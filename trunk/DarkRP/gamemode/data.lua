@@ -169,7 +169,7 @@ end
 function DB.RetrieveJailPos()
 	local map = string.lower(game.GetMap())
 	local r = sql.Query("SELECT x, y, z, lastused FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";")
-	if not r then return false end
+	if not r then return Vector(0,0,0) end
 
 	-- Retrieve the least recently used jail position
 	local now = CurTime()
