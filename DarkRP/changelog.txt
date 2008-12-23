@@ -1,4 +1,14 @@
-VERSON 2.3.1
+SVN VERSTION:
+Updated by: FPtje Falco
+
+[ADD] Cops can arrest sleeping people
+[ADD] Admins can disable the No-respawning when changing job with rp_norespawn 
+[ADD] Admins can allow/disallow hobo's by doing rp_allowhobos <1/0>
+[ADD] Reload of the keys weapons does something(Still alpha)
+[FIX] When use protection is on, doors couldn't be opened by some people, now they can.
+
+
+VERSION 2.3.1
 Updated by: FPtje Falco
 
 [ADD by FPtje] Awesome change job screen, Press F4 while not looking at a door

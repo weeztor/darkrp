@@ -42,6 +42,9 @@ function KnockoutToggle(player, command, args, caller)
 					umsg.String("0")
 				umsg.End()
 				RP:AddAllPlayers()
+				if command == true then
+					player:Arrest()
+				end
 			else
 				
 				player.WeaponsForSleep = {}
@@ -55,6 +58,7 @@ function KnockoutToggle(player, command, args, caller)
 				ragdoll:Spawn()
 				ragdoll:Activate()
 				ragdoll:SetVelocity(player:GetVelocity())
+				ragdoll:SetNWInt("OwnerINT", player:EntIndex())
 				player:StripWeapons()
 				player:Spectate(OBS_MODE_CHASE)
 				player:SpectateEntity(ragdoll)

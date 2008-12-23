@@ -1,6 +1,10 @@
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
 
+-- Currency Symbol
+local currencysymbol = CreateClientConVar("rp_currency", "$", true, false)
+CUR = currencysymbol:GetString()
+
 GUIToggled = false
 HelpToggled = false
 

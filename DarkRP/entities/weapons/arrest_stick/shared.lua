@@ -55,7 +55,19 @@ function SWEP:PrimaryAttack()
 	local trace = self.Owner:GetEyeTrace()
 
 	self.NextStrike = CurTime() + .4
-
+	
+	if trace.Entity:GetClass() == "prop_ragdoll" then
+		for k,v in pairs(player.GetAll()) do
+			if trace.Entity:GetNWInt("OwnerINT") == v:EntIndex() then
+				KnockoutToggle(v, true)
+				
+				//timer.Simple(5, v:Arrest())
+				//Notify(v, 1, 4, "You've been arrested by " .. self.Owner:Nick())
+				return
+			end
+		end
+	end
+		
 	if not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) or (not trace.Entity:IsPlayer() and not trace.Entity:IsNPC()) then
 		return
 	end

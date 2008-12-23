@@ -1,3 +1,4 @@
+CUR = "$"
 -------------
 -- LightRP
 -- Rick Darkaliono aka DarkCybo1
@@ -209,6 +210,7 @@ CfgVars["allowgang"] = 1 -- Should Gangs be allowed?
 CfgVars["allowmedics"] = 1 -- Should Medics be allowed?
 CfgVars["allowdealers"] = 1 -- Should Gun Dealers be allowed?
 CfgVars["allowcooks"] = 1 -- Should Cooks be allowed?
+CfgVars["allowhobos"] = 1 -- Disable hobos? :(
 CfgVars["customspawns"] = 1 -- Custom spawn points enabled?
 CfgVars["earthquakes"] = 1 -- Should earthquakes be enabled?
 CfgVars["dmautokick"] = 1 -- Enable deathmatch auto-kick
@@ -218,6 +220,7 @@ CfgVars["restrictbuypistol"] = 0 -- Whether /buypistol is available only to Gun 
 CfgVars["noguns"] = 0 -- Whether or not guns are banned on this server
 CfgVars["customjobs"] = 1 -- Whether or not players can use the /job command
 CfgVars["deathblack"] = 1 -- Whether or not players see black when dead
+CfgVars["norespawn"] = 1 -- Whether people have to respawn when they change job or not
 
 -- You can set the exact value of the below items:
 

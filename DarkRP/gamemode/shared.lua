@@ -1,5 +1,4 @@
--- Currency Symbol
-CUR = "$"
+
 
 -- Teams
 TEAM_CITIZEN = 1 -- Normal Citizens

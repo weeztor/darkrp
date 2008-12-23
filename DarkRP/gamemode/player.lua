@@ -33,8 +33,8 @@ function meta:NewData()
 	self:GetTable().Ownedz = { }
 	self:GetTable().OwnedNumz = 0
 
-	self:GetTable().LastLetterMade = CurTime()
-	self:GetTable().LastVoteCop = CurTime()
+	self:GetTable().LastLetterMade = CurTime() - 61
+	self:GetTable().LastVoteCop = CurTime() - 61
 
 	self:SetTeam(TEAM_CITIZEN)
 
@@ -320,6 +320,10 @@ function meta:ChangeTeam(t)
 			Notify(self, 1, 4, "You're already a hobo!")
 			return
 		end
+		if CfgVars["allowhobos"] ~= 1 then
+			Notify(self, 1, 4, "Hobos are disabled!")
+			return
+		end
 
 		self:UpdateJob("Hobo")
 		DB.StoreSalary(self, CfgVars["normalsalary"] - 15)
@@ -329,16 +333,19 @@ function meta:ChangeTeam(t)
 
 	self:SetTeam(t)
 	if self:InVehicle() then self:ExitVehicle() end
-	self:StripWeapons()
-	local vPoint = self:GetShootPos() + Vector(0,0,50)
-	local effectdata = EffectData()
-	effectdata:SetEntity(self)
-	effectdata:SetStart( vPoint ) // not sure if we need a start and origin (endpoint) for this effect, but whatever
-	effectdata:SetOrigin( vPoint )
-	effectdata:SetScale(1)
-	util.Effect( "entity_remove", effectdata )	
-	 
-	GAMEMODE:PlayerLoadout(self)
+	if CfgVars["norespawn"] == 1 then
+		self:StripWeapons()
+		local vPoint = self:GetShootPos() + Vector(0,0,50)
+		local effectdata = EffectData()
+		effectdata:SetEntity(self)
+		effectdata:SetStart( vPoint ) // not sure if we need a start and origin (endpoint) for this effect, but whatever
+		effectdata:SetOrigin( vPoint )
+		effectdata:SetScale(1)
+		util.Effect( "entity_remove", effectdata )	
+		GAMEMODE:PlayerLoadout(self)
+	else
+		self:KillSilent()
+	end
 end
 
 function meta:ResetDMCounter()
@@ -400,7 +407,7 @@ function meta:Arrest(time, rejoin)
 		self:SetNetworkedBool("wanted", false)
 	end
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
-	if CfgVars["teletojail"] == 1 then
+	if CfgVars["teletojail"] == 1 and jpc and jpc ~= 0 then
 		self:SetPos(DB.RetrieveJailPos())
 	end
 	if not RPArrestedPlayers[self:SteamID()] or rejoin then
