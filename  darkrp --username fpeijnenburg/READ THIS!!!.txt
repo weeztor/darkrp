@@ -1,7 +1,0 @@
-Put DarkRP in garrysmod/gamemodes
-
-put Simple RP prop protection in:
-garrysmod/addons
-
-
-IF YOU PUT DARKRP IN ADDONS IT WON'T WORK!
