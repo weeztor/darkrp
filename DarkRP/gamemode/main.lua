@@ -326,6 +326,7 @@ function DropWeapon(ply)
 
 	local tr = util.TraceLine(trace)
 	local ent = ply:GetActiveWeapon()
+	if not ValidEntity(ent) then return "" end
 	local class = ent:GetClass()
 	
 	local model = nil
@@ -2005,63 +2006,7 @@ function GM:ShowSpare1(ply)
 end
 
 function GM:ShowSpare2(ply)
-	local trace = ply:GetEyeTrace()
-
-	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 115 then
-		if RPArrestedPlayers[ply:SteamID()] then
-			Notify(ply, 1, 5, "Can not own or unown things while arrested!")
-			return
-		end
-
-		if trace.Entity:GetNWBool("nonOwnable") then
-			Notify(ply, 1, 5, "This Door can not be owned or unowned!")
-			return
-		end
-
-		if trace.Entity:OwnedBy(ply) then
-			Notify(ply, 1, 4, "Sold for " .. CUR .. math.floor(((CfgVars["doorcost"] * 0.66666666666666)+0.5)) .. "!")
-			trace.Entity:Fire("unlock", "", 0)
-			trace.Entity:UnOwn(ply)
-			ply:GetTable().Ownedz[trace.Entity:EntIndex()] = nil
-			ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz - 1
-			ply:AddMoney(math.floor(((CfgVars["doorcost"] * 0.66666666666666)+0.5)))
-		else
-			if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
-				Notify(ply, 1, 4, "Already owned!")
-				return
-			end
-			if trace.Entity:GetClass() == "prop_vehicle_jeep" or trace.Entity:GetClass() == "prop_vehicle_airboat" then
-				if not ply:CanAfford(CfgVars["vehiclecost"]) then
-					Notify(ply, 1, 4, "You can not afford this vehicle!")
-					return
-				end
-			else
-				if not ply:CanAfford(CfgVars["doorcost"]) then
-					Notify(ply, 1, 4, "You can not afford this door!")
-					return
-				end
-			end
-
-			if trace.Entity:GetClass() == "prop_vehicle_jeep" or trace.Entity:GetClass() == "prop_vehicle_airboat" then
-				ply:AddMoney(-CfgVars["vehiclecost"])
-				Notify(ply, 1, 4, "You've bought this vehicle for " .. CUR .. math.floor(CfgVars["vehiclecost"]) .. "!")
-			else
-				ply:AddMoney(-CfgVars["doorcost"])
-				Notify(ply, 1, 4, "You've bought this door for " .. CUR .. math.floor(CfgVars["doorcost"]) .. "!")
-			end
-			trace.Entity:Own(ply)
-
-			if ply:GetTable().OwnedNumz == 0 then
-				timer.Create(ply:SteamID() .. "propertytax", 270, 0, ply.DoPropertyTax, ply)
-			end
-
-			ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz + 1
-
-			ply:GetTable().Ownedz[trace.Entity:EntIndex()] = trace.Entity
-		end
-	else
-		ply:SendLua("ChangeJobVGUI()")
-	end
+	ply:SendLua("ChangeJobVGUI()")
 end
 
 function GM:OnNPCKilled(victim, ent, weapon)

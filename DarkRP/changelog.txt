@@ -4,8 +4,10 @@ Updated by: FPtje Falco
 [ADD] Cops can arrest sleeping people
 [ADD] Admins can disable the No-respawning when changing job with rp_norespawn 
 [ADD] Admins can allow/disallow hobo's by doing rp_allowhobos <1/0>
-[ADD] Reload of the keys weapons does something(Still alpha)
+[ADD] Reload of the keys weapons does something(Please test)
+[CHANGE] All door controls are now done though reload with the Keys weapon.
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
+[FIX] Rare error with dropweapon
 
 
 VERSION 2.3.1

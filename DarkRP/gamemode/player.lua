@@ -407,7 +407,7 @@ function meta:Arrest(time, rejoin)
 		self:SetNetworkedBool("wanted", false)
 	end
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
-	if CfgVars["teletojail"] == 1 and jpc and jpc ~= 0 then
+	if CfgVars["teletojail"] == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
 		self:SetPos(DB.RetrieveJailPos())
 	end
 	if not RPArrestedPlayers[self:SteamID()] or rejoin then

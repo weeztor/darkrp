@@ -237,7 +237,7 @@ function GM:HUDPaint()
 
 				for n = 1, num do
 					if ent:GetNWInt("Allowed" .. n) == LocalPlayer():EntIndex() then
-						ownerstr = ownerstr .. "You are allowed to co-own this door\n(Press F4 to own)"
+						ownerstr = ownerstr .. "You are allowed to co-own this door\n(Press reload with keys to co-own)"
 					elseif ent:GetNWInt("Allowed" .. n) > -1 then
 						if ValidEntity(player.GetByID(ent:GetNWInt("Allowed" .. n))) then
 							ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick() .. " is allowed to co-own this door\n"
@@ -255,12 +255,16 @@ function GM:HUDPaint()
 
 						if superAdmin then
 							if blocked then
-								st = ent:GetNWString("dTitle") .. "\n(Press F2 to allow ownership)"
+								st = ent:GetNWString("dTitle") .. "\n(Press reload with keys to allow ownership)"
 							else
 								if ownerstr == "" then
-									st = ent:GetNWString("title") .. "\n(Press F2 to disallow ownership)"
+									st = ent:GetNWString("title") .. "\n(Press reload with keys to disallow ownership)"
 								else
-									st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr .. "(Press F2 to disallow ownership)"
+									if ent:OwnedBy(LocalPlayer()) then
+										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
+									else
+										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr .. "(Press reload with keys to disallow ownership)"
+									end
 								end
 							end
 						else
@@ -278,16 +282,16 @@ function GM:HUDPaint()
 						if superAdmin then
 							if blocked then
 								whiteText = true
-								st = ent:GetNWString("dTitle") .. "\n(Press F2 to allow ownership)"
+								st = ent:GetNWString("dTitle") .. "\n(Press reload with keys to allow ownership)"
 							else
-								st = "Unowned\n(Press F4 to own)\n(Press F2 to disallow ownership)"
+								st = "Unowned\n(Press reload with keys to own)\n(Press reload with keys to disallow ownership)"
 							end
 						else
 							if blocked then
 								whiteText = true
 								st = ent:GetNWString("dTitle")
 							else
-								st = "Unowned\n(Press F4 to own)"
+								st = "Unowned\n(Press reload with keys to own)"
 							end
 						end
 					end
