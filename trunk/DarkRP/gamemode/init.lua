@@ -203,7 +203,6 @@ CfgVars["mayorsetsalary"] = 1 --Allow the Mayor to decide salaries of other play
 CfgVars["cptomayoronly"] = 0 --Only CPs can do /votemayor
 CfgVars["chiefjailpos"] = 1 -- Can the Chief set the jail positions?
 CfgVars["physgun"] = 1 --Physguns for everybody? 0 = Admins only
-CfgVars["netplay"] = 0 --NetPlay, Have fun with MySquid!
 CfgVars["teletojail"] = 1 --Should Criminals Be AUTOMATICALLY Teleported TO jail?
 CfgVars["telefromjail"] = 1 --Should Jailed People be automatically Teleported FROM jail?
 CfgVars["allowgang"] = 1 -- Should Gangs be allowed?
@@ -316,24 +315,7 @@ end
 concommand.Add("serverHelp", serverHelp)
 
 function GM:ShowTeam(ply)
-	local trace = {}
-
-	trace.start = ply:EyePos()
-	trace.endpos = trace.start + ply:GetAimVector() * 85
-	trace.filter = ply
-
-	local tr = util.TraceLine(trace)
-	local ent = tr.Entity
-
-	if not ply:IsSuperAdmin() or not ValidEntity(ent) or not ent:IsDoor() or ply:EyePos():Distance(ent:GetPos()) > 65 then
-		ply:ConCommand("serverHelp\n")
-	else
-		-- Toggle the door's ownability
-		ent:SetNWBool("nonOwnable", not ent:GetNWBool("nonOwnable"))
-
-		-- Save it for future map loads
-		DB.StoreDoorOwnability(ent)
-	end
+	ply:ConCommand("serverHelp\n")
 end
 
 function GM:ShowHelp(ply)
@@ -463,7 +445,7 @@ end
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showhelp - Toggle help menu (bind this to F1 if you haven't already)")
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "serverHelp - Show's server help.")
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare1 - Toggle vote clicker (bind this to F3 if you haven't already)")
-AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare2 - Own/unown doors (bind this to F4 if you haven't already)")
+AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare2 - Job menu(bind this to F4 if you haven't already)")
 
 GM.Name = "DarkRP 2.3.1"
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
