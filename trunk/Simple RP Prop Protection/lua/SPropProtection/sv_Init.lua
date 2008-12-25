@@ -5,6 +5,8 @@
 
 SPropProtection["Props"] = {}
 local AntiCopy = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon"}
+local NotAllowedToPickUp = {"func_breakable_surf"}
+
 
 function SPropProtection.SetupSettings()
 	if(!sql.TableExists("spropprotection")) then
@@ -209,10 +211,14 @@ end
 hook.Add("PlayerDisconnected", "SPropProtection.Disconnect", SPropProtection.Disconnect)
 
 function SPropProtection.PhysGravGunPickup(ply, ent)
-	if(!ent) then return end
-	if(!ent:IsValid()) then return end
-	if(ent:IsPlayer() and ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then return end
-	if(ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick()) then return end
+	if not ValidEntity(ent) then return end
+	if ent:IsPlayer() or ent:IsDoor() then return false end
+	for k,v in pairs(NotAllowedToPickUp) do
+		if ent:GetClass() == v then return false end
+	end
+
+	if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then return true end
+	if(ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick()) then return true end
 	if(!ent:IsValid() or !SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
 	end
@@ -222,15 +228,12 @@ hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropPr
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
 
 function SPropProtection.CanTool(ply, tr, toolgun)
-	//slider
-	//hydraulic
-	//muscle
-	//winch
-	//camera
-
 	if(tr.HitWorld) then return end
 	ent = tr.Entity
 	if(!ent:IsValid() or ent:IsPlayer()) then return false end
+	for k,v in pairs(NotAllowedToPickUp) do
+		if ent:GetClass() == v then return false end
+	end
 	if(!SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
 	elseif(toolgun == "nail") then
@@ -285,7 +288,7 @@ hook.Add("EntityTakeDamage", "SPropProtection.EntityTakeDamage", SPropProtection
 
 function SPropProtection.PlayerUse(ply, ent)
 	if ent:IsDoor() then
-		return 
+		return true
 	end
 	if(ent:IsValid() and tonumber(SPropProtection["Config"]["use"]) == 1) then
 		if(!SPropProtection.PlayerCanTouch(ply, ent) and
