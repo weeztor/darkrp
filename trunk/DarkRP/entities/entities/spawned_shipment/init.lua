@@ -22,6 +22,7 @@ weaponClasses["sniper"] = {}
 weaponClasses["sniper"]["ls_sniper"] = "models/weapons/w_snip_g3sg1.mdl"
 
 function ENT:Initialize()
+	self.Entity.Destructed = false
 	self.Entity:SetModel("models/Items/item_item_crate.mdl")
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -96,7 +97,10 @@ function ENT:Think()
 	end
 end
 
+
 function ENT:Destruct()
+	if self.Entity.Destructed then return end
+	self.Entity.Destructed = true
 	local vPoint = self.Entity:GetPos()
 	local contents = self.Entity:GetNWString("contents")
 	local count = self.Entity:GetNWInt("count")

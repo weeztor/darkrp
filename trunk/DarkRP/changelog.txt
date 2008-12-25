@@ -6,8 +6,10 @@ Updated by: FPtje Falco
 [ADD] Admins can allow/disallow hobo's by doing rp_allowhobos <1/0>
 [ADD] Reload of the keys weapons does something(Please test)
 [CHANGE] All door controls are now done though reload with the Keys weapon.
+[CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
 [FIX] Rare error with dropweapon
+[FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.
 
 
 VERSION 2.3.1

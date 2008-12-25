@@ -1,4 +1,5 @@
 local function GiveHint()
+	if CfgVars["advertisements"] ~= 1 then return end
 	local hint = math.random(1, 38)
 
 	if hint == 1 then
@@ -6,7 +7,7 @@ local function GiveHint()
 	elseif hint == 2 then
 		PrintMessageAll(HUD_PRINTTALK , "You can be arrested for buying or owning an illegal weapon!")
 	elseif hint == 3 then
-		PrintMessageAll(HUD_PRINTTALK , "Type /sleep to fall asleep. (Extra weapons will be lost!)")
+		PrintMessageAll(HUD_PRINTTALK , "Type /sleep to fall asleep. (NO weapons will be lost!)")
 	elseif hint == 4 then
 		PrintMessageAll(HUD_PRINTTALK , "You may own a handgun, but use it only in self defence.")
 	elseif hint == 5 then
