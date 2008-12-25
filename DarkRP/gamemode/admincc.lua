@@ -1116,6 +1116,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_dm_autokick - Enable/disable Aut
 AddToggleCommand("rp_norespawn", "norespawn", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_norespawn - Enable/Disable that people don't have to respawn when they change job")
 
+AddToggleCommand("rp_advertisements", "advertisements", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_advertisements - Enable/Disable chatprint advertisements")
+
 AddToggleCommand("rp_doorwarrants", "doorwarrants", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_doorwarrants - Enable/disable Warrant requirement to enter property.")
 

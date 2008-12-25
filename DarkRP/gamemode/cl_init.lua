@@ -307,7 +307,7 @@ function GM:HUDPaint()
 			end
 		end
 
-		if PanelNum > 0 then
+		if PanelNum and PanelNum > 0 then
 			draw.RoundedBox(2, 0, 0, 100, 20, Color(0, 0, 0, 128))
 			draw.DrawText("Hit F3 to vote", "ChatFont", 2, 2, Color(255, 255, 255, 200), 0)
 		end

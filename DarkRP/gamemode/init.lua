@@ -220,6 +220,8 @@ CfgVars["noguns"] = 0 -- Whether or not guns are banned on this server
 CfgVars["customjobs"] = 1 -- Whether or not players can use the /job command
 CfgVars["deathblack"] = 1 -- Whether or not players see black when dead
 CfgVars["norespawn"] = 1 -- Whether people have to respawn when they change job or not
+CfgVars["advertisements"] = 1--chatprint advertisements
+CfgVars["CopsCanUnFreeze"] = 1 
 
 -- You can set the exact value of the below items:
 
@@ -255,7 +257,7 @@ CfgVars["demotetime"] = 120 -- Amount of time a player is banned from rejoining 
 CfgVars["searchtime"] = 30 -- Amount of time a search warrant is valid for
 CfgVars["respawntime"] = 4 -- Amount of time a player has to wait before respawning
 CfgVars["wantedtime"] = 120 -- Amount of time a player is wanted for
-CfgVars["CopsCanUnFreeze"] = 1
+
 
 CfgVars["refreshglobals"] = 0
 
