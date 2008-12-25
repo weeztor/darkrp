@@ -131,6 +131,7 @@ AddCSLuaFile("scoreboard/player_row.lua")
 AddCSLuaFile("scoreboard/scoreboard.lua")
 AddCSLuaFile("scoreboard/vote_button.lua")
 AddCSLuaFile("cl_helpvgui.lua")
+AddCSLuaFile("showteamtabs.lua")
 
 -- Earthquake Mod addon
 resource.AddFile("earthquake.mp3")

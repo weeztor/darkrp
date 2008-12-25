@@ -113,9 +113,9 @@ end
 SWEP.OnceReload = false
 function SWEP:Reload()
 	local trace = self.Owner:GetEyeTrace()
-	if  not ValidEntity(trace.Entity) or ( ValidEntity(trace.Entity) and (not trace.Entity:IsDoor() or self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 65))  then
+	if  not ValidEntity(trace.Entity) or ( ValidEntity(trace.Entity) and ((not trace.Entity:IsDoor() and not trace.Entity:IsVehicle()) or self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 150))  then
 		if not self.OnceReload then
-			if SERVER then Notify(self.Owner, 1, 3, "You must be looking at a door to bring up the menu") end
+			if SERVER then Notify(self.Owner, 1, 3, "You must be looking at a door/vehicle to bring up the menu") end
 			self.OnceReload = true
 			timer.Simple(3, function() self.OnceReload = false end)
 		end
@@ -123,7 +123,11 @@ function SWEP:Reload()
 	end
 	
 	if SERVER then
-		self.Owner:SendLua("KeysMenu()")
+		if trace.Entity:IsVehicle() then
+			self.Owner:SendLua("KeysMenu(true)")
+		else
+			self.Owner:SendLua("KeysMenu(false)")
+		end
 	end
 	//if --[[ (CLIENT or self.Owner:IsListenServerHost( )) ]] not SERVER and not self.FrameVisible then
 		

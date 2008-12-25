@@ -1507,7 +1507,7 @@ function AddDoorOwner(ply, args)
 				if not trace.Entity:OwnedBy(target) and not trace.Entity:AllowedToOwn(target) then
 					trace.Entity:AddAllowed(target)
 				else
-					Notify(ply, 1, 4, "Player already owns (or is allowed to own) this door!")
+					Notify(ply, 1, 4, "Player already owns (or is allowed to own) this!")
 				end
 			else
 				Notify(ply, 1, 4, "You don't own this!")
@@ -1872,17 +1872,13 @@ end
 function GM:PhysgunPickup(ply, ent)
 	if ent:IsPlayer() or ent:IsDoor() then return false end
 
-	local class = ent:GetClass()
-	
-	//print(ent:GetNetworkedEntity("TheFingOwner"), ply)
-	//if ply:HasPriv(ADMIN) then return true end
-	local physobj = ent:GetPhysicsObject( )
+/*	local class = ent:GetClass()
 
 	if class ~= "func_physbox" and class ~= "prop_physics" and class ~= "prop_physics_multiplayer" and
 		class ~= "prop_vehicle_prisoner_pod" then
 		return false
-	end
-	return true
+	end*/
+	return
 end
 
 function GM:PlayerSpawnProp(ply, model)

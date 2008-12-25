@@ -61,6 +61,7 @@ include("entity.lua")
 include("cl_scoreboard.lua")
 include("cl_deathnotice.lua")
 include("cl_helpvgui.lua")
+include("showteamtabs.lua")
 
 surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
 
@@ -237,10 +238,10 @@ function GM:HUDPaint()
 
 				for n = 1, num do
 					if ent:GetNWInt("Allowed" .. n) == LocalPlayer():EntIndex() then
-						ownerstr = ownerstr .. "You are allowed to co-own this door\n(Press reload with keys to co-own)"
+						ownerstr = ownerstr .. "You are allowed to co-own this\n(Press reload with keys to co-own)"
 					elseif ent:GetNWInt("Allowed" .. n) > -1 then
 						if ValidEntity(player.GetByID(ent:GetNWInt("Allowed" .. n))) then
-							ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick() .. " is allowed to co-own this door\n"
+							ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick() .. " is allowed to co-own this\n"
 						end
 					end
 				end

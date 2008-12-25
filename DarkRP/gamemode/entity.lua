@@ -78,7 +78,7 @@ if SERVER then
 			end
 
 			if trace.Entity:GetNWBool("nonOwnable") then
-				Notify(ply, 1, 5, "This Door can not be owned or unowned!")
+				Notify(ply, 1, 5, "This can not be owned or unowned!")
 				return ""
 			end
 
@@ -126,7 +126,7 @@ if SERVER then
 			return ""
 		end
 	end
-	AddChatCommand("/toggleowndoor", OwnDoor)
+	AddChatCommand("/toggleown", OwnDoor)
 end
 function meta:OwnedBy(ply)
 	if self:GetNWInt("Ownerz") == ply:EntIndex() then return true end
