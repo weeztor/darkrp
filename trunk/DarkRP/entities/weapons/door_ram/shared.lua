@@ -72,9 +72,9 @@ function SWEP:PrimaryAttack()
 	end
 
 	self.Owner:EmitSound(self.Sound)
-	print(CfgVars["CopsCanUnFreeze"] == 1, not trace.Entity:GetPhysicsObject( ):IsMoveable(),self.Owner:EyePos():Distance(trace.Entity:GetPos()) < 100)
 	
-	local a = CfgVars["CopsCanUnFreeze"] == 1
+	
+	local a = CfgVars["copscanunfreeze"] == 1
 	local b = trace.Entity:GetClass() == "prop_physics"
 	local c = trace.Entity:GetNetworkedEntity("TheFingOwner"):GetNWBool("wanted")
 	if (trace.Entity:IsDoor()) then

@@ -196,8 +196,8 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_earthquakes - Enable/disable ear
 AddToggleCommand("rp_customjobs", "customjobs", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_customjobs - Enable/disable the /job command (personalized job names).")
 
-AddToggleCommand("rp_CopsCanUnFreeze", "CopsCanUnFreeze", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_CopsCanUnFreeze - Enable/disable the ability of cops to freeze other people's props")
+AddToggleCommand("rp_copscanunfreeze", "copscanunfreeze", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_copscanunfreeze - Enable/disable the ability of cops to freeze other people's props")
 
 
 --------------------------------------------------------------------------------------------------
