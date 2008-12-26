@@ -271,23 +271,37 @@ if not file.IsDir("DarkRP/") then
 	file.CreateDir("DarkRP")
 end
 
-if not file.Exists("DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt") then
-	local str = [[
-	In this folder, you can create a file named servercfg.txt.
+function SaveRPChanges()
+	if file.Exists("DarkRP/settings.txt") and file.Read("DarkRP/settings.txt") ~= "" then // If the file exists then 
+		local compare = util.KeyValuesToTable(file.Read("DarkRP/settings.txt"))
+		for k,v in pairs(compare) do
+			if CfgVars[k] ~= compare[k] then // Check if the contents match and if they don't then
+				print(k .. " changed from: " .. compare[k], "to", CfgVars[k])
+				local settings = util.TableToKeyValues(CfgVars)
+				local File = "DarkRP/settings.txt"
+				file.Write(File, settings) // Save all the settings!
+				print("DarkRP settings saved!")
+				return // only save it once, if more than one change was made, we don't want it to save more than one times.
+			end
+		end
+	else//if the file does not exist then you should make it.
+		print("DarkRP settings file doesn't exist, creating now and storing settings...")
+		local settings = util.TableToKeyValues(CfgVars)
+		local File = "DarkRP/settings.txt"
+		file.Write(File, settings)
+	end	
+end
+timer.Create("DarkRPSaveSettings", 60, 0, SaveRPChanges)
+concommand.Add("rp_SaveRPChanges", SaveRPChanges)
 
-	You can put in RP admin console commands in this file, and they'll be executed whenever the server starts.
-	Meaning you don't have to edit the script to change the default cvars!
 
-	Example content of what can be in servercfg.txt:
+//At the beginning of the game, load the last saved settings :D
+if file.Exists("DarkRP/settings.txt") and file.Read("DarkRP/settings.txt") ~= "" then
+	local temp = util.KeyValuesToTable(file.Read("DarkRP/settings.txt"))
+	for k,v in pairs(temp) do
+		CfgVars[k] = tonumber(v)
 
-	rp_chatprefix ! --Only if you need to use ! to use the chat commands.
-	rp_propertytax 1
-	rp_citpropertytax 1
-	rp_toolgun 0
-	rp_letters 0
-	]]
-
-	file.Write("DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt" , str)
+	end
 end
 
 GenerateChatCommandHelp()

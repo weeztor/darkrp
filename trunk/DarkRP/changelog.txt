@@ -4,8 +4,9 @@ Updated by: FPtje Falco
 [ADD] Cops can arrest sleeping people
 [ADD] Admins can disable the No-respawning when changing job with rp_norespawn 
 [ADD] Admins can allow/disallow hobo's by doing rp_allowhobos <1/0>
-[ADD] Reload of the keys weapons does something(Please test)
+[ADD] Every door and vehicle controls are put in the reload function of the keys SWEP
 [ADD] Re-added the earthquake sound
+[ADD] DarkRP now automaticly saves the DarkRP settings(not the costs) in a text file every minute and will get restored when the server starts(like after a crash)
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins
@@ -13,6 +14,7 @@ Updated by: FPtje Falco
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
 [FIX] Rare error with dropweapon
 [FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.
+[REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 
 
 VERSION 2.3.1
