@@ -349,7 +349,7 @@ function meta:ChangeTeam(t)
 end
 
 function meta:ResetDMCounter()
-	if not ValidEntity(self) then return
+	if not ValidEntity(self) then return end
 	self.kills = 0
 	return true
 end
