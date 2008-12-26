@@ -236,7 +236,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 	end
 	if(!SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
-	elseif(toolgun == "nail") then
+	elseif string.find(toolgun, "nail") then
 		local Trace = {}
 		Trace.start = tr.HitPos
 		Trace.endpos = tr.HitPos + (ply:GetAimVector() * 16.0)
