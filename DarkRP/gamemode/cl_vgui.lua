@@ -234,6 +234,7 @@ end
 usermessage.Hook("DoLetter", DoLetter)
 
 
+local LastTab 
 function ChangeJobVGUI()
 //vgui/dpanellist.lua:190: Tried to use invalid object (type Panel) (Object was NULL or not of the right type)
 
@@ -243,6 +244,7 @@ function ChangeJobVGUI()
 	Frame:SetVisible( true )
 	Frame:MakePopup( )
 	Frame:SetTitle("Options menu")
+	
 	
 	local Tabs = vgui.Create( "DPropertySheet", Frame)
 	Tabs:SetPos(5, 25)
@@ -256,6 +258,15 @@ function ChangeJobVGUI()
 	Tabs:AddSheet("Jobs", JobsTab(), "gui/silkicons/arrow_refresh", false, false)
 	
 	Tabs:AddSheet("Entities/weapons", EntitiesTab(), "gui/silkicons/application_view_tile", false, false)
+	
+	if LastTab and LastTab:IsValid() then 
+		Tabs:SetActiveTab(LastTab)
+	end
+	
+	function Frame:Close()
+		LastTab = Tabs:GetActiveTab()
+		Frame:Remove()
+	end
 end
 
 local KeyFrameVisible = false
