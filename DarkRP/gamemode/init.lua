@@ -222,7 +222,7 @@ CfgVars["customjobs"] = 1 -- Whether or not players can use the /job command
 CfgVars["deathblack"] = 1 -- Whether or not players see black when dead
 CfgVars["norespawn"] = 1 -- Whether people have to respawn when they change job or not
 CfgVars["advertisements"] = 1--chatprint advertisements
-CfgVars["CopsCanUnFreeze"] = 1 
+CfgVars["copscanunfreeze"] = 1 
 
 -- You can set the exact value of the below items:
 
