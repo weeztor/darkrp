@@ -4,7 +4,7 @@
 ------------------------------------
 
 SPropProtection["Props"] = {}
-local AntiCopy = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon"}
+local AntiCopy = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
 local NotAllowedToPickUp = {"func_breakable_surf"}
 local noclasses = {"weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
 
@@ -254,9 +254,9 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		if ply:GetActiveWeapon():GetTable().Tool.adv_duplicator and AdvDupe then
 			if ply:GetActiveWeapon():GetToolObject().Entities then
 				for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
-					for c,d in pairs(noclasses) do 
-						if string.find(string.lower(v.Class), string.lower(d)) then
-							ply:ChatPrint("YOU ARE NOT ALLOWED TO DUPLICATE WEAPONS!!!!!!!!")
+					for c,d in pairs(AntiCopy) do 
+						if v.Class and string.find(string.lower(v.Class), string.lower(d)) then
+							ply:ChatPrint("YOU ARE NOT ALLOWED TO DUPLICATE THIS!!!!!!!!")
 							ply:GetActiveWeapon():GetToolObject():ClearClipBoard()
 							return false
 						end

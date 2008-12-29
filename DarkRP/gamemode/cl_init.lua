@@ -238,7 +238,7 @@ function GM:HUDPaint()
 
 				for n = 1, num do
 					if ent:GetNWInt("Allowed" .. n) == LocalPlayer():EntIndex() then
-						ownerstr = ownerstr .. "You are allowed to co-own this\n(Press reload with keys to co-own)"
+						ownerstr = ownerstr .. "You are allowed to co-own this\n(Press reload with keys to co-own)\n"
 					elseif ent:GetNWInt("Allowed" .. n) > -1 then
 						if ValidEntity(player.GetByID(ent:GetNWInt("Allowed" .. n))) then
 							ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick() .. " is allowed to co-own this\n"
@@ -248,12 +248,12 @@ function GM:HUDPaint()
 
 				if not LocalPlayer():InVehicle() then
 					local blocked = ent:GetNWBool("nonOwnable")
+					local CPOnly = ent:GetNWBool("CPOwnable")
 					local st = nil
 					local whiteText = false -- false for red, true for white text
 
 					if ent:IsOwned() then
 						whiteText = true
-
 						if superAdmin then
 							if blocked then
 								st = ent:GetNWString("dTitle") .. "\n(Press reload with keys to allow ownership)"
@@ -261,11 +261,18 @@ function GM:HUDPaint()
 								if ownerstr == "" then
 									st = ent:GetNWString("title") .. "\n(Press reload with keys to disallow ownership)"
 								else
-									if ent:OwnedBy(LocalPlayer()) then
+									if ent:OwnedBy(LocalPlayer()) and not CPOnly then
 										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
-									else
-										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr .. "(Press reload with keys to disallow ownership)"
+									elseif not CPOnly then
+										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr .. "(Press reload with keys to disallow ownership)\n"
+									elseif not ent:IsVehicle() then
+										st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor\n" .. "(Press reload with keys to disallow ownership)\n"
 									end
+								end
+								if CPOnly and not ent:IsVehicle() then
+									st = st .. "(Press reload with keys to enable for everyone(not only cops))"
+								elseif not ent:IsVehicle() then
+									st = st .. "(Press reload with keys to set to cops and mayor only)"
 								end
 							end
 						else
@@ -275,7 +282,12 @@ function GM:HUDPaint()
 								if ownerstr == "" then
 									st = ent:GetNWString("title")
 								else
-									st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
+									if CPOnly then
+										whiteText = true
+										st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
+									else
+										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
+									end
 								end
 							end
 						end
@@ -285,14 +297,31 @@ function GM:HUDPaint()
 								whiteText = true
 								st = ent:GetNWString("dTitle") .. "\n(Press reload with keys to allow ownership)"
 							else
-								st = "Unowned\n(Press reload with keys to own)\n(Press reload with keys to disallow ownership)"
+								//st = "Unowned\n(Press reload with keys to own)\n(Press reload with keys to disallow ownership)"
+								if CPOnly then
+									whiteText = true
+									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
+									if not ent:IsVehicle() then
+										st = st .. "\n(Press reload with keys to enable for everyone(not only cops))"
+									end
+								else
+									st = "Unowned\n(Press reload with keys to own)\n(Press reload with keys to disallow ownership)"
+									if not ent:IsVehicle() then
+										st = st .. "\n(Press reload with keys to set to cops and mayor only)"
+									end
+								end
 							end
 						else
 							if blocked then
 								whiteText = true
 								st = ent:GetNWString("dTitle")
 							else
-								st = "Unowned\n(Press reload with keys to own)"
+								if CPOnly then
+									whiteText = true
+									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
+								else
+									st = "Unowned\n(Press reload with keys to own)"
+								end
 							end
 						end
 					end

@@ -63,6 +63,24 @@ if SERVER then
 	end
 	AddChatCommand("/toggleownable", SetDoorOwnable)
 	
+	local time3 = false
+	local function SetDoorCPOwnable(ply)
+		if time3 then return "" end
+		time3 = true
+		timer.Simple(0.1, function()  time3 = false end)
+		local trace = ply:GetEyeTrace()
+		if not ValidEntity(trace.Entity) then return "" end
+		local ent = trace.Entity
+		if ply:IsSuperAdmin() and ent:IsDoor() and ply:GetPos():Distance(ent:GetPos()) < 115 then
+			for k,v in pairs(player.GetAll()) do ent:UnOwn(v) end
+			ent:SetNWBool("CPOwnable", not ent:GetNWBool("CPOwnable"))
+			-- Save it for future map loads
+			DB.StoreCPDoorOwnability(ent)
+		end
+		return ""
+	end
+	AddChatCommand("/togglecpownable", SetDoorCPOwnable)
+	
 	local time2 = false
 	local function OwnDoor(ply)
 		if time2 then return "" end
