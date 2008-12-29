@@ -55,7 +55,7 @@ function SWEP:PrimaryAttack()
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or trace.Entity:GetNWBool("nonOwnable") then
 		return
 	end
-
+	
 	if trace.Entity:IsDoor() and self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 65 then
 		return
 	end
@@ -63,8 +63,9 @@ function SWEP:PrimaryAttack()
 	if trace.Entity:IsVehicle() and self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100 then
 		return
 	end
-
-	if trace.Entity:OwnedBy(self.Owner) then
+	
+	local Team = self.Owner:Team()
+	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity:GetNWBool("CPOwnable") and (Team == TEAM_CHIEF or Team == TEAM_POLICE or Team == TEAM_MAYOR)) then
 		trace.Entity:Fire("lock", "", 0)
 		self.Owner:EmitSound(self.Sound)
 		self.Weapon:SetNextPrimaryFire(CurTime() + 1.0)
@@ -95,7 +96,8 @@ function SWEP:SecondaryAttack()
 		return
 	end
 
-	if trace.Entity:OwnedBy(self.Owner) then
+	local Team = self.Owner:Team()
+	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity:GetNWBool("CPOwnable") and (Team == TEAM_CHIEF or Team == TEAM_POLICE or Team == TEAM_MAYOR)) then
 		trace.Entity:Fire("unlock", "", 0)
 
 		self.Owner:EmitSound(self.Sound)

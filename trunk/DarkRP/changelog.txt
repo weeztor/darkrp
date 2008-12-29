@@ -7,6 +7,7 @@ Updated by: FPtje Falco
 [ADD] Every door and vehicle controls are put in the reload function of the keys SWEP
 [ADD] Re-added the earthquake sound
 [ADD] DarkRP now automaticly saves the DarkRP settings(not the costs) in a text file every minute and will get restored when the server starts(like after a crash)
+[ADD] Cops chief and mayor only option in the Key menu for superadmins
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins

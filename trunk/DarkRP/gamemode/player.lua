@@ -865,6 +865,7 @@ function GM:PlayerInitialSpawn(ply)
 	DB.RetrieveSalary(ply)
 	DB.RetrieveMoney(ply)
 	DB.SetUpNonOwnableDoors()
+	DB.SetUpCPOwnableDoors()
 	ply:PrintMessage(HUD_PRINTTALK, "This server is running DarkRP 2.3.1")
 	timer.Simple(10, ply.CompleteSentence, ply)
 end

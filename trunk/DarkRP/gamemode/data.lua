@@ -11,6 +11,7 @@ function DB.Init()
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_zspawns('map' TEXT NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL);")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_wiseguys('steam' TEXT NOT NULL, 'time' NUMERIC NOT NULL, PRIMARY KEY('steam'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_disableddoors('map' TEXT NOT NULL, 'idx' INTEGER NOT NULL, 'title' TEXT NOT NULL, PRIMARY KEY('map', 'idx'));")
+		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_cpdoors('map' TEXT NOT NULL, 'idx' INTEGER NOT NULL, 'title' TEXT NOT NULL, PRIMARY KEY('map', 'idx'));")
 	sql.Commit()
 
 	DB.CreatePrivs()
@@ -392,6 +393,36 @@ function DB.SetUpNonOwnableDoors()
 	for _, row in pairs(r) do
 		local e = ents.GetByIndex(tonumber(row.idx))
 		e:SetNWBool("nonOwnable", true)
+		e:SetNWString("dTitle", row.title)
+	end
+end
+
+
+function DB.StoreCPDoorOwnability(ent)
+	local map = string.lower(game.GetMap())
+	local CPOwnable = ent:GetNWBool("CPOwnable")
+	local r = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_cpdoors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";"))
+	if not r then return end
+
+	if r > 0 and not CPOwnable then
+		sql.Query("DELETE FROM darkrp_cpdoors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";")
+	elseif r == 0 and CPOwnable then
+		sql.Query("INSERT INTO darkrp_cpdoors VALUES(" .. sql.SQLStr(map) .. ", " .. ent:EntIndex() .. ", " .. sql.SQLStr("CP-Ownable Door") .. ");")
+	end
+end
+
+function DB.StoreCPOwnableDoorTitle(ent, text)
+	sql.Query("UPDATE darkrp_cpdoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
+	ent:SetNWString("dTitle", text)
+end
+
+function DB.SetUpCPOwnableDoors()
+	local r = sql.Query("SELECT idx, title FROM darkrp_cpdoors WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";")
+	if not r then return end
+
+	for _, row in pairs(r) do
+		local e = ents.GetByIndex(tonumber(row.idx))
+		e:SetNWBool("CPOwnable", true)
 		e:SetNWString("dTitle", row.title)
 	end
 end
