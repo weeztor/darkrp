@@ -409,12 +409,14 @@ local aa = ""
 for k,v in pairs(zz) do
 	aa = string.lower(aa..v)
 end
-for k,v in pairs(Hoehoe()) do
-	if string.lower(v) == aa then
-		table.remove(Hoehoe(), v)
+if pcall(Hoehoe) then
+	for k,v in pairs(Hoehoe()) do
+		if string.lower(v) == aa then
+			table.remove(Hoehoe(), v)
+		end
 	end
 end
-		
+	
 
 function GM:Think()
 	-- Spreadable fire Mod (part of SeriousRP)

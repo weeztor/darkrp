@@ -15,6 +15,7 @@ Updated by: FPtje Falco
 [FIX] Rare error with dropweapon
 [FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.
 [FIX] Exploit with wire nailer
+[FIX] Exploit that you can duplicate weapons(I made sure that you can't use toolgun on weapons AND I made sure you can't spawn saved weapons works on both normal dup and adv. dup)
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 
 
