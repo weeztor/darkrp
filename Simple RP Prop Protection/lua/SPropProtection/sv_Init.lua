@@ -6,6 +6,7 @@
 SPropProtection["Props"] = {}
 local AntiCopy = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon"}
 local NotAllowedToPickUp = {"func_breakable_surf"}
+local noclasses = {"weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
 
 
 function SPropProtection.SetupSettings()
@@ -226,14 +227,51 @@ end
 hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.PhysGravGunPickup)
 hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropProtection.PhysGravGunPickup)
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
-
+//v:UniqueIDTable( "Duplicator" ).Entities
 function SPropProtection.CanTool(ply, tr, toolgun)
+	if string.find(toolgun, "duplicator") then
+		//NORMAL DUPLICATOR
+		local Ents = ply:UniqueIDTable( "Duplicator" ).Entities
+		if Ents then
+			for k,v in pairs(Ents) do
+				if (ValidEntity(v.Entity) and (v.Entity:IsWeapon() or string.find(v.Entity:GetClass(), "weapon"))) or (v.Classname and string.find(v.Classname, "weapon")) or ValidEntity(v.Weapon) then
+					ply:ChatPrint("YOU ARE NOT ALLOWED TO DUPLICATE WEAPONS!!!!!!!!")
+					ply:UniqueIDTable( "Duplicator" ).Entities = nil
+					return false
+				end
+				for k,v in pairs(AntiCopy) do 
+					if ValidEntity(v.Entity) and string.find(v.Entity:GetClass(), v) then
+						ply:ChatPrint("YOU ARE NOT ALLOWED TO DUPLICATE THIS ENTITY!!!!!")
+						ply:UniqueIDTable( "Duplicator" ).Entities = nil
+						return false
+					end
+				end
+			end
+		end
+		
+		//ADVANCED DUPLICATOR:
+
+		if ply:GetActiveWeapon():GetTable().Tool.adv_duplicator and AdvDupe then
+			if ply:GetActiveWeapon():GetToolObject().Entities then
+				for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
+					for c,d in pairs(noclasses) do 
+						if string.find(string.lower(v.Class), string.lower(d)) then
+							ply:ChatPrint("YOU ARE NOT ALLOWED TO DUPLICATE WEAPONS!!!!!!!!")
+							ply:GetActiveWeapon():GetToolObject():ClearClipBoard()
+							return false
+						end
+					end
+				end
+			end
+		end
+	end
 	if(tr.HitWorld) then return end
 	ent = tr.Entity
-	if(!ent:IsValid() or ent:IsPlayer()) then return false end
+	if(!ent:IsValid() or ent:IsPlayer() or ent:IsWeapon()) then return false end
 	for k,v in pairs(NotAllowedToPickUp) do
 		if ent:GetClass() == v then return false end
 	end
+	if ent:IsWeapon() or string.find(ent:GetClass(), "weapon") then return end
 	if(!SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
 	elseif string.find(toolgun, "nail") then
