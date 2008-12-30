@@ -12,6 +12,7 @@ Updated by: FPtje Falco
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins
 [CHANGE] Moved the job change to F2 and I added a lot of commands/entities to it
+[CHANGE] The way Simple prop protection protects against slider bug: you can make the slider but you won't be able to do anything with the prop you made the slider on.
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
 [FIX] Rare error with dropweapon
 [FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.

@@ -6,7 +6,6 @@
 SPropProtection["Props"] = {}
 local AntiCopy = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
 local NotAllowedToPickUp = {"func_breakable_surf"}
-local noclasses = {"weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
 
 
 function SPropProtection.SetupSettings()
@@ -217,6 +216,25 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 	for k,v in pairs(NotAllowedToPickUp) do
 		if ent:GetClass() == v then return false end
 	end
+	
+	for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
+		if v ~= ent then
+			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
+				SPropProtection.Nofity(ply, "Weapons are attached to your prop")
+				return false
+			end
+			for a,b in pairs(AntiCopy) do
+				if string.find(v:GetClass(), b) then
+					//SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
+					return false
+				end
+			end
+			if not SPropProtection.PlayerCanTouch(ply, v) then
+				//SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
+				return false
+			end
+		end
+	end
 
 	if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then return true end
 	if(ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick()) then return true end
@@ -235,13 +253,13 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		if Ents then
 			for k,v in pairs(Ents) do
 				if (ValidEntity(v.Entity) and (v.Entity:IsWeapon() or string.find(v.Entity:GetClass(), "weapon"))) or (v.Classname and string.find(v.Classname, "weapon")) or ValidEntity(v.Weapon) then
-					ply:ChatPrint("YOU ARE NOT ALLOWED TO DUPLICATE WEAPONS!!!!!!!!")
+					SPropProtection.Nofity(ply, "YOU ARE NOT ALLOWED TO DUPLICATE WEAPONS!!!!!!!!")
 					ply:UniqueIDTable( "Duplicator" ).Entities = nil
 					return false
 				end
-				for k,v in pairs(AntiCopy) do 
-					if ValidEntity(v.Entity) and string.find(v.Entity:GetClass(), v) then
-						ply:ChatPrint("YOU ARE NOT ALLOWED TO DUPLICATE THIS ENTITY!!!!!")
+				for a,b in pairs(AntiCopy) do 
+					if ValidEntity(v.Entity) and string.find(v.Entity:GetClass(), b) then
+						SPropProtection.Nofity(ply, "YOU ARE NOT ALLOWED TO DUPLICATE THIS ENTITY!!!!!")
 						ply:UniqueIDTable( "Duplicator" ).Entities = nil
 						return false
 					end
@@ -256,7 +274,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 				for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 					for c,d in pairs(AntiCopy) do 
 						if v.Class and string.find(string.lower(v.Class), string.lower(d)) then
-							ply:ChatPrint("YOU ARE NOT ALLOWED TO DUPLICATE THIS!!!!!!!!")
+							SPropProtection.Nofity(ply,"YOU ARE NOT ALLOWED TO DUPLICATE THIS!!!!!!!!")
 							ply:GetActiveWeapon():GetToolObject():ClearClipBoard()
 							return false
 						end
@@ -272,6 +290,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		if ent:GetClass() == v then return false end
 	end
 	if ent:IsWeapon() or string.find(ent:GetClass(), "weapon") then return end
+		
 	if(!SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
 	elseif string.find(toolgun, "nail") then
@@ -285,7 +304,8 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 				return false
 			end
 		end
-	elseif string.find(toolgun, "slider") or string.find(toolgun, "hydraulic") or string.find(toolgun, "muscle") or string.find(toolgun, "winch") then
+
+	--[[ elseif string.find(toolgun, "slider") or string.find(toolgun, "hydraulic") or string.find(toolgun, "muscle") or string.find(toolgun, "winch") then
 		local trace = {} 
 		trace.start = tr.HitPos 
 		//print(tr.HitNormal, tr.start)
@@ -304,7 +324,23 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 					return false
 				end
 			end
-		end 
+		end  ]]
+	end
+	for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
+		if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
+			SPropProtection.Nofity(ply, "Weapons are attached to your prop")
+			return false
+		end
+		for a,b in pairs(AntiCopy) do
+			if string.find(v:GetClass(), b) then
+				SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
+				return false
+			end
+		end
+		if not SPropProtection.PlayerCanTouch(ply, v) then
+			SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
+			return false
+		end
 	end
 end
 hook.Add("CanTool", "SPropProtection.CanTool", SPropProtection.CanTool)
@@ -343,6 +379,25 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 	if(tonumber(SPropProtection["Config"]["pgr"]) == 0) then return end
 	local tr = util.TraceLine(util.GetPlayerTrace(ply))
 	if(!tr.HitNonWorld or !tr.Entity:IsValid() or tr.Entity:IsPlayer()) then return end
+	
+	for k,v in pairs(constraint.GetAllConstrainedEntities(tr.Entity)) do
+		if v ~= ent then
+			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
+				SPropProtection.Nofity(ply, "Weapons are attached to your prop")
+				return false
+			end
+			for a,b in pairs(AntiCopy) do
+				if string.find(v:GetClass(), b) then
+					SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
+					return false
+				end
+			end
+			if not SPropProtection.PlayerCanTouch(ply, v) then
+				SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
+				return false
+			end
+		end
+	end
 	if(!SPropProtection.PlayerCanTouch(ply, tr.Entity)) then
 		return false
 	end
