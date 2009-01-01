@@ -134,7 +134,7 @@ AddCSLuaFile("cl_helpvgui.lua")
 AddCSLuaFile("showteamtabs.lua")
 
 -- Earthquake Mod addon
-resource.AddFile("earthquake.mp3")
+resource.AddFile("sound/earthquake.mp3")
 util.PrecacheSound("earthquake.mp3")
 quakenotify = nil -- When the next quake report comes up
 lastmagnitudes = {} -- The magnitudes of the last tremors

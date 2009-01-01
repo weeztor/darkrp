@@ -234,39 +234,44 @@ end
 usermessage.Hook("DoLetter", DoLetter)
 
 
-local LastTab 
+local F4Menu  
+//local LastF4Tab 
+local F4MenuTabs
+local F4Tabs
 function ChangeJobVGUI()
-//vgui/dpanellist.lua:190: Tried to use invalid object (type Panel) (Object was NULL or not of the right type)
+	if not F4Menu or not F4Menu:IsValid() then
+		F4Menu = vgui.Create("DFrame")
+		F4Menu:SetSize(770, 580)
+		F4Menu:Center()
+		F4Menu:SetVisible( true )
+		F4Menu:MakePopup( )
+		F4Menu:SetTitle("Options menu")
+		F4Tabs = {MoneyTab(), JobsTab(), EntitiesTab()}
+	else
+		F4Menu:SetVisible(true)
+	end
+	
+	//local money, jobs, entities = MoneyTab(), JobsTab(), EntitiesTab()
+	
+	if not F4MenuTabs or not F4MenuTabs:IsValid() then
+		F4MenuTabs = vgui.Create( "DPropertySheet", F4Menu)
+		F4MenuTabs:SetPos(5, 25)
+		F4MenuTabs:SetSize(760, 550)
+		//FIRST TAB:
+		F4MenuTabs:AddSheet("Money/Commands", F4Tabs[1], "gui/silkicons/plugin", false, false)
+		
+		// SECON TAB: JOBS:
+		// OMG IT'S GONE
+		//don't worry it has moved to shoteamtabs.lua :)
+		F4MenuTabs:AddSheet("Jobs", F4Tabs[2], "gui/silkicons/arrow_refresh", false, false)
+		
+		F4MenuTabs:AddSheet("Entities/weapons", F4Tabs[3], "gui/silkicons/application_view_tile", false, false)
+	end
+	for _, panel in pairs(F4Tabs) do panel:Update() end
 
-	local Frame = vgui.Create("DFrame")
-	Frame:SetSize(770, 580)
-	Frame:Center()
-	Frame:SetVisible( true )
-	Frame:MakePopup( )
-	Frame:SetTitle("Options menu")
-	
-	
-	local Tabs = vgui.Create( "DPropertySheet", Frame)
-	Tabs:SetPos(5, 25)
-	Tabs:SetSize(760, 550)
-	//FIRST TAB:
-	Tabs:AddSheet("Money/Commands", MoneyTab(), "gui/silkicons/plugin", false, false)
-	
-	// SECON TAB: JOBS:
-	// OMG IT'S GONE
-	//don't worry it has moved to shoteamtabs.lua :)
-	Tabs:AddSheet("Jobs", JobsTab(), "gui/silkicons/arrow_refresh", false, false)
-	
-	Tabs:AddSheet("Entities/weapons", EntitiesTab(), "gui/silkicons/application_view_tile", false, false)
-	
-	if LastTab and LastTab:IsValid() then 
-		Tabs:SetActiveTab(LastTab)
-	end
-	
-	function Frame:Close()
-		LastTab = Tabs:GetActiveTab()
-		Frame:Remove()
-	end
+ 	function F4Menu:Close()
+		F4Menu:SetVisible(false)
+	end 
 end
 
 local KeyFrameVisible = false
