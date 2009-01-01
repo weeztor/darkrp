@@ -143,6 +143,8 @@ if SERVER then
 			end
 			return ""
 		end
+		Notify(ply, 1, 4, "Not looking at a vehicle/door!")
+		return ""
 	end
 	AddChatCommand("/toggleown", OwnDoor)
 end
