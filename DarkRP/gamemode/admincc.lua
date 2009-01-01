@@ -646,7 +646,7 @@ end
 concommand.Add("rp_citizen", ccCitizen)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_citizen [Nick|SteamID|UserID] - Make a player become a Citizen.")
 
-function ccHobo(ply, cmd, args)
+--[[ function ccHobo(ply, cmd, args)
         if (ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN)) then
                 ply:PrintMessage(2, "You're not an admin!")
                 return
@@ -674,7 +674,36 @@ function ccHobo(ply, cmd, args)
         end
 end
 concommand.Add("rp_Hobo", ccHobo)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_Hobo [Nick|SteamID|UserID] - Make a player become a Hobo.")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_Hobo [Nick|SteamID|UserID] - Make a player become a Hobo.") ]]
+
+for k,v in pairs(RPExtraTeams) do
+	concommand.Add("rp_"..v.command, function(ply, cmd, args)
+		if (ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN)) then
+			ply:PrintMessage(2, "You're not an admin!")
+			return
+        end
+		local target = FindPlayer(args[1])
+		
+        if (target) then
+			target:ChangeTeam(9 + k)
+			if (ply:EntIndex() ~= 0) then
+				nick = ply:Nick()
+			else
+				nick = "Console"
+			end
+			target:PrintMessage(2, nick .. " made you a " .. v.name .. "!")
+        else
+			if (ply:EntIndex() == 0) then
+				Msg("Could not find player: " .. args[1])
+			else
+				ply:PrintMessage(2, "Could not find player: " .. args[1])
+			end
+			return
+        end
+	end)
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..v.command.. " [Nick|SteamID|UserID] - Make a player become a "..v.name..".")
+end
+		
 
 function ccKickBan(ply, cmd, args)
 	if not ply:HasPriv(ADMIN) then

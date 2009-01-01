@@ -315,7 +315,7 @@ function meta:ChangeTeam(t)
 		DB.StoreSalary(self, CfgVars["normalsalary"] + 30)
 		NotifyAll(1, 4, self:Name() .. " has been made Chief!")
 		self:SetModel("models/player/combine_soldier_prisonguard.mdl")
-	elseif t == TEAM_HOBO then
+--[[ 	elseif t == TEAM_HOBO then
 		if self:Team() == t then
 			Notify(self, 1, 4, "You're already a hobo!")
 			return
@@ -328,7 +328,20 @@ function meta:ChangeTeam(t)
 		self:UpdateJob("Hobo")
 		DB.StoreSalary(self, CfgVars["normalsalary"] - 15)
 		NotifyAll(1, 4, self:Name() .. " has been made a Hobo!")
-		self:SetModel("models/player/corpse1.mdl")
+		self:SetModel("models/player/corpse1.mdl") ]]
+	else
+		for k,v in pairs(RPExtraTeams) do
+			if t == (9 + k) then
+				if self:Team() == t then
+					Notify(self, 1, 4, "You're already a " .. v.name .. "!")	
+					return
+				end
+				self:UpdateJob(v.name)
+				DB.StoreSalary(self, v.salary)
+				NotifyAll(1, 4, self:Name() .. " has been made a " .. v.name .. "!")
+				self:SetModel(v.model)
+			end
+		end
 	end
 
 	self:SetTeam(t)
@@ -836,6 +849,11 @@ function GM:PlayerLoadout(ply)
 		if CfgVars["noguns"] ~= 1 then
 			ply:Give("weapon_deagle2")
 			ply:GiveAmmo(30, "Pistol")
+		end
+	end
+	for k,v in pairs(RPExtraTeams) do
+		if team == (9 + k) then
+			for _,b in pairs(v.Weapons) do ply:Give(b) end
 		end
 	end
 end
