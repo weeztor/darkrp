@@ -1,3 +1,180 @@
+local function MayorOptns()
+	local MayCat = vgui.Create("DCollapsibleCategory")
+	function MayCat:Paint()
+		self:SetBGColor(team.GetColor(LocalPlayer():Team()))
+	end
+	MayCat:SetLabel("Mayor options")
+		local maypanel = vgui.Create("DPanelList")
+		maypanel:SetSpacing(5)
+		maypanel:SetSize(740,110)
+		maypanel:EnableHorizontal(false)
+		maypanel:EnableVerticalScrollbar(true)
+			local Warrant = vgui.Create("DButton") 
+			Warrant:SetText("Warrant a player")
+			Warrant.DoClick = function()
+				local menu = DermaMenu()
+				for _,ply in pairs(player.GetAll()) do
+					if not ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
+						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
+					end
+				end
+				if #menu.Panels == 0 then
+					menu:AddOption("Noone available", function() end)
+				end
+				menu:Open()
+			end
+			maypanel:AddItem(Warrant)
+			
+			local UnWarrant = vgui.Create("DButton") 
+			UnWarrant:SetText("Unwarrant a player")
+			UnWarrant.DoClick = function()
+				local menu = DermaMenu()
+				for _,ply in pairs(player.GetAll()) do
+					if ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
+						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /unwanted " .. tostring(ply:UserID())) end)
+					end
+				end
+				if #menu.Panels == 0 then
+					menu:AddOption("Noone available", function() end)
+				end
+				menu:Open()
+			end
+			maypanel:AddItem(UnWarrant)
+			
+			local Lockdown = vgui.Create("DButton") 
+			Lockdown:SetText("Initiate a lockdown")
+			Lockdown.DoClick = function()
+				LocalPlayer():ConCommand("say /lockdown")
+			end
+			maypanel:AddItem(Lockdown)
+			
+			
+			local UnLockdown = vgui.Create("DButton") 
+			UnLockdown:SetText("Stop the lockdown")
+			UnLockdown.DoClick = function()
+				LocalPlayer():ConCommand("say /unlockdown")
+			end
+			maypanel:AddItem(UnLockdown)
+	MayCat:SetContents(maypanel)
+	return MayCat
+end
+
+local function CPOptns()
+	local CPCat = vgui.Create("DCollapsibleCategory")
+	function CPCat:Paint()
+		self:SetBGColor(team.GetColor(LocalPlayer():Team()))
+	end
+	CPCat:SetLabel("Police options")
+		local CPpanel = vgui.Create("DPanelList")
+		CPpanel:SetSpacing(5)
+		CPpanel:SetSize(740,110)
+		CPpanel:EnableHorizontal(false)
+		CPpanel:EnableVerticalScrollbar(true)
+			local Warrant = vgui.Create("DButton") 
+			Warrant:SetText("Warrant a player")
+			Warrant.DoClick = function()
+				local menu = DermaMenu()
+				for _,ply in pairs(player.GetAll()) do
+					if not ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
+						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
+					end
+				end
+				if #menu.Panels == 0 then
+					menu:AddOption("Noone available", function() end)
+				end
+				menu:Open()
+			end
+			CPpanel:AddItem(Warrant)
+			
+			local UnWarrant = vgui.Create("DButton") 
+			UnWarrant:SetText("Unwarrant a player")
+			UnWarrant.DoClick = function()
+				local menu = DermaMenu()
+				for _,ply in pairs(player.GetAll()) do
+					if ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
+						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /unwanted " .. tostring(ply:UserID())) end)
+					end
+				end
+				if #menu.Panels == 0 then
+					menu:AddOption("Noone available", function() end)
+				end
+				menu:Open()
+			end
+			CPpanel:AddItem(UnWarrant)
+			
+			if LocalPlayer():Team() == TEAM_CHIEF or LocalPlayer():IsAdmin() then
+				local SetJailPos = vgui.Create("DButton") 
+				SetJailPos:SetText("Set the jail position")
+				SetJailPos.DoClick = function() LocalPlayer():ConCommand("say /jailpos") end
+				CPpanel:AddItem(SetJailPos)
+				
+				local AddJailPos = vgui.Create("DButton") 
+				AddJailPos:SetText("Add a jail position")
+				AddJailPos.DoClick = function() LocalPlayer():ConCommand("say /addjailpos") end
+				CPpanel:AddItem(AddJailPos)
+			end
+	CPCat:SetContents(CPpanel)
+	return CPCat
+end
+
+
+local function CitOptns()
+	local CitCat = vgui.Create("DCollapsibleCategory")
+	function CitCat:Paint()
+		self:SetBGColor(team.GetColor(LocalPlayer():Team()))
+	end
+	CitCat:SetLabel("Citizen options")
+		local Citpanel = vgui.Create("DPanelList")
+		Citpanel:SetSpacing(5)
+		Citpanel:SetSize(740,110)
+		Citpanel:EnableHorizontal(false)
+		Citpanel:EnableVerticalScrollbar(true)
+		
+		local joblabel = vgui.Create("DLabel")
+		joblabel:SetText("Set a custom job(press enter to activate)") 
+		Citpanel:AddItem(joblabel)
+		
+		local jobentry = vgui.Create("DTextEntry")
+		jobentry:SetValue(LocalPlayer():GetNWString("job"))
+		jobentry.OnEnter = function()
+			LocalPlayer():ConCommand("say /job " .. tostring(jobentry:GetValue()))
+		end
+		jobentry.OnLoseFocus = jobentry.OnEnter
+		Citpanel:AddItem(jobentry)
+		
+	CitCat:SetContents(Citpanel)
+	return CitCat
+end
+
+
+local function MobOptns()
+	local MobCat = vgui.Create("DCollapsibleCategory")
+	function MobCat:Paint()
+		self:SetBGColor(team.GetColor(LocalPlayer():Team()))
+	end
+	MobCat:SetLabel("Mobboss options")
+		local Mobpanel = vgui.Create("DPanelList")
+		Mobpanel:SetSpacing(5)
+		Mobpanel:SetSize(740,110)
+		Mobpanel:EnableHorizontal(false)
+		Mobpanel:EnableVerticalScrollbar(true)
+		
+		local agendalabel = vgui.Create("DLabel")
+		agendalabel:SetText("Set the agenda(press enter to activate)") 
+		Mobpanel:AddItem(agendalabel)
+		
+		local agendaentry = vgui.Create("DTextEntry")
+		agendaentry:SetValue(LocalPlayer():GetNWString("agenda"))
+		agendaentry.OnEnter = function()
+			LocalPlayer():ConCommand("say /agenda " .. tostring(agendaentry:GetValue()))
+		end
+		agendaentry.OnLoseFocus = agendaentry.OnEnter
+		Mobpanel:AddItem(agendaentry)
+		
+	MobCat:SetContents(Mobpanel)
+	return MobCat
+end
+	
 local amountOfMoney = 2
 function MoneyTab()
 	local FirstTabPanel = vgui.Create("DPanelList")
@@ -48,7 +225,7 @@ function MoneyTab()
 			Commands:SetLabel("Actions")
 				local ActionsPanel = vgui.Create("DPanelList")
 				ActionsPanel:SetSpacing(5)
-				ActionsPanel:SetSize(740,200)
+				ActionsPanel:SetSize(740,140)
 				ActionsPanel:EnableHorizontal( false )
 				ActionsPanel:EnableVerticalScrollbar(true)
 					local rpnamelabel = vgui.Create("DLabel")
@@ -80,6 +257,16 @@ function MoneyTab()
 			Commands:SetContents(ActionsPanel)
 		FirstTabPanel:AddItem(MoneyCat)
 		FirstTabPanel:AddItem(Commands)
+		
+		if LocalPlayer():Team() == TEAM_MAYOR then
+			FirstTabPanel:AddItem(MayorOptns())
+		elseif LocalPlayer():Team() == TEAM_CITIZEN then
+			FirstTabPanel:AddItem(CitOptns())
+		elseif LocalPlayer():Team() == TEAM_POLICE or LocalPlayer():Team() == TEAM_CHIEF then
+			FirstTabPanel:AddItem(CPOptns())
+		elseif LocalPlayer():Team() == TEAM_MOB then
+			FirstTabPanel:AddItem(MobOptns())
+		end
 	end
 	FirstTabPanel:Update()
 	return FirstTabPanel	
@@ -427,3 +614,14 @@ function EntitiesTab()
 	EntitiesPanel:Update()	
 	return EntitiesPanel
 end
+
+--[[ local SKIN = {}
+	SKIN.bg_color 					= Color( 100, 100, 100, 255 ) 
+	SKIN.bg_color_sleep 			= Color( 0, 65, 255, 255 ) 
+	SKIN.bg_color_dark				= Color( 5, 5, 5, 255 ) 
+	SKIN.bg_color_bright			= Color( 220, 220, 220, 255  ) 
+derma.DefineSkin("F4Menu", "For the F4 menu...", SKIN)
+
+function GM:ForceDermaSkin()
+	return "F4Menu"
+end ]]
