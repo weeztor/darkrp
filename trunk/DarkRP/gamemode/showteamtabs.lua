@@ -400,7 +400,7 @@ function JobsTab()
 		end
 		
 		
-		if LocalPlayer():Team() ~= TEAM_HOBO then
+		/*if LocalPlayer():Team() ~= TEAM_HOBO then
 			AddIcon("models/player/corpse1.mdl", "Hobo", [[The lowest member of society. All people see you laugh. 
 			You have no home.
 			Beg for your food and money
@@ -411,7 +411,7 @@ function JobsTab()
 				Gravity gun
 				camera
 				]], "/hobo")
-		end
+		end*/
 		
 		if LocalPlayer():Team() ~= TEAM_CITIZEN then
 			AddIcon("models/player/Group01/male_02.mdl", "Citizen", [[The Citizen is the most basic level of society you can hold
@@ -536,6 +536,15 @@ function JobsTab()
 				camera
 				]]
 				, "/votemayor")
+		end
+		for k,v in pairs(RPExtraTeams) do
+			if LocalPlayer():Team() ~= (9 + k) then
+				local weps = "no extra weapons"
+				if #v.Weapons > 0 then
+					weps = table.concat(v.Weapons, "\n")
+				end
+				AddIcon(v.model, v.name, v.Des, weps, "/"..v.command)
+			end
 		end
 		//hordiv:SetLeft(Panel)
 		//hordiv:SetRight(Information)

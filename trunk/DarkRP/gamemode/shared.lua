@@ -10,7 +10,7 @@ TEAM_GUN = 6 -- Gun Dealers
 TEAM_MEDIC = 7 -- Medics
 TEAM_COOK = 8 -- Cooks
 TEAM_CHIEF = 9 -- Police Chiefs (CP Chiefs)
-TEAM_HOBO = 10
+//TEAM_HOBO = 10
 
 team.SetUp(TEAM_CITIZEN, "Citizen", Color(20, 150, 20, 255))
 team.SetUp(TEAM_POLICE, "Civil Protection", Color(25, 25, 170, 255))
@@ -21,4 +21,32 @@ team.SetUp(TEAM_GUN, "Gun Dealer", Color(255, 140, 0, 255))
 team.SetUp(TEAM_MEDIC, "Medic", Color(47, 79, 79, 255))
 team.SetUp(TEAM_COOK, "Cook", Color(238, 99, 99, 255))
 team.SetUp(TEAM_CHIEF, "Civil Protection Chief", Color(20, 20, 255, 255))
-team.SetUp(TEAM_HOBO, "Hobo", Color(80, 45, 0, 255))
+//team.SetUp(TEAM_HOBO, "Hobo", Color(80, 45, 0, 255))
+
+RPExtraTeams = {}
+function AddExtraTeam( Name, color, model, Description, Weapons, command, Salary)
+	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, salary = Salary})
+	team.SetUp(9 + #RPExtraTeams, Name, color)
+end
+
+/*
+--------------------------------------------------------
+HOW TO MAKE AN EXTRA CLASS!!!!
+--------------------------------------------------------
+
+You can make extra classes here. Set everything up here and the rest will be done for you! no more editing 100 files without knowing what you're doing!!!
+Ok here's how:
+
+To make an extra class do this:
+AddExtraTeam( "<NAME OF THE CLASS>", Color(<red>, <Green>, <blue>, 255), "<Player model>" , [[<the description(it can have enters)>]], { "<first extra weapon>","<second extra weapon>", etc...}, "<chat command to become it(WITHOUT THE /!)>", <the salary he gets>)
+
+The real example is here: it's the Hobo:		*/
+
+			//The name    the color(what you see in tab)                   the player model					The description
+AddExtraTeam("Hobo", Color(80, 45, 0, 255), "models/player/corpse1.mdl", [[The lowest member of society. All people see you laugh. 
+			You have no home.
+			Beg for your food and money
+			Sing for everyone who passes to get money
+			Make your own wooden home somewhere in a corner or 
+			outside someone else's door]], {}, "hobo", 0)
+						      //No extra weapons           say /hobo to become hobo 		his salary = 0 because hobo's don't earn money.

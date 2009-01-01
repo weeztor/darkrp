@@ -513,9 +513,16 @@ function SetSpawnPos(ply, args)
 	elseif args == "chief" then
 		t = TEAM_CHIEF
 		Notify(ply, 1, 4,  "Chief Spawn Position set.")
-	elseif args == "hobo" then
+	--[[ elseif args == "hobo" then
 		t = TEAM_HOBO
-		Notify(ply, 1, 4,  "Hobo Spawn Position set.")
+		Notify(ply, 1, 4,  "Hobo Spawn Position set.") ]]
+	end
+	
+	for k,v in pairs(RPExtraTeams) do
+		if args == v.name then
+			t = 9 + k
+			Notify(ply, 1, 4,  v.name .. " Spawn Position set.")
+		end
 	end
 
 	if t ~= 99 then
@@ -1284,14 +1291,18 @@ function ChangeJob(ply, args)
 	elseif (jl == "chief" or jl == "cheif" or jl == "civil protection chief") and t ~= TEAM_CHIEF then
 		ply:ChangeTeam(TEAM_CHIEF)
 		return ""
-	elseif jl == "hobo" and t ~= TEAM_HOBO then
+	--[[ elseif jl == "hobo" and t ~= TEAM_HOBO then
 		ply:ChangeTeam(TEAM_HOBO)
-		return ""
+		return "" ]]
 	elseif (jl == "bum" or jl == "unemployed") and t ~= TEAM_CITIZEN then
 		ply:ChangeTeam(TEAM_CITIZEN)
 		-- Don't return here because we want to run the notify below.
 	end
-
+	for k,v in pairs(RPExtraTeams) do
+		if jl == v.name then
+			ply:ChangeTeam(9 + k)
+		end
+	end
 	NotifyAll(2, 4, ply:Nick() .. " has set their job to '" .. args .. "'")
 	ply:UpdateJob(args)
 	return ""
@@ -1704,11 +1715,11 @@ function MakeCitizen(ply, args)
 end
 AddChatCommand("/citizen", MakeCitizen)
 
-function MakeHoBo(ply, args)
+--[[ function MakeHoBo(ply, args)
 	ply:ChangeTeam(TEAM_HOBO)
 	return ""
 end
-AddChatCommand("/hobo", MakeHoBo)
+AddChatCommand("/hobo", MakeHoBo) ]]
 
 function MakeCP(ply, args)
 	if ply:HasPriv(CP) or ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) or ply:IsAdmin() then
@@ -1747,6 +1758,13 @@ function MakeCook(ply, args)
 	return ""
 end
 AddChatCommand("/cook", MakeCook)
+
+for k,v in pairs(RPExtraTeams) do
+	AddChatCommand("/"..v.command, function(ply)
+		ply:ChangeTeam(9 + k)
+		return ""
+	end)
+end
 
 function CombineRequest(ply, args)
 	local t = ply:Team()
