@@ -1761,6 +1761,14 @@ AddChatCommand("/cook", MakeCook)
 
 for k,v in pairs(RPExtraTeams) do
 	AddChatCommand("/"..v.command, function(ply)
+		if v.admin == 1 and not ply:IsAdmin() then
+			Notify(ply, 1, 4, "You must be an admin to become "..v.name.."!")
+			return ""
+		end
+		if v.admin > 1 and not ply:IsSuperAdmin() then
+			Notify(ply, 1, 4, "You must be a super admin to become "..v.name.."!")
+			return ""
+		end
 		ply:ChangeTeam(9 + k)
 		return ""
 	end)

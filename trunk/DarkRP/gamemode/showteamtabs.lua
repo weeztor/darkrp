@@ -539,11 +539,20 @@ function JobsTab()
 		end
 		for k,v in pairs(RPExtraTeams) do
 			if LocalPlayer():Team() ~= (9 + k) then
-				local weps = "no extra weapons"
-				if #v.Weapons > 0 then
-					weps = table.concat(v.Weapons, "\n")
+				local nodude = true
+				if v.admin == 1 and not LocalPlayer():IsAdmin() then
+					nodude = false
 				end
-				AddIcon(v.model, v.name, v.Des, weps, "/"..v.command)
+				if v.admin > 1 and not LocalPlayer():IsSuperAdmin() then
+					nodude = false
+				end
+				if nodude then
+					local weps = "no extra weapons"
+					if #v.Weapons > 0 then
+						weps = table.concat(v.Weapons, "\n")
+					end
+					AddIcon(v.model, v.name, v.Des, weps, "/"..v.command)
+				end
 			end
 		end
 		//hordiv:SetLeft(Panel)
