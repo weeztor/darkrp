@@ -329,20 +329,23 @@ function meta:ChangeTeam(t)
 		DB.StoreSalary(self, CfgVars["normalsalary"] - 15)
 		NotifyAll(1, 4, self:Name() .. " has been made a Hobo!")
 		self:SetModel("models/player/corpse1.mdl") ]]
-	else
-		for k,v in pairs(RPExtraTeams) do
-			if t == (9 + k) then
-				if self:Team() == t then
-					Notify(self, 1, 4, "You're already a " .. v.name .. "!")	
-					return
-				end
-				self:UpdateJob(v.name)
-				DB.StoreSalary(self, v.salary)
-				NotifyAll(1, 4, self:Name() .. " has been made a " .. v.name .. "!")
-				self:SetModel(v.model)
+	end
+	for k,v in pairs(RPExtraTeams) do
+		if t == (9 + k) then
+			if self:Team() == t then
+				Notify(self, 1, 4, "You're already a " .. v.name .. "!")	
+				return
 			end
+			if team.NumPlayers(t) >= v.max then
+				Notify(self, 1, 4,  "Max "..v.name.." reached")
+			end
+			self:UpdateJob(v.name)
+			DB.StoreSalary(self, v.salary)
+			NotifyAll(1, 4, self:Name() .. " has been made a " .. v.name .. "!")
+			self:SetModel(v.model)
 		end
 	end
+
 
 	self:SetTeam(t)
 	if self:InVehicle() then self:ExitVehicle() end
@@ -776,6 +779,11 @@ function GM:PlayerSpawn(ply)
 			ply:SetModel("models/player/combine_soldier_prisonguard.mdl")
 		elseif ply:Team() == TEAM_HOBO then
 			ply:SetModel("models/player/corpse1.mdl")
+		end
+	end
+	for k,v in pairs(RPExtraTeams) do
+		if ply:Team() == (9+k) then
+			ply:SetModel(v.model)
 		end
 	end
 
