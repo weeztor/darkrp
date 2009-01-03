@@ -468,3 +468,34 @@ AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare2 - Job menu(bind this to F4
 
 GM.Name = "DarkRP 2.3.1"
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
+
+function GM:GravGunPunt(ply, ent)
+	if ent:IsVehicle() then return false end
+	local entphys = ent:GetPhysicsObject()
+
+	if ply:KeyDown(IN_ATTACK) then
+		-- it was launched
+		entphys:EnableMotion(false)
+		local curpos = ent:GetPos()
+		timer.Simple(.01, entphys.EnableMotion, entphys, true)
+		timer.Simple(.01, entphys.Wake, entphys)
+		timer.Simple(.01, ent.SetPos, ent, curpos)
+	else
+		return true
+	end
+end
+//hook.Add("GravGunPunt", "THEDarkRPGravGunPunt", DarkRPGravGunPunt)
+
+function GM:GravGunOnDropped(ply, ent)
+	local entphys = ent:GetPhysicsObject()
+	if ply:KeyDown(IN_ATTACK) then
+		-- it was launched
+		entphys:EnableMotion(false)
+		local curpos = ent:GetPos()
+		timer.Simple(.01, entphys.EnableMotion, entphys, true)
+		timer.Simple(.01, entphys.Wake, entphys)
+		timer.Simple(.01, ent.SetPos, ent, curpos)
+	else
+		return true
+	end
+end

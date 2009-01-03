@@ -363,7 +363,7 @@ function JobsTab()
 		end
 		UpdateInfo()
 		
-		local function AddIcon(Model, name, description, Weapons, command)
+		local function AddIcon(Model, name, description, Weapons, command, special, specialcommand)
 			local icon = vgui.Create("SpawnIcon")
 			icon:SetModel(Model)
 			icon:SetIconSize(120)
@@ -389,9 +389,15 @@ function JobsTab()
 			end
 			
 			icon.DoClick = function()
-				LocalPlayer():ConCommand("say " .. command)
-				
-				hordiv:GetParent():GetParent():Close() //SetVisible(false)
+				if special then
+					local menu = DermaMenu()
+					menu:AddOption("Vote", function() LocalPlayer():ConCommand("say "..command) hordiv:GetParent():GetParent():Close() end)
+					menu:AddOption("Do not vote", function() LocalPlayer():ConCommand("say " .. specialcommand) hordiv:GetParent():GetParent():Close() end)
+					menu:Open()
+				else
+					LocalPlayer():ConCommand("say " .. command)
+					hordiv:GetParent():GetParent():Close()
+				end
 			end
 			
 			if icon:IsValid() then
@@ -499,7 +505,7 @@ function JobsTab()
 				Glock
 				Stun Stick
 				Battering ram
-				]], "/votecop")
+				]], "/votecop", LocalPlayer():IsAdmin(), "/cp")
 		elseif LocalPlayer():Team() ~= TEAM_CHIEF then
 			AddIcon("models/player/combine_soldier_prisonguard.mdl", "Civil protection Chief", [[The Chief is the leader of the Civil Protection unit. 
 			Coordinate the police forces to bring law to the city
@@ -535,7 +541,7 @@ function JobsTab()
 				Gravity gun
 				camera
 				]]
-				, "/votemayor")
+				, "/votemayor", LocalPlayer():IsAdmin(), "/mayor")
 		end
 		for k,v in pairs(RPExtraTeams) do
 			if LocalPlayer():Team() ~= (9 + k) then

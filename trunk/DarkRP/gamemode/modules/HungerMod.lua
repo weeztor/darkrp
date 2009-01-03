@@ -13,6 +13,12 @@ CfgVars["foodcost"] = 15       --Cost of food
 CfgVars["foodpay"] = 1     --Whether there's a special spawning price for food
 CfgVars["foodspawn"] = 1       --If players can spawn food props or not
 
+concommand.Add("rp_hungerspeed", function(ply, cmd, args)
+	if not ply:IsAdmin() then ply:ChatPrint("You're not an admin") return end
+	if not args[1] then ply:ChatPrint("No arguments specified!") return end
+	CfgVars["hungerspeed"] = tonumber(args[1]) / 10
+end)
+
 function AddFoodItem(mdl, amount)
 	table.insert(FoodItems, { model = mdl, amount = amount })
 end
@@ -27,7 +33,7 @@ function HM.PlayerSpawnProp(ply, model)
 		if v.model == model then
 			if CfgVars["foodspawn"] == 0 then return false end
 
-			if CfgVars["foodpay"] == 1 then
+			if GetGlobalInt("hungermod") == 1 and CfgVars["foodpay"] == 1 then
 				if not GAMEMODE.BaseClass:PlayerSpawnProp(ply, model) then return false end
 
 				if RPArrestedPlayers[ply:SteamID()] then return false end

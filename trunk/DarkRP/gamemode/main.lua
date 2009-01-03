@@ -1594,11 +1594,7 @@ function FinishVoteCop(choice, ply)
 end
 
 function DoVoteMayor(ply, args)
-	if ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) or ply:IsAdmin() then
-		MakeMayor(ply, args)
-		return "" 
-	end
-		
+	
 	if #player.GetAll() == 1 then
 		Notify(ply, 1, 3, "You're the only one in the server so you won the vote")
 		ply:ChangeTeam(TEAM_MAYOR)
