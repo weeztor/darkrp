@@ -661,37 +661,6 @@ function GM:PlayerCanPickupWeapon(ply, class)
 	return true
 end
 
-function GM:GravGunPunt(ply, ent)
-	if ent:IsVehicle() then return false end
-
-	local entphys = ent:GetPhysicsObject()
-
-	if ply:KeyDown(IN_ATTACK) then
-		-- it was launched
-		entphys:EnableMotion(false)
-		local curpos = ent:GetPos()
-		timer.Simple(.01, entphys.EnableMotion, entphys, true)
-		timer.Simple(.01, entphys.Wake, entphys)
-		timer.Simple(.01, ent.SetPos, ent, curpos)
-	else
-		return true
-	end
-end
-
-function GM:GravGunOnDropped(ply, ent)
-	local entphys = ent:GetPhysicsObject()
-	if ply:KeyDown(IN_ATTACK) then
-		-- it was launched
-		entphys:EnableMotion(false)
-		local curpos = ent:GetPos()
-		timer.Simple(.01, entphys.EnableMotion, entphys, true)
-		timer.Simple(.01, entphys.Wake, entphys)
-		timer.Simple(.01, ent.SetPos, ent, curpos)
-	else
-		return true
-	end
-end
-
 function GM:PlayerSpawn(ply)
 	self.BaseClass:PlayerSpawn(ply)
 	ply:CrosshairEnable()

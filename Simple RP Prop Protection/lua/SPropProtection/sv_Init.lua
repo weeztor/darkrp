@@ -212,7 +212,8 @@ hook.Add("PlayerDisconnected", "SPropProtection.Disconnect", SPropProtection.Dis
 
 function SPropProtection.PhysGravGunPickup(ply, ent)
 	if not ValidEntity(ent) then return end
-	if ent:IsPlayer() or ent:IsDoor() then return false end
+	local class = ent:GetClass()
+	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then return false end
 	for k,v in pairs(NotAllowedToPickUp) do
 		if ent:GetClass() == v then return false end
 	end
@@ -241,6 +242,7 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 	if(!ent:IsValid() or !SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
 	end
+	return true
 end
 hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.PhysGravGunPickup)
 hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropProtection.PhysGravGunPickup)
