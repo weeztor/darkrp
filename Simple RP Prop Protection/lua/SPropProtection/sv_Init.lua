@@ -5,6 +5,9 @@
 
 SPropProtection["Props"] = {}
 local AntiCopy = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
+for k,v in pairs(weapons.GetList()) do
+	table.insert(AntiCopy, v.Classname)
+end
 local NotAllowedToPickUp = {"func_breakable_surf"}
 
 
@@ -270,10 +273,9 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		end
 		
 		//ADVANCED DUPLICATOR:
-
-		if ply:GetActiveWeapon():GetTable().Tool.adv_duplicator and AdvDupe then
-			if ply:GetActiveWeapon():GetToolObject().Entities then
-				for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
+		if toolgun == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
+			for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
+				for a, b in pairs(v) do
 					for c,d in pairs(AntiCopy) do 
 						if v.Class and string.find(string.lower(v.Class), string.lower(d)) then
 							SPropProtection.Nofity(ply,"YOU ARE NOT ALLOWED TO DUPLICATE THIS!!!!!!!!")
