@@ -342,6 +342,7 @@ function meta:ChangeTeam(t)
 			end
 			if team.NumPlayers(t) >= v.max then
 				Notify(self, 1, 4,  "Max "..v.name.." reached")
+				return
 			end
 			self:UpdateJob(v.name)
 			DB.StoreSalary(self, v.salary)
