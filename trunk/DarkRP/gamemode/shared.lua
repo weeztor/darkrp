@@ -51,4 +51,3 @@ Make your own wooden home somewhere in a corner or
 outside someone else's door]], {"weapon_bugbait"}, "hobo", 5, 0, 0, false)
 			//No extra weapons           say /hobo to become hobo  Maximum hobo's = 5		his salary = 0 because hobo's don't earn money.          0 = everyone can become hobo ,      false = you don't have to vote to become hobo
 //ADD TEAMS HERE:
-AddExtraTeam("minge", Color(0, 130, 255, 255), "models/player/soldier_stripped.mdl", [[Weird guy]], {"weapon_possessor", "stunstick"}, "minge",1, 999, 0, true)
