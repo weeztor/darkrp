@@ -28,8 +28,6 @@ function vote:Create(question, voteid, ent, delay, callback)
 		Notify(ply, 1, 3, "You're the only one in the server so you won the vote")
 		callback(1, ent)
 		return
-	else
-		Notify(ply, 1, 3, "Vote Created")
 	end
 	local newvote = { }
 	for k, v in pairs(Vote) do newvote[k] = v end

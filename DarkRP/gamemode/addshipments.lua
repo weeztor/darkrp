@@ -1,5 +1,20 @@
 CustomShipments = {}
 function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shipment)
+	if not name or not model or not entity or not price or not Amount_of_guns_in_one_shipment then
+		local text = "One of the custom shipments is wrongly made! Attempt to give name of the wrongly made shipment!(if it's nil then I failed):\n" .. tostring(name)
+		print(text)
+		hook.Add("PlayerSpawn", "ShipmentError", function(ply)
+			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end end)		
+		return
+	end
+	if not util.IsValidModel(model) then
+		local text = "The model of shipment "..name.." is incorrect! cannot create custom shipment!"
+		print(text) 
+		hook.Add("PlayerSpawn", "ShipmentError", function(ply)
+			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end end)		
+		return
+	end
+	local price = tonumber(price)
 	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment})
 end
 
@@ -42,4 +57,4 @@ EXAMPLES OF CUSTOM SHIPMENTS(remove the -- to activate it): */
 --AddCustomShipment("medkit", "models/Combine_Helicopter/helicopter_bomb01.mdl", "item_healthkit", 100, 10)
 --EXAMPLE OF A BOUNCY BALL:   		NOTE THAT YOU HAVE TO PRESS E REALLY QUICKLY ON THE BOMB OR YOU'LL EAT THE BALL LOL
 --AddCustomShipment("bball", "models/Combine_Helicopter/helicopter_bomb01.mdl", "sent_ball", 100, 10)
-
+-- ADD CUSTOM SHIPMENTS HERE:
