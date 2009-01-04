@@ -119,7 +119,7 @@ meta.GetName = meta.Name
 RPArrestedPlayers = {}
 
 DeriveGamemode("sandbox")
-
+AddCSLuaFile("addshipments.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("cl_vgui.lua")
@@ -161,6 +161,7 @@ include("entity.lua")
 include("bannedprops.lua")
 include("hints.lua")
 include("servercontrol.lua")
+include("addshipments.lua")
 
 AddHelpCategory(HELP_CATEGORY_CHATCMD, "Chat Commands")
 AddHelpCategory(HELP_CATEGORY_CONCMD, "Console Commands")

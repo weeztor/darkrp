@@ -802,13 +802,23 @@ function BuyShipment(ply, args)
 	for k, v in pairs(rifleWeights) do
 		if k == args then found = true end
 	end
+	for k,v in pairs(CustomShipments) do
+		if string.lower(args) == string.lower(v.name) then
+			found = v
+		end
+	end
 	
 	if not found then
 		Notify(ply, 1, 4, "Weapon not available!")
 		return ""
 	end
-
-	local cost = GetGlobalInt(args .. "cost")
+	
+	local cost
+	if found == true then
+		cost = GetGlobalInt(args .. "cost")
+	else
+		cost = found.price
+	end
 	
 	if not ply:CanAfford(cost) then
 		Notify(ply, 1, 4, "Can not afford this!")
@@ -818,7 +828,11 @@ function BuyShipment(ply, args)
 	ply:AddMoney(-cost)
 	Notify(ply, 1, 4, "You bought a Shipment of " .. args .. "s for " .. CUR .. tostring(cost))
 	local crate = ents.Create("spawned_shipment")
-	crate:SetContents(args, 10, rifleWeights[args])
+	if found == true then
+		crate:SetContents(args, 10, rifleWeights[args])
+	else
+		crate:SetContents(args, found.amount, found.weight)
+	end
 	crate:SetPos(Vector(tr.HitPos.x, tr.HitPos.y, tr.HitPos.z))
 	crate.nodupe = true
 	crate:Spawn()

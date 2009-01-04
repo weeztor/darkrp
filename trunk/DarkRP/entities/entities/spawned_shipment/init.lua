@@ -21,6 +21,11 @@ weaponClasses["shotgun"]["weapon_pumpshotgun2"] = "models/weapons/w_shot_m3super
 weaponClasses["sniper"] = {}
 weaponClasses["sniper"]["ls_sniper"] = "models/weapons/w_snip_g3sg1.mdl"
 
+for k,v in pairs(CustomShipments) do
+	weaponClasses[v.name] = {}
+	weaponClasses[v.name][v.entity] = v.model
+end
+
 function ENT:Initialize()
 	self.Entity.Destructed = false
 	self.Entity:SetModel("models/Items/item_item_crate.mdl")
