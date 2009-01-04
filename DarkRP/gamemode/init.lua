@@ -107,6 +107,7 @@ CUR = "$"
 -- philxyz: For these and future changes, please refer to changelog.txt
 
 -- RP Name Overrides
+
 local meta = FindMetaTable("Player")
 meta.SteamName = meta.Name
 meta.Name = function(self)
@@ -115,6 +116,7 @@ end
 meta.Nick = meta.Name
 meta.GetName = meta.Name
 -- End
+RPArrestedPlayers = {}
 
 DeriveGamemode("sandbox")
 

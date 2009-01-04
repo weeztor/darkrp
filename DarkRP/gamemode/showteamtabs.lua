@@ -557,7 +557,12 @@ function JobsTab()
 					if #v.Weapons > 0 then
 						weps = table.concat(v.Weapons, "\n")
 					end
-					AddIcon(v.model, v.name, v.Des, weps, "/"..v.command)
+					if v.Vote then
+						local condition = (v.admin == 0 and LocalPlayer():IsAdmin()) or (v.admin == 1 and LocalPlayer():IsSuperAdmin()) or (v.admin < 2)
+						AddIcon(v.model, v.name, v.Des, weps, "/vote"..v.command, condition, "/"..v.command)
+					else
+						AddIcon(v.model, v.name, v.Des, weps, "/"..v.command)
+					end
 				end
 			end
 		end
