@@ -1964,14 +1964,7 @@ function refwait()
 end
 
 function GM:PhysgunPickup(ply, ent)
-	if ent:IsPlayer() or ent:IsDoor() then return false end
-
-/*	local class = ent:GetClass()
-
-	if class ~= "func_physbox" and class ~= "prop_physics" and class ~= "prop_physics_multiplayer" and
-		class ~= "prop_vehicle_prisoner_pod" then
-		return false
-	end*/
+	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then return false end
 	return
 end
 
