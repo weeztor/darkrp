@@ -5,7 +5,7 @@ local zombieOn = false
 local maxZombie = 10
 
 RPArrestedPlayersPositions = {}
-RPArrestedPlayers = {}
+
 
 VoteCopOn = false
 
@@ -1756,18 +1756,76 @@ end
 AddChatCommand("/cook", MakeCook)
 
 for k,v in pairs(RPExtraTeams) do
-	AddChatCommand("/"..v.command, function(ply)
-		if v.admin == 1 and not ply:IsAdmin() then
-			Notify(ply, 1, 4, "You must be an admin to become "..v.name.."!")
+	if v.Vote then
+		AddChatCommand("/vote"..v.command, function(ply)
+			if #player.GetAll() == 1 then
+				Notify(ply, 1, 3, "You're the only one in the server so you won the vote")
+				ply:ChangeTeam(k+9)
+				return ""
+			end
+			if not ply:ChangeAllowed(9 + k) then
+				Notify(ply, 1, 4, "You were demoted! Please wait a while before taking your old job back.")
+				return ""
+			end
+			if CurTime() - ply:GetTable().LastVoteCop < 80 then
+				Notify(ply, 1, 4, "Wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before using /vote"..v.command.."!")
+				return ""
+			end
+			if VoteCopOn then
+				Notify(ply, 1, 4,  "There is already a vote!")
+				return ""
+			end
+			if ply:Team() == (k + 9) then
+				Notify(ply, 1, 4,  "You're already "..v.name.."!")
+				return ""
+			end
+			if team.NumPlayers(9 + k) >= v.max then
+				Notify(ply, 1, 4,  "There can only be "..tostring(v.max).." "..v.name.." at a time!")
+				return ""
+			end
+			vote:Create(ply:Nick() .. ":\nwants to be "..v.name, ply:EntIndex() .. "votecop", ply, 12, function()
+				VoteCopOn = false
+				if choice == 1 then
+					ply:ChangeTeam(k + 9)
+				else
+					NotifyAll(1, 4, ply:Nick() .. " has not been made "..v.name.."!")
+				end
+			end)
+			ply:GetTable().LastVoteCop = CurTime()
+			VoteCopOn = true
 			return ""
-		end
-		if v.admin > 1 and not ply:IsSuperAdmin() then
-			Notify(ply, 1, 4, "You must be a super admin to become "..v.name.."!")
+		end)
+		AddChatCommand("/"..v.command, function(ply)
+			if v.admin == 0 and not ply:IsAdmin() then
+				Notify(ply, 1, 4, "You must be an admin/make a vote to become "..v.name.."!")
+				return ""
+			elseif v.admin == 1 and ply:IsAdmin() and not ply:IsSuperAdmin() then
+				Notify(ply, 1, 4, "You have to make a vote to become "..v.name.."!")
+				return ""
+			elseif v.admin == 2 and ply:IsSuperAdmin() then
+				Notify(ply, 1, 4, "You have to make a vote to become "..v.name.."!")
+				return ""
+			elseif v.admin == 2 and ply:IsAdmin() then
+				Notify(ply, 1, 4, "You can't become "..v.name.."!")
+				return "" 
+			end
+			ply:ChangeTeam(9 + k)
 			return ""
-		end
-		ply:ChangeTeam(9 + k)
-		return ""
-	end)
+		end)
+	else
+		AddChatCommand("/"..v.command, function(ply)
+			if v.admin == 1 and not ply:IsAdmin() then
+				Notify(ply, 1, 4, "You must be an admin to become "..v.name.."!")
+				return ""
+			end
+			if v.admin > 1 and not ply:IsSuperAdmin() then
+				Notify(ply, 1, 4, "You must be a super admin to become "..v.name.."!")
+				return ""
+			end
+			ply:ChangeTeam(9 + k)
+			return ""
+		end)
+	end
 end
 
 function CombineRequest(ply, args)

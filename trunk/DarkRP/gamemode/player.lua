@@ -1,3 +1,7 @@
+if not RPArrestedPlayers then
+	RPArrestedPlayers {}
+end
+
 CivModels = {
 	"models/player/group01/male_02.mdl"
 }

@@ -687,6 +687,16 @@ for k,v in pairs(RPExtraTeams) do
 			ply:PrintMessage(2, "You're not a super admin!")
 			return
 		end
+		
+		if v.Vote then
+			if v.admin == 1 and not ply:IsSuperAdmin() then
+				ply:PrintMessage(2, "You're not a super admin!")
+				return
+			elseif v.admin > 1 and ply:IsSuperAdmin() then
+				ply:PrintMessage(2, "You cannot make anyone "..v.name.." because voting is on and admin is set to super admin. Make a vote...")
+				return
+			end
+		end
 		local target = FindPlayer(args[1])
 		
         if (target) then

@@ -24,8 +24,8 @@ team.SetUp(TEAM_CHIEF, "Civil Protection Chief", Color(20, 20, 255, 255))
 //team.SetUp(TEAM_HOBO, "Hobo", Color(80, 45, 0, 255))
 
 RPExtraTeams = {}
-function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin)
-	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0})
+function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote)
+	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote)})
 	team.SetUp(9 + #RPExtraTeams, Name, color)
 end
 
@@ -38,16 +38,16 @@ You can make extra classes here. Set everything up here and the rest will be don
 Ok here's how:
 
 To make an extra class do this:
-AddExtraTeam( "<NAME OF THE CLASS>", Color(<red>, <Green>, <blue>, 255), "<Player model>" , [[<the description(it can have enters)>]], { "<first extra weapon>","<second extra weapon>", etc...}, "<chat command to become it(WITHOUT THE /!)>", <maximum amount of this team> <the salary he gets>, 0/1/2 = public /admin only / superadmin only)
+AddExtraTeam( "<NAME OF THE CLASS>", Color(<red>, <Green>, <blue>, 255), "<Player model>" , [[<the description(it can have enters)>]], { "<first extra weapon>","<second extra weapon>", etc...}, "<chat command to become it(WITHOUT THE /!)>", <maximum amount of this team> <the salary he gets>, 0/1/2 = public /admin only / superadmin only, <1/0/true/false Do you have to vote to become it>)
 
 The real example is here: it's the Hobo:		*/
 
 			//The name    the color(what you see in tab)                   the player model					The description
 AddExtraTeam("Hobo", Color(80, 45, 0, 255), "models/player/corpse1.mdl", [[The lowest member of society. All people see you laugh. 
-			You have no home.
-			Beg for your food and money
-			Sing for everyone who passes to get money
-			Make your own wooden home somewhere in a corner or 
-			outside someone else's door]], {}, "hobo", 5, 0, 0)
-						      //No extra weapons           say /hobo to become hobo  Maximum hobo's = 5		his salary = 0 because hobo's don't earn money.          0 = everyone can become hobo
-							  
+You have no home.
+Beg for your food and money
+Sing for everyone who passes to get money
+Make your own wooden home somewhere in a corner or 
+outside someone else's door]], {}, "hobo", 5, 0, 0, false)
+			//No extra weapons           say /hobo to become hobo  Maximum hobo's = 5		his salary = 0 because hobo's don't earn money.          0 = everyone can become hobo ,      false = you don't have to vote to become hobo
+//ADD TEAMS HERE:
