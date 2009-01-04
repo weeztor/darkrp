@@ -831,7 +831,7 @@ function BuyShipment(ply, args)
 	if found == true then
 		crate:SetContents(args, 10, rifleWeights[args])
 	else
-		crate:SetContents(args, found.amount, found.weight)
+		crate:SetContents(found.name, found.amount, found.weight)
 	end
 	crate:SetPos(Vector(tr.HitPos.x, tr.HitPos.y, tr.HitPos.z))
 	crate.nodupe = true
