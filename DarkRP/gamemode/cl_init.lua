@@ -62,6 +62,7 @@ include("cl_scoreboard.lua")
 include("cl_deathnotice.lua")
 include("cl_helpvgui.lua")
 include("showteamtabs.lua")
+include("addshipments.lua")
 
 surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
 

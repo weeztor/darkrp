@@ -634,6 +634,9 @@ function EntitiesTab()
 						AddEntIcon("models/weapons/w_smg_mp5.mdl", "Buy an mp5 shipment " .. CUR .. tostring(GetGlobalInt("mp5cost")), "/buyshipment mp5")
 						AddEntIcon("models/weapons/w_shot_m3super90.mdl", "Buy a shotgun shipment " .. CUR .. tostring(GetGlobalInt("shotguncost")), "/buyshipment shotgun")
 						AddEntIcon("models/weapons/w_smg_mac10.mdl", "Buy a mac10 shipment " .. CUR .. tostring(GetGlobalInt("mac10cost")), "/buyshipment mac10")
+						for k,v in pairs(CustomShipments) do
+							AddEntIcon(v.model, "Buy a "..v.name.." shipment " .. CUR .. tostring(v.price), "/buyshipment "..v.name)
+						end
 					elseif LocalPlayer():Team() == TEAM_COOK then
 						AddEntIcon("models/props/cs_office/microwave.mdl", "Buy a microwave " .. CUR .. tostring(GetGlobalInt("microwavecost")) , "/Buymicrowave")
 					end
