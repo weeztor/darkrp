@@ -1797,7 +1797,7 @@ for k,v in pairs(RPExtraTeams) do
 				Notify(ply, 1, 4,  "There can only be "..tostring(v.max).." "..v.name.." at a time!")
 				return ""
 			end
-			vote:Create(ply:Nick() .. ":\nwants to be "..v.name, ply:EntIndex() .. "votecop", ply, 12, function()
+			vote:Create(ply:Nick() .. ":\nwants to be "..v.name, ply:EntIndex() .. "votecop", ply, 12, function(choice, ply)
 				VoteCopOn = false
 				if choice == 1 then
 					ply:ChangeTeam(k + 9)
