@@ -227,6 +227,10 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 				SPropProtection.Nofity(ply, "Weapons are attached to your prop")
 				return false
 			end
+			local class = v:GetClass()
+			if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
+				return false
+			end
 			for a,b in pairs(AntiCopy) do
 				if string.find(v:GetClass(), b) then
 					//SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
@@ -335,6 +339,10 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 			SPropProtection.Nofity(ply, "Weapons are attached to your prop")
 			return false
 		end
+		local class = v:GetClass()
+		if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
+			return false
+		end
 		for a,b in pairs(AntiCopy) do
 			if string.find(v:GetClass(), b) then
 				SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
@@ -388,6 +396,10 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 		if v ~= ent then
 			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
 				SPropProtection.Nofity(ply, "Weapons are attached to your prop")
+				return false
+			end
+			local class = v:GetClass()
+			if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
 				return false
 			end
 			for a,b in pairs(AntiCopy) do
