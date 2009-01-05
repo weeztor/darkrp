@@ -25,7 +25,7 @@ vote = { }
 
 function vote:Create(question, voteid, ent, delay, callback)
 	if #player.GetAll() == 1 then
-		Notify(ply, 1, 3, "You're the only one in the server so you won the vote")
+		Notify(ent, 1, 3, "You're the only one in the server so you won the vote")
 		callback(1, ent)
 		return
 	end
@@ -41,7 +41,9 @@ function vote:Create(question, voteid, ent, delay, callback)
 	newvote[2] = 0
 
 	Votes[voteid] = newvote
-
+	if ent:IsPlayer() then
+		Notify(ent,1,4, "Vote created")
+	end
 	umsg.Start("DoVote")
 		umsg.String(question)
 		umsg.String(voteid)
@@ -58,6 +60,7 @@ function vote.DestroyVotesWithEnt(ent)
 			umsg.End()
 
 			Votes[k] = nil
+			VoteCopOn = false
 		end
 	end
 end
