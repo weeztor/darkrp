@@ -1964,6 +1964,8 @@ function refwait()
 end
 
 function GM:PhysgunPickup(ply, ent)
+	if not ValidEntity(ent) then return false end
+	local class = ent:GetClass()
 	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then return false end
 	return
 end
