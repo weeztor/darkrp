@@ -4,11 +4,10 @@
 ------------------------------------
 
 SPropProtection["Props"] = {}
-local AntiCopy = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
+local AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
 for k,v in pairs(weapons.GetList()) do
 	table.insert(AntiCopy, v.Classname)
 end
-local NotAllowedToPickUp = {"func_breakable_surf"}
 
 
 function SPropProtection.SetupSettings()
@@ -212,13 +211,13 @@ function SPropProtection.Disconnect(ply)
 	end
 end
 hook.Add("PlayerDisconnected", "SPropProtection.Disconnect", SPropProtection.Disconnect)
-
+//a
 function SPropProtection.PhysGravGunPickup(ply, ent)
 	if not ValidEntity(ent) then return end
 	local class = ent:GetClass()
-	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then return false end
-	for k,v in pairs(NotAllowedToPickUp) do
-		if ent:GetClass() == v then return false end
+	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf") then return false end
+	for k,v in pairs(AntiCopy) do
+		if ent:GetClass() == v and not ply:IsAdmin() then return false end
 	end
 	
 	for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
@@ -256,6 +255,11 @@ hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropPr
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
 //v:UniqueIDTable( "Duplicator" ).Entities
 function SPropProtection.CanTool(ply, tr, toolgun)
+	if(tr.HitWorld) then return end
+	local ent = tr.Entity
+	for k,v in pairs(AntiCopy) do
+		if ent:GetClass() == v then return false end
+	end
 	if string.find(toolgun, "duplicator") then
 		//NORMAL DUPLICATOR
 		local Ents = ply:UniqueIDTable( "Duplicator" ).Entities
@@ -291,12 +295,8 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 			end
 		end
 	end
-	if(tr.HitWorld) then return end
-	ent = tr.Entity
+	
 	if(!ent:IsValid() or ent:IsPlayer() or ent:IsWeapon()) then return false end
-	for k,v in pairs(NotAllowedToPickUp) do
-		if ent:GetClass() == v then return false end
-	end
 	if ent:IsWeapon() or string.find(ent:GetClass(), "weapon") then return end
 		
 	if(!SPropProtection.PlayerCanTouch(ply, ent)) then
