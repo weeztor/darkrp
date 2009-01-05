@@ -1964,9 +1964,17 @@ function refwait()
 end
 
 function GM:PhysgunPickup(ply, ent)
+	self.BaseClass:PhysgunPickup(ply,ent)
 	if not ValidEntity(ent) then return false end
 	local class = ent:GetClass()
-	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then return false end
+	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf") then return false end
+	if not SPropProtection then
+		local AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
+		for k,v in pairs(AntiCopy) do
+			if class == v and not ply:IsAdmin() then return false end
+		end
+		return true
+	end
 	return
 end
 
