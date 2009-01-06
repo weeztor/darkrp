@@ -281,7 +281,7 @@ function KeysMenu(Vehicle)
 		local Frame = vgui.Create("DFrame")
 		local CPOnly = trace.Entity:GetNWBool("CPOwnable")
 		KeyFrameVisible = true
-		Frame:SetSize(200, 360)
+		Frame:SetSize(200, 470)
 		Frame:Center()
 		Frame:SetVisible(true)
 		Frame:MakePopup()
@@ -346,6 +346,17 @@ function KeysMenu(Vehicle)
 					menu:AddOption("Noone available", function() end)
 				end
 				menu:Open()
+			end
+			
+			local DoorTitle = vgui.Create("DButton", Frame)
+			DoorTitle:SetPos(10, 360)
+			DoorTitle:SetSize(180, 100)
+			DoorTitle:SetText("Set door title")
+			if not trace.Entity:IsMasterOwner(LocalPlayer()) then
+				RemoveOwner.m_bDisabled = true
+			end
+			DoorTitle.DoClick = function()
+				Derma_StringRequest("Set door title", "Set the title of the door you're looking at", "", function(text) LocalPlayer():ConCommand("say /title "..text) Frame:Close() end, function() end, "OK!", "CANCEL!")
 			end
 			
 			if LocalPlayer():IsSuperAdmin() then
