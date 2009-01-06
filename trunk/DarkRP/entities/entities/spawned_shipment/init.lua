@@ -109,8 +109,6 @@ function ENT:Destruct()
 	local vPoint = self.Entity:GetPos()
 	local contents = self.Entity:GetNWString("contents")
 	local count = self.Entity:GetNWInt("count")
-	self.Entity:Remove()
-	
 	local class = nil
 	local model = nil
 	
@@ -132,4 +130,5 @@ function ENT:Destruct()
 		weapon.nodupe = true
 		weapon:Spawn()
 	end
+	self.Entity:Remove()
 end
