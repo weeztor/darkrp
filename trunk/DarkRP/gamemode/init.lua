@@ -226,6 +226,7 @@ CfgVars["deathblack"] = 1 -- Whether or not players see black when dead
 CfgVars["norespawn"] = 1 -- Whether people have to respawn when they change job or not
 CfgVars["advertisements"] = 1--chatprint advertisements
 CfgVars["copscanunfreeze"] = 1 
+CfgVars["removeclassitems"] = 1
 
 -- You can set the exact value of the below items:
 

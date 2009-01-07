@@ -199,6 +199,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_customjobs - Enable/disable the 
 AddToggleCommand("rp_copscanunfreeze", "copscanunfreeze", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_copscanunfreeze - Enable/disable the ability of cops to freeze other people's props")
 
+AddToggleCommand("rp_removeclassitems",  "removeclassitems", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_removeclassitems - Enable/disable shipments/microwaves/etc. removal when someone changes team.")
+
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
