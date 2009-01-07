@@ -602,6 +602,12 @@ function EntitiesTab()
 					AddIcon("models/weapons/w_pist_fiveseven.mdl", "Buy a fiveseven: " .. CUR .. tostring(GetGlobalInt("fivesevencost")), "/Buypistol fiveseven")
 					AddIcon("models/weapons/w_pist_p228.mdl", "Buy a P228: " .. CUR .. tostring(GetGlobalInt("p228cost")), "/Buypistol p228")
 					
+					for k,v in pairs(CustomShipments) do
+						if v.seperate then
+							AddIcon(v.model, "Buy a "..v.name..": "..CUR..v.pricesep, "/buypistol "..v.name)
+						end
+					end
+					
 					AddIcon("models/Items/BoxSRounds.mdl", "Buy pistol ammo: " .. CUR .. tostring(GetGlobalInt("ammopistolcost")), "/buyammo pistol")
 					AddIcon("models/Items/BoxMRounds.mdl", "Buy rifle ammo: " .. CUR .. tostring(GetGlobalInt("ammoriflecost")), "/buyammo rifle")
 					AddIcon("models/Items/BoxBuckshot.mdl", "Buy shotgun ammo: " .. CUR .. tostring(GetGlobalInt("ammoshotguncost")), "/buyammo shotgun")

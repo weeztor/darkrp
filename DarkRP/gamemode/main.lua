@@ -708,6 +708,7 @@ buyPistols["glock"]["weapon_glock2"] = "models/weapons/w_pist_glock18.mdl"
 buyPistols["p228"] = {}
 buyPistols["p228"]["weapon_p2282"] = "models/weapons/w_pist_p228.mdl"
 
+
 function BuyPistol(ply, args)
 	if args == "" then return "" end
 
@@ -739,17 +740,29 @@ function BuyPistol(ply, args)
 			end
 		end
 	end
+	local custom = false
+	local price = 0
+	for k,v in pairs(CustomShipments) do
+		if v.seperate and v.name == args then
+			custom = true
+			class = v.entity
+			model = v.model
+			price = v.pricesep
+		end
+	end
 	
 	if not class then
 		Notify(ply, 1, 4, "Weapon not available!")
 		return ""
 	end
 	
-	local price = 0
-	if ply:Team() == TEAM_GUN then
-		price = math.ceil(GetGlobalInt(args .. "cost") * 0.88)
-	else
-		price = GetGlobalInt(args .. "cost")
+	
+	if not custom then
+		if ply:Team() == TEAM_GUN then
+			price = math.ceil(GetGlobalInt(args .. "cost") * 0.88)
+		else
+			price = GetGlobalInt(args .. "cost")
+		end
 	end
 	
 	if not ply:CanAfford(price) then
