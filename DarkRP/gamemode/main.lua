@@ -828,6 +828,7 @@ function BuyShipment(ply, args)
 	ply:AddMoney(-cost)
 	Notify(ply, 1, 4, "You bought a Shipment of " .. args .. "s for " .. CUR .. tostring(cost))
 	local crate = ents.Create("spawned_shipment")
+	crate.SID = ply.SID
 	if found == true then
 		crate:SetContents(args, 10, rifleWeights[args])
 	else

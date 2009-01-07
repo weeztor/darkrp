@@ -27,6 +27,7 @@ RPExtraTeams = {}
 function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote)
 	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote)})
 	team.SetUp(9 + #RPExtraTeams, Name, color)
+	return 9 + #RPExtraTeams
 end
 
 /*
@@ -43,7 +44,7 @@ AddExtraTeam( "<NAME OF THE CLASS>", Color(<red>, <Green>, <blue>, 255), "<Playe
 The real example is here: it's the Hobo:		*/
 
 			//The name    the color(what you see in tab)                   the player model					The description
-AddExtraTeam("Hobo", Color(80, 45, 0, 255), "models/player/corpse1.mdl", [[The lowest member of society. All people see you laugh. 
+TEAM_HOBO = AddExtraTeam("Hobo", Color(80, 45, 0, 255), "models/player/corpse1.mdl", [[The lowest member of society. All people see you laugh. 
 You have no home.
 Beg for your food and money
 Sing for everyone who passes to get money

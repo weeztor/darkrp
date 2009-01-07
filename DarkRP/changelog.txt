@@ -12,6 +12,7 @@ Updated by: FPtje Falco
 [ADD] rp_hungerspeed command: it's the speed of hunger divided by 10( standard = 7)
 [ADD] Admins can choose to make a vote or not to make a vote to become cop/mayor
 [ADD] The ability to make custom shipments
+[ADD] Console command to remove class specified entities when someone changes class.(Like microwaves get removed when a cook changes to like the hobo): rp_removeclassitems
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins

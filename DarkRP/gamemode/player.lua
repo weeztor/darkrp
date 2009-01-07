@@ -350,7 +350,20 @@ function meta:ChangeTeam(t)
 			self:SetModel(v.model)
 		end
 	end
-
+	
+	print(CfgVars["removeclassitems"])
+	if CfgVars["removeclassitems"] == 1 then
+		print(self.SID)
+		for k, v in pairs(ents.FindByClass("microwave")) do
+			if v.SID == self.SID then v:Remove() end
+		end
+		for k, v in pairs(ents.FindByClass("gunlab")) do
+			if v.SID == self.SID then v:Remove() end
+		end
+		for k,v in pairs(ents.FindByClass("spawned_shipment")) do
+			if v.SID == self.SID then v:Remove() end
+		end
+	end
 
 	self:SetTeam(t)
 	if self:InVehicle() then self:ExitVehicle() end
