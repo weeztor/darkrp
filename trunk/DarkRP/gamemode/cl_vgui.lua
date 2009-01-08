@@ -24,6 +24,11 @@ end
 function MsgDoVote(msg)
 	local question = msg:ReadString()
 	local voteid = msg:ReadString()
+	local timeleft = msg:ReadFloat() // 30
+	if timeleft == 0 then
+		timeleft = 100
+	end
+	local OldTime = CurTime() // 100  Nieuw = 110
 	if string.find(voteid, LocalPlayer():EntIndex()) then return end //If it's about you then go away
 	local inputenabled = false
 
@@ -31,10 +36,22 @@ function MsgDoVote(msg)
 		inputenabled = true
 	end
 
-	local panel = vgui.Create("Frame")
+	local panel = vgui.Create("DFrame")
 	panel:SetPos(3, ScrH() / 2 - 50)
 	panel:SetName("Panel")
-	panel:LoadControlsFromString([[
+	panel:SetTitle("Vote")
+	panel:SetSize(140, 140)
+	panel:SetSizable(false)
+	panel.btnClose:SetVisible(false)
+	panel:SetDraggable(false)
+	
+	function panel:Think()
+		self:SetTitle("Time: ".. tostring(math.ceil(timeleft - (CurTime() - OldTime))))
+		if timeleft - (CurTime() - OldTime) < 0 then 
+			KillVoteVGUI(voteid)
+		end
+	end
+	/*panel:LoadControlsFromString([[
 		"VotePanel"
 		{
 			"Panel"
@@ -48,7 +65,7 @@ function MsgDoVote(msg)
 				"title" "Vote"
 			}
 		}
-	]])
+	]]) */
 	panel:SetKeyboardInputEnabled(false)
 	panel:SetMouseInputEnabled(inputenabled)
 	panel:SetVisible(true)

@@ -4,10 +4,11 @@
 ------------------------------------
 
 SPropProtection["Props"] = {}
-local AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
+SPropProtection.AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
 for k,v in pairs(weapons.GetList()) do
-	table.insert(AntiCopy, v.Classname)
+	table.insert(SPropProtection.AntiCopy, v.Classname)
 end
+//PrintTable(SPropProtection.AntiCopy)
 
 
 function SPropProtection.SetupSettings()
@@ -216,7 +217,7 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 	if not ValidEntity(ent) then return end
 	local class = ent:GetClass()
 	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf") then return false end
-	for k,v in pairs(AntiCopy) do
+	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v and not ply:IsAdmin() then return false end
 	end
 	
@@ -230,7 +231,7 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 			if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
 				return false
 			end
-			for a,b in pairs(AntiCopy) do
+			for a,b in pairs(SPropProtection.AntiCopy) do
 				if string.find(v:GetClass(), b) then
 					//SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
 					return false
@@ -263,7 +264,7 @@ function SPropProtection.GravGunThings(ply, ent)
 		timer.Simple(.01, ent.SetPos, ent, curpos)
 	end
 	if not ValidEntity(ent) then return true end
-	for k,v in pairs(AntiCopy) do
+	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v then return true end
 	end
 	if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then return true end
@@ -278,10 +279,9 @@ hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.GravGunTh
 hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropProtection.GravGunThings)
 //v:UniqueIDTable( "Duplicator" ).Entities
 function SPropProtection.CanTool(ply, tr, toolgun)
-	if(tr.HitWorld) then return end
 	local ent = tr.Entity
-	for k,v in pairs(AntiCopy) do
-		if ent:GetClass() == v then return false end
+	for k,v in pairs(SPropProtection.AntiCopy) do
+		if ValidEntity(ent) and ent:GetClass() == v then return false end
 	end
 	if string.find(toolgun, "duplicator") then
 		//NORMAL DUPLICATOR
@@ -293,7 +293,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 					ply:UniqueIDTable( "Duplicator" ).Entities = nil
 					return false
 				end
-				for a,b in pairs(AntiCopy) do 
+				for a,b in pairs(SPropProtection.AntiCopy) do 
 					if ValidEntity(v.Entity) and string.find(v.Entity:GetClass(), b) then
 						SPropProtection.Nofity(ply, "YOU ARE NOT ALLOWED TO DUPLICATE THIS ENTITY!!!!!")
 						ply:UniqueIDTable( "Duplicator" ).Entities = nil
@@ -304,10 +304,11 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		end
 		
 		//ADVANCED DUPLICATOR:
+		print(toolgun, ply:GetActiveWeapon():GetToolObject().Entities)
 		if toolgun == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 			for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 				for a, b in pairs(v) do
-					for c,d in pairs(AntiCopy) do 
+					for c,d in pairs(SPropProtection.AntiCopy) do 
 						if v.Class and string.find(string.lower(v.Class), string.lower(d)) then
 							SPropProtection.Nofity(ply,"YOU ARE NOT ALLOWED TO DUPLICATE THIS!!!!!!!!")
 							ply:GetActiveWeapon():GetToolObject():ClearClipBoard()
@@ -319,8 +320,8 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		end
 	end
 	
-	if(!ent:IsValid() or ent:IsPlayer() or ent:IsWeapon()) then return false end
-	if ent:IsWeapon() or string.find(ent:GetClass(), "weapon") then return end
+	if(ValidEntity(ent) and (ent:IsPlayer() or ent:IsWeapon())) then return false end
+	if ValidEntity(ent) and (ent:IsWeapon() or string.find(ent:GetClass(), "weapon")) then return false end
 		
 	if(!SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
@@ -349,7 +350,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 				SPropProtection.Nofity(ply, "Error, please change the angle of the prop and try again")
 				return false
 			end
-			for k,v in pairs(AntiCopy) do
+			for k,v in pairs(SPropProtection.AntiCopy) do
 				if tr3.Entity:GetClass() == v then
 					SPropProtection.Nofity(ply, "Error, please change the angle of the prop and try again")
 					return false
@@ -357,24 +358,26 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 			end
 		end  ]]
 	end
-	for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-		if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
-			SPropProtection.Nofity(ply, "Weapons are attached to your prop")
-			return false
-		end
-		local class = v:GetClass()
-		if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
-			return false
-		end
-		for a,b in pairs(AntiCopy) do
-			if string.find(v:GetClass(), b) then
-				SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
+	if ValidEntity(ent) then
+		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
+			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
+				SPropProtection.Nofity(ply, "Weapons are attached to your prop")
 				return false
 			end
-		end
-		if not SPropProtection.PlayerCanTouch(ply, v) then
-			SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
-			return false
+			local class = v:GetClass()
+			if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
+				return false
+			end
+			for a,b in pairs(SPropProtection.AntiCopy) do
+				if string.find(v:GetClass(), b) then
+					SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
+					return false
+				end
+			end
+			if not SPropProtection.PlayerCanTouch(ply, v) then
+				SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
+				return false
+			end
 		end
 	end
 end
@@ -401,7 +404,7 @@ function SPropProtection.PlayerUse(ply, ent)
 	if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
 		return true
 	end
-	for k,v in pairs(AntiCopy) do 
+	for k,v in pairs(SPropProtection.AntiCopy) do 
 		if ent:GetClass() == v then	
 			return true
 		end
@@ -432,7 +435,7 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 			if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
 				return false
 			end
-			for a,b in pairs(AntiCopy) do
+			for a,b in pairs(SPropProtection.AntiCopy) do
 				if string.find(v:GetClass(), b) then
 					SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
 					return false

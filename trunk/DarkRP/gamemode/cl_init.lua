@@ -172,6 +172,11 @@ local Healthforegroundg = CreateClientConVar("Healthforegroundg", 0, true, false
 local Healthforegroundb = CreateClientConVar("Healthforegroundb", 0, true, false)
 local Healthforegrounda = CreateClientConVar("Healthforegrounda", 180, true, false)
 
+local HealthTextr = CreateClientConVar("HealthTextr", 255, true, false)
+local HealthTextg = CreateClientConVar("HealthTextg", 255, true, false)
+local HealthTextb = CreateClientConVar("HealthTextb", 255, true, false)
+local HealthTexta = CreateClientConVar("HealthTexta", 200, true, false)
+
 local Job1r = CreateClientConVar("Job1r", 0, true, false)
 local Job1g = CreateClientConVar("Job1g", 0, true, false)
 local Job1b = CreateClientConVar("Job1b", 0, true, false)
@@ -192,31 +197,35 @@ local salary2g = CreateClientConVar("salary2g", 150, true, false)
 local salary2b = CreateClientConVar("salary2b", 0, true, false)
 local salary2a = CreateClientConVar("salary2a", 255, true, false)
 
+local HUDwidth = CreateClientConVar("HudWidth", 190, true, false)
+local HUDHeight = CreateClientConVar("HudHeight", 10, true, false)
+
 function GM:HUDPaint()
 	self.BaseClass:HUDPaint()
 
 	local hx = 9
-	local hy = ScrH() - 25
-	local hw = 190
-	local hh = 10
+	local hy = ScrH() - (HUDHeight:GetInt() + 20)
+	local hw = HUDwidth:GetInt()
+	local hh = HUDHeight:GetInt()//10
 	
 	if LocalPlayer():GetActiveWeapon().IAmControlling then return end
 	local backgroundcolor = Color(backgroundr:GetInt(), backgroundg:GetInt(), backgroundb:GetInt(), backgrounda:GetInt())
 	local Healthbackgroundcolor = Color(Healthbackgroundr:GetInt(), Healthbackgroundg:GetInt(), Healthbackgroundb:GetInt(), Healthbackgrounda:GetInt())
 	local Healthforegroundcolor = Color(Healthforegroundr:GetInt(), Healthforegroundg:GetInt(), Healthforegroundb:GetInt(), Healthforegrounda:GetInt())
+	local HealthTextColor = Color( HealthTextr:GetInt(), HealthTextg:GetInt(), HealthTextb:GetInt(), HealthTexta:GetInt())
 	draw.RoundedBox(6, hx - 8, hy - 90, hw + 30, hh + 110, backgroundcolor)
 
 	draw.RoundedBox(6, hx - 4, hy - 4, hw + 8, hh + 8, Healthbackgroundcolor)
 
 	if LocalPlayer():Health() > 0 then
-		draw.RoundedBox(4, hx, hy, math.Clamp(hw * (LocalPlayer():Health() / 100), 0, 190), hh, Healthforegroundcolor)
+		draw.RoundedBox(4, hx, hy, math.Clamp(hw * (LocalPlayer():Health() / 100), 0, hw), hh, Healthforegroundcolor)
 	end
 
 	local job1color = Color(Job1r:GetInt(), Job1g:GetInt(), Job1b:GetInt(), Job1a:GetInt())
 	local job2color = Color(Job2r:GetInt(), Job2g:GetInt(), Job2b:GetInt(), Job2a:GetInt())
 	local Salary1color = Color(salary1r:GetInt(), salary1g:GetInt(), salary1b:GetInt(), salary1a:GetInt())
 	local Salary2color = Color(salary2r:GetInt(), salary2g:GetInt(), salary2b:GetInt(), salary2a:GetInt())
-	draw.DrawText(LocalPlayer():Health(), "TargetID", hx + hw / 2, hy - 6, Color(255, 255, 255, 200), 1)
+	draw.DrawText(LocalPlayer():Health(), "TargetID", hx + hw / 2, hy - 6, HealthTextColor, 1)
 	draw.DrawText("Job: " .. LocalPlayer():GetNWString("job") .. "\nWallet: " .. CUR .. LocalPlayer():GetNWInt("money") .. "", "TargetID", hx + 1, hy - 49, job1color, 0)
 	draw.DrawText("Job: " .. LocalPlayer():GetNWString("job") .. "\nWallet: " .. CUR .. LocalPlayer():GetNWInt("money") .. "", "TargetID", hx, hy - 50, job2color, 0)
 	draw.DrawText("Salary: " .. CUR .. LocalPlayer():GetNWInt("salary"), "TargetID", hx + 1, hy - 70, Salary1color, 0)
@@ -439,13 +448,13 @@ function GM:HUDPaint()
 		end
 	end
 
-	if LocalPlayer():GetNWBool("helpMenu") then
+	--[[ if LocalPlayer():GetNWBool("helpMenu") then
 		draw.RoundedBox(10, 10, 10, 860, 802, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 856, 798, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 856, 20, Color(0, 0, 70, 200))
 		draw.DrawText("Chat commands - # of Connected Players:" .. #player.GetAll() .. "/" .. MaxPlayers() .. "", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
 		draw.DrawText("- Money -\n/give <Amount> - Give money to another player (aim at them first)\n/dropmoney <Amount> - Drop some cash where you are aiming\n\n- Pistols -\n/buypistol deagle (" .. CUR .. tostring(GetGlobalInt("deaglecost")) .. ") (" .. CUR .. tostring(math.ceil(GetGlobalInt("deaglecost") * 0.88)) .. " for Gun Dealers)\n/buypistol glock (" .. CUR .. tostring(GetGlobalInt("glockcost")) .. ") (" .. CUR .. tostring(math.ceil(GetGlobalInt("glockcost") * 0.88)) .. " for Gun Dealers)\n/buypistol fiveseven (" .. CUR .. tostring(GetGlobalInt("fivesevencost")) .. ") (" .. CUR .. tostring(math.ceil(GetGlobalInt("fivesevencost") * 0.88)) .. " for Gun Dealers)\n/buypistol p228 (" .. CUR .. tostring(GetGlobalInt("p228cost")) .. ") (" .. CUR .. tostring(math.ceil(GetGlobalInt("p228cost") * 0.88)) .. " for Gun Dealers)\n\n- Rifle Shipments -\n/buyshipment ak47 (" .. CUR .. tostring(GetGlobalInt("ak47cost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment sniper (" .. CUR .. tostring(GetGlobalInt("snipercost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment mp5 (" .. CUR .. tostring(GetGlobalInt("mp5cost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment m16 (" .. CUR .. tostring(GetGlobalInt("m16cost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment shotgun (" .. CUR .. tostring(GetGlobalInt("shotguncost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment mac10 (" .. CUR .. tostring(GetGlobalInt("mac10cost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n\n- Ammo -\n/buyammo pistol (" .. CUR .. tostring(GetGlobalInt("ammopistolcost")) .. ")\n/buyammo shotgun (" .. CUR .. tostring(GetGlobalInt("ammoshotguncost")) .. ")\n/buyammo rifle (" .. CUR .. tostring(GetGlobalInt("ammoriflecost")) .. ")\n\n- Items-\n/buydruglab (" .. CUR .. tostring(GetGlobalInt("druglabcost")) .. ") - Definitely illegal to own, earns you " .. CUR .. tostring(GetGlobalInt("drugpayamount")) .. " per minute\n/buymicrowave (" .. CUR .. tostring(GetGlobalInt("microwavecost")) .. ") - Cook only, aim and use /price <Amount> to set the customer price.\n/buygunlab (" .. CUR .. tostring(GetGlobalInt("gunlabcost")) .. ") - Gun Dealer only, aim and use /price <Amount> to set the customer price.\n/buymoneyprinter (" .. CUR .. tostring(GetGlobalInt("mprintercost")) .. ") - Prints " .. CUR .. tostring(GetGlobalInt("mprintamount")) .. " every so often. It's fragile, so look after it!\n\n- Jobs -\n/mobboss - Makes you the Mob Boss\n/gangster - Makes you a Gangster\n/medic - Makes you a Medic\n/gundealer - Makes you a Gun Dealer\n/cook - Makes you a cook\n/votecop - Start a vote to become a cop\n/votemayor - Start a vote to become the Mayor\n\n- Doors -\n/title - Set the title of a door.\n/addowner (or /ao) [Nick|SteamID|Status ID] - Allow the named player to co-own this door\n/removeowner (or /ro) [Nick|SteamID|Status ID] - Remove the named player's co-ownership of your door\n\n- Other -\n/buyhealth (" .. CUR .. tostring(GetGlobalInt("healthcost")) .. ")\n/drop drops the weapon you are currently holding\n/sleep - Fall asleep or wake up\n/adminhelp - List of admin commands", "ScoreboardText", 30, 30, Color(255,255,255,255),0)
-	end
+	end ]]
 
 	if LocalPlayer():GetNWBool("helpCop") then
 		draw.RoundedBox(10, 10, 10, 590, 194, Color(0, 0, 0, 255))
@@ -484,7 +493,7 @@ function GM:HUDPaint()
 		draw.DrawText("/addzombie (creates a zombie spawn)\n/removezombie index (removes a zombie spawn, index is the number inside ()\n/showzombie (shows where the zombie spawns are)\n/enablezombie (enables zombiemode)\n/disablezombie (disables zombiemode)\n/zombiehelp (toggles this menu, /x to close)\n\nAll the zombie commands are admin only, the spawns are saved on different maps so you\ncan have a different set of zombie spawns depending on which map you are on.\nThe zombie spawns file is located in garrysmod/data/DarkRP if it ever becomes corrupt just delete it. /x to close", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
-	if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB then
+	if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB and not LocalPlayer():GetNWBool("helpBoss") then
 		draw.RoundedBox(10, 10, 10, 460, 110, Color(0, 0, 0, 155))
 		draw.RoundedBox(10, 12, 12, 456, 106, Color(51, 58, 51,100))
 		draw.RoundedBox(10, 12, 12, 456, 20, Color(0, 0, 70, 100))
