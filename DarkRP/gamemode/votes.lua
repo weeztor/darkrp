@@ -47,6 +47,7 @@ function vote:Create(question, voteid, ent, delay, callback)
 	umsg.Start("DoVote")
 		umsg.String(question)
 		umsg.String(voteid)
+		umsg.Float(delay)
 	umsg.End()
 
 	timer.Create(voteid .. "timer", delay, 1, vote.HandleVoteEnd, voteid)

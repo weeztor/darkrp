@@ -326,17 +326,17 @@ function ShowSpare2(ply)
 end
 concommand.Add("gm_spare2", ShowSpare2)
 
-function serverHelp(player)
+--[[ function serverHelp(player)
 	if not player:GetNWBool("helpMenu") then
 		player:SetNetworkedBool("helpMenu",true)
 	else
 		player:SetNetworkedBool("helpMenu",false)
 	end
 end
-concommand.Add("serverHelp", serverHelp)
+concommand.Add("serverHelp", serverHelp) ]]
 
 function GM:ShowTeam(ply)
-	ply:ConCommand("serverHelp\n")
+	//ply:ConCommand("serverHelp\n")
 end
 
 function GM:ShowHelp(ply)

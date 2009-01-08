@@ -14,6 +14,7 @@ Updated by: FPtje Falco
 [ADD] The ability to make custom shipments
 [ADD] Console command to remove class specified entities when someone changes class.(Like microwaves get removed when a cook changes to like the hobo): rp_removeclassitems
 [ADD] HUD adaptation menu.
+[ADD] Timer to the vote screen(You see how much time you have left to vote)
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins
@@ -28,6 +29,7 @@ Updated by: FPtje Falco
 [FIX] Bug that even if hungermod was off, food would still cost money.
 [FIX] Gravgun punt punting far
 [FIX] Not being able to use druglabs/money printers/whatever
+[FIX] Vote screens being able to be there forever
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 
 
