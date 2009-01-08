@@ -13,6 +13,7 @@ Updated by: FPtje Falco
 [ADD] Admins can choose to make a vote or not to make a vote to become cop/mayor
 [ADD] The ability to make custom shipments
 [ADD] Console command to remove class specified entities when someone changes class.(Like microwaves get removed when a cook changes to like the hobo): rp_removeclassitems
+[ADD] HUD adaptation menu.
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins
@@ -25,6 +26,8 @@ Updated by: FPtje Falco
 [FIX] Exploit with wire nailer
 [FIX] Exploit that you can duplicate weapons(I made sure that you can't use toolgun on weapons AND I made sure you can't spawn saved weapons works on both normal dup and adv. dup)
 [FIX] Bug that even if hungermod was off, food would still cost money.
+[FIX] Gravgun punt punting far
+[FIX] Not being able to use druglabs/money printers/whatever
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 
 
