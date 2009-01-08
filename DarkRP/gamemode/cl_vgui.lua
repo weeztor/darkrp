@@ -246,7 +246,7 @@ function ChangeJobVGUI()
 		F4Menu:SetVisible( true )
 		F4Menu:MakePopup( )
 		F4Menu:SetTitle("Options menu")
-		F4Tabs = {MoneyTab(), JobsTab(), EntitiesTab()}
+		F4Tabs = {MoneyTab(), JobsTab(), EntitiesTab(), RPHUDTab()}
 	else
 		F4Menu:SetVisible(true)
 	end
@@ -266,6 +266,8 @@ function ChangeJobVGUI()
 		F4MenuTabs:AddSheet("Jobs", F4Tabs[2], "gui/silkicons/arrow_refresh", false, false)
 		
 		F4MenuTabs:AddSheet("Entities/weapons", F4Tabs[3], "gui/silkicons/application_view_tile", false, false)
+		
+		F4MenuTabs:AddSheet("HUD", F4Tabs[4], "gui/silkicons/user", false, false)
 	end
 	for _, panel in pairs(F4Tabs) do panel:Update() end
 

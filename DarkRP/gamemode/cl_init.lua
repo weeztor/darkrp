@@ -157,6 +157,41 @@ function DrawZombieInfo(ply)
 	end
 end
 
+local backgroundr = CreateClientConVar("backgroundr", 0, true, false)
+local backgroundg = CreateClientConVar("backgroundg", 0, true, false)
+local backgroundb = CreateClientConVar("backgroundb", 0, true, false)
+local backgrounda = CreateClientConVar("backgrounda", 100, true, false)
+
+local Healthbackgroundr = CreateClientConVar("Healthbackgroundr", 0, true, false)
+local Healthbackgroundg = CreateClientConVar("Healthbackgroundg", 0, true, false)
+local Healthbackgroundb = CreateClientConVar("Healthbackgroundb", 0, true, false)
+local Healthbackgrounda = CreateClientConVar("Healthbackgrounda", 200, true, false)
+
+local Healthforegroundr = CreateClientConVar("Healthforegroundr", 140, true, false)
+local Healthforegroundg = CreateClientConVar("Healthforegroundg", 0, true, false)
+local Healthforegroundb = CreateClientConVar("Healthforegroundb", 0, true, false)
+local Healthforegrounda = CreateClientConVar("Healthforegrounda", 180, true, false)
+
+local Job1r = CreateClientConVar("Job1r", 0, true, false)
+local Job1g = CreateClientConVar("Job1g", 0, true, false)
+local Job1b = CreateClientConVar("Job1b", 0, true, false)
+local Job1a = CreateClientConVar("Job1a", 255, true, false)
+
+local Job2r = CreateClientConVar("Job2r", 0, true, false)
+local Job2g = CreateClientConVar("Job2g", 0, true, false)
+local Job2b = CreateClientConVar("Job2b", 150, true, false)
+local Job2a = CreateClientConVar("Job2a", 255, true, false)
+
+local salary1r = CreateClientConVar("salary1r", 0, true, false)
+local salary1g = CreateClientConVar("salary1g", 0, true, false)
+local salary1b = CreateClientConVar("salary1b", 0, true, false)
+local salary1a = CreateClientConVar("salary1a", 255, true, false)
+
+local salary2r = CreateClientConVar("salary2r", 0, true, false)
+local salary2g = CreateClientConVar("salary2g", 150, true, false)
+local salary2b = CreateClientConVar("salary2b", 0, true, false)
+local salary2a = CreateClientConVar("salary2a", 255, true, false)
+
 function GM:HUDPaint()
 	self.BaseClass:HUDPaint()
 
@@ -164,21 +199,28 @@ function GM:HUDPaint()
 	local hy = ScrH() - 25
 	local hw = 190
 	local hh = 10
-
+	
 	if LocalPlayer():GetActiveWeapon().IAmControlling then return end
-	draw.RoundedBox(6, hx - 8, hy - 90, hw + 30, hh + 110, Color(0, 0, 0, 100))
+	local backgroundcolor = Color(backgroundr:GetInt(), backgroundg:GetInt(), backgroundb:GetInt(), backgrounda:GetInt())
+	local Healthbackgroundcolor = Color(Healthbackgroundr:GetInt(), Healthbackgroundg:GetInt(), Healthbackgroundb:GetInt(), Healthbackgrounda:GetInt())
+	local Healthforegroundcolor = Color(Healthforegroundr:GetInt(), Healthforegroundg:GetInt(), Healthforegroundb:GetInt(), Healthforegrounda:GetInt())
+	draw.RoundedBox(6, hx - 8, hy - 90, hw + 30, hh + 110, backgroundcolor)
 
-	draw.RoundedBox(6, hx - 4, hy - 4, hw + 8, hh + 8, Color(0, 0, 0, 200))
+	draw.RoundedBox(6, hx - 4, hy - 4, hw + 8, hh + 8, Healthbackgroundcolor)
 
 	if LocalPlayer():Health() > 0 then
-		draw.RoundedBox(4, hx, hy, math.Clamp(hw * (LocalPlayer():Health() / 100), 0, 190), hh, Color(140, 0, 0, 180))
+		draw.RoundedBox(4, hx, hy, math.Clamp(hw * (LocalPlayer():Health() / 100), 0, 190), hh, Healthforegroundcolor)
 	end
 
+	local job1color = Color(Job1r:GetInt(), Job1g:GetInt(), Job1b:GetInt(), Job1a:GetInt())
+	local job2color = Color(Job2r:GetInt(), Job2g:GetInt(), Job2b:GetInt(), Job2a:GetInt())
+	local Salary1color = Color(salary1r:GetInt(), salary1g:GetInt(), salary1b:GetInt(), salary1a:GetInt())
+	local Salary2color = Color(salary2r:GetInt(), salary2g:GetInt(), salary2b:GetInt(), salary2a:GetInt())
 	draw.DrawText(LocalPlayer():Health(), "TargetID", hx + hw / 2, hy - 6, Color(255, 255, 255, 200), 1)
-	draw.DrawText("Job: " .. LocalPlayer():GetNWString("job") .. "\nWallet: " .. CUR .. LocalPlayer():GetNWInt("money") .. "", "TargetID", hx + 1, hy - 49, Color(0, 0, 150, 200), 0)
-	draw.DrawText("Job: " .. LocalPlayer():GetNWString("job") .. "\nWallet: " .. CUR .. LocalPlayer():GetNWInt("money") .. "", "TargetID", hx, hy - 50, Color(0, 0, 0, 255), 0)
-	draw.DrawText("Salary: " .. CUR .. LocalPlayer():GetNWInt("salary"), "TargetID", hx + 1, hy - 70, Color(0, 150, 0, 200), 0)
-	draw.DrawText("Salary: " .. CUR .. LocalPlayer():GetNWInt("salary"), "TargetID", hx, hy - 71, Color(0, 0, 0, 255), 0)
+	draw.DrawText("Job: " .. LocalPlayer():GetNWString("job") .. "\nWallet: " .. CUR .. LocalPlayer():GetNWInt("money") .. "", "TargetID", hx + 1, hy - 49, job1color, 0)
+	draw.DrawText("Job: " .. LocalPlayer():GetNWString("job") .. "\nWallet: " .. CUR .. LocalPlayer():GetNWInt("money") .. "", "TargetID", hx, hy - 50, job2color, 0)
+	draw.DrawText("Salary: " .. CUR .. LocalPlayer():GetNWInt("salary"), "TargetID", hx + 1, hy - 70, Salary1color, 0)
+	draw.DrawText("Salary: " .. CUR .. LocalPlayer():GetNWInt("salary"), "TargetID", hx, hy - 71, Salary2color, 0)
 
 
 	local function DrawDisplay()
