@@ -250,9 +250,32 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 	end
 	return true
 end
-hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.PhysGravGunPickup)
-hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropProtection.PhysGravGunPickup)
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
+
+function SPropProtection.GravGunThings(ply, ent)
+	if ply:KeyDown(IN_ATTACK) then
+		local entphys = ent:GetPhysicsObject()
+		-- it was launched
+		entphys:EnableMotion(false)
+		local curpos = ent:GetPos()
+		timer.Simple(.01, entphys.EnableMotion, entphys, true)
+		timer.Simple(.01, entphys.Wake, entphys)
+		timer.Simple(.01, ent.SetPos, ent, curpos)
+	end
+	if not ValidEntity(ent) then return true end
+	for k,v in pairs(AntiCopy) do
+		if ent:GetClass() == v then return true end
+	end
+	if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then return true end
+	
+	if(ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick()) then return true end
+	if(!ent:IsValid() or !SPropProtection.PlayerCanTouch(ply, ent)) then
+		return false
+	end
+	return true
+end
+hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.GravGunThings)
+hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropProtection.GravGunThings)
 //v:UniqueIDTable( "Duplicator" ).Entities
 function SPropProtection.CanTool(ply, tr, toolgun)
 	if(tr.HitWorld) then return end
@@ -373,8 +396,15 @@ end
 hook.Add("EntityTakeDamage", "SPropProtection.EntityTakeDamage", SPropProtection.EntityTakeDamage)
 
 function SPropProtection.PlayerUse(ply, ent)
-	if ent:IsDoor() then
+	if not ValidEntity(ent) then return true end
+	local class = ent:GetClass()
+	if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
 		return true
+	end
+	for k,v in pairs(AntiCopy) do 
+		if ent:GetClass() == v then	
+			return true
+		end
 	end
 	if(ent:IsValid() and tonumber(SPropProtection["Config"]["use"]) == 1) then
 		if(!SPropProtection.PlayerCanTouch(ply, ent) and
