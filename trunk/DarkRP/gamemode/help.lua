@@ -34,6 +34,35 @@ function ChangeHelpLabel(id, text)
 	end
 end
 
+function RequestAllToggleCommands(ply,cmd,args)
+	for k,v in pairs(ToggleCmds) do
+		umsg.Start("SendAllToggleCommands", ply)
+			umsg.String(k)
+			for a,b in pairs(HelpLabels) do 
+				if string.find(b.text, k) then
+					umsg.String(b.text)
+				end
+			end
+			//print(v.var, string.sub(k, 4))
+			if not v.global then
+				if CfgVars[v.var] then
+					umsg.Short(CfgVars[v.var])
+					//print("CFGVARS VAR "..v.var, CfgVars[v.var])
+				elseif CfgVars[string.sub(k, 4)] then
+					umsg.Short(CfgVars[string.sub(k, 4)])
+					//print("CFGVARS K "..string.sub(k, 4), CfgVars[k])
+				end
+			else
+				//print("GLOBALINT!", k, GetGlobalInt(v.var))
+				umsg.Short(GetGlobalInt(v.var))
+			end
+			//print(k, CfgVars[string.sub(v.var])
+
+		umsg.End()
+	end
+end
+concommand.Add("rp_RequestAllToggleCommands", RequestAllToggleCommands)
+
 function AddHelpLabel(id, category, text, constant)
 	if id < 0 then
 		id = #HelpLabels + 1

@@ -941,3 +941,53 @@ derma.DefineSkin("F4Menu", "For the F4 menu...", SKIN)
 function GM:ForceDermaSkin()
 	return "F4Menu"
 end ]]
+
+local NewHelpMessages = {}
+function RecieveAllAdminToggles(Umsg )
+	local name = Umsg:ReadString()
+	local Desc = Umsg:ReadString()
+	local value = Umsg:ReadShort()
+	//print(name, Desc, value, "\n")
+	NewHelpMessages[name] = {desc = Desc, val = value}
+end
+usermessage.Hook("SendAllToggleCommands", RecieveAllAdminToggles)
+
+
+function RPAdminTab()
+	local AdminPanel = vgui.Create("DPanelList")
+		function AdminPanel:Update()
+			LocalPlayer():ConCommand("rp_RequestAllToggleCommands")
+			self:Clear(true)
+			local ToggleCat = vgui.Create("DCollapsibleCategory")
+			ToggleCat:SetLabel("Toggle commands")
+				local AdminPanel = vgui.Create("DPanelList")
+				AdminPanel:SetSize(470, 490)
+				AdminPanel:SetSpacing(1)
+				AdminPanel:EnableHorizontal(false)
+				AdminPanel:EnableVerticalScrollbar(true)
+				
+				for command, v in pairs(NewHelpMessages) do
+					local checkbox = vgui.Create("DCheckBoxLabel")
+					//checkbox:SetConVar(command)
+					checkbox:SetValue(v.val)
+					checkbox:SetText(v.desc)
+					function checkbox.Button:Toggle()
+						if ( self:GetChecked() == nil || !self:GetChecked() ) then 
+							self:SetValue( true ) 
+						else 
+							self:SetValue( false ) 
+						end 
+						local tonum = {}
+						tonum[false] = "0"
+						tonum[true] = "1"
+						LocalPlayer():ConCommand(command .. " " .. tonum[self:GetChecked()])
+					end
+					AdminPanel:AddItem(checkbox)
+				end
+			ToggleCat:SetContents(AdminPanel)
+			self:AddItem(ToggleCat)
+		end
+		AdminPanel:Update()
+	return AdminPanel
+end
+

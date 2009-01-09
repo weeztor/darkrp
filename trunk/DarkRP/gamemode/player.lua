@@ -351,9 +351,8 @@ function meta:ChangeTeam(t)
 		end
 	end
 	
-	print(CfgVars["removeclassitems"])
+
 	if CfgVars["removeclassitems"] == 1 then
-		print(self.SID)
 		for k, v in pairs(ents.FindByClass("microwave")) do
 			if v.SID == self.SID then v:Remove() end
 		end
@@ -881,6 +880,7 @@ function GM:PlayerInitialSpawn(ply)
 	DB.SetUpCPOwnableDoors()
 	ply:PrintMessage(HUD_PRINTTALK, "This server is running DarkRP 2.3.1")
 	timer.Simple(10, ply.CompleteSentence, ply)
+	RequestAllToggleCommands(ply)
 end
 
 function GM:PlayerDisconnected(ply)
