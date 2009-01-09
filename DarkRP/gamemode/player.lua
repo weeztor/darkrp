@@ -474,8 +474,8 @@ function meta:Unarrest(ID)
 		return
 	end
 	if type(self) == "string" then
-		if self and RPArrestedPlayers[self] then
-			RPArrestedPlayers[self] = nil
+		if RPArrestedPlayers[ID] then
+			RPArrestedPlayers[ID] = nil
 			if CfgVars["telefromjail"] == 1 then
 				self:SetPos(GAMEMODE:PlayerSelectSpawn(self):GetPos())
 			end
@@ -485,7 +485,7 @@ function meta:Unarrest(ID)
 			timer.Destroy(self .. "jailtimer")
 			NotifyAll(1, 4, self:Name() .. " has been released from jail!")
 		end
-	elseif type(self) == "Player" then
+	else
 		if self and RPArrestedPlayers[self:SteamID()] then
 			RPArrestedPlayers[self:SteamID()] = nil
 			if CfgVars["telefromjail"] == 1 then
