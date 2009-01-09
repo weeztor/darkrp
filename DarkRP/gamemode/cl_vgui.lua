@@ -264,6 +264,9 @@ function ChangeJobVGUI()
 		F4Menu:MakePopup( )
 		F4Menu:SetTitle("Options menu")
 		F4Tabs = {MoneyTab(), JobsTab(), EntitiesTab(), RPHUDTab()}
+		if LocalPlayer():IsAdmin() then
+			table.insert(F4Tabs, RPAdminTab())
+		end
 	else
 		F4Menu:SetVisible(true)
 	end
@@ -285,6 +288,9 @@ function ChangeJobVGUI()
 		F4MenuTabs:AddSheet("Entities/weapons", F4Tabs[3], "gui/silkicons/application_view_tile", false, false)
 		
 		F4MenuTabs:AddSheet("HUD", F4Tabs[4], "gui/silkicons/user", false, false)
+		if LocalPlayer():IsAdmin() then
+			F4MenuTabs:AddSheet("Admin", F4Tabs[5], "gui/silkicons/wrench", false, false)
+		end
 	end
 	for _, panel in pairs(F4Tabs) do panel:Update() end
 

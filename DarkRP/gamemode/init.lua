@@ -227,6 +227,10 @@ CfgVars["norespawn"] = 1 -- Whether people have to respawn when they change job 
 CfgVars["advertisements"] = 1--chatprint advertisements
 CfgVars["copscanunfreeze"] = 1 
 CfgVars["removeclassitems"] = 1
+CfgVars["enablebuypistol"] = 1
+CfgVars["allowpdchief"] = 1
+CfgVars["enableshipments"] = 1
+
 
 -- You can set the exact value of the below items:
 
