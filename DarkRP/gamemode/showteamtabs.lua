@@ -942,31 +942,56 @@ function GM:ForceDermaSkin()
 	return "F4Menu"
 end ]]
 
-local NewHelpMessages = {}
+local NewToggleHelpMessages = {}
+function RecieveAllAdminToggles(Umsg )
+	local name = Umsg:ReadString()
+	local Desc = Umsg:ReadString()
+	local value = Umsg:ReadShort()
+	for a,b in pairs(NewToggleHelpMessages) do
+		if b.command == name then
+			table.remove(NewToggleHelpMessages, a)
+		end
+	end
+	table.insert(NewToggleHelpMessages, {command = name, desc = Desc, val = value})
+	table.SortByMember(NewToggleHelpMessages, "desc", function(a, b) return a > b end)
+end
+usermessage.Hook("SendAllToggleCommands", RecieveAllAdminToggles)
+
+local NewValueHelpMessages = {}
 function RecieveAllAdminToggles(Umsg )
 	local name = Umsg:ReadString()
 	local Desc = Umsg:ReadString()
 	local value = Umsg:ReadShort()
 	//print(name, Desc, value, "\n")
-	NewHelpMessages[name] = {desc = Desc, val = value}
+	for a,b in pairs(NewValueHelpMessages) do
+		if b.command == name then
+			table.remove(NewValueHelpMessages, a)
+		end
+	end
+	table.insert(NewValueHelpMessages,  {command = name, desc = Desc, val = value})
+	table.SortByMember(NewValueHelpMessages, "desc", function(a, b) return a > b end)
 end
-usermessage.Hook("SendAllToggleCommands", RecieveAllAdminToggles)
+usermessage.Hook("SendAllValueCommands", RecieveAllAdminToggles)
 
 
 function RPAdminTab()
 	local AdminPanel = vgui.Create("DPanelList")
+	AdminPanel:SetSpacing(1)
+	AdminPanel:EnableHorizontal( false	)
+	AdminPanel:EnableVerticalScrollbar( true )
 		function AdminPanel:Update()
 			LocalPlayer():ConCommand("rp_RequestAllToggleCommands")
+			LocalPlayer():ConCommand("rp_RequestAllValueCommands")
 			self:Clear(true)
 			local ToggleCat = vgui.Create("DCollapsibleCategory")
 			ToggleCat:SetLabel("Toggle commands")
-				local AdminPanel = vgui.Create("DPanelList")
-				AdminPanel:SetSize(470, 490)
-				AdminPanel:SetSpacing(1)
-				AdminPanel:EnableHorizontal(false)
-				AdminPanel:EnableVerticalScrollbar(true)
+				local TogglePanel = vgui.Create("DPanelList")
+				TogglePanel:SetSize(470, 230)
+				TogglePanel:SetSpacing(1)
+				TogglePanel:EnableHorizontal(false)
+				TogglePanel:EnableVerticalScrollbar(true)
 				
-				for command, v in pairs(NewHelpMessages) do
+				for k, v in pairs(NewToggleHelpMessages) do
 					local checkbox = vgui.Create("DCheckBoxLabel")
 					//checkbox:SetConVar(command)
 					checkbox:SetValue(v.val)
@@ -980,12 +1005,62 @@ function RPAdminTab()
 						local tonum = {}
 						tonum[false] = "0"
 						tonum[true] = "1"
-						LocalPlayer():ConCommand(command .. " " .. tonum[self:GetChecked()])
+						LocalPlayer():ConCommand(v.command .. " " .. tonum[self:GetChecked()])
 					end
-					AdminPanel:AddItem(checkbox)
+					TogglePanel:AddItem(checkbox)
 				end
-			ToggleCat:SetContents(AdminPanel)
+			ToggleCat:SetContents(TogglePanel)
 			self:AddItem(ToggleCat)
+			
+			local ValueCat = vgui.Create("DCollapsibleCategory")
+			ValueCat:SetLabel("Value commands")
+				local ValuePanel = vgui.Create("DPanelList")
+				ValuePanel:SetSize(470, 230)
+				ValuePanel:SetSpacing(1)
+				ValuePanel:EnableHorizontal(false)
+				ValuePanel:EnableVerticalScrollbar(true)
+				
+				for k, v in pairs(NewValueHelpMessages) do
+					local slider = vgui.Create("DNumSlider")
+					slider:SetDecimals(0)
+					slider:SetMin(0)
+					slider:SetMax(3000)
+					slider:SetText(v.desc)
+					slider:SetValue(v.val)
+					function slider.Slider:OnMouseReleased()
+						self:SetDragging( false ) 
+						self:MouseCapture( false ) 
+						LocalPlayer():ConCommand(v.command .. " " .. slider:GetValue())
+					end
+					function slider.Wang:EndWang()
+						self:MouseCapture( false ) 
+						self.Dragging = false 
+						self.HoldPos = nil 
+						self.Wanger:SetCursor( "" ) 
+						if ( ValidPanel( self.IndicatorT ) ) then self.IndicatorT:Remove() end 
+						if ( ValidPanel( self.IndicatorB ) ) then self.IndicatorB:Remove() end 
+						LocalPlayer():ConCommand(v.command .. " " .. self:GetValue())
+					end
+					function slider.Wang.TextEntry:OnEnter()
+						LocalPlayer():ConCommand(v.command .. " " .. self:GetValue())
+					end
+					//slider:SetConVar(command)
+					--[[ function slider.Button:Toggle()
+						if ( self:GetChecked() == nil || !self:GetChecked() ) then 
+							self:SetValue( true ) 
+						else 
+							self:SetValue( false ) 
+						end 
+						local tonum = {}
+						tonum[false] = "0"
+						tonum[true] = "1"
+						LocalPlayer():ConCommand(command .. " " .. tonum[self:GetChecked()])
+					end ]]
+					ValuePanel:AddItem(slider)
+					
+				end
+			ValueCat:SetContents(ValuePanel)
+			self:AddItem(ValueCat)
 		end
 		AdminPanel:Update()
 	return AdminPanel

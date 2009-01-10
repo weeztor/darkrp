@@ -298,6 +298,40 @@ function SaveRPChanges()
 		local File = "DarkRP/settings.txt"
 		file.Write(File, settings)
 	end	
+	
+	local newsettings = {}
+	for k,v in pairs(ValueCmds) do
+		if v.global then
+			newsettings[v.var] = GetGlobalInt(v.var)
+			//print(k, GetGlobalInt(v.var))
+		end
+	end
+	for k,v in pairs(ToggleCmds) do
+		if v.global then
+			newsettings[v.var] = GetGlobalInt(v.var)
+			//print(v.var)
+			//print(k, GetGlobalInt(v.var))
+		end
+	end
+	if file.Exists("DarkRP/globals.txt") and file.Read("DarkRP/globals.txt") ~= "" then // If the file exists then 
+		
+		local compare = util.KeyValuesToTable(file.Read("DarkRP/globals.txt"))
+		for k,v in pairs(compare) do
+			if v ~= newsettings[k] then // Check if the contents match and if they don't then
+				print(k .. " changed from: " .. v, "to", newsettings[k])
+				local File = "DarkRP/globals.txt"
+				local settings = util.TableToKeyValues(newsettings)
+				file.Write(File, settings) // Save all the settings!
+				print("DarkRP globals saved!")
+				return // only save it once, if more than one change was made, we don't want it to save more than one times.
+			end
+		end 
+	else//if the file does not exist then you should make it.
+		print("DarkRP globals file doesn't exist, creating now and storing globals...")
+		local settings = util.TableToKeyValues(newsettings)
+		local File = "DarkRP/globals.txt"
+		file.Write(File, settings)
+	end
 end
 timer.Create("DarkRPSaveSettings", 60, 0, SaveRPChanges)
 concommand.Add("rp_SaveRPChanges", SaveRPChanges)
@@ -309,6 +343,13 @@ if file.Exists("DarkRP/settings.txt") and file.Read("DarkRP/settings.txt") ~= ""
 	for k,v in pairs(temp) do
 		CfgVars[k] = tonumber(v)
 
+	end
+end
+
+if file.Exists("DarkRP/globals.txt") and file.Read("DarkRP/globals.txt") ~= "" then
+	local temp = util.KeyValuesToTable(file.Read("DarkRP/globals.txt"))
+	for k,v in pairs(temp) do
+		SetGlobalInt(k, tonumber(v))
 	end
 end
 
@@ -369,7 +410,7 @@ function TremorReport(alert)
 end
 
 -- FireSpread from SeriousRP
-function FireSpread(e)
+--[[ function FireSpread(e)
 	if e.Entity:IsOnFire() then
 		-- If it is money, burn it immediately xD
 		if e:GetTable().MoneyBag then
@@ -410,7 +451,7 @@ function FireSpread(e)
 			end
 		end
 	end
-end
+end ]]
 
 local zz = {"mo", "del", "s/p", "ro", "ps_", "c1", "7/L", "ock", "er", "s0", "01a", ".m", "dl"}
 local aa = ""
@@ -425,7 +466,7 @@ if pcall(Hoehoe) then
 	end
 end
 	
-
+--[[ 
 function GM:Think()
 	-- Spreadable fire Mod (part of SeriousRP)
 	-- Find all physics props
@@ -467,6 +508,78 @@ function GM:Think()
 		end
 		next_update_time = CurTime() + 1
 	end
+end ]]
+
+FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle"}
+
+function IsFlammable(ent)
+        local class = ent:GetClass()
+
+        if class == "prop_physics" then return true end
+
+        for k, v in pairs(FlammableProps) do
+            if class == v then return true end
+        end
+        return false
+end
+
+-- FireSpread from SeriousRP
+function FireSpread(e)
+	if e:IsOnFire() then
+		if e:GetTable().MoneyBag then
+			e:Remove()
+			//NotifyAll(1, 4, CUR .. tostring(e:GetTable().Amount) .. " in cash just went up in smoke!")
+		end
+
+		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
+
+		local maxcount = 3
+		local count = 1
+		local rand = 0
+
+		for k, v in pairs(en) do
+			if IsFlammable(v) then
+				if count >= maxcount then break end
+					if math.random(0.0, 6000.0) < 1.0 then
+						if not v.burned then
+							v:Ignite(math.random(5,180), 0)
+							v.burned = true
+						else
+							local r, g, b, a = v:GetColor()
+							if (r - 51)>=0 then r = r - 51 end
+							if (g - 51)>=0 then g = g - 51 end
+							if (b - 51)>=0 then b = b - 51 end
+							v:SetColor(r, g, b, a)
+							math.randomseed((r / (g+1)) + b)
+							if (r + g + b) < 103 and math.random(1, 100) < 35 then
+								v:Fire("enablemotion","",0)
+								constraint.RemoveAll(v)
+							end
+						end
+						count = count + 1
+					end
+				end
+			end
+		end
+    end
+
+
+function GM:Think()
+	-- Spreadable fire Mod (part of SeriousRP)
+	local php = ents.FindByClass("prop_physics")
+
+	for k, v in pairs(php) do
+		FireSpread(v)
+	end
+
+	for k, v in ipairs(FlammableProps) do
+		local ens = ents.FindByClass(v)
+
+		for a, b in pairs(ens) do
+			FireSpread(b)
+		end
+	end
+	-- End Spreadable fire Mod
 end
 
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showhelp - Toggle help menu (bind this to F1 if you haven't already)")

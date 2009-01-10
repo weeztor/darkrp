@@ -8,7 +8,7 @@ FoodItems = { }
 SetGlobalInt("hungermod", 0)       --Hunger mod is enabled or disabled
 
 CfgVars["starverate"] = 3      --How much health is taken away per second when starving
-CfgVars["hungerspeed"] = 0.7       --How much energy should deteriate every second
+CfgVars["hungerspeed"] = 1       --How much energy should deteriate every second
 CfgVars["foodcost"] = 15       --Cost of food
 CfgVars["foodpay"] = 1     --Whether there's a special spawning price for food
 CfgVars["foodspawn"] = 1       --If players can spawn food props or not
@@ -59,7 +59,7 @@ function HM.PlayerSpawnProp(ply, model)
 				if ply:CanAfford(cost) then
 					ply:AddMoney(-cost)
 				else
-					Notify(ply, 1, 3, "Need " .. math.floor(cost) .. " bucks!")
+					Notify(ply, 1, 4, "Need " .. math.floor(cost) .. " bucks!")
 					return false
 				end
 				return true

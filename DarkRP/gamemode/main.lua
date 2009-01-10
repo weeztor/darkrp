@@ -1624,7 +1624,7 @@ end
 function DoVoteMayor(ply, args)
 	
 	if #player.GetAll() == 1 then
-		Notify(ply, 1, 3, "You're the only one in the server so you won the vote")
+		Notify(ply, 1, 4, "You're the only one in the server so you won the vote")
 		ply:ChangeTeam(TEAM_MAYOR)
 		return ""
 	end
@@ -1691,7 +1691,7 @@ function DoVoteCop(ply, args)
 	end
 	
 	if #player.GetAll() == 1 then
-		Notify(ply, 1, 3, "You're the only one in the server so you won the vote")
+		Notify(ply, 1, 4, "You're the only one in the server so you won the vote")
 		ply:ChangeTeam(TEAM_POLICE)
 		return ""
 	end
@@ -1787,7 +1787,7 @@ for k,v in pairs(RPExtraTeams) do
 	if v.Vote then
 		AddChatCommand("/vote"..v.command, function(ply)
 			if #player.GetAll() == 1 then
-				Notify(ply, 1, 3, "You're the only one in the server so you won the vote")
+				Notify(ply, 1, 4, "You're the only one in the server so you won the vote")
 				ply:ChangeTeam(k+9)
 				return ""
 			end
@@ -2129,7 +2129,7 @@ function GM:OnNPCKilled(victim, ent, weapon)
 		-- if we know by now who killed the NPC, pay them.
 		if ent and CfgVars["npckillpay"] > 0 then
 			ent:AddMoney(CfgVars["npckillpay"])
-			Notify(ent, 1, 3, CUR .. CfgVars["npckillpay"] .. " For killing an NPC!")
+			Notify(ent, 1, 4, CUR .. CfgVars["npckillpay"] .. " For killing an NPC!")
 		end
 	end
 end
@@ -2169,7 +2169,7 @@ end
 
 function MayorSetSalary(ply, cmd, args)
 	if ply:EntIndex() == 0 then
-		Msg("Console should use rp_setsalary instead.")
+		print("Console should use rp_setsalary instead.")
 		return
 	end
 

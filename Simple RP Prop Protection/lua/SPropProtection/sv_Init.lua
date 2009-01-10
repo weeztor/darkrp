@@ -233,7 +233,7 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 			end
 			for a,b in pairs(SPropProtection.AntiCopy) do
 				if string.find(v:GetClass(), b) then
-					//SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
+					SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
 					return false
 				end
 			end
@@ -264,6 +264,7 @@ function SPropProtection.GravGunThings(ply, ent)
 		timer.Simple(.01, ent.SetPos, ent, curpos)
 	end
 	if not ValidEntity(ent) then return true end
+	if ent:GetClass() == "func_breakable_surf" then return false end
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v then return true end
 	end

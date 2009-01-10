@@ -12,13 +12,13 @@ function ccValueCommand(ply, cmd, args)
 	if #args < 1 then
 		if valuecmd.global then
 			if ply:EntIndex() == 0 then
-				Msg(cmd .. " = " .. GetGlobalInt(valuecmd.var))
+				print(cmd .. " = " .. GetGlobalInt(valuecmd.var))
 			else
 				ply:PrintMessage(2, cmd .. " = " .. GetGlobalInt(valuecmd.var))
 			end
 		else
 			if ply:EntIndex() == 0 then
-				Msg(cmd .. " = " .. CfgVars[valuecmd.var])
+				print(cmd .. " = " .. CfgVars[valuecmd.var])
 			else
 				ply:PrintMessage(2, cmd .. " = " .. CfgVars[valuecmd.var])
 			end
@@ -64,13 +64,13 @@ function ccToggleCommand(ply, cmd, args)
 	if #args < 1 then
 		if togglecmd.global then
 			if ply:EntIndex() == 0 then
-				Msg(cmd .. " = " .. GetGlobalInt(togglecmd.var))
+				print(cmd .. " = " .. GetGlobalInt(togglecmd.var))
 			else
 				ply:PrintMessage(2, cmd .. " = " .. GetGlobalInt(togglecmd.var))
 			end
 		else
 			if ply:EntIndex() == 0 then
-				Msg(cmd .. " = " .. CfgVars[togglecmd.var])
+				print(cmd .. " = " .. CfgVars[togglecmd.var])
 			else
 				ply:PrintMessage(2, cmd .. " = " .. CfgVars[togglecmd.var])
 			end
@@ -87,7 +87,7 @@ function ccToggleCommand(ply, cmd, args)
 
 	if not toggle or (toggle ~= 1 and toggle ~= 0) then
 		if ply:EntIndex() == 0 then
-			Msg("Invalid number; must be 1 or 0.")
+			print("Invalid number; must be 1 or 0.")
 		else
 			ply:PrintMessage(2, "Invalid number; must be 1 or 0.")
 		end
@@ -390,7 +390,7 @@ function ccTell(ply, cmd, args)
 		umsg.End()
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -487,7 +487,7 @@ function ccArrest(ply, cmd, args)
 
 	if DB.CountJailPos() == 0 then
 		if ply:EntIndex() == 0 then
-			Msg("No jail positions yet!\n")
+			print("No jail positions yet!\n")
 		else
 			ply:PrintMessage(2, "No jail positions yet!")
 		end
@@ -504,7 +504,7 @@ function ccArrest(ply, cmd, args)
 		end
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -525,7 +525,7 @@ function ccUnarrest(ply, cmd, args)
 		target:Unarrest()
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -560,7 +560,7 @@ function ccMayor(ply, cmd, args)
 		target:PrintMessage(2, nick .. " made you Mayor!")
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -582,7 +582,7 @@ function ccCPChief(ply, cmd, args)
 		target:ChangeTeam(TEAM_CHIEF)
 		target:PrintMessage(2, nick .. " made you a CP Chief!")
 	else
-		Msg("Could not find player: " .. args[1])
+		print("Could not find player: " .. args[1])
 		return
 	end
 end
@@ -609,7 +609,7 @@ function ccCP(ply, cmd, args)
 		target:PrintMessage(2, nick .. " made you a CP!")
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -639,7 +639,7 @@ function ccCitizen(ply, cmd, args)
 		target:PrintMessage(2, nick .. " made you a Citizen!")
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -669,7 +669,7 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_citizen [Nick|SteamID|UserID] - Mak
                 target:PrintMessage(2, nick .. " made you a Hobo!")
         else
                 if (ply:EntIndex() == 0) then
-                        Msg("Could not find player: " .. args[1])
+                        print("Could not find player: " .. args[1])
                 else
                         ply:PrintMessage(2, "Could not find player: " .. args[1])
                 end
@@ -712,7 +712,7 @@ for k,v in pairs(RPExtraTeams) do
 			target:PrintMessage(2, nick .. " made you a " .. v.name .. "!")
         else
 			if (ply:EntIndex() == 0) then
-				Msg("Could not find player: " .. args[1])
+				print("Could not find player: " .. args[1])
 			else
 				ply:PrintMessage(2, "Could not find player: " .. args[1])
 			end
@@ -745,7 +745,7 @@ function ccKickBan(ply, cmd, args)
 		game.ConsoleCommand("kickid " .. target:UserID() .. " \"Kicked and Banned\"\n")
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -781,7 +781,7 @@ function ccKick(ply, cmd, args)
 		game.ConsoleCommand("kickid " .. target:UserID() .. " \"" .. reason .. "\"\n")
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -801,7 +801,7 @@ function ccSetMoney(ply, cmd, args)
 
 	if not amount then
 		if ply:EntIndex() == 0 then
-			Msg("Invalid amount of money: " .. args[2])
+			print("Invalid amount of money: " .. args[2])
 		else
 			ply:PrintMessage(2, "Invalid amount of money: " .. args[2])
 		end
@@ -817,7 +817,7 @@ function ccSetMoney(ply, cmd, args)
 		DB.StoreMoney(target, amount)
 
 		if ply:EntIndex() == 0 then
-			Msg("Set " .. target:Nick() .. "'s money to: " .. CUR .. amount)
+			print("Set " .. target:Nick() .. "'s money to: " .. CUR .. amount)
 			nick = "Console"
 		else
 			ply:PrintMessage(2, "Set " .. target:Nick() .. "'s money to: " .. CUR .. amount)
@@ -826,7 +826,7 @@ function ccSetMoney(ply, cmd, args)
 		target:PrintMessage(2, nick .. " set your money to: " .. CUR .. amount)
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -846,7 +846,7 @@ function ccSetSalary(ply, cmd, args)
 
 	if not amount or amount < 0 then
 		if ply:EntIndex() == 0 then
-			Msg("Invalid Salary: " .. args[2])
+			print("Invalid Salary: " .. args[2])
 		else
 			ply:PrintMessage(2, "Invalid Salary: " .. args[2])
 		end
@@ -855,7 +855,7 @@ function ccSetSalary(ply, cmd, args)
 
 	if amount > 150 then
 		if ply:EntIndex() == 0 then
-			Msg("Salary must be below " .. CUR .. "150")
+			print("Salary must be below " .. CUR .. "150")
 		else
 			ply:PrintMessage(2, "Salary must be less than or equal to " .. CUR .. "150")
 		end
@@ -869,7 +869,7 @@ function ccSetSalary(ply, cmd, args)
 		DB.StoreSalary(target, amount)
 		target:SetNWInt("salary", amount)
 		if ply:EntIndex() == 0 then
-			Msg("Set " .. target:Nick() .. "'s Salary to: " .. CUR .. amount)
+			print("Set " .. target:Nick() .. "'s Salary to: " .. CUR .. amount)
 			nick = "Console"
 		else
 			ply:PrintMessage(2, "Set " .. target:Nick() .. "'s Salary to: " .. CUR .. amount)
@@ -878,7 +878,7 @@ function ccSetSalary(ply, cmd, args)
 		target:PrintMessage(2, nick .. " set your Salary to: " .. CUR .. amount)
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -917,14 +917,14 @@ function ccGrantPriv(ply, cmd, args)
 			Notify(target, 1, 3, ply:Nick() .. " has granted you /cp priveleges.")
 		else
 			if ply:EntIndex() == 0 then
-				Msg("There is not a " .. args[1] .. " privilege!")
+				print("There is not a " .. args[1] .. " privilege!")
 			else
 				ply:PrintMessage(2, "There is not a " .. args[1] .. " privilege!")
 			end
 		end
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[2])
+			print("Could not find player: " .. args[2])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[2])
 		end
@@ -963,14 +963,14 @@ function ccRevokePriv(ply, cmd, args)
 			Notify(target, 1, 3, ply:Nick() .. " has revoked your /cp priveleges.")
 		else
 			if ply:EntIndex() == 0 then
-				Msg("There is not a " .. args[1] .. " privilege!")
+				print("There is not a " .. args[1] .. " privilege!")
 			else
 				ply:PrintMessage(2, "There is not a " .. args[1] .. " privilege!")
 			end
 		end
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[2])
+			print("Could not find player: " .. args[2])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[2])
 		end
@@ -999,7 +999,7 @@ function ccMute(ply, cmd, args)
 		return
 	else
 		if ply:EntIndex() == 0 then
-			Msg("Could not find player: " .. args[1])
+			print("Could not find player: " .. args[1])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
@@ -1175,9 +1175,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmedics <Number> - Sets the max n
 AddValueCommand("rp_maxgundealers", "maxgundealers", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxgundealers <Number> - Sets the max number of Gun Dealers.")
 
-AddValueCommand("rp_maxhobos", "maxhobos", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcrackwhores <Number> - Sets the max number of Hobo's.")
-
 AddValueCommand("rp_maxcooks", "maxcooks", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcooks <Number> - Sets the max number of Cooks.")
 
@@ -1254,7 +1251,7 @@ AddValueCommand("rp_moneyprintercost", "mprintercost", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_moneyprintercost <Number> - Cost of a Money Printer.")
 
 AddValueCommand("rp_maxmoneyprinters", "maxmprinters", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxprinters <Number> - Max number of Money Printers per player.")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmoneyprinters <Number> - Max number of Money Printers per player.")
 
 AddValueCommand("rp_printamount", "mprintamount", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_printamount <Number> - Value of the money printed by the money printer.")
