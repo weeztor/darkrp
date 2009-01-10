@@ -26,7 +26,7 @@ function ENT:findSky(ply)
 	while fountSky == true do
 		zPos = zPos + 100
 		foundSky = util.IsInWorld(Vector(ply:GetPos().x ,ply:GetPos().y ,zPos))
-		Msg("My Z: " .. ply.GeyPos().z .. " -- zPos: " .. zPos .. " -- Is in world: " .. foundSky)
+		print("My Z: " .. ply.GeyPos().z .. " -- zPos: " .. zPos .. " -- Is in world: " .. foundSky)
 	end
 
 	return zPos - 20

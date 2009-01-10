@@ -71,6 +71,7 @@ end
 
 function ENT:CreateMoneybag()
 	if not ValidEntity(self) then return end
+	if self:IsOnFire() then return end
 	local MoneyPos = self:GetPos()
 
 	if math.random(1, 22) == 3 then self:BurstIntoFlames() end

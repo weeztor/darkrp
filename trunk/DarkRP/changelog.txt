@@ -15,12 +15,15 @@ Updated by: FPtje Falco
 [ADD] Console command to remove class specified entities when someone changes class.(Like microwaves get removed when a cook changes to like the hobo): rp_removeclassitems
 [ADD] HUD adaptation menu.
 [ADD] Timer to the vote screen(You see how much time you have left to vote)
+[ADD] DarkRP now saves the costs of guns and other global ints
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins
 [CHANGE] Moved the job change to F2 and I added a lot of commands/entities to it
 [CHANGE] The way Simple prop protection protects against slider bug: you can make the slider but you won't be able to do anything with the prop you made the slider on.
 [CHANGE] Lockpick being able to hit other things than doors
+[CHANGE] HasPriv() speed by using a cache: THANKS PHILXYZ
+[CHANGE] SpreadFire code: THANKS PHILXYZ
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
 [FIX] Rare error with dropweapon
 [FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.

@@ -157,7 +157,7 @@ function meta:ChangeTeam(t)
 		end
 	elseif t == TEAM_POLICE then
 		if self:Team() == t then
-			Notify(self, 1, 3, "You're already a CP!")
+			Notify(self, 1, 4, "You're already a CP!")
 			return
 		end
 
@@ -173,7 +173,7 @@ function meta:ChangeTeam(t)
 		self:SetModel("models/player/police.mdl")
 	elseif t == TEAM_MAYOR then
 		if self:Team() == t then
-			Notify(self, 1, 3, "You're already the Mayor!")
+			Notify(self, 1, 4, "You're already the Mayor!")
 			return
 		end
 
@@ -194,7 +194,7 @@ function meta:ChangeTeam(t)
 		self:SetModel("models/player/breen.mdl")
 	elseif t == TEAM_GANG then
 		if self:Team() == t then
-			Notify(self, 1, 3, "You're already a Gangster!")
+			Notify(self, 1, 4, "You're already a Gangster!")
 			return
 		end
 				
@@ -215,7 +215,7 @@ function meta:ChangeTeam(t)
 		self:SetModel("models/player/group03/male_01.mdl")
 	elseif t == TEAM_MOB then
 		if self:Team() == t then
-			Notify(self, 1, 3, "You're already the Mob Boss!")
+			Notify(self, 1, 4, "You're already the Mob Boss!")
 			return
 		end
 				
@@ -301,7 +301,7 @@ function meta:ChangeTeam(t)
 		self:SetModel("models/player/mossman.mdl")
 	elseif t == TEAM_CHIEF then
 		if self:Team() == t then
-			Notify(self, 1, 3, "You're already the Civil Protection Chief!")
+			Notify(self, 1, 4, "You're already the Civil Protection Chief!")
 			return
 		end
 
@@ -711,7 +711,7 @@ function GM:PlayerSpawn(ply)
 		if DB.RetrieveJailPos() then
 			ply:Arrest()
 		else
-			Notify(ply, 1, 3, "You're no longer under arrest because no jail positions are set!")
+			Notify(ply, 1, 4, "You're no longer under arrest because no jail positions are set!")
 		end
 	end
 
@@ -881,6 +881,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply:PrintMessage(HUD_PRINTTALK, "This server is running DarkRP 2.3.1")
 	timer.Simple(10, ply.CompleteSentence, ply)
 	RequestAllToggleCommands(ply)
+	RequestAllValueCommands(ply)
 end
 
 function GM:PlayerDisconnected(ply)

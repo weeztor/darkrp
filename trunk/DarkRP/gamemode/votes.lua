@@ -25,7 +25,7 @@ vote = { }
 
 function vote:Create(question, voteid, ent, delay, callback)
 	if #player.GetAll() == 1 then
-		Notify(ent, 1, 3, "You're the only one in the server so you won the vote")
+		Notify(ent, 1, 4, "You're the only one in the server so you won the vote")
 		callback(1, ent)
 		return
 	end

@@ -113,17 +113,63 @@ function DB.Priv2Text(priv)
 end
 
 function DB.HasPriv(ply, priv)
-	if priv == ADMIN and ply:EntIndex() == 0 then return true end
+	--[[ if priv == ADMIN and ply:EntIndex() == 0 then return true end
 
 	local p = DB.Priv2Text(priv)
 	if not p then return false end
 	
 	local result = tonumber(sql.QueryValue("SELECT " .. p .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
-	if result == 1 then return true else return false end
+	if result == 1 then return true else return false end ]]
+	if priv == ADMIN and (ply:EntIndex() == 0 or ply:IsSuperAdmin() or ply:IsAdmin()) then return true end
+
+        local p = DB.Priv2Text(priv)
+        if not p then return false end
+
+        -- If there is a current cache of priveleges
+        if DB.privcache then
+                -- If there is a cache structure for this user
+                if DB.privcache[ply:SteamID()] then
+                        -- If the cache indicates that they have the privilege
+                        if DB.privcache[ply:SteamID()][priv] == 1 then
+                                return true
+                        else
+                                return false
+                        end
+                -- If there is no cache for this user
+                else
+                        -- Find out whether they have this privelege
+                        local result = tonumber(sql.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
+
+                        DB.privcache[ply:SteamID()] = {}
+
+                        -- Create cache entries based on the database status
+                        if result == 1 then
+                                DB.privcache[ply:SteamID()][priv] = 1
+                                return true
+                        else
+                                DB.privcache[ply:SteamID()][priv] = 0
+                                return false
+                        end
+                end
+        -- If the cache is nonexistent
+        else
+                local result = tonumber(sql.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
+
+                DB.privcache = {}
+                DB.privcache[ply:SteamID()] = {}
+
+                if result == 1 then
+                        DB.privcache[ply:SteamID()][priv] = 1
+                        return true
+                else
+                        DB.privcache[ply:SteamID()][priv] = 0
+                        return false
+                end
+        end
 end
 
 function DB.GrantPriv(ply, priv)
-	local steamID = ply:SteamID()
+	--[[ local steamID = ply:SteamID()
 	local p = DB.Priv2Text(priv)
 	if not p then return false end
 	if tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";")) > 0 then
@@ -134,15 +180,37 @@ function DB.GrantPriv(ply, priv)
 		sql.Query("UPDATE darkrp_privs SET " .. p .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 		sql.Commit()
 	end
+	return true ]]
+	local steamID = ply:SteamID()
+	local p = DB.Priv2Text(priv)
+	if not p then return false end
+	if tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";")) > 0 then
+			sql.Query("UPDATE darkrp_privs SET " .. p .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
+	else
+			sql.Begin()
+			sql.Query("INSERT INTO darkrp_privs VALUES(" .. sql.SQLStr(steamID) .. ", 0, 0, 0, 0, 0, 0);")
+			sql.Query("UPDATE darkrp_privs SET " .. p .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
+			sql.Commit()
+	end
+	-- privelege structure altered, regenerate cache on lookups
+	DB.privcache = nil
 	return true
 end
 
 function DB.RevokePriv(ply, priv)
+	--[[ local steamID = ply:SteamID()
+	local p = DB.Priv2Text(priv)
+	local val = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
+	if not p or val < 1 then return false end
+	sql.Query("UPDATE darkrp_privs SET " .. p .. " = 0 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
+	return true ]]
 	local steamID = ply:SteamID()
 	local p = DB.Priv2Text(priv)
 	local val = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
 	if not p or val < 1 then return false end
 	sql.Query("UPDATE darkrp_privs SET " .. p .. " = 0 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
+	-- privelege structure altered, regenerate cache on lookups
+	DB.privcache = nil
 	return true
 end
 
