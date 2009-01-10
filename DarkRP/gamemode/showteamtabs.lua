@@ -796,7 +796,7 @@ function RPHUDTab()
 				LocalPlayer():ConCommand("Job2r 0")
 				LocalPlayer():ConCommand("Job2g 0")
 				LocalPlayer():ConCommand("Job2b 150")
-				LocalPlayer():ConCommand("Job2a 255")
+				LocalPlayer():ConCommand("Job2a 200")
 			end
 			jobs1panel:AddItem(resetjobs1)
 		jobs1cat:SetContents(jobs1panel)
@@ -847,7 +847,7 @@ function RPHUDTab()
 			resetsalary1:SetSize(230, 20)
 			resetsalary1.DoClick = function()
 				LocalPlayer():ConCommand("salary2r 0")
-				LocalPlayer():ConCommand("salary2g 150")
+				LocalPlayer():ConCommand("salary2g 0")
 				LocalPlayer():ConCommand("salary2b 0")
 				LocalPlayer():ConCommand("salary2a 255")
 			end
@@ -873,9 +873,9 @@ function RPHUDTab()
 			resetsalary2:SetSize(230, 20)
 			resetsalary2.DoClick = function()
 				LocalPlayer():ConCommand("salary1r 0")
-				LocalPlayer():ConCommand("salary1g 0")
+				LocalPlayer():ConCommand("salary1g 150")
 				LocalPlayer():ConCommand("salary1b 0")
-				LocalPlayer():ConCommand("salary1a 255")
+				LocalPlayer():ConCommand("salary1a 200")
 			end
 			salary2panel:AddItem(resetsalary2)
 		salary2cat:SetContents(salary2panel)
@@ -1011,7 +1011,23 @@ function RPAdminTab()
 				end
 			ToggleCat:SetContents(TogglePanel)
 			self:AddItem(ToggleCat)
-			
+			--[[ function ToggleCat:Toggle()
+				self:SetExpanded( !self:GetExpanded() ) 
+				self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
+				self:InvalidateLayout( true ) 
+				self:GetParent():InvalidateLayout() 
+				self:GetParent():GetParent():InvalidateLayout() 
+				local cookie = '1' 
+				if ( !self:GetExpanded() ) then cookie = '0' end 
+				self:SetCookie( "Open", cookie )
+				
+				print(ValuePanel,  self:GetExpanded(), ValueCat:GetExpanded() )
+				if not self:GetExpanded() and ValueCat:GetExpanded() then
+					print("done")
+					ValuePanel:SetSize(470)
+					print(ValuePanel:GetSize())
+				end 
+			end  ]]
 			local ValueCat = vgui.Create("DCollapsibleCategory")
 			ValueCat:SetLabel("Value commands")
 				local ValuePanel = vgui.Create("DPanelList")

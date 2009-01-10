@@ -812,12 +812,12 @@ function GM:PlayerLoadout(ply)
 	end
 	if team == TEAM_POLICE or team == TEAM_CHIEF or ply:HasPriv(ADMIN) then
 		ply:Give("door_ram")
-	end
-
-	if team == TEAM_POLICE then
 		ply:Give("arrest_stick")
 		ply:Give("unarrest_stick")
 		ply:Give("stunstick")
+	end
+
+	if team == TEAM_POLICE then
 		if CfgVars["noguns"] ~= 1 then
 			ply:Give("weapon_glock2")
 			ply:GiveAmmo(20, "Pistol")
@@ -837,9 +837,6 @@ function GM:PlayerLoadout(ply)
 	elseif team == TEAM_COOK then
 		if CfgVars["noguns"] ~= 1 then ply:GiveAmmo(1, "Pistol") end
 	elseif team == TEAM_CHIEF then
-		ply:Give("arrest_stick")
-		ply:Give("unarrest_stick")
-		ply:Give("stunstick")
 		if CfgVars["noguns"] ~= 1 then
 			ply:Give("weapon_deagle2")
 			ply:GiveAmmo(30, "Pistol")

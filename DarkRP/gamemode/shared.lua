@@ -27,7 +27,12 @@ RPExtraTeams = {}
 function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote)
 	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote)})
 	team.SetUp(9 + #RPExtraTeams, Name, color)
-	return 9 + #RPExtraTeams
+	local Team = 9 + #RPExtraTeams
+	--[[ if SERVER then
+		AddValueCommand("rp_max"..command, "max"..command, false)
+		AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..command.." <Number> - Sets max ".. Name .."s.")
+	end ]]
+	return Team
 end
 
 /*

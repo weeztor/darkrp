@@ -179,21 +179,21 @@ local HealthTexta = CreateClientConVar("HealthTexta", 200, true, false)
 
 local Job1r = CreateClientConVar("Job1r", 0, true, false)
 local Job1g = CreateClientConVar("Job1g", 0, true, false)
-local Job1b = CreateClientConVar("Job1b", 0, true, false)
-local Job1a = CreateClientConVar("Job1a", 255, true, false)
+local Job1b = CreateClientConVar("Job1b", 150, true, false)
+local Job1a = CreateClientConVar("Job1a", 200, true, false)
 
 local Job2r = CreateClientConVar("Job2r", 0, true, false)
 local Job2g = CreateClientConVar("Job2g", 0, true, false)
-local Job2b = CreateClientConVar("Job2b", 150, true, false)
+local Job2b = CreateClientConVar("Job2b", 0, true, false)
 local Job2a = CreateClientConVar("Job2a", 255, true, false)
 
 local salary1r = CreateClientConVar("salary1r", 0, true, false)
-local salary1g = CreateClientConVar("salary1g", 0, true, false)
+local salary1g = CreateClientConVar("salary1g", 150, true, false)
 local salary1b = CreateClientConVar("salary1b", 0, true, false)
-local salary1a = CreateClientConVar("salary1a", 255, true, false)
+local salary1a = CreateClientConVar("salary1a", 200, true, false)
 
 local salary2r = CreateClientConVar("salary2r", 0, true, false)
-local salary2g = CreateClientConVar("salary2g", 150, true, false)
+local salary2g = CreateClientConVar("salary2g", 0, true, false)
 local salary2b = CreateClientConVar("salary2b", 0, true, false)
 local salary2a = CreateClientConVar("salary2a", 255, true, false)
 
