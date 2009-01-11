@@ -991,6 +991,14 @@ function RPAdminTab()
 				TogglePanel:EnableHorizontal(false)
 				TogglePanel:EnableVerticalScrollbar(true)
 				
+				local ValueCat = vgui.Create("DCollapsibleCategory")
+				ValueCat:SetLabel("Value commands")
+				local ValuePanel = vgui.Create("DPanelList")
+				ValuePanel:SetSize(470, 230)
+				ValuePanel:SetSpacing(1)
+				ValuePanel:EnableHorizontal(false)
+				ValuePanel:EnableVerticalScrollbar(true)
+				
 				for k, v in pairs(NewToggleHelpMessages) do
 					local checkbox = vgui.Create("DCheckBoxLabel")
 					//checkbox:SetConVar(command)
@@ -1011,30 +1019,45 @@ function RPAdminTab()
 				end
 			ToggleCat:SetContents(TogglePanel)
 			self:AddItem(ToggleCat)
-			--[[ function ToggleCat:Toggle()
+			function ToggleCat:Toggle()
 				self:SetExpanded( !self:GetExpanded() ) 
 				self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
+				if not self:GetExpanded() and ValueCat:GetExpanded() then
+					ValuePanel:SetTall(470)
+				elseif self:GetExpanded() and ValueCat:GetExpanded() then
+					ValuePanel:SetTall(230)
+					TogglePanel:SetTall(230)
+				elseif self:GetExpanded() and not ValueCat:GetExpanded() then
+					TogglePanel:SetTall(470)
+				end 
 				self:InvalidateLayout( true ) 
 				self:GetParent():InvalidateLayout() 
 				self:GetParent():GetParent():InvalidateLayout() 
 				local cookie = '1' 
 				if ( !self:GetExpanded() ) then cookie = '0' end 
 				self:SetCookie( "Open", cookie )
-				
-				print(ValuePanel,  self:GetExpanded(), ValueCat:GetExpanded() )
-				if not self:GetExpanded() and ValueCat:GetExpanded() then
-					print("done")
-					ValuePanel:SetSize(470)
-					print(ValuePanel:GetSize())
+			end  
+			
+			function ValueCat:Toggle()
+				self:SetExpanded( !self:GetExpanded() ) 
+				self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
+
+				if not self:GetExpanded() and ToggleCat:GetExpanded() then
+					TogglePanel:SetTall(470)
+				elseif self:GetExpanded() and ToggleCat:GetExpanded() then
+					TogglePanel:SetTall(230)
+					ValuePanel:SetTall(230)
+				elseif self:GetExpanded() and not ToggleCat:GetExpanded() then
+					ValuePanel:SetTall(470)
 				end 
-			end  ]]
-			local ValueCat = vgui.Create("DCollapsibleCategory")
-			ValueCat:SetLabel("Value commands")
-				local ValuePanel = vgui.Create("DPanelList")
-				ValuePanel:SetSize(470, 230)
-				ValuePanel:SetSpacing(1)
-				ValuePanel:EnableHorizontal(false)
-				ValuePanel:EnableVerticalScrollbar(true)
+				self:InvalidateLayout( true ) 
+				self:GetParent():InvalidateLayout() 
+				self:GetParent():GetParent():InvalidateLayout()
+				local cookie = '1' 
+				if ( !self:GetExpanded() ) then cookie = '0' end 
+				self:SetCookie( "Open", cookie )
+			end  
+			
 				
 				for k, v in pairs(NewValueHelpMessages) do
 					local slider = vgui.Create("DNumSlider")
