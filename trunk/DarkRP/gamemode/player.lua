@@ -877,8 +877,6 @@ function GM:PlayerInitialSpawn(ply)
 	DB.SetUpCPOwnableDoors()
 	ply:PrintMessage(HUD_PRINTTALK, "This server is running DarkRP 2.3.1")
 	timer.Simple(10, ply.CompleteSentence, ply)
-	RequestAllToggleCommands(ply)
-	RequestAllValueCommands(ply)
 end
 
 function GM:PlayerDisconnected(ply)

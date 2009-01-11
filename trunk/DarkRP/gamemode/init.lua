@@ -280,23 +280,20 @@ if not file.IsDir("DarkRP/") then
 end
 
 function SaveRPChanges()
-	if file.Exists("DarkRP/settings.txt") and file.Read("DarkRP/settings.txt") ~= "" then // If the file exists then 
-		local compare = util.KeyValuesToTable(file.Read("DarkRP/settings.txt"))
+	local Save1 = false
+	local Save2 = false
+	local settingsfile = file.Read("DarkRP/settings.txt")
+	local Globalsfile = file.Read("DarkRP/globals.txt")
+	if file.Exists("DarkRP/settings.txt") and settingsfile ~= "" then // If the file exists then 
+		local compare = util.KeyValuesToTable(settingsfile)
 		for k,v in pairs(compare) do
 			if CfgVars[k] ~= compare[k] then // Check if the contents match and if they don't then
-				print(k .. " changed from: " .. compare[k], "to", CfgVars[k])
-				local settings = util.TableToKeyValues(CfgVars)
-				local File = "DarkRP/settings.txt"
-				file.Write(File, settings) // Save all the settings!
-				print("DarkRP settings saved!")
-				return // only save it once, if more than one change was made, we don't want it to save more than one times.
+				print(k .. " changed from: ",  compare[k], "to", CfgVars[k])
+				Save1 = true
 			end
 		end
 	else//if the file does not exist then you should make it.
-		print("DarkRP settings file doesn't exist, creating now and storing settings...")
-		local settings = util.TableToKeyValues(CfgVars)
-		local File = "DarkRP/settings.txt"
-		file.Write(File, settings)
+		Save1 = true
 	end	
 	
 	local newsettings = {}
@@ -313,24 +310,30 @@ function SaveRPChanges()
 			//print(k, GetGlobalInt(v.var))
 		end
 	end
-	if file.Exists("DarkRP/globals.txt") and file.Read("DarkRP/globals.txt") ~= "" then // If the file exists then 
-		
-		local compare = util.KeyValuesToTable(file.Read("DarkRP/globals.txt"))
+	if file.Exists("DarkRP/globals.txt") and Globalsfile ~= "" then // If the file exists then 
+		local compare = util.KeyValuesToTable(Globalsfile)
 		for k,v in pairs(compare) do
 			if v ~= newsettings[k] then // Check if the contents match and if they don't then
-				print(k .. " changed from: " .. v, "to", newsettings[k])
-				local File = "DarkRP/globals.txt"
-				local settings = util.TableToKeyValues(newsettings)
-				file.Write(File, settings) // Save all the settings!
-				print("DarkRP globals saved!")
-				return // only save it once, if more than one change was made, we don't want it to save more than one times.
+				print(k .. " changed from:",  v, "to", newsettings[k])
+				Save2 = true
 			end
 		end 
 	else//if the file does not exist then you should make it.
-		print("DarkRP globals file doesn't exist, creating now and storing globals...")
-		local settings = util.TableToKeyValues(newsettings)
+		print("globals.txt does not exist, creating now")
+		Save2 = true
+	end
+	
+	if Save1 then
+		local settings = util.TableToKeyValues(CfgVars)
+		local File = "DarkRP/settings.txt"
+		file.Write(File, settings) // Save all the settings!
+		print("DarkRP settings saved!")
+	end
+	if Save2 then
 		local File = "DarkRP/globals.txt"
-		file.Write(File, settings)
+		local settings = util.TableToKeyValues(newsettings)
+		file.Write(File, settings) // Save all the settings!
+		print("DarkRP globals saved!")
 	end
 end
 timer.Create("DarkRPSaveSettings", 60, 0, SaveRPChanges)
