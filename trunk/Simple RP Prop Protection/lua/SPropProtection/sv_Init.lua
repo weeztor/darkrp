@@ -254,6 +254,8 @@ end
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
 
 function SPropProtection.GravGunThings(ply, ent)
+	if not ValidEntity(ent) then return true end
+	if ent:IsVehicle() then return false end
 	if ply:KeyDown(IN_ATTACK) then
 		local entphys = ent:GetPhysicsObject()
 		-- it was launched
@@ -263,7 +265,6 @@ function SPropProtection.GravGunThings(ply, ent)
 		timer.Simple(.01, entphys.Wake, entphys)
 		timer.Simple(.01, ent.SetPos, ent, curpos)
 	end
-	if not ValidEntity(ent) then return true end
 	if ent:GetClass() == "func_breakable_surf" then return false end
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v then return true end
@@ -274,7 +275,7 @@ function SPropProtection.GravGunThings(ply, ent)
 	if(!ent:IsValid() or !SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
 	end
-	return true
+	return
 end
 hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.GravGunThings)
 hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropProtection.GravGunThings)
