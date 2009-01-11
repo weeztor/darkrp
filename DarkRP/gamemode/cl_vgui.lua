@@ -311,6 +311,20 @@ function KeysMenu(Vehicle)
 		Frame:SetVisible(true)
 		Frame:MakePopup()
 		Frame:SetTitle("Door options")
+		//local framethink = Frame:Think()
+		function Frame:Think()
+			local ent = LocalPlayer():GetEyeTrace().Entity
+			if not ValidEntity(ent) or not ent:IsDoor() or ent:GetPos():Distance(LocalPlayer():GetPos()) > 120 then
+				self:Close()
+			end
+			if (!self.Dragging) then return end  
+			local x = gui.MouseX() - self.Dragging[1] 
+			local y = gui.MouseY() - self.Dragging[2] 
+			// Lock to screen bounds if screenlock is enabled 
+			x = math.Clamp( x, 0, ScrW() - self:GetWide() ) 
+			y = math.Clamp( y, 0, ScrH() - self:GetTall() ) 
+			self:SetPos( x, y ) 
+		end
 		local Entiteh = "door"
 		if Vehicle then
 			Entiteh = "vehicle"

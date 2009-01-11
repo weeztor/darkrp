@@ -980,126 +980,134 @@ function RPAdminTab()
 	AdminPanel:EnableHorizontal( false	)
 	AdminPanel:EnableVerticalScrollbar( true )
 		function AdminPanel:Update()
+			self:Clear(true)
+			NewToggleHelpMessages = {}
+			NewValueHelpMessages = {}
 			LocalPlayer():ConCommand("rp_RequestAllToggleCommands")
 			LocalPlayer():ConCommand("rp_RequestAllValueCommands")
-			self:Clear(true)
-			local ToggleCat = vgui.Create("DCollapsibleCategory")
-			ToggleCat:SetLabel("Toggle commands")
-				local TogglePanel = vgui.Create("DPanelList")
-				TogglePanel:SetSize(470, 230)
-				TogglePanel:SetSpacing(1)
-				TogglePanel:EnableHorizontal(false)
-				TogglePanel:EnableVerticalScrollbar(true)
-				
-				local ValueCat = vgui.Create("DCollapsibleCategory")
-				ValueCat:SetLabel("Value commands")
-				local ValuePanel = vgui.Create("DPanelList")
-				ValuePanel:SetSize(470, 230)
-				ValuePanel:SetSpacing(1)
-				ValuePanel:EnableHorizontal(false)
-				ValuePanel:EnableVerticalScrollbar(true)
-				
-				for k, v in pairs(NewToggleHelpMessages) do
-					local checkbox = vgui.Create("DCheckBoxLabel")
-					//checkbox:SetConVar(command)
-					checkbox:SetValue(v.val)
-					checkbox:SetText(v.desc)
-					function checkbox.Button:Toggle()
-						if ( self:GetChecked() == nil || !self:GetChecked() ) then 
-							self:SetValue( true ) 
-						else 
-							self:SetValue( false ) 
-						end 
-						local tonum = {}
-						tonum[false] = "0"
-						tonum[true] = "1"
-						LocalPlayer():ConCommand(v.command .. " " .. tonum[self:GetChecked()])
-					end
-					TogglePanel:AddItem(checkbox)
-				end
-			ToggleCat:SetContents(TogglePanel)
-			self:AddItem(ToggleCat)
-			function ToggleCat:Toggle()
-				self:SetExpanded( !self:GetExpanded() ) 
-				self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
-				if not self:GetExpanded() and ValueCat:GetExpanded() then
-					ValuePanel:SetTall(470)
-				elseif self:GetExpanded() and ValueCat:GetExpanded() then
-					ValuePanel:SetTall(230)
-					TogglePanel:SetTall(230)
-				elseif self:GetExpanded() and not ValueCat:GetExpanded() then
-					TogglePanel:SetTall(470)
-				end 
-				self:InvalidateLayout( true ) 
-				self:GetParent():InvalidateLayout() 
-				self:GetParent():GetParent():InvalidateLayout() 
-				local cookie = '1' 
-				if ( !self:GetExpanded() ) then cookie = '0' end 
-				self:SetCookie( "Open", cookie )
-			end  
-			
-			function ValueCat:Toggle()
-				self:SetExpanded( !self:GetExpanded() ) 
-				self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
-
-				if not self:GetExpanded() and ToggleCat:GetExpanded() then
-					TogglePanel:SetTall(470)
-				elseif self:GetExpanded() and ToggleCat:GetExpanded() then
-					TogglePanel:SetTall(230)
-					ValuePanel:SetTall(230)
-				elseif self:GetExpanded() and not ToggleCat:GetExpanded() then
-					ValuePanel:SetTall(470)
-				end 
-				self:InvalidateLayout( true ) 
-				self:GetParent():InvalidateLayout() 
-				self:GetParent():GetParent():InvalidateLayout()
-				local cookie = '1' 
-				if ( !self:GetExpanded() ) then cookie = '0' end 
-				self:SetCookie( "Open", cookie )
-			end  
-			
-				
-				for k, v in pairs(NewValueHelpMessages) do
-					local slider = vgui.Create("DNumSlider")
-					slider:SetDecimals(0)
-					slider:SetMin(0)
-					slider:SetMax(3000)
-					slider:SetText(v.desc)
-					slider:SetValue(v.val)
-					function slider.Slider:OnMouseReleased()
-						self:SetDragging( false ) 
-						self:MouseCapture( false ) 
-						LocalPlayer():ConCommand(v.command .. " " .. slider:GetValue())
-					end
-					function slider.Wang:EndWang()
-						self:MouseCapture( false ) 
-						self.Dragging = false 
-						self.HoldPos = nil 
-						self.Wanger:SetCursor( "" ) 
-						if ( ValidPanel( self.IndicatorT ) ) then self.IndicatorT:Remove() end 
-						if ( ValidPanel( self.IndicatorB ) ) then self.IndicatorB:Remove() end 
-						LocalPlayer():ConCommand(v.command .. " " .. self:GetValue())
-					end
-					function slider.Wang.TextEntry:OnEnter()
-						LocalPlayer():ConCommand(v.command .. " " .. self:GetValue())
-					end
-					//slider:SetConVar(command)
-					--[[ function slider.Button:Toggle()
-						if ( self:GetChecked() == nil || !self:GetChecked() ) then 
-							self:SetValue( true ) 
-						else 
-							self:SetValue( false ) 
-						end 
-						local tonum = {}
-						tonum[false] = "0"
-						tonum[true] = "1"
-						LocalPlayer():ConCommand(command .. " " .. tonum[self:GetChecked()])
-					end ]]
-					ValuePanel:AddItem(slider)
+			local loadingcat = vgui.Create("DCollapsibleCategory")
+			loadingcat:SetLabel("LOADING!!!!!")
+			self:AddItem(loadingcat)
+			timer.Simple(1, function()
+				self:Clear(true)
+				local ToggleCat = vgui.Create("DCollapsibleCategory")
+				ToggleCat:SetLabel("Toggle commands")
+					local TogglePanel = vgui.Create("DPanelList")
+					TogglePanel:SetSize(470, 230)
+					TogglePanel:SetSpacing(1)
+					TogglePanel:EnableHorizontal(false)
+					TogglePanel:EnableVerticalScrollbar(true)
 					
-				end
-			ValueCat:SetContents(ValuePanel)
-			self:AddItem(ValueCat)
+					local ValueCat = vgui.Create("DCollapsibleCategory")
+					ValueCat:SetLabel("Value commands")
+					local ValuePanel = vgui.Create("DPanelList")
+					ValuePanel:SetSize(470, 230)
+					ValuePanel:SetSpacing(1)
+					ValuePanel:EnableHorizontal(false)
+					ValuePanel:EnableVerticalScrollbar(true)
+					
+					for k, v in pairs(NewToggleHelpMessages) do
+						local checkbox = vgui.Create("DCheckBoxLabel")
+						//checkbox:SetConVar(command)
+						checkbox:SetValue(v.val)
+						checkbox:SetText(v.desc)
+						function checkbox.Button:Toggle()
+							if ( self:GetChecked() == nil || !self:GetChecked() ) then 
+								self:SetValue( true ) 
+							else 
+								self:SetValue( false ) 
+							end 
+							local tonum = {}
+							tonum[false] = "0"
+							tonum[true] = "1"
+							LocalPlayer():ConCommand(v.command .. " " .. tonum[self:GetChecked()])
+						end
+						TogglePanel:AddItem(checkbox)
+					end
+				ToggleCat:SetContents(TogglePanel)
+				self:AddItem(ToggleCat)
+				function ToggleCat:Toggle()
+					self:SetExpanded( !self:GetExpanded() ) 
+					self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
+					if not self:GetExpanded() and ValueCat:GetExpanded() then
+						ValuePanel:SetTall(470)
+					elseif self:GetExpanded() and ValueCat:GetExpanded() then
+						ValuePanel:SetTall(230)
+						TogglePanel:SetTall(230)
+					elseif self:GetExpanded() and not ValueCat:GetExpanded() then
+						TogglePanel:SetTall(470)
+					end 
+					self:InvalidateLayout( true ) 
+					self:GetParent():InvalidateLayout() 
+					self:GetParent():GetParent():InvalidateLayout() 
+					local cookie = '1' 
+					if ( !self:GetExpanded() ) then cookie = '0' end 
+					self:SetCookie( "Open", cookie )
+				end  
+				
+				function ValueCat:Toggle()
+					self:SetExpanded( !self:GetExpanded() ) 
+					self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
+
+					if not self:GetExpanded() and ToggleCat:GetExpanded() then
+						TogglePanel:SetTall(470)
+					elseif self:GetExpanded() and ToggleCat:GetExpanded() then
+						TogglePanel:SetTall(230)
+						ValuePanel:SetTall(230)
+					elseif self:GetExpanded() and not ToggleCat:GetExpanded() then
+						ValuePanel:SetTall(470)
+					end 
+					self:InvalidateLayout( true ) 
+					self:GetParent():InvalidateLayout() 
+					self:GetParent():GetParent():InvalidateLayout()
+					local cookie = '1' 
+					if ( !self:GetExpanded() ) then cookie = '0' end 
+					self:SetCookie( "Open", cookie )
+				end  
+				
+					
+					for k, v in pairs(NewValueHelpMessages) do
+						local slider = vgui.Create("DNumSlider")
+						slider:SetDecimals(0)
+						slider:SetMin(0)
+						slider:SetMax(3000)
+						slider:SetText(v.desc)
+						slider:SetValue(v.val)
+						function slider.Slider:OnMouseReleased()
+							self:SetDragging( false ) 
+							self:MouseCapture( false ) 
+							LocalPlayer():ConCommand(v.command .. " " .. slider:GetValue())
+						end
+						function slider.Wang:EndWang()
+							self:MouseCapture( false ) 
+							self.Dragging = false 
+							self.HoldPos = nil 
+							self.Wanger:SetCursor( "" ) 
+							if ( ValidPanel( self.IndicatorT ) ) then self.IndicatorT:Remove() end 
+							if ( ValidPanel( self.IndicatorB ) ) then self.IndicatorB:Remove() end 
+							LocalPlayer():ConCommand(v.command .. " " .. self:GetValue())
+						end
+						function slider.Wang.TextEntry:OnEnter()
+							LocalPlayer():ConCommand(v.command .. " " .. self:GetValue())
+						end
+						//slider:SetConVar(command)
+						--[[ function slider.Button:Toggle()
+							if ( self:GetChecked() == nil || !self:GetChecked() ) then 
+								self:SetValue( true ) 
+							else 
+								self:SetValue( false ) 
+							end 
+							local tonum = {}
+							tonum[false] = "0"
+							tonum[true] = "1"
+							LocalPlayer():ConCommand(command .. " " .. tonum[self:GetChecked()])
+						end ]]
+						ValuePanel:AddItem(slider)
+						
+					end
+				ValueCat:SetContents(ValuePanel)
+				self:AddItem(ValueCat)
+			end)
 		end
 		AdminPanel:Update()
 	return AdminPanel

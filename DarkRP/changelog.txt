@@ -33,6 +33,7 @@ Updated by: FPtje Falco
 [FIX] Gravgun punt punting far
 [FIX] Not being able to use druglabs/money printers/whatever
 [FIX] Vote screens being able to be there forever
+[FIX] The save system not saving everything
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 
 

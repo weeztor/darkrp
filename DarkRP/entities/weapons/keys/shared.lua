@@ -124,14 +124,11 @@ function SWEP:Reload()
 		return
 	end
 	
-	if SERVER then
+	if CLIENT then
 		if trace.Entity:IsVehicle() then
-			self.Owner:SendLua("KeysMenu(true)")
+			KeysMenu(true)
 		else
-			self.Owner:SendLua("KeysMenu(false)")
+			KeysMenu(false)
 		end
 	end
-	//if --[[ (CLIENT or self.Owner:IsListenServerHost( )) ]] not SERVER and not self.FrameVisible then
-		
-	//end
 end
