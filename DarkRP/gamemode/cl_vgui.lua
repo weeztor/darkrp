@@ -47,8 +47,8 @@ function MsgDoVote(msg)
 	
 	function panel:Think()
 		self:SetTitle("Time: ".. tostring(math.ceil(timeleft - (CurTime() - OldTime))))
-		if timeleft - (CurTime() - OldTime) < 0 then 
-			KillVoteVGUI(voteid)
+		if timeleft - (CurTime() - OldTime) <= 0 then 
+			panel:Remove()
 		end
 	end
 	/*panel:LoadControlsFromString([[

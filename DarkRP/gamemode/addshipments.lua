@@ -1,5 +1,5 @@
 CustomShipments = {}
-function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shipment, Sold_seperately, price_seperately)
+function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shipment, Sold_seperately, price_seperately, noshipment)
 	if not name or not model or not entity or not price or not Amount_of_guns_in_one_shipment or (Sold_seperately and not price_seperately) then
 		local text = "One of the custom shipments is wrongly made! Attempt to give name of the wrongly made shipment!(if it's nil then I failed):\n" .. tostring(name)
 		print(text)
@@ -15,12 +15,12 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 		return
 	end
 	local price = tonumber(price)
-	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately})
+	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment})
 end
 
 /*
 HOW TO ADD CUSTOM SHIPMENTS:
-AddCustomShipment("<Name of the shipment(no spaces)>"," <the model that the shipment spawns(should be the world model...)>", "<the classname of the weapon>", <the price of one shipment>, <how many guns there are in one shipment>, <OPTIONAL: true/false sold seperately>, <OPTIONAL: price when sold seperately>)
+AddCustomShipment("<Name of the shipment(no spaces)>"," <the model that the shipment spawns(should be the world model...)>", "<the classname of the weapon>", <the price of one shipment>, <how many guns there are in one shipment>, <OPTIONAL: true/false sold seperately>, <OPTIONAL: price when sold seperately>, < true/false OPTIONAL: /buypistol only = true> )
 
 Notes:
 MODEL: you can go to Q and then props tab at the top left then search for w_ and you can find all world models of the weapons!
@@ -58,7 +58,7 @@ EXAMPLES OF CUSTOM SHIPMENTS(remove the -- to activate it): */
 //AddCustomShipment("HL2pistol", "models/weapons/W_pistol.mdl", "weapon_pistol", 500, 10, true, 200)
 
 --EXAMPLE OF AN ENTITY(in this case a medkit)
---AddCustomShipment("medkit", "models/Combine_Helicopter/helicopter_bomb01.mdl", "item_healthkit", 100, 10)
+--AddCustomShipment("medkit", "models/Combine_Helicopter/helicopter_bomb01.mdl", "item_healthkit", 100, 10, true, 10, false)
 --EXAMPLE OF A BOUNCY BALL:   		NOTE THAT YOU HAVE TO PRESS E REALLY QUICKLY ON THE BOMB OR YOU'LL EAT THE BALL LOL
---AddCustomShipment("bball", "models/Combine_Helicopter/helicopter_bomb01.mdl", "sent_ball", 100, 10)
+--AddCustomShipment("bball", "models/Combine_Helicopter/helicopter_bomb01.mdl", "sent_ball", 100, 10, true, 10, true)
 -- ADD CUSTOM SHIPMENTS HERE:

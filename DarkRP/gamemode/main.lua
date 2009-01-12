@@ -816,7 +816,8 @@ function BuyShipment(ply, args)
 		if k == args then found = true end
 	end
 	for k,v in pairs(CustomShipments) do
-		if string.lower(args) == string.lower(v.name) then
+		print(v.noship)
+		if string.lower(args) == string.lower(v.name) and not v.noship then
 			found = v
 		end
 	end

@@ -47,7 +47,7 @@ function ccValueCommand(ply, cmd, args)
 		nick = ply:Nick()
 	end
 
-	NotifyAll(0, 3, nick .. " set " .. cmd .. " to " .. amount)
+	NotifyAll(0, 4, nick .. " set " .. cmd .. " to " .. amount)
 end
 
 ToggleCmds = {}
