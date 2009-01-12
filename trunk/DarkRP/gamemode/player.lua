@@ -100,6 +100,33 @@ function meta:ChangeAllowed(t)
 	if self.bannedfrom[t] == 1 then return false else return true end
 end
 
+for k,v in pairs(RPExtraTeams) do
+	ValueCmds["rp_max"..v.command] = { var = "rp_max"..v.command, global = false }
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.." <Number> - Sets max "..v.name.."s.")
+	if CfgVars["rp_max"..v.command] == nil then CfgVars["rp_max"..v.command] = v.max end
+	concommand.Add("rp_max"..v.command, function(ply, cmd, args)
+		if #args < 1 then
+			print("rp_max"..v.command, "=", v.max)
+			ply:PrintMessage(2, "rp_max"..v.command..  "    =    ".. v.max)
+		end
+		if not ply:HasPriv(ADMIN) then
+			ply:PrintMessage(2, "You're not an admin")
+			return
+		end
+		v.max = tonumber(args[1])
+		CfgVars["rp_max"..v.command] = tonumber(args[1])
+		
+		local nick = ""
+
+		if ply:EntIndex() == 0 then
+			nick = "Console"
+		else
+			nick = ply:Nick()
+		end
+		NotifyAll(0, 4, nick .. " set " .. "rp_max"..v.command .. " to " .. args[1])
+	end)
+end
+
 
 function meta:ChangeTeam(t)
 	if RPArrestedPlayers[self:SteamID()] then

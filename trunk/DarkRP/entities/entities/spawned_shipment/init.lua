@@ -73,6 +73,7 @@ function ENT:SpawnItem()
 	if count <= 1 then self.Entity:Remove() end
 	local contents = self.Entity:GetNWString("contents")
 	local weapon = ents.Create("spawned_weapon")
+	if not weaponClasses[contents] then return end
 	for ent, mdl in pairs(weaponClasses[contents]) do
 		weapon:SetNWString("weaponclass", ent)
 		weapon:SetModel(mdl)
