@@ -97,6 +97,7 @@ function meta:GrantPriv(priv)
 end
 
 function meta:ChangeAllowed(t)
+	if not self.bannedfrom then return true end
 	if self.bannedfrom[t] == 1 then return false else return true end
 end
 
@@ -925,7 +926,7 @@ function GM:PlayerDisconnected(ply)
 	end
 	vote.DestroyVotesWithEnt(ply)
 	-- If you're arrested when you disconnect, you will serve your time again when you reconnect!
-	if RPArrestedPlayers[ply:SteamID()]then
+	if RPArrestedPlayers and RPArrestedPlayers[ply:SteamID()]then
 		DB.StoreJailStatus(ply, math.ceil(GetGlobalInt("jailtimer")))
 	end
 end
