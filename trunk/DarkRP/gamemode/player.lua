@@ -532,24 +532,12 @@ function meta:Unarrest(ID)
 end
 
 function meta:CompleteSentence()
-	if ValidEntity(self) and self.SteamID ~= nil and self:SteamID() ~= nil then
-		if RPArrestedPlayers[self:SteamID()] then
-			local time = GetGlobalInt("jailtimer")
-			self:Arrest(time, true)
-			Notify(self, 0, 5, "Punishment for disconnecting! Jailed for: " .. time .. " seconds.")
-		end
+	local ID = self:SteamID()
+	if ValidEntity(self) and ID ~= nil and RPArrestedPlayers[ID] then
+		local time = GetGlobalInt("jailtimer")
+		self:Arrest(time, true)
+		Notify(self, 0, 5, "Punishment for disconnecting! Jailed for: " .. time .. " seconds.")
 	end
---[[ 	local time = DB.RetrieveJailStatus(self)
-
-		if time == 0 or not DB.RetrieveJailPos() then
-			-- No outstanding jail time to be done
-			return ""
-		else
-			-- Don't pick up the soap this time
-			self:Arrest(time)
-			Notify(self, 0, 5, "Punishment for disconnecting! Jailed for: " .. time .. " seconds.")
-		end
-	end ]]
 end
 
 function meta:UnownAll()
@@ -892,8 +880,8 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNWInt("vmutez", 0)
 	ply:SetNWInt("slp", 0)
 	ply:SetNWInt("maxletters", 0)
-	ply:SetNetworkedBool("wanted", false)
-	ply:SetNetworkedBool("warrant", false)
+	ply:SetNWBool("wanted", false)
+	ply:SetNWBool("warrant", false)
 	ply:SetNWBool("helpCop", false)
 	ply:SetNWBool("zombieToggle", false)
 	ply:SetNWBool("helpZombie", false)
@@ -901,11 +889,12 @@ function GM:PlayerInitialSpawn(ply)
 	ply:SetNWBool("helpAdmin", false)
 	DB.RetrieveSalary(ply)
 	DB.RetrieveMoney(ply)
-	DB.SetUpNonOwnableDoors()
-	DB.SetUpCPOwnableDoors()
 	ply:PrintMessage(HUD_PRINTTALK, "This server is running DarkRP 2.3.1")
 	timer.Simple(10, ply.CompleteSentence, ply)
 end
+timer.Simple(5, function()
+	DB.SetUpNonOwnableDoors()
+	DB.SetUpCPOwnableDoors() end)
 
 function GM:PlayerDisconnected(ply)
 	self.BaseClass:PlayerDisconnected(ply)
