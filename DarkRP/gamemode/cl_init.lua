@@ -248,8 +248,8 @@ function GM:HUDPaint()
 		end
 
 		if ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
-			local pos = LocalPlayer():GetEyeTrace().HitPos:ToScreen()
-			
+			//local pos = LocalPlayer():GetEyeTrace().HitPos:ToScreen()
+			local pos = {x = ScrW()/2, y = ScrH() / 2}
 			if GetGlobalInt("globalshow") == 0 then
 				if tr.Entity:IsPlayer() then DrawPlayerInfo(tr.Entity) end
 			end
@@ -382,7 +382,7 @@ function GM:HUDPaint()
 						draw.DrawText(st, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
 						draw.DrawText(st, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
 					else
-						draw.DrawText(st, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
+						draw.DrawText(st, "TargetID", pos.x , pos.y+1 , Color(0, 0, 0, 255), 1)
 						draw.DrawText(st, "TargetID", pos.x, pos.y, Color(128, 30, 30, 255), 1)
 					end
 				end

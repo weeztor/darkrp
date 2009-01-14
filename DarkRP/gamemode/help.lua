@@ -133,13 +133,13 @@ function NetworkHelpLabels(ply)
 
 	local n = 0
 	for k, v in pairs(HelpCategories) do
-		timer.Simple(n * .01, tNetworkHelpCategories, ply, v)
+		timer.Simple(n * .02, tNetworkHelpCategories, ply, v)
 		n = n + 1
 	end
 
 	n = 0
 	for k, v in pairs(HelpLabels) do
-		timer.Simple(n * .01, tNetworkHelpLabels, ply, v)
+		timer.Simple(n * .02, tNetworkHelpLabels, ply, v)
 		n = n + 1
 	end
 end
