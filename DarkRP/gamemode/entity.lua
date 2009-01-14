@@ -255,6 +255,7 @@ function meta:Own(ply)
 
 	if not self:IsOwned() and not self:OwnedBy(ply) then
 		self:SetNWInt("Ownerz", ply:EntIndex())
+		self:SetNWString("OwnerName", ply:Nick())
 		self:SetNWInt("OwnerCount", 0)
 		self:SetNWString("title", "")
 	end
