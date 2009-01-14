@@ -271,9 +271,7 @@ function GM:HUDPaint()
 				local ent = ents.GetByIndex(tr.Entity:EntIndex())
 
 				if ent:GetNWInt("Ownerz") > 0 then
-					if ValidEntity(player.GetByID(ent:GetNWInt("Ownerz"))) then
-						ownerstr = player.GetByID(ent:GetNWInt("Ownerz")):Nick() .. "\n"
-					end
+					ownerstr = ent:GetNWString("OwnerName") .. "\n"
 				end
 
 				local num = ent:GetNWInt("OwnerCount")
