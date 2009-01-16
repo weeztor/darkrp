@@ -130,7 +130,7 @@ function KillVoteVGUI(msg)
 	end
 	if VoteVGUI[id .. "vote"] then
 		for k, v in pairs(VoteVGUI) do
-			if v:GetParent() == VoteVGUI[id .. "vote"] then
+			if v:IsValid() and v:GetParent() == VoteVGUI[id .. "vote"] then
 				v:Remove()
 				VoteVGUI[k] = nil
 			end
