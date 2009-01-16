@@ -630,7 +630,9 @@ function EntitiesTab()
 						icon.DoClick = function() LocalPlayer():ConCommand("say "..command) end
 						EntPanel:AddItem(icon)
 					end
-					AddEntIcon("models/props_combine/combine_mine01.mdl", "Buy a druglab " .. CUR .. tostring(GetGlobalInt("druglabcost")), "/Buydruglab")
+					if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB then
+						AddEntIcon("models/props_combine/combine_mine01.mdl", "Buy a druglab " .. CUR .. tostring(GetGlobalInt("druglabcost")), "/Buydruglab")
+					end
 					AddEntIcon("models/props_c17/consolebox01a.mdl", "Buy a Money printer " .. CUR .. tostring(GetGlobalInt("mprintercost")), "/Buymoneyprinter")
 					if LocalPlayer():Team() == TEAM_GUN then
 						AddEntIcon("models/props_c17/trappropeller_engine.mdl", "Buy a gunlab " .. CUR .. tostring(GetGlobalInt("gunlabcost")), "/Buygunlab")

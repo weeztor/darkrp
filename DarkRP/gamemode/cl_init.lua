@@ -131,6 +131,34 @@ function DrawMoneyPrinterInfo(ent)
 	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
 end
 
+function DrawDrugLabInfo(ent)
+	local pos = ent:GetPos()
+
+	pos.z = pos.z + 20
+	pos = pos:ToScreen()
+
+	local owner = tostring(ent:GetNWEntity("owning_ent"):Nick())
+	local price = tostring(ent:GetNWInt("price"))
+	local text = owner.. "'s\ndruglab\nPrice: ".. price
+
+	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
+	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
+end
+
+function DrawDrugsInfo(ent)
+	local pos = ent:GetPos()
+
+	pos.z = pos.z + 20
+	pos = pos:ToScreen()
+
+	local owner = ent:GetNWEntity("owning_ent")
+	local price = tostring(ent:GetNWInt("price"))
+	local text = owner:Name() .. "'s\ndrugs\nPrice: ".. price
+
+	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
+	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(150, 20, 20, 200), 1)
+end
+
 function DrawWantedInfo(ply)
 	if not ply:Alive() then return end
 
@@ -264,6 +292,14 @@ function GM:HUDPaint()
 
 			if tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave") then
 				DrawPriceInfo(tr.Entity)
+			end
+			
+			if tr.Entity:GetClass() == "drug_lab" then
+				DrawDrugLabInfo(tr.Entity)
+			end
+			
+			if tr.Entity:GetClass() == "drug" then
+				DrawDrugsInfo(tr.Entity)
 			end
 
 			if tr.Entity:IsOwnable() then
@@ -574,7 +610,7 @@ end
 usermessage.Hook("ShowLetter", ShowLetter)
 
 function GM:Think()
-	if LetterAlpha > -1 and LocalPlayer():GetPos():Distance(LetterPos) > 125 then LetterAlpha = -1 end
+	if LetterAlpha > -1 and LocalPlayer():GetPos():Distance(LetterPos) > 100 then LetterAlpha = -1 end
 end
 
 function KillLetter(msg) LetterAlpha = -1 end
@@ -600,11 +636,15 @@ function ToggleClicker()
 	gui.EnableScreenClicker(GUIToggled)
 
 	for k, v in pairs(VoteVGUI) do
-		v:SetMouseInputEnabled(GUIToggled)
+		if v:IsValid() then
+			v:SetMouseInputEnabled(GUIToggled)
+		end
 	end
 
 	for k, v in pairs(QuestionVGUI) do
-		v:SetMouseInputEnabled(GUIToggled)
+		if v:IsValid() then
+			v:SetMouseInputEnabled(GUIToggled)
+		end
 	end
 end
 usermessage.Hook("ToggleClicker", ToggleClicker)
@@ -684,6 +724,12 @@ local function DoSpecialEffects(Type)
 			 	settings[ "$pp_colour_mulg" ] = 0
 			 	settings[ "$pp_colour_mulb" ] = 0
 				DrawColorModify(settings)
+			end)
+		elseif thetype == "Drugged" then
+			hook.Add("RenderScreenspaceEffects", thetype, function()
+				DrawSharpen(-1, 2)
+				DrawMaterialOverlay("models/props_lab/Tank_Glass001", 0)
+				DrawMotionBlur(0.13, 1, 0.00)
 			end)
 		end
 	elseif toggle == false then
