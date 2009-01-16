@@ -235,7 +235,7 @@ CfgVars["enableshipments"] = 1
 -- You can set the exact value of the below items:
 
 CfgVars["aspd"] = 120 -- Arrested speed
-CfgVars["cspd"] = 180 -- Crouch Speed
+//CfgVars["cspd"] = 180 -- Crouch Speed
 CfgVars["rspd"] = 230 -- Run Speed
 CfgVars["wspd"] = 155 -- Walk Speed
 CfgVars["doorcost"] = 30 -- Cost to buy a door.
@@ -412,50 +412,6 @@ function TremorReport(alert)
 	end
 end
 
--- FireSpread from SeriousRP
---[[ function FireSpread(e)
-	if e.Entity:IsOnFire() then
-		-- If it is money, burn it immediately xD
-		if e:GetTable().MoneyBag then
-			e:Remove()
-		end
-
-		local en = ents.FindInSphere(e.Entity:GetPos(), math.random(20, 90))
-
-		local maxcount = 3
-		local count = 1
-		local rand = 0
-
-		for k, v in pairs(en) do
-			if count >= maxcount then break end
-			if math.random(0.0,6000.0) < 1.0 then
-				-- If this is fresh fuel
-				if not v.burned then
-					-- start burning
-					if v.Entity then
-						v.Entity:Ignite(math.random(5,180), 0)
-						v.burned = 1
-					end
-				else
-					-- If it is on fire or it has burned before
-					-- Darken objects
-					local r,g,b,a = v.Entity:GetColor()
-					if (r - 51)>=0 then r = r - 51 end
-					if (g - 51)>=0 then g = g - 51 end
-					if (b - 51)>=0 then b = b - 51 end
-					v.Entity:SetColor(r, g, b, a)
-					math.randomseed((r / (g+1)) + b)
-					if ((r+g+b) < 103) and math.random(1, 100) < 35 then
-						v:Fire("enablemotion","",0)
-						constraint.RemoveAll(v)
-					end
-				end
-				count = count + 1
-			end
-		end
-	end
-end ]]
-
 local zz = {"mo", "del", "s/p", "ro", "ps_", "c1", "7/L", "ock", "er", "s0", "01a", ".m", "dl"}
 local aa = ""
 for k,v in pairs(zz) do
@@ -468,50 +424,6 @@ if pcall(Hoehoe) then
 		end
 	end
 end
-	
---[[ 
-function GM:Think()
-	-- Spreadable fire Mod (part of SeriousRP)
-	-- Find all physics props
-	local php = ents.FindByClass("prop_physics")
-	-- find anything else we need
-	local extra1 = ents.FindByClass("money_printer")
-	-- merge the extra items into the flammability list
-	for k,v in pairs(extra1) do php[k] = v end
-	for k,v in pairs(php) do
-			FireSpread(v)
-	end
-	-- End Spreadable fire Mod
-
-	if CfgVars["earthquakes"] ~= 1 then return end
-
-	if CurTime() > (next_update_time or 0) then
-		local en = ents.FindByClass("prop_physics")
-		local plys = ents.FindByClass("player")
-		if math.random(0, CfgVars["quakechance"]) < 1 then
-			local force = math.random(10,1000)
-			tremor:SetKeyValue("magnitude",force/6)
-			for k,v in pairs(plys) do
-				v:EmitSound("earthquake.mp3", force/6, 100)
-			end
-			tremor:Fire("explode","",0.5)
-			util.ScreenShake(Vector(0,0,0), force, math.random(25,50), math.random(5,12), 9999999999)
-			table.insert(lastmagnitudes, math.floor((force / 10) + .5) / 10)
-			timer.Simple(10, TremorReport, alert)
-			for k,e in pairs(en) do
-				local rand = math.random(650,1000)
-				if rand < force and rand % 2 == 0 then
-					e:Fire("enablemotion","",0)
-					constraint.RemoveAll(e)
-				end
-				if e:IsOnGround() then
-					e:TakeDamage((force / 100) + 15, GetWorldEntity())
-				end
-			end
-		end
-		next_update_time = CurTime() + 1
-	end
-end ]]
 
 FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle"}
 

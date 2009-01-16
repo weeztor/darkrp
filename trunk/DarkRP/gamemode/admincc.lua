@@ -1076,9 +1076,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_p228cost <Number> - Sets the cost o
 AddValueCommand("rp_druglabcost", "druglabcost", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_druglabcost <Number> - Sets the cost of a druglab.")
 
-AddValueCommand("rp_drugpayamount", "drugpayamount", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_drugpayamount <Number> - payday amount for druglab.")
-
 AddValueCommand("rp_ammopistolcost", "ammopistolcost", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_ammopistolcost <Number> - Sets the cost of pistol ammo.")
 
@@ -1201,9 +1198,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmayorsetsalary <Number> - Sets t
 
 AddValueCommand("rp_runspeed", "rspd", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_runspeed <Number> - Sets the max running speed.")
-
-AddValueCommand("rp_crouchspeed", "cspd", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_crouchspeed <Number> - Sets the max crouch speed.")
 
 AddValueCommand("rp_arrestspeed", "aspd", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_arrestspeed <Number> - Sets the max arrest speed.")

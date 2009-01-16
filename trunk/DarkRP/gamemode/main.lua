@@ -98,6 +98,12 @@ function DrugPlayer(ply)
 	RP:RemoveAllPlayers()
 	RP:AddPlayer(ply)
 	umsg.Start("DarkRPEffects", RP)
+		umsg.String("Drugged")
+		umsg.String("1")
+	umsg.End()
+	
+	--[[ 
+	umsg.Start("DarkRPEffects", RP)
 		umsg.String("motionblur")
 		umsg.String("1")
 	umsg.End()
@@ -105,19 +111,37 @@ function DrugPlayer(ply)
 	umsg.Start("DarkRPEffects", RP)
 		umsg.String("dof")
 		umsg.String("1")
-	umsg.End()
+	umsg.End() ]]
 	RP:AddAllPlayers()
-
+	
+	ply:SetJumpPower(500)
+	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"] * 2, CfgVars["rspd"] * 2)
+	
 	local IDSteam = string.gsub(ply:SteamID(), ":", "")
-
-	timer.Create(IDSteam, 40, 1, UnDrugPlayer, ply)
+	if not timer.IsTimer(IDSteam.."DruggedHealth") and not timer.IsTimer(IDSteam) then
+		ply:SetHealth(ply:Health() + 100)
+		timer.Create(IDSteam.."DruggedHealth", 60/(100 + 5), 100 + 5, function() ply:SetHealth(ply:Health() - 1) end)
+		timer.Create(IDSteam, 60, 1, UnDrugPlayer, ply)
+	end
 end
 
 function UnDrugPlayer(ply)
 	local RP = RecipientFilter()
 	RP:RemoveAllPlayers()
 	RP:AddPlayer(ply)
+	
 	umsg.Start("DarkRPEffects", RP)
+		umsg.String("Drugged")
+		umsg.String("0")
+	umsg.End()
+	ply:SetJumpPower(190)
+	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] )
+	--[[local walk = CfgVars["wspd"] 
+	local run = CfgVars["rspd"]
+	ply:SetWalkSpeed( walk ) 
+	ply:SetRunSpeed( run )
+	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"]) ]]
+	--[[ umsg.Start("DarkRPEffects", RP)
 		umsg.String("motionblur")
 		umsg.String("0")
 	umsg.End()
@@ -125,7 +149,7 @@ function UnDrugPlayer(ply)
 	umsg.Start("DarkRPEffects", RP)
 		umsg.String("dof")
 		umsg.String("0")
-	umsg.End()
+	umsg.End() ]]
 	RP:AddAllPlayers()
 end
 
@@ -688,11 +712,12 @@ function SetPrice(ply, args)
 	trace.filter = ply
 
 	local tr = util.TraceLine(trace)
-
-	if ValidEntity(tr.Entity) and (tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave")) and tr.Entity.SID == ply.SID then
+	
+	//print(tr.Entity.SID, ply.SID)
+	if ValidEntity(tr.Entity) and (tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave") or tr.Entity:GetClass() == "drug_lab") and tr.Entity.SID == ply.SID then
 		tr.Entity:SetNWInt("price", b)
 	else
-		Notify(ply, 1, 4, "Must be looking at a Gun Lab or Microwave!")
+		Notify(ply, 1, 4, "Must be looking at a Gun Lab, druglab or Microwave!")
 	end
 	return ""
 end
@@ -865,6 +890,11 @@ function BuyDrugLab(ply)
 	trace.filter = ply
 
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
+	
+	if ply:Team() ~= TEAM_GANG and ply:Team() ~= TEAM_MOB then
+		Notify(ply, 1, 4, "Must be a gangster or mobboss!")
+		return "" 
+	end
 
 	local tr = util.TraceLine(trace)
 
@@ -2077,19 +2107,25 @@ function GM:PlayerSpawnedRagdoll(ply, model, ent)
 	self.BaseClass:PlayerSpawnedRagdoll(ply, model, ent)
 	ent.SID = ply.SID
 end
-
+--[[ 
 function GM:SetupMove(ply, move)
 	if ply == nil or not ply:Alive() then
 		return
 	end
+	
+	local multiply = 1
+	if ply:GetNWBool("Drugged") then
+		multiply = 2
+	end 
+	//print(multiply)
 
 	if ply:Crouching() then
-		move:SetMaxClientSpeed(CfgVars["cspd"])
+		move:SetMaxClientSpeed(CfgVars["cspd"] * multiply)
 		return
 	end
 
 	if RPArrestedPlayers[ply:SteamID()] then
-		move:SetMaxClientSpeed(CfgVars["aspd"])
+		move:SetMaxClientSpeed(CfgVars["aspd"] * multiply)
 		return
 	end
 
@@ -2097,16 +2133,16 @@ function GM:SetupMove(ply, move)
 		local t = ply:Team()
 		if t == TEAM_POLICE or ply:Team() == TEAM_CHIEF then
 			local faster = CfgVars["rspd"] + 8
-			move:SetMaxClientSpeed(faster)
+			move:SetMaxClientSpeed(faster * multiply)
 		else
-			move:SetMaxClientSpeed(CfgVars["rspd"])
+			move:SetMaxClientSpeed(CfgVars["rspd"] * multiply)
 			return
 		end
 	elseif ply:GetVelocity():Length() > 10 then
-		move:SetMaxClientSpeed(CfgVars["wspd"])
+		move:SetMaxClientSpeed(CfgVars["wspd"] * multiply)
 		return
 	end
-end
+end ]]
 
 function GM:ShowSpare1(ply)
 	umsg.Start("ToggleClicker", ply)

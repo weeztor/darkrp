@@ -468,6 +468,7 @@ function meta:Arrest(time, rejoin)
 	if self:GetNWBool("wanted") then
 		self:SetNetworkedBool("wanted", false)
 	end
+	GAMEMODE:SetPlayerSpeed(self, CfgVars["aspd"], CfgVars["aspd"] )
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
 	if CfgVars["teletojail"] == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
 		self:SetPos(DB.RetrieveJailPos())
@@ -501,6 +502,7 @@ function meta:Unarrest(ID)
 		RPArrestedPlayers[ID] = nil
 		return
 	end
+	GAMEMODE:SetPlayerSpeed(self, CfgVars["wspd"], CfgVars["rspd"] )
 	if type(self) == "string" then
 		if RPArrestedPlayers[ID] then
 			RPArrestedPlayers[ID] = nil
@@ -638,7 +640,10 @@ function GM:PlayerDeath(ply, weapon, killer)
 		umsg.End()
 		RP:AddAllPlayers()
 	end
-	
+	UnDrugPlayer(ply)
+	local IDSteam = string.gsub(ply:SteamID(), ":", "")
+	timer.Remove(IDSteam.."DruggedHealth")
+	timer.Remove(IDSteam)
 	if ply:HasWeapon("weapon_physcannon") then
 		ply:DropWeapon(ply:GetWeapon("weapon_physcannon"))
 	end
@@ -731,6 +736,7 @@ function GM:PlayerSpawn(ply)
 		end
 	end
 
+	
 	if CfgVars["enforceplayermodel"] == 1 then
 		if ply:Team() == TEAM_CITIZEN then
 			local validmodel = false
@@ -787,6 +793,11 @@ function GM:PlayerSpawn(ply)
 		if ply:Team() == (9+k) then
 			ply:SetModel(v.model)
 		end
+	end
+	
+	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] )
+	if ply:Team() == TEAM_CHIEF or ply:Team() == TEAM_POLICE then
+		GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] + 10 )
 	end
 
 	if CfgVars["customspawns"] == 1 then
@@ -870,27 +881,9 @@ function GM:PlayerInitialSpawn(ply)
 	ply:NewData()
 	ply:InitSID()
 	NetworkHelpLabels(ply)
-	//ply:SetNetworkedBool("helpMenu",false)
-	ply:SetNWInt("maxDrug", 0)
-	ply:SetNWInt("maxmicrowaves", 0)
-	ply:SetNWInt("maxgunlabs", 0)
-	ply:SetNWInt("maxDrugs", 0)
-	ply:SetNWInt("maxFoods", 0)
-	ply:SetNWInt("aspamv", 0)
-	ply:SetNWInt("vmutez", 0)
-	ply:SetNWInt("slp", 0)
-	ply:SetNWInt("maxletters", 0)
-	ply:SetNWBool("wanted", false)
-	ply:SetNWBool("warrant", false)
-	ply:SetNWBool("helpCop", false)
-	ply:SetNWBool("zombieToggle", false)
-	ply:SetNWBool("helpZombie", false)
-	ply:SetNWBool("helpBoss", false)
-	ply:SetNWBool("helpAdmin", false)
 	DB.RetrieveSalary(ply)
 	DB.RetrieveMoney(ply)
-	ply:PrintMessage(HUD_PRINTTALK, "This server is running DarkRP 2.3.1")
-	timer.Simple(10, ply.CompleteSentence, ply)
+	timer.Simple(3, ply.CompleteSentence, ply)
 end
 timer.Simple(5, function()
 	DB.SetUpNonOwnableDoors()

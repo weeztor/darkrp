@@ -7,6 +7,7 @@ function ENT:Initialize()
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self.CanUse = true
 	local phys = self.Entity:GetPhysicsObject()
 
 	if phys and phys:IsValid() then phys:Wake() end
@@ -29,7 +30,19 @@ function ENT:OnTakeDamage(dmg)
 end
 
 function ENT:Use(activator,caller)
+	if not self.CanUse then return false end
+	local Owner = self:GetNWEntity("owning_ent")
+	//print(Owner, activator, caller)
+	if activator ~= Owner then
+		if not activator:CanAfford(self:GetNWInt("price")) then
+			return false
+		end
+		DB.PayPlayer(activator, Owner, self:GetNWInt("price"))
+		Notify(activator, 1, 4, "Paid " .. CUR .. self:GetNWInt("price") .. " for using drugs.")
+		Notify(Owner, 1, 4, "Recieved " .. CUR .. self:GetNWInt("price") .. " for selling drugs.")
+	end
 	DrugPlayer(caller)
+	self.CanUse = false
 	self.Entity:Remove()
 end
 

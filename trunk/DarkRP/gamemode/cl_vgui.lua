@@ -311,7 +311,6 @@ function KeysMenu(Vehicle)
 		Frame:SetVisible(true)
 		Frame:MakePopup()
 		Frame:SetTitle("Door options")
-		//local framethink = Frame:Think()
 		function Frame:Think()
 			local ent = LocalPlayer():GetEyeTrace().Entity
 			if not ValidEntity(ent) or not ent:IsDoor() or ent:GetPos():Distance(LocalPlayer():GetPos()) > 120 then
