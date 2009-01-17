@@ -15,7 +15,7 @@ local function MayorOptns()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
 					if not ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
-						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
+						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /wanted " .. tostring(ply:UserID())) end)
 					end
 				end
 				if #menu.Panels == 0 then
@@ -76,7 +76,7 @@ local function CPOptns()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
 					if not ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
-						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
+						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /wanted " .. tostring(ply:UserID())) end)
 					end
 				end
 				if #menu.Panels == 0 then
