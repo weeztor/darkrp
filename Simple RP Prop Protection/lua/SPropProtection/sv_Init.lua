@@ -293,12 +293,24 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		if Ents then
 			for k,v in pairs(Ents) do
 				if (ValidEntity(v.Entity) and (v.Entity:IsWeapon() or string.find(v.Entity:GetClass(), "weapon"))) or (v.Classname and string.find(v.Classname, "weapon")) or ValidEntity(v.Weapon) then
+					print(ply:Nick(), "tried to spawn a ", v.Entity:GetClass(), ", He failed")
+					for NUMBER, PLAYER in pairs(player.GetAll()) do
+						if PLAYER:IsAdmin() then
+							PLAYER:ChatPrint(ply:Nick().. " tried to spawn a " .. v.Entity:GetClass() .. " with adv.duplicator, He failed")
+						end
+					end
 					SPropProtection.Nofity(ply, "YOU ARE NOT ALLOWED TO DUPLICATE WEAPONS!!!!!!!!")
 					ply:UniqueIDTable( "Duplicator" ).Entities = nil
 					return false
 				end
 				for a,b in pairs(SPropProtection.AntiCopy) do 
 					if ValidEntity(v.Entity) and string.find(v.Entity:GetClass(), b) then
+						print(ply:Nick(), "tried to spawn a ", v.Entity:GetClass(), ", He failed")
+						for NUMBER, PLAYER in pairs(player.GetAll()) do
+							if PLAYER:IsAdmin() then
+								PLAYER:ChatPrint(ply:Nick().. " tried to spawn a " .. v.Entity:GetClass() .. " with adv.duplicator, He failed")
+							end
+						end
 						SPropProtection.Nofity(ply, "YOU ARE NOT ALLOWED TO DUPLICATE THIS ENTITY!!!!!")
 						ply:UniqueIDTable( "Duplicator" ).Entities = nil
 						return false
@@ -313,8 +325,13 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 			for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 				for a, b in pairs(v) do
 					for c,d in pairs(SPropProtection.AntiCopy) do 
-						print(v.Class, d)
 						if v.Class and string.find(string.lower(v.Class), string.lower(d)) then
+							print(ply:Nick(), "tried to spawn a ", v.Class, " with adv.duplicator, He failed")
+							for NUMBER, PLAYER in pairs(player.GetAll()) do
+								if PLAYER:IsAdmin() then
+									PLAYER:ChatPrint(ply:Nick().. " tried to spawn a " .. v.Class .. " with adv.duplicator, He failed")
+								end
+							end
 							SPropProtection.Nofity(ply,"YOU ARE NOT ALLOWED TO DUPLICATE THIS!!!!!!!!")
 							ply:GetActiveWeapon():GetToolObject():ClearClipBoard()
 							return false
