@@ -433,7 +433,7 @@ function GM:HUDPaint()
 		end
 
 		if PanelNum and PanelNum > 0 then
-			draw.RoundedBox(2, 0, 0, 100, 20, Color(0, 0, 0, 128))
+			draw.RoundedBox(2, 0, 0, 150, 30, Color(0, 0, 0, 128))
 			draw.DrawText("Hit F3 to vote", "ChatFont", 2, 2, Color(255, 255, 255, 200), 0)
 		end
 	end
@@ -643,12 +643,6 @@ usermessage.Hook("UpdateHelp", UpdateHelp)
 function ToggleClicker()
 	GUIToggled = not GUIToggled
 	gui.EnableScreenClicker(GUIToggled)
-
-	for k, v in pairs(VoteVGUI) do
-		if v:IsValid() then
-			v:SetMouseInputEnabled(GUIToggled)
-		end
-	end
 
 	for k, v in pairs(QuestionVGUI) do
 		if v:IsValid() then

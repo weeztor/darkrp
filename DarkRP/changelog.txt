@@ -41,6 +41,7 @@ Updated by: FPtje Falco
 [FIX] Attempt to fix playerinitialspawn lag
 [FIX] Attempt to fix walk speed lag
 [FIX] /dropmoney text exploit
+[FIX] The vote system was fucked, I completely renewed it(I now use Derma) and HOPEFULLY every shit problem you guys had with it is fixed!
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 
 
