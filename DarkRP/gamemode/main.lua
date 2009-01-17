@@ -1444,6 +1444,9 @@ AddChatCommand("/ooc", OOC, true)
 function GiveMoney(ply, args)
 	if args == "" then return "" end
 
+	if not tonumber(args) then
+		return ""
+	end
 	local trace = ply:GetEyeTrace()
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsPlayer() and trace.Entity:GetPos():Distance(ply:GetPos()) < 150 then
@@ -1472,7 +1475,10 @@ AddChatCommand("/give", GiveMoney)
 
 function DropMoney(ply, args)
 	if args == "" then return "" end
-
+	
+	if not tonumber(args) then
+		return ""
+	end
 	local amount = math.floor(tonumber(args))
 
 	if amount <= 1 then

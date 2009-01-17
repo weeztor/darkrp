@@ -6,7 +6,7 @@ function HelpPanel:Init()
 	self.HelpX = self.StartHelpX
 
 	self.title = vgui.Create("Label", self)
-	self.title:SetText("DarkRP 2.3.1")
+	self.title:SetText("DarkRP 2.3.1+")
 
 	self.modinfo = vgui.Create("Label", self)
 	self.modinfo:SetText("Get the mod at garrysmod.org!")
