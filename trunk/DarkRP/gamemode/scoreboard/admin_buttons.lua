@@ -75,7 +75,7 @@ end
 vgui.Register("PlayerBanButton", PANEL, "SpawnMenuAdminButton")
 
 PANEL = {}
-PANEL.Text = "(un)Warrant"
+PANEL.Text = "(un)Wanted"
 
 /*---------------------------------------------------------
 Name: DoCommand
@@ -84,7 +84,7 @@ function PANEL:DoCommand(ply)
 	if ply:GetNWBool("wanted") then
 		LocalPlayer():ConCommand("say /unwanted " .. tostring( ply:UserID()))
 	else
-		LocalPlayer():ConCommand("say /warrant " .. tostring( ply:UserID()))
+		LocalPlayer():ConCommand("say /wanted " .. tostring( ply:UserID()))
 	end
 end
 

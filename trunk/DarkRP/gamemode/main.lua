@@ -391,18 +391,18 @@ AddChatCommand("/zombiemax", ZombieMax)
 
 function UnWarrant(ply, target)
 	target:SetNWBool("warrant", false)
-	target:SetNWBool( "wanted", false)
+	//target:SetNWBool( "wanted", false)
 	Notify(ply, 1, 4, "Search warrant for " .. target:Nick() .. " has expired!")
-end
+end 
 
 function SetWarrant(ply, target)
 	target:SetNWBool("warrant", true)
-	target:SetNWBool( "wanted", true)
+	//target:SetNWBool( "wanted", true)
 	timer.Simple(CfgVars["searchtime"], UnWarrant, ply, target)
 	for a, b in pairs(player.GetAll()) do
 		b:PrintMessage(HUD_PRINTCENTER, "Search warrant approved for " .. target:Nick() .. "!")
 	end
-	Notify(ply, 1, 4, "Warrant set.")
+	Notify(ply, 1, 4, "You can search his house now.")
 end
 
 function FinishWarrant(choice, mayor, initiator, target)
