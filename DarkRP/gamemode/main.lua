@@ -114,7 +114,7 @@ function DrugPlayer(ply)
 	umsg.End() ]]
 	RP:AddAllPlayers()
 	
-	ply:SetJumpPower(500)
+	ply:SetJumpPower(300)
 	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"] * 2, CfgVars["rspd"] * 2)
 	
 	local IDSteam = string.gsub(ply:SteamID(), ":", "")
@@ -1186,10 +1186,8 @@ function CreateAgenda(ply, args)
 		for k, v in pairs(player.GetAll()) do
 			local t = v:Team()
 			if t == TEAM_GANG or t == TEAM_MOB then
-				v:PrintMessage(HUD_PRINTTALK, "Mob Boss updated the agenda!")
+				Notify(v, 1, 4, "Mob Boss updated the agenda!")
 				v:SetNWString("agenda", CfgVars["mobagenda"])
-			else
-				Notify(ply, 1, 4, "Mob Boss updated the agenda!")
 			end
 		end
 	else
