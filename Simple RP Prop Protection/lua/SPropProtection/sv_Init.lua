@@ -5,9 +5,11 @@
 
 SPropProtection["Props"] = {}
 SPropProtection.AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
-for k,v in pairs(weapons.GetList()) do
-	table.insert(SPropProtection.AntiCopy, v.Classname)
-end
+timer.Simple(5, function()
+	for k,v in pairs(weapons.GetList()) do
+		table.insert(SPropProtection.AntiCopy, v.Classname)
+	end
+end)
 //PrintTable(SPropProtection.AntiCopy)
 
 
@@ -224,7 +226,6 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 	for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 		if v ~= ent then
 			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
-				SPropProtection.Nofity(ply, "Weapons are attached to your prop")
 				return false
 			end
 			local class = v:GetClass()
@@ -233,12 +234,10 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 			end
 			for a,b in pairs(SPropProtection.AntiCopy) do
 				if string.find(v:GetClass(), b) then
-					SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
 					return false
 				end
 			end
 			if not SPropProtection.PlayerCanTouch(ply, v) then
-				//SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
 				return false
 			end
 		end
@@ -306,11 +305,12 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		end
 		
 		//ADVANCED DUPLICATOR:
-		print(toolgun, ply:GetActiveWeapon():GetToolObject().Entities)
+		//print(toolgun, ply:GetActiveWeapon():GetToolObject().Entities)
 		if toolgun == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 			for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 				for a, b in pairs(v) do
 					for c,d in pairs(SPropProtection.AntiCopy) do 
+						print(v.Class, d)
 						if v.Class and string.find(string.lower(v.Class), string.lower(d)) then
 							SPropProtection.Nofity(ply,"YOU ARE NOT ALLOWED TO DUPLICATE THIS!!!!!!!!")
 							ply:GetActiveWeapon():GetToolObject():ClearClipBoard()
