@@ -508,19 +508,22 @@ GM.Name = "DarkRP 2.3.1+"
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
 
 function GM:GravGunPunt(ply, ent)
+if not ValidEntity(ent) then return false end
 	if ent:IsVehicle() then return false end
-	local entphys = ent:GetPhysicsObject()
-
 	if ply:KeyDown(IN_ATTACK) then
+		local entphys = ent:GetPhysicsObject()
 		-- it was launched
-		entphys:EnableMotion(false)
-		local curpos = ent:GetPos()
-		timer.Simple(.01, entphys.EnableMotion, entphys, true)
-		timer.Simple(.01, entphys.Wake, entphys)
-		timer.Simple(.01, ent.SetPos, ent, curpos)
-	else
-		return true
+		local moveable = entphys:IsMoveable()
+		if moveable then
+			entphys:EnableMotion(false)
+			local curpos = ent:GetPos()
+			timer.Simple(.01, entphys.EnableMotion, entphys, true)
+			timer.Simple(.01, entphys.Wake, entphys)
+			timer.Simple(.01, ent.SetPos, ent, curpos)
+		end
 	end
+	if ent:GetClass() == "func_breakable_surf" then return false end
+	return
 end
 //hook.Add("GravGunPunt", "THEDarkRPGravGunPunt", DarkRPGravGunPunt)
 

@@ -253,7 +253,7 @@ end
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
 
 function SPropProtection.GravGunThings(ply, ent)
-	if not ValidEntity(ent) then return true end
+	if not ValidEntity(ent) then return false end
 	if ent:IsVehicle() then return false end
 	if ply:KeyDown(IN_ATTACK) then
 		local entphys = ent:GetPhysicsObject()
