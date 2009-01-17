@@ -40,6 +40,7 @@ Updated by: FPtje Falco
 [FIX] When looking at an item/door, the text won't be shaky anymore!
 [FIX] Attempt to fix playerinitialspawn lag
 [FIX] Attempt to fix walk speed lag
+[FIX] /dropmoney text exploit
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 
 
