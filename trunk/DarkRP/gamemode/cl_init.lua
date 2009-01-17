@@ -124,8 +124,11 @@ function DrawMoneyPrinterInfo(ent)
 	pos.z = pos.z + 8
 	pos = pos:ToScreen()
 
-	local owner = ent:GetNWEntity("owning_ent")
-	local text = owner:Name() .. "'s\nMoney Printer"
+	local owner = "N/A!"
+	if ValidEntity(ent:GetNWEntity("owning_ent")) then
+		owner = ent:GetNWEntity("owning_ent"):Nick()
+	end
+	local text = owner .. "'s\nMoney Printer"
 
 	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
 	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
@@ -136,10 +139,13 @@ function DrawDrugLabInfo(ent)
 
 	pos.z = pos.z + 20
 	pos = pos:ToScreen()
-
-	local owner = tostring(ent:GetNWEntity("owning_ent"):Nick())
+	local owner = "N/A!"
+	if ValidEntity(ent:GetNWEntity("owning_ent")) then
+		owner = tostring(ent:GetNWEntity("owning_ent"):Nick())
+	end
+	
 	local price = tostring(ent:GetNWInt("price"))
-	local text = owner.. "'s\ndruglab\nPrice: ".. price
+	local text = owner.. "'s\ndruglab\nCustomer price: ".. price
 
 	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
 	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
@@ -151,9 +157,12 @@ function DrawDrugsInfo(ent)
 	pos.z = pos.z + 20
 	pos = pos:ToScreen()
 
-	local owner = ent:GetNWEntity("owning_ent")
+	local owner = "N/A!"
+	if ValidEntity(ent:GetNWEntity("owning_ent")) then
+		owner = ent:GetNWEntity("owning_ent"):Nick()
+	end
 	local price = tostring(ent:GetNWInt("price"))
-	local text = owner:Name() .. "'s\ndrugs\nPrice: ".. price
+	local text = owner .. "'s\ndrugs\nCustomer price: ".. price
 
 	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
 	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(150, 20, 20, 200), 1)

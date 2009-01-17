@@ -349,12 +349,14 @@ if file.Exists("DarkRP/settings.txt") and file.Read("DarkRP/settings.txt") ~= ""
 	end
 end
 
-if file.Exists("DarkRP/globals.txt") and file.Read("DarkRP/globals.txt") ~= "" then
-	local temp = util.KeyValuesToTable(file.Read("DarkRP/globals.txt"))
-	for k,v in pairs(temp) do
-		SetGlobalInt(k, tonumber(v))
+timer.Simple(5, function()
+	if file.Exists("DarkRP/globals.txt") and file.Read("DarkRP/globals.txt") ~= "" then
+		local temp = util.KeyValuesToTable(file.Read("DarkRP/globals.txt"))
+		for k,v in pairs(temp) do
+			SetGlobalInt(k, tonumber(v))
+		end
 	end
-end
+end)
 
 GenerateChatCommandHelp()
 
