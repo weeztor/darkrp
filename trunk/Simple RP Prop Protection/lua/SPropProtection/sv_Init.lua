@@ -258,11 +258,14 @@ function SPropProtection.GravGunThings(ply, ent)
 	if ply:KeyDown(IN_ATTACK) then
 		local entphys = ent:GetPhysicsObject()
 		-- it was launched
-		entphys:EnableMotion(false)
-		local curpos = ent:GetPos()
-		timer.Simple(.01, entphys.EnableMotion, entphys, true)
-		timer.Simple(.01, entphys.Wake, entphys)
-		timer.Simple(.01, ent.SetPos, ent, curpos)
+		local moveable = entphys:IsMoveable()
+		if moveable then
+			entphys:EnableMotion(false)
+			local curpos = ent:GetPos()
+			timer.Simple(.01, entphys.EnableMotion, entphys, true)
+			timer.Simple(.01, entphys.Wake, entphys)
+			timer.Simple(.01, ent.SetPos, ent, curpos)
+		end
 	end
 	if ent:GetClass() == "func_breakable_surf" then return false end
 	for k,v in pairs(SPropProtection.AntiCopy) do
