@@ -40,6 +40,7 @@ function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly)
 	umsg.Start("DoQuestion", ent)
 		umsg.String(question)
 		umsg.String(quesid)
+		umsg.Float(delay)
 	umsg.End()
 
 	timer.Create(quesid .. "timer", delay, 1, ques.HandleQuestionEnd, quesid)
