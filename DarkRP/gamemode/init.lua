@@ -258,7 +258,6 @@ CfgVars["maxgangsters"] = 3 -- Maximum number of Gangsters
 CfgVars["maxmedics"] = 3 -- Maximum number of Medics
 CfgVars["maxgundealers"] = 2 -- Maximum number of Gun Dealers
 CfgVars["maxcooks"] = 2 -- Maximum number of Cooks
-CfgVars["maxhobos"] = 10 -- Maximum number of hobos
 CfgVars["quakechance"] = 4000 -- Earthquake probability (1 in 4000)
 CfgVars["dmgracetime"] = 30 -- Players have a 30 second grace time by default
 CfgVars["dmmaxkills"] = 3 -- ...in which they can make a maximum of 3 kills
@@ -337,7 +336,7 @@ function SaveRPChanges()
 	end
 end
 timer.Create("DarkRPSaveSettings", 60, 0, SaveRPChanges)
-concommand.Add("rp_SaveRPChanges", SaveRPChanges)
+concommand.Add("rp_SaveChanges", SaveRPChanges)
 
 
 //At the beginning of the game, load the last saved settings :D
@@ -349,21 +348,28 @@ if file.Exists("DarkRP/settings.txt") and file.Read("DarkRP/settings.txt") ~= ""
 	end
 end
 
-timer.Simple(5, function()
+
+local function ReloadGlobals()
+	//print("Reloading globals!!!")
 	if file.Exists("DarkRP/globals.txt") and file.Read("DarkRP/globals.txt") ~= "" then
 		local temp = util.KeyValuesToTable(file.Read("DarkRP/globals.txt"))
 		for k,v in pairs(temp) do
 			SetGlobalInt(k, tonumber(v))
 		end
+	else
+		RefreshGlobals()
+		timer.Simple(1, SaveRPChanges)
 	end
-end)
+end
+ReloadGlobals()
+timer.Simple(10.5, ReloadGlobals) // for some reason I don't know about the vars reset after 10 seconds...
+//timer.Simple(21, ReloadGlobals)
 
 GenerateChatCommandHelp()
 
 function GM:Initialize()
 	self.BaseClass:Initialize()
 	DB.Init()
-	timer.Simple(20, RefreshGlobals)
 end
 
 function ShowSpare1(ply)
