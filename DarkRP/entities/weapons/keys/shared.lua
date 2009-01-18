@@ -68,14 +68,18 @@ function SWEP:PrimaryAttack()
 	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity:GetNWBool("CPOwnable") and (Team == TEAM_CHIEF or Team == TEAM_POLICE or Team == TEAM_MAYOR)) then
 		trace.Entity:Fire("lock", "", 0)
 		self.Owner:EmitSound(self.Sound)
-		self.Weapon:SetNextPrimaryFire(CurTime() + 1.0)
+		self.Weapon:SetNextPrimaryFire(CurTime() + 0.3)
 	else
 		if trace.Entity:IsVehicle() then
 			Notify(self.Owner, 1, 3, "You don't own this vehicle!")
 		else
-			Notify(self.Owner, 1, 3, "You don't own this door!")
+			self.Owner:EmitSound("physics/wood/wood_crate_impact_hard2.wav", 100, math.random(90, 110))
+			//d1_trainstation_03.breakin_doorknock
+			//physics\wood\wood_crate_impact_hard2.wav
+			//"physics/wood/wood_crate_impact_hard2.wav"
+			//Notify(self.Owner, 1, 3, "You don't own this door!")
 		end
-		self.Weapon:SetNextPrimaryFire(CurTime() + .5)
+		self.Weapon:SetNextPrimaryFire(CurTime() + 0.3)
 	end
 end
 
@@ -101,14 +105,15 @@ function SWEP:SecondaryAttack()
 		trace.Entity:Fire("unlock", "", 0)
 
 		self.Owner:EmitSound(self.Sound)
-		self.Weapon:SetNextPrimaryFire(CurTime() + 1.0)
+		self.Weapon:SetNextSecondaryFire(CurTime() + 0.3)
 	else
 		if trace.Entity:IsVehicle() then
 			Notify(self.Owner, 1, 3, "You don't own this vehicle!")
 		else
-			Notify(self.Owner, 1, 3, "You don't own this door!")
+			self.Owner:EmitSound("physics/wood/wood_crate_impact_hard3.wav", 100, math.random(95, 105))
+			//Notify(self.Owner, 1, 3, "You don't own this door!")
 		end
-		self.Weapon:SetNextPrimaryFire(CurTime() + .5)
+		self.Weapon:SetNextSecondaryFire(CurTime() + 0.3)
 	end
 end
 

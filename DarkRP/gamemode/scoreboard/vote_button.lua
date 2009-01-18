@@ -1,7 +1,7 @@
 local PANEL = {}
 
 PANEL.VoteName = "none"
-PANEL.MaterialName = "exclamation"
+PANEL.MaterialName = "friendly"
 
 /*---------------------------------------------------------
 Name:
