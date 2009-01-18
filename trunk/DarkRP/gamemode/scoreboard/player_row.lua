@@ -233,11 +233,16 @@ function PANEL:HigherOrLower(row)
 	if self.Player:Team() == TEAM_CONNECTING then return false end
 	if row.Player:Team() == TEAM_CONNECTING then return true end
 
-	if self.Player:Frags() == row.Player:Frags() then
+	if self.Player:Team() == row.Player:Team() then
+		return self.Player:Team() < row.Player:Team()
+	end
+
+	return self.Player:Team() > row.Player:Team()
+	--[[ if self.Player:Frags() == row.Player:Frags() then
 		return self.Player:Deaths() < row.Player:Deaths()
 	end
 
-	return self.Player:Frags() > row.Player:Frags()
+	return self.Player:Frags() > row.Player:Frags() ]]
 end
 
 vgui.Register("ScorePlayerRow", PANEL, "Button")
