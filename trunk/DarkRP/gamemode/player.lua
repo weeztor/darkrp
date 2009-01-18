@@ -347,20 +347,6 @@ function meta:ChangeTeam(t)
 		DB.StoreSalary(self, CfgVars["normalsalary"] + 30)
 		NotifyAll(1, 4, self:Name() .. " has been made Chief!")
 		self:SetModel("models/player/combine_soldier_prisonguard.mdl")
---[[ 	elseif t == TEAM_HOBO then
-		if self:Team() == t then
-			Notify(self, 1, 4, "You're already a hobo!")
-			return
-		end
-		if CfgVars["allowhobos"] ~= 1 then
-			Notify(self, 1, 4, "Hobos are disabled!")
-			return
-		end
-
-		self:UpdateJob("Hobo")
-		DB.StoreSalary(self, CfgVars["normalsalary"] - 15)
-		NotifyAll(1, 4, self:Name() .. " has been made a Hobo!")
-		self:SetModel("models/player/corpse1.mdl") ]]
 	end
 	for k,v in pairs(RPExtraTeams) do
 		if t == (9 + k) then
@@ -641,9 +627,9 @@ function GM:PlayerDeath(ply, weapon, killer)
 		RP:AddAllPlayers()
 	end
 	UnDrugPlayer(ply)
-	local IDSteam = string.gsub(ply:SteamID(), ":", "")
+	--[[ local IDSteam = string.gsub(ply:SteamID(), ":", "")
 	timer.Remove(IDSteam.."DruggedHealth")
-	timer.Remove(IDSteam)
+	timer.Remove(IDSteam) ]]
 	if ply:HasWeapon("weapon_physcannon") then
 		ply:DropWeapon(ply:GetWeapon("weapon_physcannon"))
 	end

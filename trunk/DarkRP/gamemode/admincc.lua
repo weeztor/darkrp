@@ -125,7 +125,7 @@ AddToggleCommand("rp_citpropertytax", "cit_propertytax", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_citpropertytax - Enable/disable property tax that is exclusive only for citizens.")
 
 AddToggleCommand("rp_bannedprops", "banprops", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_bannedprops - Whether or not the banned props list is active. (overrides rp_allowedprops)")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_bannedprops - Whether or not the banned props list is active. (overrides allowed props)")
 
 AddToggleCommand("rp_allowedprops", "allowedprops", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowedprops - Whether or not the allowed props list is active.")
