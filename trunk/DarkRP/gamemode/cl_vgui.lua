@@ -31,6 +31,7 @@ function MsgDoVote(msg)
 	local OldTime = CurTime() // 100  Nieuw = 110
 	if string.find(voteid, LocalPlayer():EntIndex()) then return end //If it's about you then go away
 
+	LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
 	local panel = vgui.Create("DFrame")
 	panel:SetPos(3, ScrH() / 2 - 50)
 	panel:SetName("Panel")
@@ -116,7 +117,7 @@ function MsgDoQuestion(msg)
 		timeleft = 100
 	end
 	local OldTime = CurTime() // 100  Nieuw = 110
-
+	LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
 	local panel = vgui.Create("DFrame")
 	panel:SetPos(3, ScrH() / 2 - 50)
 	panel:SetSize(380, 140)
