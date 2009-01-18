@@ -16,6 +16,7 @@ Updated by: FPtje Falco
 [ADD] HUD adaptation menu.
 [ADD] Timer to the vote screen(You see how much time you have left to vote)
 [ADD] DarkRP now saves the costs of guns and other global ints
+[ADD] Ability to knock on doors you don't own(left/right mouse with the keys weapon)
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins
