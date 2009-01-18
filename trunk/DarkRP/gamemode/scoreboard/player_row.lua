@@ -7,7 +7,7 @@ local texRatings = {}
 
 texRatings[ 'none' ] 		= surface.GetTextureID("gui/silkicons/user")
 texRatings[ 'smile' ] 		= surface.GetTextureID("gui/silkicons/emoticon_smile")
-texRatings[ 'bad' ] 		= surface.GetTextureID("gui/silkicons/exclamation")
+texRatings[ 'friendly' ] 	= surface.GetTextureID("gui/silkicons/group")
 texRatings[ 'love' ] 		= surface.GetTextureID("gui/silkicons/heart")
 texRatings[ 'artistic' ] 	= surface.GetTextureID("gui/silkicons/palette")
 texRatings[ 'star' ] 		= surface.GetTextureID("gui/silkicons/star")
@@ -94,7 +94,7 @@ function PANEL:UpdatePlayerData()
 	self.lblFrags:SetText(self.Player:Frags())
 	self.lblDeaths:SetText(self.Player:Deaths())
 	self.lblPing:SetText(self.Player:Ping())
-	self.lblWarranted:SetImage("gui/silkicons/exclamation")
+	self.lblWarranted:SetImage("gui/silkicons/group")
 	if self.Player:GetNetworkedBool("wanted") then
 		self.lblWarranted:SetVisible(true)
 	elseif not self.Player:GetNetworkedBool("wanted") then
@@ -112,7 +112,7 @@ function PANEL:UpdatePlayerData()
 	count = self:CheckRating('artistic', count)
 	count = self:CheckRating('star', count)
 	count = self:CheckRating('builder', count)
-	count = self:CheckRating('bad', count)
+	count = self:CheckRating('friendly', count)
 end
 
 /*---------------------------------------------------------

@@ -19,7 +19,7 @@ function PANEL:Init()
 	self.VoteButtons = {}
 
 	self.VoteButtons[1] = vgui.Create("SpawnMenuVoteButton", self)
-	self.VoteButtons[1]:SetUp("exclamation", "bad", "Bad Roleplayer!")
+	self.VoteButtons[1]:SetUp("group", "friendly", "Friendly Roleplayer!")
 
 	self.VoteButtons[2] = vgui.Create("SpawnMenuVoteButton", self)
 	self.VoteButtons[2]:SetUp("emoticon_smile", "smile", "Very Nice Roleplayer!")

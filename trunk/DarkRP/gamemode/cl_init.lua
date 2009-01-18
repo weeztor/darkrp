@@ -64,6 +64,12 @@ include("cl_deathnotice.lua")
 include("cl_helpvgui.lua")
 include("showteamtabs.lua")
 include("addshipments.lua")
+include("scoreboard/admin_buttons.lua")
+include("scoreboard/player_frame.lua")
+include("scoreboard/player_infocard.lua")
+include("scoreboard/player_row.lua")
+include("scoreboard/scoreboard.lua")
+include("scoreboard/vote_button.lua")
 
 surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
 
@@ -314,7 +320,7 @@ function GM:HUDPaint()
 
 			if tr.Entity:IsOwnable() then
 				local ownerstr = ""
-				local ent = ents.GetByIndex(tr.Entity:EntIndex())
+				local ent = tr.Entity
 
 				if ent:GetNWInt("Ownerz") > 0 then
 					ownerstr = ent:GetNWString("OwnerName") .. "\n"

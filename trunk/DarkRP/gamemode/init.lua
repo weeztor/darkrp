@@ -162,6 +162,7 @@ include("bannedprops.lua")
 include("hints.lua")
 include("servercontrol.lua")
 include("addshipments.lua")
+include("rating.lua")
 
 AddHelpCategory(HELP_CATEGORY_CHATCMD, "Chat Commands")
 AddHelpCategory(HELP_CATEGORY_CONCMD, "Console Commands")
