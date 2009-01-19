@@ -53,7 +53,7 @@ function ENT:BurstIntoFlames()
 end
 
 function ENT:Fireball()
-	local spreadcount = math.random(3, 6) -- Number of objects to spread to
+	//local spreadcount = math.random(3, 6) -- Number of objects to spread to
 	local dist = math.random(20, 280) -- Explosion radius
 	self:Destruct()
 	for k, v in pairs(ents.FindInSphere(self:GetPos(), dist)) do
@@ -82,6 +82,10 @@ function ENT:CreateMoneybag()
 	moneybag.nodupe = true
 	moneybag:Spawn()
 	moneybag:GetTable().MoneyBag = true
+	local amount = GetGlobalInt("mprintamount")
+	if amount == 0 then
+		amount = 250
+	end
 	moneybag:GetTable().Amount = GetGlobalInt("mprintamount")
 	self:SetNWBool("sparking", false)
 	timer.Simple(math.random(40, 350), PrintMore, self) -- Print more cash in 40 to 350 seconds

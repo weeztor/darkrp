@@ -44,7 +44,6 @@ function meta:NewData()
 
 	-- Whether or not a player is being prevented from joining
 	-- a specific team for a certain length of time
-	self.bannedfrom = {}
 	for i = 1, 9 do
 		self.bannedfrom[i] = 0
 	end
@@ -72,7 +71,8 @@ function meta:SetRPName(name, firstRun)
 			taken = true
 		end
 	end
-
+	
+	if string.len(lowername) < 3 then return end
 	-- If we found that this name exists for another player
 	if taken then
 		if firstRun then
@@ -864,6 +864,7 @@ end
 
 function GM:PlayerInitialSpawn(ply)
 	self.BaseClass:PlayerInitialSpawn(ply)
+	ply.bannedfrom = {}
 	ply:NewData()
 	ply:InitSID()
 	NetworkHelpLabels(ply)
