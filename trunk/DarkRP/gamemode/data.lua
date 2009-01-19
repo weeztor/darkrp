@@ -375,6 +375,7 @@ function DB.RetrieveRandomZombieSpawnPos()
 end
 
 function DB.StoreMoney(ply, amount)
+	if not ValidEntity(ply) then return end
 	local steamID = ply:SteamID()
 	local r = sql.QueryValue("SELECT amount FROM darkrp_wallets WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 	if r then
@@ -386,6 +387,7 @@ function DB.StoreMoney(ply, amount)
 end
 
 function DB.RetrieveMoney(ply)
+	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
 	local startingAmount = 500
 		
@@ -401,6 +403,7 @@ function DB.RetrieveMoney(ply)
 end
 
 function DB.PayPlayer(ply1, ply2, amount)
+	if not ValidEntity(ply1) or not ValidEntity(ply2) then return end
 	local sid1 = ply1:SteamID()
 	local sid2 = ply2:SteamID()
 	sql.Begin() -- Transaction
@@ -424,6 +427,7 @@ function DB.StoreSalary(ply, amount)
 end
 
 function DB.RetrieveSalary(ply)
+	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
 	local normal = CfgVars["normalsalary"]
 

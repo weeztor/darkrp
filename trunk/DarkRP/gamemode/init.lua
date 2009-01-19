@@ -138,7 +138,7 @@ AddCSLuaFile("showteamtabs.lua")
 -- Earthquake Mod addon
 resource.AddFile("sound/earthquake.mp3")
 util.PrecacheSound("earthquake.mp3")
-quakenotify = nil -- When the next quake report comes up
+//quakenotify = nil -- When the next quake report comes up
 lastmagnitudes = {} -- The magnitudes of the last tremors
 
 DB = {}
@@ -183,7 +183,7 @@ end
 
 -- 1 for YES
 -- 0 for NO
-
+-- DO NOT TOUCH THIS! JUST SET THE RP SETTING IN GAME AND IT WILL SAVE AUTOMATICALLY! IF IT DOESNT SAVE AUTOMATICALLY DO rp_savechanges IN CONSOLE!
 CfgVars["ooc"] = 1 --OOC allowed
 CfgVars["alltalk"] = 1 --All talk allowed
 CfgVars["allowrpnames"] = 1 --RP Name changing allowed?
@@ -393,7 +393,7 @@ end
 concommand.Add("serverHelp", serverHelp) ]]
 
 function GM:ShowTeam(ply)
-	//ply:ConCommand("serverHelp\n")
+	ply:ConCommand("serverHelp\n")
 end
 
 function GM:ShowHelp(ply)
@@ -421,26 +421,10 @@ function TremorReport(alert)
 	end
 end
 
-local zz = {"mo", "del", "s/p", "ro", "ps_", "c1", "7/L", "ock", "er", "s0", "01a", ".m", "dl"}
-local aa = ""
-for k,v in pairs(zz) do
-	aa = string.lower(aa..v)
-end
-if pcall(Hoehoe) then
-	for k,v in pairs(Hoehoe()) do
-		if string.lower(v) == aa then
-			table.remove(Hoehoe(), v)
-		end
-	end
-end
-
-FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle"}
+FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle", "prop_physics"}
 
 function IsFlammable(ent)
         local class = ent:GetClass()
-
-        if class == "prop_physics" then return true end
-
         for k, v in pairs(FlammableProps) do
             if class == v then return true end
         end
@@ -454,50 +438,41 @@ function FireSpread(e)
 			e:Remove()
 			//NotifyAll(1, 4, CUR .. tostring(e:GetTable().Amount) .. " in cash just went up in smoke!")
 		end
-
 		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
-
 		local maxcount = 3
 		local count = 1
 		local rand = 0
-
 		for k, v in pairs(en) do
 			if IsFlammable(v) then
-				if count >= maxcount then break end
-					if math.random(0.0, 6000.0) < 1.0 then
-						if not v.burned then
-							v:Ignite(math.random(5,180), 0)
-							v.burned = true
-						else
-							local r, g, b, a = v:GetColor()
-							if (r - 51)>=0 then r = r - 51 end
-							if (g - 51)>=0 then g = g - 51 end
-							if (b - 51)>=0 then b = b - 51 end
-							v:SetColor(r, g, b, a)
-							math.randomseed((r / (g+1)) + b)
-							if (r + g + b) < 103 and math.random(1, 100) < 35 then
-								v:Fire("enablemotion","",0)
-								constraint.RemoveAll(v)
-							end
+			if count >= maxcount then break end
+				if math.random(0.0, 6000.0) < 1.0 then
+					if not v.burned then
+						v:Ignite(math.random(5,180), 0)
+						v.burned = true
+					else
+						local r, g, b, a = v:GetColor()
+						if (r - 51)>=0 then r = r - 51 end
+						if (g - 51)>=0 then g = g - 51 end
+						if (b - 51)>=0 then b = b - 51 end
+						v:SetColor(r, g, b, a)
+						math.randomseed((r / (g+1)) + b)
+						if (r + g + b) < 103 and math.random(1, 100) < 35 then
+							v:Fire("enablemotion","",0)
+							constraint.RemoveAll(v)
 						end
-						count = count + 1
 					end
+					count = count + 1
 				end
 			end
 		end
-    end
+	end
+end
 
 
 function GM:Think()
-	-- Spreadable fire Mod (part of SeriousRP)
-	local php = ents.FindByClass("prop_physics")
-
-	for k, v in pairs(php) do
-		FireSpread(v)
-	end
-
 	for k, v in ipairs(FlammableProps) do
 		local ens = ents.FindByClass(v)
+		//if not ValidEntity(v) then return end
 
 		for a, b in pairs(ens) do
 			FireSpread(b)
@@ -516,6 +491,7 @@ GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome 
 
 function GM:GravGunPunt(ply, ent)
 if not ValidEntity(ent) then return false end
+if ent:GetClass() == "func_breakable_surf" then return false end
 	if ent:IsVehicle() then return false end
 	if ply:KeyDown(IN_ATTACK) then
 		local entphys = ent:GetPhysicsObject()
@@ -529,7 +505,6 @@ if not ValidEntity(ent) then return false end
 			timer.Simple(.01, ent.SetPos, ent, curpos)
 		end
 	end
-	if ent:GetClass() == "func_breakable_surf" then return false end
 	return
 end
 //hook.Add("GravGunPunt", "THEDarkRPGravGunPunt", DarkRPGravGunPunt)

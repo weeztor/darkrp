@@ -5,8 +5,6 @@ local zombieOn = false
 local maxZombie = 10
 
 RPArrestedPlayersPositions = {}
-
-
 VoteCopOn = false
 
 function ControlZombie()
@@ -94,6 +92,7 @@ function StartShower()
 end
 
 function DrugPlayer(ply)
+	if not ValidEntity(ply) then return end
 	local RP = RecipientFilter()
 	RP:RemoveAllPlayers()
 	RP:AddPlayer(ply)
@@ -102,16 +101,6 @@ function DrugPlayer(ply)
 		umsg.String("1")
 	umsg.End()
 	
-	--[[ 
-	umsg.Start("DarkRPEffects", RP)
-		umsg.String("motionblur")
-		umsg.String("1")
-	umsg.End()
-	
-	umsg.Start("DarkRPEffects", RP)
-		umsg.String("dof")
-		umsg.String("1")
-	umsg.End() ]]
 	RP:AddAllPlayers()
 	
 	ply:SetJumpPower(300)
@@ -126,6 +115,7 @@ function DrugPlayer(ply)
 end
 
 function UnDrugPlayer(ply)
+	if not ValidEntity(ply) then return end
 	local RP = RecipientFilter()
 	RP:RemoveAllPlayers()
 	RP:AddPlayer(ply)
@@ -136,23 +126,9 @@ function UnDrugPlayer(ply)
 		umsg.String("Drugged")
 		umsg.String("0")
 	umsg.End()
-	ply:SetJumpPower(190)
-	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] )
-	--[[local walk = CfgVars["wspd"] 
-	local run = CfgVars["rspd"]
-	ply:SetWalkSpeed( walk ) 
-	ply:SetRunSpeed( run )
-	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"]) ]]
-	--[[ umsg.Start("DarkRPEffects", RP)
-		umsg.String("motionblur")
-		umsg.String("0")
-	umsg.End()
-	
-	umsg.Start("DarkRPEffects", RP)
-		umsg.String("dof")
-		umsg.String("0")
-	umsg.End() ]]
 	RP:AddAllPlayers()
+	ply:SetJumpPower(190)
+	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] )	
 end
 
 function AttackEnt(ent)
@@ -326,6 +302,16 @@ function GetAliveZombie()
 	return zombieCount
 end
 
+function ZombieMax(ply, args)
+	if ply:HasPriv(ADMIN) then
+		maxZombie = tonumber(args)
+		Notify(ply, 1, 4, "Max zombies set.")
+	end
+
+	return ""
+end
+AddChatCommand("/zombiemax", ZombieMax)
+
 local weaponClasses = {}
 weaponClasses["weapon_deagle2"] = "models/weapons/w_pist_deagle.mdl"
 weaponClasses["weapon_fiveseven2"] = "models/weapons/w_pist_fiveseven.mdl"
@@ -378,16 +364,6 @@ end
 AddChatCommand("/drop", DropWeapon)
 AddChatCommand("/dropweapon", DropWeapon)
 AddChatCommand("/weapondrop", DropWeapon)
-
-function ZombieMax(ply, args)
-	if ply:HasPriv(ADMIN) then
-		maxZombie = tonumber(args)
-		Notify(ply, 1, 4, "Max zombies set.")
-	end
-
-	return ""
-end
-AddChatCommand("/zombiemax", ZombieMax)
 
 function UnWarrant(ply, target)
 	target:SetNWBool("warrant", false)
@@ -660,15 +636,6 @@ function StopZombie(ply)
 end
 AddChatCommand("/disablezombie", StopZombie)
 
-function QueryVar(ply, args)
-	if not CfgVars[args] then
-		Notify(ply, 1, 4, "CfgVar " .. args .. " not found.")
-	else
-		Notify(ply, 1, 4, args .. " = " .. CfgVars[args])
-	end
-	return ""
-end
-AddChatCommand("/queryvar", QueryVar)
 
 function RPName(ply, args)
 	if CfgVars["allowrpnames"] ~= 1 then
@@ -679,12 +646,10 @@ function RPName(ply, args)
 	local len = string.len(args)
 	local low = string.lower(args)
 
-	if len > 25 then
-		Notify(ply, 1, 4, "Please choose a name of 25 characters or less!")
+	if len > 30 then
+		Notify(ply, 1, 4, "Please choose a name of 30 characters or less!")
 		return ""
-	end
-
-	if len < 3 then
+	elseif len < 3 then
 		Notify(ply, 1, 4, "Please choose a name of 3 characters or more!")
 		return ""
 	end
@@ -706,6 +671,7 @@ function RPName(ply, args)
 	return ""
 end
 AddChatCommand("/rpname", RPName)
+AddChatCommand("/name", RPName)
 
 function SetPrice(ply, args)
 	if args == "" then return "" end
@@ -745,6 +711,7 @@ buyPistols["p228"]["weapon_p2282"] = "models/weapons/w_pist_p228.mdl"
 
 function BuyPistol(ply, args)
 	if args == "" then return "" end
+	if RPArrestedPlayers[ply:SteamID()] then return "" end
 
 	if CfgVars["noguns"] == 1 then
 		Notify(ply, 1, 4, "Guns are disabled!")
@@ -762,7 +729,6 @@ function BuyPistol(ply, args)
 	trace.filter = ply
 
 	local tr = util.TraceLine(trace)
-	if RPArrestedPlayers[ply:SteamID()] then return "" end
 	
 	local class = nil
 	local model = nil
@@ -1023,7 +989,7 @@ function BuyMoneyPrinter(ply, args)
 	local tr = util.TraceLine(trace)
 
 	local cost = GetGlobalInt("mprintercost")
-
+	if cost == 0 then cost = 1000 end
 	if not ply:CanAfford(cost) then
 		Notify(ply, 1, 4, "Can not afford this!")
 		return ""
@@ -1091,12 +1057,10 @@ function BuyHealth(ply)
 	end
 	if ply:Team() ~= TEAM_MEDIC and team.NumPlayers(TEAM_MEDIC) > 0 then
 		Notify(ply, 1, 4, "/buyhealth is disabled because there are Medics.")
-		return ""
 	else
 		ply:AddMoney(-cost)
 		Notify(ply, 1, 4, "You bought Health for " .. CUR .. tostring(cost))
 		ply:SetHealth(100)
-		return ""
 	end
 	return ""
 end
@@ -1220,9 +1184,6 @@ function GetHelp(ply, args)
 end
 AddChatCommand("/help", GetHelp)
 
-function Hoehoe()
-	return BannedProps
-end
 local function MakeLetter(ply, args, type)
 	if CfgVars["letters"] == 0 then
 		Notify(ply, 1, 4, "Letter writing is disabled.")
@@ -1393,6 +1354,7 @@ function GroupMsg(ply, args)
 
 	for k, v in pairs(audience) do
 		v:PrintMessage(2, ply:Nick() .. ": (GROUP) " .. args)
+		Notify(v, 1, 10, ply:Nick() .. ": (GROUP) " .. args)
 		v:PrintMessage(3, ply:Nick() .. ": (GROUP) " .. args)
 	end
 	return ""
@@ -1411,7 +1373,9 @@ function PM(ply, args)
 	if target then
 		target:PrintMessage(2, ply:Nick() .. ": (PM) " .. msg)
 		target:PrintMessage(3, ply:Nick() .. ": (PM) " .. msg)
-
+		Notify(target, 1, 10, ply:Nick() .. ": (PM) " .. args)
+		
+		Notify(ply, 1, 10, ply:Nick() .. ": (PM) " .. args)
 		ply:PrintMessage(2, ply:Nick() .. ": (PM) " .. msg)
 		ply:PrintMessage(3, ply:Nick() .. ": (PM) " .. msg)
 	else
