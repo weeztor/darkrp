@@ -491,7 +491,7 @@ function JobsTab()
 				Glock
 				Stun Stick
 				Battering ram
-				]], "/votecop", LocalPlayer():IsAdmin(), "/cp")
+				]], "/votecop", LocalPlayer():IsAdmin() or LocalPlayer():GetNWBool("Privcp") or LocalPlayer():GetNWBool("Privadmin"), "/cp")
 		elseif LocalPlayer():Team() ~= TEAM_CHIEF then
 			AddIcon("models/player/combine_soldier_prisonguard.mdl", "Civil protection Chief", [[The Chief is the leader of the Civil Protection unit. 
 			Coordinate the police forces to bring law to the city
@@ -527,7 +527,7 @@ function JobsTab()
 				Gravity gun
 				camera
 				]]
-				, "/votemayor", LocalPlayer():IsAdmin(), "/mayor")
+				, "/votemayor", LocalPlayer():IsAdmin() or LocalPlayer():GetNWBool("Privmayor") or LocalPlayer():GetNWBool("Privadmin"), "/mayor")
 		end
 		for k,v in pairs(RPExtraTeams) do
 			if LocalPlayer():Team() ~= (9 + k) then

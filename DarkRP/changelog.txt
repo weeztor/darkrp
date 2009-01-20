@@ -49,6 +49,7 @@ Updated by: FPtje Falco
 [FIX] The vote system was fucked, I completely renewed it(I now use Derma) and HOPEFULLY every shit problem you guys had with it is fixed!
 [FIX] Prices etc. resetting to 0 (TO MAKE THIS HAVE EFFECT, REMOVE THE GLOBALS.txt FROM DATA/DARKRP ON THE SERVER!) 
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
+[REMOVE] rp_mute <player> <on/off> It didn't work AND you've got admin mods to mute people!
 
 
 VERSION 2.3.1
