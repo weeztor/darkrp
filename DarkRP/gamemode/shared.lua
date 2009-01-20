@@ -25,6 +25,13 @@ team.SetUp(TEAM_CHIEF, "Civil Protection Chief", Color(20, 20, 255, 255))
 
 RPExtraTeams = {}
 function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote)
+	if not Name or not color or not model or not Description or not Weapons or not command or not maximum_amount_of_this_class or not Salary or not admin or Vote == nil then
+		local text = "One of the custom teams is wrongly made! Attempt to give name of the wrongly made team!(if it's nil then I failed):\n" .. tostring(Name)
+		print(text)
+		hook.Add("PlayerSpawn", "TeamError", function(ply)
+			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end
+		end)	
+	end
 	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote)})
 	team.SetUp(9 + #RPExtraTeams, Name, color)
 	local Team = 9 + #RPExtraTeams
@@ -56,5 +63,8 @@ Sing for everyone who passes to get money
 Make your own wooden home somewhere in a corner or 
 outside someone else's door]], {"weapon_bugbait"}, "hobo", 5, 0, 0, false)
 			//No extra weapons           say /hobo to become hobo  Maximum hobo's = 5		his salary = 0 because hobo's don't earn money.          0 = everyone can become hobo ,      false = you don't have to vote to become hobo
-//ADD TEAMS HERE:
+// MAKE SURE THAT THERE IS NO / IN THE TEAM NAME OR IN THE TEAM COMMAND:
+// TEAM_/DUDE IS WROOOOOONG !!!!!!
+// HAVING "/dude" IN THE COMMAND FIELD IS WROOOOOOOONG!!!!
+//ADD TEAMS UNDER THIS LINE:
 

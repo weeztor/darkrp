@@ -1539,7 +1539,7 @@ end
 AddChatCommand("/removeowner", RemoveDoorOwner)
 AddChatCommand("/ro", RemoveDoorOwner)
 
-function AddDoorOwner(ply, args)
+local function AddDoorOwner(ply, args)
 	local trace = ply:GetEyeTrace()
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
@@ -1568,31 +1568,7 @@ end
 AddChatCommand("/addowner", AddDoorOwner)
 AddChatCommand("/ao", AddDoorOwner)
 
-function Demote(ply, args)
-	local p = FindPlayer(args)
-	if p then
-		if CurTime() - ply:GetTable().LastVoteCop < 80 then
-			Notify(ply, 1, 4, "Please wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before demoting.")
-			return ""
-		end
-		if p:Team() == TEAM_CITIZEN then
-			Notify(ply, 1, 4,  p:Nick() .." is a Citizen - can't be demoted any further!")
-		else
-			NotifyAll(1, 4, ply:Nick() .. " has started a vote for the demotion of " .. p:Nick())
-			vote:Create(p:Nick() .. ":\n Demotion Nominee", p:EntIndex() .. "votecop", p, 12, FinishDemote)
-			ply:GetTable().LastVoteCop = CurTime()
-			VoteCopOn = true
-			Notify(ply, 1, 4, "Demotion Vote started!")
-		end
-		return ""
-	else
-		Notify(ply, 1, 4, "Player does not exist!")
-		return ""
-	end
-end
-AddChatCommand("/demote", Demote)
-
-function FinishDemote(choice, v)
+local function FinishDemote(choice, v)
 	VoteCopOn = false
 
 	if choice == 1 then
@@ -1609,7 +1585,33 @@ function FinishDemote(choice, v)
 	end
 end
 
-function FinishVoteMayor(choice, ply)
+local function Demote(ply, args)
+	local p = FindPlayer(args)
+	if p then
+		if CurTime() - ply:GetTable().LastVoteCop < 80 then
+			Notify(ply, 1, 4, "Please wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before demoting.")
+			return ""
+		end
+		if p:Team() == TEAM_CITIZEN then
+			Notify(ply, 1, 4,  p:Nick() .." is a Citizen - can't be demoted any further!")
+		else
+			NotifyAll(1, 4, ply:Nick() .. " has started a vote for the demotion of " .. p:Nick())
+			vote:Create(p:Nick() .. ":\n Demotion Nominee", p:EntIndex() .. "votecop", p, 20, FinishDemote)
+			ply:GetTable().LastVoteCop = CurTime()
+			VoteCopOn = true
+			Notify(ply, 1, 4, "Demotion Vote started!")
+		end
+		return ""
+	else
+		Notify(ply, 1, 4, "Player does not exist!")
+		return ""
+	end
+end
+AddChatCommand("/demote", Demote)
+
+
+
+local function FinishVoteMayor(choice, ply)
 	VoteCopOn = false
 
 	if choice == 1 then
@@ -1619,7 +1621,7 @@ function FinishVoteMayor(choice, ply)
 	end
 end
 
-function FinishVoteCop(choice, ply)
+local function FinishVoteCop(choice, ply)
 	VoteCopOn = false
 
 	if choice == 1 then
@@ -1629,7 +1631,7 @@ function FinishVoteCop(choice, ply)
 	end
 end
 
-function DoVoteMayor(ply, args)
+local function DoVoteMayor(ply, args)
 	
 	if #player.GetAll() == 1 then
 		Notify(ply, 1, 4, "You're the only one in the server so you won the vote")
@@ -1674,7 +1676,7 @@ function DoVoteMayor(ply, args)
 		return ""
 	end
 
-	vote:Create(ply:Nick() .. ":\nwants to be Mayor", ply:EntIndex() .. "votecop", ply, 12, FinishVoteMayor)
+	vote:Create(ply:Nick() .. ":\nwants to be Mayor", ply:EntIndex() .. "votecop", ply, 20, FinishVoteMayor)
 	ply:GetTable().LastVoteCop = CurTime()
 	VoteCopOn = true
 
@@ -1682,7 +1684,7 @@ function DoVoteMayor(ply, args)
 end
 AddChatCommand("/votemayor", DoVoteMayor)
 
-function DoVoteCop(ply, args)	
+local function DoVoteCop(ply, args)	
 	if CfgVars["cpvoting"] == 0 then
 		Notify(ply, 1, 4,  "Cop voting is disabled!")
 		return ""
@@ -1719,7 +1721,7 @@ function DoVoteCop(ply, args)
 		return ""
 	end
 
-	vote:Create(ply:Nick() .. ":\nwants to be a Cop", ply:EntIndex() .. "votecop", ply, 12, FinishVoteCop)
+	vote:Create(ply:Nick() .. ":\nwants to be a Cop", ply:EntIndex() .. "votecop", ply, 20, FinishVoteCop)
 	ply:GetTable().LastVoteCop = CurTime()
 	VoteCopOn = true
 
@@ -1746,12 +1748,6 @@ function MakeCitizen(ply, args)
 	return ""
 end
 AddChatCommand("/citizen", MakeCitizen)
-
---[[ function MakeHoBo(ply, args)
-	ply:ChangeTeam(TEAM_HOBO)
-	return ""
-end
-AddChatCommand("/hobo", MakeHoBo) ]]
 
 function MakeCP(ply, args)
 	if ply:HasPriv(CP) or ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) or ply:IsAdmin() then
@@ -1819,7 +1815,7 @@ for k,v in pairs(RPExtraTeams) do
 				Notify(ply, 1, 4,  "There can only be "..tostring(v.max).." "..v.name.." at a time!")
 				return ""
 			end
-			vote:Create(ply:Nick() .. ":\nwants to be "..v.name, ply:EntIndex() .. "votecop", ply, 12, function(choice, ply)
+			vote:Create(ply:Nick() .. ":\nwants to be "..v.name, ply:EntIndex() .. "votecop", ply, 20, function(choice, ply)
 				VoteCopOn = false
 				if choice == 1 then
 					ply:ChangeTeam(k + 9)
@@ -1866,13 +1862,13 @@ end
 
 function CombineRequest(ply, args)
 	local t = ply:Team()
-	if t ~= TEAM_POLICE and t ~= TEAM_CHIEF then
+--[[ 	if t ~= TEAM_POLICE and t ~= TEAM_CHIEF then
 		ply:ChatPrint(ply:Nick() .. ": (REQUEST!) " .. args)
 		ply:PrintMessage(2, ply:Nick() .. ": (REQUEST!) " .. args)
-	end
+	end ]]
 
 	for k, v in pairs(player.GetAll()) do
-		if v:Team() == TEAM_POLICE or v:Team() == TEAM_CHIEF then
+		if v:Team() == TEAM_POLICE or v:Team() == TEAM_CHIEF or v == ply then
 			v:ChatPrint(ply:Nick() .. ": (REQUEST!) " .. args)
 			v:PrintMessage(2, ply:Nick() .. ": (REQUEST!) " .. args)
 		end
@@ -2040,9 +2036,8 @@ function GM:PlayerSpawnProp(ply, model)
 		else
 			return true
 		end
-	else
-		return false
 	end
+	return false
 end
 
 function GM:PlayerSpawnSENT(ply, model)
