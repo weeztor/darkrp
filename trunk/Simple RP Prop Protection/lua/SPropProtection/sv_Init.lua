@@ -277,10 +277,12 @@ function SPropProtection.GravGunThings(ply, ent)
 	if(!ent:IsValid() or !SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
 	end
-	return
+	return false
 end
 hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.GravGunThings)
 hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropProtection.GravGunThings)
+
+
 //v:UniqueIDTable( "Duplicator" ).Entities
 function SPropProtection.CanTool(ply, tr, toolgun)
 	local ent = tr.Entity
