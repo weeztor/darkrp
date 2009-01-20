@@ -2243,3 +2243,107 @@ function MayorSetSalary(ply, cmd, args)
 	return
 end
 concommand.Add("mayor_setsalary", MayorSetSalary)
+
+function DoTeamBan(ply, args, cmdargs)
+	if not ply:IsAdmin() then 
+		ply:ChatPrint("You're not an admin")
+		return ""
+	end
+	
+	local ent = args
+	local Team = args
+	if cmdargs then
+		if not cmdargs[1] then
+			ply:PrintMessage(HUD_PRINTNOTIFY, "rp_teamban [player name/ID] [team name/id] Use this to ban a player from a certain team")
+			return ""
+		end
+		ent = cmdargs[1]
+		Team = cmdargs[2]
+	else
+		ent = string.sub(args, 1, string.find(args, " "))
+		Team = string.gsub(args, ent, "")
+	end
+	
+	local target = FindPlayer(ent)
+	if not target or not ValidEntity(target) then 
+		ply:ChatPrint("Player was not found!")
+		return ""
+	end
+	
+
+	local found = false
+	for k,v in pairs(team.GetAllTeams()) do
+		if string.lower(v.Name) == string.lower(Team) then
+			Team = k
+			found = true
+			break
+		end
+		if k == Team then
+			found = true
+			break
+		end
+	end
+	
+	if not found then
+		ply:ChatPrint("Team not found!")
+		return ""
+	end
+	if not target.bannedfrom then target.bannedfrom = {} end
+	target.bannedfrom[Team] = 1
+	NotifyAll(1, 5, ply:Nick() .. " has banned " ..target:Nick() .. " from being a " .. team.GetName(Team))
+	return ""
+end
+AddChatCommand("/teamban", DoTeamBan)
+concommand.Add("rp_teamban", DoTeamBan)
+
+function DoTeamUnBan(ply, args, cmdargs)
+	if not ply:IsAdmin() then 
+		ply:ChatPrint("You're not an admin")
+		return ""
+	end
+	
+	local ent = args
+	local Team = args
+	if cmdargs then
+		if not cmdargs[1] then
+			ply:PrintMessage(HUD_PRINTNOTIFY, "rp_teamunban [player name/ID] [team name/id] Use this to unban a player from a certain team")
+			return ""
+		end
+		ent = cmdargs[1]
+		Team = cmdargs[2]
+	else
+		ent = string.sub(args, 1, string.find(args, " "))
+		Team = string.gsub(args, ent, "")
+	end
+	
+	local target = FindPlayer(ent)
+	if not target or not ValidEntity(target) then 
+		ply:ChatPrint("Player was not found!")
+		return ""
+	end
+	
+
+	local found = false
+	for k,v in pairs(team.GetAllTeams()) do
+		if string.lower(v.Name) == string.lower(Team) then
+			Team = k
+			found = true
+			break
+		end
+		if k == Team then
+			found = true
+			break
+		end
+	end
+	
+	if not found then
+		ply:ChatPrint("Team not found!")
+		return ""
+	end
+	if not target.bannedfrom then target.bannedfrom = {} end
+	target.bannedfrom[Team] = 0
+	NotifyAll(1, 5, ply:Nick() .. " has unbanned " ..target:Nick() .. " from being a " .. team.GetName(Team))
+	return ""
+end
+AddChatCommand("/teamunban", DoTeamUnBan)
+concommand.Add("rp_teamunban", DoTeamUnBan)
