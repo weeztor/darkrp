@@ -70,7 +70,7 @@ end
 
 function meta:SetRPName(name, firstRun)
 	-- Make sure nobody on this server already has this RP name
-	local lowername = string.lower(name)
+	local lowername = string.lower(tostring(name))
 	local rpNames = DB.RetrieveRPNames()
 	local taken = false
 
