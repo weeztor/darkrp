@@ -649,36 +649,6 @@ end
 concommand.Add("rp_citizen", ccCitizen)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_citizen [Nick|SteamID|UserID] - Make a player become a Citizen.")
 
---[[ function ccHobo(ply, cmd, args)
-        if (ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN)) then
-                ply:PrintMessage(2, "You're not an admin!")
-                return
-        end
-
-        local target = FindPlayer(args[1])
-
-        if (target) then
-                target:ChangeTeam(TEAM_HOBO)
-
-                if (ply:EntIndex() ~= 0) then
-                        nick = ply:Nick()
-                else
-                        nick = "Console"
-                end
-
-                target:PrintMessage(2, nick .. " made you a Hobo!")
-        else
-                if (ply:EntIndex() == 0) then
-                        print("Could not find player: " .. args[1])
-                else
-                        ply:PrintMessage(2, "Could not find player: " .. args[1])
-                end
-                return
-        end
-end
-concommand.Add("rp_Hobo", ccHobo)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_Hobo [Nick|SteamID|UserID] - Make a player become a Hobo.") ]]
-
 for k,v in pairs(RPExtraTeams) do
 	concommand.Add("rp_"..v.command, function(ply, cmd, args)
 		if (ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN)) then
@@ -928,7 +898,6 @@ function ccGrantPriv(ply, cmd, args)
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[2])
 		end
-		return
 	end
 end
 concommand.Add("rp_grant", ccGrantPriv)
@@ -1249,3 +1218,30 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmoneyprinters <Number> - Max num
 
 AddValueCommand("rp_printamount", "mprintamount", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_printamount <Number> - Value of the money printed by the money printer.")
+
+for k,v in pairs(RPExtraTeams) do
+	ValueCmds["rp_max"..v.command] = { var = "rp_max"..v.command, global = false }
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.." <Number> - Sets max "..v.name.."s.")
+	if CfgVars["rp_max"..v.command] == nil then CfgVars["rp_max"..v.command] = v.max end
+	concommand.Add("rp_max"..v.command, function(ply, cmd, args)
+		if #args < 1 then
+			print("rp_max"..v.command, "=", v.max)
+			ply:PrintMessage(2, "rp_max"..v.command..  "    =    ".. v.max)
+		end
+		if not ply:HasPriv(ADMIN) then
+			ply:PrintMessage(2, "You're not an admin")
+			return
+		end
+		v.max = tonumber(args[1])
+		CfgVars["rp_max"..v.command] = tonumber(args[1])
+		
+		local nick = ""
+
+		if ply:EntIndex() == 0 then
+			nick = "Console"
+		else
+			nick = ply:Nick()
+		end
+		NotifyAll(0, 4, nick .. " set " .. "rp_max"..v.command .. " to " .. args[1])
+	end)
+end

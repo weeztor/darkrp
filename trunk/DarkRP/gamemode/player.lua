@@ -2,14 +2,22 @@ if not RPArrestedPlayers then
 	RPArrestedPlayers {}
 end
 
-CivModels = {
-	"models/player/group01/male_02.mdl"
+local CivModels = {
+	"models/player/group01/male_01.mdl",
+	"models/player/Group01/Male_02.mdl",
+	"models/player/Group01/male_03.mdl",
+	"models/player/Group01/Male_04.mdl",
+	"models/player/Group01/Male_05.mdl",
+	"models/player/Group01/Male_06.mdl",
+	"models/player/Group01/Male_07.mdl",
+	"models/player/Group01/Male_08.mdl",
+	"models/player/Group01/Male_09.mdl"
 }
 
 local meta = FindMetaTable("Player")
 
 -- Each time a player connects, they get a new ID
-sessionid = 0
+local sessionid = 0
 
 function meta:InitSID()
 	sessionid = sessionid + 1
@@ -100,34 +108,6 @@ function meta:ChangeAllowed(t)
 	if not self.bannedfrom then return true end
 	if self.bannedfrom[t] == 1 then return false else return true end
 end
-
-for k,v in pairs(RPExtraTeams) do
-	ValueCmds["rp_max"..v.command] = { var = "rp_max"..v.command, global = false }
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.." <Number> - Sets max "..v.name.."s.")
-	if CfgVars["rp_max"..v.command] == nil then CfgVars["rp_max"..v.command] = v.max end
-	concommand.Add("rp_max"..v.command, function(ply, cmd, args)
-		if #args < 1 then
-			print("rp_max"..v.command, "=", v.max)
-			ply:PrintMessage(2, "rp_max"..v.command..  "    =    ".. v.max)
-		end
-		if not ply:HasPriv(ADMIN) then
-			ply:PrintMessage(2, "You're not an admin")
-			return
-		end
-		v.max = tonumber(args[1])
-		CfgVars["rp_max"..v.command] = tonumber(args[1])
-		
-		local nick = ""
-
-		if ply:EntIndex() == 0 then
-			nick = "Console"
-		else
-			nick = ply:Nick()
-		end
-		NotifyAll(0, 4, nick .. " set " .. "rp_max"..v.command .. " to " .. args[1])
-	end)
-end
-
 
 function meta:ChangeTeam(t)
 	if RPArrestedPlayers[self:SteamID()] then
@@ -348,6 +328,8 @@ function meta:ChangeTeam(t)
 		NotifyAll(1, 4, self:Name() .. " has been made Chief!")
 		self:SetModel("models/player/combine_soldier_prisonguard.mdl")
 	end
+	
+	
 	for k,v in pairs(RPExtraTeams) do
 		if t == (9 + k) then
 			if self:Team() == t then
@@ -373,6 +355,13 @@ function meta:ChangeTeam(t)
 		for k, v in pairs(ents.FindByClass("gunlab")) do
 			if v.SID == self.SID then v:Remove() end
 		end
+		
+		if t ~= TEAM_MOB and t ~= TEAM_GANG then
+			for k, v in pairs(ents.FindByClass("drug_lab")) do
+				if v.SID == self.SID then v:Remove() end
+			end
+		end
+		
 		for k,v in pairs(ents.FindByClass("spawned_shipment")) do
 			if v.SID == self.SID then v:Remove() end
 		end
@@ -402,9 +391,7 @@ function meta:ResetDMCounter()
 end
 
 function meta:CanAfford(amount)
-	if math.floor(amount) < 0 or DB.RetrieveMoney(self) - math.floor(amount) < 0 then return false end
-
-	return true
+	return math.floor(amount) >= 0 and DB.RetrieveMoney(self) - math.floor(amount) >= 0
 end
 
 function meta:AddMoney(amount)
@@ -416,7 +403,7 @@ function meta:PayDay()
 		if not RPArrestedPlayers[self:SteamID()] then
 			local amount = math.floor(DB.RetrieveSalary(self))
 			if amount == 0 then
-				Notify(self, 4, 4, "You are unemployed!")
+				Notify(self, 4, 4, "You recieved no salary because you are unemployed!")
 			else
 				self:AddMoney(amount)
 				Notify(self, 4, 4, "Payday! You received " .. CUR .. amount .. "!")
@@ -519,15 +506,6 @@ function meta:Unarrest(ID)
 	end
 end
 
-function meta:CompleteSentence()
-	local ID = self:SteamID()
-	if ValidEntity(self) and ID ~= nil and RPArrestedPlayers[ID] then
-		local time = GetGlobalInt("jailtimer")
-		self:Arrest(time, true)
-		Notify(self, 0, 5, "Punishment for disconnecting! Jailed for: " .. time .. " seconds.")
-	end
-end
-
 function meta:UnownAll()
 	for k, v in pairs(ents.GetAll()) do
 		if v:IsOwnable() and v:OwnedBy(self) == true then
@@ -535,9 +513,11 @@ function meta:UnownAll()
 		end
 	end
 
-	for k, v in pairs(self:GetTable().Ownedz) do
-		v:UnOwn(self)
-		self:GetTable().Ownedz[v:EntIndex()] = nil
+	if self:GetTable().Ownedz then
+		for k, v in pairs(self:GetTable().Ownedz) do
+			v:UnOwn(self)
+			self:GetTable().Ownedz[v:EntIndex()] = nil
+		end
 	end
 
 	for k, v in pairs(player.GetAll()) do
@@ -627,12 +607,6 @@ function GM:PlayerDeath(ply, weapon, killer)
 		RP:AddAllPlayers()
 	end
 	UnDrugPlayer(ply)
-	--[[ local IDSteam = string.gsub(ply:SteamID(), ":", "")
-	timer.Remove(IDSteam.."DruggedHealth")
-	timer.Remove(IDSteam) ]]
-	if ply:HasWeapon("weapon_physcannon") then
-		ply:DropWeapon(ply:GetWeapon("weapon_physcannon"))
-	end
 
 	if weapon:IsVehicle() and weapon:GetDriver():IsPlayer() then killer = weapon:GetDriver() end
 	if GetGlobalInt("deathnotice") == 1 then
@@ -774,10 +748,11 @@ function GM:PlayerSpawn(ply)
 		elseif ply:Team() == TEAM_HOBO then
 			ply:SetModel("models/player/corpse1.mdl")
 		end
-	end
-	for k,v in pairs(RPExtraTeams) do
-		if ply:Team() == (9+k) then
-			ply:SetModel(v.model)
+		
+		for k,v in pairs(RPExtraTeams) do
+			if ply:Team() == (9+k) then
+				ply:SetModel(v.model)
+			end
 		end
 	end
 	
@@ -833,7 +808,7 @@ function GM:PlayerLoadout(ply)
 	if team == TEAM_POLICE then
 		if CfgVars["noguns"] ~= 1 then
 			ply:Give("weapon_glock2")
-			ply:GiveAmmo(20, "Pistol")
+			ply:GiveAmmo(30, "Pistol")
 		end
 	elseif team == TEAM_MAYOR then
 		if CfgVars["noguns"] ~= 1 then ply:GiveAmmo(28, "Pistol") end
@@ -862,6 +837,15 @@ function GM:PlayerLoadout(ply)
 	end
 end
 
+function meta:CompleteSentence()
+	local ID = self:SteamID()
+	if ValidEntity(self) and ID ~= nil and RPArrestedPlayers[ID] then
+		local time = GetGlobalInt("jailtimer")
+		self:Arrest(time, true)
+		Notify(self, 0, 5, "Punishment for disconnecting! Jailed for: " .. time .. " seconds.")
+	end
+end
+
 function GM:PlayerInitialSpawn(ply)
 	self.BaseClass:PlayerInitialSpawn(ply)
 	ply.bannedfrom = {}
@@ -874,7 +858,8 @@ function GM:PlayerInitialSpawn(ply)
 end
 timer.Simple(5, function()
 	DB.SetUpNonOwnableDoors()
-	DB.SetUpCPOwnableDoors() end)
+	DB.SetUpCPOwnableDoors() 
+end)
 
 function GM:PlayerDisconnected(ply)
 	self.BaseClass:PlayerDisconnected(ply)
