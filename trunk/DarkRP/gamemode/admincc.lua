@@ -712,7 +712,7 @@ function ccKickBan(ply, cmd, args)
 		end
 
 		game.ConsoleCommand("banid " .. args[2] .. " " .. target:UserID() .. "\n")
-		game.ConsoleCommand("kickid " .. target:UserID() .. " \"Kicked and Banned\"\n")
+		game.ConsoleCommand("kickid " .. target:UserID() .. " \"Kicked and Banned by "..ply:Nick().."\"\n")
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -748,7 +748,7 @@ function ccKick(ply, cmd, args)
 			end
 		end
 
-		game.ConsoleCommand("kickid " .. target:UserID() .. " \"" .. reason .. "\"\n")
+		game.ConsoleCommand("kickid " .. target:UserID() .. " \"" .. reason..": " ..ply:Nick().. "\"\n")
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -949,34 +949,6 @@ end
 concommand.Add("rp_revoke", ccRevokePriv)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_revoke [tool|phys|admin|prop|cp|mayor] [Nick|SteamID|UserID] - Revokes a privilege from a player.")
 
-function ccMute(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
-		return
-	end
-
-	local target = FindPlayer(args[1])
-	if target then
-		local vtoggle = tonumber(args[2])
-		if vtoggle == 1 then
-			vmute(target)
-		elseif vtoggle == 0 then
-			vunmute(target)
-		else
-			ply:PrintMessage(2, "Need a 0 or a 1 after the player's name.")
-		end
-		return
-	else
-		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[1])
-		else
-			ply:PrintMessage(2, "Could not find player: " .. args[1])
-		end
-		return
-	end
-end
-concommand.Add("rp_mute", ccMute)
-
 function ccSWEPSpawn(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
 		if not ply:HasPriv(ADMIN) and not ply:IsAdmin() and not ply:IsSuperAdmin() then
@@ -995,7 +967,7 @@ function ccSWEPGive(ply, cmd, args)
 			return
 		end
 	end
-	CCSpawnSWEP(ply, cmd, args)
+	CCGiveSWEP(ply, cmd, args)
 end
 concommand.Add("gm_spawnswep", ccSWEPGive)
 

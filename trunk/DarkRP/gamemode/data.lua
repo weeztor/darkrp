@@ -183,6 +183,7 @@ function DB.GrantPriv(ply, priv)
 	return true ]]
 	local steamID = ply:SteamID()
 	local p = DB.Priv2Text(priv)
+	ply:SetNWBool("Priv"..p, true)
 	if not p then return false end
 	if tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";")) > 0 then
 			sql.Query("UPDATE darkrp_privs SET " .. p .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
@@ -198,17 +199,13 @@ function DB.GrantPriv(ply, priv)
 end
 
 function DB.RevokePriv(ply, priv)
-	--[[ local steamID = ply:SteamID()
-	local p = DB.Priv2Text(priv)
-	local val = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
-	if not p or val < 1 then return false end
-	sql.Query("UPDATE darkrp_privs SET " .. p .. " = 0 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
-	return true ]]
 	local steamID = ply:SteamID()
 	local p = DB.Priv2Text(priv)
+	ply:SetNWBool("Priv"..p, false)
 	local val = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
 	if not p or val < 1 then return false end
 	sql.Query("UPDATE darkrp_privs SET " .. p .. " = 0 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
+	
 	-- privelege structure altered, regenerate cache on lookups
 	DB.privcache = nil
 	return true
