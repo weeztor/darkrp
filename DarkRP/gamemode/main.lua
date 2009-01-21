@@ -1877,6 +1877,68 @@ function CombineRequest(ply, args)
 end
 AddChatCommand("/cr", CombineRequest)
 
+local LotteryPeople = {}
+local LotteryON = false
+function EnterLottery(answer, ent, initiator, target, TimeIsUp)
+	//print(answer, ent, initiator, target, TimeIsUp)
+	if answer == 1 and not table.HasValue(LotteryPeople, target) then
+		table.insert(LotteryPeople, target)
+		target:AddMoney(-50)
+		Notify(target, 1,4, "You entered the lottery for $50!")
+	elseif answer and not table.HasValue(LotteryPeople, target) then
+		Notify(target, 1,4, "You did NOT enter the lottery!")
+	end
+	
+	if TimeIsUp then
+		LotteryON = false
+		if #LotteryPeople == 0 then
+			NotifyAll(1,4, "Noone entered the lottery")
+			return
+		end
+		//PrintTable( LotteryPeople)
+		local chosen = LotteryPeople[math.random(1, #LotteryPeople)]
+		//print(chosen)
+		chosen:AddMoney(#LotteryPeople * 50)
+		Notify(chosen, 1,4, "Congratulations! you've won the lottery! You have won " .. CUR .. tostring(#LotteryPeople * 50))
+		NotifyAll(1,4, chosen:Nick() .. " has won the lottery! He has won "  .. CUR .. tostring(#LotteryPeople * 50) )
+	end
+end
+
+
+function DoLottery(ply)
+	if ply:Team() ~= TEAM_MAYOR then
+		Notify(ply, 1, 4, "You're not the mayor!")
+		return "" 
+	end
+	
+	if CfgVars["lottery"] ~= 1 then
+		Notify(ply, 1, 4, "Lotteries are disabled!")
+		return ""
+	end
+	
+	if #player.GetAll() <= 2 then
+		Notify(ply, 1, 4, "Too few people in the server")
+		return "" 
+	end 
+	
+	if LotteryON then
+		Notify(ply, 1, 4, "There already is a lottery ongoing!")
+		return "" 
+	end
+	Notify(ply, 1, 4, "You started a lottery!!")
+	LotteryON = true
+	LotteryPeople = {}
+	
+	for k,v in pairs(player.GetAll()) do 
+		if v ~= ply then
+			ques:Create("There is a lottery! Participate for $50?", "lottery"..tostring(k), v, 10, EnterLottery, ply, v)
+		end
+	end	
+	timer.Create("Lottery", 10, 1, EnterLottery, nil, nil, nil, nil, true)
+	return ""
+end
+AddChatCommand("/lottery", DoLottery)
+
 function FoodHeal(ply)
 	if GetGlobalInt("hungermod") == 0 then
 		ply:SetHealth(ply:Health() + (100 - ply:Health()))

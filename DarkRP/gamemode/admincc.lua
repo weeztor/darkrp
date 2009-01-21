@@ -202,6 +202,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_copscanunfreeze - Enable/disable
 AddToggleCommand("rp_removeclassitems",  "removeclassitems", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_removeclassitems - Enable/disable shipments/microwaves/etc. removal when someone changes team.")
 
+AddToggleCommand("rp_lottery", "lottery", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_lottery - Enable/disable creating lotteries for mayors")
+
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
