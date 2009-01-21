@@ -4,6 +4,17 @@ Votes = {}
 function ccDoVote(ply, cmd, args)
 	if not Votes[args[1]] then return end
 	if not Votes[args[1]][tonumber(args[2])] then return end
+	
+	// If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
+	if not ply:GetTable().VotesVoted then
+		ply:GetTable().VotesVoted = {}
+	end
+	
+	if ply:GetTable().VotesVoted[args[1]] then
+		Notify(ply, 1, 4, "You cannot vote!")
+		return
+	end
+	ply:GetTable().VotesVoted[args[1]] = true
 
 	Votes[args[1]]:HandleNewVote(ply, tonumber(args[2]))
 end
@@ -29,6 +40,13 @@ function vote:Create(question, voteid, ent, delay, callback)
 		callback(1, ent)
 		return
 	end
+	
+	// If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
+	if not ent:GetTable().VotesVoted then
+		ent:GetTable().VotesVoted = {}
+	end
+	
+	ent:GetTable().VotesVoted[voteid] = true
 	local newvote = { }
 	for k, v in pairs(Vote) do newvote[k] = v end
 
@@ -59,6 +77,9 @@ function vote.DestroyVotesWithEnt(ent)
 			umsg.Start("KillVoteVGUI")
 				umsg.String(v.ID)
 			umsg.End()
+			for a, b in pairs(player.GetAll()) do
+				b:GetTable().VotesVoted[v.ID] = nil
+			end
 
 			Votes[k] = nil
 			VoteCopOn = false
@@ -74,7 +95,13 @@ function vote.HandleVoteEnd(id, OnePlayer)
 	if Votes[id][2] >= Votes[id][1] then choice = 2 end
 
 	Votes[id].Callback(choice, Votes[id].Ent)
-
+	
+	for a, b in pairs(player.GetAll()) do
+		if not b:GetTable().VotesVoted then
+			b:GetTable().VotesVoted = {}
+		end
+		b:GetTable().VotesVoted[id] = nil
+	end
 	umsg.Start("KillVoteVGUI")
 		umsg.String(id)
 	umsg.End()
