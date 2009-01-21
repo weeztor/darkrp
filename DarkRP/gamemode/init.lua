@@ -226,11 +226,11 @@ CfgVars["customjobs"] = 1 -- Whether or not players can use the /job command
 CfgVars["deathblack"] = 1 -- Whether or not players see black when dead
 CfgVars["norespawn"] = 1 -- Whether people have to respawn when they change job or not
 CfgVars["advertisements"] = 1--chatprint advertisements
-CfgVars["copscanunfreeze"] = 1 
-CfgVars["removeclassitems"] = 1
-CfgVars["enablebuypistol"] = 1
-CfgVars["allowpdchief"] = 1
-CfgVars["enableshipments"] = 1
+CfgVars["copscanunfreeze"] = 1  -- Cops can unfreeze props with the battering ram
+CfgVars["removeclassitems"] = 1 -- Remove(example) every gun shipment when the gundealer changes to a medic or something
+CfgVars["enablebuypistol"] = 1 -- People can do /buypistol
+CfgVars["allowpdchief"] = 1 --Allow the chief
+CfgVars["enableshipments"] = 1 --Enable gun shipments
 
 
 -- You can set the exact value of the below items:

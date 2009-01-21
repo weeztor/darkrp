@@ -84,9 +84,10 @@ function ENT:CreateMoneybag()
 	moneybag:GetTable().MoneyBag = true
 	local amount = GetGlobalInt("mprintamount")
 	if amount == 0 then
+		print("MONEY PRINTER AMOUNT IS 0!!!")
 		amount = 250
 	end
-	moneybag:GetTable().Amount = GetGlobalInt("mprintamount")
+	moneybag:GetTable().Amount = amount
 	self:SetNWBool("sparking", false)
 	timer.Simple(math.random(40, 350), PrintMore, self) -- Print more cash in 40 to 350 seconds
 end
