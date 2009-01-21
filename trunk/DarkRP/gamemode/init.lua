@@ -231,6 +231,7 @@ CfgVars["removeclassitems"] = 1 -- Remove(example) every gun shipment when the g
 CfgVars["enablebuypistol"] = 1 -- People can do /buypistol
 CfgVars["allowpdchief"] = 1 --Allow the chief
 CfgVars["enableshipments"] = 1 --Enable gun shipments
+CfgVars["lottery"] = 1 -- Enable the lottery
 
 
 -- You can set the exact value of the below items:

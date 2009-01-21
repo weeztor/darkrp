@@ -14,16 +14,13 @@ function Question:HandleNewQuestion(ply, response)
 		self.yn = response
 	end
 
-	umsg.Start("KillQuestionVGUI", ply)
-		umsg.String(self.ID)
-	umsg.End()
-
-	ques.HandleQuestionEnd(self.ID)
+	ques.HandleQuestionEnd(self.ID, false)
 end
 
 ques = { }
 
 function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly)
+	//if Questions[quesid] then Notify(fromPly, 1,4, question .. " already exists!") return end
 	local newques = { }
 	for k, v in pairs(Question) do newques[k] = v end
 
@@ -43,7 +40,7 @@ function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly)
 		umsg.Float(delay)
 	umsg.End()
 
-	timer.Create(quesid .. "timer", delay, 1, ques.HandleQuestionEnd, quesid)
+	timer.Create(quesid .. "timer", delay, 1, ques.HandleQuestionEnd, quesid, true)
 end
 
 function ques.DestroyQuestionsWithEnt(ent)
@@ -58,15 +55,20 @@ function ques.DestroyQuestionsWithEnt(ent)
 	end
 end
 
-function ques.HandleQuestionEnd(id)
+function ques.HandleQuestionEnd(id, TimeIsUp)
+	//print("VOTEEND", TimeIsUp)
 	if not Questions[id] then return end
+//	print("VOTEEND3", TimeIsUp)
+	//PrintTable(Questions[id])
 	local q = Questions[id]
+	//print(q.Callback)
+	
+	q.Callback(q.yn, q.Ent, q.Initiator, q.Target/*, TimeIsUp*/)
 
-	q.Callback(q.yn, q.Ent, q.Initiator, q.Target)
-
-	umsg.Start("KillQuestionVGUI", q.Ent)
+	--[[ umsg.Start("KillQuestionVGUI", q.Ent)
 		umsg.String(id)
-	umsg.End()
-
-	Questions[id] = nil
+	umsg.End() ]]
+	if TimeIsUp then
+		Questions[id] = nil
+	end
 end
