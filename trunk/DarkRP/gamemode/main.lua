@@ -1928,13 +1928,13 @@ function DoLottery(ply)
 	Notify(ply, 1, 4, "You started a lottery!!")
 	LotteryON = true
 	LotteryPeople = {}
-	
+	// 10
 	for k,v in pairs(player.GetAll()) do 
 		if v ~= ply then
-			ques:Create("There is a lottery! Participate for $50?", "lottery"..tostring(k), v, 10, EnterLottery, ply, v)
+			ques:Create("There is a lottery! Participate for $50?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
 		end
 	end	
-	timer.Create("Lottery", 10, 1, EnterLottery, nil, nil, nil, nil, true)
+	timer.Create("Lottery", 30, 1, EnterLottery, nil, nil, nil, nil, true)
 	return ""
 end
 AddChatCommand("/lottery", DoLottery)
