@@ -89,7 +89,7 @@ if SERVER then
 		
 		local trace = ply:GetEyeTrace()
 
-		if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 115 then
+		if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 200 then
 			if RPArrestedPlayers[ply:SteamID()] then
 				Notify(ply, 1, 5, "Can not own or unown things while arrested!")
 				return ""

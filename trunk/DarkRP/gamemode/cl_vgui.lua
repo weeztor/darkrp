@@ -260,16 +260,17 @@ function KeysMenu(Vehicle)
 	Frame:Center()
 	Frame:SetVisible(true)
 	Frame:MakePopup()
-	Frame:SetTitle("Door options")
+	
 	function Frame:Think()
 		local ent = LocalPlayer():GetEyeTrace().Entity
-		if not ValidEntity(ent) or not ent:IsDoor() or ent:GetPos():Distance(LocalPlayer():GetPos()) > 120 then
+		//print(not ValidEntity(ent), not ent:IsDoor(), not string.find(ent:GetClass(), "vehicle"), ent:GetPos():Distance(LocalPlayer():GetPos()) > 200)
+		//print(ent:GetClass(), string.find(ent:GetClass(), "vehicle"))
+		if not ValidEntity(ent) or (not ent:IsDoor() and not string.find(ent:GetClass(), "vehicle")) or ent:GetPos():Distance(LocalPlayer():GetPos()) > 200 then
 			self:Close()
 		end
 		if (!self.Dragging) then return end  
 		local x = gui.MouseX() - self.Dragging[1] 
 		local y = gui.MouseY() - self.Dragging[2] 
-		// Lock to screen bounds if screenlock is enabled 
 		x = math.Clamp( x, 0, ScrW() - self:GetWide() ) 
 		y = math.Clamp( y, 0, ScrH() - self:GetTall() ) 
 		self:SetPos( x, y ) 
@@ -278,6 +279,7 @@ function KeysMenu(Vehicle)
 	if Vehicle then
 		Entiteh = "vehicle"
 	end
+	Frame:SetTitle(Entiteh .. " options")
 	
 	function Frame:Close()
 		KeyFrameVisible = false
@@ -339,15 +341,15 @@ function KeysMenu(Vehicle)
 		local DoorTitle = vgui.Create("DButton", Frame)
 		DoorTitle:SetPos(10, 360)
 		DoorTitle:SetSize(180, 100)
-		DoorTitle:SetText("Set door title")
+		DoorTitle:SetText("Set "..Entiteh.." title")
 		if not trace.Entity:IsMasterOwner(LocalPlayer()) then
 			RemoveOwner.m_bDisabled = true
 		end
 		DoorTitle.DoClick = function()
-			Derma_StringRequest("Set door title", "Set the title of the door you're looking at", "", function(text) LocalPlayer():ConCommand("say /title "..text) Frame:Close() end, function() end, "OK!", "CANCEL!")
+			Derma_StringRequest("Set door title", "Set the title of the "..Entiteh.." you're looking at", "", function(text) LocalPlayer():ConCommand("say /title "..text) Frame:Close() end, function() end, "OK!", "CANCEL!")
 		end
 		
-		if LocalPlayer():IsSuperAdmin() then
+		if LocalPlayer():IsSuperAdmin() and not Vehicle then
 			Frame:SetSize(200, Frame:GetTall() + 110)
 			local SetCopsOnly = vgui.Create("DButton", Frame)
 			SetCopsOnly:SetPos(10, Frame:GetTall() - 110)
@@ -401,7 +403,7 @@ function KeysMenu(Vehicle)
 		Owndoor.DoClick = function() LocalPlayer():ConCommand("say /toggleown") Frame:Close() end
 		
 		if LocalPlayer():IsSuperAdmin() then
-			Frame:SetSize(200, Frame:GetTall() + 100)
+			Frame:SetSize(200, Frame:GetTall() + 110)
 			local SetCopsOnly = vgui.Create("DButton", Frame)
 			SetCopsOnly:SetPos(10, Frame:GetTall() - 110)
 			SetCopsOnly:SetSize(180, 100)

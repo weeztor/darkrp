@@ -66,6 +66,7 @@ function ENT:Use()
 end
 
 function ENT:SpawnItem()
+	if not ValidEntity(self.Entity) then return end
 	timer.Destroy(self.Entity:EntIndex() .. "crate")
 	self.Entity:SetNWBool("sparking",false)
 	local count = self.Entity:GetNWInt("count")
