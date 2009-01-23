@@ -69,11 +69,16 @@ function ENT:Use(activator,caller)
 		Notify(activator, 1, 3, "Reached Max Drugs")
 		timer.Simple(0.5, function() self.Entity.CanUse = true end)
 	else
-		self:SetNWBool("sparking",true)
-		timer.Create(self:EntIndex() .. "drug", 1, 1, self.createDrug, self)
-		local productioncost = math.random(1, self.Entity:GetNWInt("price") / 4)
+		
+		local productioncost = math.random(self.Entity:GetNWInt("price") / 8, self.Entity:GetNWInt("price") / 4)
+		if not activator:CanAfford(productioncost) then
+			Notify(activator, 1, 4, "You cannot afford to make drugs")
+			return false
+		end
 		activator:AddMoney(-productioncost)
 		Notify(activator, 1, 4, "You made drugs! production cost " .. CUR .. tostring(productioncost).."!")
+		self:SetNWBool("sparking",true)
+		timer.Create(self:EntIndex() .. "drug", 1, 1, self.createDrug, self)
 	end
 end
 

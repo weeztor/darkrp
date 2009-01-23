@@ -1899,8 +1899,8 @@ function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 		local chosen = LotteryPeople[math.random(1, #LotteryPeople)]
 		//print(chosen)
 		chosen:AddMoney(#LotteryPeople * 50)
-		Notify(chosen, 1,4, "Congratulations! you've won the lottery! You have won " .. CUR .. tostring(#LotteryPeople * 50))
-		NotifyAll(1,4, chosen:Nick() .. " has won the lottery! He has won "  .. CUR .. tostring(#LotteryPeople * 50) )
+		Notify(chosen, 1,10, "Congratulations! you've won the lottery! You have won " .. CUR .. tostring(#LotteryPeople * 50))
+		NotifyAll(1,10, chosen:Nick() .. " has won the lottery! He has won "  .. CUR .. tostring(#LotteryPeople * 50) )
 	end
 end
 

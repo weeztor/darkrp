@@ -94,7 +94,7 @@ function PANEL:UpdatePlayerData()
 	self.lblFrags:SetText(self.Player:Frags())
 	self.lblDeaths:SetText(self.Player:Deaths())
 	self.lblPing:SetText(self.Player:Ping())
-	self.lblWarranted:SetImage("gui/silkicons/group")
+	self.lblWarranted:SetImage("gui/silkicons/exclamation")
 	if self.Player:GetNetworkedBool("wanted") then
 		self.lblWarranted:SetVisible(true)
 	elseif not self.Player:GetNetworkedBool("wanted") then
