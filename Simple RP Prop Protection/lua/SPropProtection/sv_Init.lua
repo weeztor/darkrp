@@ -257,7 +257,7 @@ function SPropProtection.GravGunThings(ply, ent)
 	if ent:IsVehicle() then return false end
 	if ply:KeyDown(IN_ATTACK) then
 		local entphys = ent:GetPhysicsObject()
-		-- it was launched
+		if not entphys:IsValid() then return false end
 		local moveable = entphys:IsMoveable()
 		if moveable then
 			entphys:EnableMotion(false)
