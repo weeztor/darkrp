@@ -128,7 +128,7 @@ function SWEP:Reload()
 		end
 		return
 	end
-	print(CLIENT)
+	//print(CLIENT)
 	if SERVER then
 		if trace.Entity:IsVehicle() then
 			self.Owner:SendLua("KeysMenu(true)")
