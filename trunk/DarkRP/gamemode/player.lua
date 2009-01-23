@@ -429,10 +429,12 @@ function meta:UpdateJob(job)
 end
 
 function meta:TeamUnBan(team)
+	if not self.bannedfrom then self.bannedfrom = {}
 	self.bannedfrom[team] = 0
 end
 
 function meta:TeamBan()
+	if not self.bannedfrom then self.bannedfrom = {} end
 	self.bannedfrom[self:Team()] = 1
 	timer.Simple(CfgVars["demotetime"], self.TeamUnBan, self, self:Team())
 end
