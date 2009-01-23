@@ -429,7 +429,7 @@ function meta:UpdateJob(job)
 end
 
 function meta:TeamUnBan(team)
-	if not self.bannedfrom then self.bannedfrom = {}
+	if not self.bannedfrom then self.bannedfrom = {} end
 	self.bannedfrom[team] = 0
 end
 
