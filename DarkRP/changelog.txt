@@ -53,6 +53,7 @@ Updated by: FPtje Falco
 [FIX] Prices etc. resetting to 0 (TO MAKE THIS HAVE EFFECT, REMOVE THE GLOBALS.txt FROM DATA/DARKRP ON THE SERVER!) 
 [FIX] HUGE FUCKING MAJOR EXPLOIT where you enter a console command after doing /votecop or /votemayor and just become a cop without anyone voting yes.
 [FIX] The ability of people to somehow get <nothing> as RP name(Always happened with bots too)
+[FIX] People being able to get less than 0 money. DarkRP just doesn't work with depts 
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 [REMOVE] rp_mute <player> <on/off> It didn't work AND you've got admin mods to mute people!
 
