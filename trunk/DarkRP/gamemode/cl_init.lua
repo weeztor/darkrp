@@ -340,7 +340,7 @@ function GM:HUDPaint()
 
 				for n = 1, num do
 					if ent:GetNWInt("Allowed" .. n) == LocalPlayer():EntIndex() then
-						ownerstr = ownerstr .. "You are allowed to co-own this\n(Press reload with keys to co-own)\n"
+						ownerstr = ownerstr .. "You are allowed to co-own this\n(Press Reload with keys or F2 to co-own)\n"
 					elseif ent:GetNWInt("Allowed" .. n) > -1 then
 						if ValidEntity(player.GetByID(ent:GetNWInt("Allowed" .. n))) then
 							ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick() .. " is allowed to co-own this\n"
@@ -358,23 +358,23 @@ function GM:HUDPaint()
 						whiteText = true
 						if superAdmin then
 							if blocked then
-								st = ent:GetNWString("dTitle") .. "\n(Press reload with keys to allow ownership)"
+								st = ent:GetNWString("dTitle") .. "\n(Press Reload with keys or F2 to allow ownership)"
 							else
 								if ownerstr == "" then
-									st = ent:GetNWString("title") .. "\n(Press reload with keys to disallow ownership)"
+									st = ent:GetNWString("title") .. "\n(Press Reload with keys or F2 to disallow ownership)"
 								else
 									if ent:OwnedBy(LocalPlayer()) and not CPOnly then
 										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
 									elseif not CPOnly then
-										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr .. "(Press reload with keys to disallow ownership)\n"
+										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr .. "(Press Reload with keys or F2 to disallow ownership)\n"
 									elseif not ent:IsVehicle() then
-										st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor\n" .. "(Press reload with keys to disallow ownership)\n"
+										st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor\n" .. "(Press Reload with keys or F2 to disallow ownership)\n"
 									end
 								end
 								if CPOnly and not ent:IsVehicle() then
-									st = st .. "(Press reload with keys to enable for everyone(not only cops))"
+									st = st .. "(Press Reload with keys or F2 to enable for everyone(not only cops))"
 								elseif not ent:IsVehicle() then
-									st = st .. "(Press reload with keys to set to cops and mayor only)"
+									st = st .. "(Press Reload with keys or F2 to set to cops and mayor only)"
 								end
 							end
 						else
@@ -397,19 +397,19 @@ function GM:HUDPaint()
 						if superAdmin then
 							if blocked then
 								whiteText = true
-								st = ent:GetNWString("dTitle") .. "\n(Press reload with keys to allow ownership)"
+								st = ent:GetNWString("dTitle") .. "\n(Press Reload with keys or F2 to allow ownership)"
 							else
-								//st = "Unowned\n(Press reload with keys to own)\n(Press reload with keys to disallow ownership)"
+								//st = "Unowned\n(Press Reload with keys or F2 to own)\n(Press Reload with keys or F2 to disallow ownership)"
 								if CPOnly then
 									whiteText = true
 									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
 									if not ent:IsVehicle() then
-										st = st .. "\n(Press reload with keys to enable for everyone(not only cops))"
+										st = st .. "\n(Press Reload with keys or F2 to enable for everyone(not only cops))"
 									end
 								else
-									st = "Unowned\n(Press reload with keys to own)\n(Press reload with keys to disallow ownership)"
+									st = "Unowned\n(Press Reload with keys or F2 to own)\n(Press Reload with keys or F2 to disallow ownership)"
 									if not ent:IsVehicle() then
-										st = st .. "\n(Press reload with keys to set to cops and mayor only)"
+										st = st .. "\n(Press Reload with keys or F2 to set to cops and mayor only)"
 									end
 								end
 							end
@@ -422,7 +422,7 @@ function GM:HUDPaint()
 									whiteText = true
 									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
 								else
-									st = "Unowned\n(Press reload with keys to own)"
+									st = "Unowned\n(Press Reload with keys or F2 to own)"
 								end
 							end
 						end

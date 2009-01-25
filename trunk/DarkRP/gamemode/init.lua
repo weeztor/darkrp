@@ -395,7 +395,7 @@ end
 concommand.Add("serverHelp", serverHelp) ]]
 
 function GM:ShowTeam(ply)
-	ply:ConCommand("serverHelp\n")
+	ply:SendLua("KeysMenu(" ..tostring(ply:GetEyeTrace().Entity:IsVehicle()) .. ")")
 end
 
 function GM:ShowHelp(ply)
