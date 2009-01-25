@@ -90,9 +90,25 @@ local function CPOptns()
 	CPCat:SetLabel("Police options")
 		local CPpanel = vgui.Create("DPanelList")
 		CPpanel:SetSpacing(5)
-		CPpanel:SetSize(740,110)
+		CPpanel:SetSize(740,140)
 		CPpanel:EnableHorizontal(false)
 		CPpanel:EnableVerticalScrollbar(true)
+			local SearchWarrant = vgui.Create("DButton") 
+			SearchWarrant:SetText("Request a search warrant for a player")
+			SearchWarrant.DoClick = function()
+				local menu = DermaMenu()
+				for _,ply in pairs(player.GetAll()) do
+					if not ply:GetNWBool("warrant") and ply ~= LocalPlayer() then
+						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
+					end
+				end
+				if #menu.Panels == 0 then
+					menu:AddOption("Noone available", function() end)
+				end
+				menu:Open()
+			end
+			CPpanel:AddItem(SearchWarrant)
+			
 			local Warrant = vgui.Create("DButton") 
 			Warrant:SetText("Warrant a player")
 			Warrant.DoClick = function()
