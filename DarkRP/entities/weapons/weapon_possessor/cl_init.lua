@@ -1,4 +1,5 @@
 include('shared.lua')
+include("cl_init.lua")
 
 SWEP.PrintName = "Player posessor"
 SWEP.Slot = 5
