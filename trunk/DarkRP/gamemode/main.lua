@@ -1923,7 +1923,7 @@ function DoLottery(ply)
 	end
 	
 	if #player.GetAll() <= 2 then
-		Notify(ply, 1, 4, "Too few people in the server")
+		Notify(ply, 1, 4, "Not enough people in the server")
 		return "" 
 	end 
 	

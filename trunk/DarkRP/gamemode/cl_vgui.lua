@@ -205,6 +205,7 @@ local F4Menu
 //local LastF4Tab 
 local F4MenuTabs
 local F4Tabs
+local NoCloseF4 = CurTime()
 function ChangeJobVGUI()
 	if not F4Menu or not F4Menu:IsValid() then
 		F4Menu = vgui.Create("DFrame")
@@ -220,7 +221,21 @@ function ChangeJobVGUI()
 	else
 		F4Menu:SetVisible(true)
 	end
+	NoCloseF4 = CurTime() + 0.6
 	
+	function F4Menu:Think()
+		if input.IsKeyDown(KEY_F4) and NoCloseF4 < CurTime() then
+			self:Close()
+		end
+		if (!self.Dragging) then return end 
+		local x = gui.MouseX() - self.Dragging[1] 
+		local y = gui.MouseY() - self.Dragging[2] 
+		x = math.Clamp( x, 0, ScrW() - self:GetWide() ) 
+		y = math.Clamp( y, 0, ScrH() - self:GetTall() ) 
+		self:SetPos( x, y ) 		
+	end
+		
+		
 	//local money, jobs, entities = MoneyTab(), JobsTab(), EntitiesTab()
 	
 	if not F4MenuTabs or not F4MenuTabs:IsValid() then
