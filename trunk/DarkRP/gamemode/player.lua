@@ -24,49 +24,6 @@ function meta:InitSID()
 	self.SID = sessionid
 end
 
-function meta:NewData()
-	local function ModuleDelay(ply)
-		umsg.Start("LoadModules", ply)
-			umsg.Short(#CSFiles)
-			for n = 1, #CSFiles do
-				umsg.String(CSFiles[n])
-			end
-		umsg.End()
-	end
-
-	timer.Simple(.01, ModuleDelay, self)
-
-	self:RestoreRPName()
-
-	DB.StoreSalary(self, CfgVars["normalsalary"])
-
-	self:UpdateJob("Citizen")
-
-	self:GetTable().Ownedz = { }
-	self:GetTable().OwnedNumz = 0
-
-	self:GetTable().LastLetterMade = CurTime() - 61
-	self:GetTable().LastVoteCop = CurTime() - 61
-
-	self:SetTeam(TEAM_CITIZEN)
-
-	-- Whether or not a player is being prevented from joining
-	-- a specific team for a certain length of time
-	for i = 1, 9 + #RPExtraTeams do
-		self.bannedfrom[i] = 0
-	end
-
-	if self:IsSuperAdmin() or self:IsAdmin() then
-		self:GrantPriv(ADMIN)
-	end
-end
-
-function meta:RestoreRPName()
-	local name = DB.RetrieveRPName(self)
-	if not name then name = self:SteamName() end
-
-	self:SetRPName(name, true)
-end
 
 function meta:SetRPName(name, firstRun)
 	-- Make sure nobody on this server already has this RP name
@@ -846,6 +803,51 @@ function meta:CompleteSentence()
 		self:Arrest(time, true)
 		Notify(self, 0, 5, "Punishment for disconnecting! Jailed for: " .. time .. " seconds.")
 	end
+end
+
+
+function meta:NewData()
+	local function ModuleDelay(ply)
+		umsg.Start("LoadModules", ply)
+			umsg.Short(#CSFiles)
+			for n = 1, #CSFiles do
+				umsg.String(CSFiles[n])
+			end
+		umsg.End()
+	end
+
+	timer.Simple(.01, ModuleDelay, self)
+
+	self:RestoreRPName()
+
+	DB.StoreSalary(self, CfgVars["normalsalary"])
+
+	self:UpdateJob("Citizen")
+
+	self:GetTable().Ownedz = { }
+	self:GetTable().OwnedNumz = 0
+
+	self:GetTable().LastLetterMade = CurTime() - 61
+	self:GetTable().LastVoteCop = CurTime() - 61
+
+	self:SetTeam(TEAM_CITIZEN)
+
+	-- Whether or not a player is being prevented from joining
+	-- a specific team for a certain length of time
+	for i = 1, 9 + #RPExtraTeams do
+		self.bannedfrom[i] = 0
+	end
+
+	if self:IsSuperAdmin() or self:IsAdmin() then
+		self:GrantPriv(ADMIN)
+	end
+end
+
+function meta:RestoreRPName()
+	local name = DB.RetrieveRPName(self)
+	if not name or name == "" then name = self:SteamName() end
+
+	self:SetRPName(name, true)
 end
 
 function GM:PlayerInitialSpawn(ply)
