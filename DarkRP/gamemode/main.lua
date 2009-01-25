@@ -1883,13 +1883,13 @@ local CanLottery = CurTime()
 function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	//print(answer, ent, initiator, target, TimeIsUp)
 	if answer == 1 and not table.HasValue(LotteryPeople, target) then
-		if not ply:CanAfford(50) then
+		if not ply:CanAfford(CfgVars["lotterycommitcost"]) then
 			Notify(target, 1,4, "Cannot afford the lottery!")
 			return
 		end
 		table.insert(LotteryPeople, target)
-		target:AddMoney(-50)
-		Notify(target, 1,4, "You entered the lottery for $50!")
+		target:AddMoney(-CfgVars["lotterycommitcost"])
+		Notify(target, 1,4, "You entered the lottery for "..CUR..tostring(CfgVars["lotterycommitcost"]))
 	elseif answer and not table.HasValue(LotteryPeople, target) then
 		Notify(target, 1,4, "You did NOT enter the lottery!")
 	end
@@ -1904,9 +1904,9 @@ function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 		//PrintTable( LotteryPeople)
 		local chosen = LotteryPeople[math.random(1, #LotteryPeople)]
 		//print(chosen)
-		chosen:AddMoney(#LotteryPeople * 50)
-		Notify(chosen, 1,10, "Congratulations! you've won the lottery! You have won " .. CUR .. tostring(#LotteryPeople * 50))
-		NotifyAll(1,10, chosen:Nick() .. " has won the lottery! He has won "  .. CUR .. tostring(#LotteryPeople * 50) )
+		chosen:AddMoney(#LotteryPeople * CfgVars["lotterycommitcost"])
+		Notify(chosen, 1,10, "Congratulations! you've won the lottery! You have won " .. CUR .. tostring(#LotteryPeople * CfgVars["lotterycommitcost"]))
+		NotifyAll(1,10, chosen:Nick() .. " has won the lottery! He has won "  .. CUR .. tostring(#LotteryPeople * CfgVars["lotterycommitcost"]) )
 	end
 end
 
@@ -1941,7 +1941,7 @@ function DoLottery(ply)
 	// 10
 	for k,v in pairs(player.GetAll()) do 
 		if v ~= ply then
-			ques:Create("There is a lottery! Participate for $50?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
+			ques:Create("There is a lottery! Participate for " ..CUR.. tostring(CfgVars["lotterycommitcost"]) .. "?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
 		end
 	end	
 	timer.Create("Lottery", 30, 1, EnterLottery, nil, nil, nil, nil, true)

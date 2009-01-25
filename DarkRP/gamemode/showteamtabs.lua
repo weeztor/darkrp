@@ -6,7 +6,7 @@ local function MayorOptns()
 	MayCat:SetLabel("Mayor options")
 		local maypanel = vgui.Create("DPanelList")
 		maypanel:SetSpacing(5)
-		maypanel:SetSize(740,110)
+		maypanel:SetSize(740,140)
 		maypanel:EnableHorizontal(false)
 		maypanel:EnableVerticalScrollbar(true)
 			local Warrant = vgui.Create("DButton") 
@@ -55,6 +55,13 @@ local function MayorOptns()
 				LocalPlayer():ConCommand("say /unlockdown")
 			end
 			maypanel:AddItem(UnLockdown)
+			
+			local Lottery = vgui.Create("DButton") 
+			Lottery:SetText("Start a lottery")
+			Lottery.DoClick = function()
+				LocalPlayer():ConCommand("say /lottery")
+			end
+			maypanel:AddItem(Lottery)
 	MayCat:SetContents(maypanel)
 	return MayCat
 end

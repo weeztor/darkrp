@@ -1194,6 +1194,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmoneyprinters <Number> - Max num
 AddValueCommand("rp_printamount", "mprintamount", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_printamount <Number> - Value of the money printed by the money printer.")
 
+AddValueCommand("rp_lotterycommitcost", "lotterycommitcost", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_lotterycommitcost <Number> - How much you pay for entering a lottery")
+
 for k,v in pairs(RPExtraTeams) do
 	ValueCmds["rp_max"..v.command] = { var = "rp_max"..v.command, global = false }
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.." <Number> - Sets max "..v.name.."s.")
