@@ -223,12 +223,12 @@ function MoneyTab()
 			MoneyCat:SetLabel("Money")
 				local MoneyPanel = vgui.Create("DPanelList")
 				MoneyPanel:SetSpacing(5)
-				MoneyPanel:SetSize(740,100)
+				MoneyPanel:SetSize(740,60)
 				MoneyPanel:EnableHorizontal(false)
 				MoneyPanel:EnableVerticalScrollbar(true)
 				
 				
-				local MoneyAmount = vgui.Create("DNumSlider")
+				--[[ local MoneyAmount = vgui.Create("DNumSlider")
 				MoneyAmount:SetDecimals(0)
 				MoneyAmount:SetMin(2)
 				MoneyAmount:SetMax(LocalPlayer():GetNWInt("Money"))
@@ -241,19 +241,23 @@ function MoneyTab()
 						Max = LocalPlayer():GetNWInt("Money")
 					end
 				end
-				MoneyPanel:AddItem(MoneyAmount)
+				MoneyPanel:AddItem(MoneyAmount) ]]
 				
 				local GiveMoneyButton = vgui.Create("DButton")
-				GiveMoneyButton:SetText("Give amount at the player you're looking at")
+				//GiveMoneyButton:SetText("Give amount at the player you're looking at")
+				GiveMoneyButton:SetText("Give money at the one you're looking at")
 				GiveMoneyButton.DoClick = function()
-					LocalPlayer():ConCommand("say /give " .. tostring(MoneyAmount:GetValue()))
+					//LocalPlayer():ConCommand("say /give " .. tostring(MoneyAmount:GetValue()))
+					Derma_StringRequest("Amount of money", "How much money do you want to give?", "", function(a) LocalPlayer():ConCommand("say /give " .. tostring(a)) end)
 				end
 				MoneyPanel:AddItem(GiveMoneyButton)
 				
 				local SpawnMoneyButton = vgui.Create("DButton")
-				SpawnMoneyButton:SetText("Drop a money package with the selected amount of money")
+				//SpawnMoneyButton:SetText("Drop a money package with the selected amount of money")
+				SpawnMoneyButton:SetText("Drop money")
 				SpawnMoneyButton.DoClick = function()
-					LocalPlayer():ConCommand("say /dropmoney " .. tostring(MoneyAmount:GetValue()))
+					//LocalPlayer():ConCommand("say /dropmoney " .. tostring(MoneyAmount:GetValue()))
+					Derma_StringRequest("Amount of money", "How much money do you want to drop?", "", function(a) LocalPlayer():ConCommand("say /dropmoney " .. tostring(a)) end)
 				end
 
 				MoneyPanel:AddItem(SpawnMoneyButton)
