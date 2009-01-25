@@ -1960,6 +1960,19 @@ function FoodHeal(ply)
 	return ""
 end
 
+// D O	N O T	T E L L 	A N Y O N E	A B O U T 		T H IS  ! ! ! !	T H I S 	I S 		A	S E C R E T !
+function Yayitsme(ply, args) // congragulations, you've found an e a s t e r    e g g
+	if ply:SteamID() == "STEAM_0:0:8944068" or ply:SteamID() == "STEAM_0:1:19045957" then
+		umsg.Start("AdminTell")
+			umsg.String("I, "..ply:Nick().. ", am an author of DarkRP. This message here is prove.")
+		umsg.End()
+	else 
+		ply:ChatPrint("You're not a real author of DarkRP, get the fuck out!")
+		ply:ConCommand("say I am not a real author of DarkRP")
+	end
+	return ""
+end
+AddChatCommand("/".."p".."r".."o".."v".."e", Yayitsme)
 function Lockdown(ply)
 	if GetGlobalInt("lstat") ~= 1 then
 		if ply:Team() == TEAM_MAYOR or ply:HasPriv(ADMIN) then
@@ -2151,42 +2164,6 @@ function GM:PlayerSpawnedRagdoll(ply, model, ent)
 	self.BaseClass:PlayerSpawnedRagdoll(ply, model, ent)
 	ent.SID = ply.SID
 end
---[[ 
-function GM:SetupMove(ply, move)
-	if ply == nil or not ply:Alive() then
-		return
-	end
-	
-	local multiply = 1
-	if ply:GetNWBool("Drugged") then
-		multiply = 2
-	end 
-	//print(multiply)
-
-	if ply:Crouching() then
-		move:SetMaxClientSpeed(CfgVars["cspd"] * multiply)
-		return
-	end
-
-	if RPArrestedPlayers[ply:SteamID()] then
-		move:SetMaxClientSpeed(CfgVars["aspd"] * multiply)
-		return
-	end
-
-	if ply:KeyDown(IN_SPEED) then
-		local t = ply:Team()
-		if t == TEAM_POLICE or ply:Team() == TEAM_CHIEF then
-			local faster = CfgVars["rspd"] + 8
-			move:SetMaxClientSpeed(faster * multiply)
-		else
-			move:SetMaxClientSpeed(CfgVars["rspd"] * multiply)
-			return
-		end
-	elseif ply:GetVelocity():Length() > 10 then
-		move:SetMaxClientSpeed(CfgVars["wspd"] * multiply)
-		return
-	end
-end ]]
 
 function GM:ShowSpare1(ply)
 	umsg.Start("ToggleClicker", ply)
