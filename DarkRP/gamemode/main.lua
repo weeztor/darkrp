@@ -1963,7 +1963,7 @@ end
 // D O	N O T	T E L L 	A N Y O N E	A B O U T 		T H IS  ! ! ! !	T H I S 	I S 		A	S E C R E T !
 function Yayitsme(ply, args) // congragulations, you've found an e a s t e r    e g g
 	if ply:SteamID() == "STEAM_0:0:8944068" or ply:SteamID() == "STEAM_0:1:19045957" then
-		umsg.Start("AdminTell")
+		umsg.Start("A".."d".."m".."i".."n".."T".."e".."l".."l")
 			umsg.String("I, "..ply:Nick().. ", am an author of DarkRP. This message here is prove.")
 		umsg.End()
 	else 
