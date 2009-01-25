@@ -32,7 +32,7 @@ function meta:SetRPName(name, firstRun)
 	local taken = false
 
 	for id, row in pairs(rpNames) do
-		if lowername == string.lower(row.name) and row.steam ~= self:SteamID() then
+		if row.name and lowername == string.lower(row.name) and row.steam ~= self:SteamID() then
 			taken = true
 		end
 	end
@@ -480,9 +480,11 @@ function meta:UnownAll()
 	end
 
 	for k, v in pairs(player.GetAll()) do
-		for n, m in pairs(v:GetTable().Ownedz) do
-			if m:AllowedToOwn(self) then
-				m:RemoveAllowed(self)
+		if  v:GetTable().Ownedz then
+			for n, m in pairs(v:GetTable().Ownedz) do
+				if m:AllowedToOwn(self) then
+					m:RemoveAllowed(self)
+				end
 			end
 		end
 	end
