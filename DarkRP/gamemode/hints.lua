@@ -7,11 +7,11 @@ local function GiveHint()
 	elseif hint == 2 then
 		PrintMessageAll(HUD_PRINTTALK , "You can be arrested for buying or owning an illegal weapon!")
 	elseif hint == 3 then
-		PrintMessageAll(HUD_PRINTTALK , "Type /sleep to fall asleep. (NO weapons will be lost!)")
+		PrintMessageAll(HUD_PRINTTALK , "Type /sleep to fall asleep.")
 	elseif hint == 4 then
 		PrintMessageAll(HUD_PRINTTALK , "You may own a handgun, but use it only in self defence.")
 	elseif hint == 5 then
-		PrintMessageAll(HUD_PRINTTALK , "Press F2 to see server rules and view special commands.")
+		PrintMessageAll(HUD_PRINTTALK , "Press F2 to open the keys menu")
 	elseif hint == 6 then
 		PrintMessageAll(HUD_PRINTTALK , "All weapons are very inaccurate, unless you right click to see through the sight post.")
 	elseif hint == 7 then
@@ -33,7 +33,7 @@ local function GiveHint()
 	elseif hint == 15 then
 		PrintMessageAll(HUD_PRINTTALK , "You will be teleported to jail if you get arrested!")
 	elseif hint == 16 then
-		PrintMessageAll(HUD_PRINTTALK , "If you see someone with an illegal weapon, arrest them and confiscate it.")
+		PrintMessageAll(HUD_PRINTTALK , "If you're a cop and see someone with an illegal weapon, arrest them and confiscate it.")
 	elseif hint == 17 then
 		PrintMessageAll(HUD_PRINTTALK , "Type /sleep to fall asleep.")
 	elseif hint == 18 then
@@ -41,13 +41,13 @@ local function GiveHint()
 	elseif hint == 19 then
 		PrintMessageAll(HUD_PRINTTALK , "Type /buyhealth to refil your health to 100%")
 	elseif hint == 20 then
-		PrintMessageAll(HUD_PRINTTALK , "Type /buydruglab to buy a druglab. It makes you " .. CUR .. GetGlobalInt("drugpayamount") .. " per minute.")
+		PrintMessageAll(HUD_PRINTTALK , "Type /buydruglab to buy a druglab. be sure you sell your drugs!")
 	elseif hint == 21 then
-		PrintMessageAll(HUD_PRINTTALK , "Press F2 to see the server rules and view special commands.")
+		PrintMessageAll(HUD_PRINTTALK , "Press F2 to open the keys menu")
 	elseif hint == 22 then
 		PrintMessageAll(HUD_PRINTTALK , "You will be teleported to a jail if you get arrested!")
 	elseif hint == 23 then
-		PrintMessageAll(HUD_PRINTTALK , "Type /price <Price> while looking at a Gun Lab or a Microwave to set the customer purchase price.")
+		PrintMessageAll(HUD_PRINTTALK , "Type /price <Price> while looking at a druglab,  Gun Lab or a Microwave to set the customer purchase price.")
 	elseif hint == 24 then
 		PrintMessageAll(HUD_PRINTTALK , "Type /warrant [Nick|SteamID|UserID] to get a search warrant for a player.")
 	elseif hint == 25 then
