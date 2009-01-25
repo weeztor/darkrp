@@ -403,7 +403,7 @@ concommand.Add("rp_tell", ccTell)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_tell [Nick|SteamID|UserID] <Message> - Send a noticeable message to a named player.")
 
 function ccRemoveLetters(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
 	end
@@ -483,7 +483,7 @@ concommand.Add("rp_paydaytime", ccPayDayTime)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_paydaytime <Delay> - Pay interval. (in seconds)")
 
 function ccArrest(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin")
 		return
 	end
@@ -517,7 +517,7 @@ concommand.Add("rp_arrest", ccArrest)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_arrest [Nick|SteamID|UserID] <Length> - Arrest a player for a custom amount of time. If no time is specified, it will default to " .. GetGlobalInt("jailtimer") .. " seconds.")
 
 function ccUnarrest(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
 	end
@@ -539,7 +539,7 @@ concommand.Add("rp_unarrest", ccUnarrest)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_unarrest [Nick|SteamID|UserID] - Unarrest a player.")
 
 function ccMayor(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
 	end
@@ -574,7 +574,7 @@ concommand.Add("rp_mayor", ccMayor)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_mayor [Nick|SteamID|UserID] - Make a player the Mayor.")
 
 function ccCPChief(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
 	end
@@ -593,7 +593,7 @@ concommand.Add("rp_cpchief", ccCPChief)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_cpchief [Nick|SteamID|UserID] - Make a player the CP Chief.")
 
 function ccCP(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
 	end
@@ -623,7 +623,7 @@ concommand.Add("rp_cp", ccCP)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_cp [Nick|SteamID|UserID] - Make a player into a CP.")
 
 function ccCitizen(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
 	end
@@ -665,10 +665,10 @@ for k,v in pairs(RPExtraTeams) do
 		end
 		
 		if v.Vote then
-			if v.admin == 1 and not ply:IsSuperAdmin() then
+			if v.admin == 1 and ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 				ply:PrintMessage(2, "You're not a super admin!")
 				return
-			elseif v.admin > 1 and ply:IsSuperAdmin() then
+			elseif v.admin > 1 and ply:IsSuperAdmin() and ply:EntIndex() ~= 0 then
 				ply:PrintMessage(2, "You cannot make anyone "..v.name.." because voting is on and admin is set to super admin. Make a vote...")
 				return
 			end
@@ -697,7 +697,7 @@ end
 		
 
 function ccKickBan(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
 	end
@@ -729,7 +729,7 @@ concommand.Add("rp_kickban", ccKickBan)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_kickban [Nick|SteamID|UserID] <Length in minutes> - Kick and ban a player.")
 
 function ccKick(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
 	end
@@ -765,7 +765,7 @@ concommand.Add("rp_kick", ccKick)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_kick [Nick|SteamID|UserID] <Kick reason> - Kick a player. The reason is optional.")
 
 function ccSetMoney(ply, cmd, args)
-	if ply:EntIndex() ~= 0 and not ply:IsAdmin() and not ply:IsSuperAdmin() then
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, "You're not a server admin!")
 		return
 	end
@@ -810,7 +810,7 @@ concommand.Add("rp_setmoney", ccSetMoney)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_setmoney [Nick|SteamID|UserID] <Amount> - Set a player's money to a specific amount.")
 
 function ccSetSalary(ply, cmd, args)
-	if ply:EntIndex() ~= 0 and not ply:IsAdmin() and not ply:IsSuperAdmin() then
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, "You're not a server admin!")
 		return
 	end
@@ -862,7 +862,7 @@ concommand.Add("rp_setsalary", ccSetSalary)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_setsalary [Nick|SteamID|UserID] <Amount> - Set a player's Roleplay Salary.")
 
 function ccGrantPriv(ply, cmd, args)
-	if not ply:IsSuperAdmin() then
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, "You're not a super admin!")
 		return
 	end
@@ -907,7 +907,7 @@ concommand.Add("rp_grant", ccGrantPriv)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_grant [tool|phys|admin|prop|cp|mayor] [Nick|SteamID|UserID] - Gives a privilege to a player.")
 
 function ccRevokePriv(ply, cmd, args)
-	if not ply:IsSuperAdmin() then
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, "You're not a super admin!")
 		return
 	end
@@ -954,7 +954,7 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_revoke [tool|phys|admin|prop|cp|may
 
 function ccSWEPSpawn(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
-		if not ply:HasPriv(ADMIN) and not ply:IsAdmin() and not ply:IsSuperAdmin() then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsSuperAdmin() then
 			Notify(ply, 1, 2, "You're not an admin!")
 			return
 		end
@@ -965,7 +965,7 @@ concommand.Add("gm_giveswep", ccSWEPSpawn)
 
 function ccSWEPGive(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
-		if not ply:HasPriv(ADMIN) and not ply:IsAdmin() and not ply:IsSuperAdmin() then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsSuperAdmin() then
 			Notify(ply, 1, 2, "You're not an admin!")
 			return
 		end
@@ -976,7 +976,7 @@ concommand.Add("gm_spawnswep", ccSWEPGive)
 
 function ccSENTSPawn(ply, cmd, args)
 	if CfgVars["adminsents"] == 1 then
-		if not ply:HasPriv(ADMIN) and not ply:IsAdmin() and not ply:IsSuperAdmin() then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsSuperAdmin() then
 			Notify(ply, 1, 2, "You're not an admin!")
 			return
 		end
@@ -1203,7 +1203,7 @@ for k,v in pairs(RPExtraTeams) do
 			print("rp_max"..v.command, "=", v.max)
 			ply:PrintMessage(2, "rp_max"..v.command..  "    =    ".. v.max)
 		end
-		if not ply:HasPriv(ADMIN) then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			ply:PrintMessage(2, "You're not an admin")
 			return
 		end

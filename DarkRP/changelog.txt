@@ -34,6 +34,7 @@ Updated by: FPtje Falco
 [CHANGE] Scoreboard now sorts the players on their class
 [CHANGE] Replaced bad rating with "friendly" rating
 [CHANGE] You can see what you rated someone, and the rated guy can see who rated him.
+[CHANGE] Only super admins can set peoples money(Due to complaints of admins setting random people's money)
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
 [FIX] Rare error with dropweapon
 [FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.
