@@ -26,7 +26,7 @@ function ccValueCommand(ply, cmd, args)
 		return
 	end
 
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin")
 		return
 	end
@@ -78,7 +78,7 @@ function ccToggleCommand(ply, cmd, args)
 		return
 	end
 
-	if not DB.HasPriv(ply, ADMIN) then
+	if ply:EntIndex() ~= 0 and not DB.HasPriv(ply, ADMIN) then
 		ply:PrintMessage(2, "Admin only!")
 		return
 	end
@@ -374,7 +374,7 @@ AddValueCommand("rp_maxcps", "maxcps", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcps <Number> - Maximum number of CPs.")
 
 function ccTell(ply, cmd, args)
-	if not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
 	end
@@ -959,7 +959,7 @@ function ccSWEPSpawn(ply, cmd, args)
 			return
 		end
 	end
-	CCSpawnSWEP(ply, cmd, args)
+	CCGiveSWEP(ply, cmd, args)
 end
 concommand.Add("gm_giveswep", ccSWEPSpawn)
 
@@ -970,7 +970,7 @@ function ccSWEPGive(ply, cmd, args)
 			return
 		end
 	end
-	CCGiveSWEP(ply, cmd, args)
+	CCSpawnSWEP(ply, cmd, args)
 end
 concommand.Add("gm_spawnswep", ccSWEPGive)
 

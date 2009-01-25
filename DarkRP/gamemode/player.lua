@@ -52,7 +52,7 @@ function meta:NewData()
 
 	-- Whether or not a player is being prevented from joining
 	-- a specific team for a certain length of time
-	for i = 1, 9 do
+	for i = 1, 9 + #RPExtraTeams do
 		self.bannedfrom[i] = 0
 	end
 
@@ -856,7 +856,7 @@ function GM:PlayerInitialSpawn(ply)
 	NetworkHelpLabels(ply)
 	DB.RetrieveSalary(ply)
 	DB.RetrieveMoney(ply)
-	timer.Simple(3, ply.CompleteSentence, ply)
+	timer.Simple(10, ply.CompleteSentence, ply)
 end
 timer.Simple(5, function()
 	DB.SetUpNonOwnableDoors()
