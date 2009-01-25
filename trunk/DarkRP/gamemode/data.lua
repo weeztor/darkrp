@@ -354,6 +354,7 @@ end
 
 function DB.StoreMoney(ply, amount)
 	if not ValidEntity(ply) then return end
+	if amount < 0  then return end
 	local steamID = ply:SteamID()
 	local r = sql.QueryValue("SELECT amount FROM darkrp_wallets WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 	if r then
