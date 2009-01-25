@@ -1879,9 +1879,14 @@ AddChatCommand("/cr", CombineRequest)
 
 local LotteryPeople = {}
 local LotteryON = false
+local CanLottery = CurTime()
 function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	//print(answer, ent, initiator, target, TimeIsUp)
 	if answer == 1 and not table.HasValue(LotteryPeople, target) then
+		if not ply:CanAfford(50) then
+			Notify(target, 1,4, "Cannot afford the lottery!")
+			return
+		end
 		table.insert(LotteryPeople, target)
 		target:AddMoney(-50)
 		Notify(target, 1,4, "You entered the lottery for $50!")
@@ -1891,6 +1896,7 @@ function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	
 	if TimeIsUp then
 		LotteryON = false
+		CanLottery = CurTime() + 60
 		if #LotteryPeople == 0 then
 			NotifyAll(1,4, "Noone entered the lottery")
 			return
@@ -1923,6 +1929,10 @@ function DoLottery(ply)
 	
 	if LotteryON then
 		Notify(ply, 1, 4, "There already is a lottery ongoing!")
+		return "" 
+	end
+	if CanLottery > CurTime() then
+		Notify(ply, 1, 5, "You have to wait "..tostring(CanLottery - CurTime()).." seconds to start a lottery again.")
 		return "" 
 	end
 	Notify(ply, 1, 4, "You started a lottery!!")
