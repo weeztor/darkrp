@@ -6,11 +6,27 @@ local function MayorOptns()
 	MayCat:SetLabel("Mayor options")
 		local maypanel = vgui.Create("DPanelList")
 		maypanel:SetSpacing(5)
-		maypanel:SetSize(740,140)
+		maypanel:SetSize(740,170)
 		maypanel:EnableHorizontal(false)
 		maypanel:EnableVerticalScrollbar(true)
+			local SearchWarrant = vgui.Create("DButton") 
+			SearchWarrant:SetText("Get a search warrant for a player")
+			SearchWarrant.DoClick = function()
+				local menu = DermaMenu()
+				for _,ply in pairs(player.GetAll()) do
+					if not ply:GetNWBool("warrant") and ply ~= LocalPlayer() then
+						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
+					end
+				end
+				if #menu.Panels == 0 then
+					menu:AddOption("Noone available", function() end)
+				end
+				menu:Open()
+			end
+			maypanel:AddItem(SearchWarrant)
+			
 			local Warrant = vgui.Create("DButton") 
-			Warrant:SetText("Warrant a player")
+			Warrant:SetText("Make someone wanted")
 			Warrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
@@ -26,7 +42,7 @@ local function MayorOptns()
 			maypanel:AddItem(Warrant)
 			
 			local UnWarrant = vgui.Create("DButton") 
-			UnWarrant:SetText("Unwarrant a player")
+			UnWarrant:SetText("Make someone unwanted")
 			UnWarrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
