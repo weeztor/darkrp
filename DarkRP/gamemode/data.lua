@@ -120,7 +120,9 @@ function DB.HasPriv(ply, priv)
 	if not p then return false end
 
 	-- If there is a current cache of priveleges
-	if DB.privcache[ply:SteamID()] then
+	if DB.privcache[ply:SteamID()] and DB.privcache[ply:SteamID()][priv] then
+		print(DB.privcache[ply:SteamID()][priv])
+		//PrintTable(DB.privcache[ply:SteamID()])
 			-- If the cache indicates that they have the privilege
 		if DB.privcache[ply:SteamID()][priv] == 1 then
 			return true
@@ -128,7 +130,8 @@ function DB.HasPriv(ply, priv)
 			return false
 		end
 	-- If there is no cache for this user
-	else
+	else 
+		print(p, ply:SteamID())
 		local result = tonumber(sql.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
 		//print("RESULT = ", result)
 		DB.privcache[ply:SteamID()] = {}
@@ -153,7 +156,7 @@ function DB.GrantPriv(ply, priv)
 	else
 			sql.Begin()
 			sql.Query("INSERT INTO darkrp_privs VALUES(" .. sql.SQLStr(steamID) .. ", 0, 0, 0, 0, 0, 0);")
-			sql.Query("UPDATE darkrp_privs SET " .. p .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
+			sql.Query("UPDATE darkrp_privs SET " .. sql.SQLStr(p) .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 			
 			sql.Commit()
 			//print(sql.QueryValue("SELECT " .. p .. " FROM darkrp_privs WHERE steam = " .. steamID .. ";"))
