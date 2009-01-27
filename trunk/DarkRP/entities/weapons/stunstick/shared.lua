@@ -90,6 +90,7 @@ function SWEP:PrimaryAttack()
 			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 		else
 			self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
+			trace.Entity:TakeDamage(10, self.Owner, self.Owner)
 		end
 	end
 end
@@ -122,6 +123,7 @@ function SWEP:SecondaryAttack()
 			trace.Entity:TakeDamage(1000, self.Owner, self)
 			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 		else
+			trace.Entity:TakeDamage(1000, self.Owner, self.Owner)
 			self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
 		end
 	end

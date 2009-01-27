@@ -869,7 +869,6 @@ end)
 
 function GM:PlayerDisconnected(ply)
 	self.BaseClass:PlayerDisconnected(ply)
-	ply:UnownAll()
 	timer.Destroy(ply:SteamID() .. "jobtimer")
 	timer.Destroy(ply:SteamID() .. "propertytax")
 	for k, v in pairs(ents.FindByClass("money_printer")) do
@@ -884,9 +883,13 @@ function GM:PlayerDisconnected(ply)
 	for k, v in pairs(ents.FindByClass("letter")) do
 		if v.SID == ply.SID then v:Remove() end
 	end
+	for k, v in pairs(ents.FindByClass("drug_lab")) do
+		if v.SID == ply.SID then v:Remove() end
+	end
 	vote.DestroyVotesWithEnt(ply)
 	-- If you're arrested when you disconnect, you will serve your time again when you reconnect!
 	if RPArrestedPlayers and RPArrestedPlayers[ply:SteamID()]then
 		DB.StoreJailStatus(ply, math.ceil(GetGlobalInt("jailtimer")))
 	end
+	ply:UnownAll()
 end

@@ -20,6 +20,7 @@ function ENT:Initialize()
 	self:SetNWInt("damage",100)
 	local ply = self:GetNWEntity("owning_ent")
 	self.Entity.SID = ply.SID
+	self.SID = ply.SID
 	self.Entity:SetNWInt("price", 100)
 	self.Entity.CanUse = true
 	self:SetNetworkedString("Owner", ply:Nick())
@@ -30,27 +31,9 @@ end
 function ENT:OnTakeDamage(dmg)
 	self:SetNWInt("damage", self:GetNWInt("damage") - dmg:GetDamage())
 	if (self:GetNWInt("damage") <= 0) then
-		self:Destruct()
 		self:Remove()
 	end
 end
-
-/*function ENT:giveMoney()
-	local ply = self:GetNWEntity("owning_ent")
-	if not ValidEntity(ply) then self:Remove() return end
-	if ply:Alive() and not RPArrestedPlayers[ply:SteamID()] then
-		ply:AddMoney(GetGlobalInt("drugpayamount"))
-		Notify(ply, 1, 4, "Paid " .. CUR .. GetGlobalInt("drugpayamount") .. " for selling drugs.")
-	end
-
-	--[[ self:SetNWInt("Energy", self:GetNWInt("Energy") - 1)
-	//ply:Notify()
-	if self:GetNWInt("Energy") < 0 then
-		self:Destruct()
-		self:Remove()
-	end ]]
-	
-end*/
 
 function ENT:Destruct()
 	local vPoint = self:GetPos()
@@ -98,6 +81,9 @@ function ENT:createDrug()
 end
 
 function ENT:Think()
+	if not self.SID then 
+		self.SID = self:GetNWEntity("owning_ent")
+	end
 	if (self:GetNWBool("sparking") == true) then
 		local effectdata = EffectData()
 		effectdata:SetOrigin(self:GetPos())
@@ -109,6 +95,7 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
+	self:Destruct()
 	timer.Destroy(self)
 	local ply = self:GetNWEntity("owning_ent")
 	if ValidEntity(ply) then ply:SetNWInt("maxDrug",ply:GetNWInt("maxDrug") - 1) end
