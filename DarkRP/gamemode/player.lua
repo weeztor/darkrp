@@ -837,7 +837,7 @@ function meta:NewData()
 	-- Whether or not a player is being prevented from joining
 	-- a specific team for a certain length of time
 	for i = 1, 9 + #RPExtraTeams do
-		if CfgVars["restrictallteams"] then
+		if CfgVars["restrictallteams"] == 1 then
 			self.bannedfrom[i] = 1
 		else
 			self.bannedfrom[i] = 0
