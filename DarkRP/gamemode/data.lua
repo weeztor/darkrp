@@ -121,7 +121,6 @@ function DB.HasPriv(ply, priv)
 
 	-- If there is a current cache of priveleges
 	if DB.privcache[ply:SteamID()] and DB.privcache[ply:SteamID()][priv] then
-		print(DB.privcache[ply:SteamID()][priv])
 		//PrintTable(DB.privcache[ply:SteamID()])
 			-- If the cache indicates that they have the privilege
 		if DB.privcache[ply:SteamID()][priv] == 1 then
@@ -131,7 +130,6 @@ function DB.HasPriv(ply, priv)
 		end
 	-- If there is no cache for this user
 	else 
-		print(p, ply:SteamID())
 		local result = tonumber(sql.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
 		//print("RESULT = ", result)
 		DB.privcache[ply:SteamID()] = {}
