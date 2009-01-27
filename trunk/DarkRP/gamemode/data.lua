@@ -108,7 +108,7 @@ function DB.Priv2Text(priv)
 	elseif priv == PROP then
 		return "prop"
 	else
-		return false
+		return nil
 	end
 end
 
@@ -132,7 +132,7 @@ function DB.HasPriv(ply, priv)
 	else 
 		local result = tonumber(sql.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
 		//print("RESULT = ", result)
-		print(ply, ply:SteamID(), priv)
+		//print(ply, ply:SteamID(), priv)
 		DB.privcache[ply:SteamID()] = {}
 
 		if result == 1 then
@@ -164,6 +164,7 @@ function DB.GrantPriv(ply, priv)
 	if not DB.privcache[steamID] then
 		DB.privcache[steamID] = {}
 	end
+
 	DB.privcache[steamID][priv] = 1
 	return true
 end

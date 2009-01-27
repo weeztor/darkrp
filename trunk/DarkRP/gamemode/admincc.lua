@@ -1,3 +1,11 @@
+-- Player Priviliges
+ADMIN = 0			-- DarkRP Admin
+MAYOR = 1			-- Can become Mayor without a vote (Uses /mayor)
+CP = 2					-- Can become CP without a vote (Uses /cp)
+TOOL = 3				-- Always spawns with the toolgun
+PHYS = 4				-- Always spawns with the physgun
+PROP = 5			-- Can always spawn props (unless jailed)
+
 ValueCmds = {}
 function AddValueCommand(cmd, cfgvar, global)
 	ValueCmds[cmd] = { var = cfgvar, global = global }
@@ -883,6 +891,7 @@ function ccGrantPriv(ply, cmd, args)
 	end
 
 	if args[2] == "tool" then
+		print("Tool", TOOL)
 		DB.GrantPriv(target, TOOL)
 		NotifyAll( 1, 3, ply:Nick() .. " has granted "..target:Nick().." toolgun priveleges.")
 	elseif args[2] == "admin" then
