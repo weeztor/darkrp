@@ -2,14 +2,6 @@
 
 Person = {}
 
--- Player Priviliges
-ADMIN = 0			-- DarkRP Admin
-MAYOR = 1			-- Can become Mayor without a vote (Uses /mayor)
-CP = 2					-- Can become CP without a vote (Uses /cp)
-TOOL = 3				-- Always spawns with the toolgun
-PHYS = 4				-- Always spawns with the physgun
-PROP = 5			-- Can always spawn props (unless jailed)
-
 ---------------------------------------------------------------------------------------------------------------------------
 
 -- Do not change anything above the line ^
