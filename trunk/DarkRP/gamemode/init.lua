@@ -232,6 +232,7 @@ CfgVars["enablebuypistol"] = 1 -- People can do /buypistol
 CfgVars["allowpdchief"] = 1 --Allow the chief
 CfgVars["enableshipments"] = 1 --Enable gun shipments
 CfgVars["lottery"] = 1 -- Enable the lottery
+CfgVars["restrictallteams"] = 0
 
 
 -- You can set the exact value of the below items:

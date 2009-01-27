@@ -1119,6 +1119,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_advertisements - Enable/Disable 
 AddToggleCommand("rp_doorwarrants", "doorwarrants", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_doorwarrants - Enable/disable Warrant requirement to enter property.")
 
+AddToggleCommand("rp_restrictallteams", "restrictallteams", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_restrictallteams - Enable/disable Players can only be citizen until an admin allows them.")
+
 AddValueCommand("rp_maxmedics", "maxmedics", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmedics <Number> - Sets the max number of Medics.")
 

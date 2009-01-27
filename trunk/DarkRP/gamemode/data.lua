@@ -132,6 +132,7 @@ function DB.HasPriv(ply, priv)
 	else 
 		local result = tonumber(sql.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
 		//print("RESULT = ", result)
+		print(ply, ply:SteamID(), priv)
 		DB.privcache[ply:SteamID()] = {}
 
 		if result == 1 then

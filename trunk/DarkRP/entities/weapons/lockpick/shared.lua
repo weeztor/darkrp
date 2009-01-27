@@ -43,7 +43,7 @@ Desc: Called when the weapon is first loaded
 ---------------------------------------------------------*/
 function SWEP:Initialize()
 	if (SERVER) then
-		self:SetWeaponHoldType("Crowbar")
+		self:SetWeaponHoldType("normal")
 	end
 	util.PrecacheSound("physics/flesh/flesh_impact_bullet" .. math.random(3, 5) .. ".wav")
 	util.PrecacheSound("weapons/iceaxe/iceaxe_swing1.wav")
