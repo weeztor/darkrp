@@ -82,7 +82,7 @@ function meta:ChangeTeam(t)
 	self:SetNWBool("helpMayor",false)
 
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) then
-		Notify(self, 1, 4, "You were demoted! Please wait a while before taking your old job back.")
+		Notify(self, 1, 4, "You're either banned from this team or you were demoted.)")
 		return
 	end
 
@@ -837,7 +837,11 @@ function meta:NewData()
 	-- Whether or not a player is being prevented from joining
 	-- a specific team for a certain length of time
 	for i = 1, 9 + #RPExtraTeams do
-		self.bannedfrom[i] = 0
+		if CfgVars["restrictallteams"] then
+			self.bannedfrom[i] = 1
+		else
+			self.bannedfrom[i] = 0
+		end
 	end
 
 	if self:IsSuperAdmin() or self:IsAdmin() then

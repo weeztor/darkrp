@@ -13,7 +13,7 @@ end
 // Variables that are used on both client and server
 
 SWEP.Author = "Rickster"
-SWEP.Instructions = "Left click to break open doors/unfreeze props"
+SWEP.Instructions = "Left click to break open doors/unfreeze props or get people out of their vehicles."
 SWEP.Contact = ""
 SWEP.Purpose = ""
 

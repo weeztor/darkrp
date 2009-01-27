@@ -425,7 +425,7 @@ hook.Add("EntityTakeDamage", "SPropProtection.EntityTakeDamage", SPropProtection
 function SPropProtection.PlayerUse(ply, ent)
 	if not ValidEntity(ent) then return true end
 	local class = ent:GetClass()
-	if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
+	if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or ent:IsVehicle()) then
 		return true
 	end
 	for k,v in pairs(SPropProtection.AntiCopy) do 

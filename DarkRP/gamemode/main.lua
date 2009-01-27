@@ -1645,7 +1645,7 @@ local function DoVoteMayor(ply, args)
 	end
 
 	if not ply:ChangeAllowed(TEAM_MAYOR) then
-		Notify(ply, 1, 4, "You were demoted! Please wait a while before taking your old job back.")
+		Notify(ply, 1, 4, "Cannot become mayor. You're either banned from the team or you were demoted.")
 		return ""
 	end
 
@@ -1691,7 +1691,7 @@ local function DoVoteCop(ply, args)
 	end
 
 	if not ply:ChangeAllowed(TEAM_POLICE) then
-		Notify(ply, 1, 4, "You were demoted! Please wait a while before taking your old job back.")
+		Notify(ply, 1, 4, "You're either banned from this class or you were demoted.")
 		return ""
 	end
 
@@ -1796,7 +1796,7 @@ for k,v in pairs(RPExtraTeams) do
 				return ""
 			end
 			if not ply:ChangeAllowed(9 + k) then
-				Notify(ply, 1, 4, "You were demoted! Please wait a while before taking your old job back.")
+				Notify(ply, 1, 4, "You're either banned from this team or you were demoted.)")
 				return ""
 			end
 			if CurTime() - ply:GetTable().LastVoteCop < 80 then
