@@ -1891,7 +1891,7 @@ local CanLottery = CurTime()
 function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	//print(answer, ent, initiator, target, TimeIsUp)
 	if answer == 1 and not table.HasValue(LotteryPeople, target) then
-		if not ply:CanAfford(CfgVars["lotterycommitcost"]) then
+		if not ent:CanAfford(CfgVars["lotterycommitcost"]) then
 			Notify(target, 1,4, "Cannot afford the lottery!")
 			return
 		end
