@@ -262,11 +262,10 @@ end
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
 
 function SPropProtection.GravGunThings(ply, ent)
-	print("SDLFJ")
 	if not ValidEntity(ent) then return false end
 	if ent:IsVehicle() then return false end
 	if ent:GetClass() == "func_breakable_surf" then return false end
-	//if ply:KeyDown(IN_ATTACK) then
+	if ply:KeyDown(IN_ATTACK) then
 		local entphys = ent:GetPhysicsObject()
 		if not entphys:IsValid() then return false end
 		local moveable = entphys:IsMoveable()
@@ -277,8 +276,7 @@ function SPropProtection.GravGunThings(ply, ent)
 			timer.Simple(.01, entphys.Wake, entphys)
 			timer.Simple(.01, ent.SetPos, ent, curpos)
 		end
-		print("SDLFJ")
-	//end
+	end
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v then return true end
 	end
