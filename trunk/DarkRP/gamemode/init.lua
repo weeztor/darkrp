@@ -458,7 +458,7 @@ function FireSpread(e)
 		for k, v in pairs(en) do
 			if IsFlammable(v) then
 			if count >= maxcount then break end
-				if math.random(0.0, 6000.0) < 1.0 then
+				if math.random(0.0, 60000.0) < 1.0 then
 					if not v.burned then
 						v:Ignite(math.random(5,180), 0)
 						v.burned = true
@@ -519,7 +519,7 @@ if ent:GetClass() == "func_breakable_surf" then return false end
 		end
 	end
 	return
-end
+end 
 //hook.Add("GravGunPunt", "THEDarkRPGravGunPunt", DarkRPGravGunPunt)
 
 function GM:GravGunOnDropped(ply, ent)
@@ -534,4 +534,4 @@ function GM:GravGunOnDropped(ply, ent)
 	else
 		return true
 	end
-end
+end 

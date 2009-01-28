@@ -4,7 +4,7 @@
 ------------------------------------
 
 function CPPI:GetName()
-	return "Simple Prop Protection"
+	return "Simple RP Prop Protection"
 end
 
 function CPPI:GetVersion()

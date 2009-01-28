@@ -1410,6 +1410,14 @@ AddChatCommand("//", OOC, true)
 AddChatCommand("/a", OOC, true)
 AddChatCommand("/ooc", OOC, true)
 
+function PlayerAdvertise(ply, args)
+	for k,v in pairs(player.GetAll()) do
+		v:ChatPrint("[ADVERT] "..args)
+	end
+	return ""
+end
+AddChatCommand("/advert", PlayerAdvertise)
+
 function GiveMoney(ply, args)
 	if args == "" then return "" end
 
@@ -2066,7 +2074,7 @@ function refwait()
 	CfgVars["refreshglobals"] = 0
 end
 
-function GM:PhysgunPickup(ply, ent)
+--[[ function GM:PhysgunPickup(ply, ent)
 	self.BaseClass:PhysgunPickup(ply,ent)
 	if not ValidEntity(ent) then return false end
 	local class = ent:GetClass()
@@ -2079,7 +2087,7 @@ function GM:PhysgunPickup(ply, ent)
 		return true
 	end
 	return
-end
+end ]]
 
 function GM:PlayerSpawnProp(ply, model)
 	if not self.BaseClass:PlayerSpawnProp(ply, model) then return false end

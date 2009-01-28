@@ -3,6 +3,19 @@
 --	By Spacetech
 ------------------------------------
 
+-- Simple prop protection merge
+
+AddCSLuaFile("autorun/sh_SPropProtection.lua")
+AddCSLuaFile("SPropProtection/cl_Init.lua")
+AddCSLuaFile("SPropProtection/sh_CPPI.lua")
+include("SPropProtection/sv_Init.lua")
+include("SPropProtection/sh_CPPI.lua")
+SPropProtection = {}
+SPropProtection.Version = "RP!"
+CPPI = {}
+CPPI_NOTIMPLEMENTED = 26
+CPPI_DEFER = 16
+
 SPropProtection["Props"] = {}
 SPropProtection.AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
 timer.Simple(5, function()
@@ -253,9 +266,11 @@ end
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
 
 function SPropProtection.GravGunThings(ply, ent)
+	print("SDLFJ")
 	if not ValidEntity(ent) then return false end
 	if ent:IsVehicle() then return false end
-	if ply:KeyDown(IN_ATTACK) then
+	if ent:GetClass() == "func_breakable_surf" then return false end
+	//if ply:KeyDown(IN_ATTACK) then
 		local entphys = ent:GetPhysicsObject()
 		if not entphys:IsValid() then return false end
 		local moveable = entphys:IsMoveable()
@@ -266,8 +281,8 @@ function SPropProtection.GravGunThings(ply, ent)
 			timer.Simple(.01, entphys.Wake, entphys)
 			timer.Simple(.01, ent.SetPos, ent, curpos)
 		end
-	end
-	if ent:GetClass() == "func_breakable_surf" then return false end
+		print("SDLFJ")
+	//end
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v then return true end
 	end
