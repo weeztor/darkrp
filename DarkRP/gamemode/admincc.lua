@@ -890,8 +890,16 @@ function ccGrantPriv(ply, cmd, args)
 		return
 	end
 
+	if not args[2] then
+		ply:PrintMessage(2, target:Nick() .. " has these privileges:")
+		for i=0, 5, 1 do
+			ply:PrintMessage(2, DB.Priv2Text(i).. "        "..tostring(target:HasPriv(i)))
+		end
+		return
+	end
+	
 	if args[2] == "tool" then
-		print("Tool", TOOL)
+		//print("Tool", TOOL)
 		DB.GrantPriv(target, TOOL)
 		NotifyAll( 1, 3, ply:Nick() .. " has granted "..target:Nick().." toolgun priveleges.")
 	elseif args[2] == "admin" then
@@ -937,6 +945,13 @@ function ccRevokePriv(ply, cmd, args)
 			print("Could not find player: " .. args[2])
 		else
 			ply:PrintMessage(2, "Could not find player: " .. args[2])
+		end
+		return
+	end
+	if not args[2] then
+		ply:PrintMessage(2, target:Nick() .. " has these privileges:")
+		for i=0, 5, 1 do
+			ply:PrintMessage(2, DB.Priv2Text(i).. "        "..tostring(target:HasPriv(i)))
 		end
 		return
 	end
