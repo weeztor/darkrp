@@ -20,6 +20,7 @@ Updated by: FPtje Falco
 [ADD] Some citizen models(Now not every citizen has the same model)
 [ADD] Teamban and teamunban (chat = /teamban, console = rp_teamban): Ban/unban a player from a certain team. Use: /teamban <player> <team> or rp_teamban <player> <team>
 [ADD] Lottery: The mayor can start a lottery and players can enter the lottery with $50. At the end one of the players wins all the money. Toggle with rp_lottery 1/0
+[ADD] /advert command: Say /advert <advertisement>  to advert!
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins
@@ -37,6 +38,8 @@ Updated by: FPtje Falco
 [CHANGE] Only super admins can set peoples money(Due to complaints of admins setting random people's money)
 [CHANGE] Pressing F4 when the F4 menu is already open, closes it.
 [CHANGE] Lock pick appearance(I also fixed the error with ActIndex("Crowbar") isn't set)
+[CHANGE] Merged Simple RP Prop protection with DarkRP
+[CHANGE] Put the contents folder in DarkRP with the earthquake sound
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
 [FIX] Rare error with dropweapon
 [FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.

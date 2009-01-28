@@ -1,6 +1,17 @@
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
 
+--Clientside prop protection merge
+
+SPropProtection = {}
+SPropProtection.Version = 1.5
+
+CPPI = {}
+CPPI_NOTIMPLEMENTED = 26
+CPPI_DEFER = 16
+
+include("SPropProtection/sh_CPPI.lua")
+include("SPropProtection/cl_Init.lua")
 -- Currency Symbol
 local currencysymbol = CreateClientConVar("rp_currency", "$", true, false)
 CUR = currencysymbol:GetString()
