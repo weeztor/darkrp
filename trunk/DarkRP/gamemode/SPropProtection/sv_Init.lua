@@ -5,11 +5,7 @@
 
 -- Simple prop protection merge
 
-AddCSLuaFile("autorun/sh_SPropProtection.lua")
-AddCSLuaFile("SPropProtection/cl_Init.lua")
-AddCSLuaFile("SPropProtection/sh_CPPI.lua")
-include("SPropProtection/sv_Init.lua")
-include("SPropProtection/sh_CPPI.lua")
+
 SPropProtection = {}
 SPropProtection.Version = "RP!"
 CPPI = {}
@@ -229,7 +225,7 @@ end
 hook.Add("PlayerDisconnected", "SPropProtection.Disconnect", SPropProtection.Disconnect)
 //a
 function SPropProtection.PhysGravGunPickup(ply, ent)
-	if not ValidEntity(ent) then return end
+	if not ValidEntity(ent) then return false end
 	local class = ent:GetClass()
 	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf") then return false end
 	for k,v in pairs(SPropProtection.AntiCopy) do
