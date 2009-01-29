@@ -26,14 +26,14 @@ function DB.CreatePrivs()
 		sql.Begin()
 			sql.Query("DELETE FROM darkrp_privs;")
 			local already_inserted = {}
-			for k, v in pairs(Person) do
+			for k, v in pairs(RPAdmins) do
 				local admin = 0
 				local mayor = 0
 				local cp = 0
 				local tool = 0
 				local phys = 0
 				local prop = 0
-				for a, b in pairs(Person[k]) do
+				for a, b in pairs(RPAdmins[k]) do
 					if b == ADMIN then admin = 1 end
 					if b == MAYOR then mayor = 1 end
 					if b == CP then cp = 1 end
@@ -41,11 +41,11 @@ function DB.CreatePrivs()
 					if b == PHYS then phys = 1 end
 					if b == PROP then prop = 1 end
 				end
-				if already_inserted[Person[k]] then
-					sql.Query("UPDATE darkrp_privs SET admin = " .. admin .. ", mayor = " .. mayor .. ", cp = " .. cp .. ", tool = " .. tool .. ", phys = " .. phys .. ", prop = " .. prop .. " WHERE steam = " .. sql.SQLStr(Person[k]) .. ";")
+				if already_inserted[RPAdmins[k]] then
+					sql.Query("UPDATE darkrp_privs SET admin = " .. admin .. ", mayor = " .. mayor .. ", cp = " .. cp .. ", tool = " .. tool .. ", phys = " .. phys .. ", prop = " .. prop .. " WHERE steam = " .. sql.SQLStr(RPAdmins[k]) .. ";")
 				else
 					sql.Query("INSERT INTO darkrp_privs VALUES(" .. sql.SQLStr(k) .. ", " .. admin .. ", " .. mayor .. ", " .. cp .. ", " .. tool .. ", " .. phys .. ", " .. prop .. ");")
-					already_inserted[Person[k]] = true
+					already_inserted[RPAdmins[k]] = true
 				end
 			end
 		sql.Commit()
@@ -113,35 +113,31 @@ function DB.Priv2Text(priv)
 end
 
 function DB.HasPriv(ply, priv)
-	//print("DOES PLAYER HAVE PRIV?", ply, priv)
+	local SteamID = ply:SteamID()
 	if priv == ADMIN and (ply:EntIndex() == 0 or ply:IsAdmin()) then return true end
-	local steamID = ply:SteamID()
 
 	local p = DB.Priv2Text(priv)
 	if not p then return false end
 
 	-- If there is a current cache of priveleges
-	if DB.privcache[steamID] and DB.privcache[steamID][priv] then
-		//PrintTable(DB.privcache[ply:SteamID()])
-			-- If the cache indicates that they have the privilege
-		if DB.privcache[ply:SteamID()][priv] == 1 then
+	if DB.privcache[SteamID] and DB.privcache[SteamID][p] ~= nil then
+		if DB.privcache[SteamID][p] == 1 then
 			return true
 		else
 			return false
 		end
 	-- If there is no cache for this user
 	else 
-		print("STEAM ID = ", steamID)
-		local result = tonumber(sql.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
-		print("RESULT = ", result)
-		//print(ply, ply:SteamID(), priv)
-		DB.privcache[steamID] = {}
+		local result = tonumber(sql.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
+		if not DB.privcache[SteamID] then
+			DB.privcache[SteamID] = {}
+		end
 
 		if result == 1 then
-			DB.privcache[steamID][priv] = 1
+			DB.privcache[SteamID][p] = 1
 			return true
 		else
-			DB.privcache[steamID][priv] = 0
+			DB.privcache[SteamID][p] = 0
 			return false
 		end
 	end
@@ -151,39 +147,36 @@ function DB.GrantPriv(ply, priv)
 	local steamID = ply:SteamID()
 	local p = DB.Priv2Text(priv)
 	if not p then return false end
-	ply:SetNWBool("Priv"..p, true)
 	if tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";")) > 0 then
-			sql.Query("UPDATE darkrp_privs SET " .. sql.SQLStr(p) .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
+		sql.Query("UPDATE darkrp_privs SET " .. p .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 	else
-			sql.Begin()
-			sql.Query("INSERT INTO darkrp_privs VALUES(" .. sql.SQLStr(steamID) .. ", 0, 0, 0, 0, 0, 0);")
-			sql.Query("UPDATE darkrp_privs SET " .. sql.SQLStr(p) .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
-			
-			sql.Commit()
+		sql.Begin()
+		sql.Query("INSERT INTO darkrp_privs VALUES(" .. sql.SQLStr(steamID) .. ", 0, 0, 0, 0, 0, 0);")
+		sql.Query("UPDATE darkrp_privs SET " .. sql.SQLStr(p) .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
+		
+		sql.Commit()
 	end
-	print(sql.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
 	-- privelege structure altered, fix the goddamn cache
-	if not DB.privcache[steamID] then
-		DB.privcache[steamID] = {}
+	if DB.privcache[SteamID] == nil then
+		DB.privcache[SteamID] = {}
 	end
 
-	DB.privcache[steamID][priv] = 1
+	DB.privcache[SteamID][p] = 1
 	return true
 end
 
 function DB.RevokePriv(ply, priv)
-	local steamID = ply:SteamID()
+	local steamID = ply:SteamID()	
 	local p = DB.Priv2Text(priv)
-	ply:SetNWBool("Priv"..p, false)
 	local val = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
 	if not p or val < 1 then return false end
 	sql.Query("UPDATE darkrp_privs SET " .. p .. " = 0 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 	
 	-- privelege structure altered, alter the cache
-	if not DB.privcache[steamID] then
-		DB.privcache[steamID] = {}
+	if DB.privcache[SteamID] == nil then
+		DB.privcache[SteamID] = {}
 	end
-	DB.privcache[steamID][priv] = 0
+	DB.privcache[SteamID][p] = 0
 	return true
 end
 
@@ -267,6 +260,7 @@ function DB.RetrieveJailStatus(ply)
 end
 
 function DB.StoreRPName(ply, name)
+	if not name or string.len(name) < 3 then return end
 	local r = sql.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
 	if r then
 		sql.Query("UPDATE darkrp_rpnames SET name = " .. sql.SQLStr(name) .. " WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")

@@ -899,7 +899,6 @@ function ccGrantPriv(ply, cmd, args)
 	end
 	
 	if args[2] == "tool" then
-		//print("Tool", TOOL)
 		DB.GrantPriv(target, TOOL)
 		NotifyAll( 1, 3, ply:Nick() .. " has granted "..target:Nick().." toolgun priveleges.")
 	elseif args[2] == "admin" then

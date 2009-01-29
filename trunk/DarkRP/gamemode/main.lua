@@ -672,6 +672,7 @@ function RPName(ply, args)
 end
 AddChatCommand("/rpname", RPName)
 AddChatCommand("/name", RPName)
+AddChatCommand("/nick", RPName)
 
 function SetPrice(ply, args)
 	if args == "" then return "" end
@@ -748,6 +749,16 @@ function BuyPistol(ply, args)
 			class = v.entity
 			model = v.model
 			price = v.pricesep
+			local canbuy = false
+			for a,b in pairs(allowed) do
+				if ply:Team() == b then
+					canbuy = true
+				end
+			end
+			if not canbuy then
+				Notify(ply, 1, 4, "You do not have the correct class to buy this pistol!")
+				return ""
+			end
 		end
 	end
 	
@@ -805,20 +816,29 @@ function BuyShipment(ply, args)
 	local tr = util.TraceLine(trace)
 
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
-
-	if ply:Team() ~= TEAM_GUN then
-		Notify(ply, 1, 4, "Must be a Gun Dealer to buy gun shipments!")
-		return ""
-	end
 	
 	local found = false
 	for k, v in pairs(rifleWeights) do
-		if k == args then found = true end
+		if k == args then found = true 
+			if ply:Team() ~= TEAM_GUN then
+				Notify(ply, 1, 4, "Must be a Gun Dealer to buy gun shipments!")
+				return ""
+			end
+		end
 	end
 	for k,v in pairs(CustomShipments) do
-		print(v.noship)
 		if string.lower(args) == string.lower(v.name) and not v.noship then
 			found = v
+			local canbecome = false
+			for a,b in pairs(v.allowed) do
+				if ply:Team() == b then
+					canbecome = true
+				end
+			end
+			if not canbecome then
+				Notify(ply, 1, 4, "Cannot buy this shipment because you don't have the correct class!")
+				return "" 
+			end
 		end
 	end
 	
@@ -1891,7 +1911,7 @@ local CanLottery = CurTime()
 function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	//print(answer, ent, initiator, target, TimeIsUp)
 	if answer == 1 and not table.HasValue(LotteryPeople, target) then
-		if not ent:CanAfford(CfgVars["lotterycommitcost"]) then
+		if not target:CanAfford(CfgVars["lotterycommitcost"]) then
 			Notify(target, 1,4, "Cannot afford the lottery!")
 			return
 		end

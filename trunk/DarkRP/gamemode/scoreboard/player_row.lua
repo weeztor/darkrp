@@ -91,8 +91,6 @@ function PANEL:UpdatePlayerData()
 	self.lblName:SizeToContents()
 	self.lblJob:SetText(self.Player:GetNWString("job"))
 	self.lblJob:SizeToContents()
-	self.lblFrags:SetText(self.Player:Frags())
-	self.lblDeaths:SetText(self.Player:Deaths())
 	self.lblPing:SetText(self.Player:Ping())
 	self.lblWarranted:SetImage("gui/silkicons/exclamation")
 	if self.Player:GetNetworkedBool("wanted") then
@@ -124,8 +122,6 @@ function PANEL:Init()
 	self.infoCard = vgui.Create("ScorePlayerInfoCard", self)
 	self.lblName = vgui.Create("Label", self)
 	self.lblJob = vgui.Create("Label", self)
-	self.lblFrags = vgui.Create("Label", self)
-	self.lblDeaths = vgui.Create("Label", self)
 	self.lblPing = vgui.Create("Label", self)
 	self.lblWarranted = vgui.Create("DImage", self)
 	self.lblWarranted:SetSize(16,16)
@@ -133,8 +129,6 @@ function PANEL:Init()
 	-- If you don't do this it'll block your clicks
 	self.lblName:SetMouseInputEnabled(false)
 	self.lblJob:SetMouseInputEnabled(false)
-	self.lblFrags:SetMouseInputEnabled(false)
-	self.lblDeaths:SetMouseInputEnabled(false)
 	self.lblPing:SetMouseInputEnabled(false)
 	self.lblWarranted:SetMouseInputEnabled(false)
 end
@@ -145,14 +139,10 @@ Name: PerformLayout
 function PANEL:ApplySchemeSettings()
 	self.lblName:SetFont("ScoreboardPlayerName")
 	self.lblJob:SetFont("ScoreboardPlayerName")
-	self.lblFrags:SetFont("ScoreboardPlayerName")
-	self.lblDeaths:SetFont("ScoreboardPlayerName")
 	self.lblPing:SetFont("ScoreboardPlayerName")
 
 	self.lblName:SetFGColor(color_white)
 	self.lblJob:SetFGColor(color_white)
-	self.lblFrags:SetFGColor(color_white)
-	self.lblDeaths:SetFGColor(color_white)
 	self.lblPing:SetFGColor(color_white)
 end
 
@@ -210,8 +200,6 @@ function PANEL:PerformLayout()
 	local COLUMN_SIZE = 50
 
 	self.lblPing:SetPos(self:GetWide() - COLUMN_SIZE * 1, 0)
-	self.lblDeaths:SetPos(self:GetWide() - COLUMN_SIZE * 2, 0)
-	self.lblFrags:SetPos(self:GetWide() - COLUMN_SIZE * 3, 0)
 	self.lblJob:SetPos(self:GetWide() - COLUMN_SIZE * 7, 1)
 	self.lblWarranted:SetPos(self:GetWide() - COLUMN_SIZE * 8.8, 5)
 
