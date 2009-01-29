@@ -21,6 +21,7 @@ Updated by: FPtje Falco
 [ADD] Teamban and teamunban (chat = /teamban, console = rp_teamban): Ban/unban a player from a certain team. Use: /teamban <player> <team> or rp_teamban <player> <team>
 [ADD] Lottery: The mayor can start a lottery and players can enter the lottery with $50. At the end one of the players wins all the money. Toggle with rp_lottery 1/0
 [ADD] /advert command: Say /advert <advertisement>  to advert!
+[ADD] You can put classes in the custom shipments (so only like medics can spawn it)
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins
@@ -59,9 +60,10 @@ Updated by: FPtje Falco
 [FIX] HUGE FUCKING MAJOR EXPLOIT where you enter a console command after doing /votecop or /votemayor and just become a cop without anyone voting yes.
 [FIX] The ability of people to somehow get <nothing> as RP name(Always happened with bots too)
 [FIX] People being able to get less than 0 money. DarkRP just doesn't work with depts 
-[FIX] rp_grant and rp_revoke not working properly, Philxyz fucked the caching system up(Phil look at my code to fix it for your release :D)
+[FIX] rp_grant and rp_revoke not working properly.
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 [REMOVE] rp_mute <player> <on/off> It didn't work AND you've got admin mods to mute people!
+[REMOVE] Player kills and deaths
 
 
 VERSION 2.3.1
