@@ -1,6 +1,6 @@
 -- admins.lua v 2.0 by philxyz
 
-Person = {}
+RPAdmins = {}
 
 ---------------------------------------------------------------------------------------------------------------------------
 
@@ -11,11 +11,11 @@ Person = {}
 reset_all_privileges_to_these_on_startup = true
 
 -- To configure a player, assign permissions to them in the following way:
--- Person["STEAM_ID"] = {LIST, OF, PERMISSIONS}
+-- RPAdmins["STEAM_ID"] = {LIST, OF, PERMISSIONS}
 -- e.g:
 
--- Person["STEAM_0:1:12345678"] = {ADMIN, MAYOR, CP, TOOL, PHYS, PROP}
--- Person["STEAM_0:1:9999999"] = {MAYOR, CP, PHYS}
+-- RPAdmins["STEAM_0:1:12345678"] = {ADMIN, MAYOR, CP, TOOL, PHYS, PROP}
+-- RPAdmins["STEAM_0:1:9999999"] = {MAYOR, CP, PHYS}
 -- etc.
 
 -- HOW TO GET A STEAM ID:

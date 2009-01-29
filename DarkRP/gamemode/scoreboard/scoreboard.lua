@@ -35,12 +35,6 @@ function PANEL:Init()
 
 	self.lblPing = vgui.Create("Label", self)
 	self.lblPing:SetText("Ping")
-
-	self.lblKills = vgui.Create("Label", self)
-	self.lblKills:SetText("Kills")
-
-	self.lblDeaths = vgui.Create("Label", self)
-	self.lblDeaths:SetText("Deaths")
 	
 	self.lblWarranted = vgui.Create("Label", self)
 	self.lblWarranted:SetText("Warranted")
@@ -123,14 +117,10 @@ function PANEL:PerformLayout()
 	self.Hostname:SetText(GetGlobalString("ServerName"))
 
 	self.lblPing:SizeToContents()
-	self.lblKills:SizeToContents()
-	self.lblDeaths:SizeToContents()
 	self.lblJob:SizeToContents()
 	self.lblWarranted:SizeToContents()
 
 	self.lblPing:SetPos(self:GetWide() - 50 - self.lblPing:GetWide()/2, self.PlayerFrame.y - self.lblPing:GetTall() - 3)
-	self.lblDeaths:SetPos(self:GetWide() - 50*2 - self.lblDeaths:GetWide()/2, self.PlayerFrame.y - self.lblPing:GetTall() - 3)
-	self.lblKills:SetPos(self:GetWide() - 50*3 - self.lblKills:GetWide()/2, self.PlayerFrame.y - self.lblPing:GetTall() - 3)
 	self.lblJob:SetPos(self:GetWide() - 50*7 - self.lblJob:GetWide()/2, self.PlayerFrame.y - self.lblPing:GetTall() - 3)
 	self.lblWarranted:SetPos(self:GetWide() - 50*9 - self.lblJob:GetWide()/2, self.PlayerFrame.y - self.lblPing:GetTall() - 3)
 
@@ -149,14 +139,10 @@ function PANEL:ApplySchemeSettings()
 	self.Description:SetFGColor(color_white)
 
 	self.lblPing:SetFont("DefaultSmall")
-	self.lblKills:SetFont("DefaultSmall")
-	self.lblDeaths:SetFont("DefaultSmall")
 	self.lblJob:SetFont("DefaultSmall")
 	self.lblWarranted:SetFont("DefaultSmall")
 
 	self.lblPing:SetFGColor(Color(0, 0, 0, 255))
-	self.lblKills:SetFGColor(Color(0, 0, 0, 255))
-	self.lblDeaths:SetFGColor(Color(0, 0, 0, 255))
 	self.lblJob:SetFGColor(Color(0, 0, 0, 255))
 	self.lblWarranted:SetFGColor(Color(0, 0, 0, 255))
 end
