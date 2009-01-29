@@ -157,11 +157,12 @@ function DB.GrantPriv(ply, priv)
 		sql.Commit()
 	end
 	-- privelege structure altered, fix the goddamn cache
-	if DB.privcache[SteamID] == nil then
-		DB.privcache[SteamID] = {}
+
+	if DB.privcache[steamID] == nil then
+		DB.privcache[steamID] = {}
 	end
 
-	DB.privcache[SteamID][p] = 1
+	DB.privcache[steamID][p] = 1
 	return true
 end
 
