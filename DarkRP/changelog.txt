@@ -21,7 +21,6 @@ Updated by: FPtje Falco
 [ADD] Teamban and teamunban (chat = /teamban, console = rp_teamban): Ban/unban a player from a certain team. Use: /teamban <player> <team> or rp_teamban <player> <team>
 [ADD] Lottery: The mayor can start a lottery and players can enter the lottery with $50. At the end one of the players wins all the money. Toggle with rp_lottery 1/0
 [ADD] /advert command: Say /advert <advertisement>  to advert!
-[ADD] You can put classes in the custom shipments (so only like medics can spawn it)
 [CHANGE] All door controls are now done though reload with the Keys weapon.
 [CHANGE] Descriptions in the change job VGUI(thanks james hutchins)
 [CHANGE] The way prop protection works for admins
