@@ -111,7 +111,7 @@ function SWEP:PrimaryAttack()
 		if c then
 			trace.Entity:GetPhysicsObject( ):EnableMotion( true ) 
 		else
-			Notify(ply, 1, 3,"He is not warranted!")
+			Notify(self.Owner, 1, 3,"He is not warranted!")
 		end
 	end
 

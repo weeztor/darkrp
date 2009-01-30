@@ -59,8 +59,8 @@ function ccValueCommand(ply, cmd, args)
 end
 
 ToggleCmds = {}
-function AddToggleCommand(cmd, cfgvar, global)
-	ToggleCmds[cmd] = {var = cfgvar, global = global}
+function AddToggleCommand(cmd, cfgvar, global, superadmin)
+	ToggleCmds[cmd] = {var = cfgvar, global = global, superadmin = superadmin}
 	concommand.Add(cmd, ccToggleCommand)
 end
 
@@ -86,8 +86,8 @@ function ccToggleCommand(ply, cmd, args)
 		return
 	end
 
-	if ply:EntIndex() ~= 0 and not DB.HasPriv(ply, ADMIN) then
-		ply:PrintMessage(2, "Admin only!")
+	if (ply:EntIndex() ~= 0 and not DB.HasPriv(ply, ADMIN)) or (togglecmd.superadmin and not ply:IsSuperAdmin()) then
+		ply:PrintMessage(2, "(Super)/Admin only!")
 		return
 	end
 
@@ -212,6 +212,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_removeclassitems - Enable/disabl
 
 AddToggleCommand("rp_lottery", "lottery", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_lottery - Enable/disable creating lotteries for mayors")
+
+AddToggleCommand("rp_AdminsSpawnWithCopWeapons", "AdminsSpawnWithCopWeapons", false, true)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_AdminsSpawnWithCopWeapons - Enable/disable admins spawning with cops weapons(SUPERADMIN ONLY)")
 
 
 --------------------------------------------------------------------------------------------------
