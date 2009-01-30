@@ -22,34 +22,34 @@ function DB.Init()
 end
 
 function DB.CreatePrivs()
+	sql.Begin()
 	if reset_all_privileges_to_these_on_startup then
-		sql.Begin()
-			sql.Query("DELETE FROM darkrp_privs;")
-			local already_inserted = {}
-			for k, v in pairs(RPAdmins) do
-				local admin = 0
-				local mayor = 0
-				local cp = 0
-				local tool = 0
-				local phys = 0
-				local prop = 0
-				for a, b in pairs(RPAdmins[k]) do
-					if b == ADMIN then admin = 1 end
-					if b == MAYOR then mayor = 1 end
-					if b == CP then cp = 1 end
-					if b == TOOL then tool = 1 end
-					if b == PHYS then phys = 1 end
-					if b == PROP then prop = 1 end
-				end
-				if already_inserted[RPAdmins[k]] then
-					sql.Query("UPDATE darkrp_privs SET admin = " .. admin .. ", mayor = " .. mayor .. ", cp = " .. cp .. ", tool = " .. tool .. ", phys = " .. phys .. ", prop = " .. prop .. " WHERE steam = " .. sql.SQLStr(RPAdmins[k]) .. ";")
-				else
-					sql.Query("INSERT INTO darkrp_privs VALUES(" .. sql.SQLStr(k) .. ", " .. admin .. ", " .. mayor .. ", " .. cp .. ", " .. tool .. ", " .. phys .. ", " .. prop .. ");")
-					already_inserted[RPAdmins[k]] = true
-				end
-			end
-		sql.Commit()
+		sql.Query("DELETE FROM darkrp_privs;")
 	end
+	local already_inserted = {}
+	for k, v in pairs(RPAdmins) do
+		local admin = 0
+		local mayor = 0
+		local cp = 0
+		local tool = 0
+		local phys = 0
+		local prop = 0
+		for a, b in pairs(RPAdmins[k]) do
+			if b == ADMIN then admin = 1 end
+			if b == MAYOR then mayor = 1 end
+			if b == CP then cp = 1 end
+			if b == TOOL then tool = 1 end
+			if b == PHYS then phys = 1 end
+			if b == PROP then prop = 1 end
+		end
+		if already_inserted[RPAdmins[k]] then
+			sql.Query("UPDATE darkrp_privs SET admin = " .. admin .. ", mayor = " .. mayor .. ", cp = " .. cp .. ", tool = " .. tool .. ", phys = " .. phys .. ", prop = " .. prop .. " WHERE steam = " .. sql.SQLStr(RPAdmins[k]) .. ";")
+		else
+			sql.Query("INSERT INTO darkrp_privs VALUES(" .. sql.SQLStr(k) .. ", " .. admin .. ", " .. mayor .. ", " .. cp .. ", " .. tool .. ", " .. phys .. ", " .. prop .. ");")
+			already_inserted[RPAdmins[k]] = true
+		end
+	end
+	sql.Commit()
 end
 
 function DB.CreateJailPos()

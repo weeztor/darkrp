@@ -8,7 +8,8 @@ RPAdmins = {}
 
 -- If you set this to true, all permissions are cleared from the database
 -- and only the players listed here are inserted, _every_ time you start DarkRP
-reset_all_privileges_to_these_on_startup = true
+-- NOTE TURNING THIS TO TRUE WILL BREAK THE SAVING ON RP_GRANT AND RP_REVOKE!
+reset_all_privileges_to_these_on_startup = false
 
 -- To configure a player, assign permissions to them in the following way:
 -- RPAdmins["STEAM_ID"] = {LIST, OF, PERMISSIONS}
