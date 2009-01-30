@@ -732,6 +732,9 @@ function GM:PlayerSpawn(ply)
 	end
 
 	ply:Extinguish()
+	if ply:GetActiveWeapon() then
+		ply:GetActiveWeapon():Extinguish()
+	end
 
 	if ply.demotedWhileDead then
 		ply.demotedWhileDead = nil
@@ -888,6 +891,9 @@ function GM:PlayerDisconnected(ply)
 		if v.SID == ply.SID then v:Remove() end
 	end
 	for k, v in pairs(ents.FindByClass("drug_lab")) do
+		if v.SID == ply.SID then v:Remove() end
+	end
+	for k, v in pairs(ents.FindByClass("drug")) do
 		if v.SID == ply.SID then v:Remove() end
 	end
 	vote.DestroyVotesWithEnt(ply)
