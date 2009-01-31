@@ -657,6 +657,17 @@ function GM:PlayerSpawn(ply)
 		end
 	end
 
+	if CfgVars["BabyGod"] == 1 then
+		ply:GodEnable()
+		local r,g,b,a = ply:GetColor()
+		ply:SetColor(r, g, b, 100)
+		ply:SetCollisionGroup(  COLLISION_GROUP_WORLD )
+		timer.Simple(10, function()
+			ply:SetColor(r, g, b, a)
+			ply:GodDisable()
+			ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
+		end)
+	end
 	
 	if CfgVars["enforceplayermodel"] == 1 then
 		if ply:Team() == TEAM_CITIZEN then
@@ -732,7 +743,7 @@ function GM:PlayerSpawn(ply)
 	end
 
 	ply:Extinguish()
-	if ply:GetActiveWeapon() then
+	if ply:GetActiveWeapon() and ValidEntity(ply:GetActiveWeapon()) then
 		ply:GetActiveWeapon():Extinguish()
 	end
 
