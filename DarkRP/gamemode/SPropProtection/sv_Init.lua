@@ -288,8 +288,28 @@ function SPropProtection.GravGunThings(ply, ent)
 	end
 	return false
 end
-hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.GravGunThings)
+
 hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropProtection.GravGunThings)
+
+function SPropProtection.GravGunPunt(ply, ent)
+	if not ValidEntity(ent) then return false end
+	if ent:IsVehicle() then return false end
+	if ent:GetClass() == "func_breakable_surf" then return false end
+	if ply:KeyDown(IN_ATTACK) then
+		local entphys = ent:GetPhysicsObject()
+		if not entphys:IsValid() then return false end
+		local moveable = entphys:IsMoveable()
+		if moveable then
+			entphys:EnableMotion(false)
+			local curpos = ent:GetPos()
+			timer.Simple(.01, entphys.EnableMotion, entphys, true)
+			timer.Simple(.01, entphys.Wake, entphys)
+			timer.Simple(.01, ent.SetPos, ent, curpos)
+		end
+	end
+	return false
+end
+hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.GravGunPunt)
 
 
 //v:UniqueIDTable( "Duplicator" ).Entities
