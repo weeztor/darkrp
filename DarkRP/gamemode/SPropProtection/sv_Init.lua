@@ -232,22 +232,24 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 		if ent:GetClass() == v and not ply:IsAdmin() then return false end
 	end
 	
-	for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-		if v ~= ent then
-			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
-				return false
-			end
-			local class = v:GetClass()
-			if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
-				return false
-			end
-			for a,b in pairs(SPropProtection.AntiCopy) do
-				if string.find(v:GetClass(), b) then
+	if constraint.GetAllConstrainedEntities(ent) then
+		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
+			if v ~= ent then
+				if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
 					return false
 				end
-			end
-			if not SPropProtection.PlayerCanTouch(ply, v) then
-				return false
+				local class = v:GetClass()
+				if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
+					return false
+				end
+				for a,b in pairs(SPropProtection.AntiCopy) do
+					if string.find(v:GetClass(), b) then
+						return false
+					end
+				end
+				if not SPropProtection.PlayerCanTouch(ply, v) then
+					return false
+				end
 			end
 		end
 	end
@@ -438,7 +440,7 @@ hook.Add("CanTool", "SPropProtection.CanTool", SPropProtection.CanTool)
 
 function SPropProtection.EntityTakeDamage(ent, inflictor, attacker, amount)
 	if(tonumber(SPropProtection["Config"]["edmg"]) == 0) then return end
-	if(!ent:IsValid()) then return end
+	if(not ValidEntity(ent)) then return false end
     if(ent:IsPlayer() or !attacker:IsPlayer()) then return end
 	if(!SPropProtection.PlayerCanTouch(attacker, ent)) then
 		local Total = ent:Health() + amount
