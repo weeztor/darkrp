@@ -657,7 +657,7 @@ function GM:PlayerSpawn(ply)
 		end
 	end
 
-	if CfgVars["BabyGod"] == 1 then
+	if CfgVars["babygod"] == 1 and ply:GetNWInt("slp") ~= 1 then
 		ply:GodEnable()
 		local r,g,b,a = ply:GetColor()
 		ply:SetColor(r, g, b, 100)
