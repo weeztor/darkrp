@@ -216,6 +216,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_lottery - Enable/disable creatin
 AddToggleCommand("rp_AdminsSpawnWithCopWeapons", "AdminsSpawnWithCopWeapons", false, true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_AdminsSpawnWithCopWeapons - Enable/disable admins spawning with cops weapons(SUPERADMIN ONLY)")
 
+AddToggleCommand("rp_BabyGod", "BabyGod", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_BabyGod - Enable/disable People who have just spawned, are unable to die for 10 seconds.")
+
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
