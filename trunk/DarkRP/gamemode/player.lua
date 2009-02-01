@@ -658,11 +658,15 @@ function GM:PlayerSpawn(ply)
 	end
 
 	if CfgVars["babygod"] == 1 and ply:GetNWInt("slp") ~= 1 then
+		ply:SetNWBool("Babygod", true)
+		print("BABYGOD: ", ply:GetNWBool("Babygod"))
 		ply:GodEnable()
 		local r,g,b,a = ply:GetColor()
 		ply:SetColor(r, g, b, 100)
 		ply:SetCollisionGroup(  COLLISION_GROUP_WORLD )
-		timer.Simple(10, function()
+		timer.Simple(7, function()
+			ply:SetNWBool("Babygod", false)
+			print("BABYGOD: ", ply:GetNWBool("Babygod"))
 			ply:SetColor(r, g, b, a)
 			ply:GodDisable()
 			ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
