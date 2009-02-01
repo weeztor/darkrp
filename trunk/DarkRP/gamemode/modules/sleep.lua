@@ -22,7 +22,6 @@ function KnockoutToggle(player, command, args, caller)
 				player:SetAngles(Angle(0, ragdoll:GetPhysicsObjectNum(10):GetAngles().Yaw, 0))
 				player:UnSpectate()
 				player:StripWeapons()
-				player:SetNWInt("slp", 0)
 				ragdoll:Remove()
 				player:SetNetworkedBool("Knockedout", false)
 				player:SetNetworkedEntity("Ragdoll", NULL)
@@ -46,7 +45,6 @@ function KnockoutToggle(player, command, args, caller)
 					player:Arrest()
 				end
 			else
-				
 				player.WeaponsForSleep = {}
 				for k,v in pairs(player:GetWeapons( )) do
 					player.WeaponsForSleep[k] = v:GetClass()
@@ -84,8 +82,5 @@ function KnockoutToggle(player, command, args, caller)
 		return ""
 	end
 end
-
-concommand.Add("-knockout_toggle", KnockoutToggle)
-concommand.Add("+knockout_toggle", function() end)
 
 AddChatCommand("/sleep", KnockoutToggle)

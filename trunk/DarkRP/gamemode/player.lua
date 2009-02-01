@@ -668,7 +668,7 @@ function GM:PlayerSpawn(ply)
 			ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
 		end)
 	end
-	
+	ply:SetNWInt("slp", 0)
 	if CfgVars["enforceplayermodel"] == 1 then
 		if ply:Team() == TEAM_CITIZEN then
 			local validmodel = false
