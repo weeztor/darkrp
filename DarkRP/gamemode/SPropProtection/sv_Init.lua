@@ -229,6 +229,7 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 	local class = ent:GetClass()
 	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf") then return false end
 	if not SPropProtection.AntiCopy then return false end
+	if ent:IsVehicle() and not ply:IsAdmin() then return false end
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v and not ply:IsAdmin() then return false end
 	end
