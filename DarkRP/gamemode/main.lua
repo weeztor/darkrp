@@ -871,6 +871,12 @@ function BuyShipment(ply, args)
 	crate:SetPos(Vector(tr.HitPos.x, tr.HitPos.y, tr.HitPos.z))
 	crate.nodupe = true
 	crate:Spawn()
+	if type(found) == "table" and found.shipmodel then
+		crate:SetModel(found.shipmodel)
+		crate:PhysicsInit(SOLID_VPHYSICS)
+		crate:SetMoveType(MOVETYPE_VPHYSICS)
+		crate:SetSolid(SOLID_VPHYSICS)
+	end
 	
 	return ""
 end
