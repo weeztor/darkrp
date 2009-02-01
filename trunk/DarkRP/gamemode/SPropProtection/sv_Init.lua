@@ -228,6 +228,7 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 	if not ValidEntity(ent) then return false end
 	local class = ent:GetClass()
 	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf") then return false end
+	if not SPropProtection.AntiCopy then return false end
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v and not ply:IsAdmin() then return false end
 	end
@@ -460,7 +461,7 @@ function SPropProtection.PlayerUse(ply, ent)
 		return true
 	end
 	for k,v in pairs(SPropProtection.AntiCopy) do 
-		if ent:GetClass() == v then	
+		if class == v then	
 			return true
 		end
 	end
