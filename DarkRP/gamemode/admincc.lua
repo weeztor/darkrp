@@ -561,11 +561,7 @@ function ccMayor(ply, cmd, args)
 	local target = FindPlayer(args[1])
 
 	if target then
-		target:SetTeam(TEAM_MAYOR)
-		target:UpdateJob("Mayor")
-		target:KillSilent()
-		local mnew = CfgVars["normalsalary"] + 40
-		target:SetNWInt("salary", mnew)
+		target:ChangeTeam(TEAM_MAYOR)
 		local nick = ""
 
 		if ply:EntIndex() ~= 0 then
@@ -596,6 +592,15 @@ function ccCPChief(ply, cmd, args)
 	local target = FindPlayer(args[1])
 
 	if target then
+		local nick = ""
+
+		if ply:EntIndex() ~= 0 then
+			nick = ply:Nick()
+		else
+			nick = "Console"
+		end
+
+		target:ChangeTeam(TEAM_POLICE)
 		target:ChangeTeam(TEAM_CHIEF)
 		target:PrintMessage(2, nick .. " made you a CP Chief!")
 	else
@@ -604,6 +609,7 @@ function ccCPChief(ply, cmd, args)
 	end
 end
 concommand.Add("rp_cpchief", ccCPChief)
+concommand.Add("rp_chief", ccCPChief)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_cpchief [Nick|SteamID|UserID] - Make a player the CP Chief.")
 
 function ccCP(ply, cmd, args)
@@ -665,6 +671,151 @@ function ccCitizen(ply, cmd, args)
 end
 concommand.Add("rp_citizen", ccCitizen)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_citizen [Nick|SteamID|UserID] - Make a player become a Citizen.")
+
+function ccCook(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		ply:PrintMessage(2, "You're not an admin!")
+		return
+	end
+
+	local target = FindPlayer(args[1])
+
+	if target then
+		target:ChangeTeam(TEAM_COOK)
+
+		if ply:EntIndex() ~= 0 then
+			nick = ply:Nick()
+		else
+			nick = "Console"
+		end
+
+		target:PrintMessage(2, nick .. " made you a cook!")
+	else
+		if ply:EntIndex() == 0 then
+			print("Could not find player: " .. args[1])
+		else
+			ply:PrintMessage(2, "Could not find player: " .. args[1])
+		end
+		return
+	end
+end
+concommand.Add("rp_cook", ccCook)
+
+function ccMedic(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		ply:PrintMessage(2, "You're not an admin!")
+		return
+	end
+
+	local target = FindPlayer(args[1])
+
+	if target then
+		target:ChangeTeam(TEAM_MEDIC)
+
+		if ply:EntIndex() ~= 0 then
+			nick = ply:Nick()
+		else
+			nick = "Console"
+		end
+
+		target:PrintMessage(2, nick .. " made you a medic!")
+	else
+		if ply:EntIndex() == 0 then
+			print("Could not find player: " .. args[1])
+		else
+			ply:PrintMessage(2, "Could not find player: " .. args[1])
+		end
+		return
+	end
+end
+concommand.Add("rp_medic", ccMedic)
+
+function ccGundealer(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		ply:PrintMessage(2, "You're not an admin!")
+		return
+	end
+
+	local target = FindPlayer(args[1])
+
+	if target then
+		target:ChangeTeam(TEAM_GUN)
+
+		if ply:EntIndex() ~= 0 then
+			nick = ply:Nick()
+		else
+			nick = "Console"
+		end
+
+		target:PrintMessage(2, nick .. " made you a gundealer!")
+	else
+		if ply:EntIndex() == 0 then
+			print("Could not find player: " .. args[1])
+		else
+			ply:PrintMessage(2, "Could not find player: " .. args[1])
+		end
+		return
+	end
+end
+concommand.Add("rp_gundealer", ccGundealer)
+
+function ccmobboss(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		ply:PrintMessage(2, "You're not an admin!")
+		return
+	end
+
+	local target = FindPlayer(args[1])
+
+	if target then
+		target:ChangeTeam(TEAM_MOB)
+
+		if ply:EntIndex() ~= 0 then
+			nick = ply:Nick()
+		else
+			nick = "Console"
+		end
+
+		target:PrintMessage(2, nick .. " made you a mobboss!")
+	else
+		if ply:EntIndex() == 0 then
+			print("Could not find player: " .. args[1])
+		else
+			ply:PrintMessage(2, "Could not find player: " .. args[1])
+		end
+		return
+	end
+end
+concommand.Add("rp_mobboss", ccmobboss)
+
+function ccgangster(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		ply:PrintMessage(2, "You're not an admin!")
+		return
+	end
+
+	local target = FindPlayer(args[1])
+
+	if target then
+		target:ChangeTeam(TEAM_GANG)
+
+		if ply:EntIndex() ~= 0 then
+			nick = ply:Nick()
+		else
+			nick = "Console"
+		end
+
+		target:PrintMessage(2, nick .. " made you a gangster!")
+	else
+		if ply:EntIndex() == 0 then
+			print("Could not find player: " .. args[1])
+		else
+			ply:PrintMessage(2, "Could not find player: " .. args[1])
+		end
+		return
+	end
+end
+concommand.Add("rp_gangster", ccgangster)
 
 for k,v in pairs(RPExtraTeams) do
 	concommand.Add("rp_"..v.command, function(ply, cmd, args)
