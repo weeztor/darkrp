@@ -698,6 +698,7 @@ function SetPrice(ply, args)
 	return ""
 end
 AddChatCommand("/price", SetPrice)
+AddChatCommand("/setprice", SetPrice)
 
 local buyPistols = {}
 buyPistols["deagle"] = {}
