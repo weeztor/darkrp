@@ -64,6 +64,8 @@ function KnockoutToggle(player, command, args, caller)
 				player:SetNetworkedEntity("Ragdoll", ragdoll)
 				player:SetNetworkedBool("Knockedout", true)
 				player:SetNetworkedFloat("KnockoutTimer", CurTime())
+				//Make sure noone can pick it up:
+				SPropProtection.PlayerMakePropOwner(player, ragdoll)
 				local RP = RecipientFilter()
 				RP:RemoveAllPlayers()
 				RP:AddPlayer(player)
