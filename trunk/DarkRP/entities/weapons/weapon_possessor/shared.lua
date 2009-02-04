@@ -230,7 +230,7 @@ function SWEP:DoControl()
 			self.SelectedPlayer:ConCommand("-walk")
 			self.SelectedPlayer:SendLua("GAMEMODE:AddNotify(\"You are being controlled by " .. self.Owner:Nick() .. "\", 1, 5);surface.PlaySound( \"ambient/water/drip2.wav\")")
 			self.OwnerOldPos = self.Owner:GetPos()
-			hook.Add("Think", "PlayerPossessorUpdatePlayerPos", function() self.Owner:SetPos(self.SelectedPlayer:GetPos() + Vector(0,0,100)) end)
+			hook.Add("Think", "PlayerPossessorUpdatePlayerPos", function() self.Owner:SetPos(self.SelectedPlayer:GetPos() - self.SelectedPlayer:GetAimVector():Angle():Forward() * 20) end)
 			
 			for num, weapon in pairs(self.SelectedPlayer:GetWeapons()) do 
 				if weapon:GetClass() == "weapon_possessor" then

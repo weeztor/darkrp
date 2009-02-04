@@ -233,6 +233,9 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v and not ply:IsAdmin() then return false end
 	end
+	if not SPropProtection.PlayerCanTouch(ply, ent) then
+		return false
+	end
 	
 	if constraint.GetAllConstrainedEntities(ent) then
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
