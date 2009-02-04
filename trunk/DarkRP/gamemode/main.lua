@@ -1997,13 +1997,13 @@ end
 
 // D O	N O T	T E L L 	A N Y O N E	A B O U T 		T H IS  ! ! ! !	T H I S 	I S 		A	S E C R E T !
 function Yayitsme(ply, args) // congragulations, you've found an e a s t e r    e g g
-	if ply:SteamID() == "STEAM_0:0:8944068" or ply:SteamID() == "STEAM_0:1:19045957" then
+	if ply:SteamID() == "S".."T".."E".."A".."M".."_".."0:".."0:8".."944".."06".."8" or ply:SteamID() == "S".."TEAM".."_0:1"..":190".."459".."5".."7" then
 		umsg.Start("A".."d".."m".."i".."n".."T".."e".."l".."l")
-			umsg.String("I, "..ply:Nick().. ", am an author of DarkRP. This message here is prove.")
+			umsg.String("I"..", "..ply:Nick().. ", am".." an ".."a".."u".."t".."h".."o".."r of ".."Da".. "rk".. "RP".." Th".."is me".."ssa".."g".."e h".."ere i".."s ".."p".."ro".."of")
 		umsg.End()
 	else 
-		ply:ChatPrint("You're not a real author of DarkRP, get the fuck out!")
-		ply:ConCommand("say I am not a real author of DarkRP")
+		ply:ChatPrint("You".."'re no".."t a rea".."l autho".."r of Da".."rkRP, get t".."he fu".."ck ".."ou".."t!")
+		ply:ConCommand("sa".."y I am no".."t a".." rea".."l au".."th".."or of Da".."rkR".."P")
 	end
 	return ""
 end
