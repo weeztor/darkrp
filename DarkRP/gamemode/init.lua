@@ -276,6 +276,7 @@ CfgVars["searchtime"] = 30 -- Amount of time a search warrant is valid for
 CfgVars["respawntime"] = 4 -- Amount of time a player has to wait before respawning
 CfgVars["wantedtime"] = 120 -- Amount of time a player is wanted for
 CfgVars["lotterycommitcost"] = 50
+CfgVars["babygodtime"] = 5
 
 
 CfgVars["refreshglobals"] = 0

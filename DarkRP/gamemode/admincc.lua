@@ -1233,6 +1233,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxdrugs <Number> - Sets max drugs.
 AddValueCommand("rp_maxletters", "maxletters", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxletters <Number> - Sets max letters.")
 
+AddValueCommand("rp_babygodtime", "babygodtime", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_babygodtime <Number> - How long the babygod lasts")
+
 AddValueCommand("rp_maxgangsters", "maxgangsters", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxgangsters <Number> - Sets max gangsters.")
 
