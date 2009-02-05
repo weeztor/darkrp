@@ -27,15 +27,21 @@ function Vote:HandleNewVote(ply, id)
 		umsg.String(self.ID)
 	umsg.End() ]]
 
-	if self[1] + self[2] >= (#player.GetAll() - 1) then
+	if (self[1] + self[2] >= (#player.GetAll() - 1) and not self.special) or (self.special and self[1] + self[2] >= (#player.GetAll() - 2)) then
 		vote.HandleVoteEnd(self.ID)
 	end
 end
 
 vote = { }
 
-function vote:Create(question, voteid, ent, delay, callback)
+function vote:Create(question, voteid, ent, delay, callback, special)
 	if #player.GetAll() == 1 then
+		Notify(ent, 1, 4, "You're the only one in the server so you won the vote")
+		callback(1, ent)
+		return
+	end
+	
+	if special and #player.GetAll() <= 2 then
 		Notify(ent, 1, 4, "You're the only one in the server so you won the vote")
 		callback(1, ent)
 		return
@@ -53,6 +59,7 @@ function vote:Create(question, voteid, ent, delay, callback)
 	newvote.ID = voteid
 	newvote.Callback = callback
 	newvote.Ent = ent
+	newvote.special = special
 	
 
 	newvote[1] = 0
