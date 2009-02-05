@@ -239,7 +239,7 @@ CfgVars["enableshipments"] = 1 --Enable gun shipments
 CfgVars["lottery"] = 1 -- Enable the lottery
 CfgVars["restrictallteams"] = 0
 CfgVars["AdminsSpawnWithCopWeapons"] = 1
-CfgVars["babygod"] = 1
+CfgVars["babygod"] = 0
 
 
 -- You can set the exact value of the below items:
