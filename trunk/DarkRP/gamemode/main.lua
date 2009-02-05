@@ -1631,7 +1631,7 @@ local function Demote(ply, args)
 			Notify(ply, 1, 4,  p:Nick() .." is a Citizen - can't be demoted any further!")
 		else
 			NotifyAll(1, 4, ply:Nick() .. " has started a vote for the demotion of " .. p:Nick())
-			vote:Create(p:Nick() .. ":\n Demotion Nominee", p:EntIndex() .. "votecop", p, 20, FinishDemote)
+			vote:Create(p:Nick() .. ":\n Demotion Nominee", p:EntIndex() .. "votecop"..ply:EntIndex(), p, 20, FinishDemote, true)
 			ply:GetTable().LastVoteCop = CurTime()
 			VoteCopOn = true
 			Notify(ply, 1, 4, "Demotion Vote started!")
