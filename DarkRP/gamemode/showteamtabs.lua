@@ -612,7 +612,7 @@ function EntitiesTab()
 					AddIcon("models/weapons/w_pist_p228.mdl", "Buy a P228: " .. CUR .. tostring(GetGlobalInt("p228cost")), "/Buypistol p228")
 					
 					for k,v in pairs(CustomShipments) do
-						if v.seperate and table.HasValue(v.allowed, LocalPlayer():Team()) then
+						if v.seperate and (table.HasValue(v.allowed, LocalPlayer():Team()) or #v.allowed == 0) then
 							AddIcon(v.model, "Buy a "..v.name..": "..CUR..v.pricesep, "/buypistol "..v.name)
 						end
 					end
