@@ -108,6 +108,8 @@ CUR = "$"
 
 -- RP Name Overrides
 
+DARKRPVERSION = "2.3.1+138"
+
 local meta = FindMetaTable("Player")
 meta.SteamName = meta.Name
 meta.Name = function(self)
@@ -507,7 +509,7 @@ AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "serverHelp - Show's server help.")
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare1 - Toggle vote clicker (bind this to F3 if you haven't already)")
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare2 - Job menu(bind this to F4 if you haven't already)")
 
-GM.Name = "DarkRP 2.3.1+"
+GM.Name = "DarkRP "..DARKRPVERSION
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
 
 function GM:GravGunPunt(ply, ent)
