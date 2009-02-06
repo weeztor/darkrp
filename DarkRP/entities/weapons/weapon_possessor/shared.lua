@@ -17,15 +17,15 @@ if ( SERVER ) then
 	AddCSLuaFile( "shared.lua" )
 	AddCSLuaFile( "cl_init.lua" )
 end
-	SWEP.PrintName			= "Player possessor"			
-	SWEP.Author				= "FPtje(STEAM_0:0:8944068)"
-	SWEP.Instructions		= "Shoot the player you want to control"
-	SWEP.Slot				= 5
-	SWEP.SlotPos			= 6
-	SWEP.IconLetter			= "x"
-	SWEP.HoldType			= "pistol"
-	SWEP.Weight				= 1
-	SWEP.Spawnable			= false
+SWEP.PrintName			= "Player possessor"			
+SWEP.Author				= "FPtje"
+SWEP.Instructions		= "Shoot the player you want to control"
+SWEP.Slot				= 5
+SWEP.SlotPos			= 6
+SWEP.IconLetter			= "x"
+SWEP.HoldType			= "pistol"
+SWEP.Weight				= 1
+SWEP.Spawnable			= false
 
 
 /*--------------------------------------------------------- 
