@@ -720,11 +720,6 @@ function BuyPistol(ply, args)
 		return ""
 	end
 
-	if CfgVars["restrictbuypistol"] ~= 0 and ply:Team() ~= TEAM_GUN and team.NumPlayers(TEAM_GUN) > 0 then
-		Notify(ply, 1, 4, "/buypistol is disabled because there are Gun Dealers.")
-		return ""
-	end
-
 	local trace = {}
 	trace.start = ply:EyePos()
 	trace.endpos = trace.start + ply:GetAimVector() * 85
@@ -746,16 +741,18 @@ function BuyPistol(ply, args)
 	local price = 0
 	for k,v in pairs(CustomShipments) do
 		if v.seperate and v.name == args then
-			custom = true
+			custom = v
 			class = v.entity
 			model = v.model
 			price = v.pricesep
 			local canbuy = false
-			for a,b in pairs(allowed) do
+			if #v.allowed == 0 then canbuy = true end
+			for a,b in pairs(v.allowed) do
 				if ply:Team() == b then
 					canbuy = true
 				end
 			end
+			
 			if not canbuy then
 				Notify(ply, 1, 4, "You do not have the correct class to buy this pistol!")
 				return ""
@@ -768,7 +765,10 @@ function BuyPistol(ply, args)
 		return ""
 	end
 	
-	
+	if (not custom or (#custom.allowed == 1 and custom[1] == TEAM_GUN)) and CfgVars["restrictbuypistol"] ~= 0 and ply:Team() ~= TEAM_GUN and team.NumPlayers(TEAM_GUN) > 0 then
+		Notify(ply, 1, 4, "/buypistol is disabled because there are Gun Dealers.")
+		return ""
+	end
 	if not custom then
 		if ply:Team() == TEAM_GUN then
 			price = math.ceil(GetGlobalInt(args .. "cost") * 0.88)
