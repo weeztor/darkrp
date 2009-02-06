@@ -640,7 +640,7 @@ function EntitiesTab()
 						EntPanel:AddItem(icon)
 					end
 					if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB then
-						AddEntIcon("models/props_combine/combine_mine01.mdl", "Buy a druglab " .. CUR .. tostring(GetGlobalInt("druglabcost")), "/Buydruglab")
+						AddEntIcon("models/props_lab/crematorcase.mdl", "Buy a druglab " .. CUR .. tostring(GetGlobalInt("druglabcost")), "/Buydruglab")
 					end
 					AddEntIcon("models/props_c17/consolebox01a.mdl", "Buy a Money printer " .. CUR .. tostring(GetGlobalInt("mprintercost")), "/Buymoneyprinter")
 					if LocalPlayer():Team() == TEAM_GUN then

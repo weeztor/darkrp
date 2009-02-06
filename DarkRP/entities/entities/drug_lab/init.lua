@@ -72,6 +72,7 @@ function ENT:createDrug()
 	drug = ents.Create("drug")
 	drug:SetPos(Vector(drugPos.x,drugPos.y,drugPos.z + 35))
 	drug:SetNWEntity("owning_ent", userb)
+	drug.SID = userb.SID
 	drug:SetNWString("Owner", userb:Nick())
 	drug.nodupe = true
 	drug:SetNWInt("price", self.Entity:GetNWInt("price"))
