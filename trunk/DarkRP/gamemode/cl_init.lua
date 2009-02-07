@@ -804,13 +804,13 @@ function RPSelectwhohearit(ply,bind,pressed)
 				playercolors[v:EntIndex()] = Color(r,g,b,a)
 			end
 			if distance < 90 and (r ~= 0 or g ~= 0 or b ~= 255 or a ~= 255) then
-				v:SetColor(0,0,255,255)
-			elseif distance > 90 and distance < 250 and (r ~= 255 or g ~= 0 or b ~= 0 or a ~= 255) then
-				v:SetColor(255,0,0,255)
-			elseif distance > 250 and distance < 550 and (r ~= 0 or g ~= 255 or b ~= 0 or a ~= 255) then
-				v:SetColor(0,255,0,255)
-			elseif distance > 550 and (r ~= 0 or g ~= 0 or b ~= 0 or a ~= 255) then
-				v:SetColor(0,0,0,255)
+				v:SetColor(0,0,255,a)
+			elseif distance > 90 and distance < 250 and (r ~= 255 or g ~= 0 or b ~= 0) then
+				v:SetColor(255,0,0,a)
+			elseif distance > 250 and distance < 550 and (r ~= 0 or g ~= 255 or b ~= 0) then
+				v:SetColor(0,255,0,a)
+			elseif distance > 550 and (r ~= 0 or g ~= 0 or b ~= 0) then
+				v:SetColor(0,0,0,a)
 			end
 		end
 	end)
