@@ -293,6 +293,10 @@ function meta:ChangeTeam(t)
 				Notify(self, 1, 4, "You're already a " .. v.name .. "!")	
 				return
 			end
+			if v.NeedToChangeFrom and self:Team() ~= v.NeedToChangeFrom then
+				Notify(self, 1,4, "You have to be "..team.GetName(v.NeedToChangeFrom).."  to become " .. team.GetName(t))
+				return
+			end
 			if team.NumPlayers(t) >= v.max then
 				Notify(self, 1, 4,  "Max "..v.name.." reached")
 				return
