@@ -118,9 +118,9 @@ function SPropProtection.IsBuddy(ply, ent)
 		return true
 	end
 	for k, v in pairs(Players) do
-		if(v and v:IsValid() and v != ply) then
+		if(v and ValidEntity(v) and v != ply) then
 	        if(SPropProtection["Props"][ent:EntIndex()][1] == v:SteamID()) then 
-                if(table.HasValue(SPropProtection[v:SteamID()], ply:SteamID())) then
+                if SPropProtection[v:SteamID()] and table.HasValue(SPropProtection[v:SteamID()], ply:SteamID()) then
 					return true
 				else
 					return false
@@ -129,12 +129,13 @@ function SPropProtection.IsBuddy(ply, ent)
 		end
 	end	
 end
-
+-- table
 function SPropProtection.PlayerCanTouch(ply, ent)
+
 	if(tonumber(SPropProtection["Config"]["toggle"]) == 0 or ent:GetClass() == "worldspawn") then
 		return true
 	end
-	
+
 	if(string.find(ent:GetClass(), "stone_") == 1 or string.find(ent:GetClass(), "rock_") == 1 or string.find(ent:GetClass(), "stargate_") == 0 or string.find(ent:GetClass(), "dhd_") == 0 or ent:GetClass() == "flag" or ent:GetClass() == "item") then
 		if(!ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "") then
 			ent:SetNetworkedString("Owner", "World")
@@ -143,13 +144,13 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 			return true
 		end
 	end
-	
+
 	if(!ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and !ent:IsPlayer()) then
 		SPropProtection.PlayerMakePropOwner(ply, ent)
 		SPropProtection.Nofity(ply, "You now own this prop")
 		return true
 	end
-	
+
 	if(ent:GetNetworkedString("Owner") == "World") then
 		if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["awp"]) == 1 and tonumber(SPropProtection["Config"]["admin"]) == 1) then
 			return true
@@ -157,8 +158,8 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 	elseif(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then
 		return true
 	end
-
 	if(SPropProtection["Props"][ent:EntIndex()] != nil) then
+		
 		if(SPropProtection["Props"][ent:EntIndex()][1] == ply:SteamID() or SPropProtection.IsBuddy(ply, ent)) then
 			return true
 		end
@@ -174,7 +175,6 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 				end
 			end
 		end
-		
 		for k, v in pairs(GAMEMODE.CameraList) do
 			for b, j in pairs(v) do
 				if(j == ent) then
@@ -261,9 +261,6 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 
 	if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then return true end
 	if(ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick()) then return true end
-	if(!ent:IsValid() or !SPropProtection.PlayerCanTouch(ply, ent)) then
-		return false
-	end
 	return true
 end
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
