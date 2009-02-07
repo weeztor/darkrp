@@ -626,7 +626,7 @@ function EntitiesTab()
 			local EntCat = vgui.Create("DCollapsibleCategory")
 			EntCat:SetLabel("Entities")
 				local EntPanel = vgui.Create("DPanelList")
-				EntPanel:SetSize(470, 100)
+				EntPanel:SetSize(470, 200)
 				EntPanel:SetSpacing(1)
 				EntPanel:EnableHorizontal(true)
 				EntPanel:EnableVerticalScrollbar(true)
@@ -653,6 +653,11 @@ function EntitiesTab()
 						AddEntIcon("models/weapons/w_smg_mac10.mdl", "Buy a mac10 shipment " .. CUR .. tostring(GetGlobalInt("mac10cost")), "/buyshipment mac10")
 					elseif LocalPlayer():Team() == TEAM_COOK then
 						AddEntIcon("models/props/cs_office/microwave.mdl", "Buy a microwave " .. CUR .. tostring(GetGlobalInt("microwavecost")) , "/Buymicrowave")
+					end
+					if (GetGlobalInt("foodspawn") ~= 0 or LocalPlayer():Team() == TEAM_COOK) and FoodItems and GetGlobalInt("hungermod") == 1 then
+						for k,v in pairs(FoodItems) do
+							AddEntIcon(v.model, "Buy a(n) ".. k .. " for a few bucks", "/buyfood "..k)
+						end
 					end
 					for k,v in pairs(CustomShipments) do
 						if not v.noship and table.HasValue(v.allowed, LocalPlayer():Team()) then
