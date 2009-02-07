@@ -39,7 +39,7 @@ function ENT:Use(activator,caller)
 			return false
 		end
 		DB.PayPlayer(activator, Owner, self:GetNWInt("price"))
-		Notify(activator, 1, 4, "Paid " .. CUR .. self:GetNWInt("price") .. " for using drugs.")
+		Notify(activator, 1, 4, "You have paid " .. CUR .. self:GetNWInt("price") .. " for using drugs.")
 		Notify(Owner, 1, 4, "Recieved " .. CUR .. self:GetNWInt("price") .. " for selling drugs.")
 	end
 	DrugPlayer(caller)
