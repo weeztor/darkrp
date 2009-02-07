@@ -205,7 +205,9 @@ function SWEP:DoControl()
 			function FCameraThing(ply, origin, angles, fov)
 				if self.IAmControlling and self.SelectedPlayer:IsValid() then
 					local view = {} 
-					view.origin = self.SelectedPlayer:GetShootPos() - LocalPlayer():GetAimVector():Angle():Forward() * FalcoThirdPersonVariable:GetInt()
+					local shootpos = self.SelectedPlayer:GetShootPos()
+					local selfaimvectorforward = LocalPlayer():GetAimVector():Angle():Forward()
+					view.origin = shootpos - selfaimvectorforward  * FalcoThirdPersonVariable:GetInt()
 					view.angles = LocalPlayer():EyeAngles() 
 					
 					return view
