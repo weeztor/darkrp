@@ -144,7 +144,7 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_strictsuicide - Whether or not p
 AddToggleCommand("rp_ooc", "ooc", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_ooc - Whether or not OOC tags are enabled.")
 
-AddToggleCommand("rp_alltalk", "alltalk", false)
+AddToggleCommand("rp_alltalk", "alltalk", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_alltalk - Enable for global chat, disable for local chat.")
 
 AddToggleCommand("rp_allowrpnames", "allowrpnames", false)

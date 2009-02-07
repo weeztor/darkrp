@@ -762,3 +762,59 @@ local function DoSpecialEffects(Type)
 	end
 end
 usermessage.Hook("DarkRPEffects", DoSpecialEffects)
+
+local Messagemode = false
+local playercolors = {}
+
+function RPStopMessageMode()
+	if GetGlobalInt("alltalk") ~= 0 then return end
+	Messagemode = false
+	hook.Remove("Think", "RPGetRecipients")
+	hook.Remove("HUDPaint", "RPinstructionsOnSayColors")
+	for k,v in pairs(player.GetAll()) do
+		if playercolors[v:EntIndex()] then
+			//PrintTable(playercolors[v:EntIndex()])
+			local col = playercolors[v:EntIndex()]
+			v:SetColor(col.r, col.g, col.b, col.a)
+		end
+	end
+	playercolors = {}
+end
+
+
+function RPSelectwhohearit(ply,bind,pressed)
+	if GetGlobalInt("alltalk") ~= 0 then return end
+	Messagemode = true
+	hook.Add("HUDPaint", "RPinstructionsOnSayColors", function()
+		local h = ScrH() / 3
+		draw.WordBox(2, 0, h, "Player colour codes:", "ScoreboardText", Color(0,0,0,120), Color(255,255,255,255))
+		draw.WordBox(2, 0, h + 20, "Blue = he can hear you when you whisper", "ScoreboardText", Color(0,0,0,120), Color(0,0,255,255))
+		draw.WordBox(2, 0, h + 40, "Red = he can hear you when you talk normally", "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
+		draw.WordBox(2, 0, h + 60, "Green = he can hear you when you yell at him", "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
+		draw.WordBox(2, 0, h + 80, "Black = he can ONLY hear you when you use OOC", "ScoreboardText", Color(255,255,255,120), Color(0,0,0,255))
+		--draw.WordBox(10, "Blue = he can hear it with whisper", "ScoreboardText", 0, 20, Color(0,0,255,255), TEXT_ALIGN_LEFT,  TEXT_ALIGN_LEFT)
+	end)
+	hook.Add("Think", "RPGetRecipients", function() 
+		if not Messagemode then RPStopMessageMode() return end 
+		//LocalPlayer():ChatPrint("MESSAGEMODE") 
+		for k,v in pairs(player.GetAll()) do
+			local r,g,b,a = v:GetColor()
+			local distance = LocalPlayer():GetPos():Distance(v:GetPos())
+			if not playercolors[v:EntIndex()] then
+				playercolors[v:EntIndex()] = Color(r,g,b,a)
+			end
+			if distance < 90 and (r ~= 0 or g ~= 0 or b ~= 255 or a ~= 255) then
+				v:SetColor(0,0,255,255)
+			elseif distance > 90 and distance < 250 and (r ~= 255 or g ~= 0 or b ~= 0 or a ~= 255) then
+				v:SetColor(255,0,0,255)
+			elseif distance > 250 and distance < 550 and (r ~= 0 or g ~= 255 or b ~= 0 or a ~= 255) then
+				v:SetColor(0,255,0,255)
+			elseif distance > 550 and (r ~= 0 or g ~= 0 or b ~= 0 or a ~= 255) then
+				v:SetColor(0,0,0,255)
+			end
+		end
+	end)
+end
+hook.Add("StartChat", "RPDoSomethingWithChat", RPSelectwhohearit)
+
+hook.Add("FinishChat", "RPCloseRadiusDetection", function() Messagemode =  false RPStopMessageMode() end)

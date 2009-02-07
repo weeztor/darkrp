@@ -15,7 +15,7 @@ function GM:PlayerSay(ply, text)
 		end
 	end
 
-	if CfgVars["alltalk"] == 0 then
+	if GetGlobalInt("alltalk") == 0 then
 		TalkToRange(ply:Name() .. ": " .. text, ply:GetPos(), 250)
 		return ""
 	end
