@@ -781,9 +781,9 @@ function RPStopMessageMode()
 	playercolors = {}
 end
 
-
+local PlayerColorsOn = CreateClientConVar("rp_showchatcolors", 1, true, false)
 function RPSelectwhohearit(ply,bind,pressed)
-	if GetGlobalInt("alltalk") ~= 0 then return end
+	if GetGlobalInt("alltalk") ~= 0 or PlayerColorsOn:GetInt() == 0 then return end
 	Messagemode = true
 	hook.Add("HUDPaint", "RPinstructionsOnSayColors", function()
 		local h = ScrH() / 3
