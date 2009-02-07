@@ -108,7 +108,7 @@ CUR = "$"
 
 -- RP Name Overrides
 
-DARKRPVERSION = "2.3.1+138"
+DARKRPVERSION = "2.3.1"
 
 local meta = FindMetaTable("Player")
 meta.SteamName = meta.Name
@@ -293,6 +293,24 @@ if not file.IsDir("DarkRP/") then
 end
 
 function SaveRPChanges()
+	// OK first check if not everything is 0, because then you should load instead of save
+	local settingsbroken = true
+	for k,v in pairs(CfgVars) do
+		if v ~= 0 then settingsbroken = false break end
+	end
+	if settingsbroken then print("DARKRP SETTINGS BROKEN!, LOADING OLD SETTINGS TO FIX!")  ReloadRPSettings() return end
+	local globalsbroken = true
+	for k,v in pairs(ValueCmds) do
+		if v.global and GetGlobalInt(v.var) ~= 0 then
+			globalsbroken = false
+		end
+	end
+	for k,v in pairs(ToggleCmds) do
+		if v.global and GetGlobalInt(v.var) ~= 0 then globalsbroken = false break end
+	end
+	if globalsbroken then print("DARKRP GLOBALS BROKEN!, LOADING OLD GLOBALS TO FIX!") ReloadRPGlobals() return end
+	// End of checking if they're broken :)
+	
 	local Save1 = false
 	local Save2 = false
 	local settingsfile = file.Read("DarkRP/settings.txt")
@@ -350,20 +368,22 @@ function SaveRPChanges()
 	end
 end
 timer.Create("DarkRPSaveSettings", 60, 0, SaveRPChanges)
-concommand.Add("rp_SaveChanges", SaveRPChanges)
+concommand.Add("rp_savechanges", SaveRPChanges)
 
 
 //At the beginning of the game, load the last saved settings :D
-if file.Exists("DarkRP/settings.txt") and file.Read("DarkRP/settings.txt") ~= "" then
-	local temp = util.KeyValuesToTable(file.Read("DarkRP/settings.txt"))
-	for k,v in pairs(temp) do
-		CfgVars[k] = tonumber(v)
+function ReloadRPSettings()
+	if file.Exists("DarkRP/settings.txt") and file.Read("DarkRP/settings.txt") ~= "" then
+		local temp = util.KeyValuesToTable(file.Read("DarkRP/settings.txt"))
+		for k,v in pairs(temp) do
+			CfgVars[k] = tonumber(v)
 
+		end
 	end
 end
+ReloadRPSettings()
 
-
-local function ReloadGlobals()
+function ReloadRPGlobals()
 	//print("Reloading globals!!!")
 	if file.Exists("DarkRP/globals.txt") and file.Read("DarkRP/globals.txt") ~= "" then
 		local temp = util.KeyValuesToTable(file.Read("DarkRP/globals.txt"))
@@ -375,8 +395,8 @@ local function ReloadGlobals()
 		timer.Simple(1, SaveRPChanges)
 	end
 end
-ReloadGlobals()
-timer.Simple(10.5, ReloadGlobals) // for some reason I don't know about the vars reset after 10 seconds...
+ReloadRPGlobals()
+timer.Simple(10.5, ReloadRPGlobals) // for some reason I don't know about the vars reset after 10 seconds...
 //timer.Simple(21, ReloadGlobals)
 
 timer.Simple(5, function()

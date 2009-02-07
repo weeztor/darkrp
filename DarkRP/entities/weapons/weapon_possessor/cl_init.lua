@@ -293,7 +293,9 @@ function FControlMenu()
 		local menu = DermaMenu()
 		for num, thing in pairs(weapons.GetList( )) do
 			if thing.Spawnable or thing.AdminSpawnable then
-				menu:AddOption(tostring(thing.PrintName), function() LocalPlayer():ConCommand("FPlayerGiveSWEP " .. thing.Classname) end)
+				local name = tostring(thing.PrintName)
+				local class = thing.Classname
+				menu:AddOption(name, function() RunConsoleCommand("FPlayerGiveSWEP", thing.Classname) end)
 			end
 		end
 		menu:Open()
@@ -349,9 +351,11 @@ function FControlMenu()
 			ToolSelected = true
 			for k,v in pairs(file.FindInLua( "weapons/gmod_tool/stools/*.lua")) do
 				if k == tonumber(listview:GetSelectedLine()) then
-					LocalPlayer():ConCommand("FDoHimAnotherCommand tool_" .. string.gsub(v, ".lua", ""))
-					LocalPlayer():ConCommand("tool_" .. string.gsub(v, ".lua", ""))
+					local what = "tool_" .. string.gsub(v, ".lua", "")
+					RunConsoleCommand("FDoHimAnotherCommand", what)
+					RunConsoleCommand(what)
 					FalcoToolMode = string.gsub(v, ".lua", "")
+					break
 				end
 			end
 		end
@@ -532,7 +536,8 @@ function FControlMenu()
 				NPCButtons[k]:SetSize(380, 20)
 				NPCButtons[k]:SetText(v.Name)
 				NPCButtons[k]["DoClick"] = function()
-					LocalPlayer():ConCommand("FDoHimAnotherCommand gmod_spawnnpc " .. v.Class)
+					local class = v.Class
+					RunConsoleCommand("FDoHimAnotherCommand","gmod_spawnnpc", class)
 				end
 				NPCList:AddItem(NPCButtons[k])
 			end
@@ -744,7 +749,8 @@ function FDoSendVarsToServer()
 	end
 	if ToolObject:GetClass() == "gmod_tool" then
 		for k,v in pairs(ToolObject.Tool[FalcoToolMode].ClientConVar) do
-			LocalPlayer():ConCommand( "FDoHimAnotherCommand " .. FalcoToolMode .. "_" .. k .. " " .. GetConVarString(FalcoToolMode .. "_" .. k))
+			local setting = GetConVarString(FalcoToolMode .. "_" .. k)
+			RunConsoleCommand( "FDoHimAnotherCommand", FalcoToolMode .. "_" .. k, setting)
 		end
 	end
 end
