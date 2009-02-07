@@ -1093,46 +1093,6 @@ function BuyHealth(ply)
 end
 AddChatCommand("/buyhealth", BuyHealth)
 
-function BuyFood(ply, args)
-	if args == "" then return "" end
-
-	local trace = {}
-	trace.start = ply:EyePos()
-	trace.endpos = trace.start + ply:GetAimVector() * 85
-	trace.filter = ply
-
-	local tr = util.TraceLine(trace)
-
-	if GetGlobalInt("hungermod") == 0 then
-		Notify(ply, 1, 4, "/buyfood is disabled unless Hunger Mod is enabled.")
-		return ""
-	end
-
-	if ply:Team() ~= TEAM_COOK and team.NumPlayers(TEAM_COOK) > 0 then
-		Notify(ply, 1, 4, "/buyfood is disabled because there are Cooks.")
-		return ""
-	end
-
-	if args == "melon" then
-		if not ply:CanAfford(CfgVars["foodcost"]) then
-			Notify(ply, 1, 4, "Can not afford this!")
-			return ""
-		end
-		ply:AddMoney(-CfgVars["foodcost"])
-		Notify(ply, 1, 4, "You bought a Melon for " .. CUR .. tostring(CfgVars["foodcost"]))
-		local food = ents.Create("melon")
-		food:SetModel("models/props_junk/watermelon01.mdl")
-		food:SetNWString("Owner", "Shared")
-		food:SetPos(tr.HitPos)
-		food.nodupe = true
-		food:Spawn()
-	else
-		Notify(ply, 1, 4, "Food type not available!")
-	end
-	return ""
-end
-AddChatCommand("/buyfood", BuyFood)
-
 function JailPos(ply)
 	-- Admin or Chief can set the Jail Position
 	if (ply:Team() == TEAM_CHIEF and CfgVars["chiefjailpos"] == 1) or ply:HasPriv(ADMIN) then
