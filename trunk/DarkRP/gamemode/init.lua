@@ -192,7 +192,7 @@ end
 -- 0 for NO
 -- DO NOT TOUCH THIS! JUST SET THE RP SETTING IN GAME AND IT WILL SAVE AUTOMATICALLY! IF IT DOESNT SAVE AUTOMATICALLY DO rp_savechanges IN CONSOLE!
 CfgVars["ooc"] = 1 --OOC allowed
-CfgVars["alltalk"] = 1 --All talk allowed
+--CfgVars["alltalk"] = 1 --All talk allowed
 CfgVars["allowrpnames"] = 1 --RP Name changing allowed?
 CfgVars["crosshair"] = 1 --Crosshairs enabled?
 CfgVars["strictsuicide"] = 0 --Should players respawn where they suicided (regardless of they're arrested or not)
