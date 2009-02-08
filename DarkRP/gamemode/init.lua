@@ -186,10 +186,7 @@ for k, v in pairs(files) do
 	include("modules/" .. v)
 end
 
--- You can toggle the below items:
-
--- 1 for YES
--- 0 for NO
+local function RefreshSettings()
 -- DO NOT TOUCH THIS! JUST SET THE RP SETTING IN GAME AND IT WILL SAVE AUTOMATICALLY! IF IT DOESNT SAVE AUTOMATICALLY DO rp_savechanges IN CONSOLE!
 CfgVars["ooc"] = 1 --OOC allowed
 --CfgVars["alltalk"] = 1 --All talk allowed
@@ -284,6 +281,7 @@ CfgVars["babygodtime"] = 5
 CfgVars["refreshglobals"] = 0
 
 SetGlobalString("cmdprefix", "/") --Prefix before any chat commands
+end
 
 -- Strings
 CfgVars["mobagenda"] = ""
@@ -324,6 +322,7 @@ function SaveRPChanges()
 			end
 		end
 	else//if the file does not exist then you should make it.
+		print("Settings file does not exist, creating now...")
 		Save1 = true
 	end	
 	
@@ -331,14 +330,11 @@ function SaveRPChanges()
 	for k,v in pairs(ValueCmds) do
 		if v.global then
 			newsettings[v.var] = GetGlobalInt(v.var)
-			//print(k, GetGlobalInt(v.var))
 		end
 	end
 	for k,v in pairs(ToggleCmds) do
 		if v.global then
 			newsettings[v.var] = GetGlobalInt(v.var)
-			//print(v.var)
-			//print(k, GetGlobalInt(v.var))
 		end
 	end
 	if file.Exists("DarkRP/globals.txt") and Globalsfile ~= "" then // If the file exists then 
@@ -350,7 +346,7 @@ function SaveRPChanges()
 			end
 		end 
 	else//if the file does not exist then you should make it.
-		print("globals.txt does not exist, creating now")
+		print("Globals file does not exist, creating now...")
 		Save2 = true
 	end
 	
@@ -377,7 +373,6 @@ function ReloadRPSettings()
 		local temp = util.KeyValuesToTable(file.Read("DarkRP/settings.txt"))
 		for k,v in pairs(temp) do
 			CfgVars[k] = tonumber(v)
-
 		end
 	end
 end
@@ -398,6 +393,20 @@ end
 ReloadRPGlobals()
 timer.Simple(10.5, ReloadRPGlobals) // for some reason I don't know about the vars reset after 10 seconds...
 //timer.Simple(21, ReloadGlobals)
+
+function ResetAllRPSettings(ply,cmd,args)
+	if not ply:IsSuperAdmin() then
+		Notify(ply, 1, 4, "You must be a superadmin")
+		return
+	end
+	Notify(ply, 1, 4, "All settings resetted!")
+	file.Delete("DarkRP/globals.txt")
+	file.Delete("DarkRP/settings.txt")
+	RefreshSettings()
+	ReloadRPGlobals()
+	--timer.Simple(1, SaveRPChanges)
+end
+concommand.Add("rp_ResetAllSettings", ResetAllRPSettings)
 
 timer.Simple(5, function()
 	-- Player Priviliges
