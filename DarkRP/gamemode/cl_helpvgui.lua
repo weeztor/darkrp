@@ -18,21 +18,6 @@ function HelpPanel:Init()
 
 	self.vguiHelpCategories = { }
 	self.vguiHelpLabels = { }
-	--[[
-	self.HelpInfo.chattitle = vgui.Create("Label", self.HelpInfo)
-	self.HelpInfo.chattitle:SetText("Chat Commands")
-
-	self.HelpInfo.admintitle = vgui.Create("Label", self.HelpInfo)
-	self.HelpInfo.admintitle:SetText("Admin Console Commands")
-
-	self.HelpInfo.admincmd1 = vgui.Create("Label", self.HelpInfo)
-	self.HelpInfo.admincmd1:SetText("rp_citizen, rp_cp, or rp_ow <Name/Partial Name> - Set a player's team\nrp_paydaytime <Seconds> - The delay before each pay day\nrp_maxcps <Number> - Maximum number of CPs\nrp_setmoney <Name/Partial Name> <Money amount> - Set a player's money\nrp_adminsweps <1 or 0> Set if SWEPs should be admins only\nrp_propspawning <1 or 0> - Set if prop spawning is enabled\nrp_toolgun <1 or 0> - Set if all players get a toolgun\nrp_strictsuicide <1 or 0> - Set if the player should spawn where they suicide (whether they are arrested or not)\nrp_propertytax <1 or 0> - Property tax\nrp_citpropertytax <1 or 0> - Should property tax be only for citizens\nrp_allowedprops <1 or 0> - Set if players can only spawn \"allowed\" props\nrp_bannedprops <1 or 0> - Should certain props be banned (will override rp_allowedprops)\nrp_globaltags <1 or 0> - Should player's name and job be visible from across the map\nrp_ooc <1 or 0> - Enable or disable OOC chat\n")
-
-	self.HelpInfo.admincmd2 = vgui.Create("Label", self.HelpInfo)
-	self.HelpInfo.admincmd2:SetText("rp_alltalk <1 or 0> - Enable or disable all talk\nrp_showcrosshairs <1 or 0> - Enable or disable crosshairs\nrp_showjob <1 or 0> - Show player jobs\nrp_showname <1 or 0> - Show player names\nrp_arrest <Name/Partial Name> - Arrest a player\nrp_unarrest <Name/Partial Name> - Unarrest a player\nrp_kick <Name> <Optional Reason>\nrp_kickban <Name> <Minute length>\nrp_earthquake <1 or 0> - Enable or disable occasional earthquakes\nrp_earthquake_chance_is_1_in <Number> - Set the chance of an earthquake occurring. 1 in 4000 is default\n")
-
-	self.HelpInfo.chatcmd = vgui.Create("Label", self.HelpInfo)
-	]]--
 	self.Scroll = 0
 end
 
@@ -126,22 +111,6 @@ function HelpPanel:PerformLayout()
 
 	self.scrolltext:SetPos(250, 25)
 	self.scrolltext:SizeToContents()
-	--[[
-	self.HelpInfo.chattitle:SetPos(5, 10 - self.Scroll)
-	self.HelpInfo.chattitle:SizeToContents()
-
-	self.HelpInfo.chatcmd:SetPos(5, 40 - self.Scroll)
-	self.HelpInfo.chatcmd:SizeToContents()
-
-	self.HelpInfo.admintitle:SetPos(5, self.HelpInfo.chatcmd:GetTall() + 50 - self.Scroll)
-	self.HelpInfo.admintitle:SizeToContents()
-
-	self.HelpInfo.admincmd1:SetPos(5, self.HelpInfo.chatcmd:GetTall() + 80 - self.Scroll)
-	self.HelpInfo.admincmd1:SizeToContents()
-
-	self.HelpInfo.admincmd2:SetPos(5, self.HelpInfo.chatcmd:GetTall() + self.HelpInfo.admincmd1:GetTall() + 67 - self.Scroll)
-	self.HelpInfo.admincmd2:SizeToContents()
-	]]--
 end
 
 function HelpPanel:ApplySchemeSettings()
@@ -153,22 +122,6 @@ function HelpPanel:ApplySchemeSettings()
 
 	self.scrolltext:SetFont("GModToolSubtitle")
 	self.scrolltext:SetFGColor(Color(150, 50, 50, 255))
-
-	--[[
-	self.HelpInfo.chattitle:SetFont("GModToolSubtitle")
-	self.HelpInfo.chattitle:SetFGColor(Color(255, 255, 255, 200))
-
-	self.HelpInfo.admintitle:SetFont("GModToolSubtitle")
-	self.HelpInfo.admintitle:SetFGColor(Color(255, 255, 255, 200))
-
-	self.HelpInfo.chatcmd:SetFont("ChatFont")
-	self.HelpInfo.chatcmd:SetFGColor(Color(255, 255, 255, 200))
-
-	self.HelpInfo.admincmd1:SetFont("ChatFont")
-	self.HelpInfo.admincmd1:SetFGColor(Color(255, 255, 255, 200))
-
-	self.HelpInfo.admincmd2:SetFont("ChatFont")
-	self.HelpInfo.admincmd2:SetFGColor(Color(255, 255, 255, 200))]]--
 end
 
 function HelpPanel:OnMouseWheeled(delta)
@@ -190,16 +143,6 @@ function HelpPanel:Think()
 	end
 
 	self:SetPos(self.HelpX, 20)
-	--[[
-	--Dirty little hack D:
-	if LastChatPrefix ~= GetGlobalString("cmdprefix") then
-		LastChatPrefix = GetGlobalString("cmdprefix")
-		local chatcmdtext = "/job <Job name> - Set your job\n/give <Money amount> - Give a player you're looking at money\n/dropmoney <Money amount> - Drop a money bag\n/sleep - To fall asleep (wait 10 seconds then type again to wake up)\n/votecop - Vote to be a cop\n/cr - Send a message to the Combine/Request for Combine\n/title <Name> - Give your door a title\n/w - Whisper\n/y - Yell\n@a, @@, or @ooc - Talk in OOC\n/cp - Become a CP if you're on the admin's CP list\n/mayor - Become Mayor if you're on the admin's Mayor list\n/citizen - Become a Citizen\n/medic - Become a Medic\n/hobo - Become a hobo"
-		chatcmdtext = string.gsub(chatcmdtext, "/", GetGlobalString("cmdprefix"))
-		chatcmdtext = string.gsub(chatcmdtext, "@", "/")
-		self.HelpInfo.chatcmd:SetText(chatcmdtext)
-	end
-]]--
 end
 
 vgui.Register("HelpVGUI", HelpPanel, "Panel")

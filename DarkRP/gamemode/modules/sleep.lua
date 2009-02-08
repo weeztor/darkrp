@@ -11,7 +11,6 @@ function KnockoutToggle(player, command, args, caller)
 	if not player.SleepSound then
 		player.SleepSound = CreateSound(player, "npc/ichthyosaur/water_breath.wav")
 	end
-	//print(player:GetNWEntity("Ragdoll"))
 	if player:Alive() then
 		if player:GetNWFloat("KnockoutTimer") + KnockoutTime < CurTime() then
 			if player:GetNWEntity("Ragdoll") ~= NULL then

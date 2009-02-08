@@ -3,7 +3,6 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	//self.Entity:SetModel("models/props_junk/glassjug01.mdl")
 	self.Entity:SetModel("models/props_lab/jar01a.mdl") 
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
@@ -33,7 +32,6 @@ end
 function ENT:Use(activator,caller)
 	if not self.CanUse then return false end
 	local Owner = self:GetNWEntity("owning_ent")
-	//print(Owner, activator, caller)
 	if activator ~= Owner then
 		if not activator:CanAfford(self:GetNWInt("price")) then
 			return false

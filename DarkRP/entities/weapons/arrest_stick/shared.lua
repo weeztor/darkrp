@@ -60,9 +60,6 @@ function SWEP:PrimaryAttack()
 		for k,v in pairs(player.GetAll()) do
 			if trace.Entity:GetNWInt("OwnerINT") == v:EntIndex() then
 				KnockoutToggle(v, true)
-				
-				//timer.Simple(5, v:Arrest())
-				//Notify(v, 1, 4, "You've been arrested by " .. self.Owner:Nick())
 				return
 			end
 		end

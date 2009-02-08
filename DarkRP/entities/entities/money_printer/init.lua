@@ -53,7 +53,6 @@ function ENT:BurstIntoFlames()
 end
 
 function ENT:Fireball()
-	//local spreadcount = math.random(3, 6) -- Number of objects to spread to
 	local dist = math.random(20, 280) -- Explosion radius
 	self:Destruct()
 	for k, v in pairs(ents.FindInSphere(self:GetPos(), dist)) do

@@ -43,21 +43,15 @@ function RequestAllToggleCommands(ply,cmd,args)
 					umsg.String(b.text)
 				end
 			end
-			//print(v.var, string.sub(k, 4))
 			if not v.global then
 				if CfgVars[v.var] then
 					umsg.Short(CfgVars[v.var])
-					//print("CFGVARS VAR "..v.var, CfgVars[v.var])
 				elseif CfgVars[string.sub(k, 4)] then
 					umsg.Short(CfgVars[string.sub(k, 4)])
-					//print("CFGVARS K "..string.sub(k, 4), CfgVars[k])
 				end
 			else
-				//print("GLOBALINT!", k, GetGlobalInt(v.var))
 				umsg.Short(GetGlobalInt(v.var))
 			end
-			//print(k, CfgVars[string.sub(v.var])
-
 		umsg.End()
 	end
 end
@@ -72,21 +66,15 @@ function RequestAllValueCommands(ply,cmd,args)
 					umsg.String(b.text)
 				end
 			end
-			//print(v.var, string.sub(k, 4))
 			if not v.global then
 				if CfgVars[v.var] then
 					umsg.Short(CfgVars[v.var])
-					//print("CFGVARS VAR "..v.var, CfgVars[v.var])
 				elseif CfgVars[string.sub(k, 4)] then
 					umsg.Short(CfgVars[string.sub(k, 4)])
-					//print("CFGVARS K "..string.sub(k, 4), CfgVars[k])
 				end
 			else
-				//print("GLOBALINT!", k, GetGlobalInt(v.var))
 				umsg.Short(GetGlobalInt(v.var))
 			end
-			//print(k, CfgVars[string.sub(v.var])
-
 		umsg.End()
 	end
 end

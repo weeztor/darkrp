@@ -307,7 +307,6 @@ function JobsTab()
 			Panel:Remove()
 		end
 		Panel = vgui.Create( "DPanelList")
-		//Panel:SetPos(10,30)
 		Panel:SetSize(370, 540)
 		Panel:SetSpacing(1)
 		Panel:EnableHorizontal( true )
@@ -347,10 +346,6 @@ function JobsTab()
 						if not panel:IsValid() then return end
 						panel:SetSize( self:GetCanvas():GetWide() - self.Padding * 2, panel:GetTall() )
 						panel:SetPos( self.Padding, self.Padding + Offset )
-						// Changing the width might ultimately change the height
-						// So give the panel a chance to change its height now, 
-						// so when we call GetTall below the height will be correct.
-						// True means layout now.
 						panel:InvalidateLayout( true )
 						Offset = Offset + panel:GetTall() + self.Spacing
 					end
@@ -575,8 +570,6 @@ function JobsTab()
 				end
 			end
 		end
-		//hordiv:SetLeft(Panel)
-		//hordiv:SetRight(Information)
 	end
 	hordiv:Update()
 	return hordiv
@@ -588,11 +581,7 @@ function EntitiesTab()
 			self:Clear(true)
 			local WepCat = vgui.Create("DCollapsibleCategory")
 			WepCat:SetLabel("Weapons")
-			//WepCat:InvalidateLayout( true ) 
-			//WepCat:SetExpanded(false)
-			//WepCat:Toggle()
 				local WepPanel = vgui.Create("DPanelList")
-				//WepPanel:InvalidateLayout( true ) 
 				WepPanel:SetSize(470, 100)
 				WepPanel:SetSpacing(1)
 				WepPanel:EnableHorizontal(true)
@@ -683,7 +672,6 @@ function RPHUDTab()
 		backgrndcat = vgui.Create("DCollapsibleCategory")
 		backgrndcat:SetSize(230, 130)
 		function backgrndcat.Header:OnMousePressed() end
-		//backgrndcat:SetHeight(200)
 		backgrndcat:SetLabel("HUD background")
 			local backgrndpanel = vgui.Create("DPanelList")
 			backgrndpanel:SetTall(130)
@@ -705,13 +693,11 @@ function RPHUDTab()
 			end
 			backgrndpanel:AddItem(resetbackgrnd)
 		backgrndcat:SetContents(backgrndpanel)
-		//backgrndpanel:SizeToContents()
 		HUDTABpanel:AddItem(backgrndcat)
 		
 		hforegrndcat = vgui.Create("DCollapsibleCategory")
 		hforegrndcat:SetSize(230, 130)
 		function hforegrndcat.Header:OnMousePressed() end
-		//hforegrndcat:SetHeight(200)
 		hforegrndcat:SetLabel("Health bar foreground")
 			local hforegrndpanel = vgui.Create("DPanelList")
 			hforegrndpanel:SetTall(130)
@@ -733,14 +719,12 @@ function RPHUDTab()
 			end
 			hforegrndpanel:AddItem(resethforegrnd)
 		hforegrndcat:SetContents(hforegrndpanel)
-		//hforegrndpanel:SizeToContents()
 		HUDTABpanel:AddItem(hforegrndcat)
 		
 		
 		hbackgrndcat = vgui.Create("DCollapsibleCategory")
 		hbackgrndcat:SetSize(230, 130)
 		function hbackgrndcat.Header:OnMousePressed() end
-		//hbackgrndcat:SetHeight(200)
 		hbackgrndcat:SetLabel("Health bar background")
 			local hbackgrndpanel = vgui.Create("DPanelList")
 			hbackgrndpanel:SetTall(130)
@@ -762,13 +746,11 @@ function RPHUDTab()
 			end
 			hbackgrndpanel:AddItem(resethbackgrnd)
 		hbackgrndcat:SetContents(hbackgrndpanel)
-		//hbackgrndpanel:SizeToContents()
 		HUDTABpanel:AddItem(hbackgrndcat)
 		
 		hTextcat = vgui.Create("DCollapsibleCategory")
 		hTextcat:SetSize(230, 130)
 		function hTextcat.Header:OnMousePressed() end
-		//hTextcat:SetHeight(200)
 		hTextcat:SetLabel("Health bar text")
 			local hTextpanel = vgui.Create("DPanelList")
 			hTextpanel:SetTall(130)
@@ -790,13 +772,11 @@ function RPHUDTab()
 			end
 			hTextpanel:AddItem(resethText)
 		hTextcat:SetContents(hTextpanel)
-		//hTextpanel:SizeToContents()
 		HUDTABpanel:AddItem(hTextcat)
 		
 		jobs1cat = vgui.Create("DCollapsibleCategory")
 		jobs1cat:SetSize(230, 130)
 		function jobs1cat.Header:OnMousePressed() end
-		//jobs1cat:SetHeight(200)
 		jobs1cat:SetLabel("Jobs/wallet foreground")
 			local jobs1panel = vgui.Create("DPanelList")
 			jobs1panel:SetTall(130)
@@ -818,7 +798,6 @@ function RPHUDTab()
 			end
 			jobs1panel:AddItem(resetjobs1)
 		jobs1cat:SetContents(jobs1panel)
-		//jobs1panel:SizeToContents()
 		HUDTABpanel:AddItem(jobs1cat)
 		
 		jobs2cat = vgui.Create("DCollapsibleCategory")
@@ -942,23 +921,9 @@ function RPHUDTab()
 			HudHeightpanel:AddItem(resetHudHeight)
 		HudHeightCat:SetContents(HudHeightpanel)
 		HUDTABpanel:AddItem(HudHeightCat)
-			
-		//local div = vgui.Create("Divider")
-		//HUDTABpanel:AddItem(div)
 	end
 	return HUDTABpanel
 end
-
---[[ local SKIN = {}
-	SKIN.bg_color 					= Color( 100, 100, 100, 255 ) 
-	SKIN.bg_color_sleep 			= Color( 0, 65, 255, 255 ) 
-	SKIN.bg_color_dark				= Color( 5, 5, 5, 255 ) 
-	SKIN.bg_color_bright			= Color( 220, 220, 220, 255  ) 
-derma.DefineSkin("F4Menu", "For the F4 menu...", SKIN)
-
-function GM:ForceDermaSkin()
-	return "F4Menu"
-end ]]
 
 local NewToggleHelpMessages = {}
 function RecieveAllAdminToggles(Umsg )
@@ -980,7 +945,6 @@ function RecieveAllAdminToggles(Umsg )
 	local name = Umsg:ReadString()
 	local Desc = Umsg:ReadString()
 	local value = Umsg:ReadShort()
-	//print(name, Desc, value, "\n")
 	for a,b in pairs(NewValueHelpMessages) do
 		if b.command == name then
 			table.remove(NewValueHelpMessages, a)
@@ -1026,7 +990,6 @@ function RPAdminTab()
 					
 					for k, v in pairs(NewToggleHelpMessages) do
 						local checkbox = vgui.Create("DCheckBoxLabel")
-						//checkbox:SetConVar(command)
 						checkbox:SetValue(v.val)
 						checkbox:SetText(v.desc)
 						function checkbox.Button:Toggle()
@@ -1108,18 +1071,6 @@ function RPAdminTab()
 						function slider.Wang.TextEntry:OnEnter()
 							LocalPlayer():ConCommand(v.command .. " " .. self:GetValue())
 						end
-						//slider:SetConVar(command)
-						--[[ function slider.Button:Toggle()
-							if ( self:GetChecked() == nil || !self:GetChecked() ) then 
-								self:SetValue( true ) 
-							else 
-								self:SetValue( false ) 
-							end 
-							local tonum = {}
-							tonum[false] = "0"
-							tonum[true] = "1"
-							LocalPlayer():ConCommand(command .. " " .. tonum[self:GetChecked()])
-						end ]]
 						ValuePanel:AddItem(slider)
 						
 					end

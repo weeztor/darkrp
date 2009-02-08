@@ -1,0 +1,3 @@
+Put the DarkRP folder in garrysmod/gamemodes
+
+IF YOU PUT DARKRP IN ADDONS IT WON'T WORK!

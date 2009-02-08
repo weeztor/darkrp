@@ -14,10 +14,12 @@ reset_all_privileges_to_these_on_startup = false
 -- To configure a player, assign permissions to them in the following way:
 -- RPAdmins["STEAM_ID"] = {LIST, OF, PERMISSIONS}
 -- e.g:
+--[[
 
--- RPAdmins["STEAM_0:1:12345678"] = {ADMIN, MAYOR, CP, TOOL, PHYS, PROP}
--- RPAdmins["STEAM_0:1:9999999"] = {MAYOR, CP, PHYS}
--- etc.
+
+RPAdmins["STEAM_0:1:12345678"] = {ADMIN, MAYOR, CP, TOOL, PHYS, PROP}
+RPAdmins["STEAM_0:1:9999999"] = {MAYOR, CP, PHYS}
+-- etc.]]
 
 -- HOW TO GET A STEAM ID:
 -- 1. JOIN AN INTERNET SERVER (NOT YOURS, UNLESS IT IS DEDICATED AND NON LAN)

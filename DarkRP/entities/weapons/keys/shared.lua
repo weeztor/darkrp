@@ -74,10 +74,6 @@ function SWEP:PrimaryAttack()
 			Notify(self.Owner, 1, 3, "You don't own this vehicle!")
 		else
 			self.Owner:EmitSound("physics/wood/wood_crate_impact_hard2.wav", 100, math.random(90, 110))
-			//d1_trainstation_03.breakin_doorknock
-			//physics\wood\wood_crate_impact_hard2.wav
-			//"physics/wood/wood_crate_impact_hard2.wav"
-			//Notify(self.Owner, 1, 3, "You don't own this door!")
 		end
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.2)
 	end
@@ -111,7 +107,6 @@ function SWEP:SecondaryAttack()
 			Notify(self.Owner, 1, 3, "You don't own this vehicle!")
 		else
 			self.Owner:EmitSound("physics/wood/wood_crate_impact_hard3.wav", 100, math.random(95, 105))
-			//Notify(self.Owner, 1, 3, "You don't own this door!")
 		end
 		self.Weapon:SetNextSecondaryFire(CurTime() + 0.2)
 	end
@@ -128,7 +123,6 @@ function SWEP:Reload()
 		end
 		return
 	end
-	//print(CLIENT)
 	if SERVER then
 		if trace.Entity:IsVehicle() then
 			self.Owner:SendLua("KeysMenu(true)")

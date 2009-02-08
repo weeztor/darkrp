@@ -22,7 +22,7 @@ end
 
 /*
 HOW TO ADD CUSTOM SHIPMENTS:
-AddCustomShipment("<Name of the shipment(no spaces)>"," <the model that the shipment spawns(should be the world model...)>", "<the classname of the weapon>", <the price of one shipment>, <how many guns there are in one shipment>, <OPTIONAL: true/false sold seperately>, <OPTIONAL: price when sold seperately>, < true/false OPTIONAL: /buypistol only = true> , OPTIONAL which classes can buy the shipment)
+AddCustomShipment("<Name of the shipment(no spaces)>"," <the model that the shipment spawns(should be the world model...)>", "<the classname of the weapon>", <the price of one shipment>, <how many guns there are in one shipment>, <OPTIONAL: true/false sold seperately>, <OPTIONAL: price when sold seperately>, < true/false OPTIONAL: /buypistol only = true> , OPTIONAL which classes can buy the shipment, OPTIONAL: the model of the shipment)
 
 Notes:
 MODEL: you can go to Q and then props tab at the top left then search for w_ and you can find all world models of the weapons!

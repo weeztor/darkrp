@@ -303,7 +303,6 @@ function GM:HUDPaint()
 		end
 
 		if ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
-			//local pos = LocalPlayer():GetEyeTrace().HitPos:ToScreen()
 			local pos = {x = ScrW()/2, y = ScrH() / 2}
 			if GetGlobalInt("globalshow") == 0 then
 				if tr.Entity:IsPlayer() then DrawPlayerInfo(tr.Entity) end
@@ -410,7 +409,6 @@ function GM:HUDPaint()
 								whiteText = true
 								st = ent:GetNWString("dTitle") .. "\n(Press Reload with keys or F2 to allow ownership)"
 							else
-								//st = "Unowned\n(Press Reload with keys or F2 to own)\n(Press Reload with keys or F2 to disallow ownership)"
 								if CPOnly then
 									whiteText = true
 									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
@@ -509,25 +507,12 @@ function GM:HUDPaint()
 		end
 	end
 
-	--[[ if LocalPlayer():GetNWBool("helpMenu") then
-		draw.RoundedBox(10, 10, 10, 860, 802, Color(0, 0, 0, 255))
-		draw.RoundedBox(10, 12, 12, 856, 798, Color(51, 58, 51, 200))
-		draw.RoundedBox(10, 12, 12, 856, 20, Color(0, 0, 70, 200))
-		draw.DrawText("Chat commands - # of Connected Players:" .. #player.GetAll() .. "/" .. MaxPlayers() .. "", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText("- Money -\n/give <Amount> - Give money to another player (aim at them first)\n/dropmoney <Amount> - Drop some cash where you are aiming\n\n- Pistols -\n/buypistol deagle (" .. CUR .. tostring(GetGlobalInt("deaglecost")) .. ") (" .. CUR .. tostring(math.ceil(GetGlobalInt("deaglecost") * 0.88)) .. " for Gun Dealers)\n/buypistol glock (" .. CUR .. tostring(GetGlobalInt("glockcost")) .. ") (" .. CUR .. tostring(math.ceil(GetGlobalInt("glockcost") * 0.88)) .. " for Gun Dealers)\n/buypistol fiveseven (" .. CUR .. tostring(GetGlobalInt("fivesevencost")) .. ") (" .. CUR .. tostring(math.ceil(GetGlobalInt("fivesevencost") * 0.88)) .. " for Gun Dealers)\n/buypistol p228 (" .. CUR .. tostring(GetGlobalInt("p228cost")) .. ") (" .. CUR .. tostring(math.ceil(GetGlobalInt("p228cost") * 0.88)) .. " for Gun Dealers)\n\n- Rifle Shipments -\n/buyshipment ak47 (" .. CUR .. tostring(GetGlobalInt("ak47cost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment sniper (" .. CUR .. tostring(GetGlobalInt("snipercost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment mp5 (" .. CUR .. tostring(GetGlobalInt("mp5cost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment m16 (" .. CUR .. tostring(GetGlobalInt("m16cost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment shotgun (" .. CUR .. tostring(GetGlobalInt("shotguncost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n/buyshipment mac10 (" .. CUR .. tostring(GetGlobalInt("mac10cost")) .. ") - Possibly illegal to own (ask Mayor or Admin)\n\n- Ammo -\n/buyammo pistol (" .. CUR .. tostring(GetGlobalInt("ammopistolcost")) .. ")\n/buyammo shotgun (" .. CUR .. tostring(GetGlobalInt("ammoshotguncost")) .. ")\n/buyammo rifle (" .. CUR .. tostring(GetGlobalInt("ammoriflecost")) .. ")\n\n- Items-\n/buydruglab (" .. CUR .. tostring(GetGlobalInt("druglabcost")) .. ") - Definitely illegal to own, earns you " .. CUR .. tostring(GetGlobalInt("drugpayamount")) .. " per minute\n/buymicrowave (" .. CUR .. tostring(GetGlobalInt("microwavecost")) .. ") - Cook only, aim and use /price <Amount> to set the customer price.\n/buygunlab (" .. CUR .. tostring(GetGlobalInt("gunlabcost")) .. ") - Gun Dealer only, aim and use /price <Amount> to set the customer price.\n/buymoneyprinter (" .. CUR .. tostring(GetGlobalInt("mprintercost")) .. ") - Prints " .. CUR .. tostring(GetGlobalInt("mprintamount")) .. " every so often. It's fragile, so look after it!\n\n- Jobs -\n/mobboss - Makes you the Mob Boss\n/gangster - Makes you a Gangster\n/medic - Makes you a Medic\n/gundealer - Makes you a Gun Dealer\n/cook - Makes you a cook\n/votecop - Start a vote to become a cop\n/votemayor - Start a vote to become the Mayor\n\n- Doors -\n/title - Set the title of a door.\n/addowner (or /ao) [Nick|SteamID|Status ID] - Allow the named player to co-own this door\n/removeowner (or /ro) [Nick|SteamID|Status ID] - Remove the named player's co-ownership of your door\n\n- Other -\n/buyhealth (" .. CUR .. tostring(GetGlobalInt("healthcost")) .. ")\n/drop drops the weapon you are currently holding\n/sleep - Fall asleep or wake up\n/adminhelp - List of admin commands", "ScoreboardText", 30, 30, Color(255,255,255,255),0)
-	end ]]
-
 	if LocalPlayer():GetNWBool("helpCop") then
 		draw.RoundedBox(10, 10, 10, 590, 194, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 586, 190, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
 		draw.DrawText("Cop Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
 		draw.DrawText("Things Cops need to know-\n-Please don't abuse your job\n-When you arrest someone they are auto transported to jail.\n-They are auto let out of jail after " .. GetGlobalInt("jailtimer") .. " seconds\n-Type /warrant [Nick|SteamID|Status ID] to set a search warrant for a player.\n-Type /wanted [Nick|SteamID|Status ID] to alert everyone to a wanted suspect\n-Type /unwanted [Nick|SteamID|Status ID] to clear the suspect\n-Type /jailpos to set the jail position\n-Type /cophelp to toggle this menu, /x to close it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
-		--[[ local CloseX = vgui.Create("DSysButton")
-		CloseX:SetPos(580, 10)
-		CloseX:SetSize(16,16)
-		CloseX:SetType( "close" ) 
-		CloseX.DoClick = function(button) RunConsoleCommand("rp_CloseHelpScreen") self:Close() end ]]
 	end
 
 	if LocalPlayer():GetNWBool("helpMayor") then
@@ -773,7 +758,6 @@ function RPStopMessageMode()
 	hook.Remove("HUDPaint", "RPinstructionsOnSayColors")
 	for k,v in pairs(player.GetAll()) do
 		if playercolors[v:EntIndex()] then
-			//PrintTable(playercolors[v:EntIndex()])
 			local col = playercolors[v:EntIndex()]
 			v:SetColor(col.r, col.g, col.b, col.a)
 		end
@@ -792,11 +776,9 @@ function RPSelectwhohearit(ply,bind,pressed)
 		draw.WordBox(2, 0, h + 40, "Red = he can hear you when you talk normally", "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
 		draw.WordBox(2, 0, h + 60, "Green = he can hear you when you yell at him", "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
 		draw.WordBox(2, 0, h + 80, "Black = he can ONLY hear you when you use OOC", "ScoreboardText", Color(255,255,255,120), Color(0,0,0,255))
-		--draw.WordBox(10, "Blue = he can hear it with whisper", "ScoreboardText", 0, 20, Color(0,0,255,255), TEXT_ALIGN_LEFT,  TEXT_ALIGN_LEFT)
 	end)
 	hook.Add("Think", "RPGetRecipients", function() 
 		if not Messagemode then RPStopMessageMode() return end 
-		//LocalPlayer():ChatPrint("MESSAGEMODE") 
 		for k,v in pairs(player.GetAll()) do
 			local r,g,b,a = v:GetColor()
 			local distance = LocalPlayer():GetPos():Distance(v:GetPos())

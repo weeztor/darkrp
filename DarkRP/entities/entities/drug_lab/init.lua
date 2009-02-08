@@ -8,14 +8,12 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	//self:SetModel("models/props_combine/combine_mine01.mdl")
 	self:SetModel("models/props_lab/crematorcase.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
 	local phys = self:GetPhysicsObject()
 	if phys and phys:IsValid() then phys:Wake() end
-	//timer.Create(self, 60, 0, self.giveMoney, self)
 	self:SetNWBool("sparking",false)
 	self:SetNWInt("damage",100)
 	local ply = self:GetNWEntity("owning_ent")
@@ -25,7 +23,6 @@ function ENT:Initialize()
 	self.Entity.CanUse = true
 	self:SetNetworkedString("Owner", ply:Nick())
 	ply:SetNWInt("maxDrug",ply:GetNWInt("maxDrug") + 1)
-	//self:SetNWInt("Energy", 5)
 end
 
 function ENT:OnTakeDamage(dmg)

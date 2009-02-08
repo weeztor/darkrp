@@ -76,9 +76,6 @@ function PANEL:Paint()
 	surface.SetTexture(self.Material)
 	surface.SetDrawColor(255, 255, 255, alpha)
 	surface.DrawTexturedRect(self:GetWide()/2 - 8, self:GetWide()/2 - 8, 16, 16)
-
-	-- draw.SimpleText(, "DefaultSmall", self:GetWide() / 2, 19, Color(0,0,0,100), TEXT_ALIGN_CENTER)
-
 	return true
 end
 

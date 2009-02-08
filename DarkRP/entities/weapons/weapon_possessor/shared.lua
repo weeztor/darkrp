@@ -43,14 +43,6 @@ SWEP.Primary.Automatic		= false
 SWEP.Primary.Ammo			= "pistol"
 SWEP.Secondary.Automatic 	= false
 
---[[ /*--------------------------------------------------------- 
-	The thing when you select it.
----------------------------------------------------------*/ 
-function SWEP:DrawWeaponSelection( x, y, wide, tall, alpha ) 
-	surface.SetDrawColor(255,255,255,alpha)
-	surface.DrawTexturedRect(x + wide/3 - math.random(0.2*wide, 0.3*wide), y + math.random(10, 15), 0.9*wide, 0.7*tall ) 
-end
- ]]
 /*--------------------------------------------------------- 
 	The deploy of the weapon
 ---------------------------------------------------------*/ 
