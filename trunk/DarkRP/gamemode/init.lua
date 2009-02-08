@@ -108,7 +108,7 @@ CUR = "$"
 
 -- RP Name Overrides
 
-DARKRPVERSION = "2.3.1+RC1"
+DARKRPVERSION = "2.3.5"
 
 local meta = FindMetaTable("Player")
 meta.SteamName = meta.Name
@@ -363,7 +363,6 @@ function SaveRPChanges()
 		print("DarkRP globals saved!")
 	end
 end
-timer.Create("DarkRPSaveSettings", 60, 0, SaveRPChanges)
 concommand.Add("rp_savechanges", SaveRPChanges)
 
 
@@ -379,7 +378,6 @@ end
 ReloadRPSettings()
 
 function ReloadRPGlobals()
-	//print("Reloading globals!!!")
 	if file.Exists("DarkRP/globals.txt") and file.Read("DarkRP/globals.txt") ~= "" then
 		local temp = util.KeyValuesToTable(file.Read("DarkRP/globals.txt"))
 		for k,v in pairs(temp) do
@@ -392,7 +390,6 @@ function ReloadRPGlobals()
 end
 ReloadRPGlobals()
 timer.Simple(10.5, ReloadRPGlobals) // for some reason I don't know about the vars reset after 10 seconds...
-//timer.Simple(21, ReloadGlobals)
 
 function ResetAllRPSettings(ply,cmd,args)
 	if not ply:IsSuperAdmin() then
@@ -404,7 +401,6 @@ function ResetAllRPSettings(ply,cmd,args)
 	file.Delete("DarkRP/settings.txt")
 	RefreshSettings()
 	ReloadRPGlobals()
-	--timer.Simple(1, SaveRPChanges)
 end
 concommand.Add("rp_ResetAllSettings", ResetAllRPSettings)
 
@@ -434,15 +430,6 @@ function ShowSpare2(ply)
 	ply:ConCommand("gm_showspare2\n")
 end
 concommand.Add("gm_spare2", ShowSpare2)
-
---[[ function serverHelp(player)
-	if not player:GetNWBool("helpMenu") then
-		player:SetNetworkedBool("helpMenu",true)
-	else
-		player:SetNetworkedBool("helpMenu",false)
-	end
-end
-concommand.Add("serverHelp", serverHelp) ]]
 
 function GM:ShowTeam(ply)
 	ply:SendLua("KeysMenu(" ..tostring(ply:GetEyeTrace().Entity:IsVehicle()) .. ")")
@@ -488,7 +475,6 @@ function FireSpread(e)
 	if e:IsOnFire() then
 		if e:GetTable().MoneyBag then
 			e:Remove()
-			//NotifyAll(1, 4, CUR .. tostring(e:GetTable().Amount) .. " in cash just went up in smoke!")
 		end
 		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
 		local maxcount = 3
@@ -524,7 +510,6 @@ end
 function GM:Think()
 	for k, v in ipairs(FlammableProps) do
 		local ens = ents.FindByClass(v)
-		//if not ValidEntity(v) then return end
 
 		for a, b in pairs(ens) do
 			FireSpread(b)
@@ -540,37 +525,3 @@ AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare2 - Job menu(bind this to F4
 
 GM.Name = "DarkRP "..DARKRPVERSION
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
-
-function GM:GravGunPunt(ply, ent)
-if not ValidEntity(ent) then return false end
-if ent:GetClass() == "func_breakable_surf" then return false end
-	if ent:IsVehicle() then return false end
-	if ply:KeyDown(IN_ATTACK) then
-		local entphys = ent:GetPhysicsObject()
-		if not entphys:IsValid() then return false end
-		local moveable = entphys:IsMoveable()
-		if moveable then
-			entphys:EnableMotion(false)
-			local curpos = ent:GetPos()
-			timer.Simple(.01, entphys.EnableMotion, entphys, true)
-			timer.Simple(.01, entphys.Wake, entphys)
-			timer.Simple(.01, ent.SetPos, ent, curpos)
-		end
-	end
-	return
-end 
-//hook.Add("GravGunPunt", "THEDarkRPGravGunPunt", DarkRPGravGunPunt)
-
-function GM:GravGunOnDropped(ply, ent)
-	local entphys = ent:GetPhysicsObject()
-	if ply:KeyDown(IN_ATTACK) then
-		-- it was launched
-		entphys:EnableMotion(false)
-		local curpos = ent:GetPos()
-		timer.Simple(.01, entphys.EnableMotion, entphys, true)
-		timer.Simple(.01, entphys.Wake, entphys)
-		timer.Simple(.01, ent.SetPos, ent, curpos)
-	else
-		return true
-	end
-end 

@@ -23,10 +23,6 @@ concommand.Add("vote", ccDoVote)
 function Vote:HandleNewVote(ply, id)
 	self[id] = self[id] + 1
 
-	--[[ umsg.Start("KillVoteVGUI", ply)
-		umsg.String(self.ID)
-	umsg.End() ]]
-
 	if (self[1] + self[2] >= (#player.GetAll() - 1) and not self.special) or (self.special and self[1] + self[2] >= (#player.GetAll() - 2)) then
 		vote.HandleVoteEnd(self.ID)
 	end

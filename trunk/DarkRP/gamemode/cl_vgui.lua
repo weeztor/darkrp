@@ -104,7 +104,7 @@ function KillVoteVGUI(msg)
 	
 	if VoteVGUI[id .. "vote"] and VoteVGUI[id .. "vote"]:IsValid() then
 		VoteVGUI[id.."vote"]:Close()
-		//PanelNum = PanelNum - 1
+
 	end
 end
 usermessage.Hook("KillVoteVGUI", KillVoteVGUI)
@@ -112,11 +112,11 @@ usermessage.Hook("KillVoteVGUI", KillVoteVGUI)
 function MsgDoQuestion(msg)
 	local question = msg:ReadString()
 	local quesid = msg:ReadString()
-	local timeleft = msg:ReadFloat() // 30
+	local timeleft = msg:ReadFloat()
 	if timeleft == 0 then
 		timeleft = 100
 	end
-	local OldTime = CurTime() // 100  Nieuw = 110
+	local OldTime = CurTime()
 	LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
 	local panel = vgui.Create("DFrame")
 	panel:SetPos(3, ScrH() / 2 - 50)
@@ -185,7 +185,6 @@ function KillQuestionVGUI(msg)
 
 	if QuestionVGUI[id .. "ques"] and QuestionVGUI[id .. "ques"]:IsValid() then
 		QuestionVGUI[id .. "ques"]:Close()
-		//PanelNum = PanelNum - 1
 	end
 end
 usermessage.Hook("KillQuestionVGUI", KillQuestionVGUI)
@@ -202,7 +201,6 @@ usermessage.Hook("DoLetter", DoLetter)
 
 
 local F4Menu  
-//local LastF4Tab 
 local F4MenuTabs
 local F4Tabs
 local NoCloseF4 = CurTime()
@@ -234,24 +232,15 @@ function ChangeJobVGUI()
 		y = math.Clamp( y, 0, ScrH() - self:GetTall() ) 
 		self:SetPos( x, y ) 		
 	end
-		
-		
-	//local money, jobs, entities = MoneyTab(), JobsTab(), EntitiesTab()
 	
 	if not F4MenuTabs or not F4MenuTabs:IsValid() then
 		F4MenuTabs = vgui.Create( "DPropertySheet", F4Menu)
 		F4MenuTabs:SetPos(5, 25)
 		F4MenuTabs:SetSize(760, 550)
-		//FIRST TAB:
+		--The tabs: Look in showteamtabs.lua for more info
 		F4MenuTabs:AddSheet("Money/Commands", F4Tabs[1], "gui/silkicons/plugin", false, false)
-		
-		// SECON TAB: JOBS:
-		// OMG IT'S GONE
-		//don't worry it has moved to shoteamtabs.lua :)
 		F4MenuTabs:AddSheet("Jobs", F4Tabs[2], "gui/silkicons/arrow_refresh", false, false)
-		
 		F4MenuTabs:AddSheet("Entities/weapons", F4Tabs[3], "gui/silkicons/application_view_tile", false, false)
-		
 		F4MenuTabs:AddSheet("HUD", F4Tabs[4], "gui/silkicons/user", false, false)
 		if LocalPlayer():IsAdmin() then
 			F4MenuTabs:AddSheet("Admin", F4Tabs[5], "gui/silkicons/wrench", false, false)
@@ -278,8 +267,6 @@ function KeysMenu(Vehicle)
 	
 	function Frame:Think()
 		local ent = LocalPlayer():GetEyeTrace().Entity
-		//print(not ValidEntity(ent), not ent:IsDoor(), not string.find(ent:GetClass(), "vehicle"), ent:GetPos():Distance(LocalPlayer():GetPos()) > 200)
-		//print(ent:GetClass(), string.find(ent:GetClass(), "vehicle"))
 		if not ValidEntity(ent) or (not ent:IsDoor() and not string.find(ent:GetClass(), "vehicle")) or ent:GetPos():Distance(LocalPlayer():GetPos()) > 200 then
 			self:Close()
 		end
@@ -312,14 +299,9 @@ function KeysMenu(Vehicle)
 		local AddOwner = vgui.Create("DButton", Frame)
 		AddOwner:SetPos(10, 140)
 		AddOwner:SetSize(180, 100)
-		AddOwner:SetText("Add owner")
-		--[[ if not trace.Entity:IsMasterOwner(LocalPlayer()) then
-			AddOwner.m_bDisabled = true
-		end ]]
-			
+		AddOwner:SetText("Add owner")			
 		AddOwner.DoClick = function()
 			local menu = DermaMenu()
-			//menu:SetPos(gui.MouseX(), gui.MouseY())
 			for k,v in pairs(player.GetAll()) do
 				if not trace.Entity:OwnedBy(v) and not trace.Entity:AllowedToOwn(v) then
 					menu:AddOption(v:Nick(), function() LocalPlayer():ConCommand("say /addowner " .. tostring(v:UserID())) end)
@@ -334,14 +316,9 @@ function KeysMenu(Vehicle)
 		local RemoveOwner = vgui.Create("DButton", Frame)
 		RemoveOwner:SetPos(10, 250)
 		RemoveOwner:SetSize(180, 100)
-		RemoveOwner:SetText("Remove owner")
-		--[[ if not trace.Entity:IsMasterOwner(LocalPlayer()) then
-			RemoveOwner.m_bDisabled = true
-		end ]]
-			
+		RemoveOwner:SetText("Remove owner")			
 		RemoveOwner.DoClick = function()
 			local menu = DermaMenu()
-			//menu:SetPos(gui.MouseX(), gui.MouseY())
 			for k,v in pairs(player.GetAll()) do
 				if (trace.Entity:OwnedBy(v) and not trace.Entity:IsMasterOwner(v)) or trace.Entity:AllowedToOwn(v) then
 					menu:AddOption(v:Nick(), function() LocalPlayer():ConCommand("say /ro " .. tostring(v:UserID())) end)
@@ -455,7 +432,6 @@ function KeysMenu(Vehicle)
 		SetCopsOnly.DoClick = function() LocalPlayer():ConCommand("say /togglecpownable") Frame:Close() end
 	else
 		Frame:Close()
-		//LocalPlayer():ChatPrint("Door cannot be owned") 
 	end
 end
 

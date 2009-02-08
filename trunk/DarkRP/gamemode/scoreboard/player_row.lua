@@ -180,7 +180,6 @@ function PANEL:Think()
 		self.Size = math.Approach(self.Size, self.TargetSize, (math.abs(self.Size - self.TargetSize) + 1) * 10 * FrameTime())
 		self:PerformLayout()
 		SCOREBOARD:InvalidateLayout()
-		-- self:GetParent():InvalidateLayout()
 	end
 
 	if not self.PlayerUpdate or self.PlayerUpdate < CurTime() then
@@ -226,11 +225,6 @@ function PANEL:HigherOrLower(row)
 	end
 
 	return team.GetName(self.Player:Team()) < team.GetName(row.Player:Team())
-	--[[ if self.Player:Frags() == row.Player:Frags() then
-		return self.Player:Deaths() < row.Player:Deaths()
-	end
-
-	return self.Player:Frags() > row.Player:Frags() ]]
 end
 
 vgui.Register("ScorePlayerRow", PANEL, "Button")

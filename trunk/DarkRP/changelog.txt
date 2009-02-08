@@ -44,6 +44,7 @@ Updated by: FPtje Falco
 [CHANGE] Lock pick appearance(I also fixed the error with ActIndex("Crowbar") isn't set)
 [CHANGE] Merged Simple RP Prop protection with DarkRP
 [CHANGE] Put the contents folder in DarkRP with the earthquake sound
+[CHANGE] Settings now save when a convar is changed instead of every minute.
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
 [FIX] Rare error with dropweapon
 [FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.
@@ -59,7 +60,7 @@ Updated by: FPtje Falco
 [FIX] Attempt to fix walk speed lag
 [FIX] /dropmoney text exploit
 [FIX] The vote system was fucked, I completely renewed it(I now use Derma) and HOPEFULLY every shit problem you guys had with it is fixed!
-[FIX] Prices etc. resetting to 0 (TO MAKE THIS HAVE EFFECT, REMOVE THE GLOBALS.txt FROM DATA/DARKRP ON THE SERVER!) 
+[FIX] Prices etc. resetting to 0
 [FIX] HUGE FUCKING MAJOR EXPLOIT where you enter a console command after doing /votecop or /votemayor and just become a cop without anyone voting yes.
 [FIX] The ability of people to somehow get <nothing> as RP name(Always happened with bots too)
 [FIX] People being able to get less than 0 money. DarkRP just doesn't work with depts 

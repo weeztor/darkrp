@@ -19,7 +19,6 @@ timer.Simple(5, function()
 		table.insert(SPropProtection.AntiCopy, v.Classname)
 	end
 end)
-//PrintTable(SPropProtection.AntiCopy)
 
 
 function SPropProtection.SetupSettings()
@@ -129,7 +128,7 @@ function SPropProtection.IsBuddy(ply, ent)
 		end
 	end	
 end
--- table
+
 function SPropProtection.PlayerCanTouch(ply, ent)
 
 	if(tonumber(SPropProtection["Config"]["toggle"]) == 0 or ent:GetClass() == "worldspawn") then
@@ -223,7 +222,7 @@ function SPropProtection.Disconnect(ply)
 	end
 end
 hook.Add("PlayerDisconnected", "SPropProtection.Disconnect", SPropProtection.Disconnect)
-//a
+
 function SPropProtection.PhysGravGunPickup(ply, ent)
 	if not ValidEntity(ent) then return false end
 	local class = ent:GetClass()
@@ -315,7 +314,6 @@ end
 hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.GravGunPunt)
 
 
-//v:UniqueIDTable( "Duplicator" ).Entities
 function SPropProtection.CanTool(ply, tr, toolgun)
 	local ent = tr.Entity
 	for k,v in pairs(SPropProtection.AntiCopy) do
@@ -354,7 +352,6 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		end
 		
 		//ADVANCED DUPLICATOR:
-		//print(toolgun, ply:GetActiveWeapon():GetToolObject().Entities)
 		if toolgun == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 			for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 				for a, b in pairs(v) do
@@ -392,27 +389,6 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 				return false
 			end
 		end
-
-	--[[ elseif string.find(toolgun, "slider") or string.find(toolgun, "hydraulic") or string.find(toolgun, "muscle") or string.find(toolgun, "winch") then
-		local trace = {} 
-		trace.start = tr.HitPos 
-		//print(tr.HitNormal, tr.start)
-		trace.endpos = trace.start + (tr.HitNormal * 16384) 
-		trace.filter = {}  
-		trace.filter[1] = tr.Entity
-		local tr3 = util.TraceLine( trace )
-		if (tr3.Entity:IsValid()) then 
-			if(!SPropProtection.PlayerCanTouch(ply, tr3.Entity)) then
-				SPropProtection.Nofity(ply, "Error, please change the angle of the prop and try again")
-				return false
-			end
-			for k,v in pairs(SPropProtection.AntiCopy) do
-				if tr3.Entity:GetClass() == v then
-					SPropProtection.Nofity(ply, "Error, please change the angle of the prop and try again")
-					return false
-				end
-			end
-		end  ]]
 	end
 	if ValidEntity(ent) then
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
@@ -674,7 +650,7 @@ function SPropProtection.WorldOwner()
 		end
 	end
 	Msg("=================================================\n")
-	Msg("Simple Prop Protection: "..tostring(WorldEnts).." props belong to world\n")
+	Msg("Simple RP Prop Protection: "..tostring(WorldEnts).." props belong to world\n")
 	Msg("=================================================\n")
 end
 timer.Simple(10, SPropProtection.WorldOwner)

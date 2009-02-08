@@ -76,8 +76,6 @@ function PANEL:Paint()
 	surface.SetTexture(texGradient)
 	surface.SetDrawColor(0, 0, 0, 50)
 	surface.DrawTexturedRect(4, self.Description.y - 4, self:GetWide() - 8, self.Description:GetTall() + 8)
-
-	--draw.RoundedBox(4, 10, self.Description.y + self.Description:GetTall() + 6, self:GetWide() - 20, 12, Color(0, 0, 0, 50))
 end
 
 /*---------------------------------------------------------
@@ -123,9 +121,6 @@ function PANEL:PerformLayout()
 	self.lblPing:SetPos(self:GetWide() - 50 - self.lblPing:GetWide()/2, self.PlayerFrame.y - self.lblPing:GetTall() - 3)
 	self.lblJob:SetPos(self:GetWide() - 50*7 - self.lblJob:GetWide()/2, self.PlayerFrame.y - self.lblPing:GetTall() - 3)
 	self.lblWarranted:SetPos(self:GetWide() - 50*9 - self.lblJob:GetWide()/2, self.PlayerFrame.y - self.lblPing:GetTall() - 3)
-
-	-- self.lblKills:SetFont("DefaultSmall")
-	-- self.lblDeaths:SetFont("DefaultSmall")
 end
 
 /*---------------------------------------------------------

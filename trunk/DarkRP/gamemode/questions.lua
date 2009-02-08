@@ -20,7 +20,6 @@ end
 ques = { }
 
 function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly)
-	//if Questions[quesid] then Notify(fromPly, 1,4, question .. " already exists!") return end
 	local newques = { }
 	for k, v in pairs(Question) do newques[k] = v end
 
@@ -56,18 +55,9 @@ function ques.DestroyQuestionsWithEnt(ent)
 end
 
 function ques.HandleQuestionEnd(id, TimeIsUp)
-	//print("VOTEEND", TimeIsUp)
 	if not Questions[id] then return end
-//	print("VOTEEND3", TimeIsUp)
-	//PrintTable(Questions[id])
-	local q = Questions[id]
-	//print(q.Callback)
-	
-	q.Callback(q.yn, q.Ent, q.Initiator, q.Target/*, TimeIsUp*/)
-
-	--[[ umsg.Start("KillQuestionVGUI", q.Ent)
-		umsg.String(id)
-	umsg.End() ]]
+	local q = Questions[id]	
+	q.Callback(q.yn, q.Ent, q.Initiator, q.Target)
 	if TimeIsUp then
 		Questions[id] = nil
 	end

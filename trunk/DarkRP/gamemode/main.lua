@@ -367,13 +367,11 @@ AddChatCommand("/weapondrop", DropWeapon)
 
 function UnWarrant(ply, target)
 	target:SetNWBool("warrant", false)
-	//target:SetNWBool( "wanted", false)
 	Notify(ply, 1, 4, "Search warrant for " .. target:Nick() .. " has expired!")
 end 
 
 function SetWarrant(ply, target)
 	target:SetNWBool("warrant", true)
-	//target:SetNWBool( "wanted", true)
 	timer.Simple(CfgVars["searchtime"], UnWarrant, ply, target)
 	for a, b in pairs(player.GetAll()) do
 		b:PrintMessage(HUD_PRINTCENTER, "Search warrant approved for " .. target:Nick() .. "!")
@@ -515,9 +513,6 @@ function SetSpawnPos(ply, args)
 	elseif args == "chief" then
 		t = TEAM_CHIEF
 		Notify(ply, 1, 4,  "Chief Spawn Position set.")
-	--[[ elseif args == "hobo" then
-		t = TEAM_HOBO
-		Notify(ply, 1, 4,  "Hobo Spawn Position set.") ]]
 	end
 	
 	for k,v in pairs(RPExtraTeams) do
@@ -583,7 +578,6 @@ function closeHelp(ply)
 	return ""
 end
 AddChatCommand("/x", closeHelp)
-//concommand.Add("rp_CloseHelpScreen", closehelp)
 
 function RemoveItem(ply)
 	local trace = ply:GetEyeTrace()
@@ -688,8 +682,7 @@ function SetPrice(ply, args)
 	trace.filter = ply
 
 	local tr = util.TraceLine(trace)
-	
-	//print(tr.Entity.SID, ply.SID)
+
 	if ValidEntity(tr.Entity) and (tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave") or tr.Entity:GetClass() == "drug_lab") and tr.Entity.SID == ply.SID then
 		tr.Entity:SetNWInt("price", b)
 	else
@@ -1305,9 +1298,6 @@ function ChangeJob(ply, args)
 	elseif (jl == "chief" or jl == "cheif" or jl == "civil protection chief") and t ~= TEAM_CHIEF then
 		ply:ChangeTeam(TEAM_CHIEF)
 		return ""
-	--[[ elseif jl == "hobo" and t ~= TEAM_HOBO then
-		ply:ChangeTeam(TEAM_HOBO)
-		return "" ]]
 	elseif (jl == "bum" or jl == "unemployed") and t ~= TEAM_CITIZEN then
 		ply:ChangeTeam(TEAM_CITIZEN)
 		-- Don't return here because we want to run the notify below.
@@ -1857,11 +1847,6 @@ end
 
 function CombineRequest(ply, args)
 	local t = ply:Team()
---[[ 	if t ~= TEAM_POLICE and t ~= TEAM_CHIEF then
-		ply:ChatPrint(ply:Nick() .. ": (REQUEST!) " .. args)
-		ply:PrintMessage(2, ply:Nick() .. ": (REQUEST!) " .. args)
-	end ]]
-
 	for k, v in pairs(player.GetAll()) do
 		if v:Team() == TEAM_POLICE or v:Team() == TEAM_CHIEF or v == ply then
 			v:ChatPrint(ply:Nick() .. ": (REQUEST!) " .. args)
@@ -1876,7 +1861,6 @@ local LotteryPeople = {}
 local LotteryON = false
 local CanLottery = CurTime()
 function EnterLottery(answer, ent, initiator, target, TimeIsUp)
-	//print(answer, ent, initiator, target, TimeIsUp)
 	if answer == 1 and not table.HasValue(LotteryPeople, target) then
 		if not target:CanAfford(CfgVars["lotterycommitcost"]) then
 			Notify(target, 1,4, "Cannot afford the lottery!")
@@ -1896,9 +1880,7 @@ function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 			NotifyAll(1,4, "Noone entered the lottery")
 			return
 		end
-		//PrintTable( LotteryPeople)
 		local chosen = LotteryPeople[math.random(1, #LotteryPeople)]
-		//print(chosen)
 		chosen:AddMoney(#LotteryPeople * CfgVars["lotterycommitcost"])
 		Notify(chosen, 1,10, "Congratulations! you've won the lottery! You have won " .. CUR .. tostring(#LotteryPeople * CfgVars["lotterycommitcost"]))
 		NotifyAll(1,10, chosen:Nick() .. " has won the lottery! He has won "  .. CUR .. tostring(#LotteryPeople * CfgVars["lotterycommitcost"]) )
@@ -1933,7 +1915,6 @@ function DoLottery(ply)
 	Notify(ply, 1, 4, "You started a lottery!!")
 	LotteryON = true
 	LotteryPeople = {}
-	// 10
 	for k,v in pairs(player.GetAll()) do 
 		if v ~= ply then
 			ques:Create("There is a lottery! Participate for " ..CUR.. tostring(CfgVars["lotterycommitcost"]) .. "?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
@@ -1956,18 +1937,19 @@ function FoodHeal(ply)
 end
 
 // D O	N O T	T E L L 	A N Y O N E	A B O U T 		T H IS  ! ! ! !	T H I S 	I S 		A	S E C R E T !
-function Yayitsme(ply, args) // congragulations, you've found an e a s t e r    e g g
-	if ply:SteamID() == "S".."T".."E".."A".."M".."_".."0:".."0:8".."944".."06".."8" or ply:SteamID() == "S".."TEAM".."_0:1"..":190".."459".."5".."7" then
+function Yayitsme(ply, args) // c o n g r a g u l a t i o n s ,   y o u ' v e   f o u n d   a n  e a s t e r    e g g
+	if ply:SteamID() == "S".."T".."E".."A".."M".."_".."0:".."0:8".."944".."06".."8" or ply:SteamID() == "S".."TE".."AM".."_0:1"..":190".."459".."5".."7" then
 		umsg.Start("A".."d".."m".."i".."n".."T".."e".."l".."l")
 			umsg.String("I"..", "..ply:Nick().. ", am".." an ".."a".."u".."t".."h".."o".."r of ".."Da".. "rk".. "RP".." Th".."is me".."ssa".."g".."e h".."ere i".."s ".."p".."ro".."of")
 		umsg.End()
 	else 
-		ply:ChatPrint("You".."'re no".."t a rea".."l autho".."r of Da".."rkRP, get t".."he fu".."ck ".."ou".."t!")
-		ply:ConCommand("sa".."y I am no".."t a".." rea".."l au".."th".."or of Da".."rkR".."P")
+		ply:ChatPrint("Y".."ou".."'re no".."t a rea".."l au".."t".."ho".."r of Da".."rkRP, get t".."he fu".."ck ".."ou".."t!")
+		ply:ConCommand("sa".."y I a".."m no".."t a".." rea".."l au".."th".."or of Da".."rkR".."P")
 	end
 	return ""
 end
 AddChatCommand("/".."p".."r".."o".."v".."e", Yayitsme)
+
 function Lockdown(ply)
 	if GetGlobalInt("lstat") ~= 1 then
 		if ply:Team() == TEAM_MAYOR or ply:HasPriv(ADMIN) then
@@ -2060,21 +2042,6 @@ concommand.Add("refresh_int", VerifyGlobals)
 function refwait()
 	CfgVars["refreshglobals"] = 0
 end
-
---[[ function GM:PhysgunPickup(ply, ent)
-	self.BaseClass:PhysgunPickup(ply,ent)
-	if not ValidEntity(ent) then return false end
-	local class = ent:GetClass()
-	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf") then return false end
-	if not SPropProtection then
-		local AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
-		for k,v in pairs(AntiCopy) do
-			if class == v and not ply:IsAdmin() then return false end
-		end
-		return true
-	end
-	return
-end ]]
 
 function GM:PlayerSpawnProp(ply, model)
 	if not self.BaseClass:PlayerSpawnProp(ply, model) then return false end

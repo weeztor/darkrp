@@ -294,7 +294,7 @@ function meta:ChangeTeam(t)
 				return
 			end
 			if v.NeedToChangeFrom and self:Team() ~= v.NeedToChangeFrom then
-				Notify(self, 1,4, "You have to be "..team.GetName(v.NeedToChangeFrom).."  to become " .. team.GetName(t))
+				Notify(self, 1,4, "You have to be "..team.GetName(v.NeedToChangeFrom).." to become " .. team.GetName(t))
 				return
 			end
 			if team.NumPlayers(t) >= v.max then
@@ -420,7 +420,6 @@ function meta:Arrest(time, rejoin)
 		if not time or time == 0 then
 			time = GetGlobalInt("jailtimer")
 		end
-		//timer.Simple(time, function() RPArrestedPlayers[self:SteamID()] = nil end)
 		DB.StoreJailStatus(self, time)
 		self:PrintMessage(HUD_PRINTCENTER, "You have been arrested for " .. time .. " seconds!")
 		for k, v in pairs(player.GetAll()) do
@@ -641,7 +640,6 @@ function GM:PlayerSpawn(ply)
 		umsg.String("0")
 	umsg.End()
 	RP:AddAllPlayers()
-	//ply:SendLua("DoSpecialEffects(\"colormod\", false)")
 
 	if CfgVars["strictsuicide"] == 1 and ply:GetTable().DeathPos then
 		if not (RPArrestedPlayers[ply:SteamID()]) then

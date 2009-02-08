@@ -56,6 +56,8 @@ function ccValueCommand(ply, cmd, args)
 	end
 
 	NotifyAll(0, 4, nick .. " set " .. cmd .. " to " .. amount)
+	--Save changes when a change is made :)
+	SaveRPChanges()
 end
 
 ToggleCmds = {}
@@ -117,6 +119,8 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	NotifyAll(0, 3, nick .. " set " .. cmd .. " to " .. toggle)
+	--Save changes when a change is made :)
+	SaveRPChanges()
 end
 
 --------------------------------------------------------------------------------------------------

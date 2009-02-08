@@ -2,8 +2,6 @@ ChatCommands = {}
 
 function AddChatCommand(cmd, callback, prefixconst)
 	table.insert(ChatCommands, { cmd = cmd, callback = callback, prefixconst = prefixconst })
-	//if callback == OOC() or callback == Whisper() then return end
-	//concommand.Add(cmd, callback)
 end
 
 function GM:PlayerSay(ply, text)
