@@ -1,4 +1,8 @@
-SVN VERSTION / 2.3.5:
+SVN version
+
+[remove] The easter egg.
+
+SVN VERSTION till 150/ 2.3.5:
 Updated by: FPtje Falco
 
 [ADD] Cops can arrest sleeping people
