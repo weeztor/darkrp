@@ -1,4 +1,4 @@
-SVN VERSTION:
+SVN VERSTION / 2.3.5:
 Updated by: FPtje Falco
 
 [ADD] Cops can arrest sleeping people

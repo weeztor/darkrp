@@ -282,6 +282,7 @@ CfgVars["refreshglobals"] = 0
 
 SetGlobalString("cmdprefix", "/") --Prefix before any chat commands
 end
+RefreshSettings()
 
 -- Strings
 CfgVars["mobagenda"] = ""
