@@ -1250,7 +1250,7 @@ AddToggleCommand("rp_allowvehiclenocollide", "allowvnocollide", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowvehiclenocollide - Enable/disable the ability to no-collide a vehicle (for security).")
 
 AddToggleCommand("rp_restrictbuypistol", "restrictbuypistol", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_restrictbuypistol - Enabling this feature makes /buypistol available only to Gun Dealers (if one or more).")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_restrictbuypistol - Enabling this feature makes /buy available only to Gun Dealers (if one or more).")
 
 AddToggleCommand("rp_noguns", "noguns", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_noguns - Enabling this feature bans Guns and Gun Dealers.")
@@ -1286,7 +1286,7 @@ AddToggleCommand("rp_enableshipments", "enableshipments", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enableshipments - Turn /buyshipment on of off.")
 
 AddToggleCommand("rp_enablebuypistol", "enablebuypistol", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enablebuypistol - Turn /buypistol on of off.")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enablebuypistol - Turn /buy on of off.")
 
 AddToggleCommand("rp_enablemayorsetsalary", "mayorsetsalary", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enablemayorsetsalary - Enable Mayor salary control.")

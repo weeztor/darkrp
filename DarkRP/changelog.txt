@@ -1,5 +1,7 @@
 SVN version
 
+[FIX] Version number in the help screen
+[CHANGE] /buypistol to /buy because of the custom items
 [remove] The easter egg.
 
 SVN VERSTION till 150/ 2.3.5:

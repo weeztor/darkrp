@@ -595,14 +595,14 @@ function EntitiesTab()
 						icon.DoClick = function() LocalPlayer():ConCommand("say "..command) end
 						WepPanel:AddItem(icon)
 					end
-					AddIcon("models/weapons/w_pist_glock18.mdl", "Buy a glock: " .. CUR .. tostring(GetGlobalInt("glockcost")), "/Buypistol glock")
-					AddIcon("models/weapons/w_pist_deagle.mdl", "Buy a Desert eagle: " .. CUR .. tostring(GetGlobalInt("deaglecost")), "/Buypistol deagle")
-					AddIcon("models/weapons/w_pist_fiveseven.mdl", "Buy a fiveseven: " .. CUR .. tostring(GetGlobalInt("fivesevencost")), "/Buypistol fiveseven")
-					AddIcon("models/weapons/w_pist_p228.mdl", "Buy a P228: " .. CUR .. tostring(GetGlobalInt("p228cost")), "/Buypistol p228")
+					AddIcon("models/weapons/w_pist_glock18.mdl", "Buy a glock: " .. CUR .. tostring(GetGlobalInt("glockcost")), "/buy glock")
+					AddIcon("models/weapons/w_pist_deagle.mdl", "Buy a Desert eagle: " .. CUR .. tostring(GetGlobalInt("deaglecost")), "/buy deagle")
+					AddIcon("models/weapons/w_pist_fiveseven.mdl", "Buy a fiveseven: " .. CUR .. tostring(GetGlobalInt("fivesevencost")), "/buy fiveseven")
+					AddIcon("models/weapons/w_pist_p228.mdl", "Buy a P228: " .. CUR .. tostring(GetGlobalInt("p228cost")), "/buy p228")
 					
 					for k,v in pairs(CustomShipments) do
 						if v.seperate and (table.HasValue(v.allowed, LocalPlayer():Team()) or #v.allowed == 0) then
-							AddIcon(v.model, "Buy a "..v.name..": "..CUR..v.pricesep, "/buypistol "..v.name)
+							AddIcon(v.model, "Buy a "..v.name..": "..CUR..v.pricesep, "/buy "..v.name)
 						end
 					end
 					
