@@ -759,7 +759,7 @@ function BuyPistol(ply, args)
 	end
 	
 	if (not custom or (#custom.allowed == 1 and custom[1] == TEAM_GUN)) and CfgVars["restrictbuypistol"] ~= 0 and ply:Team() ~= TEAM_GUN and team.NumPlayers(TEAM_GUN) > 0 then
-		Notify(ply, 1, 4, "/buypistol is disabled because there are Gun Dealers.")
+		Notify(ply, 1, 4, "/buy is disabled because there are Gun Dealers.")
 		return ""
 	end
 	if not custom then
@@ -789,7 +789,7 @@ function BuyPistol(ply, args)
 
 	return ""
 end
-AddChatCommand("/buypistol", BuyPistol)
+AddChatCommand("/buy", BuyPistol)
 
 local rifleWeights = {}
 rifleWeights["ak47"] = 4.0

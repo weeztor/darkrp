@@ -19,7 +19,7 @@ local function GiveHint()
 	elseif hint == 8 then
 		PrintMessageAll(HUD_PRINTTALK , "Type /buyshipment <Weapon name> to buy a shipment of weapons (e.g: /buyshipment ak47).")
 	elseif hint == 9 then
-		PrintMessageAll(HUD_PRINTTALK , "Type /buypistol <Pistol name> to buy a pistol, e.g: /buypistol glock.")
+		PrintMessageAll(HUD_PRINTTALK , "Type /buy <Pistol name/item name> to buy a pistol, e.g: /buy glock.")
 	elseif hint == 10 then
 		PrintMessageAll(HUD_PRINTTALK , "Type /buyammo <Ammo type> to buy ammo. Ammo types are: [rifle | shotgun | pistol]")
 	elseif hint == 11 then

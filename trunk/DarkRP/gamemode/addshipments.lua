@@ -22,7 +22,7 @@ end
 
 /*
 HOW TO ADD CUSTOM SHIPMENTS:
-AddCustomShipment("<Name of the shipment(no spaces)>"," <the model that the shipment spawns(should be the world model...)>", "<the classname of the weapon>", <the price of one shipment>, <how many guns there are in one shipment>, <OPTIONAL: true/false sold seperately>, <OPTIONAL: price when sold seperately>, < true/false OPTIONAL: /buypistol only = true> , OPTIONAL which classes can buy the shipment, OPTIONAL: the model of the shipment)
+AddCustomShipment("<Name of the shipment(no spaces)>"," <the model that the shipment spawns(should be the world model...)>", "<the classname of the weapon>", <the price of one shipment>, <how many guns there are in one shipment>, <OPTIONAL: true/false sold seperately>, <OPTIONAL: price when sold seperately>, < true/false OPTIONAL: /buy only = true> , OPTIONAL which classes can buy the shipment, OPTIONAL: the model of the shipment)
 
 Notes:
 MODEL: you can go to Q and then props tab at the top left then search for w_ and you can find all world models of the weapons!
@@ -50,9 +50,9 @@ This means the classname is weapon_posessor
 YOU CAN ADD ITEMS/ENTITIES TOO! but to actually make the entity you have to press E on the thing that the shipment spawned, BUT THAT'S OK!
 YOU CAN MAKE GUNDEALERS ABLE TO SELL MEDKITS!
 
-true/false: Can the weapon be sold seperately?(with /buypistol name) if you want yes then say true else say no
+true/false: Can the weapon be sold seperately?(with /buy name) if you want yes then say true else say no
 
-the price of sold seperate is the price it is when you do /buypistol name. Of course you only have to fill this in when sold seperate is true.
+the price of sold seperate is the price it is when you do /buy name. Of course you only have to fill this in when sold seperate is true.
 
 
 EXAMPLES OF CUSTOM SHIPMENTS(remove the -- to activate it): */
