@@ -1571,7 +1571,21 @@ local function FinishDemote(choice, v)
 end
 
 local function Demote(ply, args)
-	local p = FindPlayer(args)
+	local tableargs = string.Explode(" ", args)
+	if #tableargs == 1 then
+		Notify(ply, 1, 4, "You need to specify a reason!")
+		return ""
+	end
+	local reason = ""
+	for i = 2, #tableargs, 1 do
+		reason = reason .. " " .. tableargs[i]
+	end 
+	reason = string.sub(reason, 2)
+	if string.len(reason) > 22 then
+		Notify(ply, 1, 4, "Reason must be 22 characters or less")
+		return "" 
+	end
+	local p = FindPlayer(tableargs[1])
 	if p then
 		if CurTime() - ply:GetTable().LastVoteCop < 80 then
 			Notify(ply, 1, 4, "Please wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before demoting.")
@@ -1581,7 +1595,7 @@ local function Demote(ply, args)
 			Notify(ply, 1, 4,  p:Nick() .." is a Citizen - can't be demoted any further!")
 		else
 			NotifyAll(1, 4, ply:Nick() .. " has started a vote for the demotion of " .. p:Nick())
-			vote:Create(p:Nick() .. ":\n Demotion Nominee", p:EntIndex() .. "votecop"..ply:EntIndex(), p, 20, FinishDemote, true)
+			vote:Create(p:Nick() .. ":\nDemotion Nominee:\n"..reason, p:EntIndex() .. "votecop"..ply:EntIndex(), p, 20, FinishDemote, true)
 			ply:GetTable().LastVoteCop = CurTime()
 			VoteCopOn = true
 			Notify(ply, 1, 4, "Demotion Vote started!")
