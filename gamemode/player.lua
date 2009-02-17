@@ -666,6 +666,7 @@ function GM:PlayerSpawn(ply)
 		ply:SetColor(r, g, b, 100)
 		ply:SetCollisionGroup(  COLLISION_GROUP_WORLD )
 		timer.Simple(CfgVars["babygodtime"] or 5, function()
+			if not ValidEntity(ply) then return end
 			ply:SetNWBool("Babygod", false)
 			ply:SetColor(r, g, b, a)
 			ply:GodDisable()

@@ -3,6 +3,7 @@ SVN version
 [ADD] /demote <reason> People need to specify a reason to demote.
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
+[FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
 [CHANGE] /buypistol to /buy because of the custom items
 [remove] The easter egg.
 

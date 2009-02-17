@@ -516,7 +516,7 @@ function SetSpawnPos(ply, args)
 	end
 	
 	for k,v in pairs(RPExtraTeams) do
-		if args == v.name then
+		if args == v.command then
 			t = 9 + k
 			Notify(ply, 1, 4,  v.name .. " Spawn Position set.")
 		end

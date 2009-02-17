@@ -56,10 +56,14 @@ function DB.CreateJailPos()
 	if not jail_positions then return end
 	local map = string.lower(game.GetMap())
 
+	local once = false
 	sql.Begin()
-		sql.Query("DELETE FROM darkrp_jailpositions;")
 		for k, v in pairs(jail_positions) do
 			if map == string.lower(v[1]) then
+				if not once then
+					sql.Query("DELETE FROM darkrp_jailpositions;")
+					once = true
+				end
 				sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. v[2] .. ", " .. v[3] .. ", " .. v[4] .. ", " .. 0 .. ");")
 			end
 		end
@@ -67,27 +71,29 @@ function DB.CreateJailPos()
 end
 
 function DB.CreateSpawnPos()
-	if not team_spawn_positions then return end
 	local map = string.lower(game.GetMap())
+	if not team_spawn_positions then return end
 
-	sql.Begin()
-		sql.Query("DELETE FROM darkrp_tspawns;")
-		for k, v in pairs(team_spawn_positions) do
-			if map == string.lower(v[1]) then
-				sql.Query("INSERT INTO darkrp_tspawns VALUES(" .. sql.SQLStr(map) .. ", " .. v[2] .. ", " .. v[3] .. ", " .. v[4] .. ", " .. v[5] .. ");")
-			end
+	for k, v in pairs(team_spawn_positions) do
+		if v[1] == map then
+			DB.StoreTeamSpawnPos(v[2], Vector(v[3], v[4], v[5]))
 		end
-	sql.Commit()
+	end
 end
 
 function DB.CreateZombiePos()
 	if not zombie_spawn_positions then return end
 	local map = string.lower(game.GetMap())
 
+	local once = false
 	sql.Begin()
-		sql.Query("DELETE FROM darkrp_zspawns;")
+
 		for k, v in pairs(zombie_spawn_positions) do
 			if map == string.lower(v[1]) then
+				if not once then
+					sql.Query("DELETE FROM darkrp_zspawns;")
+					once = true
+				end
 				sql.Query("INSERT INTO darkrp_zspawns VALUES(" .. sql.SQLStr(map) .. ", " .. v[2] .. ", " .. v[3] .. ", " .. v[4] .. ");")
 			end
 		end
@@ -174,10 +180,10 @@ function DB.RevokePriv(ply, priv)
 	sql.Query("UPDATE darkrp_privs SET " .. p .. " = 0 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 	
 	-- privelege structure altered, alter the cache
-	if DB.privcache[SteamID] == nil then
-		DB.privcache[SteamID] = {}
+	if DB.privcache[steamID] == nil then
+		DB.privcache[steamID] = {}
 	end
-	DB.privcache[SteamID][p] = 0
+	DB.privcache[steamID][p] = 0
 	return true
 end
 
@@ -292,21 +298,25 @@ function DB.StoreTeamSpawnPos(t, pos)
 	local already = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_tspawns WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";"))
 	if not already or already == 0 then
 		sql.Query("INSERT INTO darkrp_tspawns VALUES(" .. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
-		Notify(ply, 1, 4,  "Spawn position created.")
+		print(team.GetName(t).."'s spawn position created.")
 	else
 		sql.Query("UPDATE darkrp_tspawns SET x = " .. pos[1] .. ", y = " .. pos[2] .. ", z = " .. pos[3] .. " WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";")
-		Notify(ply, 1, 4,  "Spawn position updated.")
+		print(team.GetName(t).."'s spawn position updated.")
 	end
 end
 
 function DB.RetrieveTeamSpawnPos(ply)
-	local r = sql.Query("SELECT * FROM darkrp_tspawns WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND team = " .. ply:Team() .. ";")
-
-	if not r then return nil end
-
-	for map, row in pairs(r) do
-		return Vector(row.x, row.y, row.z)
-	end
+	local map = string.lower(game.GetMap())
+	local t = ply:Team()
+	
+	-- this should return a map name.
+	local r = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
+	if not r then print("FAIL") return nil end
+	
+	local x = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
+	local y = sql.QueryValue("SELECT y FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
+	local z = sql.QueryValue("SELECT z FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
+	return Vector(x,y,z)
 end
 
 function DB.StoreZombies()
