@@ -28,7 +28,7 @@ function SPropProtection.HUDPaint()
 			if(OwnerObj and OwnerObj:IsValid()) then
 				PropOwner = PropOwner..OwnerObj:Name()
 			else
-				PropOwner = PropOwner..tr.Entity:GetNetworkedString("Owner", "N/A")
+				PropOwner = PropOwner..tostring(tr.Entity:GetNetworkedString("Owner", "N/A"))
 			end
 			
 			surface.SetFont("Default")
