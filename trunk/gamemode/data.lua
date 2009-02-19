@@ -311,7 +311,7 @@ function DB.RetrieveTeamSpawnPos(ply)
 	
 	-- this should return a map name.
 	local r = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
-	if not r then print("FAIL") return nil end
+	if not r then return nil end
 	
 	local x = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
 	local y = sql.QueryValue("SELECT y FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")

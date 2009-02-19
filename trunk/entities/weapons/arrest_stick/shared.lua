@@ -69,10 +69,14 @@ function SWEP:PrimaryAttack()
 		return
 	end
 
+	if CfgVars["needwantedforarrest"] == 1 and not trace.Entity:IsNPC() and not trace.Entity:GetNWBool("wanted") then
+		Notify(self.Owner, 1, 4, "He isn't wanted so you can't arrest him!")
+		return
+	end
 	local jpc = DB.CountJailPos()
 
 	if not jpc or jpc == 0 then
-		Notify(ply, 1, 4, "There are no Jail Positions set!")
+		Notify(self.Owner, 1, 4, "There are no Jail Positions set!")
 	else
 		-- Send NPCs to Jail
 		if trace.Entity:IsNPC() then

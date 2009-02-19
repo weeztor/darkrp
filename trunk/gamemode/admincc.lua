@@ -223,6 +223,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_AdminsSpawnWithCopWeapons - Enab
 AddToggleCommand("rp_babygod", "babygod", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_babygod - Enable/disable People who have just spawned, are unable to die for 10 seconds.")
 
+AddToggleCommand("rp_needwantedforarrest", "needwantedforarrest", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_needwantedforarrest - Enable/disable Cops can only arrest wanted people.")
+
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
@@ -384,12 +387,6 @@ function ccUnLock(ply, cmd, args)
 end
 concommand.Add("rp_unlock", ccUnLock)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_unlock - Unlock the door you're looking at.")
-
-AddValueCommand("rp_propcost", "propcost", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_propcost <Number> - How much prop spawning should cost. (prop paying must be enabled for this to have an effect)")
-
-AddValueCommand("rp_maxcps", "maxcps", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcps <Number> - Maximum number of CPs.")
 
 function ccTell(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
@@ -1395,6 +1392,12 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_printamount <Number> - Value of the
 
 AddValueCommand("rp_lotterycommitcost", "lotterycommitcost", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_lotterycommitcost <Number> - How much you pay for entering a lottery")
+
+AddValueCommand("rp_propcost", "propcost", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_propcost <Number> - How much prop spawning should cost. (prop paying must be enabled for this to have an effect)")
+
+AddValueCommand("rp_maxcps", "maxcps", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcps <Number> - Maximum number of CPs.")
 
 for k,v in pairs(RPExtraTeams) do
 	ValueCmds["rp_max"..v.command] = { var = "rp_max"..v.command, global = false }
