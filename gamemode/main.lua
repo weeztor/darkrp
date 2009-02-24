@@ -1389,11 +1389,36 @@ AddChatCommand("/ooc", OOC, true)
 
 function PlayerAdvertise(ply, args)
 	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint("[ADVERT] "..args)
+		v:ChatPrint("[ADVERT] ("..ply:Nick()..")"..args)
 	end
 	return ""
 end
 AddChatCommand("/advert", PlayerAdvertise)
+
+function SetRadioChannel(ply,args)
+	if tonumber(args) == nil or tonumber(args) < 0 or tonumber(args) > 99 then
+		Notify(ply, 1, 4, "Please set the channel between 0 and 100")
+		return ""
+	end
+	Notify(ply, 1, 4, "Channel set to "..args.."!")
+	ply:SetNWInt("RadioChannel", tonumber(args))
+	return ""
+end
+AddChatCommand("/channel", SetRadioChannel)
+
+function SayThroughRadio(ply,args)
+	if not args or args == "" then
+		Notify(ply, 1, 4, "Please enter a message!")
+		return ""
+	end
+	for k,v in pairs(player.GetAll()) do
+		if v:GetNWInt("RadioChannel") == ply:GetNWInt("RadioChannel") then
+			v:ChatPrint("Radio ".. tostring(ply:GetNWInt("RadioChannel")) .. " ("..ply:Nick().."): ".. args)
+		end
+	end
+	return ""
+end
+AddChatCommand("/radio", SayThroughRadio)
 
 function GiveMoney(ply, args)
 	if args == "" then return "" end
