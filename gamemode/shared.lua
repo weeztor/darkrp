@@ -59,4 +59,5 @@ outside someone else's door]], {"weapon_bugbait"}, "hobo", 5, 0, 0, false)
 // TEAM_/DUDE IS WROOOOOONG !!!!!!
 // HAVING "/dude" IN THE COMMAND FIELD IS WROOOOOOOONG!!!!
 //ADD TEAMS UNDER THIS LINE:
-
+TEAM_PET = AddExtraTeam("Pet", Color(255, 200, 0, 255), "models/player/renamon_b5.mdl", [[Be someone's pet, make sure he treats you well.
+If you don't get treated well, bite him.]], {"bite"}, "pet", 2, 0, 0, false)

@@ -2384,12 +2384,15 @@ end
 AddChatCommand("/teamunban", DoTeamUnBan)
 concommand.Add("rp_teamunban", DoTeamUnBan)
 
-local nospamtime = CurTime()
+//local nospamtime = CurTime()
 function MakeZombieSoundsAsHobo(ply)
-	if not TEAM_HOBO or ply:Team() ~= TEAM_HOBO or CurTime() < (nospamtime + 1.3) then
+	if not ply.nospamtime then 
+		ply.nospamtime = CurTime() - 2
+	end
+	if not TEAM_HOBO or ply:Team() ~= TEAM_HOBO or CurTime() < (ply.nospamtime + 1.3) then
 		return
 	end
-	nospamtime = CurTime()
+	ply.nospamtime = CurTime()
 	local ran = math.random(1,3)
 	if ran == 1 then
 		ply:EmitSound("npc/zombie/zombie_voice_idle"..tostring(math.random(1,14))..".wav", 100,100)
