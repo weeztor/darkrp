@@ -4,10 +4,12 @@ SVN version
 [ADD] rp_needwantedforarrest to prevent cops from random arresting
 [ADD] /channel and /radio command: Set your radio to a channel and talk through the radio so everyone with the same channel hears you.
 [ADD] Hobo's can make zombie sounds by right clicking with the bugbait :P -- idea thanks to Camilla
+[ADD] Pet job, IF YOU DONT LIKE IT, REMOVE THE JOB FROM SHARED.LUA AND NOONE WILL NOTICE ANYTHING ABOUT THE PET! -- THANKS CAMILLA!
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
 [FIX] People being able to spawn inside each other
+[FIX] rp_max<custom team> erroring sometimes and breaking the whole fucking gamemode
 [CHANGE] /buypistol to /buy because of the custom items
 [remove] The easter egg :(
 
