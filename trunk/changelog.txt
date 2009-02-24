@@ -3,8 +3,8 @@ SVN version
 [ADD] /demote <reason> People need to specify a reason to demote
 [ADD] rp_needwantedforarrest to prevent cops from random arresting
 [ADD] /channel and /radio command: Set your radio to a channel and talk through the radio so everyone with the same channel hears you.
-[ADD] Hobo's can make zombie sounds by right clicking with the bugbait :P -- idea thanks to Camilla
-[ADD] Pet job, IF YOU DONT LIKE IT, REMOVE THE JOB FROM SHARED.LUA AND NOONE WILL NOTICE ANYTHING ABOUT THE PET! -- THANKS CAMILLA!
+[ADD] Hobo's can make zombie sounds by right clicking with the bugbait :P -- idea thanks to GoDNeSS
+[ADD] Pet job, IF YOU DONT LIKE IT, REMOVE THE JOB FROM SHARED.LUA AND NOONE WILL NOTICE ANYTHING ABOUT THE PET! -- THANKS GoDNeSS!
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
