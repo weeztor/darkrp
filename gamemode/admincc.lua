@@ -1404,14 +1404,17 @@ for k,v in pairs(RPExtraTeams) do
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.." <Number> - Sets max "..v.name.."s.")
 	if CfgVars["rp_max"..v.command] == nil then CfgVars["rp_max"..v.command] = v.max end
 	concommand.Add("rp_max"..v.command, function(ply, cmd, args)
-		if #args < 1 then
+		if #args < 1 or not tonumber(args[1]) or tonumber(args[1]) == 0 then
 			print("rp_max"..v.command, "=", v.max)
 			ply:PrintMessage(2, "rp_max"..v.command..  "    =    ".. v.max)
+			return
 		end
+		
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			ply:PrintMessage(2, "You're not an admin")
 			return
 		end
+		
 		v.max = tonumber(args[1])
 		CfgVars["rp_max"..v.command] = tonumber(args[1])
 		

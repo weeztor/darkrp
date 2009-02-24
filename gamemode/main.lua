@@ -2383,3 +2383,20 @@ function DoTeamUnBan(ply, args, cmdargs)
 end
 AddChatCommand("/teamunban", DoTeamUnBan)
 concommand.Add("rp_teamunban", DoTeamUnBan)
+
+local nospamtime = CurTime()
+function MakeZombieSoundsAsHobo(ply)
+	if not TEAM_HOBO or ply:Team() ~= TEAM_HOBO or CurTime() < (nospamtime + 1.3) then
+		return
+	end
+	nospamtime = CurTime()
+	local ran = math.random(1,3)
+	if ran == 1 then
+		ply:EmitSound("npc/zombie/zombie_voice_idle"..tostring(math.random(1,14))..".wav", 100,100)
+	elseif ran == 2 then
+		ply:EmitSound("npc/zombie/zombie_pain"..tostring(math.random(1,6))..".wav", 100,100)
+	elseif ran == 3 then
+		ply:EmitSound("npc/zombie/zombie_alert"..tostring(math.random(1,3))..".wav", 100,100)
+	end
+end
+concommand.Add("_hobo_emitsound", MakeZombieSoundsAsHobo)
