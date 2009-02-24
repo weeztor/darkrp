@@ -10,7 +10,7 @@ if CLIENT then
 	SWEP.DrawCrosshair = false
 end
 
-SWEP.Author = "FPtje"
+SWEP.Author = "FPtje + GoDNeSS"
 SWEP.Instructions = "Left click to bite. Right click to hit with your claws. Reload to make a funneh sound"
 SWEP.Contact = ""
 SWEP.Purpose = ""
