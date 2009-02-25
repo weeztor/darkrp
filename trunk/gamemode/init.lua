@@ -108,7 +108,7 @@ CUR = "$"
 
 -- RP Name Overrides
 
-DARKRPVERSION = "2.3.5"
+DARKRPVERSION = "2.3.5+"
 
 local meta = FindMetaTable("Player")
 meta.SteamName = meta.Name
