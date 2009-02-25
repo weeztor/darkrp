@@ -11,6 +11,7 @@ SVN version
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
 [FIX] People being able to spawn inside each other
 [FIX] rp_max<custom team> erroring sometimes and breaking the whole fucking gamemode
+[FIX] rp_grant breaking when the console enters it
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] Made admins.lua a bit more idiot proof
 [CHANGE] Cooks can now buy food too when hungermod is off
