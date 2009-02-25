@@ -83,7 +83,7 @@ end
 hook.Add("PlayerSpawnedProp", "HM.PlayerSpawnedProp", HM.PlayerSpawnedProp)
 
 function HM.KeyPress(ply, code)
-	if GetGlobalInt("hungermod") == 0 then return end
+	//if GetGlobalInt("hungermod") == 0 and then return end
 
 	if code ~= IN_USE then return end
 
@@ -102,6 +102,7 @@ function HM.KeyPress(ply, code)
 					umsg.Start("AteFoodIcon")
 					umsg.End()
 					tr.Entity:Remove()
+					ply:EmitSound("vo/sandwicheat09.wav", 100, 100)
 				end
 			end
 		end
@@ -176,8 +177,8 @@ function BuyFood(ply, args)
 
 	local tr = util.TraceLine(trace)
 
-	if GetGlobalInt("hungermod") == 0 then
-		Notify(ply, 1, 4, "/buyfood is disabled unless Hunger Mod is enabled.")
+	if GetGlobalInt("hungermod") == 0 and ply:Team() ~= TEAM_COOK then
+		Notify(ply, 1, 4, "/buyfood is disabled unless you're a cook or Hunger Mod is enabled.")
 		return ""
 	end
 

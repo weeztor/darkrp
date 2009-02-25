@@ -98,12 +98,16 @@ end
 
 SWEP.OnceReload = false
 local moods = {
-{"Happy","npc/headcrab/idle3.wav"},
-{"Angry", "npc/headcrab/attack2.wav"},
-{"Sad","npc/headcrab_poison/ph_wallpain1.wav"},
-{"Howl", "npc/headcrab_fast/alert1.wav"},
-{"Afraid", "ambient/creatures/town_scared_sob1.wav"},
-{"Question", "ambient/creatures/teddy.wav"}
+{"Happy","Pet/Happy.wav"},
+{"Angry", "Pet/Angry.wav"},
+{"Howl","Pet/Howl.wav"},
+{"Sad", "Pet/Cry.wav"},
+{"Growl", "Pet/Growl.wav"},
+{"Meow", "Pet/Meow.wav"},
+{"Lick", "Pet/Lick.wav"},
+{"Lost/Afraid", "Pet/Lost.wav"},
+{"Question", "Pet/Question.wav"},
+{"Please", "Pet/Please.wav"}
 }
 
 SWEP.NoReload = CurTime()

@@ -643,7 +643,7 @@ function EntitiesTab()
 					elseif LocalPlayer():Team() == TEAM_COOK then
 						AddEntIcon("models/props/cs_office/microwave.mdl", "Buy a microwave " .. CUR .. tostring(GetGlobalInt("microwavecost")) , "/Buymicrowave")
 					end
-					if (GetGlobalInt("foodspawn") ~= 0 or LocalPlayer():Team() == TEAM_COOK) and FoodItems and GetGlobalInt("hungermod") == 1 then
+					if  FoodItems and (GetGlobalInt("foodspawn") ~= 0 or LocalPlayer():Team() == TEAM_COOK) and (GetGlobalInt("hungermod") == 1 or LocalPlayer():Team() == TEAM_COOK) then
 						for k,v in pairs(FoodItems) do
 							AddEntIcon(v.model, "Buy a(n) ".. k .. " for a few bucks", "/buyfood "..k)
 						end
