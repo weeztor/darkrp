@@ -12,6 +12,7 @@ SVN version
 [FIX] People being able to spawn inside each other
 [FIX] rp_max<custom team> erroring sometimes and breaking the whole fucking gamemode
 [CHANGE] /buypistol to /buy because of the custom items
+[CHANGE] Made admins.lua a bit more idiot proof
 [CHANGE] Cooks can now buy food too when hungermod is off
 [remove] The easter egg :(
 
