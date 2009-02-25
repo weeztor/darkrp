@@ -1032,6 +1032,12 @@ function ccGrantPriv(ply, cmd, args)
 		ply:PrintMessage(2, "You're not a super admin!")
 		return
 	end
+	local PLAYER = ""
+	if ply:EntIndex() == 0 then
+		PLAYER = "console"
+	else
+		PLAYER = ply:Nick()
+	end
 	
 	if not args[1] then
 		ply:PrintMessage(2, "rp_grant <player> <privilege> Grant a player a privilege\nThese privileges are available:\ntool\nadmin\nphys\nprop\nmayor\ncp")
@@ -1058,22 +1064,22 @@ function ccGrantPriv(ply, cmd, args)
 	
 	if args[2] == "tool" then
 		DB.GrantPriv(target, TOOL)
-		NotifyAll( 1, 3, ply:Nick() .. " has granted "..target:Nick().." toolgun priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." toolgun priveleges.")
 	elseif args[2] == "admin" then
 		DB.GrantPriv(target, ADMIN)
-		NotifyAll( 1, 3, ply:Nick() .. " has granted "..target:Nick().." admin priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." admin priveleges.")
 	elseif args[2] == "phys" then
 		DB.GrantPriv(target, PHYS)
-		NotifyAll( 1, 3, ply:Nick() .. " has granted "..target:Nick().." physgun priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." physgun priveleges.")
 	elseif args[2] == "prop" then
 		DB.GrantPriv(target, PROP)
-		NotifyAll( 1, 3, ply:Nick() .. " has granted "..target:Nick().." prop spawn priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." prop spawn priveleges.")
 	elseif args[2] == "mayor" then
 		DB.GrantPriv(target, MAYOR)
-		NotifyAll( 1, 3, ply:Nick() .. " has granted "..target:Nick().." /mayor priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." /mayor priveleges.")
 	elseif args[2] == "cp" then
 		DB.GrantPriv(target, CP)
-		NotifyAll( 1, 3, ply:Nick() .. " has granted "..target:Nick().." /cp priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." /cp priveleges.")
 	else
 		if ply:EntIndex() == 0 then
 			print("There is not a " .. args[2] .. " privilege!")
@@ -1089,6 +1095,13 @@ function ccRevokePriv(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, "You're not a super admin!")
 		return
+	end
+	
+	local PLAYER = ""
+	if ply:EntIndex() == 0 then
+		PLAYER = "console"
+	else
+		PLAYER = ply:Nick()
 	end
 	
 	if not args[1] then
@@ -1115,22 +1128,22 @@ function ccRevokePriv(ply, cmd, args)
 		
 	if args[2] == "tool" then
 		DB.RevokePriv(target, TOOL)
-		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..ply:Nick().."'s toolgun priveleges.")
+		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..target:Nick().."'s toolgun priveleges.")
 	elseif args[2] == "admin" then
 		DB.RevokePriv(target, ADMIN)
-		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..ply:Nick().."'s admin priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s admin priveleges.")
 	elseif args[2] == "phys" then
 		DB.RevokePriv(target, PHYS)
-		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..ply:Nick().."'s physgun priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s physgun priveleges.")
 	elseif args[2] == "prop" then
 		DB.RevokePriv(target, PROP)
-		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..ply:Nick().."'s prop spawn priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s prop spawn priveleges.")
 	elseif args[2] == "mayor" then
 		DB.RevokePriv(target, MAYOR)
-		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..ply:Nick().."'s /mayor priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s /mayor priveleges.")
 	elseif args[2] == "cp" then
 		DB.RevokePriv(target, CP)
-		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..ply:Nick().."'s /cp priveleges.")
+		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s /cp priveleges.")
 	else
 		if ply:EntIndex() == 0 then
 			print("There is not a " .. args[2] .. " privilege!")
