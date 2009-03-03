@@ -294,7 +294,7 @@ function KeysMenu(Vehicle)
 		Owndoor:SetPos(10, 30)
 		Owndoor:SetSize(180, 100)
 		Owndoor:SetText("Sell " .. Entiteh)
-		Owndoor.DoClick = function() LocalPlayer():ConCommand("say /toggleown") Frame:Close() end
+		Owndoor.DoClick = function() RunConsoleCommand("say", "/toggleown") Frame:Close() end
 		
 		local AddOwner = vgui.Create("DButton", Frame)
 		AddOwner:SetPos(10, 140)
@@ -304,7 +304,7 @@ function KeysMenu(Vehicle)
 			local menu = DermaMenu()
 			for k,v in pairs(player.GetAll()) do
 				if not trace.Entity:OwnedBy(v) and not trace.Entity:AllowedToOwn(v) then
-					menu:AddOption(v:Nick(), function() LocalPlayer():ConCommand("say /addowner " .. tostring(v:UserID())) end)
+					menu:AddOption(v:Nick(), function() RunConsoleCommand("say", "/addowner", tostring(v:UserID())) end)
 				end
 			end
 			if #menu.Panels == 0 then
@@ -321,7 +321,7 @@ function KeysMenu(Vehicle)
 			local menu = DermaMenu()
 			for k,v in pairs(player.GetAll()) do
 				if (trace.Entity:OwnedBy(v) and not trace.Entity:IsMasterOwner(v)) or trace.Entity:AllowedToOwn(v) then
-					menu:AddOption(v:Nick(), function() LocalPlayer():ConCommand("say /ro " .. tostring(v:UserID())) end)
+					menu:AddOption(v:Nick(), function() RunConsoleCommand("say", "/ro", tostring(v:UserID())) end)
 				end
 			end
 			if #menu.Panels == 0 then
@@ -338,7 +338,7 @@ function KeysMenu(Vehicle)
 			RemoveOwner.m_bDisabled = true
 		end
 		DoorTitle.DoClick = function()
-			Derma_StringRequest("Set door title", "Set the title of the "..Entiteh.." you're looking at", "", function(text) LocalPlayer():ConCommand("say /title "..text) Frame:Close() end, function() end, "OK!", "CANCEL!")
+			Derma_StringRequest("Set door title", "Set the title of the "..Entiteh.." you're looking at", "", function(text) RunConsoleCommand("say", "/title", text) Frame:Close() end, function() end, "OK!", "CANCEL!")
 		end
 		
 		if LocalPlayer():IsSuperAdmin() and not Vehicle then
@@ -351,7 +351,7 @@ function KeysMenu(Vehicle)
 			else
 				SetCopsOnly:SetText("Set cops and mayor only")
 			end
-			SetCopsOnly.DoClick = function() LocalPlayer():ConCommand("say /togglecpownable") Frame:Close() end
+			SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
 		end	
 	elseif not trace.Entity:OwnedBy(LocalPlayer()) and trace.Entity:IsOwnable() and not trace.Entity:IsOwned() and not trace.Entity:GetNWBool("nonOwnable") then
 		if not CPOnly then
@@ -360,7 +360,7 @@ function KeysMenu(Vehicle)
 			Owndoor:SetPos(10, 30)
 			Owndoor:SetSize(180, 100)
 			Owndoor:SetText("Buy " .. Entiteh)
-			Owndoor.DoClick = function() LocalPlayer():ConCommand("say /toggleown") Frame:Close() end
+			Owndoor.DoClick = function() RunConsoleCommand("say", "/toggleown") Frame:Close() end
 		elseif not LocalPlayer():IsSuperAdmin() then
 			Frame:Close()
 		end
@@ -374,7 +374,7 @@ function KeysMenu(Vehicle)
 			DisableOwnage:SetPos(10, Frame:GetTall() - 220)
 			DisableOwnage:SetSize(180, 100)
 			DisableOwnage:SetText("Disallow ownership")
-			DisableOwnage.DoClick = function() Frame:Close() LocalPlayer():ConCommand("say /toggleownable") end
+			DisableOwnage.DoClick = function() Frame:Close() RunConsoleCommand("say", "toggleownable") end
 			
 			local SetCopsOnly = vgui.Create("DButton", Frame)
 			SetCopsOnly:SetPos(10, Frame:GetTall() - 110)
@@ -384,7 +384,7 @@ function KeysMenu(Vehicle)
 			else
 				SetCopsOnly:SetText("Set cops and mayor only")
 			end
-			SetCopsOnly.DoClick = function() LocalPlayer():ConCommand("say /togglecpownable") Frame:Close() end
+			SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
 		end
 	elseif not trace.Entity:OwnedBy(LocalPlayer()) and trace.Entity:AllowedToOwn(LocalPlayer()) then
 		Frame:SetSize(200, 140)
@@ -392,7 +392,7 @@ function KeysMenu(Vehicle)
 		Owndoor:SetPos(10, 30)
 		Owndoor:SetSize(180, 100)
 		Owndoor:SetText("Co-own " .. Entiteh)
-		Owndoor.DoClick = function() LocalPlayer():ConCommand("say /toggleown") Frame:Close() end
+		Owndoor.DoClick = function() RunConsoleCommand("say", "/toggleown") Frame:Close() end
 		
 		if LocalPlayer():IsSuperAdmin() then
 			Frame:SetSize(200, Frame:GetTall() + 110)
@@ -404,7 +404,7 @@ function KeysMenu(Vehicle)
 			else
 				SetCopsOnly:SetText("Set cops and mayor only")
 			end
-			SetCopsOnly.DoClick = function() LocalPlayer():ConCommand("say /togglecpownable") Frame:Close() end
+			SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
 		end	
 	elseif LocalPlayer():IsSuperAdmin() and trace.Entity:GetNWBool("nonOwnable") then
 		Frame:SetSize(200, 140)
@@ -412,14 +412,14 @@ function KeysMenu(Vehicle)
 		EnableOwnage:SetPos(10, 30)
 		EnableOwnage:SetSize(180, 100)
 		EnableOwnage:SetText("Allow ownership")
-		EnableOwnage.DoClick = function() Frame:Close() LocalPlayer():ConCommand("say /toggleownable") end
+		EnableOwnage.DoClick = function() Frame:Close() RunConsoleCommand("say", "/toggleownable") end
 	elseif LocalPlayer():IsSuperAdmin() and not trace.Entity:OwnedBy(LocalPlayer()) and trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(LocalPlayer()) then
 		Frame:SetSize(200, 250)
 		local DisableOwnage = vgui.Create("DButton", Frame)
 		DisableOwnage:SetPos(10, 30)
 		DisableOwnage:SetSize(180, 100)
 		DisableOwnage:SetText("Disallow ownership")
-		DisableOwnage.DoClick = function() Frame:Close() LocalPlayer():ConCommand("say /toggleownable") end
+		DisableOwnage.DoClick = function() Frame:Close() RunConsoleCommand("say", "/toggleownable") end
 		
 		local SetCopsOnly = vgui.Create("DButton", Frame)
 		SetCopsOnly:SetPos(10, Frame:GetTall() - 110)
@@ -429,7 +429,7 @@ function KeysMenu(Vehicle)
 		else
 			SetCopsOnly:SetText("Set cops and mayor only")
 		end
-		SetCopsOnly.DoClick = function() LocalPlayer():ConCommand("say /togglecpownable") Frame:Close() end
+		SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
 	else
 		Frame:Close()
 	end

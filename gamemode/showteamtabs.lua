@@ -965,8 +965,8 @@ function RPAdminTab()
 			self:Clear(true)
 			NewToggleHelpMessages = {}
 			NewValueHelpMessages = {}
-			LocalPlayer():ConCommand("rp_RequestAllToggleCommands")
-			LocalPlayer():ConCommand("rp_RequestAllValueCommands")
+			RunConsoleCommand("rp_RequestAllToggleCommands")
+			RunConsoleCommand("rp_RequestAllValueCommands")
 			local loadingcat = vgui.Create("DCollapsibleCategory")
 			loadingcat:SetLabel("LOADING!!!!!")
 			self:AddItem(loadingcat)
