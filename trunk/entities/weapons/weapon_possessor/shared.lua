@@ -13,10 +13,7 @@ local FalcoThirdPersonVariable = CreateClientConVar("TheFalcoThirdPersonValue", 
 /*--------------------------------------------------------- 
 	Settings
 ---------------------------------------------------------*/ 
-if ( SERVER ) then
-	AddCSLuaFile( "shared.lua" )
-	AddCSLuaFile( "cl_init.lua" )
-end
+
 SWEP.PrintName			= "Player possessor"			
 SWEP.Author				= "FPtje"
 SWEP.Instructions		= "Shoot the player you want to control"
