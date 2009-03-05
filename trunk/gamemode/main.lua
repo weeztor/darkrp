@@ -1218,15 +1218,18 @@ local function MakeLetter(ply, args, type)
 
 	PrintMessageAll(2, ply:Nick() .. " created a letter.")
 	ply:SetNWInt("maxletters", ply:GetNWInt("maxletters") + 1)
+	timer.Simple(600, function() if ValidEntity(letter) then letter:Remove() end end)
 end
 
 function WriteLetter(ply, args)
+	if args == "" then return "" end
 	MakeLetter(ply, args, 1)
 	return ""
 end
 AddChatCommand("/write", WriteLetter)
 
 function TypeLetter(ply, args)
+	if args == "" then return "" end
 	MakeLetter(ply, args, 2)
 	return ""
 end
