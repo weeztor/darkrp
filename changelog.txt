@@ -16,6 +16,7 @@ SVN version
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] Made admins.lua a bit more idiot proof
 [CHANGE] Cooks can now buy food too when hungermod is off
+[CHANGE] Letters get removed after 10 minutes, long enoug and prevents them for lying there for like hours.
 [remove] The easter egg :(
 
 SVN VERSTION till 150/ 2.3.5:
