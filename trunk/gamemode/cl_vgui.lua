@@ -304,7 +304,7 @@ function KeysMenu(Vehicle)
 			local menu = DermaMenu()
 			for k,v in pairs(player.GetAll()) do
 				if not trace.Entity:OwnedBy(v) and not trace.Entity:AllowedToOwn(v) then
-					menu:AddOption(v:Nick(), function() RunConsoleCommand("say", "/addowner", tostring(v:UserID())) end)
+					menu:AddOption(v:Nick(), function() LocalPlayer():ConCommand("say /ao ".. v:UserID()) end)
 				end
 			end
 			if #menu.Panels == 0 then
@@ -321,7 +321,7 @@ function KeysMenu(Vehicle)
 			local menu = DermaMenu()
 			for k,v in pairs(player.GetAll()) do
 				if (trace.Entity:OwnedBy(v) and not trace.Entity:IsMasterOwner(v)) or trace.Entity:AllowedToOwn(v) then
-					menu:AddOption(v:Nick(), function() RunConsoleCommand("say", "/ro", tostring(v:UserID())) end)
+					menu:AddOption(v:Nick(), function() LocalPlayer():ConCommand("say /ro ".. v:UserID()) end)
 				end
 			end
 			if #menu.Panels == 0 then
@@ -374,7 +374,7 @@ function KeysMenu(Vehicle)
 			DisableOwnage:SetPos(10, Frame:GetTall() - 220)
 			DisableOwnage:SetSize(180, 100)
 			DisableOwnage:SetText("Disallow ownership")
-			DisableOwnage.DoClick = function() Frame:Close() RunConsoleCommand("say", "toggleownable") end
+			DisableOwnage.DoClick = function() Frame:Close() RunConsoleCommand("say", "/toggleownable") end
 			
 			local SetCopsOnly = vgui.Create("DButton", Frame)
 			SetCopsOnly:SetPos(10, Frame:GetTall() - 110)
