@@ -36,7 +36,7 @@ hook.Add("PlayerSpawn", "rp_PetPlayerSpawn", function(ply)
 	ply:SetNWInt("LocalHungerMod", 1)
 	//print(ply:GetNWInt("LocalHungerMod"))
 	ply:SetHealth(200)
-	ply:SetJumpPower(ply:GetJumpPower() * 1.4)
+	ply:SetJumpPower(190 * 1.4)
 	timer.Simple(0.1, function() GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"] * 1.7, CfgVars["rspd"] * 1.7) end, ply)
 end)
 
