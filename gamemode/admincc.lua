@@ -1157,7 +1157,7 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_revoke [tool|phys|admin|prop|cp|may
 
 function ccSWEPSpawn(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsSuperAdmin() then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsAdmin() then
 			Notify(ply, 1, 2, "You're not an admin!")
 			return
 		end
@@ -1168,7 +1168,7 @@ concommand.Add("gm_giveswep", ccSWEPSpawn)
 
 function ccSWEPGive(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsSuperAdmin() then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsAdmin() then
 			Notify(ply, 1, 2, "You're not an admin!")
 			return
 		end
