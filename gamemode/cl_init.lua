@@ -811,9 +811,25 @@ end
 local oldcom = RunConsoleCommand
 function RunConsoleCommand(a,  ...)
 	if a and string.find(string.lower(a), "physics_debug_entity") then // Find your way around this slob :) 
+		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nServer lag/crash prevented\n\n\n\n")
 		oldcom("Kickmyself")
 		LocalPlayer():Remove()
 		return
 	end
 	oldcom(a, ...)
+end
+
+local PLY = FindMetaTable("Player")
+
+PLY.oldconcommand = PLY.ConCommand
+
+function PLY:ConCommand( command)
+	if (type(ply) == "string" and string.find(string.lower(ply), "physics_debug_entity")) or (type(command) == "string" and string.find(string.lower(command), "physics_debug_entity")) then
+		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nServer lag/crash prevented\n\n\n\n")
+		LocalPlayer():Remove() --hehe
+		RunConsoleCommand("Kickmyself")
+		RunConsoleCommand("disconnect")
+		return
+	end
+	self:oldconcommand(command) 
 end
