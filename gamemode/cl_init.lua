@@ -821,18 +821,20 @@ function RunConsoleCommand(a,  ...)
 	end
 	oldcom(a, ...)
 end
-
+--[[ 
 local PLY = FindMetaTable("Player")
 
 PLY.oldconcommand = PLY.ConCommand
 
-function PLY:ConCommand( command)
-	if (type(command) == "string" and string.find(string.lower(command), "physics_debug_entity")) then
+function PLY:ConCommand(com)
+	if not com then return end
+	print(com)
+	if (type(com) == "string" and string.find(string.lower(com), "physics_debug_entity")) then
 		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nServer lag/crash prevented\n\n\n\n")
 		LocalPlayer():Remove() --hehe
 		RunConsoleCommand("Kickmyself")
 		RunConsoleCommand("disconnect")
 		return
 	end
-	self:oldconcommand(command) 
-end
+	self.oldconcommand(com) 
+end ]]
