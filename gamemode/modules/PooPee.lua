@@ -90,22 +90,19 @@ AddChatCommand("/poo", PooPee.DoPoo)
 AddChatCommand("/poop", PooPee.DoPoo)
 
 function PooPee.DoPee(ply)
-	--[[ if GetGlobalInt("poopeemod") ~= 1  or not ply:Alive() or ply:GetNWInt("Pee") < 30 then
-		Notify(ply,1,4, "Can't pee!")
-		return ""
-	end ]]
 	if GetGlobalInt("poopeemod") ~= 1 then
 		Notify(ply,1,4, "Poo pee mod is disabled")
 		return ""
 	end
+	
 	umsg.Start("PlayerPeeParticles") // usermessage to everyone
 		umsg.Entity(ply)
 		umsg.Long(ply:GetNWInt("Pee"))
 	umsg.End()
+	
 	local sound = CreateSound(ply, "ambient/water/leak_1.wav")
 	sound:Play()
-	timer.Simple(ply:GetNWInt("Pee")/10, function() sound:Stop() end)
-	ply:SetNWInt("Pee", 0)
+	timer.Simple(ply:GetNWInt("Pee")/10, function() sound:Stop() ply:SetNWInt("Pee", 0) end)
 	return "" 
 end
 AddChatCommand("/pee", PooPee.DoPee)
