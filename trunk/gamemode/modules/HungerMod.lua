@@ -94,6 +94,7 @@ function HM.KeyPress(ply, code)
 			ply:SetNWInt("Energy", math.Clamp(ply:GetNWInt("Energy") + tr.Entity:GetTable().FoodEnergy, 0, 100))
 			umsg.Start("AteFoodIcon")
 			umsg.End()
+			PooPee.AteFood(ply, tr.Entity:GetModel())
 			tr.Entity:Remove()
 		else
 			for k, v in pairs(FoodItems) do
@@ -101,6 +102,7 @@ function HM.KeyPress(ply, code)
 					ply:SetNWInt("Energy", math.Clamp(ply:GetNWInt("Energy") + v.amount, 0, 100))
 					umsg.Start("AteFoodIcon")
 					umsg.End()
+					PooPee.AteFood(ply, tr.Entity:GetModel())
 					tr.Entity:Remove()
 					ply:EmitSound("vo/sandwicheat09.wav", 100, 100)
 				end
