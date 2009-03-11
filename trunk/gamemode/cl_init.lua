@@ -757,10 +757,13 @@ function RPStopMessageMode()
 	hook.Remove("Think", "RPGetRecipients")
 	hook.Remove("HUDPaint", "RPinstructionsOnSayColors")
 	for k,v in pairs(player.GetAll()) do
-		if playercolors[v:EntIndex()] then
+		v:SetColor(255,255,255,255)
+		--[[ if playercolors[v:EntIndex()] then
 			local col = playercolors[v:EntIndex()]
 			v:SetColor(col.r, col.g, col.b, col.a)
-		end
+		else
+			
+		end ]]
 	end
 	playercolors = {}
 end
@@ -778,7 +781,7 @@ function RPSelectwhohearit(ply,bind,pressed)
 		draw.WordBox(2, 0, h + 80, "Black = he can ONLY hear you when you use OOC", "ScoreboardText", Color(255,255,255,120), Color(0,0,0,255))
 	end)
 	hook.Add("Think", "RPGetRecipients", function() 
-		if not Messagemode then RPStopMessageMode() return end 
+		if not Messagemode then RPStopMessageMode() hook.Remove("Think", "RPGetRecipients") return end 
 		for k,v in pairs(player.GetAll()) do
 			local r,g,b,a = v:GetColor()
 			local distance = LocalPlayer():GetPos():Distance(v:GetPos())
@@ -824,7 +827,7 @@ local PLY = FindMetaTable("Player")
 PLY.oldconcommand = PLY.ConCommand
 
 function PLY:ConCommand( command)
-	if (type(ply) == "string" and string.find(string.lower(ply), "physics_debug_entity")) or (type(command) == "string" and string.find(string.lower(command), "physics_debug_entity")) then
+	if (type(command) == "string" and string.find(string.lower(command), "physics_debug_entity")) then
 		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nServer lag/crash prevented\n\n\n\n")
 		LocalPlayer():Remove() --hehe
 		RunConsoleCommand("Kickmyself")
