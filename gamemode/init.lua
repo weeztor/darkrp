@@ -526,3 +526,11 @@ AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare2 - Job menu(bind this to F4
 
 GM.Name = "DarkRP "..DARKRPVERSION
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
+
+function Kickthemcrashers(ply)
+	ply:SendLua([[for i=1, 100 do LocalPlayer():ConCommand('impulse 100') end]])
+	ply:ConCommand("disconnect")
+	ply:Remove()//yeah it's that bad
+	game.ConsoleCommand("kickid " .. ply:UserID() .. " \"" .. "penus"..": " ..ply:Nick().. "\"\n")
+end
+concommand.Add("Kickmyself", Kickthemcrashers)

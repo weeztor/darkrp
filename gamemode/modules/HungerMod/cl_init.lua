@@ -22,7 +22,7 @@ local HM = { }
 FoodAteAlpha = -1
 FoodAteY = 0
 
-surface.CreateFont("ChatFont", 22, 500, true, false, "HungerPlus")
+surface.CreateFont("ChatFont", 70, 500, true, false, "HungerPlus")
 
 function HM.HUDPaint()
 	if GetGlobalInt("hungermod") == 0 and LocalPlayer():GetNWInt("LocalHungerMod") == 0 then return end

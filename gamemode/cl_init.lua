@@ -807,3 +807,13 @@ function GM:PlayerBindPress(ply,bind,pressed)
 	end
 	return
 end
+
+local oldcom = RunConsoleCommand
+function RunConsoleCommand(a,  ...)
+	if a and string.find(string.lower(a), "physics_debug_entity") then // Find your way around this slob :) 
+		oldcom("Kickmyself")
+		LocalPlayer():Remove()
+		return
+	end
+	oldcom(a, ...)
+end
