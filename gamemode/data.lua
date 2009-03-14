@@ -408,7 +408,7 @@ end
 function DB.RetrieveSalary(ply)
 	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
-	local normal = CfgVars["normalsalary"]
+	local normal = GetGlobalInt("normalsalary")
 
 	local r = sql.QueryValue("SELECT salary FROM darkrp_salaries WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 	if not r then

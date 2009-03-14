@@ -621,7 +621,7 @@ function SPropProtection.ApplySettings(ply, cmd, args)
 		return
 	end
 	
-	local toggle = tonumber(ply:GetInfo("SPropProtection_toggle") or 1)
+	local toggle = tonumber(ply:GetInfo("SPropProtection_onoff") or 1)
 	local admin = tonumber(ply:GetInfo("SPropProtection_admin") or 1)
 	local use = tonumber(ply:GetInfo("SPropProtection_use") or 1)
 	local edmg = tonumber(ply:GetInfo("SPropProtection_edmg") or 1)
