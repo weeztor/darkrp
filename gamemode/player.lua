@@ -810,6 +810,7 @@ function GM:PlayerLoadout(ply)
 		ply:Give("arrest_stick")
 		ply:Give("unarrest_stick")
 		ply:Give("stunstick")
+		ply:Give("weaponchecker") 
 	end
 
 	if team == TEAM_POLICE then
