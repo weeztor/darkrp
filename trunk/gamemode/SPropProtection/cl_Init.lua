@@ -6,7 +6,7 @@
 SPropProtection.AdminCPanel = nil
 SPropProtection.ClientCPanel = nil
 
-CreateClientConVar("SPropProtection_toggle", 1, false, true)
+CreateClientConVar("SPropProtection_onoff", 1, false, true)
 CreateClientConVar("SPropProtection_admin", 1, false, true)
 CreateClientConVar("SPropProtection_use", 1, false, true)
 CreateClientConVar("SPropProtection_edmg", 1, false, true)
@@ -55,7 +55,7 @@ function SPropProtection.AdminPanel(Panel)
 	
 	Panel:AddControl("Label", {Text = "Admin Panel - Simple Prop Protection by Spacetech"})
 	
-	Panel:AddControl("CheckBox", {Label = "Prop Protection On/Off", Command = "SPropProtection_toggle"})
+	Panel:AddControl("CheckBox", {Label = "Prop Protection On/Off", Command = "SPropProtection_onoff"})
 	Panel:AddControl("CheckBox", {Label = "Admins Can Do Everything On/Off", Command = "SPropProtection_admin"})
 	Panel:AddControl("CheckBox", {Label = "Use Protection On/Off", Command = "SPropProtection_use"})
 	Panel:AddControl("CheckBox", {Label = "Entity Damage Protection On/Off", Command = "SPropProtection_edmg"})	

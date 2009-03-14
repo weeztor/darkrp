@@ -250,7 +250,6 @@ CfgVars["wspd"] = 155 -- Walk Speed
 CfgVars["doorcost"] = 30 -- Cost to buy a door.
 CfgVars["vehiclecost"] = 40 -- Car/Airboat Cost
 CfgVars["npckillpay"] = 10 -- Amount paid for killing a non-player character
-CfgVars["normalsalary"] = 45 -- Normal Salary
 CfgVars["maxnormalsalary"] = 150 -- Maximum Normal Salary
 CfgVars["maxmayorsetsalary"] = 120 -- Max salary that a mayor can set for another player
 CfgVars["paydelay"] = 160 -- Pay day delay (in seconds)

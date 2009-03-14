@@ -88,7 +88,7 @@ function meta:ChangeTeam(t)
 
 	if t == TEAM_CITIZEN then
 		self:UpdateJob("Citizen")
-		DB.StoreSalary(self, CfgVars["normalsalary"])
+		DB.StoreSalary(self, GetGlobalInt("normalsalary"))
 		NotifyAll(1, 4, self:Name() .. " is now an ordinary Citizen!")
 		local validmodel = false
 
@@ -132,7 +132,7 @@ function meta:ChangeTeam(t)
 		end
 
 		self:UpdateJob("Civil Protection")
-		DB.StoreSalary(self, CfgVars["normalsalary"] + 20)
+		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 20)
 		self:SetNWBool("helpCop", true)
 		NotifyAll(1, 4, self:Name() .. " has been made a CP!")
 		self:SetModel("models/player/police.mdl")
@@ -153,7 +153,7 @@ function meta:ChangeTeam(t)
 		end
 
 		self:UpdateJob("Mayor")
-		DB.StoreSalary(self, CfgVars["normalsalary"] + 40)
+		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 40)
 		self:SetNWBool("helpMayor", true)
 		NotifyAll(1, 4, self:Name() .. " has been made Mayor!")
 		self:SetModel("models/player/breen.mdl")
@@ -174,7 +174,7 @@ function meta:ChangeTeam(t)
 		end
 
 		self:UpdateJob("Gangster")
-		DB.StoreSalary(self, CfgVars["normalsalary"] + 10)
+		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 10)
 		self:SetNWString("agenda", CfgVars["mobagenda"])
 		NotifyAll(1, 4, self:Name() .. " has been made a Gangster!")
 		self:SetModel("models/player/group03/male_01.mdl")
@@ -195,7 +195,7 @@ function meta:ChangeTeam(t)
 		end
 
 		self:UpdateJob("Mob Boss")
-		DB.StoreSalary(self, CfgVars["normalsalary"] + 15)
+		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 15)
 		self:SetNWBool("helpBoss", true)
 		self:SetNWString("agenda", CfgVars["mobagenda"])
 		NotifyAll(1, 4, self:Name() .. " has been made Mob Boss!")
@@ -222,7 +222,7 @@ function meta:ChangeTeam(t)
 		end
 
 		self:UpdateJob("Gun Dealer")
-		DB.StoreSalary(self, CfgVars["normalsalary"])
+		DB.StoreSalary(self, GetGlobalInt("normalsalary"))
 		NotifyAll(1, 4, self:Name() .. " has been made a Gun Dealer!")
 		self:SetModel("models/player/monk.mdl")
 	elseif t == TEAM_MEDIC then
@@ -241,7 +241,7 @@ function meta:ChangeTeam(t)
 			return
 		end
 		self:UpdateJob("Medic")
-		DB.StoreSalary(self, CfgVars["normalsalary"] + 15)
+		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 15)
 		NotifyAll(1, 4, self:Name() .. " has been made a Medic!")
 		self:SetModel("models/player/kleiner.mdl")
 	elseif t == TEAM_COOK then
@@ -261,7 +261,7 @@ function meta:ChangeTeam(t)
 		end
 
 		self:UpdateJob("Cook")
-		DB.StoreSalary(self, CfgVars["normalsalary"])
+		DB.StoreSalary(self, GetGlobalInt("normalsalary"))
 		NotifyAll(1, 4, self:Name() .. " has been made a Cook!")
 		self:SetModel("models/player/mossman.mdl")
 	elseif t == TEAM_CHIEF then
@@ -281,7 +281,7 @@ function meta:ChangeTeam(t)
 		end
 
 		self:UpdateJob("Civil Protection Chief")
-		DB.StoreSalary(self, CfgVars["normalsalary"] + 30)
+		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 30)
 		NotifyAll(1, 4, self:Name() .. " has been made Chief!")
 		self:SetModel("models/player/combine_soldier_prisonguard.mdl")
 	end
@@ -869,7 +869,7 @@ function meta:NewData()
 
 	self:RestoreRPName()
 
-	DB.StoreSalary(self, CfgVars["normalsalary"])
+	DB.StoreSalary(self, GetGlobalInt("normalsalary"))
 
 	self:UpdateJob("Citizen")
 
