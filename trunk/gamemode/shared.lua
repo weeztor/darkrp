@@ -53,7 +53,7 @@ You have no home.
 Beg for your food and money
 Sing for everyone who passes to get money
 Make your own wooden home somewhere in a corner or 
-outside someone else's door]], {"weapon_bugbait"}, "hobo", 5, 0, 0, false, TEAM_POLICE)
+outside someone else's door]], {"weapon_bugbait"}, "hobo", 5, 0, 0, false)
 //No extra weapons           say /hobo to become hobo  Maximum hobo's = 5		his salary = 0 because hobo's don't earn money.          0 = everyone can become hobo ,      false = you don't have to vote to become hobo
 // MAKE SURE THAT THERE IS NO / IN THE TEAM NAME OR IN THE TEAM COMMAND:
 // TEAM_/DUDE IS WROOOOOONG !!!!!!
