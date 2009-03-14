@@ -31,11 +31,23 @@ local function collideback(Particle, HitPos, Normal)
 	Particle:SetLifeTime(0)
 	Particle:SetDieTime(30)
 	
-	Particle:SetStartSize(50)
+	Particle:SetStartSize(10)
 	Particle:SetEndSize(0)
 	
 	Particle:SetStartAlpha(255)
 	Particle:SetEndAlpha(0)
+end
+
+local function ParticleThink(part)
+	print("PART", part)
+	if ValidEntity(part:GetTable().Ent) and part:GetTable().Pos then
+		part:SetPos(part:GetTable().Ent:GetPos() + part:GetTable().Pos)
+	elseif util.PointContents(part:GetPos()) == 16384 then
+		for k,v in pairs(ents.FindInSphere(part:GetPos(), 1)) do 
+			part:GetTable().Ent = v 
+			part:GetTable().Pos = part:GetPos() - v:GetPos()
+		end
+	end
 end
 
 function PooPee.DoPee(umsg)
@@ -44,20 +56,21 @@ function PooPee.DoPee(umsg)
 	if not ValidEntity(ply) then return end
 	local centr = ply:GetPos() + Vector(0,0,32)
 	local em = ParticleEmitter(centr) 
-	for i=1, time do 
-		timer.Simple(i/10, function()
+	for i=1, time * 10 do 
+		timer.Simple(i/100, function()
 			local part = em:Add("sprites/orangecore2",ply:GetPos() + Vector(0,0,32)) 
 			if part then 
 				//part:SetColor(215,255,0,255) 
-				part:SetVelocity(ply:GetAimVector() * 1000 + Vector(math.random(-50,100),math.random(-50,50),0) ) 
+				part:SetVelocity(ply:GetAimVector() * 1000 + Vector(math.random(-50,50),math.random(-50,50),0) ) 
 				part:SetDieTime(30) 
 				part:SetLifeTime(1) 
-				part:SetStartSize(50) 
+				part:SetStartSize(10) 
 				part:SetAirResistance( 100 )
 				part:SetRoll( math.Rand(0, 360) )
 				part:SetRollDelta( math.Rand(-200, 200) )
 				part:SetGravity( Vector( 0, 0, -600 ) )
 				part:SetCollideCallback(collideback)
+				part:SetThinkFunction(ParticleThink)
 				part:SetCollide(true)
 				part:SetEndSize(0) 
 			end 

@@ -1972,7 +1972,7 @@ function FoodHeal(ply)
 		ply:SetHealth(ply:Health() + (100 - ply:Health()))
 	else
 		ply:SetNWInt("Energy", math.Clamp(ply:GetNWInt("Energy") + 100, 0, 100))
-		umsg.Start("AteFoodIcon")
+		umsg.Start("AteFoodIcon", ply)
 		umsg.End()
 	end
 	return ""

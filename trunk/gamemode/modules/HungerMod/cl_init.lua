@@ -41,7 +41,7 @@ function HM.HUDPaint()
 
 	if FoodAteAlpha > -1 then
 		local mul = 1
-		if FoodAteY <= ScrH() - 30 then
+		if FoodAteY <= ScrH() - 100 then
 			mul = -.5
 		end
 
