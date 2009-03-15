@@ -88,6 +88,6 @@ end
 hook.Add("PlayerCanPickupWeapon", "PetsCantPickupWeapons",  PetsCantPickupWeapons)
 
 function CanPetEnterVehicle(ply, vehicle, role)
-	if ply:Team() == TEAM_PET then return false end
+	if ply:Team() == TEAM_PET and not string.find(vehicle:GetClass(), "pod") then return false end
 end
 hook.Add("CanPlayerEnterVehicle", "PETVehicleRestriction", CanPetEnterVehicle)
