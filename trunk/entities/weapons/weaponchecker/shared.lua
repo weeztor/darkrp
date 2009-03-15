@@ -10,8 +10,8 @@ if CLIENT then
 	SWEP.DrawCrosshair = false
 end
 
-SWEP.Author = "Rick Darkaliono, philxyz"
-SWEP.Instructions = "Left click to Check weapons, right click to confiscate guns"
+SWEP.Author = "FPtje"
+SWEP.Instructions = "Left click to Check weapons, right click to confiscate guns, reload to give back the guns"
 SWEP.Contact = ""
 SWEP.Purpose = ""
 
@@ -31,10 +31,6 @@ SWEP.Secondary.DefaultClip = 0
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
 
-if CLIENT then
-	SWEP.FrameVisible = false
-end
-
 local NoStripWeapons = {"weapon_physgun", "weapon_physcannon", "keys", "gmod_camera", "gmod_tool", "weaponchecker"}
 function SWEP:Initialize()
 	if SERVER then self:SetWeaponHoldType("normal") end
@@ -53,7 +49,7 @@ function SWEP:PrimaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or (not trace.Entity:IsPlayer() and not trace.Entity:IsNPC()) then
+	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
 		return
 	end
 	
@@ -66,7 +62,19 @@ function SWEP:PrimaryAttack()
 	self.Owner:EmitSound("npc/combine_soldier/gear5.wav", 50, 100)
 	timer.Simple(0.3, function(ply) ply:EmitSound("npc/combine_soldier/gear5.wav", 50, 100) end, self.Owner)
 	self.Owner:ChatPrint(trace.Entity:Nick() .."'s weapons:")
-	self.Owner:ChatPrint(string.sub(result, 3))
+	if result == "" then
+		self.Owner:ChatPrint(trace.Entity:Nick() .. " has no weapons")
+	else
+		local endresult = string.sub(result, 3)
+		if string.len(endresult) >= 126 then
+			local amount = math.ceil(string.len(endresult) / 126)
+			for i = 1, amount, 1 do
+				self.Owner:ChatPrint(string.sub(endresult, (i-1) * 126, i * 126 - 1))
+			end
+		else		
+			self.Owner:ChatPrint(string.sub(result, 3))
+		end
+	end
 end
 
 function SWEP:SecondaryAttack()
@@ -75,17 +83,21 @@ function SWEP:SecondaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or (not trace.Entity:IsPlayer() and not trace.Entity:IsNPC()) then
+	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
 		return
 	end
 	
 	local result = "" 
+	local stripped = {}
 	for k,v in pairs(trace.Entity:GetWeapons()) do
 		if not table.HasValue(NoStripWeapons, string.lower(v:GetClass())) then
 			trace.Entity:StripWeapon(v:GetClass())
 			result = result..", "..v:GetClass()
+			table.insert(stripped, v:GetClass())
 		end
 	end
+	trace.Entity:GetTable().ConfisquatedWeapons = stripped
+	
 	if result == "" then
 		self.Owner:ChatPrint(trace.Entity:Nick() .. " has no illegal weapons")
 		self.Owner:EmitSound("npc/combine_soldier/gear5.wav", 50, 100)
@@ -105,5 +117,25 @@ function SWEP:SecondaryAttack()
 	end
 end
 
+SWEP.OnceReload = true
 function SWEP:Reload()
+	if CLIENT or not self.Weapon.OnceReload then return end
+	self.Weapon.OnceReload = false
+	timer.Simple(1, function(wep) wep.OnceReload = true end, self.Weapon)
+	local trace = self.Owner:GetEyeTrace()
+
+	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
+		return
+	end
+	
+	if not trace.Entity:GetTable().ConfisquatedWeapons then
+		Notify(self.Owner, 1, 4, trace.Entity:Nick() .. " has no confisquated weapons!")
+		return
+	else
+		for k,v in pairs(trace.Entity:GetTable().ConfisquatedWeapons) do
+			trace.Entity:Give(v)
+		end
+		Notify(self.Owner, 1, 4, "Returned "..trace.Entity:Nick() .. "'s confisquated weapons!")
+		trace.Entity:GetTable().ConfisquatedWeapons = nil
+	end
 end

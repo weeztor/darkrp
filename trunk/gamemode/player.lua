@@ -559,7 +559,6 @@ function GM:CanPlayerSuicide(ply)
 end
 
 function GM:PlayerDeath(ply, weapon, killer)
-
 	if GetGlobalInt("deathblack") == 1 then
 		local RP = RecipientFilter()
 		RP:RemoveAllPlayers()
@@ -615,6 +614,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		ply:GetTable().DeathPos = nil
 		ply:GetTable().Slayed = false
 	end
+	ply:GetTable().ConfisquatedWeapons = nil
 end
 
 function GM:PlayerCanPickupWeapon(ply, class)

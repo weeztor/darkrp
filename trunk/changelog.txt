@@ -8,6 +8,7 @@ SVN version
 [ADD] Eating food makes the TF2 nom sound(bad luck if you don't have TF2)
 [ADD] Poo and pee mod :D enable with rp_poopeemod 1
 [ADD] Anti slobbot server crash
+[ADD] Weapon checker for the cops, chief and admin
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
