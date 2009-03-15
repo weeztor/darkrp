@@ -40,12 +40,12 @@ end
 
 local function ParticleThink(part)
 	print("PART", part)
-	if ValidEntity(part:GetTable().Ent) and part:GetTable().Pos then
-		part:SetPos(part:GetTable().Ent:GetPos() + part:GetTable().Pos)
+	if ValidEntity(part.Ent) and part.EntPos then
+		part:SetPos(part.Ent:GetPos() + part.Pos)
 	elseif util.PointContents(part:GetPos()) == 16384 then
 		for k,v in pairs(ents.FindInSphere(part:GetPos(), 1)) do 
-			part:GetTable().Ent = v 
-			part:GetTable().Pos = part:GetPos() - v:GetPos()
+			part.Ent = v 
+			part.Pos = part:GetPos() - v:GetPos()
 		end
 	end
 end
