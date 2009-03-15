@@ -87,6 +87,7 @@ function PetsCantPickupWeapons(ply,weapon)
 end
 hook.Add("PlayerCanPickupWeapon", "PetsCantPickupWeapons",  PetsCantPickupWeapons)
 
-function CanPlayerEnterVehicle(ply, vehicle, role)
+function CanPetEnterVehicle(ply, vehicle, role)
 	if ply:Team() == TEAM_PET then return false end
 end
+hook.Add("CanPlayerEnterVehicle", "PETVehicleRestriction", CanPetEnterVehicle)
