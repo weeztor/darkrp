@@ -19,6 +19,7 @@ SVN version
 [FIX] Atefood icon showing for everyone
 [FIX] Prop protection toggle not working
 [FIX] Normalsalary being stored twice.
+[FIX] /teamban not working
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] Made admins.lua a bit more idiot proof
 [CHANGE] Cooks can now buy food too when hungermod is off
