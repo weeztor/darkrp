@@ -2299,8 +2299,10 @@ function DoTeamBan(ply, args, cmdargs)
 		ent = cmdargs[1]
 		Team = cmdargs[2]
 	else
-		ent = string.sub(args, 1, string.find(args, " "))
-		Team = string.gsub(args, ent, "")
+		local a,b = string.find(args, " ")
+		ent = string.sub(args, 1, a - 1)
+		Team = string.sub(args,  a + 1)
+		print("\""..ent.."\"", "\"".. Team .."\"")
 	end
 	
 	local target = FindPlayer(ent)
