@@ -23,9 +23,9 @@ end)
 
 function SPropProtection.SetupSettings()
 	if(!sql.TableExists("spropprotection")) then
-		sql.Query("CREATE TABLE IF NOT EXISTS spropprotection(toggle INTEGER NOT NULL, admin INTEGER NOT NULL, use INTEGER NOT NULL, edmg INTEGER NOT NULL, pgr INTEGER NOT NULL, awp INTEGER NOT NULL, dpd INTEGER NOT NULL, dae INTEGER NOT NULL, delay INTEGER NOT NULL);")
+		sql.Query("CREATE TABLE IF NOT EXISTS spropprotection(onoff INTEGER NOT NULL, admin INTEGER NOT NULL, use INTEGER NOT NULL, edmg INTEGER NOT NULL, pgr INTEGER NOT NULL, awp INTEGER NOT NULL, dpd INTEGER NOT NULL, dae INTEGER NOT NULL, delay INTEGER NOT NULL);")
 		sql.Query("CREATE TABLE IF NOT EXISTS spropprotectionbuddies(steamid TEXT NOT NULL PRIMARY KEY, bsteamid TEXT);")
-		sql.Query("INSERT INTO spropprotection(toggle, admin, use, edmg, pgr, awp, dpd, dae, delay) VALUES(1, 1, 1, 1, 1, 1, 1, 0, 120)")
+		sql.Query("INSERT INTO spropprotection(onoff, admin, use, edmg, pgr, awp, dpd, dae, delay) VALUES(1, 1, 1, 1, 1, 1, 1, 0, 120)")
 	end
 	return sql.QueryRow("SELECT * FROM spropprotection LIMIT 1")
 end
@@ -131,7 +131,7 @@ end
 
 function SPropProtection.PlayerCanTouch(ply, ent)
 
-	if(tonumber(SPropProtection["Config"]["toggle"]) == 0 or ent:GetClass() == "worldspawn") then
+	if(tonumber(SPropProtection["Config"]["onoff"]) == 0 or ent:GetClass() == "worldspawn") then
 		return true
 	end
 
@@ -621,7 +621,7 @@ function SPropProtection.ApplySettings(ply, cmd, args)
 		return
 	end
 	
-	local toggle = tonumber(ply:GetInfo("SPropProtection_onoff") or 1)
+	local onoff = tonumber(ply:GetInfo("SPropProtection_onoff") or 1)
 	local admin = tonumber(ply:GetInfo("SPropProtection_admin") or 1)
 	local use = tonumber(ply:GetInfo("SPropProtection_use") or 1)
 	local edmg = tonumber(ply:GetInfo("SPropProtection_edmg") or 1)
@@ -631,7 +631,7 @@ function SPropProtection.ApplySettings(ply, cmd, args)
 	local dae = tonumber(ply:GetInfo("SPropProtection_dae") or 1)
 	local delay = math.Clamp(tonumber(ply:GetInfo("SPropProtection_delay") or 120), 1, 500)
 	
-	sql.Query("UPDATE spropprotection SET toggle = "..toggle..", admin = "..admin..", use = "..use..", edmg = "..edmg..", pgr = "..pgr..", awp = "..awp..", dpd = "..dpd..", dae = "..dae..", delay = "..delay)
+	sql.Query("UPDATE spropprotection SET onoff = "..onoff..", admin = "..admin..", use = "..use..", edmg = "..edmg..", pgr = "..pgr..", awp = "..awp..", dpd = "..dpd..", dae = "..dae..", delay = "..delay)
 	
 	SPropProtection["Config"] = sql.QueryRow("SELECT * FROM spropprotection LIMIT 1")
 	

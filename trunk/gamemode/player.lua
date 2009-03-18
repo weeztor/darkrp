@@ -802,9 +802,6 @@ function GM:PlayerLoadout(ply)
 		ply:Give("weapon_physgun")
 	end
 	
-	if ply:IsSuperAdmin() then
-		ply:Give("weapon_possessor")
-	end
 	if team == TEAM_POLICE or team == TEAM_CHIEF or (ply:HasPriv(ADMIN) and CfgVars["AdminsSpawnWithCopWeapons"] == 1) then
 		ply:Give("door_ram")
 		ply:Give("arrest_stick")

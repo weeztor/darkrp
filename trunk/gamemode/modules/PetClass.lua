@@ -26,7 +26,7 @@ concommand.Add("_DoMakeAnimalSound", MakePetSound)
 
 hook.Add("PlayerLoadout", "rp_PetLoadout", function(ply)
 	if ply:Team() == TEAM_PET then
-		timer.Simple(0.1, function() if not ply:IsAdmin() then ply:StripWeapon("gmod_tool") end end, ply)
+		timer.Simple(0.1, function(ply) if not ply:IsAdmin() then ply:StripWeapon("gmod_tool") end end, ply)
 	end
 end)
 
