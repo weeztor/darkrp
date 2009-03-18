@@ -96,7 +96,11 @@ function SWEP:SecondaryAttack()
 			table.insert(stripped, v:GetClass())
 		end
 	end
-	trace.Entity:GetTable().ConfisquatedWeapons = stripped
+	if not trace.Entity:GetTable().ConfisquatedWeapons then
+		trace.Entity:GetTable().ConfisquatedWeapons = stripped
+	else
+		for k,v in pairs(stripped) do if not table.HasValue(trace.Entity:GetTable().ConfisquatedWeapons, v) then table.insert(trace.Entity:GetTable().ConfisquatedWeapons, v) end end
+	end
 	
 	if result == "" then
 		self.Owner:ChatPrint(trace.Entity:Nick() .. " has no illegal weapons")
