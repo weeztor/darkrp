@@ -1416,8 +1416,9 @@ for k,v in pairs(RPExtraTeams) do
 	ValueCmds["rp_max"..v.command] = { var = "rp_max"..v.command, global = false }
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.." <Number> - Sets max "..v.name.."s.")
 	if CfgVars["rp_max"..v.command] == nil then CfgVars["rp_max"..v.command] = v.max end
-	concommand.Add("rp_max"..v.command, function(ply, cmd, args)
-		if #args < 1 or not tonumber(args[1]) or tonumber(args[1]) == 0 then
+	concommand.Add("rp_max"..v.command.."s", function(ply, cmd, args)
+		print(args[1], type(args[1]), tonumber(args[1]))
+		if #args < 1 or args[1] == nil then
 			print("rp_max"..v.command, "=", v.max)
 			ply:PrintMessage(2, "rp_max"..v.command..  "    =    ".. v.max)
 			return
@@ -1438,6 +1439,6 @@ for k,v in pairs(RPExtraTeams) do
 		else
 			nick = ply:Nick()
 		end
-		NotifyAll(0, 4, nick .. " set " .. "rp_max"..v.command .. " to " .. args[1])
+		NotifyAll(0, 4, nick .. " set " .. "rp_max"..v.command .. "s to " .. args[1])
 	end)
 end
