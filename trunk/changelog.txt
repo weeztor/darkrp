@@ -20,7 +20,9 @@ SVN version
 [FIX] Prop protection toggle not working
 [FIX] Normalsalary being stored twice.
 [FIX] /teamban not working
+[FIX] RP_max<customteam>s unable to be set to 0
 [CHANGE] /buypistol to /buy because of the custom items
+[CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
 [CHANGE] Cooks can now buy food too when hungermod is off
 [CHANGE] Letters get removed after 10 minutes, long enoug and prevents them for lying there for like hours.

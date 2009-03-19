@@ -16,7 +16,7 @@ function PooPee.UpdatePoop(ply)
 end
 
 function PooPee.UpdatePee(ply)
-	if not ValidEntity(ply) then return end
+	if not ValidEntity(ply) or GetGlobalInt("poopeemod") ~= 1 then return end
 	ply:SetNWInt("Pee", math.Clamp(ply:GetNWInt("Pee") + 1, 0, 100) )
 	if ply:GetNWInt("Pee") >= 100 then
 		PooPee.DoPee(ply)
