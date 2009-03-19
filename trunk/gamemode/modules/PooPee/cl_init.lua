@@ -38,18 +38,6 @@ local function collideback(Particle, HitPos, Normal)
 	Particle:SetEndAlpha(0)
 end
 
-local function ParticleThink(part)
-	print("PART", part)
-	if ValidEntity(part.Ent) and part.EntPos then
-		part:SetPos(part.Ent:GetPos() + part.Pos)
-	elseif util.PointContents(part:GetPos()) == 16384 then
-		for k,v in pairs(ents.FindInSphere(part:GetPos(), 1)) do 
-			part.Ent = v 
-			part.Pos = part:GetPos() - v:GetPos()
-		end
-	end
-end
-
 function PooPee.DoPee(umsg)
 	local ply = umsg:ReadEntity()
 	local time = umsg:ReadLong()
@@ -70,7 +58,6 @@ function PooPee.DoPee(umsg)
 				part:SetRollDelta( math.Rand(-200, 200) )
 				part:SetGravity( Vector( 0, 0, -600 ) )
 				part:SetCollideCallback(collideback)
-				part:SetThinkFunction(ParticleThink)
 				part:SetCollide(true)
 				part:SetEndSize(0) 
 			end 
