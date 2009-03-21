@@ -1899,6 +1899,26 @@ function CombineRequest(ply, args)
 end
 AddChatCommand("/cr", CombineRequest)
 
+// here's the new easter egg. Easier to find, more subtle, doesn't only credit FPtje and unib5
+local CreditsWait = true
+function GetDarkRPAuthors(ply)
+	if not CreditsWait then ply:ChatPrint("Wait with that") return "" end
+	CreditsWait = false
+	timer.Simple(60, function() CreditsWait = true end)//so people don't spam it
+	for k,v in pairs(player.GetAll()) do
+		v:ChatPrint("CREDITS FOR DARKRP:")
+		v:ChatPrint("Rickster")
+		v:ChatPrint("Picwizdan")
+		v:ChatPrint("Sibre")
+		v:ChatPrint("PhilXYZ") 
+		v:ChatPrint("[GNC] Matt")
+		v:ChatPrint("Chromebolt A.K.A. unib5 (STEAM_0:1:19045957)")
+		v:ChatPrint("(FPtje) Falco A.K.A. FPtje (STEAM_0:0:8944068)")
+	end
+	return ""
+end
+AddChatCommand("/credits", GetDarkRPAuthors)
+
 local LotteryPeople = {}
 local LotteryON = false
 local CanLottery = CurTime()
