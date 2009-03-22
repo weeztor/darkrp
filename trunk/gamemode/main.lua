@@ -158,7 +158,7 @@ function PlayerDist(npcPos)
 	return currPlayer
 end
 
-function MoveZombie()
+--[[ function MoveZombie()
 	local activePlayers = false
 
 	for k, v in pairs(player.GetAll()) do
@@ -184,7 +184,7 @@ function MoveZombie()
 	timer.Create("move", .5, 0, MoveZombie)
 	timer.Stop("move")
 end
-
+ ]]
 function LoadTable(ply)
 	ply:SetNWInt("numPoints", table.getn(zombieSpawns))
 
@@ -304,6 +304,10 @@ end
 
 function ZombieMax(ply, args)
 	if ply:HasPriv(ADMIN) then
+		if not tonumber(args) then
+			Notify(ply, 1, 4, "INVALID NUMBER!")
+			return ""
+		end
 		maxZombie = tonumber(args)
 		Notify(ply, 1, 4, "Max zombies set.")
 	end
@@ -328,7 +332,9 @@ weaponClasses["weapon_usp2"] = "models/weapons/w_pist_usp.mdl"
 weaponClasses["weapon_p2282"] = "models/weapons/w_pist_p228.mdl"
 weaponClasses["weapon_p90"] = "models/weapons/w_smg_p90.mdl"
 weaponClasses["weapon_knife2"] = "models/weapons/w_knife_t.mdl"
-
+for k,v in pairs(CustomShipments) do
+	weaponClasses[v.entity] = v.model
+end
 function DropWeapon(ply)
 	local trace = {}
 	

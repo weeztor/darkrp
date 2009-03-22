@@ -14,7 +14,12 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end end)		
 		return
 	end
-	local AllowedClasses = classes or {} // if classes isn't entered then only the Gundealer can buy them.
+	local AllowedClasses = classes or {} // if classes isn't entered then anyone
+	if not classes then
+		for k,v in pairs(team.GetAllTeams()) do
+			table.insert(AllowedClasses, k)
+		end
+	end
 	local price = tonumber(price)
 	local shipmentmodel = shipmodel or "models/Items/item_item_crate.mdl"
 	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
@@ -64,3 +69,4 @@ EXAMPLES OF CUSTOM SHIPMENTS(remove the -- to activate it): */
 --EXAMPLE OF A BOUNCY BALL:   		NOTE THAT YOU HAVE TO PRESS E REALLY QUICKLY ON THE BOMB OR YOU'LL EAT THE BALL LOL
 --AddCustomShipment("bball", "models/Combine_Helicopter/helicopter_bomb01.mdl", "sent_ball", 100, 10, true, 10, true)
 -- ADD CUSTOM SHIPMENTS HERE(next line):
+
