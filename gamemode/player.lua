@@ -623,6 +623,23 @@ function GM:PlayerCanPickupWeapon(ply, class)
 	return true
 end
 
+local function IsEmpty(vector)
+	local point = util.PointContents(vector)
+	local a = point ~= CONTENTS_SOLID 
+	and point ~= CONTENTS_MOVEABLE 
+	and point ~= CONTENTS_LADDER 
+	and point ~= CONTENTS_PLAYERCLIP 
+	and point ~= CONTENTS_MONSTERCLIP
+	local b = true
+	
+	for k,v in pairs(ents.FindInSphere(vector, 35)) do
+		if v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics" then
+			b = false
+		end
+	end
+	return a and b
+end
+
 function GM:PlayerSpawn(ply)
 	self.BaseClass:PlayerSpawn(ply)
 	ply:CrosshairEnable()
@@ -647,33 +664,6 @@ function GM:PlayerSpawn(ply)
 		end
 	end
 	
-	for k,v in pairs(ents.FindInSphere(ply:GetPos(), 35)) do
-		if (v:IsPlayer() or v:GetClass() == "prop_physics") and v ~= ply then
-			local found = false
-			for i = 40, 200, 10 do
-				if util.PointContents(ply:GetPos() + Vector(i, 0, 0)) == CONTENTS_EMPTY then
-					ply:SetPos(ply:GetPos() + Vector(i, 0, 0))
-					--Yeah I found a nice position to put the player in!
-					found = true
-					break
-				end
-			end
-			if not found then
-				for i = 40, 200, 10 do
-					if util.PointContents(ply:GetPos() + Vector(0, i, 0)) == CONTENTS_EMPTY then
-						ply:SetPos(ply:GetPos() + Vector(0, i, 0))
-						found = true
-						break
-					end
-				end
-			end
-			-- If you STILL can't find it, you'll just put him on top of the other player lol
-			if not found then
-				ply:SetPos(ply:GetPos() + Vector(0,0,70))
-			end
-		end
-	end
-	
 	-- If the player for some magical reason managed to respawn while jailed then re-jail the bastard.
 	if RPArrestedPlayers[ply:SteamID()] and ply:GetTable().DeathPos then
 		-- For when CfgVars["teletojail"] == 0
@@ -683,6 +673,61 @@ function GM:PlayerSpawn(ply)
 			ply:Arrest()
 		else
 			Notify(ply, 1, 4, "You're no longer under arrest because no jail positions are set!")
+		end
+	end
+	
+	if CfgVars["customspawns"] == 1 then
+		if not RPArrestedPlayers[ply:SteamID()] then
+			local pos = DB.RetrieveTeamSpawnPos(ply)
+			if pos then
+				ply:SetPos(pos)
+			end
+		end
+	end
+	
+	//for k,v in pairs(ents.FindInSphere(ply:GetPos(), 35)) do
+	local STARTPOS = ply:GetPos()
+	if not IsEmpty(STARTPOS) then
+		local found = false
+		for i = 40, 300, 15 do
+			if IsEmpty(STARTPOS + Vector(i, 0, 0)) then
+				ply:SetPos(STARTPOS + Vector(i, 0, 0))
+				--Yeah I found a nice position to put the player in!
+				found = true
+				break
+			end
+		end
+		if not found then
+			for i = 40, 300, 15 do
+				if IsEmpty(STARTPOS + Vector(0, i, 0)) then
+					ply:SetPos(STARTPOS + Vector(0, i, 0))
+					found = true
+					break
+				end
+			end
+		end
+		if not found then
+			for i = 40, 300, 15 do
+				if IsEmpty(STARTPOS + Vector(0, -i, 0)) then
+					ply:SetPos(STARTPOS + Vector(0, -i, 0))
+					found = true
+					break
+				end
+			end
+		end
+		if not found then
+			for i = 40, 300, 15 do
+				if IsEmpty(STARTPOS + Vector(-i, 0, 0)) then
+					ply:SetPos(STARTPOS + Vector(-i, 0, 0))
+					--Yeah I found a nice position to put the player in!
+					found = true
+					break
+				end
+			end
+		end
+		-- If you STILL can't find it, you'll just put him on top of the other player lol
+		if not found then
+			ply:SetPos(ply:GetPos() + Vector(0,0,70))
 		end
 	end
 
@@ -763,15 +808,6 @@ function GM:PlayerSpawn(ply)
 	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] )
 	if ply:Team() == TEAM_CHIEF or ply:Team() == TEAM_POLICE then
 		GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] + 10 )
-	end
-
-	if CfgVars["customspawns"] == 1 then
-		if not RPArrestedPlayers[ply:SteamID()] then
-			local pos = DB.RetrieveTeamSpawnPos(ply)
-			if pos then
-				ply:SetPos(pos)
-			end
-		end
 	end
 
 	ply:Extinguish()

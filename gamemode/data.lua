@@ -339,7 +339,7 @@ function DB.RetrieveZombies()
 		zombieSpawns[map] = tostring(row.x) .. " " .. tostring(row.y) .. " " .. tostring(row.z)
 	end
 end
-
+--[[ 
 function DB.RetrieveRandomZombieSpawnPos()
 	local map = string.lower(game.GetMap())
 	local r = false
@@ -350,6 +350,73 @@ function DB.RetrieveRandomZombieSpawnPos()
 	else
 		return Vector(0,0,0)
 	end
+end
+ ]]
+ 
+local function IsEmpty(vector)
+	local point = util.PointContents(vector)
+	local a = point ~= CONTENTS_SOLID 
+	and point ~= CONTENTS_MOVEABLE 
+	and point ~= CONTENTS_LADDER 
+	and point ~= CONTENTS_PLAYERCLIP 
+	and point ~= CONTENTS_MONSTERCLIP
+	local b = true
+	
+	for k,v in pairs(ents.FindInSphere(vector, 35)) do
+		if v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics" then
+			b = false
+		end
+	end
+	return a and b
+end
+
+function DB.RetrieveRandomZombieSpawnPos()
+	local map = string.lower(game.GetMap())
+	local r = false
+	local c = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_zspawns WHERE map = " .. sql.SQLStr(map) .. ";"))
+    
+	if c and c >= 1 then
+		r = sql.QueryRow("SELECT * FROM darkrp_zspawns WHERE map = " .. sql.SQLStr(map) .. ";", math.random(1, c))
+        if not IsEmpty(Vector(r.x, r.y, r.z)) then
+			local found = false
+			for i = 40, 200, 10 do
+				if IsEmpty(Vector(r.x, r.y, r.z) + Vector(i, 0, 0)) then
+					found = true
+					return Vector(r.x, r.y, r.z) + Vector(i, 0, 0)
+				end
+			end
+			
+			if not found then
+				for i = 40, 200, 10 do
+					if IsEmpty(Vector(r.x, r.y, r.z) + Vector(0, i, 0)) then
+						found = true
+						return Vector(r.x, r.y, r.z) + Vector(0, i, 0)
+					end
+				end
+			end
+			
+			if not found then
+				for i = 40, 200, 10 do
+					if IsEmpty(Vector(r.x, r.y, r.z) + Vector(-i, 0, 0)) then
+						found = true
+						return Vector(r.x, r.y, r.z) + Vector(-i, 0, 0)
+					end
+				end
+			end
+			
+			if not found then
+				for i = 40, 200, 10 do
+					if IsEmpty(Vector(r.x, r.y, r.z) + Vector(0, -i, 0)) then
+						found = true
+						return Vector(r.x, r.y, r.z) + Vector(0, -i, 0)
+					end
+				end
+			end
+		else
+			return Vector(r.x, r.y, r.z)
+		end
+    end  
+	return Vector(r.x, r.y, r.z) + Vector(0,0,70)        
 end
 
 function DB.StoreMoney(ply, amount)

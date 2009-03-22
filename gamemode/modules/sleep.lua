@@ -85,3 +85,5 @@ function KnockoutToggle(player, command, args, caller)
 end
 
 AddChatCommand("/sleep", KnockoutToggle)
+AddChatCommand("/wake", KnockoutToggle)
+AddChatCommand("/wakeup", KnockoutToggle)

@@ -10,6 +10,7 @@ SVN version
 [ADD] Anti slobbot server crash
 [ADD] Weapon checker for the cops, chief and admin
 [ADD] New, more subtle and easier to find easter egg.
+[ADD] /wake and /wakeup command :)
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
@@ -22,11 +23,16 @@ SVN version
 [FIX] Normalsalary being stored twice.
 [FIX] /teamban not working
 [FIX] RP_max<customteam>s unable to be set to 0
+[FIX] Unable to drop custom shipment weapons
+[FIX] Zombie move code(Thanks Enjia2000)
+[FIX] Enhanced "players don't spawn in each other" code
+[FIX] Zombies spawning in each other using the "players don't spawn in each other" code (a bit thanks to Enjia2000)
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
 [CHANGE] Cooks can now buy food too when hungermod is off
 [CHANGE] Letters get removed after 10 minutes, long enoug and prevents them for lying there for like hours.
+[CHANGE] Custom shipments without a team entered will make it so that every team can spawn the shipment
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 
