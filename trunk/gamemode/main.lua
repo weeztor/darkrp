@@ -1,3 +1,4 @@
+CustomShipments = {}
 local timeLeft = 10
 local timeLeft2 = 10
 local stormOn = false
