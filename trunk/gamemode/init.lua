@@ -148,6 +148,7 @@ LRP = {}
 CSFiles = {}
 CfgVars = {}
 
+include("addshipments.lua")
 include("help.lua")
 include("shared.lua")
 include("data.lua")
@@ -162,7 +163,6 @@ include("admins.lua")
 include("entity.lua")
 include("bannedprops.lua")
 include("hints.lua")
-include("addshipments.lua")
 include("rating.lua")
 //AddCSLuaFile("autorun/sh_SPropProtection.lua")
 AddCSLuaFile("SPropProtection/cl_Init.lua")

@@ -60,7 +60,7 @@ true/false: Can the weapon be sold seperately?(with /buy name) if you want yes t
 the price of sold seperate is the price it is when you do /buy name. Of course you only have to fill this in when sold seperate is true.
 
 
-EXAMPLES OF CUSTOM SHIPMENTS(remove the -- to activate it): */
+EXAMPLES OF CUSTOM SHIPMENTS(remove the // to activate it): */
 
 //AddCustomShipment("HL2pistol", "models/weapons/W_pistol.mdl", "weapon_pistol", 500, 10, false, 200, false, {TEAM_GUN, TEAM_MEDIC})
 
