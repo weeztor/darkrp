@@ -301,7 +301,7 @@ function SPropProtection.GravGunPunt(ply, ent)
 	if ply:KeyDown(IN_ATTACK) then
 		if not ent:GetPhysicsObject() then return false end
 		local entphys = ent:GetPhysicsObject()
-		if entphys:IsMoveable() then
+		if entphys:IsValid() and entphys:IsMoveable() then
 			entphys:EnableMotion(false)
 			local curpos = ent:GetPos()
 			timer.Simple(.01, entphys.EnableMotion, entphys, true)
