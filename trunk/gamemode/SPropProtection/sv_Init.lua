@@ -7,7 +7,7 @@
 
 
 SPropProtection = {}
-SPropProtection.Version = "RP!"
+SPropProtection.Version = "DarkRP"
 CPPI = {}
 CPPI_NOTIMPLEMENTED = 26
 CPPI_DEFER = 16
@@ -48,12 +48,20 @@ end
 function SPropProtection.AdminReload(ply)
 	if(ply) then
 		for k, v in pairs(SPropProtection["Config"]) do
-			ply:ConCommand("SPropProtection_"..k.." "..v.."\n")
+			local stuff = k
+			if(stuff == "toggle") then
+				stuff = "onoff"
+			end
+			ply:ConCommand("SPropProtection_"..stuff.." "..v.."\n")
 		end
 	else
 		for k1, v1 in pairs(player.GetAll()) do
 			for k2, v2 in pairs(SPropProtection["Config"]) do
-				v1:ConCommand("SPropProtection_"..k2.." "..v2.."\n")
+				local stuff = k2
+				if(stuff == "toggle") then
+					stuff = "onoff"
+				end
+				v1:ConCommand("SPropProtection_"..stuff.." "..v2.."\n")
 			end
 		end
 	end
@@ -415,17 +423,12 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 end
 hook.Add("CanTool", "SPropProtection.CanTool", SPropProtection.CanTool)
 
-function SPropProtection.EntityTakeDamage(ent, inflictor, attacker, amount)
+function SPropProtection.EntityTakeDamage(ent, inflictor, attacker, amount, dmginfo)
 	if(tonumber(SPropProtection["Config"]["edmg"]) == 0) then return end
 	if(not ValidEntity(ent)) then return false end
     if(ent:IsPlayer() or !attacker:IsPlayer()) then return end
 	if(!SPropProtection.PlayerCanTouch(attacker, ent)) then
-		local Total = ent:Health() + amount
-		if(ent:GetMaxHealth() > Total) then 
-			ent:SetMaxHealth(Total)
-		else
-			ent:SetHealth(Total)
-		end
+		dmginfo:SetDamage(0)
 	end
 end
 hook.Add("EntityTakeDamage", "SPropProtection.EntityTakeDamage", SPropProtection.EntityTakeDamage)
