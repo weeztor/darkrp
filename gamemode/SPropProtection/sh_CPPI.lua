@@ -46,7 +46,7 @@ if(!Entity) then
 end
 
 function Entity:CPPIGetOwner()
-	local Player = self:GetNetworkedEntity("OwnerObj", false)
+	local Player = self:GetNetworkedEntity("OwnerObj")
 	
 	if(SERVER) then
 		Player = SPropProtection["Props"][self:EntIndex()][3]
