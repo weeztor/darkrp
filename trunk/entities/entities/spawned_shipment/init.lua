@@ -35,9 +35,9 @@ function ENT:Initialize()
 	self.Entity:SetNWBool("shipment", true)
 	self.locked = false
 	local phys = self.Entity:GetPhysicsObject()
-	if phys and phys:IsValid() then phys:Wake() end
 	self.Entity:SetNWInt("damage",100)
 	self.Entity:SetNWString("Owner", "Shared")
+	if phys and phys:IsValid() then phys:Wake() end
 end
 
 function ENT:OnTakeDamage(dmg)
