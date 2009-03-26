@@ -148,19 +148,20 @@ LRP = {}
 CSFiles = {}
 CfgVars = {}
 
-include("addshipments.lua")
+
 include("help.lua")
 include("shared.lua")
 include("data.lua")
 include("admincc.lua")
 include("player.lua")
 include("chat.lua")
-include("main.lua")
 include("util.lua")
 include("votes.lua")
 include("questions.lua")
 include("admins.lua")
 include("entity.lua")
+include("addshipments.lua")
+include("main.lua")
 include("bannedprops.lua")
 include("hints.lua")
 include("rating.lua")

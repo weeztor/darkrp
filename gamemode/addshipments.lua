@@ -69,4 +69,3 @@ EXAMPLES OF CUSTOM SHIPMENTS(remove the // to activate it): */
 --EXAMPLE OF A BOUNCY BALL:   		NOTE THAT YOU HAVE TO PRESS E REALLY QUICKLY ON THE BOMB OR YOU'LL EAT THE BALL LOL
 --AddCustomShipment("bball", "models/Combine_Helicopter/helicopter_bomb01.mdl", "sent_ball", 100, 10, true, 10, true)
 -- ADD CUSTOM SHIPMENTS HERE(next line):
-
