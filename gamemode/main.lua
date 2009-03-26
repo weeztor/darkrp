@@ -877,7 +877,8 @@ function BuyShipment(ply, args)
 		crate:SetMoveType(MOVETYPE_VPHYSICS)
 		crate:SetSolid(SOLID_VPHYSICS)
 	end
-	
+	local phys = crate:GetPhysicsObject()
+	if phys and phys:IsValid() then phys:Wake() end
 	return ""
 end
 AddChatCommand("/buyshipment", BuyShipment)
