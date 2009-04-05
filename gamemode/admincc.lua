@@ -42,9 +42,10 @@ function ccValueCommand(ply, cmd, args)
 	local amount = math.floor(tonumber(args[1]))
 
 	if valuecmd.global then
-		SetGlobalInt(valuecmd.var, amount)
+		DB.SaveGlobal(valuecmd.var, amount)
 	else
-		CfgVars[valuecmd.var] = amount
+		//CfgVars[valuecmd.var] = amount
+		DB.SaveSetting(valuecmd.var, amount)
 	end
 
 	local nick = ""
@@ -56,8 +57,6 @@ function ccValueCommand(ply, cmd, args)
 	end
 
 	NotifyAll(0, 4, nick .. " set " .. cmd .. " to " .. amount)
-	--Save changes when a change is made :)
-	SaveRPChanges()
 end
 
 ToggleCmds = {}
@@ -105,9 +104,10 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	if togglecmd.global then
-		SetGlobalInt(togglecmd.var, toggle)
+		DB.SaveGlobal(togglecmd.var, toggle)
 	else
-		CfgVars[togglecmd.var] = toggle
+		//CfgVars[togglecmd.var] = toggle
+		DB.SaveSetting(togglecmd.var, toggle)
 	end
 
 	local nick = ""
@@ -119,8 +119,6 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	NotifyAll(0, 3, nick .. " set " .. cmd .. " to " .. toggle)
-	--Save changes when a change is made :)
-	SaveRPChanges()
 end
 
 --------------------------------------------------------------------------------------------------
@@ -480,7 +478,7 @@ function ccPayDayTime(ply, cmd, args)
 
 	if not amount then return end
 
-	CfgVars["paydelay"] = amount
+	DB.SaveSetting("paydelay", amount)
 
 	for k, v in pairs(player.GetAll()) do
 		v:UpdateJob(v:GetNWString("job"))
@@ -1417,7 +1415,6 @@ for k,v in pairs(RPExtraTeams) do
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.." <Number> - Sets max "..v.name.."s.")
 	if CfgVars["rp_max"..v.command] == nil then CfgVars["rp_max"..v.command] = v.max end
 	concommand.Add("rp_max"..v.command.."s", function(ply, cmd, args)
-		print(args[1], type(args[1]), tonumber(args[1]))
 		if #args < 1 or args[1] == nil then
 			print("rp_max"..v.command, "=", v.max)
 			ply:PrintMessage(2, "rp_max"..v.command..  "    =    ".. v.max)
@@ -1430,7 +1427,7 @@ for k,v in pairs(RPExtraTeams) do
 		end
 		
 		v.max = tonumber(args[1])
-		CfgVars["rp_max"..v.command] = tonumber(args[1])
+		DB.SaveSetting("rp_max"..v.command, tonumber(args[1]))
 		
 		local nick = ""
 

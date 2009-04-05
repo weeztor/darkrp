@@ -103,7 +103,9 @@ function AddHelpLabel(id, category, text, constant)
 end
 
 function NetworkHelpLabels(ply)
+	if not ValidEntity(ply) then timer.Simple(1, NetworkHelpLabels, ply) return end
 	local function tNetworkHelpCategories(ply, i)
+		if not ValidEntity(ply) then return end
 		umsg.Start("AddHelpCategory", ply)
 			umsg.Short(i.id)
 			umsg.String(i.name)
@@ -111,6 +113,7 @@ function NetworkHelpLabels(ply)
 	end
 
 	local function tNetworkHelpLabels(ply, i)
+		if not ValidEntity(ply) then return end
 		umsg.Start("AddHelpLabel", ply)
 			umsg.Short(i.id)
 			umsg.Short(i.category)

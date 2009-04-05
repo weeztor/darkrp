@@ -5,17 +5,18 @@ include("HungerMod/player.lua")
 HM = { }
 FoodItems = { }
 
-SetGlobalInt("hungermod", 0)       --Hunger mod is enabled or disabled
+DB.SaveGlobal("hungermod", 0)       --Hunger mod is enabled or disabled
 
-CfgVars["starverate"] = 3      --How much health is taken away per second when starving
-CfgVars["hungerspeed"] = 1       --How much energy should deteriate every second
-CfgVars["foodcost"] = 15       --Cost of food
-CfgVars["foodpay"] = 1     --Whether there's a special spawning price for food
+DB.SaveSetting("starverate", 3)      --How much health is taken away per second when starving
+DB.SaveSetting("hungerspeed", 1)       --How much energy should deteriate every second
+DB.SaveSetting("foodcost", 15)       --Cost of food
+DB.SaveSetting("foodpay", 1)     --Whether there's a special spawning price for food
+DB.SaveSetting("foodspawn", 1)
 
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
 	if not ply:IsAdmin() then ply:ChatPrint("You're not an admin") return end
 	if not args[1] then ply:ChatPrint("No arguments specified!") return end
-	CfgVars["hungerspeed"] = tonumber(args[1]) / 10
+	DB.SaveSetting("hungerspeed", tonumber(args[1]) / 10)
 end)
 
 function AddFoodItem(name, mdl, amount)
@@ -113,7 +114,7 @@ end
 hook.Add("KeyPress", "HM.KeyPress", HM.KeyPress)
 
 function HM.Think()
-	if GetGlobalInt("hungermod") == 0 then return end
+	if GetGlobalInt("hungermod") ~= 1 then return end
 
 	if CfgVars["hungerspeed"] == 0 then return end
 

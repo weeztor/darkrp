@@ -158,33 +158,6 @@ function PlayerDist(npcPos)
 	return currPlayer
 end
 
---[[ function MoveZombie()
-	local activePlayers = false
-
-	for k, v in pairs(player.GetAll()) do
-		activePlayers = true
-	end
-
-	if activePlayers then
-		local tb1 = table.Add(ents.FindByClass("npc_antlion"),ents.FindByClass("npc_fastzombie"))
-		local tb2 = table.Add(ents.FindByClass("npc_zombie"),ents.FindByClass("npc_headcrab_fast"))
-		local tb3 = table.Add(tb1,tb2)
-		local tb4 = table.Add(tb3,ents.FindByClass("npc_headcrab"))
-
-		for a, b in pairs(tb4) do
-			local newpos = b:GetPos() + ((PlayerDist(b):GetPos()-b:GetPos()):Normalize()*500)
-
-			if PlayerDist(b):GetPos():Distance(b:GetPos()) > 500 then
-				b:AddEntityRelationship(PlayerDist(b), 1, 99)
-				b:SetLastPosition(newpos)
-				b:SetSchedule(71)
-			end
-		end
-	end
-	timer.Create("move", .5, 0, MoveZombie)
-	timer.Stop("move")
-end
- ]]
 function LoadTable(ply)
 	ply:SetNWInt("numPoints", table.getn(zombieSpawns))
 
@@ -2011,7 +1984,7 @@ function Lockdown(ply)
 			for k,v in pairs(player.GetAll()) do
 				v:ConCommand("play npc/overwatch/cityvoice/f_confirmcivilstatus_1_spkr.wav\n")
 			end
-			SetGlobalInt("lstat", 1)
+			DB.SaveGlobal("lstat", 1)
 			PrintMessageAll(HUD_PRINTTALK , "Lockdown in progress, please return to your homes!")
 			NotifyAll(4, 3, ply:Nick() .. " has initiated a Lockdown, please return to your homes!")
 		end
@@ -2026,7 +1999,7 @@ function UnLockdown(ply)
 		if ply:Team() == TEAM_MAYOR or ply:HasPriv(ADMIN) then
 			PrintMessageAll(HUD_PRINTTALK , "Lockdown has ended.")
 			NotifyAll(4, 3, ply:Nick() .. " has ended the Lockdown.")
-			SetGlobalInt("ulstat", 1)
+			DB.SaveGlobal("ulstat", 1)
 			timer.Create("spamlock", 20, 1, WaitLock, "")
 		end
 	end
@@ -2036,66 +2009,46 @@ concommand.Add("rp_unlockdown", UnLockdown)
 AddChatCommand("/unlockdown", UnLockdown)
 
 function WaitLock()
-	SetGlobalInt("ulstat", 0)
-	SetGlobalInt("lstat", 0)
+	DB.SaveGlobal("ulstat", 0)
+	DB.SaveGlobal("lstat", 0)
 	timer.Destroy("spamlock")
 end
 
 function RefreshGlobals()
-	if CfgVars["refreshglobals"] ~= 1 then
-		SetGlobalInt("ak47cost", 2450)
-		SetGlobalInt("mp5cost", 2200)
-		SetGlobalInt("m16cost", 2450)
-		SetGlobalInt("mac10cost", 2150)
-		SetGlobalInt("shotguncost", 1750)
-		SetGlobalInt("snipercost", 3750)
-		SetGlobalInt("deaglecost", 215)
-		SetGlobalInt("fivesevencost", 205)
-		SetGlobalInt("glockcost", 160)
-		SetGlobalInt("p228cost", 185)
-		SetGlobalInt("druglabcost", 400)
-		SetGlobalInt("gunlabcost", 500)
-		SetGlobalInt("mprintercost", 1000)
-		SetGlobalInt("mprintamount", 250)
-		SetGlobalInt("microwavecost", 400)
-		SetGlobalInt("drugpayamount", 15)
-		SetGlobalInt("ammopistolcost", 30)
-		SetGlobalInt("ammoriflecost", 60)
-		SetGlobalInt("ammoshotguncost", 70)
-		SetGlobalInt("healthcost", 60)
-		SetGlobalInt("jailtimer", 120)
-		SetGlobalInt("microwavefoodcost", 30)
-		SetGlobalInt("maxcopsalary", 100)
-		SetGlobalInt("maxdrugfood", 2)
-		SetGlobalInt("npckillpay", 10)
-		SetGlobalInt("nametag", 1)
-		SetGlobalInt("jobtag", 1)
-		SetGlobalInt("globalshow", 0)
-		SetGlobalInt("deathnotice", 1)
-	end
-	CfgVars["refreshglobals"] = 1
-	timer.Simple(30, refwait)
-end
-
-function VerifyGlobals(ply)
-	if not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "Must be an Admin to refresh the Global Variables!")
-		return
-	else
-		local nick = ""
-		if ply:EntIndex() == 0 then
-			nick = "Console"
-		else
-			nick = ply:Nick()
-		end
-		NotifyAll(0, 6, nick .. " refreshed the Global Variables.")
-		RefreshGlobals()
-	end
-end
-concommand.Add("refresh_int", VerifyGlobals)
-
-function refwait()
-	CfgVars["refreshglobals"] = 0
+	DB.SaveGlobal("ak47cost", 2450)
+	DB.SaveGlobal("mp5cost", 2200)
+	DB.SaveGlobal("m16cost", 2450)
+	DB.SaveGlobal("mac10cost", 2150)
+	DB.SaveGlobal("shotguncost", 1750)
+	DB.SaveGlobal("snipercost", 3750)
+	DB.SaveGlobal("deaglecost", 215)
+	DB.SaveGlobal("fivesevencost", 205)
+	DB.SaveGlobal("glockcost", 160)
+	DB.SaveGlobal("p228cost", 185)
+	DB.SaveGlobal("druglabcost", 400)
+	DB.SaveGlobal("gunlabcost", 500)
+	DB.SaveGlobal("mprintercost", 1000)
+	DB.SaveGlobal("mprintamount", 250)
+	DB.SaveGlobal("microwavecost", 400)
+	DB.SaveGlobal("drugpayamount", 15)
+	DB.SaveGlobal("ammopistolcost", 30)
+	DB.SaveGlobal("ammoriflecost", 60)
+	DB.SaveGlobal("ammoshotguncost", 70)
+	DB.SaveGlobal("healthcost", 60)
+	DB.SaveGlobal("jailtimer", 120)
+	DB.SaveGlobal("microwavefoodcost", 30)
+	DB.SaveGlobal("maxcopsalary", 100)
+	DB.SaveGlobal("maxdrugfood", 2)
+	DB.SaveGlobal("npckillpay", 10)
+	DB.SaveGlobal("jobtag", 1)
+	DB.SaveGlobal("globalshow", 0)
+	DB.SaveGlobal("deathnotice", 1)
+	DB.SaveGlobal("normalsalary", 45)
+	DB.SaveGlobal("globaltags", 1)
+	DB.SaveGlobal("nametag", 1)
+	DB.SaveGlobal("deathblack", 0)
+	DB.SaveGlobal("maxnormalsalary", 90)
+	DB.SaveGlobal("mayorsetsalary", 90)
 end
 
 function GM:PlayerSpawnProp(ply, model)
