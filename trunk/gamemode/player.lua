@@ -879,6 +879,7 @@ function GM:PlayerLoadout(ply)
 end
 
 function meta:CompleteSentence()
+	if not ValidEntity(self) then return end
 	local ID = self:SteamID()
 	if ValidEntity(self) and ID ~= nil and RPArrestedPlayers[ID] then
 		local time = GetGlobalInt("jailtimer")

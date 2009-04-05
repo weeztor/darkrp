@@ -2,6 +2,8 @@ include("static_data.lua")
 DB.privcache = {}
 function DB.Init()
 	sql.Begin()
+		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_settings('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
+		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_globals('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_tspawns('map' TEXT NOT NULL, 'team' INTEGER NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL, PRIMARY KEY('map', 'team'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_privs('steam' TEXT NOT NULL, 'admin' INTEGER NOT NULL, 'mayor' INTEGER NOT NULL, 'cp' INTEGER NOT NULL, 'tool' INTEGER NOT NULL, 'phys' INTEGER NOT NULL, 'prop' INTEGER NOT NULL, PRIMARY KEY('steam'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_salaries('steam' TEXT NOT NULL, 'salary' INTEGER NOT NULL, PRIMARY KEY('steam'));")
@@ -544,3 +546,59 @@ function DB.SetUpCPOwnableDoors()
 		e:SetNWString("dTitle", row.title)
 	end
 end
+
+function DB.RetrieveSettings()
+	local r = sql.Query("SELECT key, value FROM darkrp_settings;")
+	if not r then return false end
+	
+	for k, v in pairs(r) do
+		CfgVars[v.key] = v.value
+	end
+	return true
+end
+
+function DB.SaveSetting(key, value)
+	local r = sql.QueryValue("SELECT value FROM darkrp_settings WHERE key = "..sql.SQLStr(key)..";")
+	if not r then
+		sql.Query("INSERT INTO darkrp_settings VALUES(" .. sql.SQLStr(key) .. ", " .. value .. ");")
+		print("Created", key, "=", value)
+	elseif tonumber(r) ~= value then
+		sql.Query("UPDATE darkrp_settings SET value = " .. value .. " WHERE key = " .. sql.SQLStr(key) .. ";")
+		print("updated", key, "to", value)
+	end
+	CfgVars[key] = value
+end
+
+function DB.RemoveSettings()
+	sql.Query("DELETE FROM darkrp_settings;")
+end
+
+function DB.RetrieveGlobals()
+	local r = sql.Query("SELECT key, value FROM darkrp_globals;")
+	if not r then return false end
+	
+	for k, v in pairs(r) do
+		SetGlobalInt(v.key, v.value)
+	end
+	if #r < 30 then
+		RefreshGlobals()
+	end
+	return r
+end
+
+function DB.SaveGlobal(key, value)
+	local r = sql.QueryValue("SELECT value FROM darkrp_globals WHERE key = "..sql.SQLStr(key)..";")
+	if not r then
+		sql.Query("INSERT INTO darkrp_globals VALUES(" .. sql.SQLStr(key) .. ", " .. value .. ");")
+		print("Created", key, "=", value)
+	elseif tonumber(r) ~= value then
+		sql.Query("UPDATE darkrp_globals SET value = " .. value .. " WHERE key = " .. sql.SQLStr(key) .. ";")
+		print("updated", key, "to", value)
+	end
+	SetGlobalInt(key, value)
+end
+
+function DB.RemoveGlobals()
+	sql.Query("DELETE FROM darkrp_globals;")
+end
+	
