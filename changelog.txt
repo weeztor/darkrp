@@ -28,6 +28,7 @@ SVN version
 [FIX] Enhanced "players don't spawn in each other" code
 [FIX] Zombies spawning in each other using the "players don't spawn in each other" code (a bit thanks to Enjia2000)
 [FIX] Settings and globals not loading
+[FIX] prop protection assigning all world props to the owner of the server(in case of a listen server)
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
@@ -36,6 +37,7 @@ SVN version
 [CHANGE] Custom shipments without a team entered will make it so that every team can spawn the shipment
 [CHANGE] Moved changelog part in init.lua to the changelog.txt file
 [CHANGE] The way of saving settings and globals, it now doesn't use text files but SQL
+[CHANGE] Admins can touch world props to players can touch world props so players can pick up world items.
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings

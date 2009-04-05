@@ -138,11 +138,10 @@ function SPropProtection.IsBuddy(ply, ent)
 end
 
 function SPropProtection.PlayerCanTouch(ply, ent)
-
 	if(tonumber(SPropProtection["Config"]["onoff"]) == 0 or ent:GetClass() == "worldspawn") then
 		return true
 	end
-
+	
 	if(string.find(ent:GetClass(), "stone_") == 1 or string.find(ent:GetClass(), "rock_") == 1 or string.find(ent:GetClass(), "stargate_") == 0 or string.find(ent:GetClass(), "dhd_") == 0 or ent:GetClass() == "flag" or ent:GetClass() == "item") then
 		if(!ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "") then
 			ent:SetNetworkedString("Owner", "World")
@@ -151,7 +150,7 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 			return true
 		end
 	end
-
+	
 	if(!ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and !ent:IsPlayer()) then
 		SPropProtection.PlayerMakePropOwner(ply, ent)
 		SPropProtection.Nofity(ply, "You now own this prop")
@@ -159,12 +158,13 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 	end
 
 	if(ent:GetNetworkedString("Owner") == "World") then
-		if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["awp"]) == 1 and tonumber(SPropProtection["Config"]["admin"]) == 1) then
+		if tonumber(SPropProtection["Config"]["awp"]) == 1 and (string.lower(ent:GetClass()) == "prop_physics" or  string.lower(ent:GetClass()) == "func_physbox") /*and tonumber(SPropProtection["Config"]["admin"]) == 1)*/ then
 			return true
 		end
 	elseif(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then
 		return true
 	end
+	
 	if(SPropProtection["Props"][ent:EntIndex()] != nil) then
 		
 		if(SPropProtection["Props"][ent:EntIndex()][1] == ply:SteamID() or SPropProtection.IsBuddy(ply, ent)) then
@@ -647,7 +647,7 @@ concommand.Add("SPropProtection_ApplyAdminSettings", SPropProtection.ApplySettin
 function SPropProtection.WorldOwner()
 	local WorldEnts = 0
 	for k, v in pairs(ents.FindByClass("*")) do
-		if(!v:IsPlayer() and !v:GetNetworkedString("Owner", false)) then
+		if (!v:IsPlayer() and not v:GetNetworkedEntity("OwnerObj"):IsValid()) then
 			v:SetNetworkedString("Owner", "World")
 			WorldEnts = WorldEnts + 1
 		end
