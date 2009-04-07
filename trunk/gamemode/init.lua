@@ -1,4 +1,5 @@
 CUR = "$"
+GlobalInts = {}
 -- RP Name Overrides
 
 DARKRPVERSION = "2.3.5+"

@@ -1,3 +1,4 @@
+GlobalInts = {}
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
 
@@ -821,20 +822,20 @@ function RunConsoleCommand(a,  ...)
 	end
 	oldcom(a, ...)
 end
---[[ 
-local PLY = FindMetaTable("Player")
 
-PLY.oldconcommand = PLY.ConCommand
 
-function PLY:ConCommand(com)
-	if not com then return end
-	print(com)
-	if (type(com) == "string" and string.find(string.lower(com), "physics_debug_entity")) then
-		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nServer lag/crash prevented\n\n\n\n")
-		LocalPlayer():Remove() --hehe
-		RunConsoleCommand("Kickmyself")
-		RunConsoleCommand("disconnect")
-		return
+local function RecieveFGlobalInt(msg)
+	local int = msg:ReadLong()
+	local id = msg:ReadString()
+	GlobalInts[id] = int
+end
+usermessage.Hook("FRecieveGlobalInt", RecieveFGlobalInt)
+
+local oldGetGlobalInt = GetGlobalInt
+function GetGlobalInt(id)
+	if GlobalInts[id] then
+		return GlobalInts[id]
+	else
+		return oldGetGlobalInt(id)
 	end
-	self.oldconcommand(com) 
-end ]]
+end
