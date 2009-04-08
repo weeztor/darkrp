@@ -1,5 +1,36 @@
 CUR = "$"
 GlobalInts = {}
+
+--Overriding garryfunctions to fix the global ints
+local oldGetGlobalInt = GetGlobalInt
+function GetGlobalInt(id)
+	if GlobalInts[id] then
+		if oldGetGlobalInt(id) ~= GlobalInts[id] then
+			SetGlobalInt(id, GlobalInts[id])
+		end
+		return GlobalInts[id]
+	else
+		return oldGetGlobalInt(id)
+	end
+end
+
+local OldSetGlobalInt = SetGlobalInt
+
+function SetGlobalInt(id, int)
+	GlobalInts[id] = int
+	OldSetGlobalInt(id, int)
+	for k, ply in pairs(player.GetAll()) do
+		if v ~= 0 then
+			umsg.Start("FRecieveGlobalInt", ply)
+				umsg.Long(int)
+				umsg.String(id)
+			umsg.End()
+		else
+			GlobalInts[k] = nil
+		end
+	end
+end
+
 -- RP Name Overrides
 
 DARKRPVERSION = "2.3.5+"

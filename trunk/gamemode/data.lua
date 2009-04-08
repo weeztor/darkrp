@@ -547,41 +547,12 @@ function DB.SetUpCPOwnableDoors()
 	end
 end
 
-local oldGetGlobalInt = GetGlobalInt
-function GetGlobalInt(id)
-	if GlobalInts[id] then
-		if oldGetGlobalInt(id) ~= GlobalInts[id] then
-			SetGlobalInt(id, GlobalInts[id])
-		end
-		return GlobalInts[id]
-	else
-		return oldGetGlobalInt(id)
-	end
-end
-
-local OldSetGlobalInt = SetGlobalInt
-
-function SetGlobalInt(id, int)
-	GlobalInts[id] = int
-	OldSetGlobalInt(id, int)
-	for k, ply in pairs(player.GetAll()) do
-		if v ~= 0 then
-			umsg.Start("FRecieveGlobalInt", ply)
-				umsg.Long(int)
-				umsg.String(id)
-			umsg.End()
-		else
-			GlobalInts[k] = nil
-		end
-	end
-end
-
 function DB.RetrieveSettings()
 	local r = sql.Query("SELECT key, value FROM darkrp_settings;")
 	if not r then return false end
 	
 	for k, v in pairs(r) do
-		CfgVars[v.key] = v.value
+		CfgVars[v.key] = tonumber(v.value)
 	end
 	return true
 end
@@ -607,7 +578,7 @@ function DB.RetrieveGlobals()
 	if not r then return false end
 	
 	for k, v in pairs(r) do
-		SetGlobalInt(v.key, v.value)
+		SetGlobalInt(v.key, tonumber(v.value))
 	end
 	if #r < 30 then
 		RefreshGlobals()

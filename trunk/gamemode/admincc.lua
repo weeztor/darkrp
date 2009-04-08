@@ -104,7 +104,6 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	if togglecmd.global then
-		print("GLOBAL", togglecmd.var, toggle)
 		DB.SaveGlobal(togglecmd.var, toggle)
 	else
 		//CfgVars[togglecmd.var] = toggle

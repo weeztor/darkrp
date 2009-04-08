@@ -1,4 +1,5 @@
 function Notify(ply, msgtype, len, msg)
+	if not ValidEntity(ply) then return end
 	umsg.Start("_Notify", ply)
 		umsg.String(msg)
 		umsg.Short(msgtype)
