@@ -823,6 +823,22 @@ function RunConsoleCommand(a,  ...)
 	oldcom(a, ...)
 end
 
+local OldSetGlobalInt = SetGlobalInt
+
+function SetGlobalInt(id, int)
+	GlobalInts[id] = int
+	OldSetGlobalInt(id, int)
+	for k, ply in pairs(player.GetAll()) do
+		if v ~= 0 then
+			umsg.Start("FRecieveGlobalInt", ply)
+				umsg.Long(int)
+				umsg.String(id)
+			umsg.End()
+		else
+			GlobalInts[k] = nil
+		end
+	end
+end
 
 local function RecieveFGlobalInt(msg)
 	local int = msg:ReadLong()
