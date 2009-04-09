@@ -151,22 +151,13 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 		end
 	end
 	
-	if(!ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and !ent:IsPlayer()) then
+	if (!ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and !ent:IsPlayer()) then
 		SPropProtection.PlayerMakePropOwner(ply, ent)
 		SPropProtection.Nofity(ply, "You now own this prop")
 		return true
 	end
-
-	if(ent:GetNetworkedString("Owner") == "World") then
-		if (tonumber(SPropProtection["Config"]["awp"]) == 1 or (ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1)) and (string.lower(ent:GetClass()) == "prop_physics" or  string.lower(ent:GetClass()) == "func_physbox") /*and tonumber(SPropProtection["Config"]["admin"]) == 1)*/ then
-			return true
-		end
-	elseif(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then
-		return true
-	end
 	
 	if(SPropProtection["Props"][ent:EntIndex()] != nil) then
-		
 		if(SPropProtection["Props"][ent:EntIndex()][1] == ply:SteamID() or SPropProtection.IsBuddy(ply, ent)) then
 			return true
 		end
@@ -195,8 +186,21 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 		end
 	end
 	
+
+	if(ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick()) then return true end
+
 	if(game.GetMap() == "gm_construct" and ent:GetNetworkedString("Owner") == "World") then
 		return true
+	end
+
+	if (ent:GetNetworkedString("Owner") == "World") then
+		if (tonumber(SPropProtection["Config"]["awp"]) == 1 or (ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1)) and (string.lower(ent:GetClass()) == "prop_physics" or  string.lower(ent:GetClass()) == "func_physbox" or string.lower(ent:GetClass()) == "prop_physics_multiplayer") then
+			return true
+		end
+	elseif (ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then
+		return true
+	elseif (ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 0) then
+		return false
 	end
 	return false
 end
@@ -235,11 +239,14 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 	if not ValidEntity(ent) then return false end
 	local class = ent:GetClass()
 	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf") then return false end
-	if not SPropProtection.AntiCopy then return false end
 	if ent:IsVehicle() and not ply:IsAdmin() then return false end
-	for k,v in pairs(SPropProtection.AntiCopy) do
-		if ent:GetClass() == v and not ply:IsAdmin() then return false end
+	
+	if SPropProtection.AntiCopy then
+		for k,v in pairs(SPropProtection.AntiCopy) do
+			if ent:GetClass() == v and not ply:IsAdmin() then return false end
+		end
 	end
+	
 	if not SPropProtection.PlayerCanTouch(ply, ent) then
 		return false
 	end
@@ -250,8 +257,8 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 				if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
 					return false
 				end
-				local class = v:GetClass()
-				if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
+				local Class = v:GetClass()
+				if (Class == "func_door" or Class == "func_door_rotating" or Class == "prop_door_rotating") then
 					return false
 				end
 				for a,b in pairs(SPropProtection.AntiCopy) do
@@ -265,9 +272,6 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 			end
 		end
 	end
-
-	if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then return true end
-	if(ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick()) then return true end
 	return true
 end
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
@@ -288,18 +292,16 @@ function SPropProtection.GravGunThings(ply, ent)
 			timer.Simple(.01, ent.SetPos, ent, curpos)
 		end
 	end
+	
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v then return true end
 	end
-	if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then return true end
 	
-	if(ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick()) then return true end
-	if(!ent:IsValid() or !SPropProtection.PlayerCanTouch(ply, ent)) then
+	if not SPropProtection.PlayerCanTouch(ply, ent) then
 		return false
 	end
-	return false
+	return true
 end
-
 hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropProtection.GravGunThings)
 
 function SPropProtection.GravGunPunt(ply, ent)
@@ -323,10 +325,6 @@ hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.GravGunPu
 
 
 function SPropProtection.CanTool(ply, tr, toolgun)
-	local ent = tr.Entity
-	for k,v in pairs(SPropProtection.AntiCopy) do
-		if ValidEntity(ent) and ent:GetClass() == v then return false end
-	end
 	if string.find(toolgun, "duplicator") then
 		//NORMAL DUPLICATOR
 		local Ents = ply:UniqueIDTable( "Duplicator" ).Entities
@@ -381,8 +379,13 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		end
 	end
 	
-	if(ValidEntity(ent) and (ent:IsPlayer() or ent:IsWeapon())) then return false end
-	if ValidEntity(ent) and (ent:IsWeapon() or string.find(ent:GetClass(), "weapon")) then return false end
+	local ent = tr.Entity
+	if not ValidEntity(ent) then return true end
+	for k,v in pairs(SPropProtection.AntiCopy) do
+		if ent:GetClass() == v then return false end
+	end
+	if (ent:IsWeapon()) then return false end
+	if (ent:IsWeapon() or string.find(ent:GetClass(), "weapon")) then return false end
 		
 	if(!SPropProtection.PlayerCanTouch(ply, ent)) then
 		return false
@@ -398,26 +401,25 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 			end
 		end
 	end
-	if ValidEntity(ent) then
-		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
-				SPropProtection.Nofity(ply, "Weapons are attached to your prop")
+	
+	for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
+		if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
+			SPropProtection.Nofity(ply, "Weapons are attached to your prop")
+			return false
+		end
+		local class = v:GetClass()
+		if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
+			return false
+		end
+		for a,b in pairs(SPropProtection.AntiCopy) do
+			if string.find(v:GetClass(), b) and not string.find(v:GetClass(), "cameraprop") then
+				SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
 				return false
 			end
-			local class = v:GetClass()
-			if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
-				return false
-			end
-			for a,b in pairs(SPropProtection.AntiCopy) do
-				if string.find(v:GetClass(), b) and not string.find(v:GetClass(), "cameraprop") then
-					SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
-					return false
-				end
-			end
-			if not SPropProtection.PlayerCanTouch(ply, v) then
-				SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
-				return false
-			end
+		end
+		if not SPropProtection.PlayerCanTouch(ply, v) then
+			SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
+			return false
 		end
 	end
 end
@@ -444,13 +446,8 @@ function SPropProtection.PlayerUse(ply, ent)
 			return true
 		end
 	end
-	if(ent:IsValid() and tonumber(SPropProtection["Config"]["use"]) == 1) then
-		if(!SPropProtection.PlayerCanTouch(ply, ent) and
-                        ent:GetNetworkedString("Owner") != ply:Nick() and
-                        ent:GetNetworkedString("Owner") != "World" and
-                        ent:GetNetworkedString("Owner") != "Shared") then
-			return false
-		end
+	if ent:IsValid() and tonumber(SPropProtection["Config"]["use"]) == 1 and not SPropProtection.PlayerCanTouch(ply, ent) and ent:GetNetworkedString("Owner") != "World" then
+		return false
 	end
 end
 hook.Add("PlayerUse", "SPropProtection.PlayerUse", SPropProtection.PlayerUse)
@@ -460,6 +457,9 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 	local tr = util.TraceLine(util.GetPlayerTrace(ply))
 	if(!tr.HitNonWorld or !tr.Entity:IsValid() or tr.Entity:IsPlayer()) then return end
 	
+	if(!SPropProtection.PlayerCanTouch(ply, tr.Entity)) then
+		return false
+	end
 	for k,v in pairs(constraint.GetAllConstrainedEntities(tr.Entity)) do
 		if v ~= ent then
 			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
@@ -482,9 +482,7 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 			end
 		end
 	end
-	if(!SPropProtection.PlayerCanTouch(ply, tr.Entity)) then
-		return false
-	end
+	return true
 end
 hook.Add("OnPhysgunReload", "SPropProtection.OnPhysgunReload", SPropProtection.OnPhysgunReload)
 
