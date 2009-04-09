@@ -1,26 +1,24 @@
 ------------------------------------
 --	Simple Prop Protection
---	By Spacetech
+--	By Spacetech edited by FPtje
 ------------------------------------
-
 -- Simple prop protection merge
 
 
-SPropProtection = {}
+SPropProtection = {} -- Make a table for like every function and subvariable.
 SPropProtection.Version = "DarkRP"
-CPPI = {}
-CPPI_NOTIMPLEMENTED = 26
-CPPI_DEFER = 16
-
-SPropProtection["Props"] = {}
+SPropProtection["Props"] = {} -- a table with the props that players own.
+-- Table with RP objects that can't be copied:
 SPropProtection.AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool"}
+
+-- Put all existing weapons in after 5 seconds
 timer.Simple(5, function()
 	for k,v in pairs(weapons.GetList()) do
 		table.insert(SPropProtection.AntiCopy, v.Classname)
 	end
 end)
 
-
+-- Start the settings
 function SPropProtection.SetupSettings()
 	if(!sql.TableExists("spropprotection")) then
 		sql.Query("CREATE TABLE IF NOT EXISTS spropprotection(onoff INTEGER NOT NULL, admin INTEGER NOT NULL, use INTEGER NOT NULL, edmg INTEGER NOT NULL, pgr INTEGER NOT NULL, awp INTEGER NOT NULL, dpd INTEGER NOT NULL, dae INTEGER NOT NULL, delay INTEGER NOT NULL);")
@@ -31,19 +29,6 @@ function SPropProtection.SetupSettings()
 end
 
 SPropProtection["Config"] = SPropProtection.SetupSettings()
-
-function SPropProtection.NofityAll(Text)
-	for k, ply in pairs(player.GetAll()) do
-		ply:SendLua("GAMEMODE:AddNotify(\""..Text.."\", NOTIFY_GENERIC, 5); surface.PlaySound(\"ambient/water/drip"..math.random(1, 4)..".wav\")")
-		ply:PrintMessage(HUD_PRINTCONSOLE, Text)
-	end
-	Msg(Text.."\n")
-end
-
-function SPropProtection.Nofity(ply, Text)
-	ply:SendLua("GAMEMODE:AddNotify(\""..Text.."\", NOTIFY_GENERIC, 5); surface.PlaySound(\"ambient/water/drip"..math.random(1, 4)..".wav\")")
-	ply:PrintMessage(HUD_PRINTCONSOLE, Text)
-end
 
 function SPropProtection.AdminReload(ply)
 	if(ply) then
@@ -153,7 +138,7 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 	
 	if (!ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and !ent:IsPlayer()) then
 		SPropProtection.PlayerMakePropOwner(ply, ent)
-		SPropProtection.Nofity(ply, "You now own this prop")
+		Notify(ply, 1, 4, "You now own this prop")
 		return true
 	end
 	
@@ -167,7 +152,7 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 				for _, e in pairs(j) do
 					if(k == ply:SteamID() and e == ent) then
 						SPropProtection.PlayerMakePropOwner(ply, ent)
-						SPropProtection.Nofity(ply, "You now own this prop")
+						Notify(ply, 1, 4, "You now own this prop")
 						return true
 					end
 				end
@@ -178,7 +163,7 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 				if(j == ent) then
 					if(k == ply:SteamID() and e == ent) then
 						SPropProtection.PlayerMakePropOwner(ply, ent)
-						SPropProtection.Nofity(ply, "You now own this prop")
+						Notify(ply, 1, 4, "You now own this prop")
 						return true
 					end
 				end
@@ -212,7 +197,7 @@ function SPropProtection.DRemove(SteamID, PlayerName)
 			SPropProtection["Props"][k] = nil
 		end
 	end
-	SPropProtection.NofityAll(tostring(PlayerName).."'s props have been cleaned up")
+	NotifyAll(1, 5, tostring(PlayerName).."'s props have been cleaned up")
 end
 
 function SPropProtection.PlayerInitialSpawn(ply)
@@ -337,7 +322,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 							PLAYER:ChatPrint(ply:Nick().. " tried to spawn a " .. v.Entity:GetClass() .. " with adv.duplicator, He failed")
 						end
 					end
-					SPropProtection.Nofity(ply, "YOU ARE NOT ALLOWED TO DUPLICATE WEAPONS!!!!!!!!")
+					Notify(ply, 1, 4, "YOU ARE NOT ALLOWED TO DUPLICATE WEAPONS!!!!!!!!")
 					ply:UniqueIDTable( "Duplicator" ).Entities = nil
 					return false
 				end
@@ -349,7 +334,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 								PLAYER:ChatPrint(ply:Nick().. " tried to spawn a " .. v.Entity:GetClass() .. " with adv.duplicator, He failed")
 							end
 						end
-						SPropProtection.Nofity(ply, "YOU ARE NOT ALLOWED TO DUPLICATE THIS ENTITY!!!!!")
+						Notify(ply, 1, 4, "YOU ARE NOT ALLOWED TO DUPLICATE THIS ENTITY!!!!!")
 						ply:UniqueIDTable( "Duplicator" ).Entities = nil
 						return false
 					end
@@ -369,7 +354,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 									PLAYER:ChatPrint(ply:Nick().. " tried to spawn a " .. v.Class .. " with adv.duplicator, He failed")
 								end
 							end
-							SPropProtection.Nofity(ply,"YOU ARE NOT ALLOWED TO DUPLICATE THIS!!!!!!!!")
+							Notify(ply, 1, 4, "YOU ARE NOT ALLOWED TO DUPLICATE THIS!!!!!!!!")
 							ply:GetActiveWeapon():GetToolObject():ClearClipBoard()
 							return false
 						end
@@ -404,7 +389,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 	
 	for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 		if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
-			SPropProtection.Nofity(ply, "Weapons are attached to your prop")
+			Notify(ply, 1, 4, "Weapons are attached to your prop")
 			return false
 		end
 		local class = v:GetClass()
@@ -413,12 +398,12 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		end
 		for a,b in pairs(SPropProtection.AntiCopy) do
 			if string.find(v:GetClass(), b) and not string.find(v:GetClass(), "cameraprop") then
-				SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
+				Notify(ply, 1, 4, "Cannot touch because it has wrong entities attached to it")
 				return false
 			end
 		end
 		if not SPropProtection.PlayerCanTouch(ply, v) then
-			SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
+			Notify(ply, 1, 4, "One of the entities attached to that entity isn't yours")
 			return false
 		end
 	end
@@ -463,7 +448,7 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 	for k,v in pairs(constraint.GetAllConstrainedEntities(tr.Entity)) do
 		if v ~= ent then
 			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
-				SPropProtection.Nofity(ply, "Weapons are attached to your prop")
+				Notify(ply, 1, 4, "Weapons are attached to your prop")
 				return false
 			end
 			local class = v:GetClass()
@@ -472,12 +457,12 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 			end
 			for a,b in pairs(SPropProtection.AntiCopy) do
 				if string.find(v:GetClass(), b) then
-					SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
+					Notify(ply, 1, 4, "Cannot touch because it has wrong entities attached to it")
 					return false
 				end
 			end
 			if not SPropProtection.PlayerCanTouch(ply, v) then
-				SPropProtection.Nofity(ply, "One of the entities attached to that entity isn't yours")
+				Notify(ply, 1, 4, "One of the entities attached to that entity isn't yours")
 				return false
 			end
 		end
@@ -515,7 +500,7 @@ function SPropProtection.CleanupDisconnectedProps(ply, cmd, args)
 			SPropProtection["Props"][k1] = nil
 		end
 	end
-	SPropProtection.NofityAll("Disconnected players props have been cleaned up")
+	NotifyAll(1, 4, "Disconnected players props have been cleaned up")
 end
 concommand.Add("SPropProtection_CleanupDisconnectedProps", SPropProtection.CleanupDisconnectedProps)
 
@@ -529,7 +514,7 @@ function SPropProtection.CleanupProps(ply, cmd, args)
 				end
 			end
 		end	
-		SPropProtection.Nofity(ply, "Your props have been cleaned up")
+		Notify(ply, 1, 4, "Your props have been cleaned up")
 	elseif(ply:IsAdmin()) then
 		for k1, v1 in pairs(player.GetAll()) do
 			local NWSteamID = v1:GetNWString("SPPSteamID")
@@ -542,7 +527,7 @@ function SPropProtection.CleanupProps(ply, cmd, args)
 						end
 					end
 				end
-				SPropProtection.NofityAll(v1:Nick().."'s props have been cleaned up")
+				NotifyAll(1, 4, v1:Nick().."'s props have been cleaned up")
 			end
 		end
 	end
@@ -592,7 +577,7 @@ function SPropProtection.ApplyBuddySettings(ply, cmd, args)
 		end
 	end
 	
-	SPropProtection.Nofity(ply, "Your buddies have been updated")
+	Notify(ply, 1, 4, "Your buddies have been updated")
 end
 concommand.Add("SPropProtection_ApplyBuddySettings", SPropProtection.ApplyBuddySettings)
 
@@ -613,7 +598,7 @@ function SPropProtection.ClearBuddies(ply, cmd, args)
 	end
 	SPropProtection[ply:SteamID()] = {}
 	
-	SPropProtection.Nofity(ply, "Your buddies have been cleared")
+	Notify(ply, 1, 4, "Your buddies have been cleared")
 end
 concommand.Add("SPropProtection_ClearBuddies", SPropProtection.ClearBuddies)
 
@@ -638,7 +623,7 @@ function SPropProtection.ApplySettings(ply, cmd, args)
 	
 	timer.Simple(2, SPropProtection.AdminReload)
 	
-	SPropProtection.Nofity(ply, "Admin settings have been updated")
+	Notify(ply, 1, 4, "Admin settings have been updated")
 end
 concommand.Add("SPropProtection_ApplyAdminSettings", SPropProtection.ApplySettings)
 
