@@ -1757,7 +1757,7 @@ end
 AddChatCommand("/citizen", MakeCitizen)
 
 function MakeCP(ply, args)
-	if ply:HasPriv(CP) or ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) or ply:IsAdmin() then
+	if ply:HasPriv(CP) or ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) or ply:IsAdmin() or ply:Team() == TEAM_CHIEF then
 		if VoteCopOn then
 			Notify(ply, 1, 4,  "Please wait for the vote to finish first.")
 		else
