@@ -409,7 +409,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 				return false
 			end
 			for a,b in pairs(SPropProtection.AntiCopy) do
-				if string.find(v:GetClass(), b) then
+				if string.find(v:GetClass(), b) and not string.find(v:GetClass(), "cameraprop") then
 					SPropProtection.Nofity(ply, "Cannot touch because it has wrong entities attached to it")
 					return false
 				end

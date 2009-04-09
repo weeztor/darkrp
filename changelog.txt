@@ -38,6 +38,7 @@ SVN version
 [CHANGE] Moved changelog part in init.lua to the changelog.txt file
 [CHANGE] The way of saving settings and globals, it now doesn't use text files but SQL
 [CHANGE] Admins can touch world props to players can touch world props so players can pick up world items.
+[CHANGE] Chiefs can now change to cops by doing /cp
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings
