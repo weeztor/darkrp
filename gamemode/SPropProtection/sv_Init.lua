@@ -158,7 +158,7 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 	end
 
 	if(ent:GetNetworkedString("Owner") == "World") then
-		if tonumber(SPropProtection["Config"]["awp"]) == 1 and (string.lower(ent:GetClass()) == "prop_physics" or  string.lower(ent:GetClass()) == "func_physbox") /*and tonumber(SPropProtection["Config"]["admin"]) == 1)*/ then
+		if (tonumber(SPropProtection["Config"]["awp"]) == 1 or (ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1)) and (string.lower(ent:GetClass()) == "prop_physics" or  string.lower(ent:GetClass()) == "func_physbox") /*and tonumber(SPropProtection["Config"]["admin"]) == 1)*/ then
 			return true
 		end
 	elseif(ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then
