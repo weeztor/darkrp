@@ -2388,3 +2388,174 @@ function MakeZombieSoundsAsHobo(ply)
 	end
 end
 concommand.Add("_hobo_emitsound", MakeZombieSoundsAsHobo)
+
+function GrantLicense(answer, Ent, Initiator, Target)
+	if answer == 1 then
+		Notify(Initiator, 1, 4, Target:Nick().. " has granted you a gun license")
+		Initiator:SetNWBool("HasGunLicence", true)
+	else
+		Notify(Initiator, 1, 4, Target:Nick().. " has denied your gun license request")
+	end
+end
+
+function RequestLicense(ply)
+	if ply:GetNWBool("HasGunLicence") then
+		Notify(ply, 1, 4, "You already have a license!")
+		return ""
+	end
+	local LookingAt = ply:GetEyeTrace().Entity
+	
+	local ismayor--first look if there's a mayor
+	local ischief-- then if there's a chief
+	local iscop-- and then if there's a cop to ask
+	for k,v in pairs(player.GetAll()) do
+		if v:Team() == TEAM_MAYOR then
+			ismayor = true
+			break
+		end
+	end
+	
+	if not ismayor then
+		for k,v in pairs(player.GetAll()) do
+			if v:Team() == TEAM_CHIEF then
+				ischief = true
+				break
+			end
+		end
+	end
+	
+	if not ischief and not ismayor then
+		for k,v in pairs(player.GetAll()) do
+			if v:Team() == TEAM_POLICE then
+				iscop = true
+				break
+			end
+		end
+	end
+	
+	if not ismayor and not ischief and not iscop then
+		Notify(ply, 1, 4, "There's noone to ask for a license!")
+		return ""
+	end
+	
+	if not ValidEntity(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
+		Notify(ply, 1, 4, "Must be looking at a mayor/chief/cop")
+		return ""
+	end
+	
+	if ismayor and LookingAt:Team() ~= TEAM_MAYOR then
+		Notify(ply, 1, 4, "Must be looking at the mayor!")
+		return ""
+	elseif ischief and LookingAt:Team() ~= TEAM_CHIEF then
+		Notify(ply, 1, 4, "Must be looking at the chief!")
+		return ""
+	elseif iscop and LookingAt:Team() ~= TEAM_POLICE then
+		Notify(ply, 1, 4, "Must be looking at a cop!")
+		return ""
+	end
+	
+	Notify(ply, 1, 4, "Requested gun license!")
+	ques:Create("Grant "..ply:Nick().." a gun license?", "Gunlicense"..ply:EntIndex(), LookingAt, 20, GrantLicense, ply, LookingAt)
+	return ""
+end
+AddChatCommand("/requestlicense", RequestLicense)
+
+function GiveLicense(ply)
+	local ismayor--first look if there's a mayor
+	local ischief-- then if there's a chief
+	local iscop-- and then if there's a cop to ask
+	for k,v in pairs(player.GetAll()) do
+		if v:Team() == TEAM_MAYOR then
+			ismayor = true
+			break
+		end
+	end
+	
+	if not ismayor then
+		for k,v in pairs(player.GetAll()) do
+			if v:Team() == TEAM_CHIEF then
+				ischief = true
+				break
+			end
+		end
+	end
+	
+	if not ischief and not ismayor then
+		for k,v in pairs(player.GetAll()) do
+			if v:Team() == TEAM_POLICE then
+				iscop = true
+				break
+			end
+		end
+	end
+	
+	if ismayor and ply:Team() ~= TEAM_MAYOR then
+		Notify(ply, 1, 4, "Must be the mayor!")
+		return ""
+	elseif ischief and ply:Team() ~= TEAM_CHIEF then
+		Notify(ply, 1, 4, "Must be the chief/the mayor!")
+		return ""
+	elseif iscop and ply:Team() ~= TEAM_POLICE then
+		Notify(ply, 1, 4, "Must be a cop/chief/mayor!")
+		return ""
+	end
+	
+	local LookingAt = ply:GetEyeTrace().Entity
+	if not ValidEntity(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
+		Notify(ply, 1, 4, "Must be looking at a player!")
+		return ""
+	end
+	Notify(LookingAt, 1, 4, ply:Nick().. " has granted you a gun license")
+	Notify(ply, 1, 4, "Granted ".. LookingAt:Nick().. " a gun license")
+	LookingAt:SetNWBool("HasGunLicence", true)
+	return ""
+end
+AddChatCommand("/givelicense", GiveLicense)
+
+local function FinishRevokeLicense(choice, v)
+	VoteCopOn = false
+	if choice == 1 then
+		v:SetNWBool("HasGunLicence", false)
+		NotifyAll(1, 4, v:Nick() .. "'s license has been removed!")
+	else
+		NotifyAll(1, 4, v:Nick() .. "'s license has NOT been removed!")
+	end
+end
+
+function VoteRemoveLicense(ply, args)
+	local tableargs = string.Explode(" ", args)
+	if #tableargs == 1 then
+		Notify(ply, 1, 4, "You need to specify a reason!")
+		return ""
+	end
+	local reason = ""
+	for i = 2, #tableargs, 1 do
+		reason = reason .. " " .. tableargs[i]
+	end 
+	reason = string.sub(reason, 2)
+	if string.len(reason) > 22 then
+		Notify(ply, 1, 4, "Reason must be 22 characters or less")
+		return "" 
+	end
+	local p = FindPlayer(tableargs[1])
+	if p then
+		if CurTime() - ply:GetTable().LastVoteCop < 80 then
+			Notify(ply, 1, 4, "Please wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before demoting license.")
+			return ""
+		end
+		if ply:GetNWBool("HasGunLicence") then
+			Notify(ply, 1, 4,  p:Nick() .." doesn't have a license!")
+		else
+			NotifyAll(1, 4, ply:Nick() .. " has started a vote for the gun license removal of " .. p:Nick())
+			vote:Create(p:Nick() .. ":\nGun license remove:\n"..reason, p:EntIndex() .. "votecop"..ply:EntIndex(), p, 20, FinishRevokeLicense, true)
+			ply:GetTable().LastVoteCop = CurTime()
+			VoteCopOn = true
+			Notify(ply, 1, 4, "Gun license removal vote started!")
+		end
+		return ""
+	else
+		Notify(ply, 1, 4, "Player does not exist!")
+		return ""
+	end
+end
+AddChatCommand("/demotelicense", VoteRemoveLicense)

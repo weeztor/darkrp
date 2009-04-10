@@ -555,6 +555,20 @@ function GM:HUDPaint()
 		draw.DrawText("Mob Boss Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
 		draw.DrawText("As the Mob Boss, you decide what you want the other Gangsters to do\nYou get an Unarrest Stick which you can use to break people out of jail\n/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line\nType /mobbosshelp toggles this menu, /x closes it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
+	
+	if LocalPlayer():GetNWBool("HasGunLicence") then
+		local QuadTable = {}  
+		
+		QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/page" ) 
+		QuadTable.color		= Color( 255, 255, 255, 255 )  
+		
+		QuadTable.x = hw + 31//0//HUDwidth:GetInt()
+		QuadTable.y = ScrH() - 16  //hy - 90//0//
+		//local size = 16// + (2 * math.sin(CurTime()*4))
+		QuadTable.w = 16
+		QuadTable.h = 16
+		draw.TexturedQuad( QuadTable )
+	end
 end
 
 function GM:HUDShouldDraw(name)
@@ -828,22 +842,12 @@ local OldSetGlobalInt = SetGlobalInt
 function SetGlobalInt(id, int)
 	GlobalInts[id] = int
 	OldSetGlobalInt(id, int)
-	for k, ply in pairs(player.GetAll()) do
-		if v ~= 0 then
-			umsg.Start("FRecieveGlobalInt", ply)
-				umsg.Long(int)
-				umsg.String(id)
-			umsg.End()
-		else
-			GlobalInts[k] = nil
-		end
-	end
 end
 
 local function RecieveFGlobalInt(msg)
 	local int = msg:ReadLong()
 	local id = msg:ReadString()
-	GlobalInts[id] = int
+	SetGlobalInt(id, int)
 end
 usermessage.Hook("FRecieveGlobalInt", RecieveFGlobalInt)
 

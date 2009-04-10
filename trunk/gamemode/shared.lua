@@ -20,7 +20,7 @@ team.SetUp(TEAM_COOK, "Cook", Color(238, 99, 99, 255))
 team.SetUp(TEAM_CHIEF, "Civil Protection Chief", Color(20, 20, 255, 255))
 
 RPExtraTeams = {}
-function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote, NeedToChangeFrom)
+function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote, HasLicence, NeedToChangeFrom)
 	if not Name or not color or not model or not Description or not Weapons or not command or not maximum_amount_of_this_class or not Salary or not admin or Vote == nil then
 		local text = "One of the custom teams is wrongly made! Attempt to give name of the wrongly made team!(if it's nil then I failed):\n" .. tostring(Name)
 		print(text)
@@ -28,7 +28,7 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end
 		end)	
 	end
-	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote), NeedToChangeFrom = NeedToChangeFrom})
+	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote), NeedToChangeFrom = NeedToChangeFrom, HasLicence = HasLicence})
 	team.SetUp(9 + #RPExtraTeams, Name, color)
 	local Team = 9 + #RPExtraTeams
 	return Team
@@ -43,7 +43,7 @@ You can make extra classes here. Set everything up here and the rest will be don
 Ok here's how:
 
 To make an extra class do this:
-AddExtraTeam( "<NAME OF THE CLASS>", Color(<red>, <Green>, <blue>, 255), "<Player model>" , [[<the description(it can have enters)>]], { "<first extra weapon>","<second extra weapon>", etc...}, "<chat command to become it(WITHOUT THE /!)>", <maximum amount of this team> <the salary he gets>, 0/1/2 = public /admin only / superadmin only, <1/0/true/false Do you have to vote to become it>, TEAM: Which team you need to be to become this team)
+AddExtraTeam( "<NAME OF THE CLASS>", Color(<red>, <Green>, <blue>, 255), "<Player model>" , [[<the description(it can have enters)>]], { "<first extra weapon>","<second extra weapon>", etc...}, "<chat command to become it(WITHOUT THE /!)>", <maximum amount of this team> <the salary he gets>, 0/1/2 = public /admin only / superadmin only, <1/0/true/false Do you have to vote to become it>,  true/false DOES THIS TEAM HAVE A GUN LICENSE?, TEAM: Which team you need to be to become this team)
 
 The real example is here: it's the Hobo:		*/
 

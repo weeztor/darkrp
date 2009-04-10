@@ -78,6 +78,13 @@ local function MayorOptns()
 				LocalPlayer():ConCommand("say /lottery")
 			end
 			maypanel:AddItem(Lottery)
+			
+			local GiveLicense = vgui.Create("DButton") 
+			GiveLicense:SetText("Give <lookingat> a gun license")
+			GiveLicense.DoClick = function()
+				LocalPlayer():ConCommand("say /givelicense")
+			end
+			maypanel:AddItem(Lottery)
 	MayCat:SetContents(maypanel)
 	return MayCat
 end
@@ -248,7 +255,7 @@ function MoneyTab()
 			Commands:SetLabel("Actions")
 				local ActionsPanel = vgui.Create("DPanelList")
 				ActionsPanel:SetSpacing(5)
-				ActionsPanel:SetSize(740,140)
+				ActionsPanel:SetSize(740,160)
 				ActionsPanel:EnableHorizontal( false )
 				ActionsPanel:EnableVerticalScrollbar(true)
 					local rpnamelabel = vgui.Create("DLabel")
@@ -277,6 +284,10 @@ function MoneyTab()
 					health.DoClick = function() LocalPlayer():ConCommand("say /Buyhealth") end
 				ActionsPanel:AddItem(health)
 				
+				local RequestLicense = vgui.Create("DButton")
+					RequestLicense:SetText("Request gunlicense")
+					RequestLicense.DoClick = function() LocalPlayer():ConCommand("say /requestlicense") end
+				ActionsPanel:AddItem(RequestLicense)
 			Commands:SetContents(ActionsPanel)
 		FirstTabPanel:AddItem(MoneyCat)
 		FirstTabPanel:AddItem(Commands)

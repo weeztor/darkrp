@@ -58,7 +58,7 @@ function ques.HandleQuestionEnd(id, TimeIsUp)
 	if not Questions[id] then return end
 	local q = Questions[id]	
 	q.Callback(q.yn, q.Ent, q.Initiator, q.Target)
-	if TimeIsUp then
+	//if TimeIsUp then
 		Questions[id] = nil
-	end
+	//end
 end

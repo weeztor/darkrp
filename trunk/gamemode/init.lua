@@ -198,6 +198,7 @@ local function RefreshSettings(RESET)
 	CfgVars["wantedtime"] = 120 -- Amount of time a player is wanted for
 	CfgVars["lotterycommitcost"] = 50
 	CfgVars["babygodtime"] = 5
+	CfgVars["licence"] = 1
 
 	SetGlobalString("cmdprefix", "/") --Prefix before any chat commands
 

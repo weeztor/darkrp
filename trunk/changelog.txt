@@ -11,6 +11,7 @@ SVN version
 [ADD] Weapon checker for the cops, chief and admin
 [ADD] New, more subtle and easier to find easter egg.
 [ADD] /wake and /wakeup command :)
+[ADD] Gun license, people need a license to be able to pick up guns(toggle with rp_license 1/0)
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
@@ -39,6 +40,7 @@ SVN version
 [CHANGE] The way of saving settings and globals, it now doesn't use text files but SQL
 [CHANGE] Admins can touch world props to players can touch world props so players can pick up world items.
 [CHANGE] Chiefs can now change to cops by doing /cp
+[CHANGE] You will buy a door instantly when there would be only one button in the keys menu
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings
