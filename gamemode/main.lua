@@ -2512,10 +2512,12 @@ function GiveLicense(ply)
 end
 AddChatCommand("/givelicense", GiveLicense)
 
-local function FinishRevokeLicense(choice, v)
+function FinishRevokeLicense(choice, v)
 	VoteCopOn = false
 	if choice == 1 then
 		v:SetNWBool("HasGunLicence", false)
+		v:StripWeapons()
+		GAMEMODE:PlayerLoadout(v)
 		NotifyAll(1, 4, v:Nick() .. "'s license has been removed!")
 	else
 		NotifyAll(1, 4, v:Nick() .. "'s license has NOT been removed!")
