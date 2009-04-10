@@ -224,6 +224,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_babygod - Enable/disable People 
 AddToggleCommand("rp_needwantedforarrest", "needwantedforarrest", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_needwantedforarrest - Enable/disable Cops can only arrest wanted people.")
 
+AddToggleCommand("rp_licence", "licence", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_licence - Enable/disable People need a licence to be able to pick up guns")
+
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------

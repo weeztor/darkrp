@@ -80,6 +80,10 @@ function meta:ChangeTeam(t)
 	self:SetNWBool("helpBoss",false)
 	self:SetNWBool("helpCop",false)
 	self:SetNWBool("helpMayor",false)
+	
+	if self:GetNWBool("HasGunLicence") and t ~= TEAM_POLICE and t ~= TEAM_CHIEF then
+		self:SetNWBool("HasGunLicence", false)
+	end
 
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) then
 		Notify(self, 1, 4, "You're either banned from this team or you were demoted.)")
@@ -134,6 +138,7 @@ function meta:ChangeTeam(t)
 		self:UpdateJob("Civil Protection")
 		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 20)
 		self:SetNWBool("helpCop", true)
+		self:SetNWBool("HasGunLicence", true)
 		NotifyAll(1, 4, self:Name() .. " has been made a CP!")
 		self:SetModel("models/player/police.mdl")
 	elseif t == TEAM_MAYOR then
@@ -284,6 +289,7 @@ function meta:ChangeTeam(t)
 		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 30)
 		NotifyAll(1, 4, self:Name() .. " has been made Chief!")
 		self:SetModel("models/player/combine_soldier_prisonguard.mdl")
+		self:SetNWBool("HasGunLicence", true)
 	end
 	
 	
@@ -305,9 +311,11 @@ function meta:ChangeTeam(t)
 			DB.StoreSalary(self, v.salary)
 			NotifyAll(1, 4, self:Name() .. " has been made a " .. v.name .. "!")
 			self:SetModel(v.model)
+			if v.HasLicence then
+				self:SetNWBool("HasGunLicence", true)
+			end
 		end
 	end
-	
 
 	if CfgVars["removeclassitems"] == 1 then
 		for k, v in pairs(ents.FindByClass("microwave")) do
@@ -617,7 +625,16 @@ function GM:PlayerDeath(ply, weapon, killer)
 	ply:GetTable().ConfisquatedWeapons = nil
 end
 
-function GM:PlayerCanPickupWeapon(ply, class)
+function GM:PlayerCanPickupWeapon(ply, weapon)
+	local whitelist = {"weapon_physgun", "weapon_physcannon", "keys", "gmod_camera", "gmod_tool", "weaponchecker", "med_kit", "arrest_stick", "unarrest_stick", "stunstick", "door_ram"}
+	if CfgVars["licence"] == 1 and not ply:GetNWBool("HasGunLicence") then
+		for k,v in pairs(whitelist) do 
+			if string.find(v, string.lower(weapon:GetClass())) then
+				return true
+			end
+		end
+		return false
+	end
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 
 	return true

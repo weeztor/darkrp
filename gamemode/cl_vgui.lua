@@ -385,6 +385,11 @@ function KeysMenu(Vehicle)
 				SetCopsOnly:SetText("Set cops and mayor only")
 			end
 			SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
+		elseif not CPOnly then
+			RunConsoleCommand("say", "/toggleown")
+			Frame:Close()
+			KeyFrameVisible = true
+			timer.Simple(0.3, function() KeyFrameVisible = false end)
 		end
 	elseif not trace.Entity:OwnedBy(LocalPlayer()) and trace.Entity:AllowedToOwn(LocalPlayer()) then
 		Frame:SetSize(200, 140)
@@ -405,6 +410,11 @@ function KeysMenu(Vehicle)
 				SetCopsOnly:SetText("Set cops and mayor only")
 			end
 			SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
+		else
+			RunConsoleCommand("say", "/toggleown")
+			Frame:Close()
+			KeyFrameVisible = true
+			timer.Simple(0.3, function() KeyFrameVisible = false end)
 		end	
 	elseif LocalPlayer():IsSuperAdmin() and trace.Entity:GetNWBool("nonOwnable") then
 		Frame:SetSize(200, 140)
