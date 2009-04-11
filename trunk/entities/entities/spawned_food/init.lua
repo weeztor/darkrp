@@ -1,0 +1,27 @@
+-- =======================
+-- =          Crate SENT by Mahalis
+-- =======================
+
+AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("shared.lua")
+
+include("shared.lua")
+
+function ENT:Initialize()
+	self.Entity:PhysicsInit(SOLID_VPHYSICS)
+	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
+	self.Entity:SetSolid(SOLID_VPHYSICS)
+	local phys = self.Entity:GetPhysicsObject()
+
+	if phys and phys:IsValid() then phys:Wake() end
+end
+
+
+function ENT:Use(activator,caller)
+	activator:SetNWInt("Energy", math.Clamp(activator:GetNWInt("Energy") + self.Entity:GetTable().FoodEnergy, 0, 100))
+	umsg.Start("AteFoodIcon", activator)
+	umsg.End()
+	PooPee.AteFood(activator, self.Entity:GetModel())
+	self.Entity:Remove()
+	activator:EmitSound("vo/sandwicheat09.wav", 100, 100)
+end
