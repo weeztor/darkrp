@@ -45,7 +45,8 @@ function SWEP:PrimaryAttack()
 
 	if (tr.HitNonWorld) and SERVER then
 		local enthit = tr.Entity
-		if enthit:IsPlayer() and enthit:Health() < 100 then
+		local maxhealth = enthit.StartHealth or 100
+		if enthit:IsPlayer() and enthit:Health() < maxhealth then
 			enthit:SetHealth(enthit:Health() + 1)
 			self.Owner:EmitSound("hl1/fvox/boop.wav", 150, enthit:Health())
 		end

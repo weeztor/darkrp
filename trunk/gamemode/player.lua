@@ -81,8 +81,8 @@ function meta:ChangeTeam(t)
 	self:SetNWBool("helpCop",false)
 	self:SetNWBool("helpMayor",false)
 	
-	if self:GetNWBool("HasGunLicence") and t ~= TEAM_POLICE and t ~= TEAM_CHIEF then
-		self:SetNWBool("HasGunLicence", false)
+	if self:GetNWBool("HasGunlicense") and t ~= TEAM_POLICE and t ~= TEAM_CHIEF then
+		self:SetNWBool("HasGunlicense", false)
 	end
 
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) then
@@ -138,7 +138,7 @@ function meta:ChangeTeam(t)
 		self:UpdateJob("Civil Protection")
 		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 20)
 		self:SetNWBool("helpCop", true)
-		self:SetNWBool("HasGunLicence", true)
+		self:SetNWBool("HasGunlicense", true)
 		NotifyAll(1, 4, self:Name() .. " has been made a CP!")
 		self:SetModel("models/player/police.mdl")
 	elseif t == TEAM_MAYOR then
@@ -289,7 +289,7 @@ function meta:ChangeTeam(t)
 		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 30)
 		NotifyAll(1, 4, self:Name() .. " has been made Chief!")
 		self:SetModel("models/player/combine_soldier_prisonguard.mdl")
-		self:SetNWBool("HasGunLicence", true)
+		self:SetNWBool("HasGunlicense", true)
 	end
 	
 	
@@ -311,8 +311,8 @@ function meta:ChangeTeam(t)
 			DB.StoreSalary(self, v.salary)
 			NotifyAll(1, 4, self:Name() .. " has been made a " .. v.name .. "!")
 			self:SetModel(v.model)
-			if v.HasLicence then
-				self:SetNWBool("HasGunLicence", true)
+			if v.Haslicense then
+				self:SetNWBool("HasGunlicense", true)
 			end
 		end
 	end
@@ -412,7 +412,7 @@ function meta:Arrest(time, rejoin)
 	if self:GetNWBool("wanted") then
 		self:SetNetworkedBool("wanted", false)
 	end
-	self:SetNWBool("HasGunLicence", false)
+	self:SetNWBool("HasGunlicense", false)
 	GAMEMODE:SetPlayerSpeed(self, CfgVars["aspd"], CfgVars["aspd"] )
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
 	if CfgVars["teletojail"] == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
@@ -631,7 +631,7 @@ function GM:PlayerCanPickupWeapon(ply, weapon)
 	
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	if ply:IsAdmin() and CfgVars["AdminsSpawnWithCopWeapons"] == 1 then return true end
-	if CfgVars["licence"] == 1 and not ply:GetNWBool("HasGunLicence") then
+	if CfgVars["license"] == 1 and not ply:GetNWBool("HasGunlicense") then
 		for k,v in pairs(whitelist) do 
 			if string.find(v, string.lower(weapon:GetClass())) then
 				return true
@@ -838,6 +838,8 @@ function GM:PlayerSpawn(ply)
 		ply.demotedWhileDead = nil
 		ply:ChangeTeam(TEAM_CITIZEN)
 	end
+	
+	ply:GetTable().StartHealth = ply:Health()
 end
 
 function GM:PlayerLoadout(ply)

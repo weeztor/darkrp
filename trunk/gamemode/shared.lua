@@ -20,7 +20,7 @@ team.SetUp(TEAM_COOK, "Cook", Color(238, 99, 99, 255))
 team.SetUp(TEAM_CHIEF, "Civil Protection Chief", Color(20, 20, 255, 255))
 
 RPExtraTeams = {}
-function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote, HasLicence, NeedToChangeFrom)
+function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote, Haslicense, NeedToChangeFrom)
 	if not Name or not color or not model or not Description or not Weapons or not command or not maximum_amount_of_this_class or not Salary or not admin or Vote == nil then
 		local text = "One of the custom teams is wrongly made! Attempt to give name of the wrongly made team!(if it's nil then I failed):\n" .. tostring(Name)
 		print(text)
@@ -28,7 +28,7 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end
 		end)	
 	end
-	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote), NeedToChangeFrom = NeedToChangeFrom, HasLicence = HasLicence})
+	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote), NeedToChangeFrom = NeedToChangeFrom, Haslicense = Haslicense})
 	team.SetUp(9 + #RPExtraTeams, Name, color)
 	local Team = 9 + #RPExtraTeams
 	return Team
