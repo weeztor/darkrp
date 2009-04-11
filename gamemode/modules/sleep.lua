@@ -24,7 +24,7 @@ function KnockoutToggle(player, command, args, caller)
 				ragdoll:Remove()
 				player:SetNetworkedBool("Knockedout", false)
 				player:SetNetworkedEntity("Ragdoll", NULL)
-				if player.WeaponsForSleep then
+				if player.WeaponsForSleep and player:GetTable().BeforeSleepTeam == player:Team() then
 					for k,v in pairs(player.WeaponsForSleep) do
 						player:Give(v)
 					end
@@ -63,6 +63,7 @@ function KnockoutToggle(player, command, args, caller)
 				player:SetNetworkedEntity("Ragdoll", ragdoll)
 				player:SetNetworkedBool("Knockedout", true)
 				player:SetNetworkedFloat("KnockoutTimer", CurTime())
+				player:GetTable().BeforeSleepTeam = player:Team()
 				//Make sure noone can pick it up:
 				SPropProtection.PlayerMakePropOwner(player, ragdoll)
 				local RP = RecipientFilter()

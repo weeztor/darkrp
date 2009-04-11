@@ -31,6 +31,7 @@ SVN version
 [FIX] Settings and globals not loading
 [FIX] prop protection assigning all world props to the owner of the server(in case of a listen server)
 [FIX] Medkit now heals to someone's max health(determined on spawn)
+[FIX] Exploit: Be cop, go to sleep, change to citizen, keep arrest baton and other weapons.
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
