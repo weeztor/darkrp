@@ -30,6 +30,7 @@ SVN version
 [FIX] Zombies spawning in each other using the "players don't spawn in each other" code (a bit thanks to Enjia2000)
 [FIX] Settings and globals not loading
 [FIX] prop protection assigning all world props to the owner of the server(in case of a listen server)
+[FIX] Medkit now heals to someone's max health(determined on spawn)
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof

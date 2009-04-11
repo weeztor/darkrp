@@ -556,7 +556,7 @@ function GM:HUDPaint()
 		draw.DrawText("As the Mob Boss, you decide what you want the other Gangsters to do\nYou get an Unarrest Stick which you can use to break people out of jail\n/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line\nType /mobbosshelp toggles this menu, /x closes it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 	
-	if LocalPlayer():GetNWBool("HasGunLicence") then
+	if LocalPlayer():GetNWBool("HasGunlicense") then
 		local QuadTable = {}  
 		
 		QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/page" ) 

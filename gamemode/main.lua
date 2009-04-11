@@ -2392,14 +2392,14 @@ concommand.Add("_hobo_emitsound", MakeZombieSoundsAsHobo)
 function GrantLicense(answer, Ent, Initiator, Target)
 	if answer == 1 then
 		Notify(Initiator, 1, 4, Target:Nick().. " has granted you a gun license")
-		Initiator:SetNWBool("HasGunLicence", true)
+		Initiator:SetNWBool("HasGunlicense", true)
 	else
 		Notify(Initiator, 1, 4, Target:Nick().. " has denied your gun license request")
 	end
 end
 
 function RequestLicense(ply)
-	if ply:GetNWBool("HasGunLicence") then
+	if ply:GetNWBool("HasGunlicense") then
 		Notify(ply, 1, 4, "You already have a license!")
 		return ""
 	end
@@ -2507,7 +2507,7 @@ function GiveLicense(ply)
 	end
 	Notify(LookingAt, 1, 4, ply:Nick().. " has granted you a gun license")
 	Notify(ply, 1, 4, "Granted ".. LookingAt:Nick().. " a gun license")
-	LookingAt:SetNWBool("HasGunLicence", true)
+	LookingAt:SetNWBool("HasGunlicense", true)
 	return ""
 end
 AddChatCommand("/givelicense", GiveLicense)
@@ -2515,7 +2515,7 @@ AddChatCommand("/givelicense", GiveLicense)
 function FinishRevokeLicense(choice, v)
 	VoteCopOn = false
 	if choice == 1 then
-		v:SetNWBool("HasGunLicence", false)
+		v:SetNWBool("HasGunlicense", false)
 		v:StripWeapons()
 		GAMEMODE:PlayerLoadout(v)
 		NotifyAll(1, 4, v:Nick() .. "'s license has been removed!")
@@ -2545,7 +2545,7 @@ function VoteRemoveLicense(ply, args)
 			Notify(ply, 1, 4, "Please wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before demoting license.")
 			return ""
 		end
-		if ply:GetNWBool("HasGunLicence") then
+		if ply:GetNWBool("HasGunlicense") then
 			Notify(ply, 1, 4,  p:Nick() .." doesn't have a license!")
 		else
 			NotifyAll(1, 4, ply:Nick() .. " has started a vote for the gun license removal of " .. p:Nick())
