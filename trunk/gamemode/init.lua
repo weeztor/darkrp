@@ -31,6 +31,20 @@ function SetGlobalInt(id, int)
 	end
 end
 
+function SendGlobalIntsOnSpawn(ply)
+	for k,v in pairs(GlobalInts) do
+		if v ~= 0 then
+			umsg.Start("FRecieveGlobalInt", ply)
+				umsg.Long(v)
+				umsg.String(k)
+			umsg.End()
+		else
+			GlobalInts[k] = nil
+		end
+	end
+end
+hook.Add("PlayerInitialSpawn", "SendGlobalIntsOnSpawn", SendGlobalIntsOnSpawn)
+
 -- RP Name Overrides
 
 DARKRPVERSION = "2.3.5+"

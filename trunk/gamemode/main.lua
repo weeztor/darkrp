@@ -2392,6 +2392,7 @@ concommand.Add("_hobo_emitsound", MakeZombieSoundsAsHobo)
 function GrantLicense(answer, Ent, Initiator, Target)
 	if answer == 1 then
 		Notify(Initiator, 1, 4, Target:Nick().. " has granted you a gun license")
+		Notify(Target, 1, 4, "Granted ".. Initiator:Nick().. " a gun license")
 		Initiator:SetNWBool("HasGunlicense", true)
 	else
 		Notify(Initiator, 1, 4, Target:Nick().. " has denied your gun license request")
@@ -2506,7 +2507,7 @@ function GiveLicense(ply)
 		return ""
 	end
 	Notify(LookingAt, 1, 4, ply:Nick().. " has granted you a gun license")
-	Notify(ply, 1, 4, "Granted ".. LookingAt:Nick().. " a gun license")
+	Notify(ply, 2, 4, "Granted ".. LookingAt:Nick().. " a gun license")
 	LookingAt:SetNWBool("HasGunlicense", true)
 	return ""
 end
