@@ -54,7 +54,8 @@ function SWEP:PrimaryAttack()
 end
 function SWEP:SecondaryAttack()
 	self.Weapon:SetNextSecondaryFire(CurTime() + self.Secondary.Delay)
-	if self.Owner:Health() < 100 and SERVER then
+	local maxhealth = self.Owner.StartHealth or 100
+	if self.Owner:Health() < maxhealth and SERVER then
 		self.Owner:SetHealth(self.Owner:Health() + 1)
 		self.Owner:EmitSound("hl1/fvox/boop.wav", 150, self.Owner:Health())
 	end
