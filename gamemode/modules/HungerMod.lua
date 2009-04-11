@@ -5,13 +5,13 @@ include("HungerMod/player.lua")
 HM = { }
 FoodItems = { }
 
-DB.SaveGlobal("hungermod", 0)       --Hunger mod is enabled or disabled
+--[[ DB.SaveGlobal("hungermod", 0)       --Hunger mod is enabled or disabled
 
 DB.SaveSetting("starverate", 3)      --How much health is taken away per second when starving
 DB.SaveSetting("hungerspeed", 1)       --How much energy should deteriate every second
 DB.SaveSetting("foodcost", 15)       --Cost of food
 DB.SaveSetting("foodpay", 1)     --Whether there's a special spawning price for food
-DB.SaveSetting("foodspawn", 1)
+DB.SaveSetting("foodspawn", 1) ]]
 
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
 	if not ply:IsAdmin() then ply:ChatPrint("You're not an admin") return end
@@ -63,55 +63,40 @@ function HM.PlayerSpawnProp(ply, model)
 					return false
 				end
 				Notify(ply, 1, 4, "You bought a "..k)
-				return true
+				
+				local vStart = ply:GetShootPos() 
+				local vForward = ply:GetAimVector() 
+			   
+				local trace = {} 
+				trace.start = vStart 
+				trace.endpos = vStart + (vForward * 2048) 
+				trace.filter = ply 
+				 
+				local tr = util.TraceLine( trace )
+				local food = ents.Create("spawned_food")
+				local ang = ply:EyeAngles() 
+				ang.yaw = ang.yaw + 180 // Rotate it 180 degrees in my favour 
+				ang.roll = 0 
+				ang.pitch = 0 
+				food:SetModel( model ) 
+				food:SetAngles( ang ) 
+				food:SetPos( tr.HitPos ) 
+				food:Spawn() 
+				food:Activate() 
+				food:SetNWString("Owner", "Shared")
+				local vFlushPoint = tr.HitPos - ( tr.HitNormal * 512 )
+				vFlushPoint = food:NearestPoint( vFlushPoint )
+				vFlushPoint = food:GetPos() - vFlushPoint
+				vFlushPoint = tr.HitPos + vFlushPoint	
+				food:SetPos( vFlushPoint )
+				//food:GetTable().FoodItem = 1
+				food:GetTable().FoodEnergy = v.amount
+				return false
 			end
 		end
 	end
 end
 hook.Add("PlayerSpawnProp", "HM.PlayerSpawnProp", HM.PlayerSpawnProp)
-
-function HM.PlayerSpawnedProp(ply, model, ent)
-	ent.SID = ply.SID
-
-	for k, v in pairs(FoodItems) do
-		if string.gsub(v.model, "/", "\\") == model then
-			ent:GetTable().FoodItem = 1
-			ent:GetTable().FoodEnergy = v.amount
-			return
-		end
-	end
-end
-hook.Add("PlayerSpawnedProp", "HM.PlayerSpawnedProp", HM.PlayerSpawnedProp)
-
-function HM.KeyPress(ply, code)
-	//if GetGlobalInt("hungermod") == 0 and then return end
-
-	if code ~= IN_USE then return end
-
-	local tr = ply:GetEyeTrace()
-
-	if ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(ply:GetPos()) < 90 then
-		if tr.Entity:GetTable().FoodItem == 1 then
-			ply:SetNWInt("Energy", math.Clamp(ply:GetNWInt("Energy") + tr.Entity:GetTable().FoodEnergy, 0, 100))
-			umsg.Start("AteFoodIcon")
-			umsg.End()
-			PooPee.AteFood(ply, tr.Entity:GetModel())
-			tr.Entity:Remove()
-		else
-			for k, v in pairs(FoodItems) do
-				if string.lower(v.model) == string.lower(tr.Entity:GetModel()) then
-					ply:SetNWInt("Energy", math.Clamp(ply:GetNWInt("Energy") + v.amount, 0, 100))
-					umsg.Start("AteFoodIcon")
-					umsg.End()
-					PooPee.AteFood(ply, tr.Entity:GetModel())
-					tr.Entity:Remove()
-					ply:EmitSound("vo/sandwicheat09.wav", 100, 100)
-				end
-			end
-		end
-	end
-end
-hook.Add("KeyPress", "HM.KeyPress", HM.KeyPress)
 
 function HM.Think()
 	if GetGlobalInt("hungermod") ~= 1 then return end
