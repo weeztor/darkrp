@@ -33,7 +33,7 @@ function HM.PlayerSpawnProp(ply, model)
 		if v.model == model then
 			if GetGlobalInt("foodspawn") == 0 and ply:Team() ~= TEAM_COOK then return false end
 
-			if GetGlobalInt("hungermod") == 1 and CfgVars["foodpay"] == 1 then
+			if (GetGlobalInt("hungermod") == 1 or ply:Team() == TEAM_COOK) and CfgVars["foodpay"] == 1 then
 				if not GAMEMODE.BaseClass:PlayerSpawnProp(ply, model) then return false end
 
 				if RPArrestedPlayers[ply:SteamID()] then return false end
