@@ -16,6 +16,9 @@ function ENT:Initialize()
 	if phys and phys:IsValid() then phys:Wake() end
 end
 
+function ENT:OnTakeDamage(dmg)
+	self.Entity:Remove()
+end
 
 function ENT:Use(activator,caller)
 	activator:SetNWInt("Energy", math.Clamp(activator:GetNWInt("Energy") + self.Entity:GetTable().FoodEnergy, 0, 100))

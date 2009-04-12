@@ -216,6 +216,9 @@ function ChangeJobVGUI()
 		if LocalPlayer():IsAdmin() then
 			table.insert(F4Tabs, RPAdminTab())
 		end
+		if LocalPlayer():IsSuperAdmin() then
+			table.insert(F4Tabs, RPLicenseWeaponsTab())
+		end
 	else
 		F4Menu:SetVisible(true)
 	end
@@ -244,6 +247,9 @@ function ChangeJobVGUI()
 		F4MenuTabs:AddSheet("HUD", F4Tabs[4], "gui/silkicons/user", false, false)
 		if LocalPlayer():IsAdmin() then
 			F4MenuTabs:AddSheet("Admin", F4Tabs[5], "gui/silkicons/wrench", false, false)
+		end
+		if LocalPlayer():IsSuperAdmin() then
+			F4MenuTabs:AddSheet("License weapons", F4Tabs[6], "gui/silkicons/wrench", false, false)
 		end
 	end
 	for _, panel in pairs(F4Tabs) do panel:Update() end

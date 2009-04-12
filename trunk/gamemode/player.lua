@@ -627,15 +627,12 @@ function GM:PlayerDeath(ply, weapon, killer)
 end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
-	local whitelist = {"weapon_physgun", "weapon_physcannon", "keys", "gmod_camera", "gmod_tool", "weaponchecker", "med_kit", "arrest_stick", "unarrest_stick", "stunstick", "door_ram"}
-	
+	//print(ply:Nick(), "attempt to pick up", weapon:GetClass())
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	if ply:IsAdmin() and CfgVars["AdminsSpawnWithCopWeapons"] == 1 then return true end
 	if CfgVars["license"] == 1 and not ply:GetNWBool("HasGunlicense") then
-		for k,v in pairs(whitelist) do 
-			if string.find(v, string.lower(weapon:GetClass())) then
-				return true
-			end
+		if GetGlobalInt("licenseweapon_"..string.lower(weapon:GetClass())) == 1 then
+			return true
 		end
 		return false
 	end

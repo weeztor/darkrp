@@ -1835,6 +1835,10 @@ for k,v in pairs(RPExtraTeams) do
 			return ""
 		end)
 		AddChatCommand("/"..v.command, function(ply)
+			if CfgVars["rp_allow"..v.command] == 0 then
+				Notify(ply, 1, 4, v.name.." is disabled!")
+				return ""
+			end
 			if v.admin == 0 and not ply:IsAdmin() then
 				Notify(ply, 1, 4, "You must be an admin/make a vote to become "..v.name.."!")
 				return ""
@@ -1853,6 +1857,10 @@ for k,v in pairs(RPExtraTeams) do
 		end)
 	else
 		AddChatCommand("/"..v.command, function(ply)
+			if CfgVars["rp_allow"..v.command] == 0 then
+				Notify(ply, 1, 4, v.name.." is disabled!")
+				return ""
+			end
 			if v.admin == 1 and not ply:IsAdmin() then
 				Notify(ply, 1, 4, "You must be an admin to become "..v.name.."!")
 				return ""
@@ -2049,6 +2057,34 @@ function RefreshGlobals()
 	DB.SaveGlobal("deathblack", 0)
 	DB.SaveGlobal("maxnormalsalary", 90)
 	DB.SaveGlobal("mayorsetsalary", 90)
+	
+	DB.SaveGlobal("licenseweapon_weapon_physcannon", 1)
+	DB.SaveGlobal("licenseweapon_weapon_physgun", 1)
+	DB.SaveGlobal("licenseweapon_weapon_crowbar", 1)
+	DB.SaveGlobal("licenseweapon_weapon_stunstick", 1)
+	DB.SaveGlobal("licenseweapon_weapon_pistol", 0)
+	DB.SaveGlobal("licenseweapon_weapon_357",	0)
+	DB.SaveGlobal("licenseweapon_weapon_smg1", 0)
+	DB.SaveGlobal("licenseweapon_weapon_shotgun", 0)
+	DB.SaveGlobal("licenseweapon_weapon_crossbow", 0)
+	DB.SaveGlobal("licenseweapon_weapon_ar2", 0)
+	DB.SaveGlobal("licenseweapon_weapon_bugbait", 1)
+	DB.SaveGlobal("licenseweapon_weapon_rpg", 0)
+	DB.SaveGlobal("licenseweapon_gmod_camera", 1)
+	
+	local whitelist = {"keys", "gmod_camera", "weaponchecker", "med_kit", "arrest_stick", "unarrest_stick", "stunstick", "door_ram", "lockpick", "bite", "pcmod_", "gmod_tool"}
+	for k,v in pairs(weapons.GetList()) do
+		local allowed = false
+		for a,b in pairs(whitelist) do
+			if string.find(v.Classname, b) then
+				DB.SaveGlobal("licenseweapon_"..string.lower(v.Classname), 1)
+				allowed = true
+			end
+		end
+		if not allowed then
+			DB.SaveGlobal("licenseweapon_"..string.lower(v.Classname), 0)
+		end
+	end
 end
 
 function GM:PlayerSpawnProp(ply, model)
