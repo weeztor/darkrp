@@ -2549,6 +2549,66 @@ function GiveLicense(ply)
 end
 AddChatCommand("/givelicense", GiveLicense)
 
+function rp_GiveLicense(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
+		ply:PrintMessage(2, "You're not a superadmin!")
+		return
+	end
+
+	local target = FindPlayer(args[1])
+
+	if target then
+		target:SetNWBool("HasGunlicense", true)
+
+		if ply:EntIndex() ~= 0 then
+			nick = ply:Nick()
+		else
+			nick = "Console"
+		end
+
+		Notify(target, 1, 4, nick .. " gave you a gun license")
+		Notify(ply, 2, 4, "Gave "..target:Nick().." a gun license!")
+	else
+		if ply:EntIndex() == 0 then
+			print("Could not find player: " .. args[1])
+		else
+			ply:PrintMessage(2, "Could not find player: " .. args[1])
+		end
+		return
+	end
+end
+concommand.Add("rp_givelicense", rp_GiveLicense)
+
+function rp_RevokeLicense(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
+		ply:PrintMessage(2, "You're not a superadmin!")
+		return
+	end
+
+	local target = FindPlayer(args[1])
+
+	if target then
+		target:SetNWBool("HasGunlicense", false)
+
+		if ply:EntIndex() ~= 0 then
+			nick = ply:Nick()
+		else
+			nick = "Console"
+		end
+
+		Notify(target, 1, 4, nick .. " revoked your gun license")
+		Notify(ply, 2, 4, "Revoked "..target:Nick().."'s gun license!")
+	else
+		if ply:EntIndex() == 0 then
+			print("Could not find player: " .. args[1])
+		else
+			ply:PrintMessage(2, "Could not find player: " .. args[1])
+		end
+		return
+	end
+end
+concommand.Add("rp_revokelicense", rp_RevokeLicense)
+
 function FinishRevokeLicense(choice, v)
 	VoteCopOn = false
 	if choice == 1 then
