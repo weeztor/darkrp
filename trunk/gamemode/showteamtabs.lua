@@ -1116,7 +1116,7 @@ function RPLicenseWeaponsTab()
 		function weaponspanel:Update()
 			self:Clear(true)
 			local Explanation = vgui.Create("DLabel")
-			Explanation:SetText("License weapons\n\nTick the weapons you think people need a license for\nUntick the weapons you think people do not need a license for\n\nDefault weapons:\n") 
+			Explanation:SetText("License weapons\n\nTick the weapons you think people DO NOT need a license for\nUntick the weapons you think people DO need a license for\n\nDefault weapons:\n") 
 			Explanation:SizeToContents()
 			self:AddItem(Explanation)
 			
