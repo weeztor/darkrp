@@ -12,6 +12,7 @@ SVN version
 [ADD] New, more subtle and easier to find easter egg.
 [ADD] /wake and /wakeup command :)
 [ADD] Gun license, people need a license to be able to pick up guns(toggle with rp_license 1/0)
+[ADD] rp_allow<custom team> 1/0
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
