@@ -1148,6 +1148,7 @@ end
 for k,v in pairs(weapons.GetList()) do
 	AddToggleCommand("rp_licenseweapon_"..string.lower(v.ClassName), "licenseweapon_"..string.lower(v.ClassName), true, true)
 end
+
 AddToggleCommand("rp_propertytax", "propertytax", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_propertytax - Enable/disable property tax.")
 

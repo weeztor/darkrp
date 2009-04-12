@@ -560,13 +560,13 @@ function GM:HUDPaint()
 		local QuadTable = {}  
 		
 		QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/page" ) 
-		QuadTable.color		= Color( 255, 255, 255, 255 )  
+		QuadTable.color		= Color( 255, 255, 255, 100 )  
 		
 		QuadTable.x = hw + 31//0//HUDwidth:GetInt()
-		QuadTable.y = ScrH() - 16  //hy - 90//0//
+		QuadTable.y = ScrH() - 32  //hy - 90//0//
 		//local size = 16// + (2 * math.sin(CurTime()*4))
-		QuadTable.w = 16
-		QuadTable.h = 16
+		QuadTable.w = 32
+		QuadTable.h = 32
 		draw.TexturedQuad( QuadTable )
 	end
 end
