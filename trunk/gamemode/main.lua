@@ -2093,7 +2093,7 @@ function GM:PlayerSpawnProp(ply, model)
 	local allowed = false
 
 	if RPArrestedPlayers[ply:SteamID()] then return false end
-
+	if string.find(model,  "\\") then Notify(ply, 1, 4, "Cannot spawn props because it has one or more \\'s in it") return false end
 	-- Banned props take precedence over allowed props
 	if CfgVars["banprops"] == 1 then
 		for k, v in pairs(BannedProps) do
