@@ -341,19 +341,6 @@ function DB.RetrieveZombies()
 		zombieSpawns[map] = tostring(row.x) .. " " .. tostring(row.y) .. " " .. tostring(row.z)
 	end
 end
---[[ 
-function DB.RetrieveRandomZombieSpawnPos()
-	local map = string.lower(game.GetMap())
-	local r = false
-	local c = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_zspawns WHERE map = " .. sql.SQLStr(map) .. ";"))
-	if c and c >= 1 then
-		r = sql.QueryRow("SELECT * FROM darkrp_zspawns WHERE map = " .. sql.SQLStr(map) .. ";", math.random(1, c))
-		return Vector(r.x, r.y, r.z)
-	else
-		return Vector(0,0,0)
-	end
-end
- ]]
  
 local function IsEmpty(vector)
 	local point = util.PointContents(vector)
