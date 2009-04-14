@@ -1143,7 +1143,7 @@ function RPLicenseWeaponsTab()
 			OtherWeps:SizeToContents()
 			self:AddItem(OtherWeps)
 			for k,v in pairs(weapons.GetList()) do
-				if not string.find(string.lower(v.Classname), "base") then
+				if v.Classname and not string.find(string.lower(v.Classname), "base") and v.Classname ~= "" then
 					local checkbox = vgui.Create("DCheckBoxLabel")
 					checkbox:SetText(v.PrintName)
 					checkbox:SetValue(GetGlobalInt("licenseweapon_"..v.Classname))
