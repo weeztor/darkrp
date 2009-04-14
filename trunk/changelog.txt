@@ -35,6 +35,7 @@ SVN version
 [FIX] Medkit now heals to someone's max health(determined on spawn)
 [FIX] Exploit: Be cop, go to sleep, change to citizen, keep arrest baton and other weapons.
 [FIX] Exploit where you could duplicate food
+[FIX] Zombiemod does not only spawn zombies anymore(FIX because it was there but not enabled... Idk why)
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof

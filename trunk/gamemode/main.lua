@@ -223,7 +223,7 @@ function SpawnZombie()
 	timer.Start("move")
 	if GetAliveZombie() < maxZombie then
 		if table.getn(zombieSpawns) > 0 then
-			local zombieType = math.random(2, 2)
+			local zombieType = math.random(1, 4)
 			if zombieType == 1 then
 				local zombie1 = ents.Create("npc_zombie")
 				zombie1:SetPos(DB.RetrieveRandomZombieSpawnPos())
@@ -2369,8 +2369,10 @@ function DoTeamUnBan(ply, args, cmdargs)
 		ent = cmdargs[1]
 		Team = cmdargs[2]
 	else
-		ent = string.sub(args, 1, string.find(args, " "))
-		Team = string.gsub(args, ent, "")
+		local a,b = string.find(args, " ")
+		ent = string.sub(args, 1, a - 1)
+		Team = string.sub(args,  a + 1)
+		print("\""..ent.."\"", "\"".. Team .."\"")
 	end
 	
 	local target = FindPlayer(ent)
