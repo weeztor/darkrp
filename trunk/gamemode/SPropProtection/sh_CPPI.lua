@@ -4,7 +4,7 @@
 ------------------------------------
 CPPI = {}
 CPPI_NOTIMPLEMENTED = 26
-//CPPI_DEFER = 16
+CPPI_DEFER = 16
 
 function CPPI:GetName()
 	return "Simple RP Prop Protection"

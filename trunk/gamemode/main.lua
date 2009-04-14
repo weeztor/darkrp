@@ -2076,7 +2076,7 @@ function RefreshGlobals()
 	for k,v in pairs(weapons.GetList()) do
 		local allowed = false
 		for a,b in pairs(whitelist) do
-			if string.find(v.Classname, b) then
+			if string.find(string.lower(v.Classname), b) then
 				DB.SaveGlobal("licenseweapon_"..string.lower(v.Classname), 1)
 				allowed = true
 			end
