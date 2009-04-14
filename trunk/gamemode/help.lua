@@ -36,46 +36,56 @@ end
 
 function RequestAllToggleCommands(ply,cmd,args)
 	for k,v in pairs(ToggleCmds) do
-		umsg.Start("SendAllToggleCommands", ply)
-			umsg.String(k)
-			for a,b in pairs(HelpLabels) do 
-				if string.find(b.text, k) then
-					umsg.String(b.text)
-				end
+		local found = false
+		for a,b in pairs(HelpLabels) do 
+			if string.find(b.text, k) then
+				found = b.text
 			end
-			if not v.global then
-				if CfgVars[v.var] then
-					umsg.Short(CfgVars[v.var])
-				elseif CfgVars[string.sub(k, 4)] then
-					umsg.Short(CfgVars[string.sub(k, 4)])
+		end
+		
+		if found then
+			umsg.Start("SendAllToggleCommands", ply)
+				umsg.String(k)
+				umsg.String(found)
+				if not v.global then
+					if CfgVars[v.var] then
+						umsg.Short(CfgVars[v.var])
+					elseif CfgVars[string.sub(k, 4)] then
+						umsg.Short(CfgVars[string.sub(k, 4)])
+					end
+				else
+					umsg.Short(GetGlobalInt(v.var))
 				end
-			else
-				umsg.Short(GetGlobalInt(v.var))
-			end
-		umsg.End()
+			umsg.End()
+		end
 	end
 end
 concommand.Add("rp_RequestAllToggleCommands", RequestAllToggleCommands)
 
 function RequestAllValueCommands(ply,cmd,args)
 	for k,v in pairs(ValueCmds) do
-		umsg.Start("SendAllValueCommands", ply)
-			umsg.String(k)
-			for a,b in pairs(HelpLabels) do 
-				if string.find(b.text, k) then
-					umsg.String(b.text)
-				end
+		local found = false
+		for a,b in pairs(HelpLabels) do 
+			if string.find(b.text, k) then
+				found = b.text
 			end
-			if not v.global then
-				if CfgVars[v.var] then
-					umsg.Short(CfgVars[v.var])
-				elseif CfgVars[string.sub(k, 4)] then
-					umsg.Short(CfgVars[string.sub(k, 4)])
+		end
+		
+		if found then
+			umsg.Start("SendAllValueCommands", ply)
+				umsg.String(k)
+				umsg.String(found)
+				if not v.global then
+					if CfgVars[v.var] then
+						umsg.Short(CfgVars[v.var])
+					elseif CfgVars[string.sub(k, 4)] then
+						umsg.Short(CfgVars[string.sub(k, 4)])
+					end
+				else
+					umsg.Short(GetGlobalInt(v.var))
 				end
-			else
-				umsg.Short(GetGlobalInt(v.var))
-			end
-		umsg.End()
+			umsg.End()
+		end
 	end
 end
 concommand.Add("rp_RequestAllValueCommands", RequestAllValueCommands)
