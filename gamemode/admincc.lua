@@ -1145,9 +1145,11 @@ local DefaultWeapons = {"weapon_physcannon", "weapon_physgun","weapon_crowbar","
 for k,v in pairs(DefaultWeapons) do
 	AddToggleCommand("rp_licenseweapon_"..v, "licenseweapon_"..v, true, true)
 end
-for k,v in pairs(weapons.GetList()) do
-	AddToggleCommand("rp_licenseweapon_"..string.lower(v.ClassName), "licenseweapon_"..string.lower(v.ClassName), true, true)
-end
+timer.Simple(1, function()
+	for k,v in pairs(weapons.GetList()) do
+		AddToggleCommand("rp_licenseweapon_"..string.lower(v.ClassName), "licenseweapon_"..string.lower(v.ClassName), true, true)
+	end 
+end)
 
 AddToggleCommand("rp_propertytax", "propertytax", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_propertytax - Enable/disable property tax.")

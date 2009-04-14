@@ -94,6 +94,7 @@ function PooPee.DoPee(ply)
 		Notify(ply,1,4, "Poo pee mod is disabled")
 		return ""
 	end
+	if not ply:Alive() then return "" end
 	
 	umsg.Start("PlayerPeeParticles") // usermessage to everyone
 		umsg.Entity(ply)
