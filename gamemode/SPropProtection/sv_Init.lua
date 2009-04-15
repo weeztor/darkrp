@@ -264,7 +264,7 @@ hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysG
 function SPropProtection.GravGunThings(ply, ent)
 	if not ValidEntity(ent) then return false end
 	if ent:IsVehicle() then return false end
-	if ent:GetClass() == "func_breakable_surf" then return false end
+	if string.find(ent:GetClass(), "func_") then return false end
 	if ply:KeyDown(IN_ATTACK) then
 		local entphys = ent:GetPhysicsObject()
 		if not entphys:IsValid() then return false end
@@ -292,7 +292,7 @@ hook.Add("GravGunPickupAllowed", "SPropProtection.GravGunPickupAllowed", SPropPr
 function SPropProtection.GravGunPunt(ply, ent)
 	if not ValidEntity(ent) then return false end
 	if ent:IsVehicle() then return false end
-	if ent:GetClass() == "func_breakable_surf" then return false end
+	if string.find(ent:GetClass(), "func_") then return false end
 	if ply:KeyDown(IN_ATTACK) then
 		if not ent:GetPhysicsObject() then return false end
 		local entphys = ent:GetPhysicsObject()
