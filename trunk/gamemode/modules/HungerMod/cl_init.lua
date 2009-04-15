@@ -25,7 +25,7 @@ FoodAteY = 0
 surface.CreateFont("ChatFont", 70, 500, true, false, "HungerPlus")
 
 function HM.HUDPaint()
-	if GetGlobalInt("hungermod") == 1 and LocalPlayer():GetNWInt("LocalHungerMod") == 1 then
+	if GetGlobalInt("hungermod") == 1 or LocalPlayer():GetNWInt("LocalHungerMod") == 1 then
 		local x = 7
 		local y = ScrH() - 9
 
