@@ -18,7 +18,8 @@ function GM:PlayerSay(ply, text)
 		return ""
 	end
 	
-	if ply:GetNWString("rpname") == ply:SteamName() then
+	//print(ply:GetNWString("rpname") == ply:SteamName(), ply:GetNWString("rpname"), ply:SteamName())
+	if ply:GetNWString("rpname") == ply:SteamName() or CfgVars["allowrpnames"] == 0 then
 		return text
 	else
 		return "(" .. ply:Name() .. ") " .. text
