@@ -37,6 +37,7 @@ SVN version
 [FIX] Exploit where you could duplicate food
 [FIX] Zombiemod does not only spawn zombies anymore(FIX because it was there but not enabled... Idk why)
 [FIX] Exploit where you could spawn banned props
+[FIX] If rp_allowrpnames = 0 then people won't have rp names anymore.
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof

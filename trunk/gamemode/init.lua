@@ -52,7 +52,11 @@ DARKRPVERSION = "2.3.5+"
 local meta = FindMetaTable("Player")
 meta.SteamName = meta.Name
 meta.Name = function(self)
-	return self:GetNWString("rpname")
+	if CfgVars and CfgVars["allowrpnames"] == 1 then
+		return self:GetNWString("rpname")
+	else
+		return self:SteamName()
+	end
 end
 meta.Nick = meta.Name
 meta.GetName = meta.Name
