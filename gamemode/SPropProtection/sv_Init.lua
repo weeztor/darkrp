@@ -265,7 +265,7 @@ function SPropProtection.GravGunThings(ply, ent)
 	if not ValidEntity(ent) then return false end
 	if ent:IsVehicle() then return false end
 	if string.find(ent:GetClass(), "func_") then return false end
-	if ply:KeyDown(IN_ATTACK) then
+	if ply:GetActiveWeapon():GetClass() == "weapon_physcannon" and ply:KeyDown(IN_ATTACK) then
 		local entphys = ent:GetPhysicsObject()
 		if not entphys:IsValid() then return false end
 		local moveable = entphys:IsMoveable()

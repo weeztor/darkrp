@@ -217,6 +217,8 @@ local function RefreshSettings(RESET)
 	CfgVars["lotterycommitcost"] = 50
 	CfgVars["babygodtime"] = 5
 	CfgVars["license"] = 1
+	CfgVars["pocket"] = 1
+	CfgVars["pocketitems"] = 10
 
 	SetGlobalString("cmdprefix", "/") --Prefix before any chat commands
 
