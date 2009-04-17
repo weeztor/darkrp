@@ -626,13 +626,18 @@ function RPName(ply, args)
 		Notify(ply, 1, 4, "Please choose a name of 3 characters or more!")
 		return ""
 	end
-
+	
+	if string.find(args, " ") == 1 or string.find(args, " ") == 1 then--The first space is a normal space and the second one is a system space!
+		Notify(ply, 1, 4, "Name cannot start with a space")
+		return ""
+	end
+	
 	if low == "ooc" or low == "shared" or low == "world" or low == "n/a" then
 		Notify(ply, 1, 4, "That's not funny. Choose a proper RP name please.")
 		return ""
 	end
 	
-	//update the door names
+	--update the door names
 	for k,v in pairs(ents.GetAll()) do
 		if v:IsDoor() and v:GetNWInt("Ownerz") == ply:EntIndex() then
 			v:SetNWString("OwnerName", ply:Nick())
@@ -1887,12 +1892,12 @@ function CombineRequest(ply, args)
 end
 AddChatCommand("/cr", CombineRequest)
 
-// here's the new easter egg. Easier to find, more subtle, doesn't only credit FPtje and unib5
+-- here's the new easter egg. Easier to find, more subtle, doesn't only credit FPtje and unib5
 local CreditsWait = true
 function GetDarkRPAuthors(ply)
 	if not CreditsWait then ply:ChatPrint("Wait with that") return "" end
 	CreditsWait = false
-	timer.Simple(60, function() CreditsWait = true end)//so people don't spam it
+	timer.Simple(60, function() CreditsWait = true end)--so people don't spam it
 	for k,v in pairs(player.GetAll()) do
 		v:ChatPrint("CREDITS FOR DARKRP:")
 		v:ChatPrint("Rickster")
@@ -2072,7 +2077,7 @@ function RefreshGlobals()
 	DB.SaveGlobal("licenseweapon_weapon_rpg", 0)
 	DB.SaveGlobal("licenseweapon_gmod_camera", 1)
 	
-	local whitelist = {"keys", "gmod_camera", "weaponchecker", "med_kit", "arrest_stick", "unarrest_stick", "stunstick", "door_ram", "lockpick", "bite", "pcmod_", "gmod_tool"}
+	local whitelist = {"keys", "gmod_camera", "weaponchecker", "med_kit", "arrest_stick", "unarrest_stick", "stunstick", "door_ram", "lockpick", "bite", "pcmod_", "gmod_tool", "pocket"}
 	for k,v in pairs(weapons.GetList()) do
 		local allowed = false
 		for a,b in pairs(whitelist) do

@@ -343,7 +343,7 @@ function meta:ChangeTeam(t)
 		local vPoint = self:GetShootPos() + Vector(0,0,50)
 		local effectdata = EffectData()
 		effectdata:SetEntity(self)
-		effectdata:SetStart( vPoint ) // not sure if we need a start and origin (endpoint) for this effect, but whatever
+		effectdata:SetStart( vPoint ) -- not sure if we need a start and origin (endpoint) for this effect, but whatever
 		effectdata:SetOrigin( vPoint )
 		effectdata:SetScale(1)
 		util.Effect( "entity_remove", effectdata )	
@@ -627,7 +627,6 @@ function GM:PlayerDeath(ply, weapon, killer)
 end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
-	//print(ply:Nick(), "attempt to pick up", weapon:GetClass())
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	if ply:IsAdmin() and CfgVars["AdminsSpawnWithCopWeapons"] == 1 then return true end
 	if CfgVars["license"] == 1 and not ply:GetNWBool("HasGunlicense") then
@@ -701,7 +700,6 @@ function GM:PlayerSpawn(ply)
 		end
 	end
 	
-	//for k,v in pairs(ents.FindInSphere(ply:GetPos(), 35)) do
 	local STARTPOS = ply:GetPos()
 	if not IsEmpty(STARTPOS) then
 		local found = false
@@ -850,6 +848,10 @@ function GM:PlayerLoadout(ply)
 
 	if CfgVars["toolgun"] == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(TOOL) then
 		ply:Give("gmod_tool")
+	end
+	
+	if CfgVars["pocket"] == 1 then
+		ply:Give("pocket")
 	end
 
 	if CfgVars["physgun"] == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PHYS) then

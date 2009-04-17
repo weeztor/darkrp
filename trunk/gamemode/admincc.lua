@@ -44,7 +44,6 @@ function ccValueCommand(ply, cmd, args)
 	if valuecmd.global then
 		DB.SaveGlobal(valuecmd.var, amount)
 	else
-		//CfgVars[valuecmd.var] = amount
 		DB.SaveSetting(valuecmd.var, amount)
 	end
 
@@ -106,7 +105,6 @@ function ccToggleCommand(ply, cmd, args)
 	if togglecmd.global then
 		DB.SaveGlobal(togglecmd.var, toggle)
 	else
-		//CfgVars[togglecmd.var] = toggle
 		DB.SaveSetting(togglecmd.var, toggle)
 	end
 
@@ -1110,7 +1108,6 @@ for k,v in pairs(RPExtraTeams) do
 	
 	ToggleCmds["rp_allow"..v.command] = {var = "rp_allow"..v.command, global = false, superadmin = true}
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allow"..v.command.." - Enable/disable "..v.name)
-	//if CfgVars["rp_allow"..v.command] == nil then CfgVars["rp_allow"..v.command] = 1; DB.SaveSetting("rp_allow"..v.command, 1) end
 	concommand.Add("rp_allow"..v.command, function(ply, cmd, args)
 		if #args < 1 or tonumber(args[1]) == nil then
 			print("rp_allow"..v.command, "=", CfgVars["rp_allow"..v.command])
@@ -1306,6 +1303,10 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_doorwarrants - Enable/disable Wa
 
 AddToggleCommand("rp_restrictallteams", "restrictallteams", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_restrictallteams - Enable/disable Players can only be citizen until an admin allows them.")
+
+AddToggleCommand("rp_pocket", "pocket", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_pocket - Enable/disable pocket swep.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
@@ -1471,3 +1472,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_propcost <Number> - How much prop s
 
 AddValueCommand("rp_maxcps", "maxcps", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcps <Number> - Maximum number of CPs.")
+
+AddValueCommand("rp_pocketitems", "pocketitems", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pocketitems <Number> - Sets the amount of objects the pocket can carry")
