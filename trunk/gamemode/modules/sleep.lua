@@ -16,7 +16,9 @@ function KnockoutToggle(player, command, args, caller)
 			if player:GetNWEntity("Ragdoll") ~= NULL then
 				player.SleepSound:Stop()
 				local ragdoll = player:GetNWEntity("Ragdoll")
+				local health = player:Health()
 				player:Spawn()
+				player:SetHealth(health)
 				player:SetPos(ragdoll:GetPos())
 				player:SetAngles(Angle(0, ragdoll:GetPhysicsObjectNum(10):GetAngles().Yaw, 0))
 				player:UnSpectate()
@@ -69,10 +71,10 @@ function KnockoutToggle(player, command, args, caller)
 				local RP = RecipientFilter()
 				RP:RemoveAllPlayers()
 				RP:AddPlayer(player)
-				umsg.Start("DarkRPEffects",RP)
+				--[[ umsg.Start("DarkRPEffects",RP)
 					umsg.String("colormod")
 					umsg.String("1")
-				umsg.End()
+				umsg.End() ]]
 				RP:AddAllPlayers()
 				player.SleepSound = CreateSound(ragdoll, "npc/ichthyosaur/water_breath.wav")
 				player.SleepSound:PlayEx(0.10, 100)
@@ -84,7 +86,30 @@ function KnockoutToggle(player, command, args, caller)
 		return ""
 	end
 end
-
 AddChatCommand("/sleep", KnockoutToggle)
 AddChatCommand("/wake", KnockoutToggle)
 AddChatCommand("/wakeup", KnockoutToggle)
+
+local function DamageSleepers(ent, inflictor, attacker, amount, dmginfo)
+	local ownerint = ent:GetNWInt("OwnerINT")
+	if ownerint and ownerint ~= 0 then
+		for k,v in pairs(player.GetAll()) do 
+			if v:EntIndex() == ownerint then
+				if attacker == GetWorldEntity() then
+					amount = 10
+					dmginfo:ScaleDamage(0.1)
+				end
+				v:SetHealth(v:Health() - amount)
+				if v:Health() <= 0 and v:Alive() then
+					v:Spawn()
+					v:UnSpectate()
+					v:SetPos(ent:GetPos())
+					v:SetHealth(1)
+					v:TakeDamage(1, inflictor, attacker)
+					ent:Remove()
+				end
+			end
+		end
+	end
+end
+hook.Add("EntityTakeDamage", "Sleepdamage", DamageSleepers)
