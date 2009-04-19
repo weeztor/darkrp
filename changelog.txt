@@ -15,6 +15,7 @@ SVN version
 [ADD] rp_allow<custom team> 1/0
 [ADD] Message when trying to spawn a banned prop
 [ADD] Pocket swep, store things temporarilly! (rp_pocket to turn on/off)
+[ADD] Sleeping players can get hurt
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
@@ -39,6 +40,7 @@ SVN version
 [FIX] Zombiemod does not only spawn zombies anymore(FIX because it was there but not enabled... Idk why)
 [FIX] Exploit where you could spawn banned props
 [FIX] If rp_allowrpnames = 0 then people won't have rp names anymore.
+[FIX] Health is not restored when you come back from sleep
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
