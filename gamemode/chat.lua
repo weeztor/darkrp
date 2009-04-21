@@ -13,12 +13,6 @@ function GM:PlayerSay(ply, text)
 		end
 	end
 
-	--[[ if GetGlobalInt("alltalk") == 0 then
-		TalkToRange(ply:Name() .. ": " .. text, ply:GetPos(), 250)
-		return ""
-	end ]]
-	
-	//print(ply:GetNWString("rpname") == ply:SteamName(), ply:GetNWString("rpname"), ply:SteamName())
 	if ply:GetNWString("rpname") == ply:SteamName() or CfgVars["allowrpnames"] == 0 then
 		return text
 	else
@@ -32,5 +26,5 @@ function GM:PlayerCanSeePlayersChat(text, teamonly, listener, speaker)
 	elseif GetGlobalInt("alltalk") == 0 then
 		return false
 	end
-	return
+	return true
 end

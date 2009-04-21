@@ -2233,7 +2233,7 @@ function GM:PlayerCanHearPlayersVoice(listener, talker)
 	elseif CfgVars["voiceradius"] == 1 then
 		return false
 	end
-	return
+	return true
 end
 
 function MayorSetSalary(ply, cmd, args)
