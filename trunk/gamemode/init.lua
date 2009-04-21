@@ -182,6 +182,7 @@ local function RefreshSettings(RESET)
 	CfgVars["AdminsSpawnWithCopWeapons"] = 1
 	CfgVars["babygod"] = 0
 	CfgVars["needwantedforarrest"] = 0
+	CfgVars["voiceradius"] = 0
 
 	-- You can set the exact value of the below items:
 

@@ -12,7 +12,7 @@ if CLIENT then
 end
 
 SWEP.Author = "FPtje"
-SWEP.Instructions = "Left click to pick up, right click to drop"
+SWEP.Instructions = "Left click to pick up, right click to drop, reload for menu"
 SWEP.Contact = ""
 SWEP.Purpose = ""
 

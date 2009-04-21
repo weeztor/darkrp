@@ -2237,6 +2237,15 @@ function GM:KeyPress(ply, code)
 	end
 end
 
+function GM:PlayerCanHearPlayersVoice(listener, talker)
+	if CfgVars["voiceradius"] == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
+		return true
+	elseif CfgVars["voiceradius"] == 1 then
+		return false
+	end
+	return
+end
+
 function MayorSetSalary(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		print("Console should use rp_setsalary instead.")
