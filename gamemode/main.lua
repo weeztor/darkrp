@@ -1318,9 +1318,8 @@ function GroupMsg(ply, args)
 	end
 
 	for k, v in pairs(audience) do
-		v:PrintMessage(2, ply:Nick() .. ": (GROUP) " .. args)
-		Notify(v, 1, 10, ply:Nick() .. ": (GROUP) " .. args)
-		v:PrintMessage(3, ply:Nick() .. ": (GROUP) " .. args)
+		local col = team.GetColor(ply:Team())
+		TalkToPerson(v, col, "(GROUP) "..ply:Nick(),Color(255,255,255,255), args)
 	end
 	return ""
 end
@@ -1336,13 +1335,9 @@ function PM(ply, args)
 	target = FindPlayer(name)
 
 	if target then
-		target:PrintMessage(2, ply:Nick() .. ": (PM) " .. msg)
-		target:PrintMessage(3, ply:Nick() .. ": (PM) " .. msg)
-		Notify(target, 1, 10, ply:Nick() .. ": (PM) " .. args)
-		
-		Notify(ply, 1, 10, ply:Nick() .. ": (PM) " .. args)
-		ply:PrintMessage(2, ply:Nick() .. ": (PM) " .. msg)
-		ply:PrintMessage(3, ply:Nick() .. ": (PM) " .. msg)
+		local col = team.GetColor(ply:Team())
+		TalkToPerson(target, col, "(PM) "..ply:Nick(),Color(255,255,255,255), msg)
+		TalkToPerson(ply, col, "(PM) "..ply:Nick(), Color(255,255,255,255), msg)
 	else
 		Notify(ply, 1, 4, "Could not find player: " .. name)
 	end
@@ -1352,13 +1347,13 @@ end
 AddChatCommand("/pm", PM)
 
 function Whisper(ply, args)
-	TalkToRange("(WHISPER)" .. ply:Nick() .. ": " .. args, ply:EyePos(), 90)
+	TalkToRange(ply, "(WHISPER) " .. ply:Nick(), args, 90)
 	return ""
 end
 AddChatCommand("/w", Whisper)
 
 function Yell(ply, args)
-	TalkToRange("(YELL)" .. ply:Nick() .. ": " .. args, ply:EyePos(), 550)
+	TalkToRange(ply, "(YELL) " .. ply:Nick(), args, 550)
 	return ""
 end
 AddChatCommand("/y", Yell)
@@ -1377,7 +1372,8 @@ AddChatCommand("/ooc", OOC, true)
 
 function PlayerAdvertise(ply, args)
 	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint("[ADVERT] ("..ply:Nick()..")"..args)
+		local col = team.GetColor(ply:Team())
+		TalkToPerson(v, col, "[ADVERT] "..ply:Nick(), Color(255,255,0,255), args)
 	end
 	return ""
 end
@@ -1401,7 +1397,7 @@ function SayThroughRadio(ply,args)
 	end
 	for k,v in pairs(player.GetAll()) do
 		if v:GetNWInt("RadioChannel") == ply:GetNWInt("RadioChannel") then
-			v:ChatPrint("Radio ".. tostring(ply:GetNWInt("RadioChannel")) .. " ("..ply:Nick().."): ".. args)
+			TalkToPerson(v, Color(180,180,180,255), "Radio ".. tostring(ply:GetNWInt("RadioChannel")), Color(180,180,180,255), args)
 		end
 	end
 	return ""
@@ -1884,8 +1880,8 @@ function CombineRequest(ply, args)
 	local t = ply:Team()
 	for k, v in pairs(player.GetAll()) do
 		if v:Team() == TEAM_POLICE or v:Team() == TEAM_CHIEF or v == ply then
-			v:ChatPrint(ply:Nick() .. ": (REQUEST!) " .. args)
-			v:PrintMessage(2, ply:Nick() .. ": (REQUEST!) " .. args)
+			TalkToPerson(ply, team.GetColor(ply:Team()), "(REQUEST!) "..ply:Nick(), Color(255,0,0,255), args)
+			TalkToPerson(v, team.GetColor(ply:Team()), "(REQUEST!) "..ply:Nick(), Color(255,0,0,255), args)
 		end
 	end
 	return ""
@@ -1895,18 +1891,12 @@ AddChatCommand("/cr", CombineRequest)
 -- here's the new easter egg. Easier to find, more subtle, doesn't only credit FPtje and unib5
 local CreditsWait = true
 function GetDarkRPAuthors(ply)
-	if not CreditsWait then ply:ChatPrint("Wait with that") return "" end
+	if not CreditsWait then Notify(ply, 1, 4, "Wait with that") return "" end
 	CreditsWait = false
 	timer.Simple(60, function() CreditsWait = true end)--so people don't spam it
 	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint("CREDITS FOR DARKRP:")
-		v:ChatPrint("Rickster")
-		v:ChatPrint("Picwizdan")
-		v:ChatPrint("Sibre")
-		v:ChatPrint("PhilXYZ") 
-		v:ChatPrint("[GNC] Matt")
-		v:ChatPrint("Chromebolt A.K.A. unib5 (STEAM_0:1:19045957)")
-		v:ChatPrint("(FPtje) Falco A.K.A. FPtje (STEAM_0:0:8944068)")
+		TalkToPerson(v, Color(255,0,0,255), "CREDITS FOR DARKRP", Color(0,0,255,255),
+		"\\nRickster\\nPicwizdan\\nSibre\\nPhilXYZ\\n[GNC] Matt\\nChromebolt A.K.A. unib5 (STEAM_0:1:19045957)\\n(FPtje) Falco A.K.A. FPtje (STEAM_0:0:8944068)")
 	end
 	return ""
 end
@@ -2316,7 +2306,7 @@ concommand.Add("mayor_setsalary", MayorSetSalary)
 
 function DoTeamBan(ply, args, cmdargs)
 	if not ply:IsAdmin() then 
-		ply:ChatPrint("You're not an admin")
+		Notify(ply, 1, 4, "You're not an admin")
 		return ""
 	end
 	
@@ -2338,7 +2328,7 @@ function DoTeamBan(ply, args, cmdargs)
 	
 	local target = FindPlayer(ent)
 	if not target or not ValidEntity(target) then 
-		ply:ChatPrint("Player was not found!")
+		Notify(ply, 1, 4, "Player was not found!")
 		return ""
 	end
 	
@@ -2357,7 +2347,7 @@ function DoTeamBan(ply, args, cmdargs)
 	end
 	
 	if not found then
-		ply:ChatPrint("Team not found!")
+		Notify(ply, 1, 4, "Team not found!")
 		return ""
 	end
 	if not target.bannedfrom then target.bannedfrom = {} end
@@ -2370,7 +2360,7 @@ concommand.Add("rp_teamban", DoTeamBan)
 
 function DoTeamUnBan(ply, args, cmdargs)
 	if not ply:IsAdmin() then 
-		ply:ChatPrint("You're not an admin")
+		Notify(ply, 1, 4, "You're not an admin")
 		return ""
 	end
 	
@@ -2392,7 +2382,7 @@ function DoTeamUnBan(ply, args, cmdargs)
 	
 	local target = FindPlayer(ent)
 	if not target or not ValidEntity(target) then 
-		ply:ChatPrint("Player was not found!")
+		Notify(ply, 1, 4, "Player was not found!")
 		return ""
 	end
 	
@@ -2411,7 +2401,7 @@ function DoTeamUnBan(ply, args, cmdargs)
 	end
 	
 	if not found then
-		ply:ChatPrint("Team not found!")
+		Notify(ply, 1, 4, "Team not found!")
 		return ""
 	end
 	if not target.bannedfrom then target.bannedfrom = {} end

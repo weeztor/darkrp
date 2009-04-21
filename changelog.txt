@@ -54,6 +54,7 @@ SVN version
 [CHANGE] Chiefs can now change to cops by doing /cp
 [CHANGE] You will buy a door instantly when there would be only one button in the keys menu
 [CHANGE] When there's only one option in the keys menu, it will do that option instantly without opening the menu
+[CHANGE] Made all yell,whisper,pm ETC. in colour!!!
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings

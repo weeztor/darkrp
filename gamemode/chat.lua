@@ -13,10 +13,10 @@ function GM:PlayerSay(ply, text)
 		end
 	end
 
-	if GetGlobalInt("alltalk") == 0 then
+	--[[ if GetGlobalInt("alltalk") == 0 then
 		TalkToRange(ply:Name() .. ": " .. text, ply:GetPos(), 250)
 		return ""
-	end
+	end ]]
 	
 	//print(ply:GetNWString("rpname") == ply:SteamName(), ply:GetNWString("rpname"), ply:SteamName())
 	if ply:GetNWString("rpname") == ply:SteamName() or CfgVars["allowrpnames"] == 0 then
@@ -24,4 +24,13 @@ function GM:PlayerSay(ply, text)
 	else
 		return "(" .. ply:Name() .. ") " .. text
 	end
+end
+
+function GM:PlayerCanSeePlayersChat(text, teamonly, listener, speaker)
+	if GetGlobalInt("alltalk") == 0 and listener:GetShootPos():Distance(speaker:GetShootPos()) < 250 then
+		return true
+	elseif GetGlobalInt("alltalk") == 0 then
+		return false
+	end
+	return
 end
