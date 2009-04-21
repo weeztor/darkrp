@@ -14,8 +14,8 @@ DB.SaveSetting("foodpay", 1)     --Whether there's a special spawning price for 
 DB.SaveSetting("foodspawn", 1) ]]
 
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
-	if not ply:IsAdmin() then ply:ChatPrint("You're not an admin") return end
-	if not args[1] then ply:ChatPrint("No arguments specified!") return end
+	if not ply:IsAdmin() then Notify(ply, 1, 4, "You're not an admin") return end
+	if not args[1] then Notify(ply, 1, 4, "No arguments specified!") return end
 	DB.SaveSetting("hungerspeed", tonumber(args[1]) / 10)
 end)
 

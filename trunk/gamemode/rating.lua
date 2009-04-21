@@ -70,17 +70,17 @@
  	Target.RatingTimers = Target.RatingTimers or {} 
  	if ( Target.RatingTimers[ RaterID ] && Target.RatingTimers[ RaterID ] > CurTime() - 60 ) then 
  	 
- 		Rater:ChatPrint( "Please wait before rating ".. Target:Nick() .." again.\n" ); 
+ 		Notify(Rater, 1, 4, "Please wait before rating ".. Target:Nick() .." again.\n" ); 
  		return 
  		 
  	end 
  	 
  	Target.RatingTimers[ RaterID ] = CurTime() 
  	 
- 	Target:ChatPrint( Rater:Nick().. " gave you a "..Rating ); 
+ 	Notify(Target, 1, 4, Rater:Nick().. " gave you a "..Rating ); 
  		 
  	// Let the rater know that their vote was counted 
- 	Rater:ChatPrint( "Rated ".. Target:Nick() .." a "..Rating.."!\n" ); 
+ 	Notify(Rater, 2, 4,  "Rated ".. Target:Nick() .." a "..Rating.."!\n" ); 
  	 
  	sql.Query( "INSERT INTO ratings ( target, rater, rating ) VALUES ( "..TargetID..", "..RaterID..", "..RatingID.." )" ) 
    
