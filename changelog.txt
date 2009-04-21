@@ -16,6 +16,7 @@ SVN version
 [ADD] Message when trying to spawn a banned prop
 [ADD] Pocket swep, store things temporarilly! (rp_pocket to turn on/off)
 [ADD] Sleeping players can get hurt
+[ADD] rp_voiceradius: Only hear people's voice in your vicinity!(same distance as yell, 550 units)
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!

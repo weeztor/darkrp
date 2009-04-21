@@ -1307,6 +1307,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_restrictallteams - Enable/disabl
 AddToggleCommand("rp_pocket", "pocket", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_pocket - Enable/disable pocket swep.")
 
+AddToggleCommand("rp_voiceradius", "voiceradius", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_voiceradius - Enable/disable local voice chat.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
