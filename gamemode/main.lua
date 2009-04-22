@@ -2093,7 +2093,7 @@ function GM:PlayerSpawnProp(ply, model)
 	-- Banned props take precedence over allowed props
 	if CfgVars["banprops"] == 1 then
 		for k, v in pairs(BannedProps) do
-			if v == model then Notify(ply, 1, 4, "Cannot spawn this prop because it is banned") return false end
+			if string.lower(v) == string.lower(model) then Notify(ply, 1, 4, "Cannot spawn this prop because it is banned") return false end
 		end
 	end
 

@@ -25,6 +25,7 @@ function TalkToRange(ply, PlayerName, Message, size)
 	for k, v in pairs(ents) do
 		if v:IsPlayer() then	
 			v:SendLua("chat.AddText(Color("..col.r..","..col.g..","..col.b.."), '"..PlayerName.."', Color(255,255,255,255), ': "..Message.."')")
+			v:SendLua("chat.PlaySound()")
 		end
 	end
 end
@@ -36,6 +37,7 @@ function TalkToPerson(reciever, col1, text1, col2, text2, ...)
 		return
 	end
 	reciever:SendLua("chat.AddText(Color("..col1.r..","..col1.g..","..col1.b.."), '"..text1.."', Color("..col2.r..","..col2.g..","..col2.b.."), ': "..text2.."')")
+	reciever:SendLua("chat.PlaySound()")
 end
 
 function FindPlayer(info)
