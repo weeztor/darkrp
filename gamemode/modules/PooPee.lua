@@ -2,7 +2,7 @@ includeCS("PooPee/cl_init.lua")
 
 
 PooPee = {}
-DB.SaveGlobal("poopeemod", 0)
+//DB.SaveGlobal("poopeemod", 0)
 
 AddToggleCommand("rp_poopeemod", "poopeemod", true)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_poopeemod <1 or 0> - Enable/disable poo pee mod")
