@@ -936,37 +936,6 @@ function RPHUDTab()
 	return HUDTABpanel
 end
 
-local NewToggleHelpMessages = {}
-function RecieveAllAdminToggles(Umsg )
-	local name = Umsg:ReadString()
-	local Desc = Umsg:ReadString()
-	local value = Umsg:ReadShort()
-	for a,b in pairs(NewToggleHelpMessages) do
-		if b.command == name then
-			table.remove(NewToggleHelpMessages, a)
-		end
-	end
-	table.insert(NewToggleHelpMessages, {command = name, desc = Desc, val = value})
-	table.SortByMember(NewToggleHelpMessages, "desc", function(a, b) return a > b end)
-end
-usermessage.Hook("SendAllToggleCommands", RecieveAllAdminToggles)
-
-local NewValueHelpMessages = {}
-function RecieveAllAdminToggles(Umsg )
-	local name = Umsg:ReadString()
-	local Desc = Umsg:ReadString()
-	local value = Umsg:ReadShort()
-	for a,b in pairs(NewValueHelpMessages) do
-		if b.command == name then
-			table.remove(NewValueHelpMessages, a)
-		end
-	end
-	table.insert(NewValueHelpMessages,  {command = name, desc = Desc, val = value})
-	table.SortByMember(NewValueHelpMessages, "desc", function(a, b) return a > b end)
-end
-usermessage.Hook("SendAllValueCommands", RecieveAllAdminToggles)
-
-
 function RPAdminTab()
 	local AdminPanel = vgui.Create("DPanelList")
 	AdminPanel:SetSpacing(1)
@@ -974,35 +943,36 @@ function RPAdminTab()
 	AdminPanel:EnableVerticalScrollbar( true )
 		function AdminPanel:Update()
 			self:Clear(true)
-			NewToggleHelpMessages = {}
-			NewValueHelpMessages = {}
-			RunConsoleCommand("rp_RequestAllToggleCommands")
-			RunConsoleCommand("rp_RequestAllValueCommands")
-			local loadingcat = vgui.Create("DCollapsibleCategory")
-			loadingcat:SetLabel("LOADING!!!!!")
-			self:AddItem(loadingcat)
-			timer.Simple(1, function()
-				self:Clear(true)
-				local ToggleCat = vgui.Create("DCollapsibleCategory")
-				ToggleCat:SetLabel("Toggle commands")
-					local TogglePanel = vgui.Create("DPanelList")
-					TogglePanel:SetSize(470, 230)
-					TogglePanel:SetSpacing(1)
-					TogglePanel:EnableHorizontal(false)
-					TogglePanel:EnableVerticalScrollbar(true)
-					
-					local ValueCat = vgui.Create("DCollapsibleCategory")
-					ValueCat:SetLabel("Value commands")
-					local ValuePanel = vgui.Create("DPanelList")
-					ValuePanel:SetSize(470, 230)
-					ValuePanel:SetSpacing(1)
-					ValuePanel:EnableHorizontal(false)
-					ValuePanel:EnableVerticalScrollbar(true)
-					
-					for k, v in pairs(NewToggleHelpMessages) do
+			local ToggleCat = vgui.Create("DCollapsibleCategory")
+			ToggleCat:SetLabel("Toggle commands")
+				local TogglePanel = vgui.Create("DPanelList")
+				TogglePanel:SetSize(470, 230)
+				TogglePanel:SetSpacing(1)
+				TogglePanel:EnableHorizontal(false)
+				TogglePanel:EnableVerticalScrollbar(true)
+				
+				local ValueCat = vgui.Create("DCollapsibleCategory")
+				ValueCat:SetLabel("Value commands")
+				local ValuePanel = vgui.Create("DPanelList")
+				ValuePanel:SetSize(470, 230)
+				ValuePanel:SetSpacing(1)
+				ValuePanel:EnableHorizontal(false)
+				ValuePanel:EnableVerticalScrollbar(true)
+				
+				local toggles = table.ClearKeys(ToggleCmds)
+				table.SortByMember(toggles, "var", function(a, b) return a > b end)
+				for k, v in pairs(toggles) do
+					local found = false
+					for a,b in pairs(HelpLabels) do
+						if string.find(b.text, v.var) then
+							found = b.text
+							break
+						end
+					end
+					if found then
 						local checkbox = vgui.Create("DCheckBoxLabel")
-						checkbox:SetValue(v.val)
-						checkbox:SetText(v.desc)
+						checkbox:SetValue(GetGlobalInt(v.var))
+						checkbox:SetText(found)
 						function checkbox.Button:Toggle()
 							if ( self:GetChecked() == nil || !self:GetChecked() ) then 
 								self:SetValue( true ) 
@@ -1012,63 +982,73 @@ function RPAdminTab()
 							local tonum = {}
 							tonum[false] = "0"
 							tonum[true] = "1"
-							LocalPlayer():ConCommand(v.command .. " " .. tonum[self:GetChecked()])
+							LocalPlayer():ConCommand("rp_"..v.var .. " " .. tonum[self:GetChecked()])
 						end
 						TogglePanel:AddItem(checkbox)
 					end
-				ToggleCat:SetContents(TogglePanel)
-				self:AddItem(ToggleCat)
-				function ToggleCat:Toggle()
-					self:SetExpanded( !self:GetExpanded() ) 
-					self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
-					if not self:GetExpanded() and ValueCat:GetExpanded() then
-						ValuePanel:SetTall(470)
-					elseif self:GetExpanded() and ValueCat:GetExpanded() then
-						ValuePanel:SetTall(230)
-						TogglePanel:SetTall(230)
-					elseif self:GetExpanded() and not ValueCat:GetExpanded() then
-						TogglePanel:SetTall(470)
-					end 
-					self:InvalidateLayout( true ) 
-					self:GetParent():InvalidateLayout() 
-					self:GetParent():GetParent():InvalidateLayout() 
-					local cookie = '1' 
-					if ( !self:GetExpanded() ) then cookie = '0' end 
-					self:SetCookie( "Open", cookie )
-				end  
-				
-				function ValueCat:Toggle()
-					self:SetExpanded( !self:GetExpanded() ) 
-					self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
+				end
+			ToggleCat:SetContents(TogglePanel)
+			self:AddItem(ToggleCat)
+			function ToggleCat:Toggle()
+				self:SetExpanded( !self:GetExpanded() ) 
+				self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
+				if not self:GetExpanded() and ValueCat:GetExpanded() then
+					ValuePanel:SetTall(470)
+				elseif self:GetExpanded() and ValueCat:GetExpanded() then
+					ValuePanel:SetTall(230)
+					TogglePanel:SetTall(230)
+				elseif self:GetExpanded() and not ValueCat:GetExpanded() then
+					TogglePanel:SetTall(470)
+				end 
+				self:InvalidateLayout( true ) 
+				self:GetParent():InvalidateLayout() 
+				self:GetParent():GetParent():InvalidateLayout() 
+				local cookie = '1' 
+				if ( !self:GetExpanded() ) then cookie = '0' end 
+				self:SetCookie( "Open", cookie )
+			end  
+			
+			function ValueCat:Toggle()
+				self:SetExpanded( !self:GetExpanded() ) 
+				self.animSlide:Start( self:GetAnimTime(), { From = self:GetTall() } ) 
 
-					if not self:GetExpanded() and ToggleCat:GetExpanded() then
-						TogglePanel:SetTall(470)
-					elseif self:GetExpanded() and ToggleCat:GetExpanded() then
-						TogglePanel:SetTall(230)
-						ValuePanel:SetTall(230)
-					elseif self:GetExpanded() and not ToggleCat:GetExpanded() then
-						ValuePanel:SetTall(470)
-					end 
-					self:InvalidateLayout( true ) 
-					self:GetParent():InvalidateLayout() 
-					self:GetParent():GetParent():InvalidateLayout()
-					local cookie = '1' 
-					if ( !self:GetExpanded() ) then cookie = '0' end 
-					self:SetCookie( "Open", cookie )
-				end  
-				
-					
-					for k, v in pairs(NewValueHelpMessages) do
+				if not self:GetExpanded() and ToggleCat:GetExpanded() then
+					TogglePanel:SetTall(470)
+				elseif self:GetExpanded() and ToggleCat:GetExpanded() then
+					TogglePanel:SetTall(230)
+					ValuePanel:SetTall(230)
+				elseif self:GetExpanded() and not ToggleCat:GetExpanded() then
+					ValuePanel:SetTall(470)
+				end 
+				self:InvalidateLayout( true ) 
+				self:GetParent():InvalidateLayout() 
+				self:GetParent():GetParent():InvalidateLayout()
+				local cookie = '1' 
+				if ( !self:GetExpanded() ) then cookie = '0' end 
+				self:SetCookie( "Open", cookie )
+			end  
+				local values = table.ClearKeys(ValueCmds)
+				table.SortByMember(values, "var", function(a, b) return a > b end)
+				for k, v in pairs(values) do
+					local found = false
+					for a,b in pairs(HelpLabels) do
+						if string.find(b.text, v.var) then
+							found = b.text
+							break
+						end
+					end
+					if found then
 						local slider = vgui.Create("DNumSlider")
 						slider:SetDecimals(0)
 						slider:SetMin(0)
 						slider:SetMax(3000)
-						slider:SetText(v.desc)
-						slider:SetValue(v.val)
+						slider:SetText(found)
+						slider:SetValue(GetGlobalInt(v.var))
+						
 						function slider.Slider:OnMouseReleased()
 							self:SetDragging( false ) 
 							self:MouseCapture( false ) 
-							LocalPlayer():ConCommand(v.command .. " " .. slider:GetValue())
+							LocalPlayer():ConCommand("rp_"..v.var .. " " .. slider:GetValue())
 						end
 						function slider.Wang:EndWang()
 							self:MouseCapture( false ) 
@@ -1077,17 +1057,16 @@ function RPAdminTab()
 							self.Wanger:SetCursor( "" ) 
 							if ( ValidPanel( self.IndicatorT ) ) then self.IndicatorT:Remove() end 
 							if ( ValidPanel( self.IndicatorB ) ) then self.IndicatorB:Remove() end 
-							LocalPlayer():ConCommand(v.command .. " " .. self:GetValue())
+							LocalPlayer():ConCommand("rp_"..v.var .. " " .. self:GetValue())
 						end
 						function slider.Wang.TextEntry:OnEnter()
-							LocalPlayer():ConCommand(v.command .. " " .. self:GetValue())
+							LocalPlayer():ConCommand("rp_"..v.var .. " " .. self:GetValue())
 						end
 						ValuePanel:AddItem(slider)
-						
 					end
-				ValueCat:SetContents(ValuePanel)
-				self:AddItem(ValueCat)
-			end)
+				end
+			ValueCat:SetContents(ValuePanel)
+			self:AddItem(ValueCat)
 		end
 		AdminPanel:Update()
 	return AdminPanel

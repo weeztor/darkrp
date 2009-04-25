@@ -79,6 +79,7 @@ AddCSLuaFile("scoreboard/scoreboard.lua")
 AddCSLuaFile("scoreboard/vote_button.lua")
 AddCSLuaFile("cl_helpvgui.lua")
 AddCSLuaFile("showteamtabs.lua")
+AddCSLuaFile("sh_commands.lua")
 
 -- Earthquake Mod addon
 resource.AddFile("sound/earthquake.mp3")
@@ -96,6 +97,7 @@ include("help.lua")
 include("shared.lua")
 include("data.lua")
 include("admincc.lua")
+include("sh_commands.lua")
 include("player.lua")
 include("chat.lua")
 include("util.lua")
@@ -108,16 +110,10 @@ include("main.lua")
 include("bannedprops.lua")
 include("hints.lua")
 include("rating.lua")
-//AddCSLuaFile("autorun/sh_SPropProtection.lua")
 AddCSLuaFile("SPropProtection/cl_Init.lua")
 AddCSLuaFile("SPropProtection/sh_CPPI.lua")
 include("SPropProtection/sv_Init.lua")
 include("SPropProtection/sh_CPPI.lua")
-
-AddHelpCategory(HELP_CATEGORY_CHATCMD, "Chat Commands")
-AddHelpCategory(HELP_CATEGORY_CONCMD, "Console Commands")
-AddHelpCategory(HELP_CATEGORY_ADMINTOGGLE, "Admin Toggle Commands (1 or 0!)")
-AddHelpCategory(HELP_CATEGORY_ADMINCMD, "Admin Console Commands")
 
 function includeCS(dir)
 	AddCSLuaFile(dir)
@@ -268,8 +264,6 @@ timer.Simple(5, function()
 	PROP = 5			-- Can always spawn props (unless jailed)
 end)
 
-GenerateChatCommandHelp()
-
 function GM:Initialize()
 	self.BaseClass:Initialize()
 	DB.Init()
@@ -371,11 +365,6 @@ function GM:Think()
 	end
 	-- End Spreadable fire Mod
 end
-
-AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showhelp - Toggle help menu (bind this to F1 if you haven't already)")
-AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "serverHelp - Show's server help.")
-AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare1 - Toggle vote clicker (bind this to F3 if you haven't already)")
-AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare2 - Job menu(bind this to F4 if you haven't already)")
 
 GM.Name = "DarkRP "..DARKRPVERSION
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"

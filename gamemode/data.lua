@@ -554,6 +554,7 @@ function DB.RetrieveSettings()
 	
 	for k, v in pairs(r) do
 		CfgVars[v.key] = tonumber(v.value)
+		SetGlobalInt(v.key, v.value)-- Set the global INT so clients can access this information in the admin menu! This does not save though!
 	end
 	return true
 end
@@ -568,6 +569,7 @@ function DB.SaveSetting(key, value)
 		print("updated", key, "to", value)
 	end
 	CfgVars[key] = value
+	SetGlobalInt(key, value)-- Set the global INT so clients can access this information in the admin menu! This does not save though!
 end
 
 function DB.RemoveSettings()

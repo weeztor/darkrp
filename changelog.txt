@@ -43,6 +43,9 @@ SVN version
 [FIX] Exploit where you could spawn banned props
 [FIX] If rp_allowrpnames = 0 then people won't have rp names anymore.
 [FIX] Health is not restored when you come back from sleep
+[FIX] HUGE Speed fix!(something with help labels sending from server to client every time)
+[FIX] F4 admin menu having to load a few seconds
+[FIX] F4 admin menu being unstable
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
@@ -56,6 +59,7 @@ SVN version
 [CHANGE] You will buy a door instantly when there would be only one button in the keys menu
 [CHANGE] When there's only one option in the keys menu, it will do that option instantly without opening the menu
 [CHANGE] Made all yell,whisper,pm ETC. in colour!!!
+[CHANGE] Helplabel structure(now MUCH faster!)
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings

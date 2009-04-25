@@ -629,7 +629,7 @@ end
 function GM:PlayerCanPickupWeapon(ply, weapon)
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	if ply:IsAdmin() and CfgVars["AdminsSpawnWithCopWeapons"] == 1 then return true end
-	if CfgVars["license"] == 1 and not ply:GetNWBool("HasGunlicense") then
+	if CfgVars["license"] == 1 and not ply:GetNWBool("HasGunlicense") and not ply:GetTable().RPLicenseSpawn then
 		if GetGlobalInt("licenseweapon_"..string.lower(weapon:GetClass())) == 1 then
 			return true
 		end
@@ -662,6 +662,9 @@ function GM:PlayerSpawn(ply)
 	if CfgVars["crosshair"] == 0 then
 		ply:CrosshairDisable()
 	end
+	
+	ply:GetTable().RPLicenseSpawn = true
+	timer.Simple(1, function(ply) ply:GetTable().RPLicenseSpawn = false end, ply)
 	
 	--Kill any colormod anyway
 	local RP = RecipientFilter()
@@ -962,7 +965,6 @@ function GM:PlayerInitialSpawn(ply)
 	ply.bannedfrom = {}
 	ply:NewData()
 	ply:InitSID()
-	NetworkHelpLabels(ply)
 	DB.RetrieveSalary(ply)
 	DB.RetrieveMoney(ply)
 	timer.Simple(10, ply.CompleteSentence, ply)
