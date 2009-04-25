@@ -112,6 +112,7 @@ Updated by: FPtje Falco
 [CHANGE] Merged Simple RP Prop protection with DarkRP
 [CHANGE] Put the contents folder in DarkRP with the earthquake sound
 [CHANGE] Settings now save when a convar is changed instead of every minute.
+[CHANGE] Removed /zombiehelp and put it in the F1 menu.
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
 [FIX] Rare error with dropweapon
 [FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.
@@ -134,6 +135,7 @@ Updated by: FPtje Falco
 [FIX] rp_grant and rp_revoke not working properly, Philxyz fucked the caching system up(Phil look at my code to fix it for your release :D)
 [FIX] Demote: the demoter can't vote anymore now.
 [FIX] Unable to select keys when you got a different weapon(like the 357)
+[FIX] F1 menu not showing part of the help.
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 [REMOVE] rp_mute <player> <on/off> It didn't work AND you've got admin mods to mute people!
 

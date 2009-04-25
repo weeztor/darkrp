@@ -2,6 +2,7 @@ HELP_CATEGORY_CHATCMD = 1
 HELP_CATEGORY_CONCMD = 2
 HELP_CATEGORY_ADMINTOGGLE = 3
 HELP_CATEGORY_ADMINCMD = 4
+HELP_CATEGORY_ZOMBIE = 5
 
 ValueCmds = {}
 function AddValueCommand(cmd, cfgvar, global)
@@ -23,11 +24,19 @@ AddHelpCategory(HELP_CATEGORY_CHATCMD, "Chat Commands")
 AddHelpCategory(HELP_CATEGORY_CONCMD, "Console Commands")
 AddHelpCategory(HELP_CATEGORY_ADMINTOGGLE, "Admin Toggle Commands (1 or 0!)")
 AddHelpCategory(HELP_CATEGORY_ADMINCMD, "Admin Console Commands")
+AddHelpCategory(HELP_CATEGORY_ZOMBIE, "Zombie chat commands")
 
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showhelp - Toggle help menu (bind this to F1 if you haven't already)")
-AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "serverHelp - Show's server help.")
+AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showteam - Show door menu")
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare1 - Toggle vote clicker (bind this to F3 if you haven't already)")
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare2 - Job menu(bind this to F4 if you haven't already)")
+
+AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/addzombie (creates a zombie spawn)")
+AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/removezombie index (removes a zombie spawn, index is the number inside ()")
+AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/showzombie (shows where the zombie spawns are)")
+AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/enablezombie (enables zombiemode)")
+AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/disablezombie (disables zombiemode)")
+AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/enablestorm enables meteor storms")
 
 -----------------------------------------------------------
 -- TOGGLE COMMANDS -- 

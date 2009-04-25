@@ -530,12 +530,6 @@ function HelpMayor(ply)
 end
 AddChatCommand("/mayorhelp", HelpMayor)
 
-function HelpZombie(ply)
-	ply:SetNWBool("helpZombie", not ply:GetNWBool("helpZombie"))
-	return ""
-end
-AddChatCommand("/zombiehelp", HelpZombie)
-
 function HelpBoss(ply)
 	ply:SetNWBool("helpBoss", not ply:GetNWBool("helpBoss"))
 	return ""
@@ -552,7 +546,6 @@ function closeHelp(ply)
 	ply:SetNWBool("helpCop", false)
 	ply:SetNWBool("helpBoss", false)
 	ply:SetNWBool("helpMayor", false)
-	ply:SetNWBool("helpZombie", false)
 	ply:SetNWBool("helpAdmin", false)
 	return ""
 end

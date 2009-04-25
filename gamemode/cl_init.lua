@@ -529,15 +529,7 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 12, 12, 556, 256, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 556, 20, Color(0, 0, 70, 200))
 		draw.DrawText("Admin Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText("/zombiehelp Shows you how to setup zombie mode\n/enablestorm enables meteor storms\n/disablestorm Disables meteor storms\n\nYou can change the price of weapons, jailtimer, max gangsters, ect.\nTo do this press F1 then scroll down and you will see all of the console commands\nIf you edit the init.lua file you can save the vars.\n/jailpos sets the jailposition!\n/setspawn <team> - Enter teamname Ex. police, mayor, gangster\n/adminhelp toggles this menu, /x closes it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
-	end
-
-	if LocalPlayer():GetNWBool("helpZombie") then
-		draw.RoundedBox(10, 10, 10, 860, 230, Color(0, 0, 0, 255))
-		draw.RoundedBox(10, 12, 12, 856, 226, Color(51, 58, 51, 200))
-		draw.RoundedBox(10, 12, 12, 856, 20, Color(0, 0, 70, 200))
-		draw.DrawText("Zombie Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText("/addzombie (creates a zombie spawn)\n/removezombie index (removes a zombie spawn, index is the number inside ()\n/showzombie (shows where the zombie spawns are)\n/enablezombie (enables zombiemode)\n/disablezombie (disables zombiemode)\n/zombiehelp (toggles this menu, /x to close)\n\nAll the zombie commands are admin only, the spawns are saved on different maps so you\ncan have a different set of zombie spawns depending on which map you are on.\nThe zombie spawns file is located in garrysmod/data/DarkRP if it ever becomes corrupt just delete it. /x to close", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText("/enablestorm enables meteor storms\n/disablestorm Disables meteor storms\n\nYou can change the price of weapons, jailtimer, max gangsters, ect.\nTo do this press F1 then scroll down and you will see all of the console commands\nIf you edit the init.lua file you can save the vars.\n/jailpos sets the jailposition!\n/setspawn <team> - Enter teamname Ex. police, mayor, gangster\n/adminhelp toggles this menu, /x closes it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
 	if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB and not LocalPlayer():GetNWBool("helpBoss") then

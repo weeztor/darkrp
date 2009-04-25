@@ -125,7 +125,7 @@ function HelpPanel:ApplySchemeSettings()
 end
 
 function HelpPanel:OnMouseWheeled(delta)
-	self.Scroll = math.Clamp(self.Scroll - delta * FrameTime() * 2000, 0, math.Clamp((#HelpCategories * 25 + #HelpLabels * 14) - 400, 0, 99999))
+	self.Scroll = self.Scroll - delta * FrameTime() * 2000//, 0, math.Clamp((#HelpCategories * 25 + #HelpLabels * 14) - 400, 0, 9999999999))
 	self:InvalidateLayout()
 end
 
