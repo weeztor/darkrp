@@ -60,6 +60,7 @@ SVN version
 [CHANGE] When there's only one option in the keys menu, it will do that option instantly without opening the menu
 [CHANGE] Made all yell,whisper,pm ETC. in colour!!!
 [CHANGE] Helplabel structure(now MUCH faster!)
+[CHANGE] The chat to use the new system
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings

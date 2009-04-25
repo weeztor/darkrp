@@ -15,12 +15,17 @@ function GM:PlayerSay(ply, text)
 			return v.callback(ply, "" .. string.sub(text, string.len(v.cmd) + 2, string.len(text)))
 		end
 	end
-
-	if ply:GetNWString("rpname") == ply:SteamName() or CfgVars["allowrpnames"] == 0 then
-		return text
-	else
-		return "(" .. ply:Name() .. ") " .. text
+	
+	local col = team.GetColor(ply:Team())
+	local col2 = Color(255,255,255,255)
+	if not ply:Alive() then
+		col2 = Color(200,200,200,255)
+		col = col2
 	end
+	for k,v in pairs(player.GetAll()) do
+		TalkToPerson(v, col, ply:Name(), col2, text)
+	end
+	return ""
 end
 
 function GM:PlayerCanSeePlayersChat(text, teamonly, listener, speaker)
