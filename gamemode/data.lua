@@ -437,6 +437,20 @@ function DB.RetrieveMoney(ply)
 	end
 end
 
+function DB.ResetAllMoney(ply,cmd,args)
+	if not ply:IsSuperAdmin() then return end
+	sql.Query("DELETE FROM darkrp_wallets;")
+	for k,v in pairs(player.GetAll()) do
+		DB.StoreMoney(v, 500)
+	end
+	if ply:IsPlayer() then
+		NotifyAll(1,4, ply:Nick() .. " reset all player's money!")
+	else
+		NotifyAll(1,4, "Console reset all player's money!")
+	end
+end
+concommand.Add("rp_resetallmoney", DB.ResetAllMoney)
+
 function DB.PayPlayer(ply1, ply2, amount)
 	if not ValidEntity(ply1) or not ValidEntity(ply2) then return end
 	local sid1 = ply1:SteamID()

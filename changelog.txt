@@ -17,6 +17,7 @@ SVN version
 [ADD] Pocket swep, store things temporarilly! (rp_pocket to turn on/off)
 [ADD] Sleeping players can get hurt
 [ADD] rp_voiceradius: Only hear people's voice in your vicinity!(same distance as yell, 550 units)
+[ADD] rp_resetallmoney: Reset EVERY SINGLE stored money on the server(not only of the people who are in the server)(Superadmin only)
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
