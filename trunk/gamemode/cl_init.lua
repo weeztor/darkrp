@@ -670,26 +670,9 @@ function ToggleClicker()
 end
 usermessage.Hook("ToggleClicker", ToggleClicker)
 
-function AddHelpLabel(msg)
-	local id = msg:ReadShort()
-	local category = msg:ReadShort()
-	local text = msg:ReadString()
-	local constant = msg:ReadShort()
-
-	local function tAddHelpLabel(id, category, text, constant)
-		for k, v in pairs(HelpLabels) do
-			if v.id == id then
-				v.text = text
-				return
-			end
-		end
-
-		table.insert(HelpLabels, { id = id, category = category, text = text, constant = constant })
-	end
-
-	timer.Simple(.01, tAddHelpLabel, id, category, text, constant)
+function AddHelpLabel(id, category, text, constant)
+	table.insert(HelpLabels, { id = id, category = category, text = text, constant = constant })
 end
-usermessage.Hook("AddHelpLabel", AddHelpLabel)
 
 function ChangeHelpLabel(msg)
 	local id = msg:ReadShort()
@@ -708,17 +691,10 @@ function ChangeHelpLabel(msg)
 end
 usermessage.Hook("ChangeHelpLabel", ChangeHelpLabel)
 
-function AddHelpCategory(msg)
-	local id = msg:ReadShort()
-	local text = msg:ReadString()
-
-	local function tAddHelpCategory(id, text)
-		table.insert(HelpCategories, { id = id, text = text })
-	end
-
-	timer.Simple(.01, tAddHelpCategory, id, text)
+function AddHelpCategory(id, name)
+	table.insert(HelpCategories, { id = id, text = name })
 end
-usermessage.Hook("AddHelpCategory", AddHelpCategory)
+include("sh_commands.lua")
 
 local function DoSpecialEffects(Type)
 	local thetype = Type:ReadString()
