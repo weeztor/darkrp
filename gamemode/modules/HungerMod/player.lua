@@ -6,7 +6,7 @@ function meta:NewHungerData()
 end
 
 function meta:HungerUpdate()
-	if not CfgVars["hungerspeed"] then return
+	if not CfgVars["hungerspeed"] then return end
 	self:SetNWInt("Energy", math.Clamp(self:GetNWInt("Energy") - CfgVars["hungerspeed"] / 10, 0, 100))
 	self:GetTable().LastHungerUpdate = CurTime()
 
