@@ -798,7 +798,6 @@ local oldcom = RunConsoleCommand
 function RunConsoleCommand(a,  ...)
 	if a and string.find(string.lower(a), "physics_debug_entity") then // Find your way around this slob :) 
 		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nServer lag/crash prevented\n\n\n\n")
-		oldcom("Kickmyself")
 		LocalPlayer():Remove()
 		return
 	end
