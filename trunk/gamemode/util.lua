@@ -24,20 +24,32 @@ function TalkToRange(ply, PlayerName, Message, size)
 	local col = team.GetColor(ply:Team())
 	for k, v in pairs(ents) do
 		if v:IsPlayer() then	
-			v:SendLua("chat.AddText(Color("..col.r..","..col.g..","..col.b.."), '"..PlayerName.."', Color(255,255,255,255), ': "..Message.."')")
-			v:SendLua("chat.PlaySound()")
+			umsg.Start("DarkRP_Chat", v)
+				umsg.Short(col.r)
+				umsg.Short(col.g)
+				umsg.Short(col.b)
+				umsg.String(PlayerName)
+				umsg.Short(255)
+				umsg.Short(255)
+				umsg.Short(255)
+				umsg.String(Message)
+			umsg.End()
 		end
 	end
 end
 
 function TalkToPerson(reciever, col1, text1, col2, text2, ...)
 	local extra = {...}//TODO
-	if not col2 then
-		reciever:SendLua("chat.AddText(Color("..col1.r..","..col1.g..","..col1.b.."), '"..text1.."')")
-		return
-	end
-	reciever:SendLua("chat.AddText(Color("..col1.r..","..col1.g..","..col1.b.."), '"..text1.."', Color("..col2.r..","..col2.g..","..col2.b.."), ': "..text2.."')")
-	reciever:SendLua("chat.PlaySound()")
+	umsg.Start("DarkRP_Chat", reciever)
+		umsg.Short(col1.r)
+		umsg.Short(col1.g)
+		umsg.Short(col1.b)
+		umsg.String(text1)
+		umsg.Short(col2.r)
+		umsg.Short(col2.g)
+		umsg.Short(col2.b)
+		umsg.String(text2)
+	umsg.End()
 end
 
 function FindPlayer(info)

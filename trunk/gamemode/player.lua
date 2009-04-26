@@ -32,7 +32,7 @@ function meta:SetRPName(name, firstRun)
 	local taken = false
 
 	for id, row in pairs(rpNames) do
-		if row.name and lowername == string.lower(row.name) and row.steam ~= self:SteamID() then
+		if row.name and lowername == string.lower(row.name) and row.steam ~= self:SteamID() and row.steam ~= "STEAM_ID_PENDING" and row.steam ~= "UNKNOWN" then
 			taken = true
 		end
 	end
