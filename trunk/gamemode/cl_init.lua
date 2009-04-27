@@ -832,6 +832,10 @@ local function AddToChat(msg)
 	local name = msg:ReadString()
 	local col2 = Color(msg:ReadShort(), msg:ReadShort(), msg:ReadShort())
 	local text = msg:ReadString()
-	chat.AddText(col1, name, col2, ": "..text)
+	if text then
+		chat.AddText(col1, name, col2, ": "..text)
+	else
+		chat.AddText(col1, name)
+	end
 end
 usermessage.Hook("DarkRP_Chat", AddToChat)
