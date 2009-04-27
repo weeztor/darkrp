@@ -45,10 +45,12 @@ function TalkToPerson(reciever, col1, text1, col2, text2, ...)
 		umsg.Short(col1.g)
 		umsg.Short(col1.b)
 		umsg.String(text1)
-		umsg.Short(col2.r)
-		umsg.Short(col2.g)
-		umsg.Short(col2.b)
-		umsg.String(text2)
+		if col2 and text2 then
+			umsg.Short(col2.r)
+			umsg.Short(col2.g)
+			umsg.Short(col2.b)
+			umsg.String(text2)
+		end
 	umsg.End()
 end
 
