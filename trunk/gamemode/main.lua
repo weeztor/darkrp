@@ -309,35 +309,10 @@ for k,v in pairs(CustomShipments) do
 	weaponClasses[v.entity] = v.model
 end
 function DropWeapon(ply)
-	local trace = {}
-	
-	trace.start = ply:EyePos()
-	trace.endpos = trace.start + ply:GetAimVector() * 85
-	trace.filter = ply
-
-	local tr = util.TraceLine(trace)
 	local ent = ply:GetActiveWeapon()
 	if not ValidEntity(ent) then return "" end
-	local class = ent:GetClass()
 	
-	local model = nil
-	
-	for k, v in pairs(weaponClasses) do
-		if class == k then model = v end
-	end
-	
-	if model then
-		ply:StripWeapon(class)
-		local weapon = ents.Create("spawned_weapon")
-		weapon:SetModel(model)
-		weapon:SetNWString("weaponclass", class)
-		weapon:SetPos(tr.HitPos)
-		weapon:SetNWString("Owner", "Shared")
-		weapon.nodupe = true
-		weapon:Spawn()
-	else
-		Notify(ply, 1, 4, "This weapon can not be dropped!")
-	end
+	ply:DropWeapon(ent)
 	return ""
 end
 AddChatCommand("/drop", DropWeapon)
@@ -685,6 +660,10 @@ function BuyPistol(ply, args)
 	if args == "" then return "" end
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
 
+	if CfgVars["enablebuypistol"] == 0 then
+		Notify(ply, 1, 4, "/buy is disabled!")
+		return ""
+	end
 	if CfgVars["noguns"] == 1 then
 		Notify(ply, 1, 4, "Guns are disabled!")
 		return ""

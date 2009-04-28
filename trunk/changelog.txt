@@ -138,6 +138,7 @@ Updated by: FPtje Falco
 [FIX] F1 menu not showing part of the help.
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 [REMOVE] rp_mute <player> <on/off> It didn't work AND you've got admin mods to mute people!
+[REMOVE] Restriction of /dropweapon. You can now drop any weapon.
 
 
 VERSION 2.3.1
