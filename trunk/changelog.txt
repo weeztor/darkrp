@@ -18,6 +18,7 @@ SVN version
 [ADD] Sleeping players can get hurt
 [ADD] rp_voiceradius: Only hear people's voice in your vicinity!(same distance as yell, 550 units)
 [ADD] rp_resetallmoney: Reset EVERY SINGLE stored money on the server(not only of the people who are in the server)(Superadmin only)
+[ADD] Players can now see how long before they get unarrested.
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
@@ -46,6 +47,8 @@ SVN version
 [FIX] HUGE Speed fix!(something with help labels sending from server to client every time)
 [FIX] F4 admin menu having to load a few seconds
 [FIX] F4 admin menu being unstable
+[FIX] F1 menu not showing part of the help.
+[FIX] Player warrants resetting after they were already reset.
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
@@ -61,9 +64,11 @@ SVN version
 [CHANGE] Made all yell,whisper,pm ETC. in colour!!!
 [CHANGE] Helplabel structure(now MUCH faster!)
 [CHANGE] The chat to use the new system
+[CHANGE] Removed /zombiehelp and put it in the F1 menu.
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings
+[REMOVE] Restriction of /dropweapon. You can now drop any weapon.
 
 SVN VERSTION till 150/ 2.3.5:
 Updated by: FPtje Falco
@@ -112,7 +117,6 @@ Updated by: FPtje Falco
 [CHANGE] Merged Simple RP Prop protection with DarkRP
 [CHANGE] Put the contents folder in DarkRP with the earthquake sound
 [CHANGE] Settings now save when a convar is changed instead of every minute.
-[CHANGE] Removed /zombiehelp and put it in the F1 menu.
 [FIX] When use protection is on, doors couldn't be opened by some people, now they can.
 [FIX] Rare error with dropweapon
 [FIX] Exploit with shipments: Exploding them with more than one explosive would make them spawn more guns than usual.
@@ -135,10 +139,8 @@ Updated by: FPtje Falco
 [FIX] rp_grant and rp_revoke not working properly, Philxyz fucked the caching system up(Phil look at my code to fix it for your release :D)
 [FIX] Demote: the demoter can't vote anymore now.
 [FIX] Unable to select keys when you got a different weapon(like the 357)
-[FIX] F1 menu not showing part of the help.
 [REMOVE] Data/DarkRP/WHAT_YOU_CAN_DO_IN_THIS_FOLDER.txt and its contents, it had absolutely no purpose. If you have that file, the update won't remove it but it won't remake it either.
 [REMOVE] rp_mute <player> <on/off> It didn't work AND you've got admin mods to mute people!
-[REMOVE] Restriction of /dropweapon. You can now drop any weapon.
 
 
 VERSION 2.3.1

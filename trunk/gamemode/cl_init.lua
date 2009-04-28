@@ -256,7 +256,18 @@ local salary2a = CreateClientConVar("salary2a", 255, true, false)
 local HUDwidth = CreateClientConVar("HudWidth", 190, true, false)
 local HUDHeight = CreateClientConVar("HudHeight", 10, true, false)
 
+
+local arresttime = 0
+local function GetArrested()
+	arresttime = CurTime()
+end
+usermessage.Hook("GotArrested", GetArrested)
+
 function GM:HUDPaint()
+	if arresttime ~= 0 and CurTime() - arresttime <= GetGlobalInt("jailtimer") then
+		draw.DrawText("You are arrested for "..tostring(math.ceil(GetGlobalInt("jailtimer") - (CurTime() - arresttime))).." seconds!","ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
+	elseif arresttime ~= 0 then arresttime = 0
+	end
 	self.BaseClass:HUDPaint()
 
 	local hx = 9
