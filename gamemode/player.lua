@@ -655,6 +655,11 @@ local function IsEmpty(vector)
 	return a and b
 end
 
+local function removelicense(ply) 
+	if not ValidEntity(ply) then return end 
+	ply:GetTable().RPLicenseSpawn = false 
+end
+
 function GM:PlayerSpawn(ply)
 	self.BaseClass:PlayerSpawn(ply)
 	ply:CrosshairEnable()
@@ -664,7 +669,7 @@ function GM:PlayerSpawn(ply)
 	end
 	
 	ply:GetTable().RPLicenseSpawn = true
-	timer.Simple(1, function(ply) ply:GetTable().RPLicenseSpawn = false end, ply)
+	timer.Simple(1, removelicense, ply)
 	
 	--Kill any colormod anyway
 	local RP = RecipientFilter()
