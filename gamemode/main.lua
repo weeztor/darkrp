@@ -320,6 +320,7 @@ AddChatCommand("/dropweapon", DropWeapon)
 AddChatCommand("/weapondrop", DropWeapon)
 
 function UnWarrant(ply, target)
+	if not target:GetNWBool("warrant") then return end
 	target:SetNWBool("warrant", false)
 	Notify(ply, 1, 4, "Search warrant for " .. target:Nick() .. " has expired!")
 end 

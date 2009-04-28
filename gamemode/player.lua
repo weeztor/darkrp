@@ -409,11 +409,11 @@ function meta:TeamBan()
 end
 
 function meta:Arrest(time, rejoin)
-	if self:GetNWBool("wanted") then
-		self:SetNetworkedBool("wanted", false)
-	end
+	self:SetNetworkedBool("wanted", false)
+	self:SetNWBool("warrant", false)
 	self:SetNWBool("HasGunlicense", false)
 	GAMEMODE:SetPlayerSpeed(self, CfgVars["aspd"], CfgVars["aspd"] )
+	
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
 	if CfgVars["teletojail"] == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
 		self:SetPos(DB.RetrieveJailPos())
@@ -438,6 +438,8 @@ function meta:Arrest(time, rejoin)
 		end
 		
 		timer.Create(ID .. "jailtimer", time, 1, function() self:Unarrest(ID) end)
+		umsg.Start("GotArrested", ply)
+		umsg.End()
 	end
 end
 
