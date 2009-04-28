@@ -58,7 +58,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	if self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 65 then
+	if self.Owner:EyePos():Distance(trace.HitPos) > 65 then
 		return
 	end
 	
@@ -89,17 +89,16 @@ function SWEP:PrimaryAttack()
 		return
 	end
 
-	table.insert(self.Owner:GetTable().Pocket, {
-	class = trace.Entity:GetClass(), 
-	model = trace.Entity:GetModel(), 
-	Owner = trace.Entity:GetNWString("Owner"), 
-	gettable = trace.Entity:GetTable(), 
-	weaponclass = trace.Entity:GetNWString("weaponclass"),
-	shipcontent = trace.Entity:GetNWString("contents"),
-	shipcount = trace.Entity:GetNWInt("count"),
-	price = trace.Entity:GetNWInt("price")})
 	
-	trace.Entity:Remove()
+	table.insert(self.Owner:GetTable().Pocket, trace.Entity)
+	trace.Entity:SetNoDraw(true)
+	trace.Entity:SetCollisionGroup(0)
+	local phys = trace.Entity:GetPhysicsObject()
+	if phys:IsValid() then
+		phys:EnableCollisions(false)
+		trace.Entity:SetMoveType(MOVETYPE_VPHYSICS)
+		phys:Wake()
+	end
 end
 
 function SWEP:SecondaryAttack()
@@ -112,33 +111,21 @@ function SWEP:SecondaryAttack()
 	end
 	local ent = self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket]
 	self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket] = nil
-	
+	if not ValidEntity(ent) then Notify(self.Owner, 1, 4, "No items in pocket!") return end
 	local trace = {}
 	trace.start = self.Owner:EyePos()
 	trace.endpos = trace.start + self.Owner:GetAimVector() * 85
 	trace.filter = self.Owner
 	local tr = util.TraceLine(trace)
-	local spawn = ents.Create(ent.class)
-	spawn:SetPos(tr.HitPos)
-	spawn:SetModel(ent.model)
-	if ent.Owner ~= "" then
-		spawn:SetNWString("Owner", ent.Owner)
-		undo.Create("Pocket Entity")
-			undo.AddEntity( spawn )
-			undo.SetPlayer( self.Owner )
-		undo.Finish()
-	else
-		spawn:SetNWString("Owner", "Shared")
+	ent:SetMoveType(MOVETYPE_VPHYSICS)
+	ent:SetNoDraw(false)
+	ent:SetCollisionGroup(4)
+	ent:SetPos(tr.HitPos)
+	local phys = ent:GetPhysicsObject()
+	if phys:IsValid() then
+		phys:EnableCollisions(true)
+		phys:Wake()
 	end
-	spawn:Spawn()
-	for k,v in pairs(ent.gettable) do
-		spawn:GetTable()[k] = v
-	end
-	spawn:GetTable().Entity = spawn
-	spawn:SetNWString("weaponclass", ent.weaponclass)
-	spawn:SetNWString("contents", ent.shipcontent)
-	spawn:SetNWInt("count", ent.shipcount)
-	spawn:SetNWInt("price", ent.price)
 end
 
 SWEP.OnceReload = false
