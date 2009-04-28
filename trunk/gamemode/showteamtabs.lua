@@ -84,7 +84,7 @@ local function MayorOptns()
 			GiveLicense.DoClick = function()
 				LocalPlayer():ConCommand("say /givelicense")
 			end
-			maypanel:AddItem(Lottery)
+			maypanel:AddItem(GiveLicense)
 	MayCat:SetContents(maypanel)
 	return MayCat
 end
@@ -220,8 +220,7 @@ local function MobOptns()
 	MobCat:SetContents(Mobpanel)
 	return MobCat
 end
-	
-local amountOfMoney = 2
+
 function MoneyTab()
 	local FirstTabPanel = vgui.Create("DPanelList")
 		function FirstTabPanel:Update()
