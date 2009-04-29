@@ -90,6 +90,10 @@ function SWEP:PrimaryAttack()
 	end
 
 	
+	umsg.Start("Pocket_AddItem", self.Owner)
+		umsg.Short(trace.Entity:EntIndex())
+	umsg.End()
+	
 	table.insert(self.Owner:GetTable().Pocket, trace.Entity)
 	trace.Entity:SetNoDraw(true)
 	trace.Entity:SetCollisionGroup(0)
@@ -139,55 +143,70 @@ function SWEP:Reload()
 		return
 	end
 	
-	local SendToClient = {}
-	for k,v in pairs(self.Owner:GetTable().Pocket) do
-		table.insert(SendToClient, v.model) -- only send the model!
-	end
-	datastream.StreamToClients({self.Owner}, "PocketMenu", SendToClient)
+	umsg.Start("StartPocketMenu", self.Owner)
+	umsg.End()
 end
 
 if CLIENT then
-	require("datastream")
+	local function StorePocketItem(um)
+		if not LocalPlayer():GetTable().Pocket then
+			LocalPlayer():GetTable().Pocket = {}
+		end
+		local ent = Entity(um:ReadShort())
+		if ValidEntity(ent) then
+			table.insert(LocalPlayer():GetTable().Pocket, ent)
+		end
+	end
+	usermessage.Hook("Pocket_AddItem", StorePocketItem)
 	local frame
-	local function PocketMenu(handler, id, encoded, decoded)
+	local function PocketMenu()
 		if frame and frame:IsValid() and frame:IsVisible() then return end
+		if LocalPlayer():GetActiveWeapon():GetClass() ~= "pocket" then return end
+		if not LocalPlayer():GetTable().Pocket then LocalPlayer():GetTable().Pocket = {} return end
+		if #LocalPlayer():GetTable().Pocket <= 0 then return end
 		frame = vgui.Create( "DFrame" )
 		frame:SetTitle( "Drop item" )
 		frame:SetVisible( true )
 		frame:MakePopup( )
 		
+		local items = LocalPlayer():GetTable().Pocket
 		local function Reload()
-			frame:SetSize( #decoded * 64, 90 ) 
+			frame:SetSize( #items * 64, 90 ) 
 			frame:Center()
-			for k,v in pairs(decoded) do
+			for k,v in pairs(items) do
 				local icon = vgui.Create("SpawnIcon", frame)
 				icon:SetPos((k-1) * 64, 25)
-				icon:SetModel(v)
+				icon:SetModel(v:GetModel())
 				icon:SetIconSize(64)
 				icon:SetToolTip()
 				icon.DoClick = function()
-					RunConsoleCommand("_RPSpawnPocketItem", k)
-					decoded[k] = nil
-					if #decoded == 0 then
+					icon:SetToolTip()
+					RunConsoleCommand("_RPSpawnPocketItem", v:EntIndex())
+					items[k] = nil
+					if #items == 0 then
 						frame:Close()
 						return
 					end
-					decoded = table.ClearKeys(decoded)
+					items = table.ClearKeys(items)
 					Reload()
 				end
 			end
 		end
 		Reload()
 	end
-	datastream.Hook( "PocketMenu", PocketMenu )
+	usermessage.Hook("StartPocketMenu", PocketMenu)
 elseif SERVER then
 	local function Spawn(ply, cmd, args)
 		if ply:GetActiveWeapon():GetClass() ~= "pocket" then
 			return
 		end
-		if ply:GetTable().Pocket and ply:GetTable().Pocket[tonumber(args[1])] then
-			local ent = ply:GetTable().Pocket[tonumber(args[1])]
-			ply:GetTable().Pocket[tonumber(args[1])] = nil
+		if ply:GetTable().Pocket and Entity(tonumber(args[1])) then
+			local ent = Entity(tonumber(args[1]))
+			for k,v in pairs(ply:GetTable().Pocket) do 
+				if v == ent then
+					ply:GetTable().Pocket[k] = nil
+				end
+			end
 			ply:GetTable().Pocket = table.ClearKeys(ply:GetTable().Pocket)
 			
 			local trace = {}
@@ -195,27 +214,15 @@ elseif SERVER then
 			trace.endpos = trace.start + ply:GetAimVector() * 85
 			trace.filter = ply
 			local tr = util.TraceLine(trace)
-			local spawn = ents.Create(ent.class)
-			spawn:SetPos(tr.HitPos)
-			spawn:SetModel(ent.model)
-			if ent.Owner ~= "" then
-				spawn:SetNWString("Owner", ent.Owner)
-				undo.Create("Pocket Entity")
-					undo.AddEntity( spawn )
-					undo.SetPlayer( ply )
-				undo.Finish()
-			else
-				spawn:SetNWString("Owner", "Shared")
+			ent:SetMoveType(MOVETYPE_VPHYSICS)
+			ent:SetNoDraw(false)
+			ent:SetCollisionGroup(4)
+			ent:SetPos(tr.HitPos)
+			local phys = ent:GetPhysicsObject()
+			if phys:IsValid() then
+				phys:EnableCollisions(true)
+				phys:Wake()
 			end
-			spawn:SetNWString("weaponclass", ent.weaponclass)
-			spawn:SetNWString("contents", ent.shipcontent)
-			spawn:SetNWInt("count", ent.shipcount)
-			spawn:SetNWInt("price", ent.price)
-			spawn:Spawn()
-			for k,v in pairs(ent.gettable) do
-				spawn:GetTable()[k] = v
-			end
-			spawn:GetTable().Entity = spawn
 		end
 	end
 	concommand.Add("_RPSpawnPocketItem", Spawn)
