@@ -50,6 +50,7 @@ SVN version
 [FIX] F1 menu not showing part of the help.
 [FIX] Player warrants resetting after they were already reset.
 [FIX] rp_enablemayorsetsalary not working
+[FIX] Can't change job when you're dead
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof

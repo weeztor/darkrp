@@ -1195,6 +1195,10 @@ AddChatCommand("/type", TypeLetter)
 
 function ChangeJob(ply, args)
 	if args == "" then return "" end
+	if not ply:Alive() then
+		Notify(ply, 1, 4, "Ur ded")
+		return ""
+	end
 
 	if CfgVars["customjobs"] ~= 1 then
 		Notify(ply, 1, 4, "Custom Jobs are disabled!")
