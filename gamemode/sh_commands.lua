@@ -433,8 +433,8 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_cpchief [Nick|SteamID|UserID] - Mak
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_cp [Nick|SteamID|UserID] - Make a player into a CP.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_citizen [Nick|SteamID|UserID] - Make a player become a Citizen.")
 for k,v in pairs(RPExtraTeams) do
-	ValueCmds["rp_max"..v.command.."s"] = { var = "rp_max"..v.command.."s", global = false }
-	ToggleCmds["rp_allow"..v.command] = {var = "rp_allow"..v.command, global = false, superadmin = true}
+	ValueCmds["rp_max"..v.command.."s"] = { var = "max"..v.command.."s", global = false }
+	ToggleCmds["rp_allow"..v.command] = {var = "allow"..v.command, global = false, superadmin = true}
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..v.command.. " [Nick|SteamID|UserID] - Make a player become a "..v.name..".")
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allow"..v.command.." - Enable/disable "..v.name)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.."s".." <Number> - Sets max "..v.name.."s.")

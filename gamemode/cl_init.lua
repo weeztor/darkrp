@@ -850,5 +850,6 @@ local function AddToChat(msg)
 	else
 		chat.AddText(col1, name)
 	end
+	chat.PlaySound()
 end
 usermessage.Hook("DarkRP_Chat", AddToChat)
