@@ -412,6 +412,7 @@ function meta:Arrest(time, rejoin)
 	self:SetNetworkedBool("wanted", false)
 	self:SetNWBool("warrant", false)
 	self:SetNWBool("HasGunlicense", false)
+	self:SetNWBool("Arrested", true)
 	GAMEMODE:SetPlayerSpeed(self, CfgVars["aspd"], CfgVars["aspd"] )
 	
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
@@ -444,6 +445,7 @@ function meta:Arrest(time, rejoin)
 end
 
 function meta:Unarrest(ID)
+	self:SetNWBool("Arrested", false)
 	if not ValidEntity(self) then
 		RPArrestedPlayers[ID] = nil
 		return

@@ -264,9 +264,9 @@ end
 usermessage.Hook("GotArrested", GetArrested)
 
 function GM:HUDPaint()
-	if arresttime ~= 0 and CurTime() - arresttime <= GetGlobalInt("jailtimer") then
+	if arresttime ~= 0 and CurTime() - arresttime <= GetGlobalInt("jailtimer") and LocalPlayer():GetNWBool("Arrested") then
 		draw.DrawText("You are arrested for "..tostring(math.ceil(GetGlobalInt("jailtimer") - (CurTime() - arresttime))).." seconds!","ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
-	elseif arresttime ~= 0 then arresttime = 0
+	elseif arresttime ~= 0 or not LocalPlayer():GetNWBool("Arrested") then arresttime = 0
 	end
 	self.BaseClass:HUDPaint()
 

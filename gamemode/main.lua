@@ -2024,7 +2024,7 @@ function RefreshGlobals()
 	DB.SaveGlobal("nametag", 1)
 	DB.SaveGlobal("deathblack", 0)
 	DB.SaveGlobal("maxnormalsalary", 90)
-	DB.SaveGlobal("mayorsetsalary", 90)
+	DB.SaveGlobal("maxmayorsetsalary", 90)
 	
 	DB.SaveGlobal("licenseweapon_weapon_physcannon", 1)
 	DB.SaveGlobal("licenseweapon_weapon_physgun", 1)
@@ -2215,7 +2215,7 @@ function MayorSetSalary(ply, cmd, args)
 		return
 	end
 
-	if CfgVars["mayorsetsalary"] == 0 then
+	if CfgVars["enablemayorsetsalary"] == 0 then
 		ply:PrintMessage(2, "Mayor SetSalary disabled by Admin!")
 		Notify(ply, 1, 4, "Mayor SetSalary disabled by Admin!")
 		return "Mayor SetSalary disabled by Admin!"
@@ -2233,8 +2233,8 @@ function MayorSetSalary(ply, cmd, args)
 		return
 	end
 
-	if amount > GetGlobalInt("mayorsetsalary") then
-		ply:PrintMessage(2, "Salary must be less than or equal to " .. CUR .. CfgVars["maxmayorsetsalary"] .."!")
+	if amount > GetGlobalInt("maxmayorsetsalary") then
+		ply:PrintMessage(2, "Salary must be less than or equal to " .. CUR .. GetGlobalInt("maxmayorsetsalary") .."!")
 		return
 	end
 
@@ -2275,7 +2275,7 @@ function MayorSetSalary(ply, cmd, args)
 	end
 	return
 end
-concommand.Add("mayor_setsalary", MayorSetSalary)
+concommand.Add("rp_mayor_setsalary", MayorSetSalary)
 
 function DoTeamBan(ply, args, cmdargs)
 	if not ply:IsAdmin() then 

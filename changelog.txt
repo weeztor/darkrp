@@ -49,6 +49,7 @@ SVN version
 [FIX] F4 admin menu being unstable
 [FIX] F1 menu not showing part of the help.
 [FIX] Player warrants resetting after they were already reset.
+[FIX] rp_enablemayorsetsalary not working
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
@@ -65,6 +66,7 @@ SVN version
 [CHANGE] Helplabel structure(now MUCH faster!)
 [CHANGE] The chat to use the new system
 [CHANGE] Removed /zombiehelp and put it in the F1 menu.
+[CHANGE] the way how gravgun punting is done
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings

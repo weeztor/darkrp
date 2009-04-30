@@ -188,7 +188,7 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enableshipments - Turn /buyshipm
 AddToggleCommand("rp_enablebuypistol", "enablebuypistol", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enablebuypistol - Turn /buy on of off.")
 
-AddToggleCommand("rp_enablemayorsetsalary", "mayorsetsalary", false)
+AddToggleCommand("rp_enablemayorsetsalary", "enablemayorsetsalary", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enablemayorsetsalary - Enable Mayor salary control.")
 
 AddToggleCommand("rp_customspawns", "customspawns", false)
@@ -335,9 +335,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_normalsalary <Number> - Sets the st
 
 AddValueCommand("rp_maxnormalsalary", "maxnormalsalary", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxnormalsalary <Number> - Sets the max normal salary.")
-
-AddValueCommand("rp_maxmayorsetsalary", "mayorsetsalary", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmayorsetsalary <Number> - Sets the max salary that the Mayor can set for a player.")
 
 AddValueCommand("rp_maxcopsalary", "maxcopsalary", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcopsalary <Number> - Sets the max salary that the Mayor can give to a CP.")
