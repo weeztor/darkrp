@@ -958,12 +958,10 @@ function RPAdminTab()
 				ValuePanel:EnableHorizontal(false)
 				ValuePanel:EnableVerticalScrollbar(true)
 				
-				local toggles = table.ClearKeys(ToggleCmds)
-				table.SortByMember(toggles, "var", function(a, b) return a > b end)
-				for k, v in pairs(toggles) do
+				for k, v in SortedPairsByMemberValue(ToggleCmds, "var") do
 					local found = false
 					for a,b in pairs(HelpLabels) do
-						if string.find(b.text, v.var) then
+						if string.find(b.text, k) then
 							found = b.text
 							break
 						end
@@ -981,7 +979,7 @@ function RPAdminTab()
 							local tonum = {}
 							tonum[false] = "0"
 							tonum[true] = "1"
-							LocalPlayer():ConCommand("rp_"..v.var .. " " .. tonum[self:GetChecked()])
+							RunConsoleCommand(k, tonum[self:GetChecked()])
 						end
 						TogglePanel:AddItem(checkbox)
 					end
@@ -1026,12 +1024,10 @@ function RPAdminTab()
 				if ( !self:GetExpanded() ) then cookie = '0' end 
 				self:SetCookie( "Open", cookie )
 			end  
-				local values = table.ClearKeys(ValueCmds)
-				table.SortByMember(values, "var", function(a, b) return a > b end)
-				for k, v in pairs(values) do
+				for k, v in SortedPairsByMemberValue(ValueCmds, "var") do
 					local found = false
 					for a,b in pairs(HelpLabels) do
-						if string.find(b.text, v.var) then
+						if string.find(b.text, k) then
 							found = b.text
 							break
 						end
@@ -1047,7 +1043,7 @@ function RPAdminTab()
 						function slider.Slider:OnMouseReleased()
 							self:SetDragging( false ) 
 							self:MouseCapture( false ) 
-							LocalPlayer():ConCommand("rp_"..v.var .. " " .. slider:GetValue())
+							RunConsoleCommand(k, slider:GetValue())
 						end
 						function slider.Wang:EndWang()
 							self:MouseCapture( false ) 
@@ -1056,10 +1052,10 @@ function RPAdminTab()
 							self.Wanger:SetCursor( "" ) 
 							if ( ValidPanel( self.IndicatorT ) ) then self.IndicatorT:Remove() end 
 							if ( ValidPanel( self.IndicatorB ) ) then self.IndicatorB:Remove() end 
-							LocalPlayer():ConCommand("rp_"..v.var .. " " .. self:GetValue())
+							RunConsoleCommand(k, self:GetValue())
 						end
 						function slider.Wang.TextEntry:OnEnter()
-							LocalPlayer():ConCommand("rp_"..v.var .. " " .. self:GetValue())
+							RunConsoleCommand(k, self:GetValue())
 						end
 						ValuePanel:AddItem(slider)
 					end
