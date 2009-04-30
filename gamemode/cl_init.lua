@@ -49,6 +49,8 @@ function GM:Initialize()
 	self.BaseClass:Initialize()
 end
 
+CreateClientConVar("physics_debug_entity", 0, false,false)
+
 function DisplayNotify(msg)
 	local txt = msg:ReadString()
 	GAMEMODE:AddNotify(txt, msg:ReadShort(), msg:ReadLong())
