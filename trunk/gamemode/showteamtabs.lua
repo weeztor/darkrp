@@ -968,7 +968,7 @@ function RPAdminTab()
 							break
 						end
 					end
-					if found then
+					if found and type(v) == "table" then
 						local checkbox = vgui.Create("DCheckBoxLabel")
 						checkbox:SetValue(GetGlobalInt(v.var))
 						checkbox:SetText(found)
@@ -1036,7 +1036,7 @@ function RPAdminTab()
 							break
 						end
 					end
-					if found then
+					if found and type(v) == "table" then
 						local slider = vgui.Create("DNumSlider")
 						slider:SetDecimals(0)
 						slider:SetMin(0)
@@ -1094,37 +1094,15 @@ function RPLicenseWeaponsTab()
 		function weaponspanel:Update()
 			self:Clear(true)
 			local Explanation = vgui.Create("DLabel")
-			Explanation:SetText("License weapons\n\nTick the weapons you think people DO NOT need a license for\nUntick the weapons you think people DO need a license for\n\nDefault weapons:\n") 
+			Explanation:SetText("License weapons\n\nTick the weapons people should be able to get WITHOUT a license!\n") 
 			Explanation:SizeToContents()
 			self:AddItem(Explanation)
 			
 			for k,v in pairs(DefaultWeapons) do
-				local checkbox = vgui.Create("DCheckBoxLabel")
-				checkbox:SetText(v.name)
-				checkbox:SetValue(GetGlobalInt("licenseweapon_"..v.class))
-				function checkbox.Button:Toggle()
-					if ( self:GetChecked() == nil || !self:GetChecked() ) then 
-						self:SetValue( true ) 
-					else 
-						self:SetValue( false ) 
-					end 
-					local tonum = {}
-					tonum[false] = "0"
-					tonum[true] = "1"
-					RunConsoleCommand("rp_licenseweapon_".. v.class, tonum[self:GetChecked()])
-				end
-				self:AddItem(checkbox)
-			end
-			
-			local OtherWeps = vgui.Create("DLabel")
-			OtherWeps:SetText("\nOther weapons:\n") 
-			OtherWeps:SizeToContents()
-			self:AddItem(OtherWeps)
-			for k,v in pairs(weapons.GetList()) do
-				if v.Classname and not string.find(string.lower(v.Classname), "base") and v.Classname ~= "" then
+				if type(v) == "table" and v.name then
 					local checkbox = vgui.Create("DCheckBoxLabel")
-					checkbox:SetText(v.PrintName)
-					checkbox:SetValue(GetGlobalInt("licenseweapon_"..v.Classname))
+					checkbox:SetText(v.name)
+					checkbox:SetValue(GetGlobalInt("licenseweapon_"..v.class))
 					function checkbox.Button:Toggle()
 						if ( self:GetChecked() == nil || !self:GetChecked() ) then 
 							self:SetValue( true ) 
@@ -1134,9 +1112,35 @@ function RPLicenseWeaponsTab()
 						local tonum = {}
 						tonum[false] = "0"
 						tonum[true] = "1"
-						RunConsoleCommand("rp_licenseweapon_".. string.lower(v.Classname), tonum[self:GetChecked()])
+						RunConsoleCommand("rp_licenseweapon_".. v.class, tonum[self:GetChecked()])
 					end
 					self:AddItem(checkbox)
+				end
+			end
+			
+			local OtherWeps = vgui.Create("DLabel")
+			OtherWeps:SetText("\nOther weapons:\n") 
+			OtherWeps:SizeToContents()
+			self:AddItem(OtherWeps)
+			for k,v in pairs(weapons.GetList()) do
+				if type(v) == "table" and v.Classname then
+					if v.Classname and not string.find(string.lower(v.Classname), "base") and v.Classname ~= "" then
+						local checkbox = vgui.Create("DCheckBoxLabel")
+						checkbox:SetText(v.PrintName)
+						checkbox:SetValue(GetGlobalInt("licenseweapon_"..v.Classname))
+						function checkbox.Button:Toggle()
+							if ( self:GetChecked() == nil || !self:GetChecked() ) then 
+								self:SetValue( true ) 
+							else 
+								self:SetValue( false ) 
+							end 
+							local tonum = {}
+							tonum[false] = "0"
+							tonum[true] = "1"
+							RunConsoleCommand("rp_licenseweapon_".. string.lower(v.Classname), tonum[self:GetChecked()])
+						end
+						self:AddItem(checkbox)
+					end
 				end
 			end
 		end

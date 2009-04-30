@@ -146,7 +146,7 @@ local function RefreshSettings(RESET)
 	CfgVars["letters"] = 1 --Allow letter writing
 	CfgVars["cpvoting"] = 1 --Allow CP voting
 	CfgVars["mayorvoting"] = 1 --Allow Mayor voting
-	CfgVars["mayorsetsalary"] = 1 --Allow the Mayor to decide salaries of other players
+	CfgVars["enablemayorsetsalary"] = 1 --Allow the Mayor to decide salaries of other players
 	CfgVars["cptomayoronly"] = 0 --Only CPs can do /votemayor
 	CfgVars["chiefjailpos"] = 1 -- Can the Chief set the jail positions?
 	CfgVars["physgun"] = 1 --Physguns for everybody? 0 = Admins only
