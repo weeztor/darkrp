@@ -143,6 +143,17 @@ function SWEP:Reload()
 		return
 	end
 	
+	for k,v in pairs(self.Owner:GetTable().Pocket) do 
+		if not ValidEntity(v) then
+			self.Owner:GetTable().Pocket[k] = nil
+			self.Owner:GetTable().Pocket = table.ClearKeys(self.Owner:GetTable().Pocket)
+			if #self.Owner:GetTable().Pocket <= 0 then -- Recheck after the entities have been validated.
+				Notify(self.Owner, 1, 4, "No items in pocket!") 
+				return
+			end
+		end
+	end
+	
 	umsg.Start("StartPocketMenu", self.Owner)
 	umsg.End()
 end
@@ -174,6 +185,13 @@ if CLIENT then
 			frame:SetSize( #items * 64, 90 ) 
 			frame:Center()
 			for k,v in pairs(items) do
+				if not ValidEntity(v) then 
+					items[k] = nil
+					items = table.ClearKeys(items)
+					frame:Close()
+					PocketMenu()
+					break
+				end
 				local icon = vgui.Create("SpawnIcon", frame)
 				icon:SetPos((k-1) * 64, 25)
 				icon:SetModel(v:GetModel())
@@ -202,12 +220,15 @@ elseif SERVER then
 		end
 		if ply:GetTable().Pocket and Entity(tonumber(args[1])) then
 			local ent = Entity(tonumber(args[1]))
+			
 			for k,v in pairs(ply:GetTable().Pocket) do 
 				if v == ent then
 					ply:GetTable().Pocket[k] = nil
 				end
 			end
 			ply:GetTable().Pocket = table.ClearKeys(ply:GetTable().Pocket)
+			
+			if not ValidEntity(ent) then return end
 			
 			local trace = {}
 			trace.start = ply:EyePos()
