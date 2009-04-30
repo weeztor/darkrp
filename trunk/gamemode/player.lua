@@ -360,6 +360,7 @@ function meta:ResetDMCounter()
 end
 
 function meta:CanAfford(amount)
+	if not amount then return false end
 	return math.floor(amount) >= 0 and DB.RetrieveMoney(self) - math.floor(amount) >= 0
 end
 
@@ -975,8 +976,10 @@ function GM:PlayerInitialSpawn(ply)
 	-- He is the one who made slobbot, a clientside mod that insta crashes servers
 	-- This code litterally removes him from the server when he joins
 	-- Really, you don't want this guy in your server.
-	-- If you do, then remove the next line:
-	if ply:SteamID() == "STEAM_0:0:16882263" then ply:ConCommand("disconnect") ply:Remove() end
+	-- To enable autokick on spawn, remove the // from the next line:
+	//if ply:SteamID() == "STEAM_0:0:16882263" then ply:ConCommand("disconnect") ply:Remove() end
+	
+	
 	-- Sorry for adding an automatic player remover in the darkRP code, but this is to prevent a raid from this guy.
 	-- This code will get removed once the slob danger is over.
 	self.BaseClass:PlayerInitialSpawn(ply)
