@@ -303,7 +303,7 @@ function meta:ChangeTeam(t)
 				Notify(self, 1,4, "You have to be "..team.GetName(v.NeedToChangeFrom).." to become " .. team.GetName(t))
 				return
 			end
-			if team.NumPlayers(t) >= v.max then
+			if CfgVars["max"..v.command.."s"] and team.NumPlayers(t) >= CfgVars["max"..v.command.."s"] then
 				Notify(self, 1, 4,  "Max "..v.name.." reached")
 				return
 			end
@@ -821,8 +821,6 @@ function GM:PlayerSpawn(ply)
 			ply:SetModel("models/player/mossman.mdl")
 		elseif ply:Team() == TEAM_CHIEF then
 			ply:SetModel("models/player/combine_soldier_prisonguard.mdl")
-		elseif ply:Team() == TEAM_HOBO then
-			ply:SetModel("models/player/corpse1.mdl")
 		end
 		
 		for k,v in pairs(RPExtraTeams) do
