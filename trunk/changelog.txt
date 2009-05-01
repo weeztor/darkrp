@@ -51,6 +51,7 @@ SVN version
 [FIX] Player warrants resetting after they were already reset.
 [FIX] rp_enablemayorsetsalary not working
 [FIX] Can't change job when you're dead
+[FIX] Shotgun shooting super precise when in ironsight mode
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
@@ -68,10 +69,13 @@ SVN version
 [CHANGE] The chat to use the new system
 [CHANGE] Removed /zombiehelp and put it in the F1 menu.
 [CHANGE] the way how gravgun punting is done
+[CHANGE] You can't shoot unless you see through the sight post (ANTI DM!)
+[CHANGE] Weapon animations, they are now standard holstered, unless you see through the sight post
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings
 [REMOVE] Restriction of /dropweapon. You can now drop any weapon.
+[REMOVE] CSE base and other unused swep bases
 
 SVN VERSTION till 150/ 2.3.5:
 Updated by: FPtje Falco

@@ -46,10 +46,20 @@ SWEP.Secondary.Ammo = "none"
 ---------------------------------------------------------*/
 function SWEP:Initialize()
 	if (SERVER) then
-		self:SetWeaponHoldType(self.HoldType)
+		self:SetWeaponHoldType("normal")
 	end
 
 	self.Weapon:SetNetworkedBool("Ironsights", false)
+end
+
+/*---------------------------------------------------------
+Deploy
+---------------------------------------------------------*/
+function SWEP:Deploy()
+	if SERVER then
+		self:SetWeaponHoldType("normal")
+	end
+	return true
 end
 
 /*---------------------------------------------------------
@@ -68,7 +78,7 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
 	if not self:CanPrimaryAttack() then return end
-
+	if not self:GetIronsights() then return end
 	-- Play shoot sound
 	self.Weapon:EmitSound(self.Primary.Sound)
 
@@ -97,17 +107,19 @@ Name: SWEP:PrimaryAttack()
 Desc: +attack1 has been pressed
 ---------------------------------------------------------*/
 function SWEP:CSShootBullet(dmg, recoil, numbul, cone)
+	if not ValidEntity(self.Owner) then return end
 	numbul = numbul or 1
 	cone = cone or 0.01
 
 	local bullet = {}
-	bullet.Num  = numbul
+	bullet.Num  = numbul or 1
 	bullet.Src = self.Owner:GetShootPos()       -- Source
 	bullet.Dir = self.Owner:GetAimVector()      -- Dir of bullet
 	bullet.Spread = Vector(cone, cone, 0)     -- Aim Cone
 	bullet.Tracer = 4       -- Show a tracer on every x bullets
 	bullet.Force = 5        -- Amount of force to give to phys objects
 	bullet.Damage = dmg
+
 
 	self.Owner:FireBullets(bullet)
 	self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)      -- View model animation
@@ -197,6 +209,11 @@ end
 SetIronsights
 ---------------------------------------------------------*/
 function SWEP:SetIronsights(b)
+	if b and SERVER then 
+		self:SetWeaponHoldType(self.HoldType)
+	elseif SERVER then
+		self:SetWeaponHoldType("normal")
+	end
 	self.Weapon:SetNetworkedBool("Ironsights", b)
 end
 

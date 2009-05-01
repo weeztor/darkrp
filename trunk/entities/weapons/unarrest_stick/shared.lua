@@ -40,23 +40,27 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
 
 function SWEP:Initialize()
-	if SERVER then self:SetWeaponHoldType("melee") end
+	if SERVER then self:SetWeaponHoldType("normal") end
 end
 
 function SWEP:PrimaryAttack()
 	if CurTime() < self.NextStrike then return end
 
+	if SERVER then
+		self:SetWeaponHoldType("melee")
+		timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+	end
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Weapon:EmitSound(self.Sound)
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
 
+	self.NextStrike = CurTime() + .4
+	
 	if CLIENT then return end
 
 	local trace = self.Owner:GetEyeTrace()
 
-	self.NextStrike = CurTime() + .4
-
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) then
+	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) or not trace.Entity:GetNWBool("Arrested") then
 		return
 	end
 
