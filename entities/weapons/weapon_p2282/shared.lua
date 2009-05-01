@@ -5,7 +5,7 @@ end
 
 if (CLIENT) then
 	SWEP.PrintName = "P228"
-	SWEP.Author = "CSE - Night Eagle"
+	SWEP.Author = "PhilXYZ + FPtje"
 	SWEP.Slot = 1
 	SWEP.SlotPos = 5
 	SWEP.IconLetter = "y"
@@ -13,7 +13,7 @@ if (CLIENT) then
 	killicon.AddFont("weapon_p228", "CSKillIcons", SWEP.IconLetter, Color(255, 80, 0, 255))
 end
 
-SWEP.Base = "weapon_cs_base"
+SWEP.Base = "weapon_cs_base2"
 
 SWEP.Spawnable = true
 SWEP.AdminSpawnable = true
@@ -42,4 +42,3 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 
 SWEP.IronSightsPos = Vector(4.76,-2,2.955)
-SWEP.IronSightsAng = Vector(-.6,0,0)

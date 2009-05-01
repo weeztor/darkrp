@@ -1,6 +1,6 @@
 if (SERVER) then
 	AddCSLuaFile("shared.lua")
-	SWEP.HoldType			= "pistol"
+	SWEP.HoldType	= "pistol"
 end
 
 if (CLIENT) then
