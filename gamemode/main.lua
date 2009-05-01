@@ -1813,7 +1813,7 @@ for k,v in pairs(RPExtraTeams) do
 			return ""
 		end)
 		AddChatCommand("/"..v.command, function(ply)
-			if CfgVars["rp_allow"..v.command] == 0 then
+			if CfgVars["allow"..v.command] ~= 1 then
 				Notify(ply, 1, 4, v.name.." is disabled!")
 				return ""
 			end
@@ -1835,7 +1835,7 @@ for k,v in pairs(RPExtraTeams) do
 		end)
 	else
 		AddChatCommand("/"..v.command, function(ply)
-			if CfgVars["rp_allow"..v.command] == 0 then
+			if CfgVars["allow"..v.command] ~= 1 then
 				Notify(ply, 1, 4, v.name.." is disabled!")
 				return ""
 			end
