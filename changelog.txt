@@ -52,6 +52,7 @@ SVN version
 [FIX] rp_enablemayorsetsalary not working
 [FIX] Can't change job when you're dead
 [FIX] Shotgun shooting super precise when in ironsight mode
+[FIX] Arrest/unarrest baton seeming to hit superfast clientside
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
@@ -76,6 +77,7 @@ SVN version
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings
 [REMOVE] Restriction of /dropweapon. You can now drop any weapon.
 [REMOVE] CSE base and other unused swep bases
+[REMOVE] The second stunstick swep(There were 2 the same :S)
 
 SVN VERSTION till 150/ 2.3.5:
 Updated by: FPtje Falco

@@ -1775,6 +1775,10 @@ AddChatCommand("/cook", MakeCook)
 for k,v in pairs(RPExtraTeams) do
 	if v.Vote then
 		AddChatCommand("/vote"..v.command, function(ply)
+			if CfgVars["allow"..v.command] and CfgVars["allow"..v.command] ~= 1 then
+				Notify(ply, 1, 4, v.name.." is disabled!")
+				return ""
+			end
 			if #player.GetAll() == 1 then
 				Notify(ply, 1, 4, "You're the only one in the server so you won the vote")
 				ply:ChangeTeam(k+9)
@@ -1813,7 +1817,7 @@ for k,v in pairs(RPExtraTeams) do
 			return ""
 		end)
 		AddChatCommand("/"..v.command, function(ply)
-			if CfgVars["allow"..v.command] ~= 1 then
+			if CfgVars["allow"..v.command] and CfgVars["allow"..v.command] ~= 1 then
 				Notify(ply, 1, 4, v.name.." is disabled!")
 				return ""
 			end
@@ -1835,7 +1839,7 @@ for k,v in pairs(RPExtraTeams) do
 		end)
 	else
 		AddChatCommand("/"..v.command, function(ply)
-			if CfgVars["allow"..v.command] ~= 1 then
+			if CfgVars["allow"..v.command] and CfgVars["allow"..v.command] ~= 1 then
 				Notify(ply, 1, 4, v.name.." is disabled!")
 				return ""
 			end
