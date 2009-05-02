@@ -381,6 +381,14 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcps <Number> - Maximum number of
 AddValueCommand("rp_pocketitems", "pocketitems", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pocketitems <Number> - Sets the amount of objects the pocket can carry")
 
+for k,v in pairs(RPExtraTeams) do
+	AddValueCommand("rp_max"..v.command.."s", "max"..v.command.."s", false)
+	AddToggleCommand("rp_allow"..v.command, "allow"..v.command, false, true)
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..v.command.. " [Nick|SteamID|UserID] - Make a player become a "..v.name..".")
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allow"..v.command.." - Enable/disable "..v.name)
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.."s".." <Number> - Sets max "..v.name.."s.")
+end
+
 function GenerateChatCommandHelp()
 	local p = GetGlobalString("cmdprefix")
 
@@ -432,13 +440,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_mayor [Nick|SteamID|UserID] - Make 
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_cpchief [Nick|SteamID|UserID] - Make a player the CP Chief.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_cp [Nick|SteamID|UserID] - Make a player into a CP.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_citizen [Nick|SteamID|UserID] - Make a player become a Citizen.")
-for k,v in pairs(RPExtraTeams) do
-	AddValueCommand("rp_max"..v.command.."s", "max"..v.command.."s", false)
-	AddToggleCommand("rp_allow"..v.command, "allow"..v.command, false, true)
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..v.command.. " [Nick|SteamID|UserID] - Make a player become a "..v.name..".")
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allow"..v.command.." - Enable/disable "..v.name)
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.."s".." <Number> - Sets max "..v.name.."s.")
-end
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_kickban [Nick|SteamID|UserID] <Length in minutes> - Kick and ban a player.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_kick [Nick|SteamID|UserID] <Kick reason> - Kick a player. The reason is optional.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_setmoney [Nick|SteamID|UserID] <Amount> - Set a player's money to a specific amount.")

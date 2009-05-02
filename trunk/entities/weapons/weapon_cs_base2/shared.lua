@@ -171,8 +171,9 @@ function SWEP:GetViewModelPosition(pos, ang)
 	end
 
 	local fIronTime = self.fIronTime or 0
-
-	if (not bIron and fIronTime < CurTime() - IRONSIGHT_TIME) then
+	
+	ang:RotateAroundAxis(ang:Right(), -15)
+	if (not bIron and fIronTime < CurTime() - IRONSIGHT_TIME) then	
 		return pos, ang
 	end
 
@@ -188,10 +189,12 @@ function SWEP:GetViewModelPosition(pos, ang)
 
 	if (self.IronSightsAng) then
 		ang = ang * 1
-		ang:RotateAroundAxis(ang:Right(), 		self.IronSightsAng.x * Mul)
+		ang:RotateAroundAxis(ang:Right(), 	self.IronSightsAng.x		* Mul)
 		ang:RotateAroundAxis(ang:Up(), 		self.IronSightsAng.y * Mul)
 		ang:RotateAroundAxis(ang:Forward(), 	self.IronSightsAng.z * Mul)
 	end
+	
+	ang:RotateAroundAxis(ang:Right(), Mul * 15)
 
 	local Right 	= ang:Right()
 	local Up 		= ang:Up()

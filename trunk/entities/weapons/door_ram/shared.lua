@@ -43,8 +43,10 @@ Name: SWEP:Initialize()
 Desc: Called when the weapon is first loaded
 ---------------------------------------------------------*/
 function SWEP:Initialize()
+	self.LastIron = CurTime()
 	if (SERVER) then
-		self:SetWeaponHoldType("rpg")
+		self:SetWeaponHoldType("normal")
+		self:SetNWBool("Ready", false)
 	end
 end
 
@@ -53,24 +55,25 @@ Name: SWEP:PrimaryAttack()
 Desc: +attack1 has been pressed
 ---------------------------------------------------------*/
 function SWEP:PrimaryAttack()
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
-
 	if (CLIENT) then return end
 
-	local trace = self.Owner:GetEyeTrace()
+	if not self:GetNWBool("Ready") then return end
 
+	local trace = self.Owner:GetEyeTrace()
+	
+	self.Weapon:SetNextPrimaryFire(CurTime() + 2.5)
 	if (not ValidEntity(trace.Entity) or (not trace.Entity:IsDoor() and not trace.Entity:IsVehicle() and trace.Entity:GetClass() ~= "prop_physics")) then
 		return
 	end
 
-	if (trace.Entity:IsDoor() and self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 45) then
+	if (trace.Entity:IsDoor() and self.Owner:EyePos():Distance(trace.HitPos) > 45) then
 		return
 	end
 
-	if (trace.Entity:IsVehicle() and self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100) then
+	if (trace.Entity:IsVehicle() and self.Owner:EyePos():Distance(trace.HitPos) > 100) then
 		return
 	end
-
+	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Owner:EmitSound(self.Sound)
 	
 	
@@ -107,18 +110,36 @@ function SWEP:PrimaryAttack()
 		if driver and driver.ExitVehicle then
 			driver:ExitVehicle()
 		end
-	elseif a and b and not trace.Entity:GetPhysicsObject( ):IsMoveable() and self.Owner:EyePos():Distance(trace.Entity:GetPos()) < 100 then
+	elseif a and b and not trace.Entity:GetPhysicsObject( ):IsMoveable() and self.Owner:EyePos():Distance(trace.HitPos) < 100 then
 		if c then
 			trace.Entity:GetPhysicsObject( ):EnableMotion( true ) 
 		else
 			Notify(self.Owner, 1, 3,"He is not warranted!")
 		end
 	end
-
 	self.Owner:ViewPunch(Angle(-10, math.random(-5, 5), 0))
-	self.Weapon:SetNextPrimaryFire(CurTime() + 2.5)
 end
 
 function SWEP:SecondaryAttack()
-	self:PrimaryAttack()
+	self:SetNWFloat("LastIron", CurTime())
+	self:SetNWBool("Ready", not self:GetNWBool("Ready"))
+	if self:GetNWBool("Ready") and SERVER then
+		self:SetWeaponHoldType("rpg")
+	elseif SERVER then
+		self:SetWeaponHoldType("normal")
+	end
+end
+
+function SWEP:GetViewModelPosition(pos, ang)
+	local Mul = 1
+	if self:GetNWFloat("LastIron") > CurTime() - 0.25 then
+		Mul = math.Clamp((CurTime() - self:GetNWFloat("LastIron")) / 0.25, 0, 1)
+	end
+
+	if self:GetNWBool("Ready") then
+		Mul = 1-Mul
+	end
+
+	ang:RotateAroundAxis(ang:Right(), - 15 * Mul)
+	return pos,ang
 end
