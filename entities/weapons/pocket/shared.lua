@@ -130,6 +130,9 @@ function SWEP:SecondaryAttack()
 		phys:EnableCollisions(true)
 		phys:Wake()
 	end
+	umsg.Start("Pocket_RemoveItem", self.Owner)
+		umsg.Short(ent:EntIndex())
+	umsg.End()
 end
 
 SWEP.OnceReload = false
@@ -164,16 +167,29 @@ if CLIENT then
 			LocalPlayer():GetTable().Pocket = {}
 		end
 		local ent = Entity(um:ReadShort())
-		if ValidEntity(ent) then
+		if ValidEntity(ent) and not table.HasValue(LocalPlayer():GetTable().Pocket, ent) then
 			table.insert(LocalPlayer():GetTable().Pocket, ent)
 		end
 	end
 	usermessage.Hook("Pocket_AddItem", StorePocketItem)
+	
+	local function RemovePocketItem(um)
+		if not LocalPlayer():GetTable().Pocket then
+			LocalPlayer():GetTable().Pocket = {}
+		end
+		local ent = Entity(um:ReadShort())
+		for k,v in pairs(LocalPlayer():GetTable().Pocket) do
+			if v == ent then LocalPlayer():GetTable().Pocket[k] = nil end
+		end
+	end
+	usermessage.Hook("Pocket_RemoveItem", RemovePocketItem)
+	
 	local frame
 	local function PocketMenu()
 		if frame and frame:IsValid() and frame:IsVisible() then return end
 		if LocalPlayer():GetActiveWeapon():GetClass() ~= "pocket" then return end
 		if not LocalPlayer():GetTable().Pocket then LocalPlayer():GetTable().Pocket = {} return end
+		for k,v in pairs(LocalPlayer():GetTable().Pocket) do if not ValidEntity(v) then LocalPlayer():GetTable().Pocket[k] = nil end end
 		if #LocalPlayer():GetTable().Pocket <= 0 then return end
 		frame = vgui.Create( "DFrame" )
 		frame:SetTitle( "Drop item" )
