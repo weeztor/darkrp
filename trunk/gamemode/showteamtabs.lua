@@ -223,6 +223,7 @@ end
 
 function MoneyTab()
 	local FirstTabPanel = vgui.Create("DPanelList")
+	FirstTabPanel:EnableVerticalScrollbar( true )
 		function FirstTabPanel:Update()
 			self:Clear(true)
 			local MoneyCat = vgui.Create("DCollapsibleCategory")
@@ -587,6 +588,7 @@ end
 
 function EntitiesTab()
 	local EntitiesPanel = vgui.Create("DPanelList")
+	EntitiesPanel:EnableVerticalScrollbar( true )
 		function EntitiesPanel:Update()
 			self:Clear(true)
 			local WepCat = vgui.Create("DCollapsibleCategory")
