@@ -907,6 +907,13 @@ function GM:PlayerLoadout(ply)
 			for _,b in pairs(v.Weapons) do ply:Give(b) end
 		end
 	end
+	
+	// Switch to prefered weapon if they have it
+	local cl_defaultweapon = ply:GetInfo( "cl_defaultweapon" )
+	
+	if ( ply:HasWeapon( cl_defaultweapon )  ) then
+		ply:SelectWeapon( cl_defaultweapon ) 
+	end
 end
 
 function meta:CompleteSentence()
