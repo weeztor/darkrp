@@ -36,12 +36,3 @@ function GM:PlayerSay(ply, text)
 	end
 	return ""
 end
---[[ 
-function GM:PlayerCanSeePlayersChat(text, teamonly, listener, speaker)
-	if GetGlobalInt("alltalk") == 0 and listener:GetShootPos():Distance(speaker:GetShootPos()) < 250 then
-		return true
-	elseif GetGlobalInt("alltalk") == 0 then
-		return false
-	end
-	return true
-end ]]
