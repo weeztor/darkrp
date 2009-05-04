@@ -368,7 +368,7 @@ end
 
 function GM:GetFallDamage( ply, flFallSpeed )
 	if GetConVarNumber("mp_falldamage") == 1 then
-		return flFallSpeed / 8
+		return flFallSpeed / 15
 	end
 	return 10
 end
