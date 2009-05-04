@@ -973,7 +973,7 @@ function RPAdminTab()
 						checkbox:SetValue(GetGlobalInt(v.var))
 						checkbox:SetText(found)
 						function checkbox.Button:Toggle()
-							if ( self:GetChecked() == nil || !self:GetChecked() ) then 
+							if self:GetChecked() == nil or not self:GetChecked() then 
 								self:SetValue( true ) 
 							else 
 								self:SetValue( false ) 
@@ -1124,7 +1124,11 @@ function RPLicenseWeaponsTab()
 				if type(v) == "table" and v.Classname then
 					if v.Classname and not string.find(string.lower(v.Classname), "base") and v.Classname ~= "" then
 						local checkbox = vgui.Create("DCheckBoxLabel")
-						checkbox:SetText(v.PrintName)
+						if v.PrintName then
+							checkbox:SetText(v.PrintName)
+						else
+							checkbox:SetText(v.Classname)
+						end
 						checkbox:SetValue(GetGlobalInt("licenseweapon_"..v.Classname))
 						function checkbox.Button:Toggle()
 							if ( self:GetChecked() == nil || !self:GetChecked() ) then 
