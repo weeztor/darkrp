@@ -1296,7 +1296,7 @@ function GroupMsg(ply, args)
 
 	for k, v in pairs(audience) do
 		local col = team.GetColor(ply:Team())
-		TalkToPerson(v, col, "(GROUP) "..ply:Nick(),Color(255,255,255,255), args)
+		TalkToPerson(v, col, "(GROUP) "..ply:Nick(),Color(255,255,255,255), args, ply)
 	end
 	return ""
 end
@@ -1313,8 +1313,8 @@ function PM(ply, args)
 
 	if target then
 		local col = team.GetColor(ply:Team())
-		TalkToPerson(target, col, "(PM) "..ply:Nick(),Color(255,255,255,255), msg)
-		TalkToPerson(ply, col, "(PM) "..ply:Nick(), Color(255,255,255,255), msg)
+		TalkToPerson(target, col, "(PM) "..ply:Nick(),Color(255,255,255,255), msg, ply)
+		TalkToPerson(ply, col, "(PM) "..ply:Nick(), Color(255,255,255,255), msg, ply)
 	else
 		Notify(ply, 1, 4, "Could not find player: " .. name)
 	end
@@ -1350,7 +1350,7 @@ AddChatCommand("/ooc", OOC, true)
 function PlayerAdvertise(ply, args)
 	for k,v in pairs(player.GetAll()) do
 		local col = team.GetColor(ply:Team())
-		TalkToPerson(v, col, "[ADVERT] "..ply:Nick(), Color(255,255,0,255), args)
+		TalkToPerson(v, col, "[ADVERT] "..ply:Nick(), Color(255,255,0,255), args, ply)
 	end
 	return ""
 end
@@ -1861,8 +1861,8 @@ function CombineRequest(ply, args)
 	local t = ply:Team()
 	for k, v in pairs(player.GetAll()) do
 		if v:Team() == TEAM_POLICE or v:Team() == TEAM_CHIEF or v == ply then
-			TalkToPerson(ply, team.GetColor(ply:Team()), "(REQUEST!) "..ply:Nick(), Color(255,0,0,255), args)
-			TalkToPerson(v, team.GetColor(ply:Team()), "(REQUEST!) "..ply:Nick(), Color(255,0,0,255), args)
+			TalkToPerson(ply, team.GetColor(ply:Team()), "(REQUEST!) "..ply:Nick(), Color(255,0,0,255), args, ply)
+			TalkToPerson(v, team.GetColor(ply:Team()), "(REQUEST!) "..ply:Nick(), Color(255,0,0,255), args, ply)
 		end
 	end
 	return ""
@@ -1877,7 +1877,7 @@ function GetDarkRPAuthors(ply)
 	timer.Simple(60, function() CreditsWait = true end)--so people don't spam it
 	for k,v in pairs(player.GetAll()) do
 		TalkToPerson(v, Color(255,0,0,255), "CREDITS FOR DARKRP", Color(0,0,255,255),
-		"\nRickster\nPicwizdan\nSibre\nPhilXYZ\n[GNC] Matt\nChromebolt A.K.A. unib5 (STEAM_0:1:19045957)\n(FPtje) Falco A.K.A. FPtje (STEAM_0:0:8944068)")
+		"\nRickster\nPicwizdan\nSibre\nPhilXYZ\n[GNC] Matt\nChromebolt A.K.A. unib5 (STEAM_0:1:19045957)\n(FPtje) Falco A.K.A. FPtje (STEAM_0:0:8944068)", ply)
 	end
 	return ""
 end

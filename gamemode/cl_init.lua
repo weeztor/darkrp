@@ -587,6 +587,32 @@ function GM:HUDShouldDraw(name)
 	end
 end
 
+function FindPlayer(info)
+	local pls = player.GetAll()
+
+	-- Find by Index Number (status in console)
+	for k, v in pairs(pls) do
+		if tonumber(info) == v:UserID() then
+			return v
+		end
+	end
+
+	-- Find by RP Name
+	for k, v in pairs(pls) do
+		if string.find(string.lower(v:GetNWString("rpname")), string.lower(tostring(info))) ~= nil then
+			return v
+		end
+	end
+
+	-- Find by Partial Nick
+	for k, v in pairs(pls) do
+		if string.find(string.lower(v:Name()), string.lower(tostring(info))) ~= nil then
+			return v
+		end
+	end
+	return nil
+end
+
 function EndStunStickFlash()
 	StunStickFlashAlpha = -1
 end
@@ -746,52 +772,106 @@ usermessage.Hook("DarkRPEffects", DoSpecialEffects)
 
 local Messagemode = false
 local playercolors = {}
+local HearMode = "talk"
 
 function RPStopMessageMode()
-	if GetGlobalInt("alltalk") ~= 0 then return end
+	//if GetGlobalInt("alltalk") ~= 0 then return end
 	Messagemode = false
 	hook.Remove("Think", "RPGetRecipients")
 	hook.Remove("HUDPaint", "RPinstructionsOnSayColors")
-	for k,v in pairs(player.GetAll()) do
-		v:SetColor(255,255,255,255)
-		--[[ if playercolors[v:EntIndex()] then
-			local col = playercolors[v:EntIndex()]
-			v:SetColor(col.r, col.g, col.b, col.a)
-		else
-			
-		end ]]
-	end
 	playercolors = {}
 end
 
 local PlayerColorsOn = CreateClientConVar("rp_showchatcolors", 1, true, false)
-function RPSelectwhohearit(ply,bind,pressed)
-	if GetGlobalInt("alltalk") ~= 0 or PlayerColorsOn:GetInt() == 0 then return end
+function GM:ChatTextChanged(text)
+	if PlayerColorsOn:GetInt() == 0 then return end
+	
+	local old = HearMode
+	HearMode = "talk"
+	if GetGlobalInt("alltalk") == 0 then
+		if string.sub(text, 1, 2) == "//" or string.sub(string.lower(text), 1, 4) == "/ooc" or string.sub(string.lower(text), 1, 4) == "/a" then
+			HearMode = "talk through OOC"
+		elseif string.sub(string.lower(text), 1, 7) == "/advert" then
+			HearMode = "advert"
+		end
+	end
+	
+	if string.sub(string.lower(text), 1, 3) == "/pm" then
+		local plyname = string.sub(text, 5)
+		if string.find(plyname, " ") then
+			plyname = string.sub(plyname, 1, string.find(plyname, " ") - 1)
+		end
+		HearMode = "pm"
+		playercolors = {}
+		if plyname ~= "" and FindPlayer(plyname) then
+			playercolors = {FindPlayer(plyname)}
+		end
+	elseif string.sub(string.lower(text), 1, 2) == "/g" then
+		HearMode = "group chat"
+		local t = LocalPlayer():Team()
+		playercolors = {}
+		if t == TEAM_POLICE or t == TEAM_CHIEF or t == TEAM_MAYOR then
+			for k, v in pairs(player.GetAll()) do
+				if v ~= LocalPlayer() then
+					local vt = v:Team()
+					if vt == TEAM_POLICE or vt == TEAM_CHIEF or vt == TEAM_MAYOR then table.insert(playercolors, v) end
+				end
+			end
+		elseif t == TEAM_MOB or t == TEAM_GANG then
+			for k, v in pairs(player.GetAll()) do
+				if v ~= LocalPlayer() then
+					local vt = v:Team()
+					if vt == TEAM_MOB or vt == TEAM_GANG then table.insert(playercolors, v) end
+				end
+			end
+		end
+	elseif string.sub(string.lower(text), 1, 2) == "/w" then
+		HearMode = "whisper"
+	elseif string.sub(string.lower(text), 1, 2) == "/y" then
+		HearMode = "yell"
+	end
+	if old ~= HearMode then
+		playercolors = {}
+	end
+end
+
+function RPSelectwhohearit()
+	if PlayerColorsOn:GetInt() == 0 then return end
 	Messagemode = true
+	
 	hook.Add("HUDPaint", "RPinstructionsOnSayColors", function()
-		local h = ScrH() / 3
-		draw.WordBox(2, 0, h, "Player colour codes:", "ScoreboardText", Color(0,0,0,120), Color(255,255,255,255))
-		draw.WordBox(2, 0, h + 20, "Blue = he can hear you when you whisper", "ScoreboardText", Color(0,0,0,120), Color(0,0,255,255))
-		draw.WordBox(2, 0, h + 40, "Red = he can hear you when you talk normally", "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
-		draw.WordBox(2, 0, h + 60, "Green = he can hear you when you yell at him", "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
-		draw.WordBox(2, 0, h + 80, "Black = he can ONLY hear you when you use OOC", "ScoreboardText", Color(255,255,255,120), Color(0,0,0,255))
+		local w, l = chat.GetChatBoxPos()
+		local h = l - (#playercolors * 20) - 20
+		local AllTalk = GetGlobalInt("alltalk") == 1
+		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" )) then
+			draw.WordBox(2, w, h, "Noone can hear you "..HearMode.."!", "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
+		elseif HearMode == "talk through OOC" or HearMode == "advert" then
+			draw.WordBox(2, w, h, "Everyone can hear you!", "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
+		elseif not AllTalk or (AllTalk and HearMode ~= "talk" ) then
+			draw.WordBox(2, w, h, "Players who can hear you "..HearMode..": ", "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
+		end
+		
+		for k,v in pairs(playercolors) do
+			if v.Nick then
+				draw.WordBox(2, w, h + k*20, v:Nick(), "ScoreboardText", Color(0,0,0,120), Color(255,255,255,255))
+			end
+		end
 	end)
+	
 	hook.Add("Think", "RPGetRecipients", function() 
 		if not Messagemode then RPStopMessageMode() hook.Remove("Think", "RPGetRecipients") return end 
+		if HearMode ~= "whisper" and HearMode ~= "yell" and HearMode ~= "talk" then return end
+		playercolors = {}
 		for k,v in pairs(player.GetAll()) do
-			local r,g,b,a = v:GetColor()
-			local distance = LocalPlayer():GetPos():Distance(v:GetPos())
-			if not playercolors[v:EntIndex()] then
-				playercolors[v:EntIndex()] = Color(r,g,b,a)
-			end
-			if distance < 90 and (r ~= 0 or g ~= 0 or b ~= 255 or a ~= 255) then
-				v:SetColor(0,0,255,a)
-			elseif distance > 90 and distance < 250 and (r ~= 255 or g ~= 0 or b ~= 0) then
-				v:SetColor(255,0,0,a)
-			elseif distance > 250 and distance < 550 and (r ~= 0 or g ~= 255 or b ~= 0) then
-				v:SetColor(0,255,0,a)
-			elseif distance > 550 and (r ~= 0 or g ~= 0 or b ~= 0) then
-				v:SetColor(0,0,0,a)
+			if v ~= LocalPlayer() then
+				local distance = LocalPlayer():GetPos():Distance(v:GetPos())
+				if HearMode == "whisper" and distance < 90 and not table.HasValue(playercolors, v) then
+					table.insert(playercolors, v)
+				elseif HearMode == "yell" and distance < 550 and not table.HasValue(playercolors, v) then
+					table.insert(playercolors, v)
+				elseif HearMode == "talk" and GetGlobalInt("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
+					table.insert(playercolors, v)
+				end
 			end
 		end
 	end)
@@ -843,12 +923,18 @@ end
 local function AddToChat(msg)
 	local col1 = Color(msg:ReadShort(), msg:ReadShort(), msg:ReadShort())
 	local name = msg:ReadString()
+	local ply = msg:ReadEntity()
 	local col2 = Color(msg:ReadShort(), msg:ReadShort(), msg:ReadShort())
 	local text = msg:ReadString()
-	if text ~= "" then
+	if text and text ~= "" then
 		chat.AddText(col1, name, col2, ": "..text)
+		if ply:IsValid() then
+			hook.Call("ChatText", GM, ply:EntIndex(), ply:Nick(), text)
+			hook.Call("OnPlayerChat", GM, ply, text, false, ply:Alive())
+		end
 	else
 		chat.AddText(col1, name)
+		hook.Call("ChatText", GM, "0", name, "", "none")
 	end
 	chat.PlaySound()
 end
