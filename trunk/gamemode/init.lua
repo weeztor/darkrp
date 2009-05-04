@@ -1,5 +1,6 @@
 CUR = "$"
 GlobalInts = {}
+CfgVars = {}
 
 --Overriding garryfunctions to fix the global ints
 local oldGetGlobalInt = GetGlobalInt
@@ -90,7 +91,6 @@ lastmagnitudes = {} -- The magnitudes of the last tremors
 DB = {}
 LRP = {}
 CSFiles = {}
-CfgVars = {}
 
 
 include("help.lua")
@@ -364,6 +364,13 @@ function GM:Think()
 		end
 	end
 	-- End Spreadable fire Mod
+end
+
+function GM:GetFallDamage( ply, flFallSpeed )
+	if GetConVarNumber("mp_falldamage") == 1 then
+		return flFallSpeed / 8
+	end
+	return 10
 end
 
 GM.Name = "DarkRP "..DARKRPVERSION

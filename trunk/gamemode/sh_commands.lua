@@ -382,13 +382,15 @@ AddValueCommand("rp_pocketitems", "pocketitems", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pocketitems <Number> - Sets the amount of objects the pocket can carry")
 
 for k,v in pairs(RPExtraTeams) do
-	if not CfgVars["max"..v.command.."s"] then
-		CfgVars["max"..v.command.."s"] = v.max
-		SetGlobalInt("max"..v.command.."s", v.max)
-	end
-	if not CfgVars["allow"..v.command] then
-		CfgVars["allow"..v.command] = 1
-		SetGlobalInt("allow"..v.command, 1)
+	if SERVER then
+		if not CfgVars["max"..v.command.."s"] then
+			CfgVars["max"..v.command.."s"] = v.max
+			SetGlobalInt("max"..v.command.."s", v.max)
+		end
+		if not CfgVars["allow"..v.command] then
+			CfgVars["allow"..v.command] = 1
+			SetGlobalInt("allow"..v.command, 1)
+		end
 	end
 	AddValueCommand("rp_max"..v.command.."s", "max"..v.command.."s", false)
 	AddToggleCommand("rp_allow"..v.command, "allow"..v.command, false, true)
