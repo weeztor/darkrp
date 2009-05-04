@@ -41,7 +41,9 @@ SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 
-SWEP.IronSightsPos = Vector(5.7, -3, 3)
+SWEP.IronSightsPos = Vector (5.7515, -3.2305, 3.1898)
+SWEP.IronSightsAng = Vector (0.4467, 0.1261, 0)
+
 
 function SWEP:Reload()
 	-- if (CLIENT) then return end

@@ -70,6 +70,10 @@ function SWEP:PrimaryAttack()
 	local e = trace.Entity
 	if e ~= nil then
 		if (ValidEntity(e) and (trace.HitPos:Distance(self.Owner:GetShootPos()) <= 100 and (e:IsDoor() or e:IsVehicle()))) then
+			if SERVER then
+				self:SetWeaponHoldType("pistol")
+				timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+			end
 			self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
 			self.Owner:FireBullets(bullet)
 			self.Weapon:EmitSound("physics/flesh/flesh_impact_bullet" .. math.random(3, 5) .. ".wav")

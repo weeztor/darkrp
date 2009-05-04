@@ -382,6 +382,14 @@ AddValueCommand("rp_pocketitems", "pocketitems", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pocketitems <Number> - Sets the amount of objects the pocket can carry")
 
 for k,v in pairs(RPExtraTeams) do
+	if not CfgVars["max"..v.command.."s"] then
+		CfgVars["max"..v.command.."s"] = v.max
+		SetGlobalInt("max"..v.command.."s", v.max)
+	end
+	if not CfgVars["allow"..v.command] then
+		CfgVars["allow"..v.command] = 1
+		SetGlobalInt("allow"..v.command, 1)
+	end
 	AddValueCommand("rp_max"..v.command.."s", "max"..v.command.."s", false)
 	AddToggleCommand("rp_allow"..v.command, "allow"..v.command, false, true)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..v.command.. " [Nick|SteamID|UserID] - Make a player become a "..v.name..".")
@@ -415,7 +423,6 @@ function GenerateChatCommandHelp()
 	AddHelpLabel(1900, HELP_CATEGORY_CHATCMD, p .. "votecop - Vote to be a Cop")
 	AddHelpLabel(2750, HELP_CATEGORY_CHATCMD, p .. "votemayor - Vote to be Mayor")
 	AddHelpLabel(2100, HELP_CATEGORY_CHATCMD, p .. "citizen - Become a Citizen")
-	AddHelpLabel(2111, HELP_CATEGORY_CHATCMD, p .. "hobo - Become a fucking hobo")
 	AddHelpLabel(2000, HELP_CATEGORY_CHATCMD, p .. "mayor - Become Mayor if you're on the admin's Mayor list")
 	AddHelpLabel(2200, HELP_CATEGORY_CHATCMD, p .. "cp - Become a Combine if you're on the admin's Cop list")
 	AddHelpLabel(2250, HELP_CATEGORY_CHATCMD, "")
