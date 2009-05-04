@@ -71,6 +71,7 @@ function SWEP:PrimaryAttack()
 		timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	end
 	
+	if not self.Owner:GetTable().Pocket then self.Owner:GetTable().Pocket = {} end
 	if /*trace.Entity:IsWeapon() or */not SPropProtection.GravGunThings(self.Owner, trace.Entity) or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) then
 		Notify(self.Owner, 1, 4, "Cannot put in pocket!")
 		return
@@ -87,7 +88,6 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	if not self.Owner:GetTable().Pocket then self.Owner:GetTable().Pocket = {} end
 	if not CfgVars["pocketitems"] then CfgVars["pocketitems"] = 10 end
 	if #self.Owner:GetTable().Pocket >= CfgVars["pocketitems"] then
 		Notify(self.Owner, 1, 4, "Pocket is full!")
