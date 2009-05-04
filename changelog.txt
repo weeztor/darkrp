@@ -54,6 +54,7 @@ SVN version
 [FIX] Shotgun shooting super precise when in ironsight mode
 [FIX] Arrest/unarrest baton seeming to hit superfast clientside
 [FIX] cl_defaultweapon, you can now spawn and select the weapon you want by doing cl_defaultweapon <weapon name>
+[FIX] Ironsights, they were fucked up
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof

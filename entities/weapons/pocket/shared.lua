@@ -66,7 +66,12 @@ function SWEP:PrimaryAttack()
 	if not phys:IsValid() then return end
 	local mass = phys:GetMass()
 	
-	if /*trace.Entity:IsWeapon() or */not SPropProtection.GravGunThings(self.Owner, trace.Entity) then
+	if SERVER then
+		self:SetWeaponHoldType("pistol")
+		timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+	end
+	
+	if /*trace.Entity:IsWeapon() or */not SPropProtection.GravGunThings(self.Owner, trace.Entity) or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) then
 		Notify(self.Owner, 1, 4, "Cannot put in pocket!")
 		return
 	end
@@ -98,9 +103,9 @@ function SWEP:PrimaryAttack()
 	trace.Entity:SetNoDraw(true)
 	trace.Entity:SetCollisionGroup(0)
 	local phys = trace.Entity:GetPhysicsObject()
+	trace.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	if phys:IsValid() then
 		phys:EnableCollisions(false)
-		trace.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 		phys:Wake()
 	end
 end
@@ -116,6 +121,10 @@ function SWEP:SecondaryAttack()
 	local ent = self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket]
 	self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket] = nil
 	if not ValidEntity(ent) then Notify(self.Owner, 1, 4, "No items in pocket!") return end
+	if SERVER then
+		self:SetWeaponHoldType("pistol")
+		timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+	end
 	local trace = {}
 	trace.start = self.Owner:EyePos()
 	trace.endpos = trace.start + self.Owner:GetAimVector() * 85
@@ -245,6 +254,10 @@ elseif SERVER then
 			ply:GetTable().Pocket = table.ClearKeys(ply:GetTable().Pocket)
 			
 			if not ValidEntity(ent) then return end
+			if SERVER then
+				self:SetWeaponHoldType("pistol")
+				timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+			end
 			
 			local trace = {}
 			trace.start = ply:EyePos()
