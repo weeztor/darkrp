@@ -976,17 +976,6 @@ function meta:RestoreRPName()
 end
 
 function GM:PlayerInitialSpawn(ply)
-	-- This is slob's steam ID
-	-- Slob is a known DarkRP troller
-	-- He is the one who made slobbot, a clientside mod that insta crashes servers
-	-- This code litterally removes him from the server when he joins
-	-- Really, you don't want this guy in your server.
-	-- To enable autokick on spawn, remove the // from the next line:
-	//if ply:SteamID() == "STEAM_0:0:16882263" then ply:ConCommand("disconnect") ply:Remove() end
-	
-	
-	-- Sorry for adding an automatic player remover in the darkRP code, but this is to prevent a raid from this guy.
-	-- This code will get removed once the slob danger is over.
 	self.BaseClass:PlayerInitialSpawn(ply)
 	ply.bannedfrom = {}
 	ply:NewData()

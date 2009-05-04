@@ -29,7 +29,7 @@ function GM:PlayerSay(ply, text)
 	
 	if GetGlobalInt("alltalk") == 1 then
 		for k,v in pairs(player.GetAll()) do
-			TalkToPerson(v, col, callback..ply:Name(), col2, text)
+			TalkToPerson(v, col, callback..ply:Name(), col2, text, ply)
 		end
 	else
 		TalkToRange(ply, callback..ply:Name(), text, 250)
