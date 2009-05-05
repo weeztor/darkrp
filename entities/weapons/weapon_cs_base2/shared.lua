@@ -25,7 +25,7 @@ SWEP.Instructions = ""
 SWEP.Spawnable = false
 SWEP.AdminSpawnable = false
 
-SWEP.Primary.Sound =  Sound("Weapon_AK47.Single")
+SWEP.Primary.Sound = Sound("Weapon_AK47.Single")
 SWEP.Primary.Recoil = 1.5
 SWEP.Primary.Damage = 40
 SWEP.Primary.NumShots = 1
@@ -112,7 +112,7 @@ function SWEP:CSShootBullet(dmg, recoil, numbul, cone)
 	cone = cone or 0.01
 
 	local bullet = {}
-	bullet.Num  = numbul or 1
+	bullet.Num = numbul or 1
 	bullet.Src = self.Owner:GetShootPos()       -- Source
 	bullet.Dir = self.Owner:GetAimVector()      -- Dir of bullet
 	bullet.Spread = Vector(cone, cone, 0)     -- Aim Cone

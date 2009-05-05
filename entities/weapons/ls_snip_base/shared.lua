@@ -104,7 +104,7 @@ function SWEP:GetViewModelPosition(pos, ang)
 	if (self.IronSightsAng) then
 		ang = ang * 1
 		ang:RotateAroundAxis(ang:Right(), self.IronSightsAng.x * Mul)
-		ang:RotateAroundAxis(ang:Up(),  self.IronSightsAng.y * Mul)
+		ang:RotateAroundAxis(ang:Up(), self.IronSightsAng.y * Mul)
 		ang:RotateAroundAxis(ang:Forward(), self.IronSightsAng.z * Mul)
 	end
 

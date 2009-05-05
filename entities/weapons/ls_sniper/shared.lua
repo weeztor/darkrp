@@ -34,4 +34,4 @@ SWEP.Primary.Delay = 0.7
 SWEP.Primary.DefaultClip = 75
 SWEP.Primary.Automatic = false
 SWEP.Primary.Ammo = "smg1"
-SWEP.IronSightsPos  = Vector(0, 0, -15) -- this is just to make it disappear so it doesn't show up whilst scoped
+SWEP.IronSightsPos = Vector(0, 0, -15) -- this is just to make it disappear so it doesn't show up whilst scoped

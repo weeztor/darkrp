@@ -30,6 +30,10 @@ function KnockoutToggle(player, command, args, caller)
 					for k,v in pairs(player.WeaponsForSleep) do
 						player:Give(v)
 					end
+					local cl_defaultweapon = ply:GetInfo( "cl_defaultweapon" )
+					if ( ply:HasWeapon( cl_defaultweapon )  ) then
+						ply:SelectWeapon( cl_defaultweapon ) 
+					end
 				else
 					GAMEMODE:PlayerLoadout(player)
 				end 
@@ -71,10 +75,10 @@ function KnockoutToggle(player, command, args, caller)
 				local RP = RecipientFilter()
 				RP:RemoveAllPlayers()
 				RP:AddPlayer(player)
-				--[[ umsg.Start("DarkRPEffects",RP)
+				umsg.Start("DarkRPEffects",RP)
 					umsg.String("colormod")
 					umsg.String("1")
-				umsg.End() ]]
+				umsg.End()
 				RP:AddAllPlayers()
 				player.SleepSound = CreateSound(ragdoll, "npc/ichthyosaur/water_breath.wav")
 				player.SleepSound:PlayEx(0.10, 100)
