@@ -835,6 +835,29 @@ function GM:ChatTextChanged(text)
 	end
 end
 
+function SelfStartVoice(ply)
+	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 then
+		HearMode = "speak"
+		hook.Remove("PlayerStartVoice", "ShowWhoHearsMe")
+		hook.Add("PlayerEndVoice", "ShowWhoHearsMe", SelfStopVoice)
+		RPSelectwhohearit()
+	end
+end
+hook.Add("PlayerStartVoice", "ShowWhoHearsMe", SelfStartVoice)
+
+function SelfStopVoice(ply)
+	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 then
+		HearMode = "talk"
+		hook.Add("PlayerStartVoice", "ShowWhoHearsMe", SelfStartVoice)
+		hook.Remove("PlayerEndVoice", "ShowWhoHearsMe")
+		hook.Remove("Think", "RPGetRecipients")
+		hook.Remove("HUDPaint", "RPinstructionsOnSayColors")
+		Messagemode = false
+		playercolors = {}
+	end
+end
+
+
 function RPSelectwhohearit()
 	if PlayerColorsOn:GetInt() == 0 then return end
 	Messagemode = true
@@ -843,7 +866,7 @@ function RPSelectwhohearit()
 		local w, l = chat.GetChatBoxPos()
 		local h = l - (#playercolors * 20) - 20
 		local AllTalk = GetGlobalInt("alltalk") == 1
-		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" )) then
+		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" ) or HearMode == "speak" ) then
 			draw.WordBox(2, w, h, "Noone can hear you "..HearMode.."!", "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
 		elseif HearMode == "talk through OOC" or HearMode == "advert" then
 			draw.WordBox(2, w, h, "Everyone can hear you!", "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
@@ -860,14 +883,14 @@ function RPSelectwhohearit()
 	
 	hook.Add("Think", "RPGetRecipients", function() 
 		if not Messagemode then RPStopMessageMode() hook.Remove("Think", "RPGetRecipients") return end 
-		if HearMode ~= "whisper" and HearMode ~= "yell" and HearMode ~= "talk" then return end
+		if HearMode ~= "whisper" and HearMode ~= "yell" and HearMode ~= "talk" and HearMode ~= "speak" then return end
 		playercolors = {}
 		for k,v in pairs(player.GetAll()) do
 			if v ~= LocalPlayer() then
 				local distance = LocalPlayer():GetPos():Distance(v:GetPos())
 				if HearMode == "whisper" and distance < 90 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
-				elseif HearMode == "yell" and distance < 550 and not table.HasValue(playercolors, v) then
+				elseif (HearMode == "yell" or HearMode == "speak") and distance < 550 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
 				elseif HearMode == "talk" and GetGlobalInt("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
@@ -877,8 +900,7 @@ function RPSelectwhohearit()
 	end)
 end
 hook.Add("StartChat", "RPDoSomethingWithChat", RPSelectwhohearit)
-
-hook.Add("FinishChat", "RPCloseRadiusDetection", function() Messagemode =  false RPStopMessageMode() end)
+hook.Add("FinishChat", "RPCloseRadiusDetection", function() Messagemode = false RPStopMessageMode() end)
 
 function GM:PlayerBindPress(ply,bind,pressed)
 	if ply == LocalPlayer() and ValidEntity(ply:GetActiveWeapon()) and string.find(string.lower(bind), "attack2") and ply:GetActiveWeapon():GetClass() == "weapon_bugbait" then
@@ -929,7 +951,6 @@ local function AddToChat(msg)
 	if text and text ~= "" then
 		chat.AddText(col1, name, col2, ": "..text)
 		if ply:IsValid() then
-			hook.Call("ChatText", GM, ply:EntIndex(), ply:Nick(), text)
 			hook.Call("OnPlayerChat", GM, ply, text, false, ply:Alive())
 		end
 	else
