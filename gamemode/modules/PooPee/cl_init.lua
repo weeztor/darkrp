@@ -48,6 +48,7 @@ function PooPee.DoPee(umsg)
 	local em = ParticleEmitter(centr) 
 	for i=1, time * 10 do 
 		timer.Simple(i/100, function()
+			if not ply:IsValid() then return end
 			local part = em:Add("sprites/orangecore2",ply:GetPos() + Vector(0,0,32)) 
 			if part then 
 				//part:SetColor(215,255,0,255) 
