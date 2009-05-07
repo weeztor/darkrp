@@ -806,6 +806,16 @@ function GM:ChatTextChanged(text)
 		if plyname ~= "" and FindPlayer(plyname) then
 			playercolors = {FindPlayer(plyname)}
 		end
+	elseif string.sub(string.lower(text), 1, 5) == "/call" then
+		local plyname = string.sub(text, 7)
+		if string.find(plyname, " ") then
+			plyname = string.sub(plyname, 1, string.find(plyname, " ") - 1)
+		end
+		HearMode = "call"
+		playercolors = {}
+		if plyname ~= "" and FindPlayer(plyname) then
+			playercolors = {FindPlayer(plyname)}
+		end
 	elseif string.sub(string.lower(text), 1, 2) == "/g" then
 		HearMode = "group chat"
 		local t = LocalPlayer():Team()
@@ -836,7 +846,12 @@ function GM:ChatTextChanged(text)
 end
 
 function SelfStartVoice(ply)
-	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 then
+	if ply == LocalPlayer() and ValidEntity(LocalPlayer():GetNWEntity("phone")) then
+		hook.Remove("PlayerStartVoice", "ShowWhoHearsMe")
+		hook.Add("PlayerEndVoice", "ShowWhoHearsMe", SelfStopVoice)
+		return
+	end
+	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 and not ValidEntity(LocalPlayer():GetNWEntity("phone")) then
 		HearMode = "speak"
 		hook.Remove("PlayerStartVoice", "ShowWhoHearsMe")
 		hook.Add("PlayerEndVoice", "ShowWhoHearsMe", SelfStopVoice)
@@ -846,6 +861,14 @@ end
 hook.Add("PlayerStartVoice", "ShowWhoHearsMe", SelfStartVoice)
 
 function SelfStopVoice(ply)
+	if ValidEntity(LocalPlayer():GetNWEntity("phone")) then
+		timer.Simple(0.2, function() 
+			if ValidEntity(LocalPlayer():GetNWEntity("phone")) then
+				LocalPlayer():ConCommand("+voicerecord") 
+			end
+		end)
+		return
+	end
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 then
 		HearMode = "talk"
 		hook.Add("PlayerStartVoice", "ShowWhoHearsMe", SelfStartVoice)
