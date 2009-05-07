@@ -1341,7 +1341,16 @@ function OOC(ply, args)
 		return ""
 	end
 
-	return "(OOC)"// .. args
+	local col = team.GetColor(ply:Team())
+	local col2 = Color(255,255,255,255)
+	if not ply:Alive() then
+		col2 = Color(255,200,200,255)
+		col = col2
+	end
+	for k,v in pairs(player.GetAll()) do
+		TalkToPerson(v, col, "(OOC) "..ply:Name(), col2, args, ply)
+	end
+	return ""
 end
 AddChatCommand("//", OOC, true)
 AddChatCommand("/a", OOC, true)
