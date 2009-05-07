@@ -2218,6 +2218,12 @@ function GM:KeyPress(ply, code)
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, talker)
+	if ValidEntity(listener:GetNWEntity("phone")) and ValidEntity(talker:GetNWEntity("phone")) and listener == talker:GetNWEntity("phone"):GetNWEntity("Caller") then 
+		return true
+	elseif ValidEntity(talker:GetNWEntity("phone")) then
+		return false
+	end
+	
 	if CfgVars["voiceradius"] == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
 		return true
 	elseif CfgVars["voiceradius"] == 1 then
@@ -2655,3 +2661,60 @@ function VoteRemoveLicense(ply, args)
 	end
 end
 AddChatCommand("/demotelicense", VoteRemoveLicense)
+
+local function MakeACall(ply,args)
+	local p = FindPlayer(args)
+	if not ValidEntity(p) then return "" end
+	if ValidEntity(ply:GetNWEntity("phone")) or ValidEntity(p:GetNWEntity("phone")) then
+		Notify(ply, 1, 4, "He's already in a conversation!")
+		return "" 
+	end
+	if not p:Alive() or p == ply or not ply:Alive() then return "" end
+	local trace = {}
+	trace.start = p:EyePos()
+	trace.endpos = trace.start + p:GetAimVector() * 85
+	trace.filter = p
+	local tr = util.TraceLine(trace)
+	
+	local banana = ents.Create("banana_phone")
+	
+	banana:SetNWEntity("owning_ent", p)
+	banana:SetNWString("Owner", "Shared") 
+	banana:SetNWEntity("Caller", ply)
+	
+	banana:SetPos(tr.HitPos)
+	banana.onlyremover = true
+	banana.SID = p.SID
+	banana:Spawn()
+	
+	
+	local ownphone = ents.Create("banana_phone")
+	
+	ownphone:SetNWEntity("owning_ent", ply)
+	ownphone:SetNWString("Owner", "Shared") 
+	ownphone:SetNWBool("IsBeingHeld", true)
+	ply:SetNWEntity("phone", ownphone)
+	
+	ownphone:SetPos(ply:GetShootPos())
+	ownphone.onlyremover = true
+	ownphone.SID = ply.SID
+	ownphone:Spawn()
+	ownphone:Use(ply,ply)--Put it on the ear already, since you're the one who'se calling...
+	timer.Simple(20, function(ply, OtherPhone)
+		local MyPhone = ply:GetNWEntity("phone")
+		local WhoPickedItUp = MyPhone:GetNWEntity("Caller")
+		if ValidEntity(MyPhone) and ValidEntity(OtherPhone) and not ValidEntity(WhoPickedItUp) then -- if noone picked up the phone then hang up :)
+			MyPhone:Remove()
+			OtherPhone:Remove()
+		end
+	end, ply, banana)
+	return ""
+end
+AddChatCommand("/call", MakeACall)
+
+local function HangUp(ply, code)
+	if code == IN_USE and ValidEntity(ply:GetNWEntity("phone")) then
+		ply:GetNWEntity("phone"):HangUp()
+	end
+end
+hook.Add("KeyPress", "HangUpPhone", HangUp)
