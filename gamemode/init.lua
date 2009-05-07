@@ -92,7 +92,10 @@ DB = {}
 LRP = {}
 CSFiles = {}
 
-
+// sv_alltalk must be 0
+// note, everyone will STILL hear everyone UNLESS rp_voiceradius is 1!!!
+// This will fix the rp_voiceradius not working
+game.ConsoleCommand("sv_alltalk 0\n")
 include("help.lua")
 include("shared.lua")
 include("data.lua")
