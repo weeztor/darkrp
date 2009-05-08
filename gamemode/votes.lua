@@ -1,5 +1,6 @@
-Vote = {}
-Votes = {}
+local Vote = {}
+local Votes = {}
+local vote = { }
 
 function ccDoVote(ply, cmd, args)
 	if not Votes[args[1]] then return end
@@ -27,8 +28,6 @@ function Vote:HandleNewVote(ply, id)
 		vote.HandleVoteEnd(self.ID)
 	end
 end
-
-vote = { }
 
 function vote:Create(question, voteid, ent, delay, callback, special)
 	if #player.GetAll() == 1 then

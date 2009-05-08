@@ -20,6 +20,7 @@ SVN version
 [ADD] rp_resetallmoney: Reset EVERY SINGLE stored money on the server(not only of the people who are in the server)(Superadmin only)
 [ADD] Players can now see how long before they get unarrested.
 [ADD] Banana phone! You can call people for 1$ per 20 seconds!
+[ADD] DarkRP map pattern(in create server/start singleplayer) THANKS \/\/()?|\/|Š
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!

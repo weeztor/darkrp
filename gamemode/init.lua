@@ -45,6 +45,7 @@ function SendGlobalIntsOnSpawn(ply)
 	end
 end
 hook.Add("PlayerInitialSpawn", "SendGlobalIntsOnSpawn", SendGlobalIntsOnSpawn)
+-- end of overriding SetGlobalInt...
 
 -- RP Name Overrides
 
@@ -62,6 +63,7 @@ end
 meta.Nick = meta.Name
 meta.GetName = meta.Name
 -- End
+
 RPArrestedPlayers = {}
 
 DeriveGamemode("sandbox")
@@ -85,17 +87,15 @@ AddCSLuaFile("sh_commands.lua")
 -- Earthquake Mod addon
 resource.AddFile("sound/earthquake.mp3")
 util.PrecacheSound("earthquake.mp3")
-//quakenotify = nil -- When the next quake report comes up
 lastmagnitudes = {} -- The magnitudes of the last tremors
 
 DB = {}
-LRP = {}
-CSFiles = {}
 
 // sv_alltalk must be 0
 // note, everyone will STILL hear everyone UNLESS rp_voiceradius is 1!!!
 // This will fix the rp_voiceradius not working
 game.ConsoleCommand("sv_alltalk 0\n")
+
 include("help.lua")
 include("shared.lua")
 include("data.lua")
@@ -117,11 +117,6 @@ AddCSLuaFile("SPropProtection/cl_Init.lua")
 AddCSLuaFile("SPropProtection/sh_CPPI.lua")
 include("SPropProtection/sv_Init.lua")
 include("SPropProtection/sh_CPPI.lua")
-
-function includeCS(dir)
-	AddCSLuaFile(dir)
-	table.insert(CSFiles, dir)
-end
 
 local files = file.Find("../gamemodes/DarkRP/gamemode/modules/*.lua")
 for k, v in pairs(files) do
@@ -219,6 +214,7 @@ local function RefreshSettings(RESET)
 	CfgVars["license"] = 1
 	CfgVars["pocket"] = 1
 	CfgVars["pocketitems"] = 10
+	CfgVars["mobagenda"] = ""
 
 	if RESET then
 		for k,v in pairs(CfgVars) do
@@ -230,15 +226,12 @@ local function RefreshSettings(RESET)
 end
 RefreshSettings()
 
--- Strings
-CfgVars["mobagenda"] = ""
-
-DB.RetrieveSettings()
+//DB.RetrieveSettings()
 if not DB.RetrieveSettings() then
 	RefreshSettings(true)
 end
 
-DB.RetrieveGlobals()
+//DB.RetrieveGlobals()
 if not DB.RetrieveGlobals() then
 	RefreshGlobals()
 end
@@ -255,7 +248,7 @@ function ResetAllRPSettings(ply,cmd,args)
 end
 concommand.Add("rp_ResetAllSettings", ResetAllRPSettings)
 
-timer.Simple(5, function()
+--[[ timer.Simple(1, function()
 	-- Player Priviliges
 	ADMIN = 0			-- DarkRP Admin
 	MAYOR = 1			-- Can become Mayor without a vote (Uses /mayor)
@@ -263,7 +256,7 @@ timer.Simple(5, function()
 	TOOL = 3				-- Always spawns with the toolgun
 	PHYS = 4				-- Always spawns with the physgun
 	PROP = 5			-- Can always spawn props (unless jailed)
-end)
+end) ]]
 
 function GM:Initialize()
 	self.BaseClass:Initialize()
@@ -312,11 +305,11 @@ end
 FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle", "prop_physics"}
 
 function IsFlammable(ent)
-        local class = ent:GetClass()
-        for k, v in pairs(FlammableProps) do
-            if class == v then return true end
-        end
-        return false
+	local class = ent:GetClass()
+	for k, v in pairs(FlammableProps) do
+		if class == v then return true end
+	end
+	return false
 end
 
 -- FireSpread from SeriousRP
@@ -332,7 +325,7 @@ function FireSpread(e)
 		for k, v in pairs(en) do
 			if IsFlammable(v) then
 			if count >= maxcount then break end
-				if math.random(0.0, 60000.0) < 1.0 then
+				if math.random(0.0, 60000) < 1.0 then
 					if not v.burned then
 						v:Ignite(math.random(5,180), 0)
 						v.burned = true
@@ -354,7 +347,6 @@ function FireSpread(e)
 		end
 	end
 end
-
 
 function GM:Think()
 	for k, v in ipairs(FlammableProps) do

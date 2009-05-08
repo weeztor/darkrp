@@ -1,5 +1,6 @@
-Question = { }
-Questions = { }
+local Question = { }
+local Questions = { }
+local ques = { }
 
 function ccDoQuestion(ply, cmd, args)
 	if not Questions[args[1]] then return end
@@ -16,8 +17,6 @@ function Question:HandleNewQuestion(ply, response)
 
 	ques.HandleQuestionEnd(self.ID, false)
 end
-
-ques = { }
 
 function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly)
 	local newques = { }
@@ -48,7 +47,6 @@ function ques.DestroyQuestionsWithEnt(ent)
 			umsg.Start("KillQuestionVGUI", v.Ent)
 				umsg.String(v.ID)
 			umsg.End()
-
 			Questions[k] = nil
 		end
 	end
@@ -58,7 +56,5 @@ function ques.HandleQuestionEnd(id, TimeIsUp)
 	if not Questions[id] then return end
 	local q = Questions[id]	
 	q.Callback(q.yn, q.Ent, q.Initiator, q.Target)
-	//if TimeIsUp then
-		Questions[id] = nil
-	//end
+	Questions[id] = nil
 end
