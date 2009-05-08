@@ -45,6 +45,7 @@ function meta:IsMasterOwner(ply)
 
 	return false
 end
+
 if SERVER then
 	local time = false
 	local function SetDoorOwnable(ply)
@@ -148,6 +149,7 @@ if SERVER then
 	end
 	AddChatCommand("/toggleown", OwnDoor)
 end
+
 function meta:OwnedBy(ply)
 	if self:GetNWInt("Ownerz") == ply:EntIndex() then return true end
 
