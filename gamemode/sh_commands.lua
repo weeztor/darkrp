@@ -400,7 +400,7 @@ for k,v in pairs(RPExtraTeams) do
 end
 
 function GenerateChatCommandHelp()
-	local p = GetGlobalString("cmdprefix")
+	local p = "/"
 
 	AddHelpLabel(1000, HELP_CATEGORY_CHATCMD, p .. "help - Bring up this menu")
 	AddHelpLabel(1100, HELP_CATEGORY_CHATCMD, p .. "job <Job Name> - Set a custom job")

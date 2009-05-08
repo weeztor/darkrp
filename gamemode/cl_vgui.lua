@@ -1,25 +1,7 @@
-if VoteVGUI then
-	for k, v in pairs(VoteVGUI) do
-		v:Remove()
-		VoteVGUI[k] = nil
-	end
-end
-
-if QuestionVGUI then
-	for k, v in pairs(QuestionVGUI) do
-		v:Remove()
-		QuestionVGUI[k] = nil
-	end
-end
-
-VoteVGUI = {}
-QuestionVGUI = {}
-PanelNum = 0
-
-if LetterWritePanel then
-	LetterWritePanel:Remove()
-	LetterWritePanel = nil
-end
+local VoteVGUI = {}
+local QuestionVGUI = {}
+local PanelNum = 0
+local LetterWritePanel
 
 function MsgDoVote(msg)
 	local question = msg:ReadString()
@@ -28,7 +10,7 @@ function MsgDoVote(msg)
 	if timeleft == 0 then
 		timeleft = 100
 	end
-	local OldTime = CurTime() // 100  Nieuw = 110
+	local OldTime = CurTime()
 	if string.find(voteid, LocalPlayer():EntIndex()) then return end //If it's about you then go away
 
 	LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
@@ -198,7 +180,6 @@ function DoLetter(msg)
 	LetterWritePanel:SetVisible(true)
 end
 usermessage.Hook("DoLetter", DoLetter)
-
 
 local F4Menu  
 local F4MenuTabs

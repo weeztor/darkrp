@@ -13,21 +13,21 @@ CPPI_DEFER = 16
 
 include("SPropProtection/sh_CPPI.lua")
 include("SPropProtection/cl_Init.lua")
--- Currency Symbol
-local currencysymbol = CreateClientConVar("rp_currency", "$", true, false)
-CUR = currencysymbol:GetString()
 
-GUIToggled = false
-HelpToggled = false
+
+CUR = "$"
+
+local GUIToggled = false
+local HelpToggled = false
 
 HelpLabels = { }
 HelpCategories = { }
 
-AdminTellAlpha = -1
-AdminTellStartTime = 0
-AdminTellMsg = ""
+local AdminTellAlpha = -1
+local AdminTellStartTime = 0
+local AdminTellMsg = ""
 
-StunStickFlashAlpha = -1
+local StunStickFlashAlpha = -1
 
 -- Make sure the client sees the RP name where they expect to see the name
 local pmeta = FindMetaTable("Player")
@@ -40,13 +40,9 @@ pmeta.GetName = pmeta.Name
 pmeta.Nick = pmeta.Name
 -- End
 
-if HelpVGUI then
-	HelpVGUI:Remove()
-	HelpVGUI = nil
-end
-
-function GM:Initialize()
-	self.BaseClass:Initialize()
+function GM:DrawDeathNotice(x, y)
+	if GetGlobalInt("deathnotice") ~= 1 then return end
+	self.BaseClass:DrawDeathNotice(x, y)
 end
 
 CreateClientConVar("physics_debug_entity", 0, false,false)
@@ -98,17 +94,19 @@ function DrawPlayerInfo(ply)
 
 	local pos = ply:EyePos()
 
-	pos.z = pos.z + 14
+	pos.z = pos.z + 34
 	pos = pos:ToScreen()
 
 	if GetGlobalInt("nametag") == 1 then
 		draw.DrawText(ply:Nick(), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply:Nick(), "TargetID", pos.x, pos.y, team.GetColor(ply:Team()), 1)
+		draw.DrawText("Health: "..ply:Health(), "TargetID", pos.x + 1, pos.y + 21, Color(0, 0, 0, 255), 1)
+		draw.DrawText("Health: "..ply:Health(), "TargetID", pos.x, pos.y + 20, Color(255,255,255,200), 1)
 	end
 
 	if GetGlobalInt("jobtag") == 1 then
-		draw.DrawText(ply:GetNWString("job"), "TargetID", pos.x + 1, pos.y + 21, Color(0, 0, 0, 255), 1)
-		draw.DrawText(ply:GetNWString("job"), "TargetID", pos.x, pos.y + 20, Color(255, 255, 255, 200), 1)
+		draw.DrawText(ply:GetNWString("job"), "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
+		draw.DrawText(ply:GetNWString("job"), "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
 end
 
@@ -264,6 +262,13 @@ local function GetArrested()
 	arresttime = CurTime()
 end
 usermessage.Hook("GotArrested", GetArrested)
+
+local LetterY = 0
+local LetterAlpha = -1
+local LetterMsg = ""
+local LetterType = 0
+local LetterStartTime = 0
+local LetterPos = Vector(0, 0, 0)
 
 function GM:HUDPaint()
 	if arresttime ~= 0 and CurTime() - arresttime <= GetGlobalInt("jailtimer") and LocalPlayer():GetNWBool("Arrested") then
@@ -587,6 +592,10 @@ function GM:HUDShouldDraw(name)
 	end
 end
 
+function GM:HUDDrawTargetID()
+    return false
+end
+
 function FindPlayer(info)
 	local pls = player.GetAll()
 
@@ -645,13 +654,6 @@ function AdminTell(msg)
 	AdminTellMsg = msg:ReadString()
 end
 usermessage.Hook("AdminTell", AdminTell)
-
-LetterY = 0
-LetterAlpha = -1
-LetterMsg = ""
-LetterType = 0
-LetterStartTime = 0
-LetterPos = Vector(0, 0, 0)
 
 function ShowLetter(msg)
 	LetterMsg = ""

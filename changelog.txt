@@ -83,6 +83,10 @@ SVN version
 [REMOVE] Restriction of /dropweapon. You can now drop any weapon.
 [REMOVE] CSE base and other unused swep bases
 [REMOVE] The second stunstick swep(There were 2 the same :S)
+[REMOVE] Chat prefix, broken and noone ever used it.
+[REMOVE] cl_deathnotice.lua, it was a complete file just for ONE thing!
+[REMOVE] rp_currencysymbol, Didn't work and noone used it
+[REMOVE] The standard look-at-a-player Name and health thing, it's replaced by the RP one
 
 SVN VERSTION till 150/ 2.3.5:
 Updated by: FPtje Falco
