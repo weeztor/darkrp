@@ -308,36 +308,6 @@ function ccRemoveLetters(ply, cmd, args)
 end
 concommand.Add("rp_removeletters", ccRemoveLetters)
 
-function ccSetChatCmdPrefix(ply, cmd, args)
-	if ply:EntIndex() ~= 0 and not ply:IsAdmin() and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a server admin!")
-		return
-	end
-
-	local oldprefix = GetGlobalString("cmdprefix")
-	SetGlobalString("cmdprefix", args[1])
-
-	if ply:EntIndex() == 0 then
-		nick = "Console"
-	else
-		nick = ply:Nick()
-	end
-
-	NotifyAll(0, 3, nick .. " set rp_chatprefix to " .. args[1])
-
-	GenerateChatCommandHelp()
-
-	for k, v in pairs(ChatCommands) do
-		if not v.prefixconst then
-			v.cmd = string.gsub(v.cmd, oldprefix, args[1])
-		end
-	end
-
-	umsg.Start("UpdateHelp")
-	umsg.End()
-end
-concommand.Add("rp_chatprefix", ccSetChatCmdPrefix)
-
 function ccPayDayTime(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsAdmin() and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, "You're not a server admin")
@@ -790,7 +760,7 @@ concommand.Add("rp_kick", ccKick)
 
 function ccSetMoney(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a server admin!")
+		ply:PrintMessage(2, "You're not a super admin!")
 		return
 	end
 
@@ -810,7 +780,6 @@ function ccSetMoney(ply, cmd, args)
 	if target then
 		local nick = ""
 		target:SetNWInt("money", amount)
-		target:SetNWString("moneyshow", amount)
 		DB.StoreMoney(target, amount)
 
 		if ply:EntIndex() == 0 then
@@ -834,7 +803,7 @@ concommand.Add("rp_setmoney", ccSetMoney)
 
 function ccSetSalary(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a server admin!")
+		ply:PrintMessage(2, "You're not a super admin!")
 		return
 	end
 
@@ -1011,7 +980,7 @@ concommand.Add("rp_revoke", ccRevokePriv)
 
 function ccSWEPSpawn(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsAdmin() then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			Notify(ply, 1, 2, "You're not an admin!")
 			return
 		end
@@ -1022,7 +991,7 @@ concommand.Add("gm_giveswep", ccSWEPSpawn)
 
 function ccSWEPGive(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsAdmin() then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			Notify(ply, 1, 2, "You're not an admin!")
 			return
 		end
@@ -1033,7 +1002,7 @@ concommand.Add("gm_spawnswep", ccSWEPGive)
 
 function ccSENTSPawn(ply, cmd, args)
 	if CfgVars["adminsents"] == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) and not ply:IsSuperAdmin() then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			Notify(ply, 1, 2, "You're not an admin!")
 			return
 		end

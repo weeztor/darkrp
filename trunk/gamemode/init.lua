@@ -220,8 +220,6 @@ local function RefreshSettings(RESET)
 	CfgVars["pocket"] = 1
 	CfgVars["pocketitems"] = 10
 
-	SetGlobalString("cmdprefix", "/") --Prefix before any chat commands
-
 	if RESET then
 		for k,v in pairs(CfgVars) do
 			if type(v) == "number" then
