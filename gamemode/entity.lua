@@ -1,3 +1,6 @@
+/*---------------------------------------------------------
+ Shared part
+ ---------------------------------------------------------*/
 local meta = FindMetaTable("Entity")
 
 function meta:IsOwnable()
@@ -46,110 +49,6 @@ function meta:IsMasterOwner(ply)
 	return false
 end
 
-if SERVER then
-	local time = false
-	local function SetDoorOwnable(ply)
-		if time then return "" end
-		time = true
-		timer.Simple(0.1, function()  time = false end)
-		local trace = ply:GetEyeTrace()
-		if not ValidEntity(trace.Entity) then return "" end
-		local ent = trace.Entity
-		if ply:IsSuperAdmin() and ent:IsDoor() and ply:GetPos():Distance(ent:GetPos()) < 115 then
-			ent:SetNWBool("nonOwnable", not ent:GetNWBool("nonOwnable"))
-			-- Save it for future map loads
-			DB.StoreDoorOwnability(ent)
-		end
-		return ""
-	end
-	AddChatCommand("/toggleownable", SetDoorOwnable)
-	
-	local time3 = false
-	local function SetDoorCPOwnable(ply)
-		if time3 then return "" end
-		time3 = true
-		timer.Simple(0.1, function()  time3 = false end)
-		local trace = ply:GetEyeTrace()
-		if not ValidEntity(trace.Entity) then return "" end
-		local ent = trace.Entity
-		if ply:IsSuperAdmin() and ent:IsDoor() and ply:GetPos():Distance(ent:GetPos()) < 115 then
-			for k,v in pairs(player.GetAll()) do ent:UnOwn(v) end
-			ent:SetNWBool("CPOwnable", not ent:GetNWBool("CPOwnable"))
-			-- Save it for future map loads
-			DB.StoreCPDoorOwnability(ent)
-		end
-		return ""
-	end
-	AddChatCommand("/togglecpownable", SetDoorCPOwnable)
-	
-	local time2 = false
-	local function OwnDoor(ply)
-		if time2 then return "" end
-		time2 = true
-		timer.Simple(0.1, function()  time2 = false end)
-		
-		local trace = ply:GetEyeTrace()
-
-		if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 200 then
-			if RPArrestedPlayers[ply:SteamID()] then
-				Notify(ply, 1, 5, "Can not own or unown things while arrested!")
-				return ""
-			end
-
-			if trace.Entity:GetNWBool("nonOwnable") then
-				Notify(ply, 1, 5, "This can not be owned or unowned!")
-				return ""
-			end
-
-			if trace.Entity:OwnedBy(ply) then
-				Notify(ply, 1, 4, "Sold for " .. CUR .. math.floor(((CfgVars["doorcost"] * 0.66666666666666)+0.5)) .. "!")
-				trace.Entity:Fire("unlock", "", 0)
-				trace.Entity:UnOwn(ply)
-				ply:GetTable().Ownedz[trace.Entity:EntIndex()] = nil
-				ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz - 1
-				ply:AddMoney(math.floor(((CfgVars["doorcost"] * 0.66666666666666)+0.5)))
-			else
-				if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
-					Notify(ply, 1, 4, "Already owned!")
-					return ""
-				end
-				if trace.Entity:GetClass() == "prop_vehicle_jeep" or trace.Entity:GetClass() == "prop_vehicle_airboat" then
-					if not ply:CanAfford(CfgVars["vehiclecost"]) then
-						Notify(ply, 1, 4, "You can not afford this vehicle!")
-						return ""
-					end
-				else
-					if not ply:CanAfford(CfgVars["doorcost"]) then
-						Notify(ply, 1, 4, "You can not afford this door!")
-						return ""
-					end
-				end
-
-				if trace.Entity:GetClass() == "prop_vehicle_jeep" or trace.Entity:GetClass() == "prop_vehicle_airboat" then
-					ply:AddMoney(-CfgVars["vehiclecost"])
-					Notify(ply, 1, 4, "You've bought this vehicle for " .. CUR .. math.floor(CfgVars["vehiclecost"]) .. "!")
-				else
-					ply:AddMoney(-CfgVars["doorcost"])
-					Notify(ply, 1, 4, "You've bought this door for " .. CUR .. math.floor(CfgVars["doorcost"]) .. "!")
-				end
-				trace.Entity:Own(ply)
-
-				if ply:GetTable().OwnedNumz == 0 then
-					timer.Create(ply:SteamID() .. "propertytax", 270, 0, ply.DoPropertyTax, ply)
-				end
-
-				ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz + 1
-
-				ply:GetTable().Ownedz[trace.Entity:EntIndex()] = trace.Entity
-			end
-			return ""
-		end
-		Notify(ply, 1, 4, "Not looking at a vehicle/door!")
-		return ""
-	end
-	AddChatCommand("/toggleown", OwnDoor)
-end
-
 function meta:OwnedBy(ply)
 	if self:GetNWInt("Ownerz") == ply:EntIndex() then return true end
 
@@ -164,8 +63,114 @@ function meta:OwnedBy(ply)
 	return false
 end
 
+/*---------------------------------------------------------
+ Serverside part
+ ---------------------------------------------------------*/
+if not SERVER then return end
+
+local time = false
+local function SetDoorOwnable(ply)
+	if time then return "" end
+	time = true
+	timer.Simple(0.1, function()  time = false end)
+	local trace = ply:GetEyeTrace()
+	if not ValidEntity(trace.Entity) then return "" end
+	local ent = trace.Entity
+	if ply:IsSuperAdmin() and ent:IsDoor() and ply:GetPos():Distance(ent:GetPos()) < 115 then
+		ent:SetNWBool("nonOwnable", not ent:GetNWBool("nonOwnable"))
+		-- Save it for future map loads
+		DB.StoreDoorOwnability(ent)
+	end
+	return ""
+end
+AddChatCommand("/toggleownable", SetDoorOwnable)
+
+local time3 = false
+local function SetDoorCPOwnable(ply)
+	if time3 then return "" end
+	time3 = true
+	timer.Simple(0.1, function()  time3 = false end)
+	local trace = ply:GetEyeTrace()
+	if not ValidEntity(trace.Entity) then return "" end
+	local ent = trace.Entity
+	if ply:IsSuperAdmin() and ent:IsDoor() and ply:GetPos():Distance(ent:GetPos()) < 115 then
+		for k,v in pairs(player.GetAll()) do ent:UnOwn(v) end
+		ent:SetNWBool("CPOwnable", not ent:GetNWBool("CPOwnable"))
+		-- Save it for future map loads
+		DB.StoreCPDoorOwnability(ent)
+	end
+	return ""
+end
+AddChatCommand("/togglecpownable", SetDoorCPOwnable)
+
+local time2 = false
+local function OwnDoor(ply)
+	if time2 then return "" end
+	time2 = true
+	timer.Simple(0.1, function()  time2 = false end)
+	
+	local trace = ply:GetEyeTrace()
+
+	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 200 then
+		if RPArrestedPlayers[ply:SteamID()] then
+			Notify(ply, 1, 5, "Can not own or unown things while arrested!")
+			return ""
+		end
+
+		if trace.Entity:GetNWBool("nonOwnable") then
+			Notify(ply, 1, 5, "This can not be owned or unowned!")
+			return ""
+		end
+
+		if trace.Entity:OwnedBy(ply) then
+			Notify(ply, 1, 4, "Sold for " .. CUR .. math.floor(((CfgVars["doorcost"] * 0.66666666666666)+0.5)) .. "!")
+			trace.Entity:Fire("unlock", "", 0)
+			trace.Entity:UnOwn(ply)
+			ply:GetTable().Ownedz[trace.Entity:EntIndex()] = nil
+			ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz - 1
+			ply:AddMoney(math.floor(((CfgVars["doorcost"] * 0.66666666666666)+0.5)))
+		else
+			if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
+				Notify(ply, 1, 4, "Already owned!")
+				return ""
+			end
+			if trace.Entity:GetClass() == "prop_vehicle_jeep" or trace.Entity:GetClass() == "prop_vehicle_airboat" then
+				if not ply:CanAfford(CfgVars["vehiclecost"]) then
+					Notify(ply, 1, 4, "You can not afford this vehicle!")
+					return ""
+				end
+			else
+				if not ply:CanAfford(CfgVars["doorcost"]) then
+					Notify(ply, 1, 4, "You can not afford this door!")
+					return ""
+				end
+			end
+
+			if trace.Entity:GetClass() == "prop_vehicle_jeep" or trace.Entity:GetClass() == "prop_vehicle_airboat" then
+				ply:AddMoney(-CfgVars["vehiclecost"])
+				Notify(ply, 1, 4, "You've bought this vehicle for " .. CUR .. math.floor(CfgVars["vehiclecost"]) .. "!")
+			else
+				ply:AddMoney(-CfgVars["doorcost"])
+				Notify(ply, 1, 4, "You've bought this door for " .. CUR .. math.floor(CfgVars["doorcost"]) .. "!")
+			end
+			trace.Entity:Own(ply)
+
+			if ply:GetTable().OwnedNumz == 0 then
+				timer.Create(ply:SteamID() .. "propertytax", 270, 0, ply.DoPropertyTax, ply)
+			end
+
+			ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz + 1
+
+			ply:GetTable().Ownedz[trace.Entity:EntIndex()] = trace.Entity
+		end
+		return ""
+	end
+	Notify(ply, 1, 4, "Not looking at a vehicle/door!")
+	return ""
+end
+AddChatCommand("/toggleown", OwnDoor)
+
 function meta:UnOwn(ply)
-	if CLIENT then return end
 
 	if not ply then
 		ply = self:GetDoorOwner()
@@ -236,9 +241,7 @@ function meta:AddOwner(ply)
 end
 
 function meta:RemoveOwner(ply)
-
 	local num = self:GetNWInt("OwnerCount")
-
 	for n = 1, num do
 		if ply:EntIndex() == self:GetNWInt("Ownersz" .. n) then
 			self:SetNWInt("Ownersz" .. n, -1)
@@ -248,7 +251,6 @@ function meta:RemoveOwner(ply)
 end
 
 function meta:Own(ply)
-	if CLIENT then return end
 
 	if self:AllowedToOwn(ply) then
 		self:AddOwner(ply)
@@ -262,3 +264,89 @@ function meta:Own(ply)
 		self:SetNWString("title", "")
 	end
 end
+
+function SetDoorTitle(ply, args)
+	local trace = ply:GetEyeTrace()
+
+	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
+		if ply:IsSuperAdmin() then
+			if trace.Entity:GetNWBool("nonOwnable") then
+				DB.StoreNonOwnableDoorTitle(trace.Entity, args)
+				return ""
+			end
+		else
+			if trace.Entity:GetNWBool("nonOwnable") then
+				Notify(ply, 1, 4, "Admin only!")
+			end
+		end
+
+		if trace.Entity:OwnedBy(ply) then
+			trace.Entity:SetNWString("title", args)
+		else
+			Notify(ply, 1, 4, "You don't own this!")
+		end
+	end
+
+	return ""
+end
+AddChatCommand("/title", SetDoorTitle)
+
+function RemoveDoorOwner(ply, args)
+	local trace = ply:GetEyeTrace()
+
+	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
+		target = FindPlayer(args)
+
+		if trace.Entity:GetNWBool("nonOwnable") then
+			Notify(ply, 1, 4, "Can not remove owners while Door is non-ownable!")
+		end
+
+		if target then
+			if trace.Entity:OwnedBy(ply) then
+				if trace.Entity:AllowedToOwn(target) then
+					trace.Entity:RemoveAllowed(target)
+				end
+
+				if trace.Entity:OwnedBy(target) then
+					trace.Entity:RemoveOwner(target)
+				end
+			else
+				Notify(ply, 1, 4, "You don't own this!")
+			end
+		else
+			Notify(ply, 1, 4, "Could not find player: " .. args)
+		end
+	end
+	return ""
+end
+AddChatCommand("/removeowner", RemoveDoorOwner)
+AddChatCommand("/ro", RemoveDoorOwner)
+
+local function AddDoorOwner(ply, args)
+	local trace = ply:GetEyeTrace()
+
+	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
+		target = FindPlayer(args)
+		if target then
+			if trace.Entity:GetNWBool("nonOwnable") then
+				Notify(ply, 1, 4, "Can not add owners while Door is non-ownable!")
+				return ""
+			end
+
+			if trace.Entity:OwnedBy(ply) then
+				if not trace.Entity:OwnedBy(target) and not trace.Entity:AllowedToOwn(target) then
+					trace.Entity:AddAllowed(target)
+				else
+					Notify(ply, 1, 4, "Player already owns (or is allowed to own) this!")
+				end
+			else
+				Notify(ply, 1, 4, "You don't own this!")
+			end
+		else
+			Notify(ply, 1, 4, "Could not find player: " .. args)
+		end
+	end
+	return ""
+end
+AddChatCommand("/addowner", AddDoorOwner)
+AddChatCommand("/ao", AddDoorOwner)

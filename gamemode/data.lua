@@ -604,3 +604,79 @@ end
 function DB.RemoveGlobals()
 	sql.Query("DELETE FROM darkrp_globals;")
 end
+
+function ResetAllRPSettings(ply,cmd,args)
+	if not ply:IsSuperAdmin() then
+		Notify(ply, 1, 4, "You must be a superadmin")
+		return
+	end
+	Notify(ply, 1, 4, "All settings resetted!")
+	RefreshSettings(true)
+	RefreshGlobals()
+end
+concommand.Add("rp_ResetAllSettings", ResetAllRPSettings)
+
+function RefreshGlobals()
+	DB.SaveGlobal("ak47cost", 2450)
+	DB.SaveGlobal("mp5cost", 2200)
+	DB.SaveGlobal("m16cost", 2450)
+	DB.SaveGlobal("mac10cost", 2150)
+	DB.SaveGlobal("shotguncost", 1750)
+	DB.SaveGlobal("snipercost", 3750)
+	DB.SaveGlobal("deaglecost", 215)
+	DB.SaveGlobal("fivesevencost", 205)
+	DB.SaveGlobal("glockcost", 160)
+	DB.SaveGlobal("p228cost", 185)
+	DB.SaveGlobal("druglabcost", 400)
+	DB.SaveGlobal("gunlabcost", 500)
+	DB.SaveGlobal("mprintercost", 1000)
+	DB.SaveGlobal("mprintamount", 250)
+	DB.SaveGlobal("microwavecost", 400)
+	DB.SaveGlobal("drugpayamount", 15)
+	DB.SaveGlobal("ammopistolcost", 30)
+	DB.SaveGlobal("ammoriflecost", 60)
+	DB.SaveGlobal("ammoshotguncost", 70)
+	DB.SaveGlobal("healthcost", 60)
+	DB.SaveGlobal("jailtimer", 120)
+	DB.SaveGlobal("microwavefoodcost", 30)
+	DB.SaveGlobal("maxcopsalary", 100)
+	DB.SaveGlobal("maxdrugfood", 2)
+	DB.SaveGlobal("npckillpay", 10)
+	DB.SaveGlobal("jobtag", 1)
+	DB.SaveGlobal("globalshow", 0)
+	DB.SaveGlobal("deathnotice", 1)
+	DB.SaveGlobal("normalsalary", 45)
+	DB.SaveGlobal("globaltags", 1)
+	DB.SaveGlobal("nametag", 1)
+	DB.SaveGlobal("deathblack", 0)
+	DB.SaveGlobal("maxnormalsalary", 90)
+	DB.SaveGlobal("maxmayorsetsalary", 90)
+	
+	DB.SaveGlobal("licenseweapon_weapon_physcannon", 1)
+	DB.SaveGlobal("licenseweapon_weapon_physgun", 1)
+	DB.SaveGlobal("licenseweapon_weapon_crowbar", 1)
+	DB.SaveGlobal("licenseweapon_weapon_stunstick", 1)
+	DB.SaveGlobal("licenseweapon_weapon_pistol", 0)
+	DB.SaveGlobal("licenseweapon_weapon_357",	0)
+	DB.SaveGlobal("licenseweapon_weapon_smg1", 0)
+	DB.SaveGlobal("licenseweapon_weapon_shotgun", 0)
+	DB.SaveGlobal("licenseweapon_weapon_crossbow", 0)
+	DB.SaveGlobal("licenseweapon_weapon_ar2", 0)
+	DB.SaveGlobal("licenseweapon_weapon_bugbait", 1)
+	DB.SaveGlobal("licenseweapon_weapon_rpg", 0)
+	DB.SaveGlobal("licenseweapon_gmod_camera", 1)
+	
+	local whitelist = {"keys", "gmod_camera", "weaponchecker", "med_kit", "arrest_stick", "unarrest_stick", "stunstick", "door_ram", "lockpick", "bite", "pcmod_", "gmod_tool", "pocket"}
+	for k,v in pairs(weapons.GetList()) do
+		local allowed = false
+		for a,b in pairs(whitelist) do
+			if string.find(string.lower(v.Classname), b) then
+				DB.SaveGlobal("licenseweapon_"..string.lower(v.Classname), 1)
+				allowed = true
+			end
+		end
+		if not allowed then
+			DB.SaveGlobal("licenseweapon_"..string.lower(v.Classname), 0)
+		end
+	end
+end

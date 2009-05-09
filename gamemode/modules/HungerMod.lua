@@ -187,3 +187,14 @@ function BuyFood(ply, args)
 	return ""
 end
 AddChatCommand("/buyfood", BuyFood)
+
+function FoodHeal(ply)
+	if GetGlobalInt("hungermod") == 0 then
+		ply:SetHealth(ply:Health() + (100 - ply:Health()))
+	else
+		ply:SetNWInt("Energy", math.Clamp(ply:GetNWInt("Energy") + 100, 0, 100))
+		umsg.Start("AteFoodIcon", ply)
+		umsg.End()
+	end
+	return ""
+end
