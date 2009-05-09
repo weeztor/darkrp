@@ -1,3 +1,6 @@
+GM.Name = "DarkRP 2.3.5+"
+GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
+
 CUR = "$"
 GlobalInts = {}
 CfgVars = {}
@@ -49,8 +52,6 @@ hook.Add("PlayerInitialSpawn", "SendGlobalIntsOnSpawn", SendGlobalIntsOnSpawn)
 
 -- RP Name Overrides
 
-DARKRPVERSION = "2.3.5+"
-
 local meta = FindMetaTable("Player")
 meta.SteamName = meta.Name
 meta.Name = function(self)
@@ -101,8 +102,9 @@ include("shared.lua")
 include("data.lua")
 include("admincc.lua")
 include("sh_commands.lua")
-include("player.lua")
 include("chat.lua")
+include("player.lua")
+include("sv_gamemode_functions.lua")
 include("util.lua")
 include("votes.lua")
 include("questions.lua")
@@ -226,145 +228,16 @@ local function RefreshSettings(RESET)
 end
 RefreshSettings()
 
-//DB.RetrieveSettings()
 if not DB.RetrieveSettings() then
 	RefreshSettings(true)
 end
 
-//DB.RetrieveGlobals()
 if not DB.RetrieveGlobals() then
 	RefreshGlobals()
 end
 timer.Simple(10.5, DB.RetrieveGlobals) // for some reason I don't know about the vars reset after 10 seconds...
 
-function ResetAllRPSettings(ply,cmd,args)
-	if not ply:IsSuperAdmin() then
-		Notify(ply, 1, 4, "You must be a superadmin")
-		return
-	end
-	Notify(ply, 1, 4, "All settings resetted!")
-	RefreshSettings(true)
-	RefreshGlobals()
-end
-concommand.Add("rp_ResetAllSettings", ResetAllRPSettings)
-
---[[ timer.Simple(1, function()
-	-- Player Priviliges
-	ADMIN = 0			-- DarkRP Admin
-	MAYOR = 1			-- Can become Mayor without a vote (Uses /mayor)
-	CP = 2					-- Can become CP without a vote (Uses /cp)
-	TOOL = 3				-- Always spawns with the toolgun
-	PHYS = 4				-- Always spawns with the physgun
-	PROP = 5			-- Can always spawn props (unless jailed)
-end) ]]
-
-function GM:Initialize()
-	self.BaseClass:Initialize()
-	DB.Init()
-end
-
-function ShowSpare1(ply)
-	ply:ConCommand("gm_showspare1\n")
-end
-concommand.Add("gm_spare1", ShowSpare1)
-
-function ShowSpare2(ply)
-	ply:ConCommand("gm_showspare2\n")
-end
-concommand.Add("gm_spare2", ShowSpare2)
-
-function GM:ShowTeam(ply)
-	ply:SendLua("KeysMenu(" ..tostring(ply:GetEyeTrace().Entity:IsVehicle()) .. ")")
-end
-
-function GM:ShowHelp(ply)
-	umsg.Start("ToggleHelp", ply)
-	umsg.End()
-end
-
--- Earthquake Mod part
-local next_update_time
-local tremor = ents.Create("env_physexplosion")
-tremor:SetPos(Vector(0,0,0))
-tremor:SetKeyValue("radius",9999999999)
-tremor:SetKeyValue("spawnflags", 7)
-tremor.nodupe = true
-tremor:Spawn()
-
-function TremorReport(alert)
-	local mag = table.remove(lastmagnitudes, 1)
-	if mag then
-		local alert = "Earthquake"
-		if mag < 6.5 then
-			alert = "Earth Tremor"
-		end
-		NotifyAll(1, 3, alert .. " reported of magnitude " .. tostring(mag) .. "Mw")
-	end
-end
-
-FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle", "prop_physics"}
-
-function IsFlammable(ent)
-	local class = ent:GetClass()
-	for k, v in pairs(FlammableProps) do
-		if class == v then return true end
-	end
-	return false
-end
-
--- FireSpread from SeriousRP
-function FireSpread(e)
-	if e:IsOnFire() then
-		if e:GetTable().MoneyBag then
-			e:Remove()
-		end
-		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
-		local maxcount = 3
-		local count = 1
-		local rand = 0
-		for k, v in pairs(en) do
-			if IsFlammable(v) then
-			if count >= maxcount then break end
-				if math.random(0.0, 60000) < 1.0 then
-					if not v.burned then
-						v:Ignite(math.random(5,180), 0)
-						v.burned = true
-					else
-						local r, g, b, a = v:GetColor()
-						if (r - 51)>=0 then r = r - 51 end
-						if (g - 51)>=0 then g = g - 51 end
-						if (b - 51)>=0 then b = b - 51 end
-						v:SetColor(r, g, b, a)
-						math.randomseed((r / (g+1)) + b)
-						if (r + g + b) < 103 and math.random(1, 100) < 35 then
-							v:Fire("enablemotion","",0)
-							constraint.RemoveAll(v)
-						end
-					end
-					count = count + 1
-				end
-			end
-		end
-	end
-end
-
-function GM:Think()
-	for k, v in ipairs(FlammableProps) do
-		local ens = ents.FindByClass(v)
-
-		for a, b in pairs(ens) do
-			FireSpread(b)
-		end
-	end
-	-- End Spreadable fire Mod
-end
-
-function GM:GetFallDamage( ply, flFallSpeed )
-	if GetConVarNumber("mp_falldamage") == 1 then
-		return flFallSpeed / 15
-	end
-	return 10
-end
-
-GM.Name = "DarkRP "..DARKRPVERSION
-GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
+timer.Simple(5, function()
+	DB.SetUpNonOwnableDoors()
+	DB.SetUpCPOwnableDoors() 
+end)

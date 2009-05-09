@@ -88,6 +88,7 @@ SVN version
 [REMOVE] cl_deathnotice.lua, it was a complete file just for ONE thing!
 [REMOVE] rp_currencysymbol, Didn't work and noone used it
 [REMOVE] The standard look-at-a-player Name and health thing, it's replaced by the RP one
+[REMOVE] /rm, Exploit-sensitive and never used
 
 SVN VERSTION till 150/ 2.3.5:
 Updated by: FPtje Falco

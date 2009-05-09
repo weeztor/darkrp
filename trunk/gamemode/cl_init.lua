@@ -818,7 +818,7 @@ function GM:ChatTextChanged(text)
 		if plyname ~= "" and FindPlayer(plyname) then
 			playercolors = {FindPlayer(plyname)}
 		end
-	elseif string.sub(string.lower(text), 1, 2) == "/g" then
+	elseif string.sub(string.lower(text), 1, 3) == "/g " then
 		HearMode = "group chat"
 		local t = LocalPlayer():Team()
 		playercolors = {}

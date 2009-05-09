@@ -7,7 +7,7 @@ function AddChatCommand(cmd, callback, prefixconst)
 	table.insert(ChatCommands, { cmd = cmd, callback = callback, prefixconst = prefixconst })
 end
 
-function GM:PlayerSay(ply, text)
+function RP_PlayerChat(ply, text)
 	self.BaseClass:PlayerSay(ply, text)
 
 	local callback = "" 
