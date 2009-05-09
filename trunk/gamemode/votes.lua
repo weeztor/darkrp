@@ -1,6 +1,6 @@
 local Vote = {}
 local Votes = {}
-local vote = { }
+vote = { }
 
 function ccDoVote(ply, cmd, args)
 	if not Votes[args[1]] then return end

@@ -1,6 +1,6 @@
 local Question = { }
 local Questions = { }
-local ques = { }
+ques = { }
 
 function ccDoQuestion(ply, cmd, args)
 	if not Questions[args[1]] then return end
