@@ -666,6 +666,7 @@ local function removelicense(ply)
 end
 
 function GM:PlayerSpawn(ply)
+	self.BaseClass:PlayerSpawn(ply)
 	ply:CrosshairEnable()
 
 	if CfgVars["crosshair"] == 0 then
@@ -845,7 +846,6 @@ function GM:PlayerSpawn(ply)
 	end
 	
 	ply:GetTable().StartHealth = ply:Health()
-	self.BaseClass:PlayerSpawn(ply)
 end
 
 function GM:PlayerLoadout(ply)
