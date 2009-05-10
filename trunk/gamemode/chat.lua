@@ -8,6 +8,7 @@ function AddChatCommand(cmd, callback, prefixconst)
 end
 
 function RP_PlayerChat(ply, text)
+	print(ply, text)
 	local callback = "" 
 	for k, v in pairs(ChatCommands) do
 		if string.lower(v.cmd) == string.Explode(" ", string.lower(text))[1] then

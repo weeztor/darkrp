@@ -619,6 +619,6 @@ function GM:GetFallDamage( ply, flFallSpeed )
 end
 
 function GM:PlayerSay(ply, text)
-	self.BaseClass:PlayerSay(ply, text)
-	RP_PlayerChat(ply, text)
+	//self.BaseClass:PlayerSay(ply, text)
+	return RP_PlayerChat(ply, text)
 end
