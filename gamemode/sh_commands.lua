@@ -198,10 +198,10 @@ AddToggleCommand("rp_dm_autokick", "dmautokick", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_dm_autokick - Enable/disable Auto-kick of deathmatchers.")
 
 AddToggleCommand("rp_norespawn", "norespawn", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_norespawn - Enable/Disable that people don't have to respawn when they change job")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_norespawn - Enable/Disable that people don't have to respawn when they change job.")
 
 AddToggleCommand("rp_advertisements", "advertisements", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_advertisements - Enable/Disable chatprint advertisements")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_advertisements - Enable/Disable chatprint advertisements.")
 
 AddToggleCommand("rp_doorwarrants", "doorwarrants", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_doorwarrants - Enable/disable Warrant requirement to enter property.")
@@ -214,6 +214,12 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_pocket - Enable/disable pocket s
 
 AddToggleCommand("rp_voiceradius", "voiceradius", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_voiceradius - Enable/disable local voice chat.")
+
+AddToggleCommand("rp_teletojail", "teletojail", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_teletojail - Enable/disable teleporting to jail.")
+
+AddToggleCommand("rp_telefromjail", "telefromjail", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_telefromjail - Enable/disable teleporting from jail.")
 
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
