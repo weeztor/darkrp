@@ -694,6 +694,21 @@ function GM:ShowHelp(ply)
 	umsg.End()
 end
 
+function LookPersonUp(ply, cmd, args)
+	if not args[1] then 
+		ply:PrintMessage(2, "argument invalid")
+		return 
+	end
+	local P = FindPlayer(args[1])
+	if not ValidEntity(P) then
+		ply:PrintMessage(2, "Player not found!")
+	end
+	ply:PrintMessage(2, "Nick: ".. P:Nick())
+	ply:PrintMessage(2, "Steam name: "..P:SteamName())
+	ply:PrintMessage(2, "Steam ID: "..P:SteamID())
+end
+concommand.Add("rp_lookup", LookPersonUp)
+
 /*---------------------------------------------------------
  Items
  ---------------------------------------------------------*/
