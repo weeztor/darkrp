@@ -63,6 +63,18 @@ function meta:OwnedBy(ply)
 	return false
 end
 
+function meta:AllowedToOwn(ply)
+	local num = self:GetNWInt("AllowedNum")
+
+	for n = 1, num do
+		if self:GetNWInt("Allowed" .. n) == ply:EntIndex() then
+			return true
+		end
+	end
+
+	return false
+end
+
 /*---------------------------------------------------------
  Serverside part
  ---------------------------------------------------------*/
@@ -198,18 +210,6 @@ function meta:UnOwn(ply)
 			self:SetNWInt("Allowed" .. n, -1)
 		end
 	end
-end
-
-function meta:AllowedToOwn(ply)
-	local num = self:GetNWInt("AllowedNum")
-
-	for n = 1, num do
-		if self:GetNWInt("Allowed" .. n) == ply:EntIndex() then
-			return true
-		end
-	end
-
-	return false
 end
 
 function meta:AddAllowed(ply)
