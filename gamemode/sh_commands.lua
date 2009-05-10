@@ -387,6 +387,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcps <Number> - Maximum number of
 AddValueCommand("rp_pocketitems", "pocketitems", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pocketitems <Number> - Sets the amount of objects the pocket can carry")
 
+AddValueCommand("rp_paydelay", "paydelay", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_paydelay <Number> - Sets how long it takes before people get salary")
+
 for k,v in pairs(RPExtraTeams) do
 	if SERVER then
 		if not CfgVars["max"..v.command.."s"] then

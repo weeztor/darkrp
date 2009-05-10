@@ -139,8 +139,6 @@ local function RefreshSettings(RESET)
 	CfgVars["propspawning"] = 1 --Prop spawning enabled?
 	CfgVars["adminsents"] = 1 --Should all SENTs be admin only?
 	CfgVars["adminsweps"] = 1 --Should all sweps be admin only?
-	CfgVars["cpvote"] = 1 --Should people be able to use /votecop?
-	CfgVars["mayorvote"] = 1 --Should people be able to use /votemayor?
 	CfgVars["enforceplayermodel"] = 1 --Should player models be enforced? (Bans using player models like zombie/combine/etc)
 	CfgVars["proppaying"] = 0 --Should players pay for props
 	CfgVars["letters"] = 1 --Allow letter writing
@@ -156,7 +154,6 @@ local function RefreshSettings(RESET)
 	CfgVars["allowmedics"] = 1 -- Should Medics be allowed?
 	CfgVars["allowdealers"] = 1 -- Should Gun Dealers be allowed?
 	CfgVars["allowcooks"] = 1 -- Should Cooks be allowed?
-	CfgVars["allowhobos"] = 1 -- Disable hobos? :(
 	CfgVars["customspawns"] = 1 -- Custom spawn points enabled?
 	CfgVars["earthquakes"] = 1 -- Should earthquakes be enabled?
 	CfgVars["dmautokick"] = 1 -- Enable deathmatch auto-kick
@@ -179,6 +176,8 @@ local function RefreshSettings(RESET)
 	CfgVars["babygod"] = 0
 	CfgVars["needwantedforarrest"] = 0
 	CfgVars["voiceradius"] = 0
+	CfgVars["license"] = 1
+	CfgVars["pocket"] = 1
 
 	-- You can set the exact value of the below items:
 
@@ -213,8 +212,6 @@ local function RefreshSettings(RESET)
 	CfgVars["wantedtime"] = 120 -- Amount of time a player is wanted for
 	CfgVars["lotterycommitcost"] = 50
 	CfgVars["babygodtime"] = 5
-	CfgVars["license"] = 1
-	CfgVars["pocket"] = 1
 	CfgVars["pocketitems"] = 10
 	CfgVars["mobagenda"] = ""
 
