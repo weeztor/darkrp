@@ -388,9 +388,6 @@ function GM:PlayerSpawn(ply)
 		ply:CrosshairDisable()
 	end
 	
-	ply:GetTable().RPLicenseSpawn = true
-	timer.Simple(1, removelicense, ply)
-	
 	--Kill any colormod
 	local RP = RecipientFilter()
 	RP:RemoveAllPlayers()
@@ -511,6 +508,9 @@ end
 
 function GM:PlayerLoadout(ply)
 	if RPArrestedPlayers[ply:SteamID()] then return end
+	
+	ply:GetTable().RPLicenseSpawn = true
+	timer.Simple(1, removelicense, ply)
 
 	local team = ply:Team()
 
