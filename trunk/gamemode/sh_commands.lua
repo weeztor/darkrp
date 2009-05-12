@@ -390,22 +390,149 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pocketitems <Number> - Sets the amo
 AddValueCommand("rp_paydelay", "paydelay", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_paydelay <Number> - Sets how long it takes before people get salary")
 
-for k,v in pairs(RPExtraTeams) do
-	if SERVER then
-		if not CfgVars["max"..v.command.."s"] then
-			CfgVars["max"..v.command.."s"] = v.max
-			SetGlobalInt("max"..v.command.."s", v.max)
-		end
-		if not CfgVars["allow"..v.command] then
-			CfgVars["allow"..v.command] = 1
-			SetGlobalInt("allow"..v.command, 1)
+function AddTeamCommands(CTeam)
+	local k = 0
+	for num,v in pairs(RPExtraTeams) do
+		if v.command == CTeam.command then
+			k = num
 		end
 	end
-	AddValueCommand("rp_max"..v.command.."s", "max"..v.command.."s", false)
-	AddToggleCommand("rp_allow"..v.command, "allow"..v.command, false, true)
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..v.command.. " [Nick|SteamID|UserID] - Make a player become a "..v.name..".")
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allow"..v.command.." - Enable/disable "..v.name)
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..v.command.."s".." <Number> - Sets max "..v.name.."s.")
+	AddValueCommand("rp_max"..CTeam.command.."s", "max"..CTeam.command.."s", false)
+	AddToggleCommand("rp_allow"..CTeam.command, "allow"..CTeam.command, false, true)
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..CTeam.command.. " [Nick|SteamID|UserID] - Make a player become a "..CTeam.name..".")
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allow"..CTeam.command.." - Enable/disable "..CTeam.name)
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..CTeam.command.."s".." <Number> - Sets max "..CTeam.name.."s.")
+	if CLIENT then return end
+	if not CfgVars["max"..CTeam.command.."s"] then
+		CfgVars["max"..CTeam.command.."s"] = CTeam.max
+		SetGlobalInt("max"..CTeam.command.."s", CTeam.max)
+	end
+	if not CfgVars["allow"..CTeam.command] then
+		CfgVars["allow"..CTeam.command] = 1
+		SetGlobalInt("allow"..CTeam.command, 1)
+	end
+	if CTeam.Vote then
+		AddChatCommand("/vote"..CTeam.command, function(ply)
+			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
+				Notify(ply, 1, 4, CTeam.name.." is disabled!")
+				return ""
+			end
+			if #player.GetAll() == 1 then
+				Notify(ply, 1, 4, "You're the only one in the server so you won the vote")
+				ply:ChangeTeam(k+9)
+				return ""
+			end
+			if not ply:ChangeAllowed(9 + k) then
+				Notify(ply, 1, 4, "You're either banned from this team or you were demoted.)")
+				return ""
+			end
+			if CurTime() - ply:GetTable().LastVoteCop < 80 then
+				Notify(ply, 1, 4, "Wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before using /vote"..CTeam.command.."!")
+				return ""
+			end
+			if VoteCopOn then
+				Notify(ply, 1, 4,  "There is already a vote!")
+				return ""
+			end
+			if ply:Team() == (k + 9) then
+				Notify(ply, 1, 4,  "You're already "..CTeam.name.."!")
+				return ""
+			end
+			if team.NumPlayers(9 + k) >= CTeam.max then
+				Notify(ply, 1, 4,  "There can only be "..tostring(CTeam.max).." "..CTeam.name.." at a time!")
+				return ""
+			end
+			vote:Create(ply:Nick() .. ":\nwants to be "..CTeam.name, ply:EntIndex() .. "votecop", ply, 20, function(choice, ply)
+				VoteCopOn = false
+				if choice == 1 then
+					ply:ChangeTeam(k + 9)
+				else
+					NotifyAll(1, 4, ply:Nick() .. " has not been made "..CTeam.name.."!")
+				end
+			end)
+			ply:GetTable().LastVoteCop = CurTime()
+			VoteCopOn = true
+			return ""
+		end)
+		AddChatCommand("/"..CTeam.command, function(ply)
+			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
+				Notify(ply, 1, 4, CTeam.name.." is disabled!")
+				return ""
+			end
+			if CTeam.admin == 0 and not ply:IsAdmin() then
+				Notify(ply, 1, 4, "You must be an admin/make a vote to become "..CTeam.name.."!")
+				return ""
+			elseif CTeam.admin == 1 and ply:IsAdmin() and not ply:IsSuperAdmin() then
+				Notify(ply, 1, 4, "You have to make a vote to become "..CTeam.name.."!")
+				return ""
+			elseif CTeam.admin == 2 and ply:IsSuperAdmin() then
+				Notify(ply, 1, 4, "You have to make a vote to become "..CTeam.name.."!")
+				return ""
+			elseif CTeam.admin == 2 and ply:IsAdmin() then
+				Notify(ply, 1, 4, "You can't become "..CTeam.name.."!")
+				return "" 
+			end
+			ply:ChangeTeam(9 + k)
+			return ""
+		end)
+	else
+		AddChatCommand("/"..CTeam.command, function(ply)
+			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
+				Notify(ply, 1, 4, CTeam.name.." is disabled!")
+				return ""
+			end
+			if CTeam.admin == 1 and not ply:IsAdmin() then
+				Notify(ply, 1, 4, "You must be an admin to become "..CTeam.name.."!")
+				return ""
+			end
+			if CTeam.admin > 1 and not ply:IsSuperAdmin() then
+				Notify(ply, 1, 4, "You must be a super admin to become "..CTeam.name.."!")
+				return ""
+			end
+			ply:ChangeTeam(9 + k)
+			return ""
+		end)
+	end
+	
+	concommand.Add("rp_"..CTeam.command, function(ply, cmd, args)
+		if (ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN)) then
+			ply:PrintMessage(2, "You're not an admin!")
+			return
+        end
+		
+		if CTeam.admin > 1 and not ply:IsSuperAdmin() then
+			ply:PrintMessage(2, "You're not a super admin!")
+			return
+		end
+		
+		if CTeam.Vote then
+			if CTeam.admin == 1 and ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
+				ply:PrintMessage(2, "You're not a super admin!")
+				return
+			elseif CTeam.admin > 1 and ply:IsSuperAdmin() and ply:EntIndex() ~= 0 then
+				ply:PrintMessage(2, "You cannot make anyone "..CTeam.name.." because voting is on and admin is set to super admin. Make a vote...")
+				return
+			end
+		end
+		local target = FindPlayer(args[1])
+		
+        if (target) then
+			target:ChangeTeam(9 + k)
+			if (ply:EntIndex() ~= 0) then
+				nick = ply:Nick()
+			else
+				nick = "Console"
+			end
+			target:PrintMessage(2, nick .. " made you a " .. CTeam.name .. "!")
+        else
+			if (ply:EntIndex() == 0) then
+				print("Could not find player: " .. args[1])
+			else
+				ply:PrintMessage(2, "Could not find player: " .. args[1])
+			end
+			return
+        end
+	end)
 end
 
 function GenerateChatCommandHelp()

@@ -28,9 +28,13 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end
 		end)	
 	end
-	table.insert(RPExtraTeams, {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote), NeedToChangeFrom = NeedToChangeFrom, Haslicense = Haslicense})
+	local CustomTeam = {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote), NeedToChangeFrom = NeedToChangeFrom, Haslicense = Haslicense}
+	table.insert(RPExtraTeams, CustomTeam)
 	team.SetUp(9 + #RPExtraTeams, Name, color)
 	local Team = 9 + #RPExtraTeams
+	if SERVER then
+		timer.Simple(0.1, function(CustomTeam) AddTeamCommands(CustomTeam) end, CustomTeam)
+	end
 	return Team
 end
 
@@ -59,6 +63,3 @@ outside someone else's door]], {"weapon_bugbait"}, "hobo", 5, 0, 0, false)
 // TEAM_/DUDE IS WROOOOOONG !!!!!!
 // HAVING "/dude" IN THE COMMAND FIELD IS WROOOOOOOONG!!!!
 //ADD TEAMS UNDER THIS LINE:
-TEAM_PET = AddExtraTeam("Pet", Color(255, 200, 0, 255), "models/player/renamon_b5.mdl", [[Be someone's pet, make sure he treats you well.
-If you don't get treated well, bite him.
-Pet's can't have guns or toolgun(unless you're admin)]], {"bite"}, "pet", 1, 0, 0, false)
