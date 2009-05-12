@@ -30,9 +30,9 @@ function KnockoutToggle(player, command, args, caller)
 					for k,v in pairs(player.WeaponsForSleep) do
 						player:Give(v)
 					end
-					local cl_defaultweapon = ply:GetInfo( "cl_defaultweapon" )
-					if ( ply:HasWeapon( cl_defaultweapon )  ) then
-						ply:SelectWeapon( cl_defaultweapon ) 
+					local cl_defaultweapon = player:GetInfo( "cl_defaultweapon" )
+					if ( player:HasWeapon( cl_defaultweapon )  ) then
+						player:SelectWeapon( cl_defaultweapon ) 
 					end
 				else
 					GAMEMODE:PlayerLoadout(player)
@@ -110,6 +110,9 @@ local function DamageSleepers(ent, inflictor, attacker, amount, dmginfo)
 					v:SetPos(ent:GetPos())
 					v:SetHealth(1)
 					v:TakeDamage(1, inflictor, attacker)
+					if v.SleepSound then
+						v.SleepSound:Stop()
+					end
 					ent:Remove()
 				end
 			end

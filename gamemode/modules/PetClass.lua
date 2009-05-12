@@ -1,4 +1,9 @@
-if not TEAM_PET then return end
+if SERVER then includeCS("PetClass.lua") end
+TEAM_PET = AddExtraTeam("Pet", Color(255, 200, 0, 255), "models/player/renamon_b5.mdl", [[Be someone's pet, make sure he treats you well.
+If you don't get treated well, bite him.
+Pet's can't have guns or toolgun(unless you're admin)]], {"bite"}, "pet", 1, 0, 0, false)
+
+if CLIENT then return end
 // CREDITS FOR THE MODEL GO TO RAPTOR!
 resource.AddFile("materials/models/renamon/rena_light.vmt")
 resource.AddFile("materials/models/renamon/rena_light_n.vtf")

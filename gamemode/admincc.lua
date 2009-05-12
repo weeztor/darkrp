@@ -647,50 +647,7 @@ function ccgangster(ply, cmd, args)
 		return
 	end
 end
-concommand.Add("rp_gangster", ccgangster)
-
-for k,v in pairs(RPExtraTeams) do
-	concommand.Add("rp_"..v.command, function(ply, cmd, args)
-		if (ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN)) then
-			ply:PrintMessage(2, "You're not an admin!")
-			return
-        end
-		
-		if v.admin > 1 and not ply:IsSuperAdmin() then
-			ply:PrintMessage(2, "You're not a super admin!")
-			return
-		end
-		
-		if v.Vote then
-			if v.admin == 1 and ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-				ply:PrintMessage(2, "You're not a super admin!")
-				return
-			elseif v.admin > 1 and ply:IsSuperAdmin() and ply:EntIndex() ~= 0 then
-				ply:PrintMessage(2, "You cannot make anyone "..v.name.." because voting is on and admin is set to super admin. Make a vote...")
-				return
-			end
-		end
-		local target = FindPlayer(args[1])
-		
-        if (target) then
-			target:ChangeTeam(9 + k)
-			if (ply:EntIndex() ~= 0) then
-				nick = ply:Nick()
-			else
-				nick = "Console"
-			end
-			target:PrintMessage(2, nick .. " made you a " .. v.name .. "!")
-        else
-			if (ply:EntIndex() == 0) then
-				print("Could not find player: " .. args[1])
-			else
-				ply:PrintMessage(2, "Could not find player: " .. args[1])
-			end
-			return
-        end
-	end)
-end
-		
+concommand.Add("rp_gangster", ccgangster)	
 
 function ccKickBan(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
