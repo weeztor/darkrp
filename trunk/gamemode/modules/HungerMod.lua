@@ -5,14 +5,6 @@ include("HungerMod/player.lua")
 HM = { }
 FoodItems = { }
 
---[[ DB.SaveGlobal("hungermod", 0)       --Hunger mod is enabled or disabled
-
-DB.SaveSetting("starverate", 3)      --How much health is taken away per second when starving
-DB.SaveSetting("hungerspeed", 1)       --How much energy should deteriate every second
-DB.SaveSetting("foodcost", 15)       --Cost of food
-DB.SaveSetting("foodpay", 1)     --Whether there's a special spawning price for food
-DB.SaveSetting("foodspawn", 1) ]]
-
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
 	if not ply:IsAdmin() then Notify(ply, 1, 4, "You're not an admin") return end
 	if not args[1] then Notify(ply, 1, 4, "No arguments specified!") return end
@@ -27,76 +19,6 @@ function HM.PlayerSpawn(ply)
 	ply:SetNWInt("Energy", 100)
 end
 hook.Add("PlayerSpawn", "HM.PlayerSpawn", HM.PlayerSpawn)
-
-function HM.PlayerSpawnProp(ply, model)
-	for k, v in pairs(FoodItems) do
-		if v.model == model then
-			if GetGlobalInt("foodspawn") == 0 and ply:Team() ~= TEAM_COOK then return false end
-
-			if (GetGlobalInt("hungermod") == 1 or ply:Team() == TEAM_COOK) and CfgVars["foodpay"] == 1 then
-				if not GAMEMODE.BaseClass:PlayerSpawnProp(ply, model) then return false end
-
-				if RPArrestedPlayers[ply:SteamID()] then return false end
-
-				if (CfgVars["allowedprops"] == 0 and CfgVars["banprops"] == 0) or ply:HasPriv(ADMIN) then allowed = true end
-
-				if CfgVars["propspawning"] == 0 then return false end
-
-				if CfgVars["allowedprops"] == 1 then
-					for n, m in pairs(AllowedProps) do
-						if m == model then allowed = true end
-					end
-				end
-
-				if CfgVars["banprops"] == 1 then
-					for n, m in pairs(BannedProps) do
-						if m == model then return false end
-					end
-				end
-
-				local cost = CfgVars["foodcost"]
-
-				if ply:CanAfford(cost) then
-					ply:AddMoney(-cost)
-				else
-					Notify(ply, 1, 4, "Need " .. math.floor(cost) .. " bucks!")
-					return false
-				end
-				Notify(ply, 1, 4, "You bought a "..k)
-				
-				local vStart = ply:GetShootPos() 
-				local vForward = ply:GetAimVector() 
-			   
-				local trace = {} 
-				trace.start = vStart 
-				trace.endpos = vStart + (vForward * 2048) 
-				trace.filter = ply 
-				 
-				local tr = util.TraceLine( trace )
-				local food = ents.Create("spawned_food")
-				local ang = ply:EyeAngles() 
-				ang.yaw = ang.yaw + 180 // Rotate it 180 degrees in my favour 
-				ang.roll = 0 
-				ang.pitch = 0 
-				food:SetModel( model ) 
-				food:SetAngles( ang ) 
-				food:SetPos( tr.HitPos ) 
-				food:Spawn() 
-				food:Activate() 
-				food:SetNWString("Owner", "Shared")
-				local vFlushPoint = tr.HitPos - ( tr.HitNormal * 512 )
-				vFlushPoint = food:NearestPoint( vFlushPoint )
-				vFlushPoint = food:GetPos() - vFlushPoint
-				vFlushPoint = tr.HitPos + vFlushPoint	
-				food:SetPos( vFlushPoint )
-				//food:GetTable().FoodItem = 1
-				food:GetTable().FoodEnergy = v.amount
-				return false
-			end
-		end
-	end
-end
-hook.Add("PlayerSpawnProp", "HM.PlayerSpawnProp", HM.PlayerSpawnProp)
 
 function HM.Think()
 	if GetGlobalInt("hungermod") ~= 1 then return end
