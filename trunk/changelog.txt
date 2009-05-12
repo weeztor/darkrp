@@ -70,7 +70,6 @@ SVN version
 [CHANGE] The way of saving settings and globals, it now doesn't use text files but SQL
 [CHANGE] Admins can touch world props to players can touch world props so players can pick up world items.
 [CHANGE] Chiefs can now change to cops by doing /cp
-[CHANGE] You will buy a door instantly when there would be only one button in the keys menu
 [CHANGE] When there's only one option in the keys menu, it will do that option instantly without opening the menu
 [CHANGE] Made all yell,whisper,pm ETC. in colour!!!
 [CHANGE] Helplabel structure(now MUCH faster!)
