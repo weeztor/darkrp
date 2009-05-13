@@ -37,6 +37,10 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 	end
 	return Team
 end
+if file.Exists("CustomTeams.txt") then
+	RunString(file.Read("CustomTeams.txt"))
+	if SERVER then resource.AddFile("data/CustomTeams.txt") end
+end
 
 /*
 --------------------------------------------------------
