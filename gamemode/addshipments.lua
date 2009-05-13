@@ -25,11 +25,13 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
 end
 
-if file.Exists("CustomShipments.txt") then
-	RunString(file.Read("CustomShipments.txt"))
-	if SERVER then resource.AddFile("data/CustomShipments.txt") end
-end
-
+hook.Add("InitPostEntity", "AddShipments", function()
+	if file.Exists("CustomShipments.txt") then
+		RunString(file.Read("CustomShipments.txt"))
+		if SERVER then resource.AddFile("data/CustomShipments.txt") end
+		if CLIENT and not LocalPlayer():IsSuperAdmin() then file.Delete("CustomShipments.txt") end
+	end
+end)
 /*
 HOW TO ADD CUSTOM SHIPMENTS:
 AddCustomShipment("<Name of the shipment(no spaces)>"," <the model that the shipment spawns(should be the world model...)>", "<the classname of the weapon>", <the price of one shipment>, <how many guns there are in one shipment>, <OPTIONAL: true/false sold seperately>, <OPTIONAL: price when sold seperately>, < true/false OPTIONAL: /buy only = true> , OPTIONAL which classes can buy the shipment, OPTIONAL: the model of the shipment)

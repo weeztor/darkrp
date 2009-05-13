@@ -37,10 +37,14 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 	end
 	return Team
 end
-if file.Exists("CustomTeams.txt") then
-	RunString(file.Read("CustomTeams.txt"))
-	if SERVER then resource.AddFile("data/CustomTeams.txt") end
-end
+
+hook.Add("InitPostEntity", "AddTeams", function()
+	if file.Exists("CustomTeams.txt") then
+		RunString(file.Read("CustomTeams.txt"))
+		if SERVER then resource.AddFile("data/CustomTeams.txt") end
+		if CLIENT and not LocalPlayer():IsSuperAdmin() then file.Delete("CustomTeams.txt") end
+	end
+end)
 
 /*
 --------------------------------------------------------
