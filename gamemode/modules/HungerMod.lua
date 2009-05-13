@@ -5,6 +5,13 @@ include("HungerMod/player.lua")
 HM = { }
 FoodItems = { }
 
+if not CfgVars["starverate"] then
+	CfgVars["starverate"] = 3      --How much health is taken away per second when starving
+	CfgVars["hungerspeed"] = 1       --How much energy should deteriate every second
+	CfgVars["foodcost"] = 15       --Cost of food
+	CfgVars["foodpay"] = 1     --Whether there's a special spawning price for food
+end
+
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
 	if not ply:IsAdmin() then Notify(ply, 1, 4, "You're not an admin") return end
 	if not args[1] then Notify(ply, 1, 4, "No arguments specified!") return end
