@@ -1,5 +1,8 @@
 include("static_data.lua")
 DB.privcache = {}
+/*---------------------------------------------------------
+ Database initialize
+ ---------------------------------------------------------*/
 function DB.Init()
 	sql.Begin()
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_settings('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
@@ -23,6 +26,9 @@ function DB.Init()
 	DB.SetUpNonOwnableDoors()
 end
 
+/*---------------------------------------------------------
+ The privileges
+ ---------------------------------------------------------*/
 function DB.CreatePrivs()
 	sql.Begin()
 	if reset_all_privileges_to_these_on_startup then
@@ -51,54 +57,6 @@ function DB.CreatePrivs()
 			already_inserted[RPAdmins[k]] = true
 		end
 	end
-	sql.Commit()
-end
-
-function DB.CreateJailPos()
-	if not jail_positions then return end
-	local map = string.lower(game.GetMap())
-
-	local once = false
-	sql.Begin()
-		for k, v in pairs(jail_positions) do
-			if map == string.lower(v[1]) then
-				if not once then
-					sql.Query("DELETE FROM darkrp_jailpositions;")
-					once = true
-				end
-				sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. v[2] .. ", " .. v[3] .. ", " .. v[4] .. ", " .. 0 .. ");")
-			end
-		end
-	sql.Commit()
-end
-
-function DB.CreateSpawnPos()
-	local map = string.lower(game.GetMap())
-	if not team_spawn_positions then return end
-
-	for k, v in pairs(team_spawn_positions) do
-		if v[1] == map then
-			DB.StoreTeamSpawnPos(v[2], Vector(v[3], v[4], v[5]))
-		end
-	end
-end
-
-function DB.CreateZombiePos()
-	if not zombie_spawn_positions then return end
-	local map = string.lower(game.GetMap())
-
-	local once = false
-	sql.Begin()
-
-		for k, v in pairs(zombie_spawn_positions) do
-			if map == string.lower(v[1]) then
-				if not once then
-					sql.Query("DELETE FROM darkrp_zspawns;")
-					once = true
-				end
-				sql.Query("INSERT INTO darkrp_zspawns VALUES(" .. sql.SQLStr(map) .. ", " .. v[2] .. ", " .. v[3] .. ", " .. v[4] .. ");")
-			end
-		end
 	sql.Commit()
 end
 
@@ -189,136 +147,37 @@ function DB.RevokePriv(ply, priv)
 	return true
 end
 
-function DB.StoreJailPos(ply, addingPos)
+/*---------------------------------------------------------
+ positions
+ ---------------------------------------------------------*/
+function DB.CreateSpawnPos()
 	local map = string.lower(game.GetMap())
-	local pos = string.Explode(" ", tostring(ply:GetPos()))
-	local already = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";"))
-	if not already or already == 0 then
-		sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
-		Notify(ply, 1, 4,  "First jail position created!")
-	else
-		if addingPos then
-			sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
-			Notify(ply, 1, 4,  "Extra jail position added!")
-		else
-			sql.Begin()
-			sql.Query("DELETE FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";")
-			sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
-			sql.Commit()
-			Notify(ply, 1, 5,  "Removed all jail positions and added a new one here")
+	if not team_spawn_positions then return end
+
+	for k, v in pairs(team_spawn_positions) do
+		if v[1] == map then
+			DB.StoreTeamSpawnPos(v[2], Vector(v[3], v[4], v[5]))
 		end
 	end
 end
 
-function DB.RetrieveJailPos()
+function DB.CreateZombiePos()
+	if not zombie_spawn_positions then return end
 	local map = string.lower(game.GetMap())
-	local r = sql.Query("SELECT x, y, z, lastused FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";")
-	if not r then return Vector(0,0,0) end
 
-	-- Retrieve the least recently used jail position
-	local now = CurTime()
-	local oldest = 0
-	local ret = nil
+	local once = false
+	sql.Begin()
 
-	for _, row in pairs(r) do
-		if (now - tonumber(row.lastused)) > oldest then
-			oldest = (now - tonumber(row.lastused))
-			ret = row
+		for k, v in pairs(zombie_spawn_positions) do
+			if map == string.lower(v[1]) then
+				if not once then
+					sql.Query("DELETE FROM darkrp_zspawns;")
+					once = true
+				end
+				sql.Query("INSERT INTO darkrp_zspawns VALUES(" .. sql.SQLStr(map) .. ", " .. v[2] .. ", " .. v[3] .. ", " .. v[4] .. ");")
+			end
 		end
-	end
-
-	-- Mark that position as having been used just now
-	sql.Query("UPDATE darkrp_jailpositions SET lastused = " .. CurTime() .. " WHERE map = " .. sql.SQLStr(map) .. " AND x = " .. ret.x .. " AND y = " .. ret.y .. " AND z = " .. ret.z .. ";")
-
-	return Vector(ret.x, ret.y, ret.z)
-end
-
-function DB.CountJailPos()
-	return tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";"))
-end
-
-function DB.StoreJailStatus(ply, time)
-	local steamID = ply:SteamID()
-	-- Is there an existing outstanding jail sentence for this player?
-	local r = tonumber(sql.QueryValue("SELECT time FROM darkrp_wiseguys WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
-
-	
-	if not r and time ~= 0 then
-		-- If there is no jail record for this player and we're not trying to clear an existing one
-		sql.Query("INSERT INTO darkrp_wiseguys VALUES(" .. sql.SQLStr(steamID) .. ", " .. time .. ");")
-	else
-		-- There is a jail record for this player
-		if time == 0 then
-			-- If we are reducing their jail time to zero, delete their record
-			sql.Query("DELETE FROM darkrp_wiseguys WHERE steam = " .. sql.SQLStr(steamID) .. ";")
-		else
-			-- Increase this player's sentence by the amount specified
-			sql.Query("UPDATE darkrp_wiseguys SET time = " .. r + time .. " WHERE steam = " .. sql.SQLStr(steamID) .. ");")
-		end
-	end
-end
-
-function DB.RetrieveJailStatus(ply)
-	-- How much time does this player owe in jail?
-	local r = tonumber(sql.QueryValue("SELECT time FROM darkrp_wiseguys WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
-	if r then
-		return r
-	else
-		return 0
-	end
-end
-
-function DB.StoreRPName(ply, name)
-	if not name or string.len(name) < 3 then return end
-	local r = sql.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
-	if r then
-		sql.Query("UPDATE darkrp_rpnames SET name = " .. sql.SQLStr(name) .. " WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
-	else
-		sql.Query("INSERT INTO darkrp_rpnames VALUES(" .. sql.SQLStr(ply:SteamID()) .. ", " .. sql.SQLStr(name) .. ");")
-	end
-
-	-- Change the owner of all props to the new name
-	for k, v in pairs(ents.FindByClass("prop_*")) do
-		if v:GetNWString("Owner") == ply:Name() then
-			v:SetNWString("Owner", name)
-		end
-	end
-	ply:SetNWString("rpname", name)
-end
-
-function DB.RetrieveRPNames()
-	local r = sql.Query("SELECT * FROM darkrp_rpnames;")
-	if r then return r else return {} end
-end
-
-function DB.RetrieveRPName(ply)
-	return sql.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
-end
-
-function DB.StoreTeamSpawnPos(t, pos)
-	local map = string.lower(game.GetMap())
-	local already = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_tspawns WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";"))
-	if not already or already == 0 then
-		sql.Query("INSERT INTO darkrp_tspawns VALUES(" .. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
-		print(team.GetName(t).."'s spawn position created.")
-	else
-		sql.Query("UPDATE darkrp_tspawns SET x = " .. pos[1] .. ", y = " .. pos[2] .. ", z = " .. pos[3] .. " WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";")
-		print(team.GetName(t).."'s spawn position updated.")
-	end
-end
-
-function DB.RetrieveTeamSpawnPos(ply)
-	local map = string.lower(game.GetMap())
-	local t = ply:Team()
-	
-	-- this should return a map name.
-	local r = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
-	if not r then return nil end
-	
-	local x = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
-	local y = sql.QueryValue("SELECT y FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
-	local z = sql.QueryValue("SELECT z FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
-	return Vector(x,y,z)
+	sql.Commit()
 end
 
 function DB.StoreZombies()
@@ -408,6 +267,159 @@ function DB.RetrieveRandomZombieSpawnPos()
 	return Vector(r.x, r.y, r.z) + Vector(0,0,70)        
 end
 
+function DB.CreateJailPos()
+	if not jail_positions then return end
+	local map = string.lower(game.GetMap())
+
+	local once = false
+	sql.Begin()
+		for k, v in pairs(jail_positions) do
+			if map == string.lower(v[1]) then
+				if not once then
+					sql.Query("DELETE FROM darkrp_jailpositions;")
+					once = true
+				end
+				sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. v[2] .. ", " .. v[3] .. ", " .. v[4] .. ", " .. 0 .. ");")
+			end
+		end
+	sql.Commit()
+end
+
+function DB.StoreJailPos(ply, addingPos)
+	local map = string.lower(game.GetMap())
+	local pos = string.Explode(" ", tostring(ply:GetPos()))
+	local already = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";"))
+	if not already or already == 0 then
+		sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
+		Notify(ply, 1, 4,  "First jail position created!")
+	else
+		if addingPos then
+			sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
+			Notify(ply, 1, 4,  "Extra jail position added!")
+		else
+			sql.Begin()
+			sql.Query("DELETE FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";")
+			sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
+			sql.Commit()
+			Notify(ply, 1, 5,  "Removed all jail positions and added a new one here")
+		end
+	end
+end
+
+function DB.RetrieveJailPos()
+	local map = string.lower(game.GetMap())
+	local r = sql.Query("SELECT x, y, z, lastused FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";")
+	if not r then return Vector(0,0,0) end
+
+	-- Retrieve the least recently used jail position
+	local now = CurTime()
+	local oldest = 0
+	local ret = nil
+
+	for _, row in pairs(r) do
+		if (now - tonumber(row.lastused)) > oldest then
+			oldest = (now - tonumber(row.lastused))
+			ret = row
+		end
+	end
+
+	-- Mark that position as having been used just now
+	sql.Query("UPDATE darkrp_jailpositions SET lastused = " .. CurTime() .. " WHERE map = " .. sql.SQLStr(map) .. " AND x = " .. ret.x .. " AND y = " .. ret.y .. " AND z = " .. ret.z .. ";")
+
+	return Vector(ret.x, ret.y, ret.z)
+end
+
+function DB.CountJailPos()
+	return tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";"))
+end
+
+function DB.StoreJailStatus(ply, time)
+	local steamID = ply:SteamID()
+	-- Is there an existing outstanding jail sentence for this player?
+	local r = tonumber(sql.QueryValue("SELECT time FROM darkrp_wiseguys WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
+
+	
+	if not r and time ~= 0 then
+		-- If there is no jail record for this player and we're not trying to clear an existing one
+		sql.Query("INSERT INTO darkrp_wiseguys VALUES(" .. sql.SQLStr(steamID) .. ", " .. time .. ");")
+	else
+		-- There is a jail record for this player
+		if time == 0 then
+			-- If we are reducing their jail time to zero, delete their record
+			sql.Query("DELETE FROM darkrp_wiseguys WHERE steam = " .. sql.SQLStr(steamID) .. ";")
+		else
+			-- Increase this player's sentence by the amount specified
+			sql.Query("UPDATE darkrp_wiseguys SET time = " .. r + time .. " WHERE steam = " .. sql.SQLStr(steamID) .. ");")
+		end
+	end
+end
+
+function DB.StoreTeamSpawnPos(t, pos)
+	local map = string.lower(game.GetMap())
+	local already = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_tspawns WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";"))
+	if not already or already == 0 then
+		sql.Query("INSERT INTO darkrp_tspawns VALUES(" .. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
+		print(team.GetName(t).."'s spawn position created.")
+	else
+		sql.Query("UPDATE darkrp_tspawns SET x = " .. pos[1] .. ", y = " .. pos[2] .. ", z = " .. pos[3] .. " WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";")
+		print(team.GetName(t).."'s spawn position updated.")
+	end
+end
+
+function DB.RetrieveTeamSpawnPos(ply)
+	local map = string.lower(game.GetMap())
+	local t = ply:Team()
+	
+	-- this should return a map name.
+	local r = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
+	if not r then return nil end
+	
+	local x = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
+	local y = sql.QueryValue("SELECT y FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
+	local z = sql.QueryValue("SELECT z FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
+	return Vector(x,y,z)
+end
+
+/*---------------------------------------------------------
+Players 
+ ---------------------------------------------------------*/
+function DB.RetrieveJailStatus(ply)
+	-- How much time does this player owe in jail?
+	local r = tonumber(sql.QueryValue("SELECT time FROM darkrp_wiseguys WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
+	if r then
+		return r
+	else
+		return 0
+	end
+end
+
+function DB.StoreRPName(ply, name)
+	if not name or string.len(name) < 3 then return end
+	local r = sql.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
+	if r then
+		sql.Query("UPDATE darkrp_rpnames SET name = " .. sql.SQLStr(name) .. " WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
+	else
+		sql.Query("INSERT INTO darkrp_rpnames VALUES(" .. sql.SQLStr(ply:SteamID()) .. ", " .. sql.SQLStr(name) .. ");")
+	end
+
+	-- Change the owner of all props to the new name
+	for k, v in pairs(ents.FindByClass("prop_*")) do
+		if v:GetNWString("Owner") == ply:Name() then
+			v:SetNWString("Owner", name)
+		end
+	end
+	ply:SetNWString("rpname", name)
+end
+
+function DB.RetrieveRPNames()
+	local r = sql.Query("SELECT * FROM darkrp_rpnames;")
+	if r then return r else return {} end
+end
+
+function DB.RetrieveRPName(ply)
+	return sql.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
+end
+
 function DB.StoreMoney(ply, amount)
 	if not ValidEntity(ply) then return end
 	if amount < 0  then return end
@@ -489,6 +501,9 @@ function DB.RetrieveSalary(ply)
 	end
 end
 
+/*---------------------------------------------------------
+ Doors
+ ---------------------------------------------------------*/
 function DB.StoreDoorOwnability(ent)
 	local map = string.lower(game.GetMap())
 	local nonOwnable = ent:GetNWBool("nonOwnable")
@@ -548,6 +563,9 @@ function DB.SetUpCPOwnableDoors()
 	end
 end
 
+/*---------------------------------------------------------
+ Settings and globals
+ ---------------------------------------------------------*/
 function DB.RetrieveSettings()
 	local r = sql.Query("SELECT key, value FROM darkrp_settings;")
 	if not r then return false end
