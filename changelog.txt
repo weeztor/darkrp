@@ -60,6 +60,7 @@ SVN version
 [FIX] Ironsights, they were fucked up
 [FIX] mp_falldamage not working
 [FIX] Chat bug after gamemode_reload(developer's thing)
+[FIX] Health showing below 0
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
