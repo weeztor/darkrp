@@ -4,7 +4,7 @@ AddCSLuaFile( "shared.lua" )
 include('shared.lua')
 
 function ENT:Initialize()
-	self:SetModel("models/props/cs_italy/bananna.mdl")
+	self:SetModel("models/weapons/w_camphone.mdl")
 	self.Entity:PhysicsInit( SOLID_VPHYSICS )
 	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
 	self.Entity:SetSolid( SOLID_VPHYSICS )
