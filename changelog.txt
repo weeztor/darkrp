@@ -22,6 +22,7 @@ SVN version
 [ADD] Banana phone! You can call people for 1$ per 20 seconds!
 [ADD] DarkRP map pattern(in create server/start singleplayer) THANKS \/\/()?|\/|Š
 [ADD] rp_lookup command, look players up(nick, steam name, steam ID)
+[ADD] Custom vehicle support!
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
