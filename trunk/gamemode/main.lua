@@ -1005,15 +1005,61 @@ function BuyShipment(ply, args)
 end
 AddChatCommand("/buyshipment", BuyShipment)
 
-function BuyDrugLab(ply)
+function BuyVehicle(ply, args)
+	if RPArrestedPlayers[ply:SteamID()] then return "" end
 	if args == "" then return "" end
-
+	local found = false
+	for k,v in pairs(CustomVehicles) do
+		if string.lower(v.name) == string.lower(args) then found = CustomVehicles[k] break end
+	end
+	if not found then return "" end
+	if not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, "You don't have the correct job!") return ""  end	
+	if not ply:CanAfford(found.price) then Notify(ply, 1, 4, "need "..CUR..found.price.."!") return "" end
+	ply:AddMoney(-found.price)
+	Notify(ply, 1, 4, "You bought a "..found.name.." for " .. CUR .. found.price)
+	
+	local Vehicle = list.Get("Vehicles")[found.name]
+	if not Vehicle then Notify(ply, 1, 4, "Invalid vehicle!") return "" end
+	
 	local trace = {}
 	trace.start = ply:EyePos()
 	trace.endpos = trace.start + ply:GetAimVector() * 85
 	trace.filter = ply
+	local tr = util.TraceLine(trace)
+	
+	local ent = ents.Create(Vehicle.Class)
+	if not ent then return "" end
+	ent:SetModel(Vehicle.Model)
+	if Vehicle.KeyValues then
+		for k, v in pairs( Vehicle.KeyValues ) do
+			ent:SetKeyValue( k, v )
+		end            
+	end
+	
+	local Angles = ply:GetAngles()
+	Angles.pitch = 0
+	Angles.roll = 0
+	Angles.yaw = Angles.yaw + 180
+	ent:SetAngles(Angles)
+	ent:SetPos(tr.HitPos)
+	ent.VehicleName = found.Name
+	ent.VehicleTable = found
+	ent:SetNWString("Owner", ply:Nick())
+	ent:Spawn()
+	ent:Activate()
+	ent.ClassOverride = Vehicle.Class
+	return ""
+end
+AddChatCommand("/buyvehicle", BuyVehicle)
 
+function BuyDrugLab(ply)
+	if args == "" then return "" end
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
+	
+	local trace = {}
+	trace.start = ply:EyePos()
+	trace.endpos = trace.start + ply:GetAimVector() * 85
+	trace.filter = ply
 	
 	if ply:Team() ~= TEAM_GANG and ply:Team() ~= TEAM_MOB then
 		Notify(ply, 1, 4, "Must be a gangster or mobboss!")

@@ -595,6 +595,7 @@ function EntitiesTab()
 			WepCat:SetLabel("Weapons")
 				local WepPanel = vgui.Create("DPanelList")
 				WepPanel:SetSize(470, 100)
+				WepPanel:SetAutoSize(true)
 				WepPanel:SetSpacing(1)
 				WepPanel:EnableHorizontal(true)
 				WepPanel:EnableVerticalScrollbar(true)
@@ -628,6 +629,7 @@ function EntitiesTab()
 			EntCat:SetLabel("Entities")
 				local EntPanel = vgui.Create("DPanelList")
 				EntPanel:SetSize(470, 200)
+				EntPanel:SetAutoSize(true)
 				EntPanel:SetSpacing(1)
 				EntPanel:EnableHorizontal(true)
 				EntPanel:EnableVerticalScrollbar(true)
@@ -667,6 +669,42 @@ function EntitiesTab()
 					end
 			EntCat:SetContents(EntPanel)
 			self:AddItem(EntCat)
+			
+			
+			if #CustomVehicles <= 0 then return end
+			local VehicleCat = vgui.Create("DCollapsibleCategory")
+			VehicleCat:SetLabel("Vehicles")
+				local VehiclePanel = vgui.Create("DPanelList")
+				VehiclePanel:SetSize(470, 200)
+				VehiclePanel:SetAutoSize(true)
+				VehiclePanel:SetSpacing(1)
+				VehiclePanel:EnableHorizontal(true)
+				VehiclePanel:EnableVerticalScrollbar(true)
+				local function AddVehicleIcon(Model, description, command)
+					local icon = vgui.Create("SpawnIcon")
+					icon:InvalidateLayout( true ) 
+					icon:SetModel(Model)
+					icon:SetIconSize(64)
+					icon:SetToolTip(description)
+					icon.DoClick = function() LocalPlayer():ConCommand("say "..command) end
+					VehiclePanel:AddItem(icon)
+				end
+				
+				local founds = 0
+				for k,v in pairs(CustomVehicles) do
+					if table.HasValue(v.allowed, LocalPlayer():Team()) then
+						local Vehicle = list.Get("Vehicles")[v.name]
+						AddVehicleIcon(Vehicle.Model, "Buy a "..Vehicle.Name.." for "..CUR..v.price, "/buyvehicle "..v.name)
+						founds = founds + 1
+					end
+				end
+			if founds ~= 0 then
+				VehicleCat:SetContents(VehiclePanel)
+				self:AddItem(VehicleCat)
+			else
+				VehiclePanel:Remove()
+				VehicleCat:Remove()
+			end
 		end
 	EntitiesPanel:Update()	
 	return EntitiesPanel

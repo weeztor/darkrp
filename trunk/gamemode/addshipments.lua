@@ -1,3 +1,4 @@
+CustomVehicles = {}
 CustomShipments = {}
 function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shipment, Sold_seperately, price_seperately, noshipment, classes, shipmodel)
 	if not name or not model or not entity or not price or not Amount_of_guns_in_one_shipment or (Sold_seperately and not price_seperately) then
@@ -25,6 +26,32 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
 end
 
+function AddCustomVehicle(Name_of_vehicle, price, Jobs_that_can_buy_it)
+	local function warn()
+		local text = "FAILURE IN CUSTOM VEHICLE, YOU MADE IT WRONG. LOOK AT IT CAREFULLY!"
+		print(text)
+		hook.Add("PlayerSpawn", "VehicleError", function(ply)
+			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end end)		
+	end
+	if not Name_of_vehicle or not price then
+		warn()
+		return
+	end
+	local found = false
+	for k,v in pairs(list.Get("Vehicles")) do
+		if string.lower(k) == string.lower(Name_of_vehicle) then found = true break end
+	end
+	if not found then
+		warn()
+		return
+	end
+	if type(Jobs_that_can_buy_it) ~= "table" then
+		Jobs_that_can_buy_it = {}
+		for k,v in pairs(team.GetAllTeams()) do table.insert(Jobs_that_can_buy_it, k) end
+	end
+	table.insert(CustomVehicles, {name = Name_of_vehicle, price = price, allowed = Jobs_that_can_buy_it})
+end
+
 hook.Add("InitPostEntity", "AddShipments", function()
 	if file.Exists("CustomShipments.txt") then
 		RunString(file.Read("CustomShipments.txt"))
@@ -32,7 +59,20 @@ hook.Add("InitPostEntity", "AddShipments", function()
 		if CLIENT and not LocalPlayer():IsSuperAdmin() then file.Delete("CustomShipments.txt") end
 	end
 end)
+
 /*
+How to add custom vehicles:
+FIRST
+go ingame, type rp_getvehicles for available vehicles!
+then:
+AddCustomVehicle(<One of the vehicles from the rp_getvehicles list>, <Price of the vehicle>, <OPTIONAL jobs that can buy the vehicle>)
+Examples:
+AddCustomVehicle("Jeep", 100)
+AddCustomVehicle("Airboat", 600, {TEAM_GUN})
+AddCustomVehicle("Airboat", 600, {TEAM_GUN, TEAM_MEDIC})
+
+Add those lines under your custom shipments. At the bottom of this file or in data/CustomShipments.txt
+
 HOW TO ADD CUSTOM SHIPMENTS:
 AddCustomShipment("<Name of the shipment(no spaces)>"," <the model that the shipment spawns(should be the world model...)>", "<the classname of the weapon>", <the price of one shipment>, <how many guns there are in one shipment>, <OPTIONAL: true/false sold seperately>, <OPTIONAL: price when sold seperately>, < true/false OPTIONAL: /buy only = true> , OPTIONAL which classes can buy the shipment, OPTIONAL: the model of the shipment)
 

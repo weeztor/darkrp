@@ -984,3 +984,11 @@ local function AddToChat(msg)
 	chat.PlaySound()
 end
 usermessage.Hook("DarkRP_Chat", AddToChat)
+
+function GetAvailableVehicles()
+	print("Available vehicles for custom vehicles:")
+	for k,v in pairs(list.Get("Vehicles")) do
+		print("\""..k.."\"")
+	end
+end
+concommand.Add("rp_getvehicles", GetAvailableVehicles)
