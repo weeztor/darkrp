@@ -1229,7 +1229,7 @@ local function MakeACall(ply,args)
 	trace.filter = p
 	local tr = util.TraceLine(trace)
 	
-	local banana = ents.Create("banana_phone")
+	local banana = ents.Create("phone")
 	
 	banana:SetNWEntity("owning_ent", p)
 	banana:SetNWString("Owner", "Shared") 
@@ -1241,7 +1241,7 @@ local function MakeACall(ply,args)
 	banana:Spawn()
 	
 	
-	local ownphone = ents.Create("banana_phone")
+	local ownphone = ents.Create("phone")
 	
 	ownphone:SetNWEntity("owning_ent", ply)
 	ownphone:SetNWString("Owner", "Shared") 
