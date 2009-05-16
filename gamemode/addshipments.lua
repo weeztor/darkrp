@@ -54,7 +54,7 @@ end
 
 hook.Add("InitPostEntity", "AddShipments", function()
 	if file.Exists("CustomShipments.txt") then
-		RunString(file.Read("CustomShipments.txt"))
+		timer.Simple(2, RunString, file.Read("CustomShipments.txt"))
 		if SERVER then resource.AddFile("data/CustomShipments.txt") end
 		if CLIENT and not LocalPlayer():IsSuperAdmin() then file.Delete("CustomShipments.txt") end
 	end
@@ -116,3 +116,4 @@ EXAMPLES OF CUSTOM SHIPMENTS(remove the // to activate it): */
 --EXAMPLE OF A BOUNCY BALL:   		NOTE THAT YOU HAVE TO PRESS E REALLY QUICKLY ON THE BOMB OR YOU'LL EAT THE BALL LOL
 --AddCustomShipment("bball", "models/Combine_Helicopter/helicopter_bomb01.mdl", "sent_ball", 100, 10, true, 10, true)
 -- ADD CUSTOM SHIPMENTS HERE(next line):
+
