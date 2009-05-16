@@ -28,7 +28,6 @@ SVN version
 [FIX] People being able to spawn inside each other
 [FIX] rp_max<custom team> erroring sometimes and breaking the whole fucking gamemode
 [FIX] rp_grant breaking when the console enters it
-[FIX] Stupid and retarded error in the player possessor :downs:
 [FIX] Atefood icon showing for everyone
 [FIX] Prop protection toggle not working
 [FIX] Normalsalary being stored twice.
