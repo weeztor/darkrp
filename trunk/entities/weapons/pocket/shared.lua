@@ -103,6 +103,7 @@ function SWEP:PrimaryAttack()
 	trace.Entity:SetNoDraw(true)
 	trace.Entity:SetCollisionGroup(0)
 	local phys = trace.Entity:GetPhysicsObject()
+	phys:EnableMotion(true)
 	trace.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	if phys:IsValid() then
 		phys:EnableCollisions(false)
