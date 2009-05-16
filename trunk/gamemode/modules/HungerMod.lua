@@ -110,7 +110,23 @@ function BuyFood(ply, args)
 				Notify(ply, 1, 4, "Can not afford this!")
 				return ""
 			end
-			ply:ConCommand("gm_spawn " .. v.model)
+			local cost = CfgVars["foodcost"]		
+			if ply:CanAfford(cost) then
+				ply:AddMoney(-cost)
+			else
+				Notify(ply, 1, 4, "Need " .. math.floor(cost) .. " bucks!")
+				return
+			end
+			Notify(ply, 1, 4, "You bought a "..k)
+			local SpawnedFood = ents.Create("spawned_food")
+			SpawnedFood:SetNWEntity("owning_ent", ply)
+			SpawnedFood:SetNWString("Owner", "Shared") -- So people can run off with them!
+			SpawnedFood:SetPos(tr.HitPos)
+			SpawnedFood.onlyremover = true
+			SpawnedFood.SID = ply.SID
+			SpawnedFood:SetModel(v.model)
+			SpawnedFood.FoodEnergy = v.amount
+			SpawnedFood:Spawn()
 		end
 	end
 	return ""
