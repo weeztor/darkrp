@@ -698,3 +698,19 @@ function RefreshGlobals()
 		end
 	end
 end
+
+/*---------------------------------------------------------
+ Logging
+ ---------------------------------------------------------*/
+function DB.Log(text)
+	if not util.tobool(CfgVars["logging"]) then return end
+	if not DB.File then -- The log file of this session, if it's not there then make it!
+		if not file.IsDir("DarkRP_logs") then
+			file.CreateDir("DarkRP_logs")
+		end
+		DB.File = "DarkRP_logs/"..os.date("%m_%d_%Y %I_%M %p")..".txt"
+		file.Write(DB.File, os.date().. "\t".. text)
+		return
+	end
+	file.Write(DB.File, file.Read(DB.File).."\n"..os.date().. "\t"..text)
+end

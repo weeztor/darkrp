@@ -416,6 +416,7 @@ function meta:ChangeTeam(t)
 	end
 
 	self:SetTeam(t)
+	DB.Log(self:SteamName().." ("..self:SteamID()..") changed to "..team.GetName(t))
 	if self:InVehicle() then self:ExitVehicle() end
 	if CfgVars["norespawn"] == 1 and self:Alive() then
 		self:StripWeapons()

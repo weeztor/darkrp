@@ -177,6 +177,7 @@ local function RefreshSettings(RESET)
 	CfgVars["voiceradius"] = 0
 	CfgVars["license"] = 1
 	CfgVars["pocket"] = 1
+	CfgVars["logging"] = 1
 
 	-- You can set the exact value of the below items:
 
