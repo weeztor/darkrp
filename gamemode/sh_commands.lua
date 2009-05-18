@@ -221,6 +221,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_teletojail - Enable/disable tele
 AddToggleCommand("rp_telefromjail", "telefromjail", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_telefromjail - Enable/disable teleporting from jail.")
 
+AddToggleCommand("rp_logging", "logging", false, true)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_logging - Enable/disable logging everything that happens.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------

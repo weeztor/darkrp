@@ -13,11 +13,16 @@ function GM:PlayerSpawnProp(ply, model)
 
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	model = string.gsub(model, "\\", "/")
-	if string.find(model,  "//") then Notify(ply, 1, 4, "Cannot spawn props because it has one or more //'s in it") return false end
+	if string.find(model,  "//") then Notify(ply, 1, 4, "Cannot spawn props because it has one or more //'s in it") 
+	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with double // "..model) return false end
 	-- Banned props take precedence over allowed props
 	if CfgVars["banprops"] == 1 then
 		for k, v in pairs(BannedProps) do
-			if string.lower(v) == string.lower(model) then Notify(ply, 1, 4, "Cannot spawn this prop because it is banned") return false end
+			if string.lower(v) == string.lower(model) then 
+				Notify(ply, 1, 4, "Cannot spawn this prop because it is banned") 
+				DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn banned prop "..model)
+				return false 
+			end
 		end
 	end
 
@@ -262,6 +267,9 @@ function GM:PlayerDeath(ply, weapon, killer)
 		ply:GetTable().Slayed = false
 	end
 	ply:GetTable().ConfisquatedWeapons = nil
+	if weapon:IsPlayer() then weapon = weapon:GetActiveWeapon() killer = killer:SteamName() if ( !weapon || weapon == NULL ) then weapon = killer else weapon = weapon:GetClass() end end
+	if killer == ply then killer = "Himself" weapon = "suicide trick" end
+	DB.Log(ply:Nick() .. " was killed by "..tostring(killer) .. " with a "..tostring(weapon))
 end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
@@ -373,6 +381,7 @@ end
 
 function GM:PlayerInitialSpawn(ply)
 	self.BaseClass:PlayerInitialSpawn(ply)
+	DB.Log(ply:SteamName().." ("..ply:SteamID()..") has joined the game")
 	ply.bannedfrom = {}
 	ply:NewData()
 	ply:InitSID()
@@ -504,6 +513,7 @@ function GM:PlayerSpawn(ply)
 	ply:GetTable().StartHealth = ply:Health()
 	GAMEMODE:PlayerSetModel(ply)
 	GAMEMODE:PlayerLoadout( ply )
+	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned")
 end
 
 function GM:PlayerLoadout(ply)
@@ -605,6 +615,7 @@ function GM:PlayerDisconnected(ply)
 		DB.StoreJailStatus(ply, math.ceil(GetGlobalInt("jailtimer")))
 	end
 	ply:UnownAll()
+	DB.Log(ply:SteamName().." ("..ply:SteamID()..") disconnected")
 end
 
 function GM:Think()
