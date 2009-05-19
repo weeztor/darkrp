@@ -4,7 +4,6 @@ SVN version
 [ADD] rp_needwantedforarrest to prevent cops from random arresting
 [ADD] /channel and /radio command: Set your radio to a channel and talk through the radio so everyone with the same channel hears you.
 [ADD] Hobo's can make zombie sounds by right clicking with the bugbait :P -- idea thanks to GoDNeSS
-[ADD] Pet job, IF YOU DONT LIKE IT, REMOVE THE JOB FROM SHARED.LUA AND NOONE WILL NOTICE ANYTHING ABOUT THE PET! -- THANKS GoDNeSS!
 [ADD] Eating food makes the TF2 nom sound(bad luck if you don't have TF2)
 [ADD] Poo and pee mod :D enable with rp_poopeemod 1
 [ADD] Anti slobbot server crash
