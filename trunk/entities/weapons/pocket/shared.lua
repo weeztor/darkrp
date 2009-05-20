@@ -256,8 +256,8 @@ elseif SERVER then
 			
 			if not ValidEntity(ent) then return end
 			if SERVER then
-				self:SetWeaponHoldType("pistol")
-				timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+				ply:GetActiveWeapon():SetWeaponHoldType("pistol")
+				timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, ply:GetActiveWeapon())
 			end
 			
 			local trace = {}
