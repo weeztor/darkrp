@@ -57,7 +57,7 @@ function ENT:Use(activator,caller)
 	local owner = self.Entity:GetNWEntity("owning_ent")
 	self.Entity:SetNWEntity("user", activator)
 	if not activator:CanAfford(self:SalePrice(activator)) then
-		Notify(activator, 1, 3, "Can not afford this!")
+		Notify(activator, 1, 3, "You do not have enough money to purchase food!")
 		return ""
 	end
 	local diff = (self:SalePrice(activator) - self:SalePrice(owner))
@@ -66,7 +66,7 @@ function ENT:Use(activator,caller)
 		return ""
 	end
 	if (activator:GetNWInt("maxFoods") >= CfgVars["maxfoods"]) then
-		Notify(activator, 1, 3, "Max Food Reached!")
+		Notify(activator, 1, 3, "You have reached the food limit.")
 	elseif not self.Once then
 		self.Once = true
 		self.Entity:SetNWBool("sparking", true)
@@ -75,7 +75,7 @@ function ENT:Use(activator,caller)
 		local cash = self:SalePrice(activator)
 
 		activator:AddMoney(cash * -1)
-		Notify(activator, 1, 3, "You bought food for " .. CUR .. tostring(cash) .. "!")
+		Notify(activator, 1, 3, "You have purchased food for " .. CUR .. tostring(cash) .. "!")
 
 		if activator ~= owner then
 			local gain = 0

@@ -102,7 +102,7 @@ function SWEP:PrimaryAttack()
 			trace.Entity:Fire("unlock", "", .5)
 			trace.Entity:Fire("open", "", .6)
 		else
-			Notify(self.Owner, 1, 3, "You need a warrant!")
+			Notify(self.Owner, 1, 5, "You need a warrant in order to be able to unlock this door.")
 		end
 	elseif (trace.Entity:IsVehicle()) then
 		trace.Entity:Fire("unlock", "", .5)
@@ -114,7 +114,7 @@ function SWEP:PrimaryAttack()
 		if c then
 			trace.Entity:GetPhysicsObject( ):EnableMotion( true ) 
 		else
-			Notify(self.Owner, 1, 3,"He is not warranted!")
+			Notify(self.Owner, 1, 5,"You need a warrant in order to be able to unfreeze this prop.")
 		end
 	end
 	self.Owner:ViewPunch(Angle(-10, math.random(-5, 5), 0))

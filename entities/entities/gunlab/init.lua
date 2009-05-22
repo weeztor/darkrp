@@ -62,7 +62,7 @@ function ENT:Use(activator)
 	
 	self.Entity:SetNWEntity("user", activator)
 	if not activator:CanAfford(self:SalePrice(activator)) then
-		Notify(activator, 1, 3, "Can not afford this!")
+		Notify(activator, 1, 3, "You do not have enough money to purchase this gun.")
 		return ""
 	end
 	local diff = (self:SalePrice(activator) - self:SalePrice(owner))
@@ -75,7 +75,7 @@ function ENT:Use(activator)
 	if not self.Once then
 		self.Once = true
 		activator:AddMoney(cash * -1)
-		Notify(activator, 1, 3, "You bought a P228 for " .. CUR .. tostring(cash) .. "!")
+		Notify(activator, 1, 3, "You purchased a P228 for " .. CUR .. tostring(cash) .. "!")
 		
 		if activator ~= owner then
 			local gain = 0

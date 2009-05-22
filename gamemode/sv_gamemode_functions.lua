@@ -1,6 +1,7 @@
 /*---------------------------------------------------------
  Gamemode functions
  ---------------------------------------------------------*/
+-- Grammar corrections by Eusion
 function GM:Initialize()
 	self.BaseClass:Initialize()
 	DB.Init()
@@ -13,13 +14,13 @@ function GM:PlayerSpawnProp(ply, model)
 
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	model = string.gsub(model, "\\", "/")
-	if string.find(model,  "//") then Notify(ply, 1, 4, "Cannot spawn props because it has one or more //'s in it") 
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with double // "..model) return false end
+	if string.find(model,  "//") then Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model) 
+	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with an invalid path "..model) return false end
 	-- Banned props take precedence over allowed props
 	if CfgVars["banprops"] == 1 then
 		for k, v in pairs(BannedProps) do
 			if string.lower(v) == string.lower(model) then 
-				Notify(ply, 1, 4, "Cannot spawn this prop because it is banned") 
+				Notify(ply, 1, 4, "You can't spawn this prop as it is banned. "..model) 
 				DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn banned prop "..model)
 				return false 
 			end
@@ -145,7 +146,7 @@ function GM:KeyPress(ply, code)
 			end
 
 			if tr.Entity:GetTable().MoneyBag then
-				Notify(ply, 0, 4, "You found " .. CUR .. tr.Entity:GetTable().Amount .. "!")
+				Notify(ply, 0, 4, "You have found " .. CUR .. tr.Entity:GetTable().Amount .. "!")
 				ply:AddMoney(tr.Entity:GetTable().Amount)
 				tr.Entity:Remove()
 			end
@@ -200,11 +201,11 @@ end
 
 function GM:CanPlayerSuicide(ply)
 	if ply:GetNWInt("slp") == 1 then
-		Notify(ply, 4, 4, "Can not suicide while sleeping!")
+		Notify(ply, 4, 4, "You can't suicide whilst sleeping.")
 		return false
 	end
 	if RPArrestedPlayers[ply:SteamID()] then
-		Notify(ply, 4, 4, "You cannot suicide in jail.")
+		Notify(ply, 4, 4, "You can't suicide whilst in jail.")
 		return false
 	end
 	return true
@@ -421,7 +422,7 @@ function GM:PlayerSpawn(ply)
 		if DB.RetrieveJailPos() then
 			ply:Arrest()
 		else
-			Notify(ply, 1, 4, "You're no longer under arrest because no jail positions are set!")
+			Notify(ply, 1, 4, "You're no longer under arrest since no jail positions are set!")
 		end
 	end
 	
@@ -608,6 +609,12 @@ function GM:PlayerDisconnected(ply)
 	end
 	for k, v in pairs(ents.FindByClass("drug")) do
 		if v.SID == ply.SID then v:Remove() end
+	end
+	
+	for k,v in pairs(ents.GetAll()) do 
+		if v:IsVehicle() and v.SID == ply.SID then
+			v:Remove()
+		end
 	end
 	vote.DestroyVotesWithEnt(ply)
 	-- If you're arrested when you disconnect, you will serve your time again when you reconnect!

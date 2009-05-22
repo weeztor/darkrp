@@ -84,7 +84,7 @@ function ReMoveZombie(ply, index)
 			Notify(ply, 1, 4, "Zombie Spawn " .. tostring(index) .. " does not exist.")
 		else
 			DB.RetrieveZombies()
-			Notify(ply, 1, 4, "Zombie spawn removed.")
+			Notify(ply, 1, 4, "You have removed this zombie spawn.")
 			table.remove(zombieSpawns,index)
 			DB.StoreZombies()
 			if ply:GetNWBool("zombieToggle") then
@@ -92,7 +92,7 @@ function ReMoveZombie(ply, index)
 			end
 		end
 	else
-		Notify(ply, 1, 4, "Must be an admin.")
+		Notify(ply, 1, 4, "You need admin privileges in order to be able to remove zombie positions.")
 	end
 	return ""
 end
@@ -104,9 +104,9 @@ function AddZombie(ply)
 		table.insert(zombieSpawns, tostring(ply:GetPos()))
 		DB.StoreZombies()
 		if ply:GetNWBool("zombieToggle") then LoadTable(ply) end
-		Notify(ply, 1, 4, "Zombie spawn added.")
+		Notify(ply, 1, 4, "You have added a zombie spawn.")
 	else
-		Notify(ply, 1, 4, "Must be an admin.")
+		Notify(ply, 1, 6, "You need admin privileges in order to be able to add a zombie spawn.")
 	end
 	return ""
 end
@@ -118,13 +118,13 @@ function ToggleZombie(ply)
 			DB.RetrieveZombies()
 			ply:SetNWBool("zombieToggle", true)
 			LoadTable(ply)
-			Notify(ply, 1, 4, "Show Zombies Enabled")
+			Notify(ply, 1, 4, "You will now be able to see zombie spawns.")
 		else
 			ply:SetNWBool("zombieToggle", false)
-			Notify(ply, 1, 4, "Show Zombies Disabled")
+			Notify(ply, 1, 4, "You will now be unable to see zombie spawns")
 		end
 	else
-		Notify(ply, 1, 4, "Must be an admin.")
+		Notify(ply, 1, 6, "You need admin privileges in order to be able to see the zombie spawns.")
 	end
 	return ""
 end
@@ -189,11 +189,11 @@ end
 function ZombieMax(ply, args)
 	if ply:HasPriv(ADMIN) then
 		if not tonumber(args) then
-			Notify(ply, 1, 4, "INVALID NUMBER!")
+			Notify(ply, 1, 4, "The number entered is invalid.")
 			return ""
 		end
 		maxZombie = tonumber(args)
-		Notify(ply, 1, 4, "Max zombies set.")
+		Notify(ply, 1, 4, "Max zombies is now set to "..args..".")
 	end
 
 	return ""
@@ -203,7 +203,7 @@ AddChatCommand("/zombiemax", ZombieMax)
 function StartZombie(ply)
 	if ply:HasPriv(ADMIN) then
 		timer.Start("zombieControl")
-		Notify(ply, 1, 4, "Zombies enabled.")
+		Notify(ply, 1, 4, "Zombies are now enabled.")
 	end
 	return ""
 end
@@ -215,7 +215,7 @@ function StopZombie(ply)
 		zombieOn = false
 		timer.Stop("start2")
 		ZombieEnd()
-		Notify(ply, 1, 4, "Zombies disabled.")
+		Notify(ply, 1, 4, "Zombies are now disabled.")
 		return ""
 	end
 end
@@ -286,7 +286,7 @@ end
 function StartStorm(ply)
 	if ply:HasPriv(ADMIN) then
 		timer.Start("stormControl")
-		Notify(ply, 1, 4, "Meteor Storm enabled.")
+		Notify(ply, 1, 4, "Meteor Storms are now enabled.")
 	end
 	return ""
 end
@@ -298,7 +298,7 @@ function StopStorm(ply)
 		stormOn = false
 		timer.Stop("start")
 		StormEnd()
-		Notify(ply, 1, 4, "Meteor Storm disabled.")
+		Notify(ply, 1, 4, "Meteor Storms are now disabled.")
 		return ""
 	end
 end
@@ -473,7 +473,7 @@ AddChatCommand("/weapondrop", DropWeapon)
 function UnWarrant(ply, target)
 	if not target:GetNWBool("warrant") then return end
 	target:SetNWBool("warrant", false)
-	Notify(ply, 1, 4, "Search warrant for " .. target:Nick() .. " has expired!")
+	Notify(ply, 1, 4, "The search warrant for " .. target:Nick() .. " has expired!")
 end 
 
 function SetWarrant(ply, target)
@@ -482,7 +482,7 @@ function SetWarrant(ply, target)
 	for a, b in pairs(player.GetAll()) do
 		b:PrintMessage(HUD_PRINTCENTER, "Search warrant approved for " .. target:Nick() .. "!")
 	end
-	Notify(ply, 1, 4, "You can search his house now.")
+	Notify(ply, 1, 4, "You are now able to search his house.")
 end
 
 function FinishWarrant(choice, mayor, initiator, target)
@@ -497,7 +497,7 @@ end
 function SearchWarrant(ply, args)
 	local t = ply:Team()
 	if not (t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF) then
-		Notify(ply, 1, 4, "You must be a Cop or the Mayor.")
+		Notify(ply, 1, 4, "You must be a cop or the Mayor in order to be able to make a warrant.")
 	else
 		local p = FindPlayer(args)
 		if p and p:Alive() then
@@ -516,7 +516,7 @@ function SearchWarrant(ply, args)
 				-- If we found the mayor
 				if m ~= nil then
 					-- request a search warrent for player "p"
-					ques:Create(ply:Nick() .. " wants a search warrant for " .. p:Nick(), p:EntIndex() .. "warrant", m, 40, FinishWarrant, ply, p)
+					ques:Create(ply:Nick() .. " requests a search warrant for " .. p:Nick(), p:EntIndex() .. "warrant", m, 40, FinishWarrant, ply, p)
 					Notify(ply, 1, 4, "Search warrant request sent to Mayor " .. m:Nick() .. "!")
 				else
 					-- there is no mayor, CPs can set warrants.
@@ -535,7 +535,7 @@ AddChatCommand("/warrent", SearchWarrant) -- Most players can't spell for some r
 function PlayerWanted(ply, args)
 	local t = ply:Team()
 	if not (t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF) then
-		Notify(ply, 1, 4, "You must be a Cop or the Mayor.")
+		Notify(ply, 1, 6, "You must be a Cop or the Mayor in order to be able to make someone wanted.")
 	else
 		local p = FindPlayer(args)
 		if p and p:Alive() then
@@ -555,7 +555,7 @@ AddChatCommand("/wanted", PlayerWanted)
 function PlayerUnWanted(ply, args)
 	local t = ply:Team()
 	if not (t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF) then
-		Notify(ply, 1, 4, "You must be a Cop or the Mayor.")
+		Notify(ply, 1, 6, "You must be a Cop or the Mayor in order to be able to make someone unwanted.")
 	else
 		local p = FindPlayer(args)
 		if p and p:Alive() then
@@ -597,37 +597,37 @@ function SetSpawnPos(ply, args)
 
 	if args == "citizen" then
 		t = TEAM_CITIZEN
-		Notify(ply, 1, 4,  "Citizen Spawn Position set.")
+		Notify(ply, 1, 4, "You have set the Citizen Spawn Position.")
 	elseif args == "cp" then
 		t = TEAM_POLICE
-		Notify(ply, 1, 4,  "CP Spawn Position set.")
+		Notify(ply, 1, 4, "You have set the CP Spawn Position.")
 	elseif args == "mayor" then
 		t = TEAM_MAYOR
-		Notify(ply, 1, 4,  "Mayor Spawn Position set.")
+		Notify(ply, 1, 4, "You have set the Mayor Spawn Position.")
 	elseif args == "gangster" then
 		t = TEAM_GANG
-		Notify(ply, 1, 4,  "Gangster Spawn Position set.")
+		Notify(ply, 1, 4, "You have set the Gangster Spawn Position.")
 	elseif args == "mobboss" then
 		t = TEAM_MOB
-		Notify(ply, 1, 4,  "Mob Boss Spawn Position set.")
+		Notify(ply, 1, 4, "You have set the mob boss Spawn Position.")
 	elseif args == "gundealer" then
 		t = TEAM_GUN
-		Notify(ply, 1, 4,  "Gun Dealer Spawn Position set.")
+		Notify(ply, 1, 4, "You have set the Gun Dealer Spawn Position.")
 	elseif args == "medic" then
 		t = TEAM_MEDIC
-		Notify(ply, 1, 4,  "Medic Spawn Position set.")
+		Notify(ply, 1, 4, "You have set the Medic Spawn Position.")
 	elseif args == "cook" then
 		t = TEAM_COOK
-		Notify(ply, 1, 4,  "Cook Spawn Position set.")
+		Notify(ply, 1, 4, "You have set the Cook Spawn Position.")
 	elseif args == "chief" then
 		t = TEAM_CHIEF
-		Notify(ply, 1, 4,  "Chief Spawn Position set.")
+		Notify(ply, 1, 4, "You have set the Chief Spawn Position.")
 	end
 	
 	for k,v in pairs(RPExtraTeams) do
 		if args == v.command then
 			t = 9 + k
-			Notify(ply, 1, 4,  v.name .. " Spawn Position set.")
+			Notify(ply, 1, 4, "You have set the ".. v.name .. " Spawn Position.")
 		end
 	end
 
@@ -719,12 +719,12 @@ local function MakeLetter(ply, args, type)
 	end
 
 	if ply:GetNWInt("maxletters") >= CfgVars["maxletters"] then
-		Notify(ply, 1, 4, "Max Letters reached!")
+		Notify(ply, 1, 4, "You have reached the letters limit.")
 		return ""
 	end
 
 	if CurTime() - ply:GetTable().LastLetterMade < 3 then
-		Notify(ply, 1, 4, "Wait another " .. math.ceil(3 - (CurTime() - ply:GetTable().LastLetterMade)) .. " seconds before writing another letter!")
+		Notify(ply, 1, 4, "You need to wait another " .. math.ceil(3 - (CurTime() - ply:GetTable().LastLetterMade)) .. " seconds before writing another letter!")
 		return ""
 	end
 
@@ -810,7 +810,7 @@ function SetPrice(ply, args)
 	if ValidEntity(tr.Entity) and (tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave") or tr.Entity:GetClass() == "drug_lab") and tr.Entity.SID == ply.SID then
 		tr.Entity:SetNWInt("price", b)
 	else
-		Notify(ply, 1, 4, "Must be looking at a Gun Lab, druglab or Microwave!")
+		Notify(ply, 1, 4, "You You need to be looking at a Gun Lab, druglab or Microwave!")
 	end
 	return ""
 end
@@ -882,7 +882,7 @@ function BuyPistol(ply, args)
 	end
 	
 	if not class then
-		Notify(ply, 1, 4, "Weapon not available!")
+		Notify(ply, 1, 4, "This weapon is not available!")
 		return ""
 	end
 	
@@ -899,13 +899,13 @@ function BuyPistol(ply, args)
 	end
 	
 	if not ply:CanAfford(price) then
-		Notify(ply, 1, 4, "Can not afford this!")
+		Notify(ply, 1, 4, "You You can not afford this!")
 		return ""
 	end
 	
 	ply:AddMoney(-price)
 	
-	Notify(ply, 1, 4, "You bought a " .. args .. " for " .. CUR .. tostring(price))
+	Notify(ply, 1, 4, "You have bought a " .. args .. " for " .. CUR .. tostring(price))
 	
 	local weapon = ents.Create("spawned_weapon")
 	weapon:SetModel(model)
@@ -943,7 +943,7 @@ function BuyShipment(ply, args)
 	for k, v in pairs(rifleWeights) do
 		if k == args then found = true 
 			if ply:Team() ~= TEAM_GUN then
-				Notify(ply, 1, 4, "Must be a Gun Dealer to buy gun shipments!")
+				Notify(ply, 1, 4, "You must be a Gun Dealer to buy gun shipments!")
 				return ""
 			end
 		end
@@ -958,14 +958,14 @@ function BuyShipment(ply, args)
 				end
 			end
 			if not canbecome then
-				Notify(ply, 1, 4, "Cannot buy this shipment because you don't have the correct class!")
+				Notify(ply, 1, 4, "You can not buy this shipment because you don't have the correct class!")
 				return "" 
 			end
 		end
 	end
 	
 	if not found then
-		Notify(ply, 1, 4, "Weapon not available!")
+		Notify(ply, 1, 4, "This weapon is not available!")
 		return ""
 	end
 	
@@ -977,12 +977,12 @@ function BuyShipment(ply, args)
 	end
 	
 	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "Can not afford this!")
+		Notify(ply, 1, 4, "You You can not afford this!")
 		return ""
 	end
 	
 	ply:AddMoney(-cost)
-	Notify(ply, 1, 4, "You bought a Shipment of " .. args .. "s for " .. CUR .. tostring(cost))
+	Notify(ply, 1, 4, "You have bought a Shipment of " .. args .. "s for " .. CUR .. tostring(cost))
 	local crate = ents.Create("spawned_shipment")
 	crate.SID = ply.SID
 	if found == true then
@@ -1013,13 +1013,13 @@ function BuyVehicle(ply, args)
 		if string.lower(v.name) == string.lower(args) then found = CustomVehicles[k] break end
 	end
 	if not found then return "" end
-	if not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, "You don't have the correct job!") return ""  end	
+	if not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, "You don't have the right job!") return ""  end	
 	if not ply:CanAfford(found.price) then Notify(ply, 1, 4, "need "..CUR..found.price.."!") return "" end
 	ply:AddMoney(-found.price)
-	Notify(ply, 1, 4, "You bought a "..found.name.." for " .. CUR .. found.price)
+	Notify(ply, 1, 4, "You have bought a "..found.name.." for " .. CUR .. found.price)
 	
 	local Vehicle = list.Get("Vehicles")[found.name]
-	if not Vehicle then Notify(ply, 1, 4, "Invalid vehicle!") return "" end
+	if not Vehicle then Notify(ply, 1, 4, "This is an invalid vehicle!") return "" end
 	
 	local trace = {}
 	trace.start = ply:EyePos()
@@ -1047,6 +1047,7 @@ function BuyVehicle(ply, args)
 	ent:SetNWString("Owner", ply:Nick())
 	ent:Spawn()
 	ent:Activate()
+	ent.SID = ply.SID
 	ent.ClassOverride = Vehicle.Class
 	return ""
 end
@@ -1062,7 +1063,7 @@ function BuyDrugLab(ply)
 	trace.filter = ply
 	
 	if ply:Team() ~= TEAM_GANG and ply:Team() ~= TEAM_MOB then
-		Notify(ply, 1, 4, "Must be a gangster or mobboss!")
+		Notify(ply, 1, 4, "You must be a gangster or mobboss!")
 		return "" 
 	end
 
@@ -1070,15 +1071,15 @@ function BuyDrugLab(ply)
 
 	local cost = GetGlobalInt("druglabcost")
 	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "Can not afford this!")
+		Notify(ply, 1, 4, "You You can not afford this!")
 		return ""
 	end
 	if ply:GetNWInt("maxDrug") == CfgVars["maxdruglabs"] then
-		Notify(ply, 1, 4, "Max Drug Labs reached!")
+		Notify(ply, 1, 4, "You have reached the limit of druglabs.")
 		return ""
 	end
 	ply:AddMoney(-cost)
-	Notify(ply, 1, 4, "You bought a Drug Lab for " .. CUR .. tostring(cost))
+	Notify(ply, 1, 4, "You have bought a Drug Lab for " .. CUR .. tostring(cost))
 	local druglab = ents.Create("drug_lab")
 	druglab:SetNWEntity("owning_ent", ply)
 	druglab:SetNWString("Owner", ply:Nick())
@@ -1104,18 +1105,18 @@ function BuyMicrowave(ply)
 	local cost = GetGlobalInt("microwavecost")
 
 	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "Can not afford this!")
+		Notify(ply, 1, 4, "You You can not afford this!")
 		return ""
 	end
 
 	if ply:GetNWInt("maxmicrowaves") == CfgVars["maxmicrowaves"] then
-		Notify(ply, 1, 4, "Max Microwaves reached!")
+		Notify(ply, 1, 4, "You have reached the limit of microwaves.")
 		return ""
 	end
 
 	if ply:Team() == TEAM_COOK then
 		ply:AddMoney(-cost)
-		Notify(ply, 1, 4, "You bought a Microwave for " .. CUR .. tostring(cost))
+		Notify(ply, 1, 4, "You have bought a Microwave for " .. CUR .. tostring(cost))
 		local microwave = ents.Create("microwave")
 		microwave:SetNWInt("price", GetGlobalInt("microwavefoodcost"))
 		microwave:SetNWEntity("owning_ent", ply)
@@ -1127,7 +1128,7 @@ function BuyMicrowave(ply)
 		microwave.SID = ply.SID
 		return ""
 	else
-		Notify(ply, 1, 4, "You must be a Cook to buy this!")
+		Notify(ply, 1, 4, "You need to be a Cook to be able to buy this!")
 	end
 	return ""
 end
@@ -1147,16 +1148,16 @@ function BuyGunlab(ply)
 	local cost = GetGlobalInt("gunlabcost")
 
 	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "Can not afford this!")
+		Notify(ply, 1, 4, "You You can not afford this!")
 		return ""
 	end
 	if ply:GetNWInt("maxgunlabs") == CfgVars["maxgunlabs"] then
-		Notify(ply, 1, 4, "Max Gun Labs reached!")
+		Notify(ply, 1, 4, "You have reached the limit of gunlabs!")
 		return ""
 	end
 	if ply:Team() == TEAM_GUN then
 		ply:AddMoney(-cost)
-		Notify(ply, 1, 4, "You bought a Gun Lab for " .. CUR .. tostring(cost))
+		Notify(ply, 1, 4, "You have bought a Gun Lab for " .. CUR .. tostring(cost))
 		local gunlab = ents.Create("gunlab")
 		gunlab:SetNWEntity("owning_ent", ply)
 		gunlab:SetNWString("Owner", ply:Nick())
@@ -1168,7 +1169,7 @@ function BuyGunlab(ply)
 		gunlab.SID = ply.SID
 		return ""
 	else
-		Notify(ply, 1, 4, "Must be a Gun Dealer!")
+		Notify(ply, 1, 4, "You need to be a Gun Dealer!")
 	end
 	return ""
 end
@@ -1186,17 +1187,17 @@ function BuyMoneyPrinter(ply, args)
 	local cost = GetGlobalInt("mprintercost")
 	if cost == 0 then cost = 1000 end
 	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "Can not afford this!")
+		Notify(ply, 1, 4, "You You can not afford this!")
 		return ""
 	end
 
 	if ply:GetNWInt("maxmprinters") >= CfgVars["maxmprinters"] then
-		Notify(ply, 1, 4, "Max Money Printers reached!")
+		Notify(ply, 1, 4, "You have reached the limit of money printers!")
 		return ""
 	end
 
 	ply:AddMoney(-cost)
-	Notify(ply, 1, 4, "You bought a Money Printer for " .. CUR .. tostring(cost))
+	Notify(ply, 1, 4, "You have bought a Money Printer for " .. CUR .. tostring(cost))
 	local moneyprinter = ents.Create("money_printer")
 	moneyprinter:SetNWEntity("owning_ent", ply)
 	moneyprinter:SetNWString("Owner", "Shared") -- So people can run off with them!
@@ -1214,16 +1215,16 @@ function BuyAmmo(ply, args)
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
 
 	if CfgVars["noguns"] == 1 then
-		Notify(ply, 1, 4, "Guns are disabled so why buy ammo?!")
+		Notify(ply, 1, 4, "You can not buy ammo because guns are disabled.")
 		return ""
 	end
 	
 	if args ~= "rifle" and args ~= "shotgun" and args ~= "pistol" then
-		Notify(ply, 1, 4, "That ammo is not available!")
+		Notify(ply, 1, 4, "That ammo type is not available!")
 	end
 	
 	if not ply:CanAfford(GetGlobalInt("ammo" .. args .. "cost")) then
-		Notify(ply, 1, 4, "Can not afford this!")
+		Notify(ply, 1, 4, "You can not afford this!")
 		return ""
 	end
 	
@@ -1237,7 +1238,7 @@ function BuyAmmo(ply, args)
 
 	local cost = GetGlobalInt("ammo" .. args .. "cost")
 
-	Notify(ply, 1, 4, "You bought some " .. args .. " ammo for " .. CUR .. tostring(cost))
+	Notify(ply, 1, 4, "You have bought some " .. args .. " ammo for " .. CUR .. tostring(cost))
 	ply:AddMoney(-cost)
 
 	return ""
@@ -1247,14 +1248,14 @@ AddChatCommand("/buyammo", BuyAmmo)
 function BuyHealth(ply)
 	local cost = GetGlobalInt("healthcost")
 	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "Can not afford this!")
+		Notify(ply, 1, 4, "You can not afford this!")
 		return ""
 	end
 	if ply:Team() ~= TEAM_MEDIC and team.NumPlayers(TEAM_MEDIC) > 0 then
-		Notify(ply, 1, 4, "/buyhealth is disabled because there are Medics.")
+		Notify(ply, 1, 4, "/buyhealth is disabled since there are Medics.")
 	else
 		ply:AddMoney(-cost)
-		Notify(ply, 1, 4, "You bought Health for " .. CUR .. tostring(cost))
+		Notify(ply, 1, 4, "You have bought Health for " .. CUR .. tostring(cost))
 		ply:SetHealth(100)
 	end
 	return ""
@@ -1340,12 +1341,12 @@ function CreateAgenda(ply, args)
 		for k, v in pairs(player.GetAll()) do
 			local t = v:Team()
 			if t == TEAM_GANG or t == TEAM_MOB then
-				Notify(v, 1, 4, "Mob Boss updated the agenda!")
+				Notify(v, 1, 4, "The mob boss has updated the agenda!")
 				v:SetNWString("agenda", CfgVars["mobagenda"])
 			end
 		end
 	else
-		Notify(ply, 1, 4, "Must be a Mob Boss to use this command.")
+		Notify(ply, 1, 6, "You need to be a mob boss to be able to use this command.")
 	end
 	return ""
 end
@@ -1361,24 +1362,24 @@ AddChatCommand("/help", GetHelp)
 function ChangeJob(ply, args)
 	if args == "" then return "" end
 	if not ply:Alive() then
-		Notify(ply, 1, 4, "Ur ded")
+		Notify(ply, 1, 4, "You can not change job as a dead person.")
 		return ""
 	end
 
 	if CfgVars["customjobs"] ~= 1 then
-		Notify(ply, 1, 4, "Custom Jobs are disabled!")
+		Notify(ply, 1, 4, "You can not change job as they are disabled.")
 		return ""
 	end
 
 	local len = string.len(args)
 
 	if len < 3 then
-		Notify(ply, 1, 4, "Job must be at least 3 characters!")
+		Notify(ply, 1, 4, "The job name needs to be at least 3 characters!")
 		return ""
 	end
 
 	if len > 25 then
-		Notify(ply, 1, 4, "Job is restricted to 25 characters!")
+		Notify(ply, 1, 4, "The job name is restricted to 25 characters!")
 		return ""
 	end
 
@@ -1388,23 +1389,23 @@ function ChangeJob(ply, args)
 	if (jl == "cp" or jl == "cop" or jl == "police" or jl == "civil protection" or jl == "civilprotection") and t ~= TEAM_POLICE then
 		if ply:HasPriv(CP) or ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) then
 			if VoteCopOn then
-				Notify(ply, 1, 4,  "Please wait for the vote to finish first.")
+				Notify(ply, 1, 4,  "Please wait for the current vote to finish first.")
 			else
 				ply:ChangeTeam(TEAM_POLICE)
 			end
 		else
-			Notify(ply, 1, 4, "You have to be on the CP or Mayor List or Admin!")
+			Notify(ply, 1, 4, "You need to be on the CP or Mayor List or Admin!")
 		end
 		return ""
 	elseif jl == "mayor" and t ~= TEAM_MAYOR then
 		if ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) then
 			if VoteCopOn then
-				Notify(ply, 1, 4,  "Please wait for the vote to finish first.")
+				Notify(ply, 1, 4,  "Please wait for the current vote to finish first.")
 			else
 				ply:ChangeTeam(TEAM_MAYOR)
 			end
 		else
-			Notify(ply, 1, 4, "You Must be on the Mayor List or Admin!")
+			Notify(ply, 1, 4, "You need to be on the Mayor List or Admin!")
 		end
 		return ""
 	elseif jl == "gangster" and t ~= TEAM_GANG then
@@ -1437,7 +1438,7 @@ function ChangeJob(ply, args)
 			ply:ChangeTeam(9 + k)
 		end
 	end
-	NotifyAll(2, 4, ply:Nick() .. " has set their job to '" .. args .. "'")
+	NotifyAll(2, 4, ply:Nick() .. " has set his/her job to '" .. args .. "'")
 	ply:UpdateJob(args)
 	return ""
 end
@@ -1472,7 +1473,7 @@ local function Demote(ply, args)
 	end 
 	reason = string.sub(reason, 2)
 	if string.len(reason) > 22 then
-		Notify(ply, 1, 4, "Reason must be 22 characters or less")
+		Notify(ply, 1, 4, "The reason needs to be 22 characters or less")
 		return "" 
 	end
 	local p = FindPlayer(tableargs[1])
@@ -1482,17 +1483,17 @@ local function Demote(ply, args)
 			return ""
 		end
 		if p:Team() == TEAM_CITIZEN then
-			Notify(ply, 1, 4,  p:Nick() .." is a Citizen - can't be demoted any further!")
+			Notify(ply, 1, 4,  p:Nick() .." is already Citizen, he can't be demoted any further!")
 		else
 			NotifyAll(1, 4, ply:Nick() .. " has started a vote for the demotion of " .. p:Nick())
 			vote:Create(p:Nick() .. ":\nDemotion Nominee:\n"..reason, p:EntIndex() .. "votecop"..ply:EntIndex(), p, 20, FinishDemote, true)
 			ply:GetTable().LastVoteCop = CurTime()
 			VoteCopOn = true
-			Notify(ply, 1, 4, "Demotion Vote started!")
+			Notify(ply, 1, 4, "The demotion vote has started!")
 		end
 		return ""
 	else
-		Notify(ply, 1, 4, "Player does not exist!")
+		Notify(ply, 1, 4, "This player does not exist!")
 		return ""
 	end
 end
@@ -1514,14 +1515,14 @@ local function FinishVoteCop(choice, ply)
 	if choice == 1 then
 		ply:ChangeTeam(TEAM_POLICE)
 	else
-		NotifyAll(1, 4, ply:Nick() .. " has not been made Civil Protection!")
+		NotifyAll(1, 4, ply:Nick() .. " has not been made civil protection!")
 	end
 end
 
 local function DoVoteMayor(ply, args)
 	
 	if #player.GetAll() == 1 then
-		Notify(ply, 1, 4, "You're the only one in the server so you won the vote")
+		Notify(ply, 1, 4, "You have won the vote since you are alone in the server.")
 		ply:ChangeTeam(TEAM_MAYOR)
 		return ""
 	end
@@ -1532,29 +1533,29 @@ local function DoVoteMayor(ply, args)
 	end
 
 	if not ply:ChangeAllowed(TEAM_MAYOR) then
-		Notify(ply, 1, 4, "Cannot become mayor. You're either banned from the team or you were demoted.")
+		Notify(ply, 1, 4, "You can not become mayor. You're either banned from the team or you were demoted.")
 		return ""
 	end
 
 	if CurTime() - ply:GetTable().LastVoteCop < 80 then
-		Notify(ply, 1, 4, "Wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before using /votemayor!")
+		Notify(ply, 1, 4, "You need to wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before using /votemayor!")
 		return ""
 	end
 
 	if VoteCopOn then
-		Notify(ply, 1, 4,  "There is already a vote!")
+		Notify(ply, 1, 4,  "There already is a vote!")
 		return ""
 	end
 
 	if CfgVars["cptomayoronly"] == 1 then
 		if ply:Team() ~= TEAM_POLICE and ply:Team() ~= TEAM_CHIEF then
-			Notify(ply, 1, 4,  "You have to be in the Civil Protection!")
+			Notify(ply, 1, 4,  "You have to be in the civil protection team!")
 			return ""
 		end
 	end
 
 	if ply:Team() == TEAM_MAYOR then
-		Notify(ply, 1, 4,  "You're already Mayor!")
+		Notify(ply, 1, 4,  "You already are the Mayor!")
 		return ""
 	end
 
@@ -1578,17 +1579,17 @@ local function DoVoteCop(ply, args)
 	end
 
 	if not ply:ChangeAllowed(TEAM_POLICE) then
-		Notify(ply, 1, 4, "You're either banned from this class or you were demoted.")
+		Notify(ply, 1, 4, "You're either banned from this job or you were demoted.")
 		return ""
 	end
 
 	if CurTime() - ply:GetTable().LastVoteCop < 60 then
-		Notify(ply, 1, 4, "Wait another " .. math.ceil(60 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds to vote for Cop.")
+		Notify(ply, 1, 4, "You need to wait another " .. math.ceil(60 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds to vote for Cop.")
 		return ""
 	end
 	
 	if #player.GetAll() == 1 then
-		Notify(ply, 1, 4, "You're the only one in the server so you won the vote")
+		Notify(ply, 1, 4, "You have won the vote since you are alone in this server.")
 		ply:ChangeTeam(TEAM_POLICE)
 		return ""
 	end
@@ -1599,7 +1600,7 @@ local function DoVoteCop(ply, args)
 	end
 
 	if ply:Team() == TEAM_POLICE then
-		Notify(ply, 1, 4,  "You're already in the Civil Protection!")
+		Notify(ply, 1, 4,  "You already are in the Civil Protection!")
 		return ""
 	end
 
@@ -1619,12 +1620,12 @@ AddChatCommand("/votecop", DoVoteCop)
 function MakeMayor(ply, args)
 	if ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) or ply:IsAdmin() then
 		if VoteCopOn then
-			Notify(ply, 1, 4,  "Please wait for the vote to finish first.")
+			Notify(ply, 1, 4,  "Please wait for the current vote to finish first.")
 		else
 			ply:ChangeTeam(TEAM_MAYOR)
 		end
 	else
-		Notify(ply, 1, 4, "You must be on the Mayor list or Admin!")
+		Notify(ply, 1, 4, "You need to be on the Mayor list or Admin!")
 	end
 	return ""
 end
@@ -1639,12 +1640,12 @@ AddChatCommand("/citizen", MakeCitizen)
 function MakeCP(ply, args)
 	if ply:HasPriv(CP) or ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) or ply:IsAdmin() or ply:Team() == TEAM_CHIEF then
 		if VoteCopOn then
-			Notify(ply, 1, 4,  "Please wait for the vote to finish first.")
+			Notify(ply, 1, 4,  "Please wait for the current vote to finish first.")
 		else
 			ply:ChangeTeam(TEAM_POLICE)
 		end
 	else
-		Notify(ply, 1, 4, "You must be on the CP or the Mayor list or Admin!")
+		Notify(ply, 1, 4, "You need to be on the CP or the Mayor list or Admin!")
 	end
 	return ""
 end
@@ -1700,7 +1701,7 @@ AddChatCommand("/g", GroupMsg)
 
 function DoTeamBan(ply, args, cmdargs)
 	if not ply:IsAdmin() then 
-		Notify(ply, 1, 4, "You're not an admin")
+		Notify(ply, 1, 4, "You need admin privileges in order to be able to ban someone from a job.")
 		return ""
 	end
 	
@@ -1722,7 +1723,7 @@ function DoTeamBan(ply, args, cmdargs)
 	
 	local target = FindPlayer(ent)
 	if not target or not ValidEntity(target) then 
-		Notify(ply, 1, 4, "Player was not found!")
+		Notify(ply, 1, 4, "This player was not found!")
 		return ""
 	end
 	
@@ -1741,7 +1742,7 @@ function DoTeamBan(ply, args, cmdargs)
 	end
 	
 	if not found then
-		Notify(ply, 1, 4, "Team not found!")
+		Notify(ply, 1, 4, "This job was not found!")
 		return ""
 	end
 	if not target.bannedfrom then target.bannedfrom = {} end
@@ -1754,7 +1755,7 @@ concommand.Add("rp_teamban", DoTeamBan)
 
 function DoTeamUnBan(ply, args, cmdargs)
 	if not ply:IsAdmin() then 
-		Notify(ply, 1, 4, "You're not an admin")
+		Notify(ply, 1, 4, "You need admin privileges in order to be able to unban someone from a job.")
 		return ""
 	end
 	
@@ -1776,7 +1777,7 @@ function DoTeamUnBan(ply, args, cmdargs)
 	
 	local target = FindPlayer(ent)
 	if not target or not ValidEntity(target) then 
-		Notify(ply, 1, 4, "Player was not found!")
+		Notify(ply, 1, 4, "This player was not found!")
 		return ""
 	end
 	
@@ -1794,7 +1795,7 @@ function DoTeamUnBan(ply, args, cmdargs)
 	end
 	
 	if not found then
-		Notify(ply, 1, 4, "Team not found!")
+		Notify(ply, 1, 4, "This job was not found!")
 		return ""
 	end
 	if not target.bannedfrom then target.bannedfrom = {} end
@@ -1935,22 +1936,22 @@ function GiveMoney(ply, args)
 	if ValidEntity(trace.Entity) and trace.Entity:IsPlayer() and trace.Entity:GetPos():Distance(ply:GetPos()) < 150 then
 		local amount = math.floor(tonumber(args))
 
-		if amount <= 1 then
-			Notify(ply, 1, 4, "Invalid amount of money! Must be at least " .. CUR .. "2!")
+		if amount < 1 then
+			Notify(ply, 1, 4, "Invalid amount of money! Must be at least " .. CUR .. "1!")
 			return
 		end
 
 		if not ply:CanAfford(amount) then
-			Notify(ply, 1, 4, "Can not afford this!")
+			Notify(ply, 1, 4, "You can not afford this!")
 			return ""
 		end
 
 		DB.PayPlayer(ply, trace.Entity, amount)
 
 		Notify(trace.Entity, 0, 4, ply:Nick() .. " has given you " .. CUR .. tostring(amount))
-		Notify(ply, 0, 4, "Gave " .. trace.Entity:Nick() .. " " .. CUR .. tostring(amount))
+		Notify(ply, 0, 4, "You gave " .. trace.Entity:Nick() .. " " .. CUR .. tostring(amount))
 	else
-		Notify(ply, 1, 4, "Must be looking at and standing close to another player!")
+		Notify(ply, 1, 4, "You need to be looking at and standing close to another player!")
 	end
 	return ""
 end
@@ -1970,7 +1971,7 @@ function DropMoney(ply, args)
 	end
 
 	if not ply:CanAfford(amount) then
-		Notify(ply, 1, 4, "Can not afford this!")
+		Notify(ply, 1, 4, "You can not afford this!")
 		return ""
 	end
 
@@ -2024,7 +2025,7 @@ local CanLottery = CurTime()
 function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	if answer == 1 and not table.HasValue(LotteryPeople, target) then
 		if not target:CanAfford(CfgVars["lotterycommitcost"]) then
-			Notify(target, 1,4, "Cannot afford the lottery!")
+			Notify(target, 1,4, "You can not afford the commitment cost of the lottery!")
 			return
 		end
 		table.insert(LotteryPeople, target)
@@ -2038,7 +2039,7 @@ function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 		LotteryON = false
 		CanLottery = CurTime() + 60
 		if #LotteryPeople == 0 then
-			NotifyAll(1,4, "Noone entered the lottery")
+			NotifyAll(1,4, "Noone has entered the lottery")
 			return
 		end
 		local chosen = LotteryPeople[math.random(1, #LotteryPeople)]
@@ -2050,17 +2051,17 @@ end
 
 function DoLottery(ply)
 	if ply:Team() ~= TEAM_MAYOR then
-		Notify(ply, 1, 4, "You're not the mayor!")
+		Notify(ply, 1, 4, "You need to be the mayor in order to be able to start a lottery.")
 		return "" 
 	end
 	
 	if CfgVars["lottery"] ~= 1 then
-		Notify(ply, 1, 4, "Lotteries are disabled!")
+		Notify(ply, 1, 4, "You can not start a lottery as they are disabled.")
 		return ""
 	end
 	
 	if #player.GetAll() <= 2 then
-		Notify(ply, 1, 4, "Not enough people in the server")
+		Notify(ply, 1, 6, "There are not enough people in the server for a lottery to be successful")
 		return "" 
 	end 
 	
@@ -2069,10 +2070,10 @@ function DoLottery(ply)
 		return "" 
 	end
 	if CanLottery > CurTime() then
-		Notify(ply, 1, 5, "You have to wait "..tostring(CanLottery - CurTime()).." seconds to start a lottery again.")
+		Notify(ply, 1, 5, "You have to wait "..tostring(CanLottery - CurTime()).." seconds to be able to start a lottery again.")
 		return "" 
 	end
-	Notify(ply, 1, 4, "You started a lottery!!")
+	Notify(ply, 1, 4, "You have started a lottery!")
 	LotteryON = true
 	LotteryPeople = {}
 	for k,v in pairs(player.GetAll()) do 
@@ -2128,13 +2129,13 @@ function MayorSetSalary(ply, cmd, args)
 	end
 
 	if CfgVars["enablemayorsetsalary"] == 0 then
-		ply:PrintMessage(2, "Mayor SetSalary disabled by Admin!")
-		Notify(ply, 1, 4, "Mayor SetSalary disabled by Admin!")
-		return "Mayor SetSalary disabled by Admin!"
+		ply:PrintMessage(2, "Can not set salary as it is disabled.")
+		Notify(ply, 1, 4, "Can not set salary as it is disabled.")
+		return "Can not set salary as it is disabled."
 	end
 
 	if ply:Team() ~= TEAM_MAYOR then
-		ply:PrintMessage(2, "You must be the Mayor to use this function!")
+		ply:PrintMessage(2, "You need to be the mayor to be able to set someone's salary.")
 		return
 	end
 
@@ -2158,7 +2159,7 @@ function MayorSetSalary(ply, cmd, args)
 		local targetnick = target:Nick()
 
 		if targetteam == TEAM_MAYOR then
-			Notify(ply, 1, 4, "Can not set your own salary!")
+			Notify(ply, 1, 4, "You can not set your own salary!")
 			return
 		elseif targetteam == TEAM_POLICE or targetteam == TEAM_CHIEF then
 			if amount > GetGlobalInt("maxcopsalary") then
@@ -2179,7 +2180,7 @@ function MayorSetSalary(ply, cmd, args)
 				target:PrintMessage(2, plynick .. " set your Salary to: " .. CUR .. amount)
 			end
 		elseif targetteam == TEAM_GANG or targetteam == TEAM_MOB then
-			Notify(ply, 1, 4, "Mayor can not set the salary of a Mob Boss or a Gang member.")
+			Notify(ply, 1, 4, "The mayor can not set the salary of a mob boss or a Gang member.")
 			return
 		end
 	else
@@ -2195,7 +2196,7 @@ concommand.Add("rp_mayor_setsalary", MayorSetSalary)
 function GrantLicense(answer, Ent, Initiator, Target)
 	if answer == 1 then
 		Notify(Initiator, 1, 4, Target:Nick().. " has granted you a gun license")
-		Notify(Target, 1, 4, "Granted ".. Initiator:Nick().. " a gun license")
+		Notify(Target, 1, 4, "You have granted ".. Initiator:Nick().. " a gun license")
 		Initiator:SetNWBool("HasGunlicense", true)
 	else
 		Notify(Initiator, 1, 4, Target:Nick().. " has denied your gun license request")
@@ -2243,22 +2244,22 @@ function RequestLicense(ply)
 	end
 	
 	if not ValidEntity(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
-		Notify(ply, 1, 4, "Must be looking at a mayor/chief/cop")
+		Notify(ply, 1, 4, "You need to be looking at a mayor/chief/cop")
 		return ""
 	end
 	
 	if ismayor and LookingAt:Team() ~= TEAM_MAYOR then
-		Notify(ply, 1, 4, "Must be looking at the mayor!")
+		Notify(ply, 1, 4, "You need to be looking at the mayor!")
 		return ""
 	elseif ischief and LookingAt:Team() ~= TEAM_CHIEF then
-		Notify(ply, 1, 4, "Must be looking at the chief!")
+		Notify(ply, 1, 4, "You need to be looking at the chief!")
 		return ""
 	elseif iscop and LookingAt:Team() ~= TEAM_POLICE then
-		Notify(ply, 1, 4, "Must be looking at a cop!")
+		Notify(ply, 1, 4, "You need to be looking at a cop!")
 		return ""
 	end
 	
-	Notify(ply, 1, 4, "Requested gun license!")
+	Notify(ply, 1, 4, "You have requested a gun license!")
 	ques:Create("Grant "..ply:Nick().." a gun license?", "Gunlicense"..ply:EntIndex(), LookingAt, 20, GrantLicense, ply, LookingAt)
 	return ""
 end
@@ -2306,11 +2307,11 @@ function GiveLicense(ply)
 	
 	local LookingAt = ply:GetEyeTrace().Entity
 	if not ValidEntity(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
-		Notify(ply, 1, 4, "Must be looking at a player!")
+		Notify(ply, 1, 4, "You need to be looking at a player!")
 		return ""
 	end
 	Notify(LookingAt, 1, 4, ply:Nick().. " has granted you a gun license")
-	Notify(ply, 2, 4, "Granted ".. LookingAt:Nick().. " a gun license")
+	Notify(ply, 2, 4, "You have granted ".. LookingAt:Nick().. " a gun license")
 	LookingAt:SetNWBool("HasGunlicense", true)
 	return ""
 end
@@ -2318,7 +2319,7 @@ AddChatCommand("/givelicense", GiveLicense)
 
 function rp_GiveLicense(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a superadmin!")
+		ply:PrintMessage(2, "You need to be superadin in order to be able to give a license.")
 		return
 	end
 
@@ -2335,6 +2336,7 @@ function rp_GiveLicense(ply, cmd, args)
 
 		Notify(target, 1, 4, nick .. " gave you a gun license")
 		Notify(ply, 2, 4, "Gave "..target:Nick().." a gun license!")
+		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-gave "..target:Nick().." a gun license")
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -2348,7 +2350,7 @@ concommand.Add("rp_givelicense", rp_GiveLicense)
 
 function rp_RevokeLicense(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a superadmin!")
+		ply:PrintMessage(2, "You need to be superadmin in order to be able to be able to revoke a license.")
 		return
 	end
 
@@ -2365,6 +2367,7 @@ function rp_RevokeLicense(ply, cmd, args)
 
 		Notify(target, 1, 4, nick .. " revoked your gun license")
 		Notify(ply, 2, 4, "Revoked "..target:Nick().."'s gun license!")
+		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed "..target:Nick().."'s gun license")
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -2420,7 +2423,7 @@ function VoteRemoveLicense(ply, args)
 		end
 		return ""
 	else
-		Notify(ply, 1, 4, "Player does not exist!")
+		Notify(ply, 1, 4, "This player does not exist!")
 		return ""
 	end
 end

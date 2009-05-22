@@ -25,7 +25,7 @@ table.insert(hints, "Type /warrant [Nick|SteamID|UserID] to get a search warrant
 table.insert(hints, "Type /wanted or /unwanted [Nick|SteamID|UserID] to set a player as wanted/unwanted by the Police.")
 table.insert(hints, "Type /drop to drop the weapon you are holding.")
 table.insert(hints, "Type /gangster to become a Gangster.")
-table.insert(hints, "Type /mobboss to become a Mob Boss.")
+table.insert(hints, "Type /mobboss to become a mob boss.")
 table.insert(hints, "Type /buymicrowave to buy a Microwave Oven that spawns food.")
 table.insert(hints, "Type /dropmoney <Amount> to drop a money amount.")
 table.insert(hints, "Type /buymoneyprinter to buy a Money Printer. Costs " .. CUR .. GetGlobalInt("mprintercost"))

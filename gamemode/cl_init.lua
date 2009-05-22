@@ -561,8 +561,8 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 10, 10, 560, 130, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 556, 126, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 556, 20, Color(0, 0, 70, 200))
-		draw.DrawText("Mob Boss Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText("As the Mob Boss, you decide what you want the other Gangsters to do\nYou get an Unarrest Stick which you can use to break people out of jail\n/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line\nType /mobbosshelp toggles this menu, /x closes it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText("mob boss Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
+		draw.DrawText("As the mob boss, you decide what you want the other Gangsters to do\nYou get an Unarrest Stick which you can use to break people out of jail\n/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line\nType /mobbosshelp toggles this menu, /x closes it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 	
 	if LocalPlayer():GetNWBool("HasGunlicense") then

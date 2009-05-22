@@ -9,7 +9,7 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 		return
 	end
 	if not util.IsValidModel(model) then
-		local text = "The model of shipment "..name.." is incorrect! cannot create custom shipment!"
+		local text = "The model of shipment "..name.." is incorrect! can not create custom shipment!"
 		print(text) 
 		hook.Add("PlayerSpawn", "ShipmentError", function(ply)
 			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end end)		
@@ -59,7 +59,7 @@ hook.Add("InitPostEntity", "AddShipments", function()
 		if CLIENT and not LocalPlayer():IsSuperAdmin() then file.Delete("CustomShipments.txt") end
 	end
 end)
-
+AddCustomVehicle("Jeep", 100)
 /*
 How to add custom vehicles:
 FIRST

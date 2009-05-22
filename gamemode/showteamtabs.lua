@@ -457,7 +457,7 @@ function JobsTab()
 		if LocalPlayer():Team() ~= TEAM_MEDIC then
 			AddIcon("models/player/kleiner.mdl", "Medic", [[With your medical knowledge, you heal players to proper 
 			health. 
-			Without a medic, people cannot be healed. 
+			Without a medic, people can not be healed. 
 			Left click with the Medical Kit to heal other players.
 			Right click with the Medical Kit to heal yourself.]]
 				, [[Keys

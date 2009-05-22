@@ -86,7 +86,7 @@ function KnockoutToggle(player, command, args, caller)
 		end
 		return ""
 	else
-		Notify(player, 1, 4, "Sleep Disabled When You Are Dead.")
+		Notify(player, 1, 4, "Sleep is disabled when you are dead.")
 		return ""
 	end
 end

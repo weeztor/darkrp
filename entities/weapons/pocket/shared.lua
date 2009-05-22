@@ -73,24 +73,24 @@ function SWEP:PrimaryAttack()
 	
 	if not self.Owner:GetTable().Pocket then self.Owner:GetTable().Pocket = {} end
 	if /*trace.Entity:IsWeapon() or */not SPropProtection.GravGunThings(self.Owner, trace.Entity) or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) then
-		Notify(self.Owner, 1, 4, "Cannot put in pocket!")
+		Notify(self.Owner, 1, 4, "You can not put this object in your pocket!")
 		return
 	end
 	for k,v in pairs(blacklist) do 
 		if string.find(string.lower(trace.Entity:GetClass()), v) then
-			Notify(self.Owner, 1, 4, "Cannot put "..v.." in pocket!")
+			Notify(self.Owner, 1, 4, "You can not put "..v.." in your pocket!")
 			return
 		end
 	end
 	
 	if mass > 100 then
-		Notify(self.Owner, 1, 4, "Too heavy!")
+		Notify(self.Owner, 1, 4, "This object is too heavy.")
 		return
 	end
 	
 	if not CfgVars["pocketitems"] then CfgVars["pocketitems"] = 10 end
 	if #self.Owner:GetTable().Pocket >= CfgVars["pocketitems"] then
-		Notify(self.Owner, 1, 4, "Pocket is full!")
+		Notify(self.Owner, 1, 4, "Your pocket is full!")
 		return
 	end
 
@@ -116,12 +116,12 @@ function SWEP:SecondaryAttack()
 	self.Weapon:SetNextSecondaryFire(CurTime() + 0.2)
 	
 	if not self.Owner:GetTable().Pocket or #self.Owner:GetTable().Pocket <= 0 then
-		Notify(self.Owner, 1, 4, "No items in pocket!")
+		Notify(self.Owner, 1, 4, "Your pocket contains no items.")
 		return
 	end
 	local ent = self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket]
 	self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket] = nil
-	if not ValidEntity(ent) then Notify(self.Owner, 1, 4, "No items in pocket!") return end
+	if not ValidEntity(ent) then Notify(self.Owner, 1, 4, "Your pocket contains no items.") return end
 	if SERVER then
 		self:SetWeaponHoldType("pistol")
 		timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
@@ -152,7 +152,7 @@ function SWEP:Reload()
 	timer.Simple(0.5, function() self.Weapon.OnceReload = false end)
 	
 	if not self.Owner:GetTable().Pocket or #self.Owner:GetTable().Pocket <= 0 then
-		Notify(self.Owner, 1, 4, "No items in pocket!")
+		Notify(self.Owner, 1, 4, "Your pocket contains no items.")
 		return
 	end
 	
@@ -161,7 +161,7 @@ function SWEP:Reload()
 			self.Owner:GetTable().Pocket[k] = nil
 			self.Owner:GetTable().Pocket = table.ClearKeys(self.Owner:GetTable().Pocket)
 			if #self.Owner:GetTable().Pocket <= 0 then -- Recheck after the entities have been validated.
-				Notify(self.Owner, 1, 4, "No items in pocket!") 
+				Notify(self.Owner, 1, 4, "Your pocket contains no items.") 
 				return
 			end
 		end

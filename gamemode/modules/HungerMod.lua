@@ -13,8 +13,8 @@ if not CfgVars["starverate"] then
 end
 
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
-	if not ply:IsAdmin() then Notify(ply, 1, 4, "You're not an admin") return end
-	if not args[1] then Notify(ply, 1, 4, "No arguments specified!") return end
+	if not ply:IsAdmin() then Notify(ply, 1, 4, "You need admin privileges in order to be able to set the hungerspeed.") return end
+	if not args[1] then Notify(ply, 1, 4, "No arguments were specified!") return end
 	DB.SaveSetting("hungerspeed", tonumber(args[1]) / 10)
 end)
 
@@ -95,29 +95,29 @@ function BuyFood(ply, args)
 	local tr = util.TraceLine(trace)
 
 	if GetGlobalInt("hungermod") == 0 and ply:Team() ~= TEAM_COOK then
-		Notify(ply, 1, 4, "/buyfood is disabled unless you're a cook or Hunger Mod is enabled.")
+		Notify(ply, 1, 4, "/buyfood is disabled unless you're a cook or hunger mod is enabled.")
 		return ""
 	end
 
 	if ply:Team() ~= TEAM_COOK and team.NumPlayers(TEAM_COOK) > 0 then
-		Notify(ply, 1, 4, "/buyfood is disabled because there are Cooks.")
+		Notify(ply, 1, 4, "/buyfood is disabled since there are Cooks.")
 		return ""
 	end
 
 	for k,v in pairs(FoodItems) do
 		if string.lower(args) == k then
 			if not ply:CanAfford(CfgVars["foodcost"]) then
-				Notify(ply, 1, 4, "Can not afford this!")
+				Notify(ply, 1, 4, "You can not afford this!")
 				return ""
 			end
 			local cost = CfgVars["foodcost"]		
 			if ply:CanAfford(cost) then
 				ply:AddMoney(-cost)
 			else
-				Notify(ply, 1, 4, "Need " .. math.floor(cost) .. " bucks!")
+				Notify(ply, 1, 4, "You need " .. CUR.. math.floor(cost) .. " to purchase this!")
 				return
 			end
-			Notify(ply, 1, 4, "You bought a "..k)
+			Notify(ply, 1, 4, "You have bought a "..k)
 			local SpawnedFood = ents.Create("spawned_food")
 			SpawnedFood:SetNWEntity("owning_ent", ply)
 			SpawnedFood:SetNWString("Owner", "Shared") -- So people can run off with them!

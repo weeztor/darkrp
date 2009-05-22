@@ -417,32 +417,32 @@ function AddTeamCommands(CTeam)
 	if CTeam.Vote then
 		AddChatCommand("/vote"..CTeam.command, function(ply)
 			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
-				Notify(ply, 1, 4, CTeam.name.." is disabled!")
+				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." since they are disabled!")
 				return ""
 			end
 			if #player.GetAll() == 1 then
-				Notify(ply, 1, 4, "You're the only one in the server so you won the vote")
+				Notify(ply, 1, 4, "You've won the vote since you're alone in the server.")
 				ply:ChangeTeam(k+9)
 				return ""
 			end
 			if not ply:ChangeAllowed(9 + k) then
-				Notify(ply, 1, 4, "You're either banned from this team or you were demoted.)")
+				Notify(ply, 1, 4, "You were either banned from this team or you were demoted.")
 				return ""
 			end
 			if CurTime() - ply:GetTable().LastVoteCop < 80 then
-				Notify(ply, 1, 4, "Wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before using /vote"..CTeam.command.."!")
+				Notify(ply, 1, 4, "You need to wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before using /vote"..CTeam.command.."!")
 				return ""
 			end
 			if VoteCopOn then
-				Notify(ply, 1, 4,  "There is already a vote!")
+				Notify(ply, 1, 4,  "There already is a vote!")
 				return ""
 			end
 			if ply:Team() == (k + 9) then
-				Notify(ply, 1, 4,  "You're already "..CTeam.name.."!")
+				Notify(ply, 1, 4,  "You already are "..CTeam.name.."!")
 				return ""
 			end
-			if team.NumPlayers(9 + k) >= CTeam.max then
-				Notify(ply, 1, 4,  "There can only be "..tostring(CTeam.max).." "..CTeam.name.." at a time!")
+			if team.NumPlayers(9 + k) >= CfgVars["max"..CTeam.command.."s"] then
+				Notify(ply, 1, 4,  "There can only be "..tostring(CTeam.max).." "..CTeam.name.."'s at a time!")
 				return ""
 			end
 			vote:Create(ply:Nick() .. ":\nwants to be "..CTeam.name, ply:EntIndex() .. "votecop", ply, 20, function(choice, ply)
@@ -459,11 +459,11 @@ function AddTeamCommands(CTeam)
 		end)
 		AddChatCommand("/"..CTeam.command, function(ply)
 			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
-				Notify(ply, 1, 4, CTeam.name.." is disabled!")
+				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." as it is disabled!")
 				return ""
 			end
 			if CTeam.admin == 0 and not ply:IsAdmin() then
-				Notify(ply, 1, 4, "You must be an admin/make a vote to become "..CTeam.name.."!")
+				Notify(ply, 1, 4, "You need to be an admin/make a vote to become "..CTeam.name.."!")
 				return ""
 			elseif CTeam.admin == 1 and ply:IsAdmin() and not ply:IsSuperAdmin() then
 				Notify(ply, 1, 4, "You have to make a vote to become "..CTeam.name.."!")
@@ -472,7 +472,7 @@ function AddTeamCommands(CTeam)
 				Notify(ply, 1, 4, "You have to make a vote to become "..CTeam.name.."!")
 				return ""
 			elseif CTeam.admin == 2 and ply:IsAdmin() then
-				Notify(ply, 1, 4, "You can't become "..CTeam.name.."!")
+				Notify(ply, 1, 4, "You can't become "..CTeam.name.." since you don't have the proper access.")
 				return "" 
 			end
 			ply:ChangeTeam(9 + k)
@@ -481,15 +481,15 @@ function AddTeamCommands(CTeam)
 	else
 		AddChatCommand("/"..CTeam.command, function(ply)
 			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
-				Notify(ply, 1, 4, CTeam.name.." is disabled!")
+				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." as it is disabled!")
 				return ""
 			end
 			if CTeam.admin == 1 and not ply:IsAdmin() then
-				Notify(ply, 1, 4, "You must be an admin to become "..CTeam.name.."!")
+				Notify(ply, 1, 4, "You need to be an admin to become "..CTeam.name.."!")
 				return ""
 			end
 			if CTeam.admin > 1 and not ply:IsSuperAdmin() then
-				Notify(ply, 1, 4, "You must be a super admin to become "..CTeam.name.."!")
+				Notify(ply, 1, 4, "You need to be a superadmin to become "..CTeam.name.."!")
 				return ""
 			end
 			ply:ChangeTeam(9 + k)
@@ -499,21 +499,21 @@ function AddTeamCommands(CTeam)
 	
 	concommand.Add("rp_"..CTeam.command, function(ply, cmd, args)
 		if (ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN)) then
-			ply:PrintMessage(2, "You're not an admin!")
+			ply:PrintMessage(2, "You need admin privileges in order to be able to set someone's team")
 			return
         end
 		
 		if CTeam.admin > 1 and not ply:IsSuperAdmin() then
-			ply:PrintMessage(2, "You're not a super admin!")
+			ply:PrintMessage(2, "You need to be superadmin in order to be able to give someone this job.")
 			return
 		end
 		
 		if CTeam.Vote then
 			if CTeam.admin == 1 and ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-				ply:PrintMessage(2, "You're not a super admin!")
+				ply:PrintMessage(2, "You need admin privileges in order to be able to give someone this job")
 				return
 			elseif CTeam.admin > 1 and ply:IsSuperAdmin() and ply:EntIndex() ~= 0 then
-				ply:PrintMessage(2, "You cannot make anyone "..CTeam.name.." because voting is on and admin is set to super admin. Make a vote...")
+				ply:PrintMessage(2, "You can not make anyone "..CTeam.name.." because voting is on and admin is set to superadmin. Make a vote...")
 				return
 			end
 		end
@@ -526,7 +526,7 @@ function AddTeamCommands(CTeam)
 			else
 				nick = "Console"
 			end
-			target:PrintMessage(2, nick .. " made you a " .. CTeam.name .. "!")
+			target:PrintMessage(2, nick .. " has made you a " .. CTeam.name .. "!")
         else
 			if (ply:EntIndex() == 0) then
 				print("Could not find player: " .. args[1])
