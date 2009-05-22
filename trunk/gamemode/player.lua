@@ -4,11 +4,11 @@
 local meta = FindMetaTable("Player")
 
 -- Each time a player connects, they get a new ID
-local sessionid = 0
+//local sessionid = 0
 
 function meta:InitSID()
-	sessionid = sessionid + 1
-	self.SID = sessionid
+	//sessionid = sessionid + 1
+	self.SID = self:UserID()//sessionid
 end
 
 /*---------------------------------------------------------
@@ -16,7 +16,7 @@ end
  ---------------------------------------------------------*/
 function RPName(ply, args)
 	if CfgVars["allowrpnames"] ~= 1 then
-		Notify(ply, 1, 4, "Changing your RP name is disabled on this server!")
+		Notify(ply, 1, 6, "You can not change your RP name as it is disabled.")
 		return ""
 	end
 
@@ -32,7 +32,7 @@ function RPName(ply, args)
 	end
 	
 	if string.find(args, " ") == 1 or string.find(args, " ") == 1 then--The first space is a normal space and the second one is a system space!
-		Notify(ply, 1, 4, "Name cannot start with a space")
+		Notify(ply, 1, 4, "Your name can not start with a space")
 		return ""
 	end
 	
@@ -49,7 +49,7 @@ function RPName(ply, args)
 	end
 
 	ply:SetRPName(args)
-	NotifyAll(2, 6, "Steam player: " .. ply:SteamName() .. " changed his / her RP name to: " .. args)
+	NotifyAll(2, 6, "Steam player: " .. ply:SteamName() .. " changed his/her RP name to: " .. args)
 	return ""
 end
 AddChatCommand("/rpname", RPName)
@@ -77,7 +77,7 @@ function meta:SetRPName(name, firstRun)
 			DB.StoreRPName(self, name .. " 1")
 			Notify(self, 1, 12, "Someone is already using your Steam name as their RP name so we gave you a '1' after your name.")
 		else
-			Notify(self, 1, 5, "This RP name in use by another player on this server!")
+			Notify(self, 1, 5, "This RP name in already use by another player on this server!")
 		end
 	else
 		DB.StoreRPName(self, name)
@@ -187,7 +187,7 @@ end
 function meta:ChangeTeam(t)
 	if RPArrestedPlayers[self:SteamID()] then
 		if not self:Alive() then
-			Notify(self, 1, 4, "Can not change your job while dead in jail.")
+			Notify(self, 1, 4, "You can not change your job whilst being dead in jail.")
 			return
 		else
 			Notify(self, 1, 4, "You are in Jail. Get a new job when you have been released.")
@@ -204,7 +204,7 @@ function meta:ChangeTeam(t)
 	end
 
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) then
-		Notify(self, 1, 4, "You're either banned from this team or you were demoted.)")
+		Notify(self, 1, 4, "You were either banned from this team or you were demoted.)")
 		return
 	end
 
@@ -214,12 +214,12 @@ function meta:ChangeTeam(t)
 		NotifyAll(1, 4, self:Name() .. " is now an ordinary Citizen!")
 	elseif t == TEAM_POLICE then
 		if self:Team() == t then
-			Notify(self, 1, 4, "You're already a CP!")
+			Notify(self, 1, 4, "You already are a CP!")
 			return
 		end
 
 		if team.NumPlayers(t) >= CfgVars["maxcps"] then
-			Notify(self, 1, 4,  "Max CPs reached!")
+			Notify(self, 1, 4,  "You can not become CP as the limit of CPs is reached.")
 			return
 		end
 
@@ -230,12 +230,12 @@ function meta:ChangeTeam(t)
 		NotifyAll(1, 4, self:Name() .. " has been made a CP!")
 	elseif t == TEAM_MAYOR then
 		if self:Team() == t then
-			Notify(self, 1, 4, "You're already the Mayor!")
+			Notify(self, 1, 4, "You already are the Mayor!")
 			return
 		end
 
 		if team.NumPlayers(t) >= 1 then
-			Notify(self, 1, 4,  "Max Mayors reached!")
+			Notify(self, 1, 4,  "You cannot become mayor since the limit of mayors is reached.")
 			return
 		end
 
@@ -250,17 +250,17 @@ function meta:ChangeTeam(t)
 		NotifyAll(1, 4, self:Name() .. " has been made Mayor!")
 	elseif t == TEAM_GANG then
 		if self:Team() == t then
-			Notify(self, 1, 4, "You're already a Gangster!")
+			Notify(self, 1, 4, "You already are a Gangster!")
 			return
 		end
 				
 		if CfgVars["allowgang"] == 0 then
-			Notify(self, 1, 4, "Gangs are disabled!")
+			Notify(self, 1, 4, "You can not become gangster as they are disabled.")
 			return
 		end
 
 		if team.NumPlayers(t) >= CfgVars["maxgangsters"] then
-			Notify(self, 1, 4, "Max Gangsters reached!")
+			Notify(self, 1, 4, "You can not become gangster as the gangster limit is reached.")
 			return
 		end
 
@@ -270,43 +270,43 @@ function meta:ChangeTeam(t)
 		NotifyAll(1, 4, self:Name() .. " has been made a Gangster!")
 	elseif t == TEAM_MOB then
 		if self:Team() == t then
-			Notify(self, 1, 4, "You're already the Mob Boss!")
+			Notify(self, 1, 4, "You already are the mob boss!")
 			return
 		end
 				
 		if CfgVars["allowgang"] == 0 then
-			Notify(self, 1, 4, "Gangs are disabled!")
+			Notify(self, 1, 4, "You cannot become gangster as they are disabled.")
 			return
 		end
 
 		if team.NumPlayers(t) >= 1 then
-			Notify(self, 1, 4, "Only one Mob Boss is allowed.")
+			Notify(self, 1, 4, "You can not become mob boss since only one mob boss is allowed.")
 			return
 		end
 
-		self:UpdateJob("Mob Boss")
+		self:UpdateJob("mob boss")
 		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 15)
 		self:SetNWBool("helpBoss", true)
 		self:SetNWString("agenda", CfgVars["mobagenda"])
-		NotifyAll(1, 4, self:Name() .. " has been made Mob Boss!")
+		NotifyAll(1, 4, self:Name() .. " has been made mob boss!")
 	elseif t == TEAM_GUN then
 		if self:Team() == t then
-			Notify(self, 1, 4, "You're already a Gun Dealer!")
+			Notify(self, 1, 4, "You already are a Gun Dealer!")
 			return
 		end
 
 		if CfgVars["noguns"] == 1 then
-			Notify(self, 1, 4, "Guns are disabled!")
+			Notify(self, 1, 4, "You can not become gundealer because guns are disabled.")
 			return
 		end
 
 		if CfgVars["allowdealers"] == 0 then
-			Notify(self, 1, 4, "Gun Dealers are disabled!")
+			Notify(self, 1, 4, "You can not become gun dealer as they are disabled.")
 			return
 		end
 
 		if team.NumPlayers(t) >= CfgVars["maxgundealers"] then
-			Notify(self, 1, 4,  "Max Gun Dealers reached!")
+			Notify(self, 1, 4,  "You can not become gundealer since the limit of gundealers is reached.")
 			return
 		end
 
@@ -315,17 +315,17 @@ function meta:ChangeTeam(t)
 		NotifyAll(1, 4, self:Name() .. " has been made a Gun Dealer!")
 	elseif t == TEAM_MEDIC then
 		if self:Team() == t then
-			Notify(self, 1, 4, "You're already a Medic!")
+			Notify(self, 1, 4, "You already are a Medic!")
 			return
 		end
 
 		if CfgVars["allowmedics"] == 0 then
-			Notify(self, 1, 4, "Medics are disabled!")
+			Notify(self, 1, 4, "You can not become a medic as they are disabled.")
 			return
 		end
 
 		if team.NumPlayers(t) >= CfgVars["maxmedics"] then
-			Notify(self, 1, 4,  "Max Medics reached!")
+			Notify(self, 1, 4,  "You can not become a medic since the limit of medics is reached.")
 			return
 		end
 		self:UpdateJob("Medic")
@@ -333,17 +333,17 @@ function meta:ChangeTeam(t)
 		NotifyAll(1, 4, self:Name() .. " has been made a Medic!")
 	elseif t == TEAM_COOK then
 		if self:Team() == t then
-			Notify(self, 1, 4, "You're already a Cook!")
+			Notify(self, 1, 4, "You already are a Cook!")
 			return
 		end
 
 		if CfgVars["allowcooks"] == 0 then
-			Notify(self, 1, 4, "Cooks are disabled!")
+			Notify(self, 1, 4, "You can not become a cook as they are disabled.")
 			return
 		end
 
 		if team.NumPlayers(t) >= CfgVars["maxcooks"] then
-			Notify(self, 1, 4,  "Max Cooks reached!")
+			Notify(self, 1, 4,  "You can not become a cook since the limit of cook is reached.")
 			return
 		end
 
@@ -352,7 +352,7 @@ function meta:ChangeTeam(t)
 		NotifyAll(1, 4, self:Name() .. " has been made a Cook!")
 	elseif t == TEAM_CHIEF then
 		if self:Team() == t then
-			Notify(self, 1, 4, "You're already the Civil Protection Chief!")
+			Notify(self, 1, 4, "You already are the civil protection chief!")
 			return
 		end
 
@@ -362,7 +362,7 @@ function meta:ChangeTeam(t)
 		end
 
 		if team.NumPlayers(t) >= 1 then
-			Notify(self, 1, 4,  "Max Civil Protection Chiefs reached")
+			Notify(self, 1, 4,  "You can not become the chief since the limit of chiefs is reached.")
 			return
 		end
 
@@ -376,15 +376,15 @@ function meta:ChangeTeam(t)
 	for k,v in pairs(RPExtraTeams) do
 		if t == (9 + k) then
 			if self:Team() == t then
-				Notify(self, 1, 4, "You're already a " .. v.name .. "!")	
+				Notify(self, 1, 4, "You already are a " .. v.name .. "!")	
 				return
 			end
 			if v.NeedToChangeFrom and self:Team() ~= v.NeedToChangeFrom then
-				Notify(self, 1,4, "You have to be "..team.GetName(v.NeedToChangeFrom).." to become " .. team.GetName(t))
+				Notify(self, 1,4, "You need to be "..team.GetName(v.NeedToChangeFrom).." first in order to become " .. team.GetName(t))
 				return
 			end
 			if CfgVars["max"..v.command.."s"] and team.NumPlayers(t) >= CfgVars["max"..v.command.."s"] then
-				Notify(self, 1, 4,  "Max "..v.name.." reached")
+				Notify(self, 1, 4,  "You can not become "..v.name.." since the limit of "..v.name.." is reached.")
 				return
 			end
 			self:UpdateJob(v.name)
@@ -412,6 +412,12 @@ function meta:ChangeTeam(t)
 		
 		for k,v in pairs(ents.FindByClass("spawned_shipment")) do
 			if v.SID == self.SID then v:Remove() end
+		end
+		
+		for k,v in pairs(ents.GetAll()) do 
+			if v:IsVehicle() and v.SID == self.SID then
+				v:Remove()
+			end
 		end
 	end
 
@@ -627,13 +633,13 @@ function meta:DoPropertyTax()
 
 	if self:CanAfford(tax) then
 		if tax == 0 then
-			Notify(self, 1, 5, "No property tax - You don't own a door or a vehicle.")
+			Notify(self, 1, 5, "You have received no property taxes since you don't own a door or a vehicle.")
 		else
 			self:AddMoney(-tax)
 			Notify(self, 1, 5, "Property tax! " .. CUR .. tax)
 		end
 	else
-		Notify(self, 1, 8, "Couldn't pay the taxes! Your property has been taken away from you!")
+		Notify(self, 1, 8, "You couldn't pay the taxes! Your property has been taken away from you!")
 		self:UnownAll()
 	end
 end

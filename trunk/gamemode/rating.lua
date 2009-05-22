@@ -77,10 +77,10 @@
  	 
  	Target.RatingTimers[ RaterID ] = CurTime() 
  	 
- 	Notify(Target, 1, 4, Rater:Nick().. " gave you a "..Rating ); 
+ 	Notify(Target, 1, 4, Rater:Nick().. " has given you a "..Rating ); 
  		 
  	// Let the rater know that their vote was counted 
- 	Notify(Rater, 2, 4,  "Rated ".. Target:Nick() .." a "..Rating.."!\n" ); 
+ 	Notify(Rater, 2, 4,  "You have rated ".. Target:Nick() .." a "..Rating.."!\n" ); 
  	 
  	sql.Query( "INSERT INTO ratings ( target, rater, rating ) VALUES ( "..TargetID..", "..RaterID..", "..RatingID.." )" ) 
    

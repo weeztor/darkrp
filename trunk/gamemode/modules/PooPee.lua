@@ -68,7 +68,7 @@ if SERVER then
 
 	function PooPee.DoPoo(ply)
 		if GetGlobalInt("poopeemod") ~= 1 or not ply:Alive() or ply:GetNWInt("Poop") < 30 then
-			Notify(ply,1,4, "Can't poop!")
+			Notify(ply,1,6, "You are unable to go to the toilet at this moment.")
 			return ""
 		end
 		local turd = ents.Create("prop_physics")
@@ -89,7 +89,7 @@ if SERVER then
 
 	function PooPee.DoPee(ply)
 		if GetGlobalInt("poopeemod") ~= 1 then
-			Notify(ply,1,4, "Poo pee mod is disabled")
+			Notify(ply,1,4, "Can not pee as it is disabled.")
 			return ""
 		end
 		if not ply:Alive() then return "" end

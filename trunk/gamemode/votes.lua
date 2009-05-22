@@ -12,7 +12,7 @@ function ccDoVote(ply, cmd, args)
 	end
 	
 	if ply:GetTable().VotesVoted[args[1]] then
-		Notify(ply, 1, 4, "You cannot vote!")
+		Notify(ply, 1, 4, "You can not vote!")
 		return
 	end
 	ply:GetTable().VotesVoted[args[1]] = true
@@ -31,13 +31,13 @@ end
 
 function vote:Create(question, voteid, ent, delay, callback, special)
 	if #player.GetAll() == 1 then
-		Notify(ent, 1, 4, "You're the only one in the server so you won the vote")
+		Notify(ent, 1, 4, "You have won the vote since you are alone in the server.")
 		callback(1, ent)
 		return
 	end
 	
 	if special and #player.GetAll() <= 2 then
-		Notify(ent, 1, 4, "You're the only one in the server so you won the vote")
+		Notify(ent, 1, 4, "You have won the vote since you are alone in the server.")
 		callback(1, ent)
 		return
 	end
@@ -62,7 +62,7 @@ function vote:Create(question, voteid, ent, delay, callback, special)
 
 	Votes[voteid] = newvote
 	if ent:IsPlayer() then
-		Notify(ent,1,4, "Vote created")
+		Notify(ent,1,4, "The vote is created")
 	end
 	umsg.Start("DoVote")
 		umsg.String(question)

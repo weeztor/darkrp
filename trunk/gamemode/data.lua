@@ -291,17 +291,17 @@ function DB.StoreJailPos(ply, addingPos)
 	local already = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";"))
 	if not already or already == 0 then
 		sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
-		Notify(ply, 1, 4,  "First jail position created!")
+		Notify(ply, 1, 4,  "You have created the first jail position!")
 	else
 		if addingPos then
 			sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
-			Notify(ply, 1, 4,  "Extra jail position added!")
+			Notify(ply, 1, 4,  "You have added one extra jail position!")
 		else
 			sql.Begin()
 			sql.Query("DELETE FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";")
 			sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
 			sql.Commit()
-			Notify(ply, 1, 5,  "Removed all jail positions and added a new one here")
+			Notify(ply, 1, 5,  "You have removed all jail positions and you have added a new one here.")
 		end
 	end
 end
@@ -456,9 +456,9 @@ function DB.ResetAllMoney(ply,cmd,args)
 		DB.StoreMoney(v, 500)
 	end
 	if ply:IsPlayer() then
-		NotifyAll(1,4, ply:Nick() .. " reset all player's money!")
+		NotifyAll(1,4, ply:Nick() .. " has reset all player's money!")
 	else
-		NotifyAll(1,4, "Console reset all player's money!")
+		NotifyAll(1,4, "Console has reset all player's money!")
 	end
 end
 concommand.Add("rp_resetallmoney", DB.ResetAllMoney)
@@ -625,10 +625,10 @@ end
 
 function ResetAllRPSettings(ply,cmd,args)
 	if not ply:IsSuperAdmin() then
-		Notify(ply, 1, 4, "You must be a superadmin")
+		Notify(ply, 1, 5, "You need to be superadmin in order to be able to reset all RP settings.")
 		return
 	end
-	Notify(ply, 1, 4, "All settings resetted!")
+	Notify(ply, 1, 4, "You have reset all settings!")
 	RefreshSettings(true)
 	RefreshGlobals()
 end

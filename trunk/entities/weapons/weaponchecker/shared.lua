@@ -133,7 +133,7 @@ function SWEP:Reload()
 	end
 	
 	if not trace.Entity:GetTable().ConfisquatedWeapons then
-		Notify(self.Owner, 1, 4, trace.Entity:Nick() .. " has no confisquated weapons!")
+		Notify(self.Owner, 1, 4, trace.Entity:Nick() .. " had no weapons confisquated!")
 		return
 	else
 		for k,v in pairs(trace.Entity:GetTable().ConfisquatedWeapons) do

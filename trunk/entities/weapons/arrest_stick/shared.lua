@@ -71,13 +71,13 @@ function SWEP:PrimaryAttack()
 	end
 
 	if CfgVars["needwantedforarrest"] == 1 and not trace.Entity:IsNPC() and not trace.Entity:GetNWBool("wanted") then
-		Notify(self.Owner, 1, 4, "He isn't wanted so you can't arrest him!")
+		Notify(self.Owner, 1, 5, "The player must be wanted in order to be able to arrest them.")
 		return
 	end
 	local jpc = DB.CountJailPos()
 
 	if not jpc or jpc == 0 then
-		Notify(self.Owner, 1, 4, "There are no Jail Positions set!")
+		Notify(self.Owner, 1, 4, "You cannot arrest people since there are no jail positions set!")
 	else
 		-- Send NPCs to Jail
 		if trace.Entity:IsNPC() then
@@ -87,7 +87,7 @@ function SWEP:PrimaryAttack()
 				trace.Entity:Arrest()
 				Notify(trace.Entity, 1, 4, "You've been arrested by " .. self.Owner:Nick())
 			else
-				Notify(self.Owner, 1, 4, "Cannot arrest because he just spawned!")
+				Notify(self.Owner, 1, 4, "You can't arrest players who are spawning.")
 			end
 		end
 	end

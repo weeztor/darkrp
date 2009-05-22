@@ -65,7 +65,7 @@ function SWEP:PrimaryAttack()
 	end
 
 	trace.Entity:Unarrest()
-	Notify(trace.Entity, 1, 4, "You've been unarrested by " .. self.Owner:Nick())
+	Notify(trace.Entity, 1, 4, "You were unarrested by " .. self.Owner:Nick())
 end
 
 function SWEP:SecondaryAttack()

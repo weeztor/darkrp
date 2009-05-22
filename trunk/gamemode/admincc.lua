@@ -29,7 +29,7 @@ function ccValueCommand(ply, cmd, args)
 	end
 
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin")
+		ply:PrintMessage(2, "You need admin privileges in order to be able to set this command.")
 		return
 	end
 
@@ -115,7 +115,7 @@ function ccDoorOwn(ply, cmd, args)
 	end
 
 	if not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin")
+		ply:PrintMessage(2, "You need admin privileges in order to be able to own a door.")
 		return
 	end
 
@@ -348,7 +348,7 @@ concommand.Add("rp_paydaytime", ccPayDayTime)
 
 function ccArrest(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin")
+		ply:PrintMessage(2, "You need admin privileges in order to be able to arrest someone through rp_arrest.")
 		return
 	end
 
@@ -979,7 +979,7 @@ concommand.Add("rp_revoke", ccRevokePriv)
 function ccSWEPSpawn(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-			Notify(ply, 1, 2, "You're not an admin!")
+			Notify(ply, 1, 5, "You need admin privileges in order to be able to spawn a SWEP.")
 			return
 		end
 	end
@@ -991,7 +991,7 @@ concommand.Add("gm_giveswep", ccSWEPSpawn)
 function ccSWEPGive(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-			Notify(ply, 1, 2, "You're not an admin!")
+			Notify(ply, 1, 5, "You need admin privileges in order to be able to spawn a SWEP.")
 			return
 		end
 	end
@@ -1003,7 +1003,7 @@ concommand.Add("gm_spawnswep", ccSWEPGive)
 function ccSENTSPawn(ply, cmd, args)
 	if CfgVars["adminsents"] == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-			Notify(ply, 1, 2, "You're not an admin!")
+			Notify(ply, 1, 2, "You need admin privileges in order to be able to spawn a SENT.")
 			return
 		end
 	end
