@@ -124,7 +124,7 @@ for k, v in pairs(files) do
 	include("modules/" .. v)
 end
 
-local function RefreshSettings(RESET)
+function RefreshRPSettings(RESET)
 	-- DO NOT TOUCH THIS! JUST SET THE RP SETTING IN GAME AND IT WILL SAVE AUTOMATICALLY! IF IT DOESNT SAVE AUTOMATICALLY DO rp_savechanges IN CONSOLE!
 	CfgVars["ooc"] = 1 --OOC allowed
 	CfgVars["allowrpnames"] = 1 --RP Name changing allowed?
@@ -223,10 +223,10 @@ local function RefreshSettings(RESET)
 		end
 	end
 end
-RefreshSettings()
+RefreshRPSettings()
 
 if not DB.RetrieveSettings() then
-	RefreshSettings(true)
+	RefreshRPSettings(true)
 end
 
 if not DB.RetrieveGlobals() then
