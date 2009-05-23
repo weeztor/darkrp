@@ -39,8 +39,8 @@ function TalkToRange(ply, PlayerName, Message, size)
 	end
 end
 
-function TalkToPerson(reciever, col1, text1, col2, text2, sender)
-	umsg.Start("DarkRP_Chat", reciever)
+function TalkToPerson(receiver, col1, text1, col2, text2, sender)
+	umsg.Start("DarkRP_Chat", receiver)
 		umsg.Short(col1.r)
 		umsg.Short(col1.g)
 		umsg.Short(col1.b)

@@ -11,7 +11,7 @@ function ccValueCommand(ply, cmd, args)
 
 	if not valuecmd then return end
 
-	if #args < 1 then
+	if #args < 1 or not tonumber(args[1]) then
 		if valuecmd.global then
 			if ply:EntIndex() == 0 then
 				print(cmd .. " = " .. GetGlobalInt(valuecmd.var))
@@ -50,7 +50,11 @@ function ccValueCommand(ply, cmd, args)
 	end
 
 	NotifyAll(0, 4, nick .. " set " .. cmd .. " to " .. amount)
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..cmd.." to "..amount )
+	if ply.SteamName then
+		DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..cmd.." to "..amount )
+	else
+		DB.Log("Console set "..cmd.." to "..amount )
+	end
 end
 
 function ccToggleCommand(ply, cmd, args)
@@ -58,7 +62,7 @@ function ccToggleCommand(ply, cmd, args)
 
 	if not togglecmd then return end
 
-	if #args < 1 then
+	if #args < 1 or not tonumber(args[1]) then
 		if togglecmd.global then
 			if ply:EntIndex() == 0 then
 				print(cmd .. " = " .. GetGlobalInt(togglecmd.var))
@@ -106,7 +110,11 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	NotifyAll(0, 3, nick .. " set " .. cmd .. " to " .. toggle)
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..cmd.." to "..toggle )
+	if ply.SteamName then
+		DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..cmd.." to "..toggle )
+	else
+		DB.Log("Console set "..cmd.." to "..toggle )
+	end
 end
 
 function ccDoorOwn(ply, cmd, args)
@@ -285,7 +293,12 @@ function ccTell(ply, cmd, args)
 		umsg.Start("AdminTell", target)
 			umsg.String(msg)
 		umsg.End()
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") did rp_tell \""..msg .. "\" on "..target:SteamName() )
+		
+		if ply:EntIndex() == 0 then
+			DB.Log("Console did rp_tell \""..msg .. "\" on "..target:SteamName() )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") did rp_tell \""..msg .. "\" on "..target:SteamName() )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -315,7 +328,12 @@ function ccRemoveLetters(ply, cmd, args)
 			v:Remove()
 		end
 	end
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed all letters" )
+	
+	if ply:EntIndex() == 0 then
+		DB.Log("Console force-removed all letters" )
+	else
+		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed all letters" )
+	end
 end
 concommand.Add("rp_removeletters", ccRemoveLetters)
 
@@ -342,7 +360,12 @@ function ccPayDayTime(ply, cmd, args)
 	end
 
 	NotifyAll(0, 3, nick .. " set rp_paydaytime to " .. amount)
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") changed the paydaytime to "..amount )
+	
+	if ply:EntIndex() == 0 then
+		DB.Log("Console changed the paydaytime to "..amount )
+	else
+		DB.Log(ply:SteamName().." ("..ply:SteamID()..") changed the paydaytime to "..amount )
+	end
 end
 concommand.Add("rp_paydaytime", ccPayDayTime)
 
@@ -369,7 +392,12 @@ function ccArrest(ply, cmd, args)
 		else
 			target:Arrest()
 		end
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-arrested "..target:SteamName() )
+		
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-arrested "..target:SteamName())
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-arrested "..target:SteamName() )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -391,7 +419,12 @@ function ccUnarrest(ply, cmd, args)
 
 	if target then
 		target:Unarrest()
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-unarrested "..target:SteamName() )
+		
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-unarrested "..target:SteamName())
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-unarrested "..target:SteamName() )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -423,7 +456,11 @@ function ccMayor(ply, cmd, args)
 		end
 
 		target:PrintMessage(2, nick .. " made you Mayor!")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." mayor" )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-made "..target:SteamName().." mayor" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." mayor" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -455,7 +492,11 @@ function ccCPChief(ply, cmd, args)
 		target:ChangeTeam(TEAM_POLICE)
 		target:ChangeTeam(TEAM_CHIEF)
 		target:PrintMessage(2, nick .. " made you a CP Chief!")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." chief" )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-made "..target:SteamName().." chief" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." chief" )
+		end
 	else
 		print("Could not find player: " .. args[1])
 		return
@@ -482,7 +523,11 @@ function ccCP(ply, cmd, args)
 		end
 
 		target:PrintMessage(2, nick .. " made you a CP!")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." CP" )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-made "..target:SteamName().." CP" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." CP" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -512,7 +557,11 @@ function ccCitizen(ply, cmd, args)
 		end
 
 		target:PrintMessage(2, nick .. " made you a Citizen!")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." citizen" )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-made "..target:SteamName().." Citizen" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." Citizen" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -542,7 +591,11 @@ function ccCook(ply, cmd, args)
 		end
 
 		target:PrintMessage(2, nick .. " made you a cook!")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." cook" )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-made "..target:SteamName().." Cook" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." Cook" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -572,7 +625,11 @@ function ccMedic(ply, cmd, args)
 		end
 
 		target:PrintMessage(2, nick .. " made you a medic!")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." medic" )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-made "..target:SteamName().." medic" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." medic" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -602,7 +659,11 @@ function ccGundealer(ply, cmd, args)
 		end
 
 		target:PrintMessage(2, nick .. " made you a gundealer!")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." gundealer" )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-made "..target:SteamName().." gundealer" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." gundealer" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -632,7 +693,11 @@ function ccmobboss(ply, cmd, args)
 		end
 
 		target:PrintMessage(2, nick .. " made you a mobboss!")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." mobboss" )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-made "..target:SteamName().." mobboss" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." mobboss" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -662,7 +727,11 @@ function ccgangster(ply, cmd, args)
 		end
 
 		target:PrintMessage(2, nick .. " made you a gangster!")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." gangster" )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-made "..target:SteamName().." gangster" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-made "..target:SteamName().." gangster" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -694,7 +763,11 @@ function ccKickBan(ply, cmd, args)
 
 		game.ConsoleCommand("banid " .. args[2] .. " " .. target:UserID() .. "\n")
 		game.ConsoleCommand("kickid " .. target:UserID() .. " \"Kicked and Banned by "..ply:Nick().."\"\n")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") kicked and banned "..target:SteamName() )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console kicked and banned "..target:SteamName() )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") kicked and banned "..target:SteamName() )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -730,7 +803,11 @@ function ccKick(ply, cmd, args)
 		end
 
 		game.ConsoleCommand("kickid " .. target:UserID() .. " \"" .. reason..": " ..ply:Nick().. "\"\n")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..")  kicked "..target:SteamName())
+		if ply:EntIndex() == 0 then
+			DB.Log("Console kicked "..target:SteamName() )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") kicked "..target:SteamName() )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -774,7 +851,11 @@ function ccSetMoney(ply, cmd, args)
 			nick = ply:Nick()
 		end
 		target:PrintMessage(2, nick .. " set your money to: " .. CUR .. amount)
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..target:SteamName().."'s money to "..CUR..amount)
+		if ply:EntIndex() == 0 then
+			DB.Log("Console set "..target:SteamName().."'s money to "..CUR..amount )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..target:SteamName().."'s money to "..CUR..amount)
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -826,7 +907,11 @@ function ccSetSalary(ply, cmd, args)
 			nick = ply:Nick()
 		end
 		target:PrintMessage(2, nick .. " set your Salary to: " .. CUR .. amount)
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..target:SteamName().."'s salary to "..CUR..amount )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console set "..target:SteamName().."'s salary to "..CUR..amount )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..target:SteamName().."'s salary to "..CUR..amount)
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -876,27 +961,51 @@ function ccGrantPriv(ply, cmd, args)
 	if args[2] == "tool" then
 		DB.GrantPriv(target, TOOL)
 		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." toolgun priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." toolgun priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has granted "..target:Nick().." toolgun priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." toolgun priveleges." )
+		end
 	elseif args[2] == "admin" then
 		DB.GrantPriv(target, ADMIN)
 		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." admin priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." admin priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has granted "..target:Nick().." admin priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." admin priveleges." )
+		end
 	elseif args[2] == "phys" then
 		DB.GrantPriv(target, PHYS)
 		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." physgun priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." physgun priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has granted "..target:Nick().." physgun priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." physgun priveleges." )
+		end
 	elseif args[2] == "prop" then
 		DB.GrantPriv(target, PROP)
 		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." prop spawn priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." prop spawn priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has granted "..target:Nick().." prop spawn priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." prop spawn priveleges." )
+		end
 	elseif args[2] == "mayor" then
 		DB.GrantPriv(target, MAYOR)
 		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." /mayor priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." mayor priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has granted "..target:Nick().." mayor priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." mayor priveleges." )
+		end
 	elseif args[2] == "cp" then
 		DB.GrantPriv(target, CP)
 		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." /cp priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." CP priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has granted "..target:Nick().." CP priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." CP priveleges." )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("There is not a " .. args[2] .. " privilege!")
@@ -945,27 +1054,51 @@ function ccRevokePriv(ply, cmd, args)
 	if args[2] == "tool" then
 		DB.RevokePriv(target, TOOL)
 		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..target:Nick().."'s toolgun priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." toolgun priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has revoked "..target:Nick().." toolgun priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." toolgun priveleges." )
+		end
 	elseif args[2] == "admin" then
 		DB.RevokePriv(target, ADMIN)
 		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s admin priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." admin priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has revoked "..target:Nick().." admin priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." admin priveleges." )
+		end
 	elseif args[2] == "phys" then
 		DB.RevokePriv(target, PHYS)
 		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s physgun priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." physgun priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has revoked "..target:Nick().." physgun priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." physgun priveleges." )
+		end
 	elseif args[2] == "prop" then
 		DB.RevokePriv(target, PROP)
 		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s prop spawn priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." prop spawn priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has revoked "..target:Nick().." prop spawn priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." prop spawn priveleges." )
+		end
 	elseif args[2] == "mayor" then
 		DB.RevokePriv(target, MAYOR)
 		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s /mayor priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." mayor priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has revoked "..target:Nick().." mayor priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." mayor priveleges." )
+		end
 	elseif args[2] == "cp" then
 		DB.RevokePriv(target, CP)
 		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s /cp priveleges.")
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." CP priveleges." )
+		if ply:EntIndex() == 0 then
+			DB.Log("Console has revoked "..target:Nick().." CP priveleges." )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." CP priveleges." )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("There is not a " .. args[2] .. " privilege!")
