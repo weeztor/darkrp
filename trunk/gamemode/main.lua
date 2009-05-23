@@ -2337,6 +2337,11 @@ function rp_GiveLicense(ply, cmd, args)
 		Notify(target, 1, 4, nick .. " gave you a gun license")
 		Notify(ply, 2, 4, "Gave "..target:Nick().." a gun license!")
 		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-gave "..target:Nick().." a gun license")
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-gave "..target:Nick().." a gun license" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-gave "..target:Nick().." a gun license" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
@@ -2368,6 +2373,11 @@ function rp_RevokeLicense(ply, cmd, args)
 		Notify(target, 1, 4, nick .. " revoked your gun license")
 		Notify(ply, 2, 4, "Revoked "..target:Nick().."'s gun license!")
 		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed "..target:Nick().."'s gun license")
+		if ply:EntIndex() == 0 then
+			DB.Log("Console force-removed "..target:Nick().."'s gun license" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed "..target:Nick().."'s gun license" )
+		end
 	else
 		if ply:EntIndex() == 0 then
 			print("Could not find player: " .. args[1])
