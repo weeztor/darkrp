@@ -624,12 +624,12 @@ function DB.RemoveGlobals()
 end
 
 function ResetAllRPSettings(ply,cmd,args)
-	if not ply:IsSuperAdmin() then
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		Notify(ply, 1, 5, "You need to be superadmin in order to be able to reset all RP settings.")
 		return
 	end
 	Notify(ply, 1, 4, "You have reset all settings!")
-	RefreshSettings(true)
+	RefreshRPSettings(true)
 	RefreshGlobals()
 end
 concommand.Add("rp_ResetAllSettings", ResetAllRPSettings)
