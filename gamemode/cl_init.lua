@@ -955,7 +955,7 @@ local function ReceiveFGlobalInt(msg)
 	local id = msg:ReadString()
 	SetGlobalInt(id, int)
 end
-usermessage.Hook("FReceiveGlobalInt", ReceiveFGlobalInt)
+usermessage.Hook("FRecieveGlobalInt", ReceiveFGlobalInt)
 
 local oldGetGlobalInt = GetGlobalInt
 function GetGlobalInt(id)

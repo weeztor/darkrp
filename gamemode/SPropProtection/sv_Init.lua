@@ -341,6 +341,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 	
 	local ent = tr.Entity
 	if not ValidEntity(ent) then return true end
+	if ent:GetClass() == "func_breakable_surf" and ply:IsAdmin() then return true end
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v then return false end
 	end
