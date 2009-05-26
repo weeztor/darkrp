@@ -22,21 +22,25 @@ end
 function TalkToRange(ply, PlayerName, Message, size)
 	local ents = ents.FindInSphere(ply:EyePos(), size)
 	local col = team.GetColor(ply:Team())
+	local filter = RecipientFilter() 
+	filter:RemoveAllPlayers()
 	for k, v in pairs(ents) do
-		if v:IsPlayer() then	
-			umsg.Start("DarkRP_Chat", v)
-				umsg.Short(col.r)
-				umsg.Short(col.g)
-				umsg.Short(col.b)
-				umsg.String(PlayerName)
-				umsg.Entity(v)
-				umsg.Short(255)
-				umsg.Short(255)
-				umsg.Short(255)
-				umsg.String(Message)
-			umsg.End()
+		if v:IsPlayer() then
+			filter:AddPlayer(v)
 		end
 	end
+	
+	umsg.Start("DarkRP_Chat", filter)
+		umsg.Short(col.r)
+		umsg.Short(col.g)
+		umsg.Short(col.b)
+		umsg.String(PlayerName)
+		umsg.Entity(ply)
+		umsg.Short(255)
+		umsg.Short(255)
+		umsg.Short(255)
+		umsg.String(Message)
+	umsg.End()
 end
 
 function TalkToPerson(receiver, col1, text1, col2, text2, sender)
