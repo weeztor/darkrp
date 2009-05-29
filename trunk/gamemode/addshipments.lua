@@ -24,6 +24,8 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 	local price = tonumber(price)
 	local shipmentmodel = shipmodel or "models/Items/item_item_crate.mdl"
 	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
+	ShipmentWeaponClasses[name] = {}
+	ShipmentWeaponClasses[name][entity] = model
 end
 
 function AddCustomVehicle(Name_of_vehicle, price, Jobs_that_can_buy_it)
