@@ -134,3 +134,14 @@ local function CPPIInitGM()
 	end
 end
 hook.Add("Initialize", "CPPIInitGM", CPPIInitGM)
+
+AddToggleCommand("rp_spp_on", "spp_on", false)
+AddToggleCommand("rp_spp_admin", "spp_admin", false)
+AddToggleCommand("rp_spp_use", "spp_use", false)
+AddToggleCommand("rp_spp_entdamage", "spp_entdamage", false)
+AddToggleCommand("rp_spp_physreload", "spp_physreload", false)
+AddToggleCommand("rp_spp_touchworldprops", "spp_touchworldprops", false)
+AddToggleCommand("rp_spp_propdeletion", "spp_propdeletion", false)
+AddToggleCommand("rp_spp_deleteadminents", "spp_deleteadminents", false)
+AddValueCommand("rp_spp_deletedelay", "spp_deletedelay", false)
+

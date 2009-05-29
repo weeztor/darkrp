@@ -1,10 +1,7 @@
 ------------------------------------
 --	Simple Prop Protection
---	By Spacetech
+--	By Spacetech, edited by FPtje
 ------------------------------------
-
-SPropProtection.AdminCPanel = nil
-SPropProtection.ClientCPanel = nil
 
 CreateClientConVar("SPropProtection_onoff", 1, false, true)
 CreateClientConVar("SPropProtection_admin", 1, false, true)
@@ -17,15 +14,15 @@ CreateClientConVar("SPropProtection_dae", 0, false, true)
 CreateClientConVar("SPropProtection_delay", 120, false, true)
 
 function SPropProtection.HUDPaint()
-	if(!LocalPlayer() or !LocalPlayer():IsValid()) then
+	if not LocalPlayer() or not LocalPlayer():IsValid() then
 		return
 	end
 	local tr = util.TraceLine(util.GetPlayerTrace(LocalPlayer()))
-	if(tr.HitNonWorld) then
-		if(tr.Entity:IsValid() and !tr.Entity:IsPlayer() and !LocalPlayer():InVehicle()) then
+	if tr.HitNonWorld then
+		if tr.Entity:IsValid() and not tr.Entity:IsPlayer() and not LocalPlayer():InVehicle() then
 			local PropOwner = "Owner: "
 			local OwnerObj = tr.Entity:GetNetworkedEntity("OwnerObj", false)
-			if(OwnerObj and OwnerObj:IsValid()) then
+			if OwnerObj and OwnerObj:IsValid() then
 				PropOwner = PropOwner..OwnerObj:Name()
 			else
 				PropOwner = PropOwner..tostring(tr.Entity:GetNetworkedString("Owner", "N/A"))
@@ -44,33 +41,51 @@ hook.Add("HUDPaint", "SPropProtection.HUDPaint", SPropProtection.HUDPaint)
 function SPropProtection.AdminPanel(Panel)
 	Panel:ClearControls()
 	
-	if(!LocalPlayer():IsAdmin()) then
-		Panel:AddControl("Label", {Text = "You are not an admin"})
+	if not LocalPlayer():IsAdmin() then
+		Panel:AddControl("Label", {Text = "You need to be admin in order to be able to view this menu."})
 		return
 	end
 	
-	if(!SPropProtection.AdminCPanel) then
+	if not SPropProtection.AdminCPanel then
 		SPropProtection.AdminCPanel = Panel
 	end
 	
 	Panel:AddControl("Label", {Text = "Admin Panel - Simple Prop Protection by Spacetech"})
 	
-	Panel:AddControl("CheckBox", {Label = "Prop Protection On/Off", Command = "SPropProtection_onoff"})
-	Panel:AddControl("CheckBox", {Label = "Admins Can Do Everything On/Off", Command = "SPropProtection_admin"})
-	Panel:AddControl("CheckBox", {Label = "Use Protection On/Off", Command = "SPropProtection_use"})
-	Panel:AddControl("CheckBox", {Label = "Entity Damage Protection On/Off", Command = "SPropProtection_edmg"})	
-	Panel:AddControl("CheckBox", {Label = "Physgun Reload Protection On/Off", Command = "SPropProtection_pgr"})
-	Panel:AddControl("CheckBox", {Label = "People can Touch World Props On/Off", Command = "SPropProtection_awp"})	
-	Panel:AddControl("CheckBox", {Label = "Disconnect Prop Deletion On/Off", Command = "SPropProtection_dpd"})
-	Panel:AddControl("CheckBox", {Label = "Delete Admin Entities On/Off", Command = "SPropProtection_dae"})
-	Panel:AddControl("Slider", {Label = "Deletion Delay in seconds", Command = "SPropProtection_delay", Type = "Integer", Min = "10", Max = "500"})
-	Panel:AddControl("Button", {Text = "Apply Settings", Command = "SPropProtection_ApplyAdminSettings"})
+	local function DoToggle(chkbx, command)
+		if chkbx:GetChecked() == nil or not chkbx:GetChecked() then 
+			chkbx:SetValue( true ) 
+		else 
+			chkbx:SetValue( false ) 
+		end 
+		local tonum = {}
+		tonum[false] = "0"
+		tonum[true] = "1"
+		RunConsoleCommand(command, tonum[chkbx:GetChecked()])
+	end
 	
+	local function AddOption(text, command, value)
+		local box = vgui.Create("DCheckBoxLabel")
+		box:SetText(text)
+		box:SetValue(util.tobool(GetGlobalInt(value)))
+		function box.Button:Toggle() DoToggle(self, command) end
+		Panel:AddPanel(box)
+	end
+	
+	AddOption("Prop Protection On/Off", "rp_spp_on", "spp_on")
+	AddOption("Admins Can Do Everything On/Off", "rp_spp_admin", "spp_admin")
+	AddOption("Use Protection On/Off", "rp_spp_use", "spp_use")
+	AddOption("Entity Damage Protection On/Off", "rp_spp_entdamage", "spp_entdamage")
+	AddOption("Physgun Reload Protection On/Off", "rp_spp_physreload", "spp_physreload")
+	AddOption("People can Touch World Props On/Off", "rp_spp_touchworldprops", "spp_touchworldprops")
+	AddOption("Disconnect Prop Deletion On/Off", "rp_spp_propdeletion", "spp_propdeletion")
+	AddOption("Delete Admin Entities On/Off", "rp_spp_deleteadminents", "spp_deleteadminents")
+
 	Panel:AddControl("Label", {Text = "Cleanup Panel"})
 	
 	for k, ply in pairs(player.GetAll()) do
-		if(ply and ply:IsValid()) then
-			Panel:AddControl("Button", {Text = ply:Nick(), Command = "SPropProtection_CleanupProps "..ply:GetNWString("SPPSteamID")})
+		if ply and ply:IsValid() then
+			Panel:AddControl("Button", {Text = ply:Nick(), Command = "SPropProtection_CleanupProps "..ply:UserID()})
 		end
 	end
 	
@@ -81,7 +96,7 @@ end
 function SPropProtection.ClientPanel(Panel)
 	Panel:ClearControls()
 	
-	if(!SPropProtection.ClientCPanel) then
+	if not SPropProtection.ClientCPanel then
 		SPropProtection.ClientCPanel = Panel
 	end
 	
@@ -91,13 +106,13 @@ function SPropProtection.ClientPanel(Panel)
 	Panel:AddControl("Label", {Text = "Buddies Panel"})
 	
 	local Players = player.GetAll()
-	if(table.Count(Players) == 1) then
+	if table.Count(Players) == 1 then
 		Panel:AddControl("Label", {Text = "No Other Players Are Online"})
 	else
 		for k, ply in pairs(Players) do
-			if(ply and ply:IsValid() and ply != LocalPlayer()) then
-				local BCommand = "SPropProtection_BuddyUp_"..ply:GetNWString("SPPSteamID")
-				if(!LocalPlayer():GetInfo(BCommand)) then
+			if(ply and ply:IsValid() and ply ~= LocalPlayer()) then
+				local BCommand = "SPropProtection_BuddyUp_"..ply:UserID()
+				if not LocalPlayer():GetInfo(BCommand) then
 					CreateClientConVar(BCommand, 0, false, true)
 				end
 				Panel:AddControl("CheckBox", {Label = ply:Nick(), Command = BCommand})
@@ -109,11 +124,11 @@ function SPropProtection.ClientPanel(Panel)
 end
 
 function SPropProtection.SpawnMenuOpen()
-	if(SPropProtection.AdminCPanel) then
+	if SPropProtection.AdminCPanel then
 		SPropProtection.AdminPanel(SPropProtection.AdminCPanel)
 	end
 	
-	if(SPropProtection.ClientCPanel) then
+	if SPropProtection.ClientCPanel then
 		SPropProtection.ClientPanel(SPropProtection.ClientCPanel)
 	end
 end

@@ -178,6 +178,16 @@ function RefreshRPSettings(RESET)
 	CfgVars["license"] = 1
 	CfgVars["pocket"] = 1
 	CfgVars["logging"] = 1
+	
+	CfgVars["spp_on"] = 1
+	CfgVars["spp_admin"] = 1
+	CfgVars["spp_use"] = 0
+	CfgVars["spp_entdamage"] = 1
+	CfgVars["spp_physreload"] = 1
+	CfgVars["spp_touchworldprops"] = 0
+	CfgVars["spp_propdeletion"] = 1
+	CfgVars["spp_deleteadminents"] = 1
+	CfgVars["spp_deletedelay"] = 120
 
 	-- You can set the exact value of the below items:
 
