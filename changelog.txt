@@ -61,6 +61,8 @@ SVN version
 [FIX] mp_falldamage not working
 [FIX] Chat bug after gamemode_reload(developer's thing)
 [FIX] Health showing below 0
+[FIX] SPP exploit where clients could retrieve steamID's with Lua.(Should only be possible with status in console)
+[FIX] Bug in SPP menu that made the settings reset themselves(The settings now use the DarkRP settings system)
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
@@ -91,6 +93,7 @@ SVN version
 [REMOVE] rp_currencysymbol, Didn't work and noone used it
 [REMOVE] The standard look-at-a-player Name and health thing, it's replaced by the RP one
 [REMOVE] /rm, Exploit-sensitive and never used
+[REMOVE] Apply settings button in SPP menu, it now applies instantly.
 
 SVN VERSTION till 150/ 2.3.5:
 Updated by: FPtje Falco

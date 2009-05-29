@@ -34,7 +34,7 @@ function ccValueCommand(ply, cmd, args)
 	end
 
 	local amount = math.floor(tonumber(args[1]))
-
+	if amount == GetGlobalInt(valuecmd.var) then return end
 	if valuecmd.global then
 		DB.SaveGlobal(valuecmd.var, amount)
 	else
@@ -85,6 +85,7 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	local toggle = tonumber(args[1])
+	if toggle == GetGlobalInt(togglecmd.var) then return end
 
 	if not toggle or (toggle ~= 1 and toggle ~= 0) then
 		if ply:EntIndex() == 0 then

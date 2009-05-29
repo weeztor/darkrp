@@ -4,7 +4,6 @@
 ------------------------------------
 -- Simple prop protection merge
 
-
 SPropProtection = {} -- Make a table for like every function and subvariable.
 SPropProtection.Version = "DarkRP"
 SPropProtection["Props"] = {} -- a table with the props that players own.
@@ -17,40 +16,6 @@ timer.Simple(5, function()
 		table.insert(SPropProtection.AntiCopy, v.Classname)
 	end
 end)
-
--- Start the settings
-function SPropProtection.SetupSettings()
-	if(!sql.TableExists("spropprotection")) then
-		sql.Query("CREATE TABLE IF NOT EXISTS spropprotection(onoff INTEGER NOT NULL, admin INTEGER NOT NULL, use INTEGER NOT NULL, edmg INTEGER NOT NULL, pgr INTEGER NOT NULL, awp INTEGER NOT NULL, dpd INTEGER NOT NULL, dae INTEGER NOT NULL, delay INTEGER NOT NULL);")
-		sql.Query("CREATE TABLE IF NOT EXISTS spropprotectionbuddies(steamid TEXT NOT NULL PRIMARY KEY, bsteamid TEXT);")
-		sql.Query("INSERT INTO spropprotection(onoff, admin, use, edmg, pgr, awp, dpd, dae, delay) VALUES(1, 1, 1, 1, 1, 1, 1, 0, 120)")
-	end
-	return sql.QueryRow("SELECT * FROM spropprotection LIMIT 1")
-end
-
-SPropProtection["Config"] = SPropProtection.SetupSettings()
-
-function SPropProtection.AdminReload(ply)
-	if(ply) then
-		for k, v in pairs(SPropProtection["Config"]) do
-			local stuff = k
-			if(stuff == "toggle") then
-				stuff = "onoff"
-			end
-			ply:ConCommand("SPropProtection_"..stuff.." "..v.."\n")
-		end
-	else
-		for k1, v1 in pairs(player.GetAll()) do
-			for k2, v2 in pairs(SPropProtection["Config"]) do
-				local stuff = k2
-				if(stuff == "toggle") then
-					stuff = "onoff"
-				end
-				v1:ConCommand("SPropProtection_"..stuff.." "..v2.."\n")
-			end
-		end
-	end
-end
 
 function SPropProtection.LoadBuddies(ply)
 	local PData = ply:GetPData("SPPBuddies", "")
@@ -123,7 +88,7 @@ function SPropProtection.IsBuddy(ply, ent)
 end
 
 function SPropProtection.PlayerCanTouch(ply, ent)
-	if(tonumber(SPropProtection["Config"]["onoff"]) == 0 or ent:GetClass() == "worldspawn") then
+	if(tonumber(CfgVars["spp_on"]) == 0 or ent:GetClass() == "worldspawn") then
 		return true
 	end
 	
@@ -179,12 +144,12 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 	end
 
 	if (ent:GetNetworkedString("Owner") == "World") then
-		if (tonumber(SPropProtection["Config"]["awp"]) == 1 or (ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1)) and (string.lower(ent:GetClass()) == "prop_physics" or  string.lower(ent:GetClass()) == "func_physbox" or string.lower(ent:GetClass()) == "prop_physics_multiplayer") then
+		if (tonumber(CfgVars["spp_touchworldprops"]) == 1 or (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1)) and (string.lower(ent:GetClass()) == "prop_physics" or  string.lower(ent:GetClass()) == "func_physbox" or string.lower(ent:GetClass()) == "prop_physics_multiplayer") then
 			return true
 		end
-	elseif (ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 1) then
+	elseif (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1) then
 		return true
-	elseif (ply:IsAdmin() and tonumber(SPropProtection["Config"]["admin"]) == 0) then
+	elseif (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 0) then
 		return false
 	end
 	return false
@@ -201,10 +166,8 @@ function SPropProtection.DRemove(SteamID, PlayerName)
 end
 
 function SPropProtection.PlayerInitialSpawn(ply)
-	ply:SetNWString("SPPSteamID", string.gsub(ply:SteamID(), ":", "_"))
 	SPropProtection[ply:SteamID()] = {}
 	SPropProtection.LoadBuddies(ply)
-	SPropProtection.AdminReload(ply)
 	local TimerName = "SPropProtection.DRemove: "..ply:SteamID()
 	if(timer.IsTimer(TimerName)) then
 		timer.Remove(TimerName)
@@ -213,9 +176,9 @@ end
 hook.Add("PlayerInitialSpawn", "SPropProtection.PlayerInitialSpawn", SPropProtection.PlayerInitialSpawn)
 
 function SPropProtection.Disconnect(ply)
-	if(tonumber(SPropProtection["Config"]["dpd"]) == 1) then
-		if(ply:IsAdmin() and tonumber(SPropProtection["Config"]["dae"]) == 0) then return end
-		timer.Create("SPropProtection.DRemove: "..ply:SteamID(), tonumber(SPropProtection["Config"]["delay"]), 1, SPropProtection.DRemove, ply:SteamID(), ply:Nick())
+	if(tonumber(CfgVars["spp_propdeletion"]) == 1) then
+		if(ply:IsAdmin() and tonumber(CfgVars["spp_deleteadminents"]) == 0) then return end
+		timer.Create("SPropProtection.DRemove: "..ply:SteamID(), tonumber(CfgVars["spp_deletedelay"]), 1, SPropProtection.DRemove, ply:SteamID(), ply:Nick())
 	end
 end
 hook.Add("PlayerDisconnected", "SPropProtection.Disconnect", SPropProtection.Disconnect)
@@ -387,7 +350,7 @@ end
 hook.Add("CanTool", "SPropProtection.CanTool", SPropProtection.CanTool)
 
 function SPropProtection.EntityTakeDamage(ent, inflictor, attacker, amount, dmginfo)
-	if(tonumber(SPropProtection["Config"]["edmg"]) == 0) then return end
+	if(tonumber(CfgVars["spp_entdamage"]) == 0) then return end
 	if(not ValidEntity(ent)) then return false end
     if(ent:IsPlayer() or !attacker:IsPlayer()) then return end
 	if(!SPropProtection.PlayerCanTouch(attacker, ent)) then
@@ -407,14 +370,14 @@ function SPropProtection.PlayerUse(ply, ent)
 			return true
 		end
 	end
-	if ent:IsValid() and tonumber(SPropProtection["Config"]["use"]) == 1 and not SPropProtection.PlayerCanTouch(ply, ent) and ent:GetNetworkedString("Owner") != "World" then
+	if ent:IsValid() and tonumber(CfgVars["spp_use"]) == 1 and not SPropProtection.PlayerCanTouch(ply, ent) and ent:GetNetworkedString("Owner") != "World" then
 		return false
 	end
 end
 hook.Add("PlayerUse", "SPropProtection.PlayerUse", SPropProtection.PlayerUse)
 
 function SPropProtection.OnPhysgunReload(weapon, ply)
-	if(tonumber(SPropProtection["Config"]["pgr"]) == 0) then return end
+	if(tonumber(CfgVars["spp_physreload"]) == 0) then return end
 	local tr = util.TraceLine(util.GetPlayerTrace(ply))
 	if(!tr.HitNonWorld or !tr.Entity:IsValid() or tr.Entity:IsPlayer()) then return end
 	
@@ -463,15 +426,15 @@ end
 hook.Add("PlayerSpawnedVehicle", "SPropProtection.PlayerSpawnedVehicle", SPropProtection.PlayerSpawnedVehicle)
 
 function SPropProtection.CleanupDisconnectedProps(ply, cmd, args)
-	if(!ply:IsAdmin()) then return end
+	if !ply:IsAdmin() then return end
 	for k1, v1 in pairs(SPropProtection["Props"]) do
 		local FoundUID = false
 		for k2, v2 in pairs(player.GetAll()) do
-			if(v1[1] == v2:SteamID()) then
+			if v1[1] == v2:SteamID() then
 				FoundUID = true
 			end
 		end
-		if(FoundUID == false and v1[2]:IsValid()) then
+		if FoundUID == false and v1[2]:IsValid() then
 			v1[2]:Remove()
 			SPropProtection["Props"][k1] = nil
 		end
@@ -481,56 +444,55 @@ end
 concommand.Add("SPropProtection_CleanupDisconnectedProps", SPropProtection.CleanupDisconnectedProps)
 
 function SPropProtection.CleanupProps(ply, cmd, args)
-	if(!args[1] or args[1] == "") then
+	if not args[1] or args[1] == "" then
 		for k, v in pairs(SPropProtection["Props"]) do
-			if(v[1] == ply:SteamID()) then
-				if(v[2]:IsValid()) then
+			if v[1] == ply:SteamID() then
+				if v[2]:IsValid() then
 					v[2]:Remove()
 					SPropProtection["Props"][k] = nil
 				end
 			end
 		end	
 		Notify(ply, 1, 4, "Your props have been cleaned up")
-	elseif(ply:IsAdmin()) then
-		for k1, v1 in pairs(player.GetAll()) do
-			local NWSteamID = v1:GetNWString("SPPSteamID")
-			if(args[1] == NWSteamID or args[2] == NWSteamID or string.find(string.Implode(" ", args), NWSteamID) != nil) then
-				for k2, v2 in pairs(SPropProtection["Props"]) do
-					if(v2[1] == v1:SteamID()) then
-						if(v2[2]:IsValid()) then
-							v2[2]:Remove()
-							SPropProtection["Props"][k2] = nil
-						end
-					end
-				end
-				NotifyAll(1, 4, v1:Nick().."'s props have been cleaned up")
+	elseif ply:IsAdmin() then
+		local find = FindPlayer(args[1])
+		if not ValidEntity(find) then
+			Notify(ply, 1, 4, "Could not find player "..args[1])
+			return
+		end
+		
+		for k,v in pairs(SPropProtection["Props"]) do
+			if v[1] == find:SteamID() then
+				if v[2]:IsValid() then v[2]:Remove() end
+				SPropProtection["Props"][k] = nil
 			end
 		end
+		NotifyAll(1, 4, find:Nick().."'s props have been cleaned up")
 	end
 end
 concommand.Add("SPropProtection_CleanupProps", SPropProtection.CleanupProps)
 
 function SPropProtection.ApplyBuddySettings(ply, cmd, args)
 	local Players = player.GetAll()
-	if(table.Count(Players) > 1) then
+	if #Players > 1 then
 		local ChangedFriends = false
 		for k, v in pairs(Players) do
 			local PlayersSteamID = v:SteamID()
 			local PData = ply:GetPData("SPPBuddies", "")
-			if(tonumber(ply:GetInfo("SPropProtection_BuddyUp_"..v:GetNWString("SPPSteamID"))) == 1) then
-				if(!table.HasValue(SPropProtection[ply:SteamID()], PlayersSteamID)) then
+			if tonumber(ply:GetInfo("SPropProtection_BuddyUp_"..v:UserID())) == 1 then
+				if not table.HasValue(SPropProtection[ply:SteamID()], PlayersSteamID) then
 					ChangedFriends = true
 					table.insert(SPropProtection[ply:SteamID()], PlayersSteamID)
-					if(PData == "") then
+					if PData == "" then
 						ply:SetPData("SPPBuddies", PlayersSteamID..";")
 					else
 						ply:SetPData("SPPBuddies", PData..PlayersSteamID..";")
 					end
 				end
 			else
-				if(table.HasValue(SPropProtection[ply:SteamID()], PlayersSteamID)) then
+				if table.HasValue(SPropProtection[ply:SteamID()], PlayersSteamID) then
 					for k2, v2 in pairs(SPropProtection[ply:SteamID()]) do
-						if(v2 == PlayersSteamID) then
+						if v2 == PlayersSteamID then
 							ChangedFriends = true
 							table.remove(SPropProtection[ply:SteamID()], k2)
 							ply:SetPData("SPPBuddies", string.gsub(PData, PlayersSteamID..";", ""))
@@ -540,11 +502,11 @@ function SPropProtection.ApplyBuddySettings(ply, cmd, args)
 			end
 		end
 		
-		if(ChangedFriends) then
+		if ChangedFriends then
 			local Table = {}
 			for k, v in pairs(SPropProtection[ply:SteamID()]) do
 				for k2, v2 in pairs(player.GetAll()) do
-					if(v == v2:SteamID()) then
+					if v == v2:SteamID() then
 						table.insert(Table, v2)
 					end
 				end
@@ -552,17 +514,16 @@ function SPropProtection.ApplyBuddySettings(ply, cmd, args)
 			gamemode.Call("CPPIFriendsChanged", ply, Table)
 		end
 	end
-	
 	Notify(ply, 1, 4, "Your buddies have been updated")
 end
 concommand.Add("SPropProtection_ApplyBuddySettings", SPropProtection.ApplyBuddySettings)
 
 function SPropProtection.ClearBuddies(ply, cmd, args)
 	local PData = ply:GetPData("SPPBuddies", "")
-	if(PData != "") then
+	if PData != "" then
 		for k, v in pairs(string.Explode(";", PData)) do
 			local String = string.Trim(v)
-			if(String != "") then
+			if String != "" then
 				ply:ConCommand("SPropProtection_BuddyUp_"..string.gsub(String, ":", "_").." 0\n")
 			end
 		end
@@ -578,35 +539,10 @@ function SPropProtection.ClearBuddies(ply, cmd, args)
 end
 concommand.Add("SPropProtection_ClearBuddies", SPropProtection.ClearBuddies)
 
-function SPropProtection.ApplySettings(ply, cmd, args)
-	if(!ply:IsAdmin()) then
-		return
-	end
-	
-	local onoff = tonumber(ply:GetInfo("SPropProtection_onoff") or 1)
-	local admin = tonumber(ply:GetInfo("SPropProtection_admin") or 1)
-	local use = tonumber(ply:GetInfo("SPropProtection_use") or 1)
-	local edmg = tonumber(ply:GetInfo("SPropProtection_edmg") or 1)
-	local pgr = tonumber(ply:GetInfo("SPropProtection_pgr") or 1)
-	local awp = tonumber(ply:GetInfo("SPropProtection_awp") or 1)
-	local dpd = tonumber(ply:GetInfo("SPropProtection_dpd") or 1)
-	local dae = tonumber(ply:GetInfo("SPropProtection_dae") or 1)
-	local delay = math.Clamp(tonumber(ply:GetInfo("SPropProtection_delay") or 120), 1, 500)
-	
-	sql.Query("UPDATE spropprotection SET onoff = "..onoff..", admin = "..admin..", use = "..use..", edmg = "..edmg..", pgr = "..pgr..", awp = "..awp..", dpd = "..dpd..", dae = "..dae..", delay = "..delay)
-	
-	SPropProtection["Config"] = sql.QueryRow("SELECT * FROM spropprotection LIMIT 1")
-	
-	timer.Simple(2, SPropProtection.AdminReload)
-	
-	Notify(ply, 1, 4, "Admin settings have been updated")
-end
-concommand.Add("SPropProtection_ApplyAdminSettings", SPropProtection.ApplySettings)
-
 function SPropProtection.WorldOwner()
 	local WorldEnts = 0
 	for k, v in pairs(ents.FindByClass("*")) do
-		if (!v:IsPlayer() and not v:GetNetworkedEntity("OwnerObj"):IsValid()) then
+		if not v:IsPlayer() and not v:GetNetworkedEntity("OwnerObj"):IsValid() then
 			v:SetNetworkedString("Owner", "World")
 			WorldEnts = WorldEnts + 1
 		end

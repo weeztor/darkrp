@@ -7,7 +7,6 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
-ShipmentWeaponClasses = {} --Global since it's used for custom shipments.
 ShipmentWeaponClasses["ak47"] = {}
 ShipmentWeaponClasses["ak47"]["weapon_ak472"] = "models/weapons/w_rif_ak47.mdl"
 ShipmentWeaponClasses["mp5"] = {}

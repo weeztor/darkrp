@@ -11,10 +11,6 @@ CPPI = {}
 CPPI_NOTIMPLEMENTED = 26
 CPPI_DEFER = 16
 
-include("SPropProtection/sh_CPPI.lua")
-include("SPropProtection/cl_Init.lua")
-
-
 CUR = "$"
 
 local GUIToggled = false
@@ -79,6 +75,7 @@ include("scoreboard/player_infocard.lua")
 include("scoreboard/player_row.lua")
 include("scoreboard/scoreboard.lua")
 include("scoreboard/vote_button.lua")
+include("SPropProtection/cl_Init.lua")
 
 surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
 
@@ -727,6 +724,7 @@ function AddHelpCategory(id, name)
 	table.insert(HelpCategories, { id = id, text = name })
 end
 include("sh_commands.lua")
+include("SPropProtection/sh_CPPI.lua")
 
 local function DoSpecialEffects(Type)
 	local thetype = Type:ReadString()
