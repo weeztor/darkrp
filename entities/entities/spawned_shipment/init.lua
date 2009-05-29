@@ -7,24 +7,19 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
-local weaponClasses = {}
-weaponClasses["ak47"] = {}
-weaponClasses["ak47"]["weapon_ak472"] = "models/weapons/w_rif_ak47.mdl"
-weaponClasses["mp5"] = {}
-weaponClasses["mp5"]["weapon_mp52"] = "models/weapons/w_smg_mp5.mdl"
-weaponClasses["m16"] = {}
-weaponClasses["m16"]["weapon_m42"] = "models/weapons/w_rif_m4a1.mdl"
-weaponClasses["mac10"] = {}
-weaponClasses["mac10"]["weapon_mac102"] = "models/weapons/w_smg_mac10.mdl"
-weaponClasses["shotgun"] = {}
-weaponClasses["shotgun"]["weapon_pumpshotgun2"] = "models/weapons/w_shot_m3super90.mdl"
-weaponClasses["sniper"] = {}
-weaponClasses["sniper"]["ls_sniper"] = "models/weapons/w_snip_g3sg1.mdl"
-
-for k,v in pairs(CustomShipments) do
-	weaponClasses[v.name] = {}
-	weaponClasses[v.name][v.entity] = v.model
-end
+ShipmentWeaponClasses = {} --Global since it's used for custom shipments.
+ShipmentWeaponClasses["ak47"] = {}
+ShipmentWeaponClasses["ak47"]["weapon_ak472"] = "models/weapons/w_rif_ak47.mdl"
+ShipmentWeaponClasses["mp5"] = {}
+ShipmentWeaponClasses["mp5"]["weapon_mp52"] = "models/weapons/w_smg_mp5.mdl"
+ShipmentWeaponClasses["m16"] = {}
+ShipmentWeaponClasses["m16"]["weapon_m42"] = "models/weapons/w_rif_m4a1.mdl"
+ShipmentWeaponClasses["mac10"] = {}
+ShipmentWeaponClasses["mac10"]["weapon_mac102"] = "models/weapons/w_smg_mac10.mdl"
+ShipmentWeaponClasses["shotgun"] = {}
+ShipmentWeaponClasses["shotgun"]["weapon_pumpshotgun2"] = "models/weapons/w_shot_m3super90.mdl"
+ShipmentWeaponClasses["sniper"] = {}
+ShipmentWeaponClasses["sniper"]["ls_sniper"] = "models/weapons/w_snip_g3sg1.mdl"
 
 function ENT:Initialize()
 	self.Entity.Destructed = false
@@ -74,8 +69,8 @@ function ENT:SpawnItem()
 	if count <= 1 then self.Entity:Remove() end
 	local contents = self.Entity:GetNWString("contents")
 	local weapon = ents.Create("spawned_weapon")
-	if not weaponClasses[contents] then return end
-	for ent, mdl in pairs(weaponClasses[contents]) do
+	if not ShipmentWeaponClasses[contents] then return end
+	for ent, mdl in pairs(ShipmentWeaponClasses[contents]) do
 		weapon:SetNWString("weaponclass", ent)
 		weapon:SetModel(mdl)
 	end
@@ -114,7 +109,7 @@ function ENT:Destruct()
 	local class = nil
 	local model = nil
 	
-	for k, v in pairs(weaponClasses) do
+	for k, v in pairs(ShipmentWeaponClasses) do
 		if k == contents then
 			for cls, mdl in pairs(v) do
 				class = cls
