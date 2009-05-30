@@ -36,8 +36,11 @@ function SPropProtection.HUDPaint()
 			surface.SetFont("Default")
 			local Width, Height = surface.GetTextSize(PropOwner)
 			Width = Width + 25
-			draw.RoundedBox(4, ScrW() - (Width + 8), (ScrH()/2 - 200) - (8), Width + 8, Height + 8, Color(0, 0, 0, 150))
-			draw.SimpleText(PropOwner, "Default", ScrW() - (Width / 2) - 7, ScrH()/2 - 200, Color(255, 255, 255, 255), 1, 1)
+			local r,g,b,a = GetConVarNumber("backgroundr"), GetConVarNumber("backgroundg"), GetConVarNumber("backgroundb"), GetConVarNumber("backgrounda")
+			draw.RoundedBox(4, 0, ScrH() - GetConVarNumber("HudHeight")-123, Width, Height, Color(r,g,b,a))
+			draw.SimpleText(PropOwner, "Default", Width / 2, ScrH() - GetConVarNumber("HudHeight")-115, Color(255, 255, 255, 255), 1, 1)
+			//draw.RoundedBox(4, ScrW() - (Width + 8), (ScrH()/2 - 200) - (8), Width + 8, Height + 8, Color(0, 0, 0, 150))
+			//draw.SimpleText(PropOwner, "Default", ScrW() - (Width / 2) - 7, ScrH()/2 - 200, Color(255, 255, 255, 255), 1, 1)
 		end
 	end
 	if CantTouchAlpha ~= 0 then
