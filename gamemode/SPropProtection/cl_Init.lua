@@ -2,6 +2,22 @@
 --	Simple Prop Protection
 --	By Spacetech, edited by FPtje
 ------------------------------------
+
+local CantTouchAlpha = 0
+function SPPCanNotTouch()
+	if CantTouchAlpha ~= 0 then return end
+	for i = 1, 510, 1 do
+		timer.Simple(i/510, function(i)
+			if i <= 255 then
+				CantTouchAlpha = i
+			else
+				CantTouchAlpha = 255 - (i-255)
+			end
+		end, i)
+	end
+end
+usermessage.Hook("SPPCantTouch", SPPCanNotTouch)
+
 function SPropProtection.HUDPaint()
 	if not LocalPlayer() or not LocalPlayer():IsValid() then
 		return
@@ -23,6 +39,19 @@ function SPropProtection.HUDPaint()
 			draw.RoundedBox(4, ScrW() - (Width + 8), (ScrH()/2 - 200) - (8), Width + 8, Height + 8, Color(0, 0, 0, 150))
 			draw.SimpleText(PropOwner, "Default", ScrW() - (Width / 2) - 7, ScrH()/2 - 200, Color(255, 255, 255, 255), 1, 1)
 		end
+	end
+	if CantTouchAlpha ~= 0 then
+		local QuadTable = {}  
+		
+		QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/check_off" ) 
+		QuadTable.color		= Color( 255, 255, 255, CantTouchAlpha )  
+		
+		QuadTable.x = ScrW()/2 - 8
+		QuadTable.y = ScrH()/2 - 8  //hy - 90//0//
+		//local size = 16// + (2 * math.sin(CurrentTime*4))
+		QuadTable.w = 16
+		QuadTable.h = 16
+		draw.TexturedQuad( QuadTable )
 	end
 end
 hook.Add("HUDPaint", "SPropProtection.HUDPaint", SPropProtection.HUDPaint)
