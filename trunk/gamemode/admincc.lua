@@ -311,6 +311,32 @@ function ccTell(ply, cmd, args)
 end
 concommand.Add("rp_tell", ccTell)
 
+function ccTellAll(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		ply:PrintMessage(2, "You're not an admin!")
+		return
+	end
+
+	for k,v in pairs(player.GetAll()) do
+		local msg = ""
+
+		for n = 1, #args do
+			msg = msg .. args[n] .. " "
+		end
+
+		umsg.Start("AdminTell", v)
+			umsg.String(msg)
+		umsg.End()
+		
+		if ply:EntIndex() == 0 then
+			DB.Log("Console did rp_tellall \""..msg .. "\"" )
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") did rp_tellall \""..msg .. "\"" )
+		end
+	end
+end
+concommand.Add("rp_tellall", ccTellAll)
+
 function ccRemoveLetters(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")

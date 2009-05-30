@@ -259,6 +259,173 @@ local function GetArrested()
 end
 usermessage.Hook("GotArrested", GetArrested)
 
+local function DrawDisplay()
+	for k, v in pairs(player.GetAll()) do
+		if v:GetNWBool("zombieToggle") == true then DrawZombieInfo(v) end
+		if v:GetNWBool("wanted") == true then DrawWantedInfo(v) end
+	end
+
+	local tr = LocalPlayer():GetEyeTrace()
+	local superAdmin = LocalPlayer():IsSuperAdmin()
+
+	if GetGlobalInt("globalshow") == 1 then
+		for k, v in pairs(player.GetAll()) do
+			DrawPlayerInfo(v)
+		end
+	end
+
+	if ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
+		local pos = {x = ScrW()/2, y = ScrH() / 2}
+		if GetGlobalInt("globalshow") == 0 then
+			if tr.Entity:IsPlayer() then DrawPlayerInfo(tr.Entity) end
+		end
+
+		if tr.Entity:GetNWBool("shipment") then
+			DrawShipmentInfo(tr.Entity)
+		end
+
+		if tr.Entity:GetNWBool("money_printer") then
+			DrawMoneyPrinterInfo(tr.Entity)
+		end
+
+		if tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave") then
+			DrawPriceInfo(tr.Entity)
+		end
+		
+		if tr.Entity:GetClass() == "drug_lab" then
+			DrawDrugLabInfo(tr.Entity)
+		end
+		
+		if tr.Entity:GetClass() == "drug" then
+			DrawDrugsInfo(tr.Entity)
+		end
+
+		if tr.Entity:IsOwnable() then
+			local ownerstr = ""
+			local ent = tr.Entity
+
+			if ent:GetNWInt("Ownerz") > 0 then
+				ownerstr = ent:GetNWString("OwnerName") .. "\n"
+			end
+
+			local num = ent:GetNWInt("OwnerCount")
+
+			for n = 1, num do
+				if (ent:GetNWInt("Ownersz" .. n) or -1) > -1 then
+					if ValidEntity(player.GetByID(ent:GetNWInt("Ownersz" .. n))) then
+						ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Ownersz" .. n)):Nick() .. "\n"
+					end
+				end
+			end
+
+			num = ent:GetNWInt("AllowedNum")
+
+			for n = 1, num do
+				if ent:GetNWInt("Allowed" .. n) == LocalPlayer():EntIndex() then
+					ownerstr = ownerstr .. "You are allowed to co-own this\n(Press Reload with keys or F2 to co-own)\n"
+				elseif ent:GetNWInt("Allowed" .. n) > -1 then
+					if ValidEntity(player.GetByID(ent:GetNWInt("Allowed" .. n))) then
+						ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick() .. " is allowed to co-own this\n"
+					end
+				end
+			end
+
+			if not LocalPlayer():InVehicle() then
+				local blocked = ent:GetNWBool("nonOwnable")
+				local CPOnly = ent:GetNWBool("CPOwnable")
+				local st = nil
+				local whiteText = false -- false for red, true for white text
+
+				if ent:IsOwned() then
+					whiteText = true
+					if superAdmin then
+						if blocked then
+							st = ent:GetNWString("dTitle") .. "\n(Press Reload with keys or F2 to allow ownership)"
+						else
+							if ownerstr == "" then
+								st = ent:GetNWString("title") .. "\n(Press Reload with keys or F2 to disallow ownership)"
+							else
+								if ent:OwnedBy(LocalPlayer()) and not CPOnly then
+									st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
+								elseif not CPOnly then
+									st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr .. "(Press Reload with keys or F2 to disallow ownership)\n"
+								elseif not ent:IsVehicle() then
+									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor\n" .. "(Press Reload with keys or F2 to disallow ownership)\n"
+								end
+							end
+							if CPOnly and not ent:IsVehicle() then
+								st = st .. "(Press Reload with keys or F2 to enable for everyone(not only cops))"
+							elseif not ent:IsVehicle() then
+								st = st .. "(Press Reload with keys or F2 to set to cops and mayor only)"
+							end
+						end
+					else
+						if blocked then
+							st = ent:GetNWString("dTitle")
+						else
+							if ownerstr == "" then
+								st = ent:GetNWString("title")
+							else
+								if CPOnly then
+									whiteText = true
+									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
+								else
+									st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
+								end
+							end
+						end
+					end
+				else
+					if superAdmin then
+						if blocked then
+							whiteText = true
+							st = ent:GetNWString("dTitle") .. "\n(Press Reload with keys or F2 to allow ownership)"
+						else
+							if CPOnly then
+								whiteText = true
+								st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
+								if not ent:IsVehicle() then
+									st = st .. "\n(Press Reload with keys or F2 to enable for everyone(not only cops))"
+								end
+							else
+								st = "Unowned\n(Press Reload with keys or F2 to own)\n(Press Reload with keys or F2 to disallow ownership)"
+								if not ent:IsVehicle() then
+									st = st .. "\n(Press Reload with keys or F2 to set to cops and mayor only)"
+								end
+							end
+						end
+					else
+						if blocked then
+							whiteText = true
+							st = ent:GetNWString("dTitle")
+						else
+							if CPOnly then
+								whiteText = true
+								st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
+							else
+								st = "Unowned\n(Press Reload with keys or F2 to own)"
+							end
+						end
+					end
+				end
+
+				if whiteText then
+					draw.DrawText(st, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
+					draw.DrawText(st, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
+				else
+					draw.DrawText(st, "TargetID", pos.x , pos.y+1 , Color(0, 0, 0, 255), 1)
+					draw.DrawText(st, "TargetID", pos.x, pos.y, Color(128, 30, 30, 255), 1)
+				end
+			end
+		end
+	end
+
+	if PanelNum and PanelNum > 0 then
+		draw.RoundedBox(2, 0, 0, 150, 30, Color(0, 0, 0, 128))
+		draw.DrawText("Hit F3 to vote", "ChatFont", 2, 2, Color(255, 255, 255, 200), 0)
+	end
+end
+
 local LetterY = 0
 local LetterAlpha = -1
 local LetterMsg = ""
@@ -266,9 +433,45 @@ local LetterType = 0
 local LetterStartTime = 0
 local LetterPos = Vector(0, 0, 0)
 
+local MoneyChangeAlpha = 0
+local function MakeMoneyShine()
+	local start = CurTime()
+	local End = CurTime() + 1
+	hook.Add("Tick", "MoneyShine", function()
+		MoneyChangeAlpha = 255 - 255 * (math.sin((CurTime() - start) *2))
+		if CurTime() >= End then
+			hook.Remove("Tick", "MoneyShine")
+			MoneyChangeAlpha = 0
+		end
+	end)
+end
+
+local OldHealth = 100
+local ShowHealth = 100
+local function ChangeHealth(old, new)
+	local start = CurTime()
+	local End = CurTime() + 1.58
+	local difference = old - new
+	local lastsin = new
+	hook.Add("Tick", "HealthChange", function()
+		ShowHealth =  old - difference * (math.sin((CurTime() - start)))
+		if CurTime() >= End then
+			hook.Remove("Tick", "HealthChange")
+			ShowHealth = new
+		end
+	end)
+end
+
+local oldmoney = LocalPlayer():GetNWInt("Money")
 function GM:HUDPaint()
-	if arresttime ~= 0 and CurTime() - arresttime <= GetGlobalInt("jailtimer") and LocalPlayer():GetNWBool("Arrested") then
-		draw.DrawText("You are arrested for "..tostring(math.ceil(GetGlobalInt("jailtimer") - (CurTime() - arresttime))).." seconds!","ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
+	local health = LocalPlayer():Health()
+	local money = LocalPlayer():GetNWInt("Money")
+	local job = LocalPlayer():GetNWString("job")
+	local salary = LocalPlayer():GetNWInt("salary")
+	local CurrentTime = CurTime()
+	
+	if arresttime ~= 0 and CurrentTime - arresttime <= GetGlobalInt("jailtimer") and LocalPlayer():GetNWBool("Arrested") then
+		draw.DrawText("You are arrested for "..tostring(math.ceil(GetGlobalInt("jailtimer") - (CurrentTime - arresttime))).." seconds!","ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
 	elseif arresttime ~= 0 or not LocalPlayer():GetNWBool("Arrested") then arresttime = 0
 	end
 	self.BaseClass:HUDPaint()
@@ -287,187 +490,30 @@ function GM:HUDPaint()
 
 	draw.RoundedBox(6, hx - 4, hy - 4, hw + 8, hh + 8, Healthbackgroundcolor)
 
-	if LocalPlayer():Health() > 0 then
-		draw.RoundedBox(4, hx, hy, math.Clamp(hw * (LocalPlayer():Health() / 100), 0, hw), hh, Healthforegroundcolor)
+	if health ~= OldHealth then
+		ChangeHealth(OldHealth, health)
+		OldHealth = health
+	end
+	
+	if ShowHealth > 0 then
+		draw.RoundedBox(4, hx, hy, math.Clamp(hw * (ShowHealth / 100), 0, hw), hh, Healthforegroundcolor)
+	end
+	
+	if oldmoney ~= money then
+		MakeMoneyShine()
+		oldmoney = money
 	end
 
 	local job1color = Color(Job1r:GetInt(), Job1g:GetInt(), Job1b:GetInt(), Job1a:GetInt())
 	local job2color = Color(Job2r:GetInt(), Job2g:GetInt(), Job2b:GetInt(), Job2a:GetInt())
 	local Salary1color = Color(salary1r:GetInt(), salary1g:GetInt(), salary1b:GetInt(), salary1a:GetInt())
 	local Salary2color = Color(salary2r:GetInt(), salary2g:GetInt(), salary2b:GetInt(), salary2a:GetInt())
-	draw.DrawText(math.Max(0, LocalPlayer():Health()), "TargetID", hx + hw / 2, hy - 6, HealthTextColor, 1)
-	draw.DrawText("Job: " .. LocalPlayer():GetNWString("job") .. "\nWallet: " .. CUR .. LocalPlayer():GetNWInt("money") .. "", "TargetID", hx + 1, hy - 49, job1color, 0)
-	draw.DrawText("Job: " .. LocalPlayer():GetNWString("job") .. "\nWallet: " .. CUR .. LocalPlayer():GetNWInt("money") .. "", "TargetID", hx, hy - 50, job2color, 0)
-	draw.DrawText("Salary: " .. CUR .. LocalPlayer():GetNWInt("salary"), "TargetID", hx + 1, hy - 70, Salary1color, 0)
-	draw.DrawText("Salary: " .. CUR .. LocalPlayer():GetNWInt("salary"), "TargetID", hx, hy - 71, Salary2color, 0)
-
-
-	local function DrawDisplay()
-		for k, v in pairs(player.GetAll()) do
-			if v:GetNWBool("zombieToggle") == true then DrawZombieInfo(v) end
-			if v:GetNWBool("wanted") == true then DrawWantedInfo(v) end
-		end
-
-		local tr = LocalPlayer():GetEyeTrace()
-		local superAdmin = LocalPlayer():IsSuperAdmin()
-
-		if GetGlobalInt("globalshow") == 1 then
-			for k, v in pairs(player.GetAll()) do
-				DrawPlayerInfo(v)
-			end
-		end
-
-		if ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
-			local pos = {x = ScrW()/2, y = ScrH() / 2}
-			if GetGlobalInt("globalshow") == 0 then
-				if tr.Entity:IsPlayer() then DrawPlayerInfo(tr.Entity) end
-			end
-
-			if tr.Entity:GetNWBool("shipment") then
-				DrawShipmentInfo(tr.Entity)
-			end
-
-			if tr.Entity:GetNWBool("money_printer") then
-				DrawMoneyPrinterInfo(tr.Entity)
-			end
-
-			if tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave") then
-				DrawPriceInfo(tr.Entity)
-			end
-			
-			if tr.Entity:GetClass() == "drug_lab" then
-				DrawDrugLabInfo(tr.Entity)
-			end
-			
-			if tr.Entity:GetClass() == "drug" then
-				DrawDrugsInfo(tr.Entity)
-			end
-
-			if tr.Entity:IsOwnable() then
-				local ownerstr = ""
-				local ent = tr.Entity
-
-				if ent:GetNWInt("Ownerz") > 0 then
-					ownerstr = ent:GetNWString("OwnerName") .. "\n"
-				end
-
-				local num = ent:GetNWInt("OwnerCount")
-
-				for n = 1, num do
-					if (ent:GetNWInt("Ownersz" .. n) or -1) > -1 then
-						if ValidEntity(player.GetByID(ent:GetNWInt("Ownersz" .. n))) then
-							ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Ownersz" .. n)):Nick() .. "\n"
-						end
-					end
-				end
-
-				num = ent:GetNWInt("AllowedNum")
-
-				for n = 1, num do
-					if ent:GetNWInt("Allowed" .. n) == LocalPlayer():EntIndex() then
-						ownerstr = ownerstr .. "You are allowed to co-own this\n(Press Reload with keys or F2 to co-own)\n"
-					elseif ent:GetNWInt("Allowed" .. n) > -1 then
-						if ValidEntity(player.GetByID(ent:GetNWInt("Allowed" .. n))) then
-							ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick() .. " is allowed to co-own this\n"
-						end
-					end
-				end
-
-				if not LocalPlayer():InVehicle() then
-					local blocked = ent:GetNWBool("nonOwnable")
-					local CPOnly = ent:GetNWBool("CPOwnable")
-					local st = nil
-					local whiteText = false -- false for red, true for white text
-
-					if ent:IsOwned() then
-						whiteText = true
-						if superAdmin then
-							if blocked then
-								st = ent:GetNWString("dTitle") .. "\n(Press Reload with keys or F2 to allow ownership)"
-							else
-								if ownerstr == "" then
-									st = ent:GetNWString("title") .. "\n(Press Reload with keys or F2 to disallow ownership)"
-								else
-									if ent:OwnedBy(LocalPlayer()) and not CPOnly then
-										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
-									elseif not CPOnly then
-										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr .. "(Press Reload with keys or F2 to disallow ownership)\n"
-									elseif not ent:IsVehicle() then
-										st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor\n" .. "(Press Reload with keys or F2 to disallow ownership)\n"
-									end
-								end
-								if CPOnly and not ent:IsVehicle() then
-									st = st .. "(Press Reload with keys or F2 to enable for everyone(not only cops))"
-								elseif not ent:IsVehicle() then
-									st = st .. "(Press Reload with keys or F2 to set to cops and mayor only)"
-								end
-							end
-						else
-							if blocked then
-								st = ent:GetNWString("dTitle")
-							else
-								if ownerstr == "" then
-									st = ent:GetNWString("title")
-								else
-									if CPOnly then
-										whiteText = true
-										st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
-									else
-										st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
-									end
-								end
-							end
-						end
-					else
-						if superAdmin then
-							if blocked then
-								whiteText = true
-								st = ent:GetNWString("dTitle") .. "\n(Press Reload with keys or F2 to allow ownership)"
-							else
-								if CPOnly then
-									whiteText = true
-									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
-									if not ent:IsVehicle() then
-										st = st .. "\n(Press Reload with keys or F2 to enable for everyone(not only cops))"
-									end
-								else
-									st = "Unowned\n(Press Reload with keys or F2 to own)\n(Press Reload with keys or F2 to disallow ownership)"
-									if not ent:IsVehicle() then
-										st = st .. "\n(Press Reload with keys or F2 to set to cops and mayor only)"
-									end
-								end
-							end
-						else
-							if blocked then
-								whiteText = true
-								st = ent:GetNWString("dTitle")
-							else
-								if CPOnly then
-									whiteText = true
-									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
-								else
-									st = "Unowned\n(Press Reload with keys or F2 to own)"
-								end
-							end
-						end
-					end
-
-					if whiteText then
-						draw.DrawText(st, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
-						draw.DrawText(st, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
-					else
-						draw.DrawText(st, "TargetID", pos.x , pos.y+1 , Color(0, 0, 0, 255), 1)
-						draw.DrawText(st, "TargetID", pos.x, pos.y, Color(128, 30, 30, 255), 1)
-					end
-				end
-			end
-		end
-
-		if PanelNum and PanelNum > 0 then
-			draw.RoundedBox(2, 0, 0, 150, 30, Color(0, 0, 0, 128))
-			draw.DrawText("Hit F3 to vote", "ChatFont", 2, 2, Color(255, 255, 255, 200), 0)
-		end
-	end
+	draw.DrawText(math.Max(0, math.Round(ShowHealth)), "TargetID", hx + hw / 2, hy - 6, HealthTextColor, 1)
+	draw.DrawText("Job: " .. job .. "\nWallet: " .. CUR .. money .. "", "TargetID", hx + 1, hy - 49, job1color, 0)
+	draw.DrawText("Job: " .. job .. "\nWallet: " .. CUR .. money .. "", "TargetID", hx, hy - 50, job2color, 0)
+	draw.DrawText("\nWallet: " .. CUR .. money .. "", "TargetID", hx, hy - 50, Color(255,255,255,MoneyChangeAlpha), 0)
+	draw.DrawText("Salary: " .. CUR .. salary, "TargetID", hx + 1, hy - 70, Salary1color, 0)
+	draw.DrawText("Salary: " .. CUR .. salary, "TargetID", hx, hy - 71, Salary2color, 0)
 
 	if LetterAlpha > -1 then
 		if LetterY > ScrH() * .25 then
@@ -501,7 +547,7 @@ function GM:HUDPaint()
 	if AdminTellAlpha > -1 then
 		local dir = 1
 
-		if CurTime() - AdminTellStartTime > 10 then
+		if CurrentTime - AdminTellStartTime > 10 then
 			dir = -1
 
 			if AdminTellAlpha <= 0 then
@@ -570,7 +616,7 @@ function GM:HUDPaint()
 		
 		QuadTable.x = hw + 31//0//HUDwidth:GetInt()
 		QuadTable.y = ScrH() - 32  //hy - 90//0//
-		//local size = 16// + (2 * math.sin(CurTime()*4))
+		//local size = 16// + (2 * math.sin(CurrentTime*4))
 		QuadTable.w = 32
 		QuadTable.h = 32
 		draw.TexturedQuad( QuadTable )
