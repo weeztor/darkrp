@@ -87,6 +87,7 @@ function SPropProtection.IsBuddy(ply, ent)
 end
 
 function SPropProtection.CanNotTouch(ply)
+	if not ValidEntity(ply) then return end
 	umsg.Start("SPPCantTouch", ply)
 	umsg.End()
 	return false
@@ -359,11 +360,11 @@ hook.Add("CanTool", "SPropProtection.CanTool", SPropProtection.CanTool)
 
 function SPropProtection.EntityTakeDamage(ent, inflictor, attacker, amount, dmginfo)
 	if tonumber(CfgVars["spp_entdamage"]) == 0 then return end
-	if not ValidEntity(ent) then return SPropProtection.CanNotTouch(ply) end
+	if not ValidEntity(ent) then return SPropProtection.CanNotTouch(attacker) end
     if ent:IsPlayer() or not attacker:IsPlayer() then return end
 	if not SPropProtection.PlayerCanTouch(attacker, ent) then
 		dmginfo:SetDamage(0)
-		return SPropProtection.CanNotTouch(ply)
+		return SPropProtection.CanNotTouch(attacker)
 	end
 end
 hook.Add("EntityTakeDamage", "SPropProtection.EntityTakeDamage", SPropProtection.EntityTakeDamage)
