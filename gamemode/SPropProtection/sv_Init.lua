@@ -260,7 +260,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		local Ents = ply:UniqueIDTable( "Duplicator" ).Entities
 		if Ents then
 			for k,v in pairs(Ents) do
-				if (ValidEntity(v.Entity) and (v.Entity:IsWeapon() or string.find(v.Entity:GetClass(), "weapon"))) or (v.Classname and string.find(v.Classname, "weapon")) or ValidEntity(v.Weapon) then
+				if not string.find(v.Entity:GetClass(), "gmod_cameraprop") and (ValidEntity(v.Entity) and (v.Entity:IsWeapon() or string.find(v.Entity:GetClass(), "weapon"))) or (v.Classname and string.find(v.Classname, "weapon")) or ValidEntity(v.Weapon) then
 					print(ply:Nick(), "tried to spawn a ", v.Entity:GetClass(), ", He failed")
 					for NUMBER, PLAYER in pairs(player.GetAll()) do
 						if PLAYER:IsAdmin() then
@@ -292,7 +292,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 			for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 				for a, b in pairs(v) do
 					for c,d in pairs(SPropProtection.AntiCopy) do 
-						if v.Class and string.find(string.lower(v.Class), string.lower(d)) then
+						if v.Class and not string.find(v.Class, "gmod_cameraprop") and string.find(string.lower(v.Class), string.lower(d)) then
 							print(ply:Nick(), "tried to spawn a ", v.Class, " with adv.duplicator, He failed")
 							for NUMBER, PLAYER in pairs(player.GetAll()) do
 								if PLAYER:IsAdmin() then
@@ -394,6 +394,7 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 	if not SPropProtection.PlayerCanTouch(ply, tr.Entity) then
 		return SPropProtection.CanNotTouch(ply)
 	end
+
 	for k,v in pairs(constraint.GetAllConstrainedEntities(tr.Entity)) do
 		if v ~= tr.Entity then
 			if v:IsWeapon() or string.find(v:GetClass(), "weapon") then
@@ -416,9 +417,8 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 			end
 		end
 	end
-	return true
 end
-hook.Add("OnPhysgunReload", "SPropProtection.OnPhysgunReload", SPropProtection.OnPhysgunReload)
+hook.Add("OnPhysgunReload", "SPropProtection.OnPhysgunReload", SPropProtection.OnPhysgunReload) 
 
 function SPropProtection.EntityRemoved(ent)
 	SPropProtection["Props"][ent:EntIndex()] = nil

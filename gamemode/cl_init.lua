@@ -971,6 +971,7 @@ hook.Add("StartChat", "RPDoSomethingWithChat", RPSelectwhohearit)
 hook.Add("FinishChat", "RPCloseRadiusDetection", function() Messagemode = false RPStopMessageMode() end)
 
 function GM:PlayerBindPress(ply,bind,pressed)
+	self.BaseClass:PlayerBindPress(ply, bind, pressed)
 	if ply == LocalPlayer() and ValidEntity(ply:GetActiveWeapon()) and string.find(string.lower(bind), "attack2") and ply:GetActiveWeapon():GetClass() == "weapon_bugbait" then
 		LocalPlayer():ConCommand("_hobo_emitsound")
 	end
