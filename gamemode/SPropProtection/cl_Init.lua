@@ -2,17 +2,6 @@
 --	Simple Prop Protection
 --	By Spacetech, edited by FPtje
 ------------------------------------
-
-CreateClientConVar("SPropProtection_onoff", 1, false, true)
-CreateClientConVar("SPropProtection_admin", 1, false, true)
-CreateClientConVar("SPropProtection_use", 1, false, true)
-CreateClientConVar("SPropProtection_edmg", 1, false, true)
-CreateClientConVar("SPropProtection_pgr", 1, false, true)
-CreateClientConVar("SPropProtection_awp", 1, false, true)
-CreateClientConVar("SPropProtection_dpd", 1, false, true)
-CreateClientConVar("SPropProtection_dae", 0, false, true)
-CreateClientConVar("SPropProtection_delay", 120, false, true)
-
 function SPropProtection.HUDPaint()
 	if not LocalPlayer() or not LocalPlayer():IsValid() then
 		return

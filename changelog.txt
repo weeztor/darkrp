@@ -23,6 +23,7 @@ SVN version
 [ADD] rp_lookup command, look players up(nick, steam name, steam ID)
 [ADD] Custom vehicle support!
 [ADD] Logging system toggle on/off by doing rp_logging 1/0(superadmin only command)
+[ADD] /job antispam, you can now only change job every 60 seconds
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
