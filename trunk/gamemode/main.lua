@@ -1363,7 +1363,6 @@ function ChangeJob(ply, args)
 	if args == "" then return "" end
 	
 	if ply.LastJob and 60 - (CurTime() - ply.LastJob) >= 0 then
-		print(ply.LastJob, CurTime(), CurTime() + 60)
 		Notify(ply, 1, 4, "Please wait ".. math.ceil(60 - (CurTime() - ply.LastJob)).." seconds before changing your job")
 		return ""
 	end
@@ -1726,7 +1725,6 @@ function DoTeamBan(ply, args, cmdargs)
 		local a,b = string.find(args, " ")
 		ent = string.sub(args, 1, a - 1)
 		Team = string.sub(args,  a + 1)
-		print("\""..ent.."\"", "\"".. Team .."\"")
 	end
 	
 	local target = FindPlayer(ent)
@@ -1780,7 +1778,6 @@ function DoTeamUnBan(ply, args, cmdargs)
 		local a,b = string.find(args, " ")
 		ent = string.sub(args, 1, a - 1)
 		Team = string.sub(args,  a + 1)
-		print("\""..ent.."\"", "\"".. Team .."\"")
 	end
 	
 	local target = FindPlayer(ent)
