@@ -83,11 +83,7 @@ function SWEP:PrimaryAttack()
 	self.Weapon:EmitSound(self.Primary.Sound)
 
 	-- Shoot the bullet
-	if (self:GetIronsights() == true) then
-		self:CSShootBullet(self.Primary.Damage, self.Primary.Recoil, self.Primary.NumShots, self.Primary.Cone)
-	else
-		self:CSShootBullet(self.Primary.Damage, self.Primary.Recoil + 3, self.Primary.NumShots, self.Primary.Cone + .05)
-	end
+	self:CSShootBullet(self.Primary.Damage, self.Primary.Recoil + 3, self.Primary.NumShots, self.Primary.Cone + .05)
 
 	-- Remove 1 bullet from our clip
 	self:TakePrimaryAmmo(1)
