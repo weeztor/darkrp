@@ -2,7 +2,6 @@
 --	Simple Prop Protection
 --	By Spacetech edited by FPtje
 ------------------------------------
--- Simple prop protection merge
 
 SPropProtection = {} -- Make a table for like every function and subvariable.
 SPropProtection.Version = "DarkRP"
@@ -19,10 +18,10 @@ end)
 
 function SPropProtection.LoadBuddies(ply)
 	local PData = ply:GetPData("SPPBuddies", "")
-	if(PData != "") then
+	if PData ~= "" then
 		for k, v in pairs(string.Explode(";", PData)) do
 			local String = string.Trim(v)
-			if(String != "") then
+			if String ~= "" then
 				table.insert(SPropProtection[ply:SteamID()], String)
 			end
 		end
@@ -30,13 +29,13 @@ function SPropProtection.LoadBuddies(ply)
 end
 
 function SPropProtection.PlayerMakePropOwner(ply, ent)
-	if(ent:GetClass() == "transformer" and ent.spawned and !ent.Part) then
+	if ent:GetClass() == "transformer" and ent.spawned and not ent.Part then
 		for k, v in pairs(transpiece[ent]) do
 			v.Part = true
 			SPropProtection.PlayerMakePropOwner(ply, v)
 		end
 	end
-	if(ent:IsPlayer()) then
+	if ent:IsPlayer() then
 		return false
 	end
 	SPropProtection["Props"][ent:EntIndex()] = {ply:SteamID(), ent, ply}
@@ -46,13 +45,13 @@ function SPropProtection.PlayerMakePropOwner(ply, ent)
 	return true
 end
 
-if(cleanup) then
+if cleanup then
 	local Clean = cleanup.Add
 	function cleanup.Add(Player, Type, Entity)
-		if(Entity) then
+		if Entity then
 			local Check = Player:IsPlayer()
 			local Valid = Entity:IsValid()
-		    if(Check and Valid) then
+		    if Check and Valid then
 		        SPropProtection.PlayerMakePropOwner(Player, Entity)
 		    end
 		end
@@ -61,7 +60,7 @@ if(cleanup) then
 end
 
 local Meta = FindMetaTable("Player")
-if(Meta.AddCount) then
+if Meta.AddCount then
 	local Backup = Meta.AddCount
 	function Meta:AddCount(Type, Entity)
 		SPropProtection.PlayerMakePropOwner(self, Entity)
@@ -71,12 +70,12 @@ end
 
 function SPropProtection.IsBuddy(ply, ent)
 	local Players = player.GetAll()
-	if(table.Count(Players) == 1) then
+	if table.Count(Players) == 1 then
 		return true
 	end
 	for k, v in pairs(Players) do
-		if(v and ValidEntity(v) and v != ply) then
-	        if(SPropProtection["Props"][ent:EntIndex()][1] == v:SteamID()) then 
+		if v and ValidEntity(v) and v ~= ply then
+	        if SPropProtection["Props"][ent:EntIndex()][1] == v:SteamID() then 
                 if SPropProtection[v:SteamID()] and table.HasValue(SPropProtection[v:SteamID()], ply:SteamID()) then
 					return true
 				else
@@ -88,34 +87,35 @@ function SPropProtection.IsBuddy(ply, ent)
 end
 
 function SPropProtection.PlayerCanTouch(ply, ent)
-	if(tonumber(CfgVars["spp_on"]) == 0 or ent:GetClass() == "worldspawn") then
+	if tonumber(CfgVars["spp_on"]) == 0 or ent:GetClass() == "worldspawn" then
 		return true
 	end
+	local class = ent:GetClass()
 	
-	if(string.find(ent:GetClass(), "stone_") == 1 or string.find(ent:GetClass(), "rock_") == 1 or string.find(ent:GetClass(), "stargate_") == 0 or string.find(ent:GetClass(), "dhd_") == 0 or ent:GetClass() == "flag" or ent:GetClass() == "item") then
-		if(!ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "") then
+	if string.find(class, "stone_") == 1 or string.find(class, "rock_") == 1 or string.find(class, "stargate_") == 0 or string.find(class, "dhd_") == 0 or class == "flag" or class == "item" then
+		if not ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" then
 			ent:SetNetworkedString("Owner", "World")
 		end
-		if(ply:GetActiveWeapon():GetClass() != "weapon_physgun" and ply:GetActiveWeapon():GetClass() != "gmod_tool") then
+		if ply:GetActiveWeapon():GetClass() ~= "weapon_physgun" and ply:GetActiveWeapon():GetClass() ~= "gmod_tool" then
 			return true
 		end
 	end
 	
-	if (!ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and !ent:IsPlayer()) then
+	if not ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and not ent:IsPlayer() then
 		SPropProtection.PlayerMakePropOwner(ply, ent)
 		Notify(ply, 1, 4, "You now own this prop")
 		return true
 	end
 	
-	if(SPropProtection["Props"][ent:EntIndex()] != nil) then
-		if(SPropProtection["Props"][ent:EntIndex()][1] == ply:SteamID() or SPropProtection.IsBuddy(ply, ent)) then
+	if SPropProtection["Props"][ent:EntIndex()] ~= nil then
+		if SPropProtection["Props"][ent:EntIndex()][1] == ply:SteamID() or SPropProtection.IsBuddy(ply, ent) then
 			return true
 		end
 	else
 		for k, v in pairs(g_SBoxObjects) do
 			for b, j in pairs(v) do
 				for _, e in pairs(j) do
-					if(k == ply:SteamID() and e == ent) then
+					if k == ply:SteamID() and e == ent then
 						SPropProtection.PlayerMakePropOwner(ply, ent)
 						Notify(ply, 1, 4, "You now own this prop")
 						return true
@@ -125,8 +125,8 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 		end
 		for k, v in pairs(GAMEMODE.CameraList) do
 			for b, j in pairs(v) do
-				if(j == ent) then
-					if(k == ply:SteamID() and e == ent) then
+				if j == ent then
+					if k == ply:SteamID() and e == ent then
 						SPropProtection.PlayerMakePropOwner(ply, ent)
 						Notify(ply, 1, 4, "You now own this prop")
 						return true
@@ -137,19 +137,19 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 	end
 	
 
-	if(ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick()) then return true end
+	if ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick() then return true end
 
-	if(game.GetMap() == "gm_construct" and ent:GetNetworkedString("Owner") == "World") then
+	if game.GetMap() == "gm_construct" and ent:GetNetworkedString("Owner") == "World" then
 		return true
 	end
 
-	if (ent:GetNetworkedString("Owner") == "World") then
-		if (tonumber(CfgVars["spp_touchworldprops"]) == 1 or (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1)) and (string.lower(ent:GetClass()) == "prop_physics" or  string.lower(ent:GetClass()) == "func_physbox" or string.lower(ent:GetClass()) == "prop_physics_multiplayer") then
+	if ent:GetNetworkedString("Owner") == "World" then
+		if (tonumber(CfgVars["spp_touchworldprops"]) == 1 or (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1)) and (string.lower(class) == "prop_physics" or  string.lower(class) == "func_physbox" or string.lower(class) == "prop_physics_multiplayer") then
 			return true
 		end
-	elseif (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1) then
+	elseif ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1 then
 		return true
-	elseif (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 0) then
+	elseif ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 0 then
 		return false
 	end
 	return false
@@ -157,7 +157,7 @@ end
 
 function SPropProtection.DRemove(SteamID, PlayerName)
 	for k, v in pairs(SPropProtection["Props"]) do
-		if(v[1] == SteamID and v[2]:IsValid()) then
+		if v[1] == SteamID and v[2]:IsValid() then
 			v[2]:Remove()
 			SPropProtection["Props"][k] = nil
 		end
@@ -169,15 +169,15 @@ function SPropProtection.PlayerInitialSpawn(ply)
 	SPropProtection[ply:SteamID()] = {}
 	SPropProtection.LoadBuddies(ply)
 	local TimerName = "SPropProtection.DRemove: "..ply:SteamID()
-	if(timer.IsTimer(TimerName)) then
+	if timer.IsTimer(TimerName) then
 		timer.Remove(TimerName)
 	end
 end
 hook.Add("PlayerInitialSpawn", "SPropProtection.PlayerInitialSpawn", SPropProtection.PlayerInitialSpawn)
 
 function SPropProtection.Disconnect(ply)
-	if(tonumber(CfgVars["spp_propdeletion"]) == 1) then
-		if(ply:IsAdmin() and tonumber(CfgVars["spp_deleteadminents"]) == 0) then return end
+	if tonumber(CfgVars["spp_propdeletion"]) == 1 then
+		if ply:IsAdmin() and tonumber(CfgVars["spp_deleteadminents"]) == 0 then return end
 		timer.Create("SPropProtection.DRemove: "..ply:SteamID(), tonumber(CfgVars["spp_deletedelay"]), 1, SPropProtection.DRemove, ply:SteamID(), ply:Nick())
 	end
 end
@@ -206,7 +206,7 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 					return false
 				end
 				local Class = v:GetClass()
-				if (Class == "func_door" or Class == "func_door_rotating" or Class == "prop_door_rotating") then
+				if Class == "func_door" or Class == "func_door_rotating" or Class == "prop_door_rotating" then
 					return false
 				end
 				for a,b in pairs(SPropProtection.AntiCopy) do
@@ -308,10 +308,10 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v then return false end
 	end
-	if (ent:IsWeapon()) then return false end
-	if (ent:IsWeapon() or string.find(ent:GetClass(), "weapon")) then return false end
+	if ent:IsWeapon() then return false end
+	if ent:IsWeapon() or string.find(ent:GetClass(), "weapon") then return false end
 		
-	if(!SPropProtection.PlayerCanTouch(ply, ent)) then
+	if not SPropProtection.PlayerCanTouch(ply, ent) then
 		return false
 	elseif string.find(toolgun, "nail") then
 		local Trace = {}
@@ -319,8 +319,8 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		Trace.endpos = tr.HitPos + (ply:GetAimVector() * 16.0)
 		Trace.filter = {ply, tr.Entity}
 		local tr2 = util.TraceLine(Trace)
-		if(tr2.Hit and !tr2.Entity:IsPlayer()) then
-			if(!SPropProtection.PlayerCanTouch(ply, tr2.Entity)) then
+		if tr2.Hit and not tr2.Entity:IsPlayer() then
+			if not SPropProtection.PlayerCanTouch(ply, tr2.Entity) then
 				return false
 			end
 		end
@@ -332,7 +332,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 			return false
 		end
 		local class = v:GetClass()
-		if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
+		if class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" then
 			return false
 		end
 		for a,b in pairs(SPropProtection.AntiCopy) do
@@ -350,10 +350,10 @@ end
 hook.Add("CanTool", "SPropProtection.CanTool", SPropProtection.CanTool)
 
 function SPropProtection.EntityTakeDamage(ent, inflictor, attacker, amount, dmginfo)
-	if(tonumber(CfgVars["spp_entdamage"]) == 0) then return end
-	if(not ValidEntity(ent)) then return false end
-    if(ent:IsPlayer() or !attacker:IsPlayer()) then return end
-	if(!SPropProtection.PlayerCanTouch(attacker, ent)) then
+	if tonumber(CfgVars["spp_entdamage"]) == 0 then return end
+	if not ValidEntity(ent) then return false end
+    if ent:IsPlayer() or not attacker:IsPlayer() then return end
+	if not SPropProtection.PlayerCanTouch(attacker, ent) then
 		dmginfo:SetDamage(0)
 	end
 end
@@ -362,7 +362,7 @@ hook.Add("EntityTakeDamage", "SPropProtection.EntityTakeDamage", SPropProtection
 function SPropProtection.PlayerUse(ply, ent)
 	if not ValidEntity(ent) then return true end
 	local class = ent:GetClass()
-	if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or ent:IsVehicle()) then
+	if class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or ent:IsVehicle() then
 		return true
 	end
 	for k,v in pairs(SPropProtection.AntiCopy) do 
@@ -370,18 +370,18 @@ function SPropProtection.PlayerUse(ply, ent)
 			return true
 		end
 	end
-	if ent:IsValid() and tonumber(CfgVars["spp_use"]) == 1 and not SPropProtection.PlayerCanTouch(ply, ent) and ent:GetNetworkedString("Owner") != "World" then
+	if ent:IsValid() and tonumber(CfgVars["spp_use"]) == 1 and not SPropProtection.PlayerCanTouch(ply, ent) and ent:GetNetworkedString("Owner") ~= "World" then
 		return false
 	end
 end
 hook.Add("PlayerUse", "SPropProtection.PlayerUse", SPropProtection.PlayerUse)
 
 function SPropProtection.OnPhysgunReload(weapon, ply)
-	if(tonumber(CfgVars["spp_physreload"]) == 0) then return end
+	if tonumber(CfgVars["spp_physreload"]) == 0 then return end
 	local tr = util.TraceLine(util.GetPlayerTrace(ply))
-	if(!tr.HitNonWorld or !tr.Entity:IsValid() or tr.Entity:IsPlayer()) then return end
+	if not tr.HitNonWorld or not tr.Entity:IsValid() or tr.Entity:IsPlayer() then return end
 	
-	if(!SPropProtection.PlayerCanTouch(ply, tr.Entity)) then
+	if not SPropProtection.PlayerCanTouch(ply, tr.Entity) then
 		return false
 	end
 	for k,v in pairs(constraint.GetAllConstrainedEntities(tr.Entity)) do
@@ -391,7 +391,7 @@ function SPropProtection.OnPhysgunReload(weapon, ply)
 				return false
 			end
 			local class = v:GetClass()
-			if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") then
+			if class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" then
 				return false
 			end
 			for a,b in pairs(SPropProtection.AntiCopy) do
@@ -426,7 +426,7 @@ end
 hook.Add("PlayerSpawnedVehicle", "SPropProtection.PlayerSpawnedVehicle", SPropProtection.PlayerSpawnedVehicle)
 
 function SPropProtection.CleanupDisconnectedProps(ply, cmd, args)
-	if !ply:IsAdmin() then return end
+	if not ply:IsAdmin() then return end
 	for k1, v1 in pairs(SPropProtection["Props"]) do
 		local FoundUID = false
 		for k2, v2 in pairs(player.GetAll()) do
@@ -520,10 +520,10 @@ concommand.Add("SPropProtection_ApplyBuddySettings", SPropProtection.ApplyBuddyS
 
 function SPropProtection.ClearBuddies(ply, cmd, args)
 	local PData = ply:GetPData("SPPBuddies", "")
-	if PData != "" then
+	if PData ~= "" then
 		for k, v in pairs(string.Explode(";", PData)) do
 			local String = string.Trim(v)
-			if String != "" then
+			if String ~= "" then
 				ply:ConCommand("SPropProtection_BuddyUp_"..string.gsub(String, ":", "_").." 0\n")
 			end
 		end

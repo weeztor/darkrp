@@ -1361,6 +1361,14 @@ AddChatCommand("/help", GetHelp)
 
 function ChangeJob(ply, args)
 	if args == "" then return "" end
+	
+	if ply.LastJob and 60 - (CurTime() - ply.LastJob) >= 0 then
+		print(ply.LastJob, CurTime(), CurTime() + 60)
+		Notify(ply, 1, 4, "Please wait ".. math.ceil(60 - (CurTime() - ply.LastJob)).." seconds before changing your job")
+		return ""
+	end
+	ply.LastJob = CurTime()
+	
 	if not ply:Alive() then
 		Notify(ply, 1, 4, "You can not change job as a dead person.")
 		return ""

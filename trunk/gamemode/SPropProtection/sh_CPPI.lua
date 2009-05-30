@@ -23,16 +23,16 @@ function CPPI:GetNameFromUID(uid)
 end
 
 local Player = FindMetaTable("Player")
-if(!Player) then
+if not Player then
 	print("EXTREME ERROR 1")
 	return
 end
 
 function Player:CPPIGetFriends()
-	if(SERVER) then
+	if SERVER then
 		local Table = {}
 		for k, v in pairs(player.GetAll()) do
-			if(table.HasValue(SPropProtection[self:SteamID()], v:SteamID())) then
+			if table.HasValue(SPropProtection[self:SteamID()], v:SteamID()) then
 				table.insert(Table, v)
 			end
 		end
@@ -43,7 +43,7 @@ function Player:CPPIGetFriends()
 end
 
 local Entity = FindMetaTable("Entity")
-if(!Entity) then
+if not Entity then
 	print("EXTREME ERROR 2")
 	return
 end
@@ -51,38 +51,38 @@ end
 function Entity:CPPIGetOwner()
 	local Player = self:GetNetworkedEntity("OwnerObj")
 	
-	if(SERVER) then
+	if SERVER then
 		Player = SPropProtection["Props"][self:EntIndex()][3]
 	end
 	
-	if(!Player or !Player:IsValid()) then
+	if not Player or not Player:IsValid() then
 		return nil, CPPI_NOTIMPLEMENTED
 	end
 	
 	local UID = CPPI_NOTIMPLEMENTED
 	
-	if(SERVER) then
+	if SERVER then
 		UID = Player:UniqueID()
 	end
 	
 	return Player, UID
 end
 
-if(SERVER) then
+if SERVER then
 	function Entity:CPPISetOwner(ply)
-		if(!ply or !ply:IsValid() or !ply:IsPlayer()) then
+		if not ply or not ply:IsValid() or not ply:IsPlayer() then
 			return false
 		end
 		return SPropProtection.PlayerMakePropOwner(ply, self)
 	end
 	
 	function Entity:CPPISetOwnerUID(uid)
-		if(!uid) then
+		if not uid then
 			return false
 		end
 		
 		local ply = player.GetByUniqueID(tostring(uid))
-		if(!ply) then
+		if not ply then
 			return false
 		end
 		
@@ -90,37 +90,37 @@ if(SERVER) then
 	end
 	
 	function Entity:CPPICanTool(ply, toolmode)
-		if(!ply or !ply:IsValid() or !ply:IsPlayer() or !toolmode) then
+		if not ply or not ply:IsValid() or not ply:IsPlayer() or not toolmode then
 			return false
 		end
 		return SPropProtection.PlayerCanTouch(ply, self)
 	end
 	
 	function Entity:CPPICanPhysgun(ply)
-		if(!ply or !ply:IsValid() or !ply:IsPlayer()) then
+		if not ply or not ply:IsValid() or not ply:IsPlayer() then
 			return false
 		end
-		if(SPropProtection.PhysGravGunPickup(ply, self) == false) then
+		if SPropProtection.PhysGravGunPickup(ply, self) == false then
 			return false
 		end
 		return true
 	end
 	
 	function Entity:CPPICanPickup(ply)
-		if(!ply or !ply:IsValid() or !ply:IsPlayer()) then
+		if not ply or not ply:IsValid() or not ply:IsPlayer() then
 			return false
 		end
-		if(SPropProtection.PhysGravGunPickup(ply, self) == false) then
+		if SPropProtection.PhysGravGunPickup(ply, self) == false then
 			return false
 		end
 		return true
 	end
 	
 	function Entity:CPPICanPunt(ply)
-		if(!ply or !ply:IsValid() or !ply:IsPlayer()) then
+		if not ply or not ply:IsValid() or not ply:IsPlayer() then
 			return false
 		end
-		if(SPropProtection.PhysGravGunPickup(ply, self) == false) then
+		if SPropProtection.PhysGravGunPickup(ply, self) == false then
 			return false
 		end
 		return true
