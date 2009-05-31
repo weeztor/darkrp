@@ -12,13 +12,13 @@ function ENT:Initialize()
 
 	if phys and phys:IsValid() then phys:Wake() end
 
-	self.Entity:SetNWInt("damage",10)
+	self.damage = 10
 end
 
 function ENT:OnTakeDamage(dmg)
-	self.Entity:SetNWInt("damage",self.Entity:GetNWInt("damage") - dmg:GetDamage())
+	self.damage = self.damage - dmg:GetDamage()
 
-	if (self.Entity:GetNWInt("damage") <= 0) then
+	if (self.damage <= 0) then
 		local effectdata = EffectData()
 		effectdata:SetOrigin(self.Entity:GetPos())
 		effectdata:SetMagnitude(2)
@@ -47,5 +47,5 @@ end
 
 function ENT:OnRemove()
 	local ply = self.Entity:GetNWEntity("owning_ent")
-	ply:SetNWInt("maxDrugs",ply:GetNWInt("maxDrugs") - 1)
+	ply.maxDrugs = ply.maxDrugs - 1
 end

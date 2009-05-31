@@ -11,19 +11,22 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then phys:Wake() end
 	self:SetNWBool("money_printer", true)
-	self:SetNWBool("sparking", false)
-	self:SetNWInt("damage", 100)
+	self.sparking = false
+	self.damage = 100
 	self.IsMoneyPrinter = true
 	local ply = self:GetNWEntity("owning_ent")
-	ply:SetNWInt("maxmprinters", ply:GetNWInt("maxmprinters") + 1)
+	if not ply.maxmprinters then
+		ply.maxmprinters = 0
+	end
+	ply.maxmprinters = ply.maxmprinters + 1
 	timer.Simple(30, self.CreateMoneybag, self)
 end
 
 function ENT:OnTakeDamage(dmg)
 	if self.burningup then return end
 
-	self:SetNWInt("damage", self:GetNWInt("damage") - dmg:GetDamage())
-	if self:GetNWInt("damage") <= 0 then
+	self.damage = self.damage - dmg:GetDamage()
+	if self.damage <= 0 then
 		local rnd = math.random(1, 10)
 		if rnd < 3 then
 			self:BurstIntoFlames()
@@ -63,7 +66,7 @@ end
 
 local function PrintMore(ent)
 	if ValidEntity(ent) then
-		ent:SetNWBool("sparking", true)
+		self.sparking = true
 		timer.Simple(3, ent.CreateMoneybag, ent)
 	end
 end
@@ -87,12 +90,12 @@ function ENT:CreateMoneybag()
 		amount = 250
 	end
 	moneybag:GetTable().Amount = amount
-	self:SetNWBool("sparking", false)
+	self.sparking = false
 	timer.Simple(math.random(40, 350), PrintMore, self) -- Print more cash in 40 to 350 seconds
 end
 
 function ENT:Think()
-	if not self:GetNWBool("sparking") then return end
+	if not self.sparking then return end
 
 	local effectdata = EffectData()
 	effectdata:SetOrigin(self:GetPos())
@@ -104,5 +107,5 @@ end
 
 function ENT:OnRemove()
 	local ply = self:GetNWEntity("owning_ent")
-	ply:SetNWInt("maxmprinters", ply:GetNWInt("maxmprinters") - 1)
+	ply.maxmprinters = ply.maxmprinters - 1
 end

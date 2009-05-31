@@ -519,7 +519,7 @@ AddChatCommand("/addjailpos", AddJailPos)
 
 function meta:Arrest(time, rejoin)
 	self:SetNetworkedBool("wanted", false)
-	self:SetNWBool("warrant", false)
+	self.warranted = false
 	self:SetNWBool("HasGunlicense", false)
 	self:SetNWBool("Arrested", true)
 	GAMEMODE:SetPlayerSpeed(self, CfgVars["aspd"], CfgVars["aspd"] )

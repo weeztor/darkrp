@@ -49,7 +49,7 @@ function SWEP:Initialize()
 		self:SetWeaponHoldType("normal")
 	end
 
-	self.Weapon:SetNetworkedBool("Ironsights", false)
+	self.Ironsights = false
 end
 
 /*---------------------------------------------------------
@@ -67,7 +67,7 @@ Reload does nothing
 ---------------------------------------------------------*/
 function SWEP:Reload()
 	self.Weapon:DefaultReload(ACT_VM_RELOAD)
-	self:SetIronsights(false)
+	self.Ironsights = false
 end
 
 /*---------------------------------------------------------
@@ -78,7 +78,7 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
 	if not self:CanPrimaryAttack() then return end
-	if not self:GetIronsights() then return end
+	if not self.Ironsights then return end
 	-- Play shoot sound
 	self.Weapon:EmitSound(self.Primary.Sound)
 
@@ -90,13 +90,6 @@ function SWEP:PrimaryAttack()
 
 	-- Punch the player's view
 	self.Owner:ViewPunch(Angle(math.Rand(-0.2,-0.1) * self.Primary.Recoil, math.Rand(-0.1,0.1) *self.Primary.Recoil, 0))
-
-	-- In singleplayer this doesn't get called on the client, so we use a networked float
-	-- to send the last shoot time. In multiplayer this is predicted clientside so we don't need to
-	-- send the float.
-	if ((SinglePlayer() and SERVER) or CLIENT) then
-		self.Weapon:SetNetworkedFloat("LastShootTime", CurTime())
-	end
 end
 /*---------------------------------------------------------
 Name: SWEP:PrimaryAttack()
@@ -151,7 +144,7 @@ Desc: Allows you to re-position the view model
 function SWEP:GetViewModelPosition(pos, ang)
 	if (not self.IronSightsPos) then return pos, ang end
 
-	local bIron = self.Weapon:GetNWBool("Ironsights")
+	local bIron = self.Ironsights
 
 	if (bIron != self.bLastIron) then
 		self.bLastIron = bIron
@@ -213,11 +206,11 @@ function SWEP:SetIronsights(b)
 	elseif SERVER then
 		self:SetWeaponHoldType("normal")
 	end
-	self.Weapon:SetNetworkedBool("Ironsights", b)
+	self.Ironsights = b
 end
 
 function SWEP:GetIronsights()
-	return self.Weapon:GetNWBool("Ironsights")
+	return self.Ironsights
 end
 
 SWEP.NextSecondaryAttack = 0
@@ -229,7 +222,7 @@ function SWEP:SecondaryAttack()
 
 	if (self.NextSecondaryAttack > CurTime()) then return end
 
-	bIronsights = not self.Weapon:GetNWBool("Ironsights", false)
+	bIronsights = not self.Ironsights
 	self:SetIronsights(bIronsights)
 	self.NextSecondaryAttack = CurTime() + 0.3
 end
@@ -240,5 +233,5 @@ onRestore
 ---------------------------------------------------------*/
 function SWEP:OnRestore()
 	self.NextSecondaryAttack = 0
-	self:SetIronsights(false)
+	self.Ironsights = false
 end

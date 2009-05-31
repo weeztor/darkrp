@@ -335,7 +335,7 @@ end
 /*---------------------------------------------------------
  Flammable
  ---------------------------------------------------------*/
-local FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "melon", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle", "prop_physics"}
+local FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle", "prop_physics"}
 
 function IsFlammable(ent)
 	local class = ent:GetClass()
@@ -485,13 +485,13 @@ AddChatCommand("/weapondrop", DropWeapon)
  Warrants/wanted
  ---------------------------------------------------------*/
 function UnWarrant(ply, target)
-	if not target:GetNWBool("warrant") then return end
-	target:SetNWBool("warrant", false)
+	if not target.warranted then return end
+	target.warranted = false
 	Notify(ply, 1, 4, "The search warrant for " .. target:Nick() .. " has expired!")
 end 
 
 function SetWarrant(ply, target)
-	target:SetNWBool("warrant", true)
+	target.warranted = true
 	timer.Simple(CfgVars["searchtime"], UnWarrant, ply, target)
 	for a, b in pairs(player.GetAll()) do
 		b:PrintMessage(HUD_PRINTCENTER, "Search warrant approved for " .. target:Nick() .. "!")
@@ -732,7 +732,7 @@ local function MakeLetter(ply, args, type)
 		return ""
 	end
 
-	if ply:GetNWInt("maxletters") >= CfgVars["maxletters"] then
+	if ply.maxletters and ply.maxletters >= CfgVars["maxletters"] then
 		Notify(ply, 1, 4, "You have reached the letters limit.")
 		return ""
 	end
@@ -766,20 +766,24 @@ local function MakeLetter(ply, args, type)
 	letter:Spawn()
 
 	letter:GetTable().Letter = true
-	letter:SetNWInt("type", type)
-	letter:SetNWInt("numPts", numParts)
+	letter.type = type
+	letter.numPts = numParts
 
 	local startpos = 1
 	local endpos = 39
+	letter.Parts = {}
 	for k=1, numParts do
-		letter:SetNWString("part" .. tostring(k), string.sub(ftext, startpos, endpos))
+		table.insert(letter.Parts, string.sub(ftext, startpos, endpos))
 		startpos = startpos + 39
 		endpos = endpos + 39
 	end
 	letter.SID = ply.SID
 
 	PrintMessageAll(2, ply:Nick() .. " created a letter.")
-	ply:SetNWInt("maxletters", ply:GetNWInt("maxletters") + 1)
+	if not ply.maxletters then
+		ply.maxletters = 0
+	end
+	ply.maxletters = ply.maxletters + 1
 	timer.Simple(600, function() if ValidEntity(letter) then letter:Remove() end end)
 end
 
@@ -923,7 +927,7 @@ function BuyPistol(ply, args)
 	
 	local weapon = ents.Create("spawned_weapon")
 	weapon:SetModel(model)
-	weapon:SetNWString("weaponclass", class)
+	weapon.weaponclass = class
 	weapon:SetNWString("Owner", "Shared")
 	weapon:SetPos(tr.HitPos)
 	weapon.nodupe = true
@@ -1088,7 +1092,7 @@ function BuyDrugLab(ply)
 		Notify(ply, 1, 4, "You You can not afford this!")
 		return ""
 	end
-	if ply:GetNWInt("maxDrug") == CfgVars["maxdruglabs"] then
+	if ply.maxDrug and ply.maxDrug == CfgVars["maxdruglabs"] then
 		Notify(ply, 1, 4, "You have reached the limit of druglabs.")
 		return ""
 	end
@@ -1165,7 +1169,7 @@ function BuyGunlab(ply)
 		Notify(ply, 1, 4, "You You can not afford this!")
 		return ""
 	end
-	if ply:GetNWInt("maxgunlabs") == CfgVars["maxgunlabs"] then
+	if ply.maxgunlabs and ply.maxgunlabs == CfgVars["maxgunlabs"] then
 		Notify(ply, 1, 4, "You have reached the limit of gunlabs!")
 		return ""
 	end
@@ -1205,7 +1209,7 @@ function BuyMoneyPrinter(ply, args)
 		return ""
 	end
 
-	if ply:GetNWInt("maxmprinters") >= CfgVars["maxmprinters"] then
+	if ply.maxmprinters and ply.maxmprinters >= CfgVars["maxmprinters"] then
 		Notify(ply, 1, 4, "You have reached the limit of money printers!")
 		return ""
 	end
@@ -1294,7 +1298,7 @@ local function MakeACall(ply,args)
 	
 	banana:SetNWEntity("owning_ent", p)
 	banana:SetNWString("Owner", "Shared") 
-	banana:SetNWEntity("Caller", ply)
+	banana.Caller = ply
 	
 	banana:SetPos(tr.HitPos)
 	banana.onlyremover = true
@@ -1316,7 +1320,7 @@ local function MakeACall(ply,args)
 	ownphone:Use(ply,ply)--Put it on the ear already, since you're the one who'se calling...
 	timer.Simple(20, function(ply, OtherPhone)
 		local MyPhone = ply:GetNWEntity("phone")
-		local WhoPickedItUp = MyPhone:GetNWEntity("Caller")
+		local WhoPickedItUp = MyPhone.Caller
 		if ValidEntity(MyPhone) and ValidEntity(OtherPhone) and not ValidEntity(WhoPickedItUp) then -- if noone picked up the phone then hang up :)
 			MyPhone:Remove()
 			OtherPhone:Remove()
@@ -1896,7 +1900,7 @@ function SetRadioChannel(ply,args)
 		return ""
 	end
 	Notify(ply, 1, 4, "Channel set to "..args.."!")
-	ply:SetNWInt("RadioChannel", tonumber(args))
+	ply.RadioChannel = tonumber(args)
 	return ""
 end
 AddChatCommand("/channel", SetRadioChannel)
@@ -1907,8 +1911,8 @@ function SayThroughRadio(ply,args)
 		return ""
 	end
 	for k,v in pairs(player.GetAll()) do
-		if v:GetNWInt("RadioChannel") == ply:GetNWInt("RadioChannel") then
-			TalkToPerson(v, Color(180,180,180,255), "Radio ".. tostring(ply:GetNWInt("RadioChannel")), Color(180,180,180,255), args)
+		if v.RadioChannel == ply.RadioChannel then
+			TalkToPerson(v, Color(180,180,180,255), "Radio ".. tostring(ply.RadioChannel), Color(180,180,180,255), args)
 		end
 	end
 	return ""

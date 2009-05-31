@@ -1,7 +1,7 @@
 include("shared.lua")
 
 function SWEP:DrawHUD()
-	if (LocalPlayer():GetNWInt("ScopeLevel") > 0) then
+	if LocalPlayer():GetFOV() < 90 then
 		--Width hairs
 		draw.RoundedBox(1, ScrW() / 2 - 54, ScrH() / 2, 50, 1, Color(0,0,0,255))
 		draw.RoundedBox(1, ScrW() / 2 + 4, ScrH() / 2, 50, 1, Color(0,0,0,255))

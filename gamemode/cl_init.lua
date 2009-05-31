@@ -126,11 +126,11 @@ function DrawShipmentInfo(ent)
 
 	local contents = ent:GetNWString("contents")
 	local count = ent:GetNWInt("count")
-	local itemWt = ent:GetNWFloat("itemWt")
-	local weight = tostring(math.floor(((count * itemWt)*100)+0.5)/100) .. "kg NET"
+	//local itemWt = ent:GetNWFloat("itemWt")
+	//local weight = tostring(math.floor(((count * itemWt)*100)+0.5)/100) .. "kg NET"
 
-	draw.DrawText(tostring(count) .. " x " .. contents .. "\n" .. weight, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
-	draw.DrawText(tostring(count) .. " x " .. contents .. "\n" .. weight, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
+	draw.DrawText(tostring(count) .. " x " .. contents, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
+	draw.DrawText(tostring(count) .. " x " .. contents, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
 end
 
 function DrawMoneyPrinterInfo(ent)

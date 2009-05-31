@@ -137,11 +137,11 @@ function GM:KeyPress(ply, code)
 		if ValidEntity(tr.Entity) and not ply:KeyDown(IN_ATTACK) then
 			if tr.Entity:GetTable().Letter then
 				umsg.Start("ShowLetter", ply)
-					umsg.Short(tr.Entity:GetNWInt("type"))
+					umsg.Short(tr.Entity.type)
 					umsg.Vector(tr.Entity:GetPos())
-					local numParts = tr.Entity:GetNWInt("numPts")
+					local numParts = tr.Entity.numPts
 					umsg.Short(numParts)
-					for k=1, numParts do umsg.String(tr.Entity:GetNWString("part" .. tostring(k))) end
+					for a,b in pairs(tr.Entity.Parts) do umsg.String(b) end
 				umsg.End()
 			end
 
@@ -158,7 +158,7 @@ function GM:KeyPress(ply, code)
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, talker)
-	if ValidEntity(listener:GetNWEntity("phone")) and ValidEntity(talker:GetNWEntity("phone")) and listener == talker:GetNWEntity("phone"):GetNWEntity("Caller") then 
+	if ValidEntity(listener:GetNWEntity("phone")) and ValidEntity(talker:GetNWEntity("phone")) and listener == talker:GetNWEntity("phone").Caller then 
 		return true
 	elseif ValidEntity(talker:GetNWEntity("phone")) then
 		return false
@@ -200,7 +200,7 @@ function GM:CanTool(ply, trace, mode)
 end
 
 function GM:CanPlayerSuicide(ply)
-	if ply:GetNWInt("slp") == 1 then
+	if ply.IsSleeping then
 		Notify(ply, 4, 4, "You can't suicide whilst sleeping.")
 		return false
 	end
@@ -480,7 +480,7 @@ function GM:PlayerSpawn(ply)
 		end
 	end
 
-	if CfgVars["babygod"] == 1 and ply:GetNWInt("slp") ~= 1 then
+	if CfgVars["babygod"] == 1 and not ply.IsSleeping then
 		ply:SetNWBool("Babygod", true)
 		ply:GodEnable()
 		local r,g,b,a = ply:GetColor()
@@ -494,7 +494,7 @@ function GM:PlayerSpawn(ply)
 			ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
 		end)
 	end
-	ply:SetNWInt("slp", 0)
+	ply.IsSleeping = false
 	
 	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] )
 	if ply:Team() == TEAM_CHIEF or ply:Team() == TEAM_POLICE then

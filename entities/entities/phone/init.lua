@@ -32,7 +32,7 @@ function ENT:Use( activator, caller )
 	// Someone is already using the phone
 	if ( self.LastUser && self.LastUser:IsValid() ) then return end
 
-	if ValidEntity(self:GetNWEntity("Caller")) and activator == self:GetNWEntity("Caller") then return end
+	if ValidEntity(self.Caller) and activator == self.Caller then return end
 	
 	if self.sound then
 		self.sound:Stop()
@@ -51,10 +51,10 @@ function ENT:Use( activator, caller )
 	self:SetParent(activator)
 	self:SetNWBool("IsBeingHeld", true)
 	
-	if ValidEntity(self:GetNWEntity("Caller")) then // if you're BEING called and pick up the phone...
-		local ply = self:GetNWEntity("Caller") -- the one who called you
-		ply:GetNWEntity("phone"):SetNWEntity("Caller", activator) -- Make sure he knows YOU picked up the phone
-		ply:GetNWEntity("phone"):SetNWBool("HePickedUp", true)
+	if ValidEntity(self.Caller) then // if you're BEING called and pick up the phone...
+		local ply = self.Caller -- the one who called you
+		ply:GetNWEntity("phone").Caller = activator -- Make sure he knows YOU picked up the phone
+		ply:GetNWEntity("phone").HePickedUp = true
 		
 		activator:SetNWEntity("phone", self) -- This object is the phone you're holding
 		
@@ -76,14 +76,14 @@ function ENT:Think()
 	if not self:GetNWEntity("owning_ent"):Alive() then
 		self:HangUp()
 	end
-	if self:GetNWBool("HePickedUp") and not ValidEntity(self:GetNWEntity("Caller")) then
+	if self.HePickedUp and not ValidEntity(self.Caller) then
 		self:HangUp(true)
 	end
 end
 
 function ENT:HangUp(force)
 	local ply = self:GetNWEntity("owning_ent")
-	local him = self:GetNWEntity("Caller")
+	local him = self.Caller
 	local HisPhone = him:GetNWEntity("phone")
 
 	timer.Remove("PhoneCallCosts"..ply:EntIndex())

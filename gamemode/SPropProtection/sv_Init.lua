@@ -7,7 +7,7 @@ SPropProtection = {} -- Make a table for like every function and subvariable.
 SPropProtection.Version = "DarkRP"
 SPropProtection["Props"] = {} -- a table with the props that players own.
 -- Table with RP objects that can't be copied:
-SPropProtection.AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "melon", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool", "spawned_food"}
+SPropProtection.AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool", "spawned_food"}
 
 -- Put all existing weapons in after 5 seconds
 timer.Simple(5, function()
@@ -193,7 +193,8 @@ hook.Add("PlayerDisconnected", "SPropProtection.Disconnect", SPropProtection.Dis
 function SPropProtection.PhysGravGunPickup(ply, ent)
 	if not ValidEntity(ent) then return SPropProtection.CanNotTouch(ply) end
 	local class = ent:GetClass()
-	if ent:IsPlayer() or (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf") then return SPropProtection.CanNotTouch(ply) end
+	if ent:IsPlayer() then return false end
+	if class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating" or class == "func_breakable_surf" then return SPropProtection.CanNotTouch(ply) end
 	if ent:IsVehicle() and not ply:IsAdmin() then return SPropProtection.CanNotTouch(ply) end
 	
 	if SPropProtection.AntiCopy then

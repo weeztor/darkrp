@@ -46,7 +46,7 @@ function SWEP:Initialize()
 	self.LastIron = CurTime()
 	if (SERVER) then
 		self:SetWeaponHoldType("normal")
-		self:SetNWBool("Ready", false)
+		self.Ready = false
 	end
 end
 
@@ -57,7 +57,7 @@ Desc: +attack1 has been pressed
 function SWEP:PrimaryAttack()
 	if (CLIENT) then return end
 
-	if not self:GetNWBool("Ready") then return end
+	if not self.Ready then return end
 
 	local trace = self.Owner:GetEyeTrace()
 	
@@ -79,7 +79,7 @@ function SWEP:PrimaryAttack()
 	
 	local a = CfgVars["copscanunfreeze"] == 1
 	local b = trace.Entity:GetClass() == "prop_physics"
-	local c = trace.Entity:GetNetworkedEntity("TheFingOwner"):GetNWBool("warrant")
+	local c = trace.Entity:GetNetworkedEntity("TheFingOwner").warranted
 	if (trace.Entity:IsDoor()) then
 		local allowed = false
 		local team = self.Owner:Team()
@@ -88,7 +88,7 @@ function SWEP:PrimaryAttack()
 			-- if anyone who owns this door has a warrant for their arrest
 			-- allow the police to smash the door in
 			for k, v in pairs(player.GetAll()) do
-				if trace.Entity:OwnedBy(v) and v:GetNWBool("warrant") == true then
+				if trace.Entity:OwnedBy(v) and v.warranted == true then
 					allowed = true
 					break
 				end
@@ -121,9 +121,9 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	self:SetNWFloat("LastIron", CurTime())
-	self:SetNWBool("Ready", not self:GetNWBool("Ready"))
-	if self:GetNWBool("Ready") and SERVER then
+	self.LastIron = CurTime()
+	self.Ready = not self.Ready
+	if self.Ready and SERVER then
 		self:SetWeaponHoldType("rpg")
 	elseif SERVER then
 		self:SetWeaponHoldType("normal")
@@ -132,11 +132,11 @@ end
 
 function SWEP:GetViewModelPosition(pos, ang)
 	local Mul = 1
-	if self:GetNWFloat("LastIron") > CurTime() - 0.25 then
-		Mul = math.Clamp((CurTime() - self:GetNWFloat("LastIron")) / 0.25, 0, 1)
+	if self.LastIron > CurTime() - 0.25 then
+		Mul = math.Clamp((CurTime() - self.LastIron) / 0.25, 0, 1)
 	end
 
-	if self:GetNWBool("Ready") then
+	if self.Ready then
 		Mul = 1-Mul
 	end
 
