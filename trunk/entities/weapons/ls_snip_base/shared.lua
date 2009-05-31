@@ -26,6 +26,7 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
+SWEP.Ironsights = false
 
 SWEP.ViewModelFOV = 70
 
@@ -37,12 +38,12 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
 	if not self:CanPrimaryAttack() then return end
-	if not self:GetIronsights() then return end
+	if not self.Ironsights then return end
 	-- Play shoot sound
 	self.Weapon:EmitSound(self.Primary.Sound)
 
 	-- Shoot the bullet
-	if (self:GetIronsights() == true) then
+	if (self.Ironsights == true) then
 		self:CSShootBullet(self.Primary.Damage, self.Primary.Recoil, self.Primary.NumShots, self.Primary.Cone)
 	else
 		self:CSShootBullet(self.Primary.Damage, self.Primary.Recoil + 3, self.Primary.NumShots, self.Primary.Cone + .05)
@@ -53,13 +54,6 @@ function SWEP:PrimaryAttack()
 
 	-- Punch the player's view
 	self.Owner:ViewPunch(Angle(math.Rand(-0.2,-0.1) * self.Primary.Recoil, math.Rand(-0.1,0.1) *self.Primary.Recoil, 0))
-
-	-- In singleplayer this doesn't get called on the client, so we use a networked float
-	-- to send the last shoot time. In multiplayer this is predicted clientside so we don't need to
-	-- send the float.
-	if ((SinglePlayer() and SERVER) or CLIENT) then
-		self.Weapon:SetNetworkedFloat("LastShootTime", CurTime())
-	end
 end
 
 local IRONSIGHT_TIME = 0.25
@@ -71,7 +65,7 @@ Desc: Allows you to re-position the view model
 function SWEP:GetViewModelPosition(pos, ang)
 	if (not self.IronSightsPos) then return pos, ang end
 
-	local bIron = self.Weapon:GetNWBool("Ironsights")
+	local bIron = self.Ironsights
 
 	if (bIron != self.bLastIron) then
 		self.bLastIron = bIron
@@ -133,32 +127,32 @@ function SWEP:SecondaryAttack()
 
 	self.NextSecondaryAttack = CurTime() + 0.1
 
-	if (self.Owner:GetNWInt("ScopeLevel") == nil) then
-		self.Owner:SetNetworkedInt("ScopeLevel", 0)
+	if (self.ScopeLevel == nil) then
+		self.ScopeLevel = 0
 	end
 
-	if (self.Owner:GetNWInt("ScopeLevel") == 0) then
+	if self.ScopeLevel == 0 then
 		if (SERVER) then
 			self.Owner:SetFOV(25, 0)
 		end
 
-		self.Owner:SetNetworkedInt("ScopeLevel", 1)
-		self:SetIronsights(true)
+		self.ScopeLevel = 1
+		self.Ironsights = true
 	else
-		if (self.Owner:GetNWInt("ScopeLevel") == 1) then
+		if self.ScopeLevel == 1 then
 			if (SERVER) then
 				self.Owner:SetFOV(5, 0)
 			end
 
-			self.Owner:SetNetworkedInt("ScopeLevel", 2)
-			self:SetIronsights(true)
+			self.ScopeLevel = 2
+			self.Ironsights = true
 		else
 			if (SERVER) then
 				self.Owner:SetFOV(0, 0)
 			end
 
-			self.Owner:SetNetworkedInt("ScopeLevel", 0)
-			self:SetIronsights(false)
+			self.ScopeLevel = 0
+			self.Ironsights = true
 		end
 	end
 end
@@ -169,9 +163,8 @@ function SWEP:Holster()
 		self.Owner:SetFOV(0, 0)
 	end
 
-	self.Owner:SetNetworkedInt("ScopeLevel", 0)
-	self:SetIronsights(false)
-	self.Owner:SetNetworkedInt("ScopeLevel", 0)
+	self.ScopeLevel = 0
+	self.Ironsights = false
 
 	return true
 end
@@ -182,16 +175,16 @@ function SWEP:Reload()
 		self.Owner:SetFOV(0, 0)
 	end
 
-	self.Owner:SetNetworkedInt("ScopeLevel", 0)
+	self.ScopeLevel = 0
 	self.Weapon:DefaultReload(ACT_VM_RELOAD)
-	self:SetIronsights(false)
+	self.Ironsights = false
 
 	return true
 end
 
 function SWEP:DrawHUD()
 	-- No crosshair when ironsights is on
-	if (self.Weapon:GetNWBool("Ironsights")) then return end
+	if self.Ironsights then return end
 
 	-- gets the center of the screen
 	local x = ScrW() / 2.0

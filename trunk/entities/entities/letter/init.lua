@@ -16,5 +16,8 @@ end
 
 function ENT:OnRemove()
 	local ply = self.Entity:GetNWEntity("owning_ent")
-	ply:SetNWInt("maxletters", ply:GetNWInt("maxletters") - 1)
+	if not ply.maxletters then
+		ply.maxletters = 0
+	end
+	ply.maxletters = ply.maxletters - 1
 end

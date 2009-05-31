@@ -98,6 +98,9 @@ SVN version
 [REMOVE] The standard look-at-a-player Name and health thing, it's replaced by the RP one
 [REMOVE] /rm, Exploit-sensitive and never used
 [REMOVE] Apply settings button in SPP menu, it now applies instantly.
+[REMOVE] Melon entity, it wasn't doing anything :S
+[REMOVE] Several networked variables that were used only serverside
+[REMOVE] The weight of shipments, noone ever cared.
 
 SVN VERSTION till 150/ 2.3.5:
 Updated by: FPtje Falco

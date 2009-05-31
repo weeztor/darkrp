@@ -14,20 +14,23 @@ function ENT:Initialize()
 	self:SetSolid(SOLID_VPHYSICS)
 	local phys = self:GetPhysicsObject()
 	if phys and phys:IsValid() then phys:Wake() end
-	self:SetNWBool("sparking",false)
-	self:SetNWInt("damage",100)
+	self.sparking = false
+	self.damage = 100
 	local ply = self:GetNWEntity("owning_ent")
 	self.Entity.SID = ply.SID
 	self.SID = ply.SID
 	self.Entity:SetNWInt("price", 100)
 	self.Entity.CanUse = true
 	self:SetNetworkedString("Owner", ply:Nick())
-	ply:SetNWInt("maxDrug",ply:GetNWInt("maxDrug") + 1)
+	if not ply.maxDrug then
+		ply.maxDrug = 0
+	end
+	ply.maxDrug = ply.maxDrug + 1
 end
 
 function ENT:OnTakeDamage(dmg)
-	self:SetNWInt("damage", self:GetNWInt("damage") - dmg:GetDamage())
-	if (self:GetNWInt("damage") <= 0) then
+	self.damage = self.damage - dmg:GetDamage()
+	if (self.damage <= 0) then
 		self:Remove()
 	end
 end
@@ -44,8 +47,8 @@ end
 function ENT:Use(activator,caller)
 	if not self.Entity.CanUse then return false end
 	self.Entity.CanUse = false
-	self:SetNWEntity("drug_user", activator)
-	if (activator:GetNWInt("maxDrugs") >= CfgVars["maxdrugs"]) then
+	self.drug_user = activator
+	if (activator.maxDrugs and activator.maxDrugs >= CfgVars["maxdrugs"]) then
 		Notify(activator, 1, 3, "You can't make anymore drugs as the limit is reached.")
 		timer.Simple(0.5, function() self.Entity.CanUse = true end)
 	else
@@ -57,14 +60,14 @@ function ENT:Use(activator,caller)
 		end
 		activator:AddMoney(-productioncost)
 		Notify(activator, 1, 4, "You have made drugs! production cost: " .. CUR .. tostring(productioncost).."!")
-		self:SetNWBool("sparking",true)
+		self.sparking = true
 		timer.Create(self:EntIndex() .. "drug", 1, 1, self.createDrug, self)
 	end
 end
 
 function ENT:createDrug()
 	self.Entity.CanUse = true
-	local userb = self:GetNWEntity("drug_user")
+	local userb = self.drug_user
 	local drugPos = self:GetPos()
 	drug = ents.Create("drug")
 	drug:SetPos(Vector(drugPos.x,drugPos.y,drugPos.z + 35))
@@ -74,15 +77,18 @@ function ENT:createDrug()
 	drug.nodupe = true
 	drug:SetNWInt("price", self.Entity:GetNWInt("price"))
 	drug:Spawn()
-	userb:SetNWInt("maxDrugs",userb:GetNWInt("maxDrugs") + 1)
-	self:SetNWBool("sparking",false)
+	if not userb.maxDrugs then
+		userb.maxDrugs = 0
+	end
+	userb.maxDrugs = userb.maxDrugs + 1
+	self.sparking = true
 end
 
 function ENT:Think()
 	if not self.SID then 
 		self.SID = self:GetNWEntity("owning_ent")
 	end
-	if (self:GetNWBool("sparking") == true) then
+	if self.sparking then
 		local effectdata = EffectData()
 		effectdata:SetOrigin(self:GetPos())
 		effectdata:SetMagnitude(1)
@@ -96,5 +102,5 @@ function ENT:OnRemove()
 	self:Destruct()
 	timer.Destroy(self)
 	local ply = self:GetNWEntity("owning_ent")
-	if ValidEntity(ply) then ply:SetNWInt("maxDrug",ply:GetNWInt("maxDrug") - 1) end
+	if ValidEntity(ply) then ply.maxDrug = ply.maxDrug - 1 end
 end

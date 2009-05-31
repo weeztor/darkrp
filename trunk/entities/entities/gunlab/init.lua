@@ -16,15 +16,18 @@ function ENT:Initialize()
 
 	if phys and phys:IsValid() then phys:Wake() end
 
-	self.Entity:SetNWBool("sparking",false)
-	self.Entity:SetNWInt("damage",100)
+	self.sparking = false
+	self.damage = 100
 	local ply = self.Entity:GetNWEntity("owning_ent")
-	ply:SetNWInt("maxgunlabs",ply:GetNWInt("maxgunlabs") + 1)
+	if not ply.maxgunlabs then
+		ply.maxgunlabs = 0
+	end
+	ply.maxgunlabs = ply.maxgunlabs + 1
 end
 
 function ENT:OnTakeDamage(dmg)
-	self.Entity:SetNWInt("damage",self.Entity:GetNWInt("damage") - dmg:GetDamage())
-	if (self.Entity:GetNWInt("damage") <= 0) then
+	self.damage = self.damage - dmg:GetDamage()
+	if (self.damage <= 0) then
 		self.Entity:Destruct()
 		self.Entity:Remove()
 	end
@@ -60,7 +63,6 @@ function ENT:Use(activator)
 	local discounted = math.ceil(GetGlobalInt("p228cost") * 0.88)
 	local cash = self:SalePrice(activator)
 	
-	self.Entity:SetNWEntity("user", activator)
 	if not activator:CanAfford(self:SalePrice(activator)) then
 		Notify(activator, 1, 3, "You do not have enough money to purchase this gun.")
 		return ""
@@ -70,7 +72,7 @@ function ENT:Use(activator)
 		Notify(activator, 1, 3, "Gun Lab owner is too poor to subsidize this sale!")
 		return ""
 	end
-	self.Entity:SetNWBool("sparking", true)
+	self.sparking = true
 	
 	if not self.Once then
 		self.Once = true
@@ -102,17 +104,17 @@ function ENT:createGun()
 	local gun = ents.Create("spawned_weapon")
 	gun = ents.Create("spawned_weapon")
 	gun:SetModel("models/weapons/w_pist_p228.mdl")
-	gun:SetNWString("weaponclass", "weapon_p2282")
+	gun.weaponclass = "weapon_p2282"
 	local gunPos = self.Entity:GetPos()
 	gun:SetPos(Vector(gunPos.x, gunPos.y, gunPos.z + 27))
 	gun:SetNetworkedString("Owner", "Shared")
 	gun.nodupe = true
 	gun:Spawn()
-	self.Entity:SetNWBool("sparking", false)
+	self.sparking = false
 end
 
 function ENT:Think()
-	if (self.Entity:GetNWBool("sparking") == true) then
+	if self.sparking then
 		local effectdata = EffectData()
 		effectdata:SetOrigin(self.Entity:GetPos())
 		effectdata:SetMagnitude(1)
@@ -125,5 +127,5 @@ end
 function ENT:OnRemove()
 	timer.Destroy(self.Entity)
 	local ply = self.Entity:GetNWEntity("owning_ent")
-	ply:SetNWInt("maxgunlabs",ply:GetNWInt("maxgunlabs") - 1)
+	ply.maxgunlabs = ply.maxgunlabs - 1
 end

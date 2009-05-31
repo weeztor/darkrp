@@ -28,15 +28,15 @@ function ENT:Initialize()
 	self.Entity:SetSolid(SOLID_VPHYSICS)
 	self.Entity:SetNWBool("shipment", true)
 	self.locked = false
-	self.Entity:SetNWInt("damage",100)
+	self.damage = 100
 	self.Entity:SetNWString("Owner", "Shared")
 	local phys = self.Entity:GetPhysicsObject()
 	if phys and phys:IsValid() then phys:Wake() end
 end
 
 function ENT:OnTakeDamage(dmg)
-	self.Entity:SetNWInt("damage",self.Entity:GetNWInt("damage") - dmg:GetDamage())
-	if self.Entity:GetNWInt("damage") <= 0 then
+	self.damage = self.damage - dmg:GetDamage()
+	if self.damage <= 0 then
 		self.Entity:Destruct()
 	end
 end
@@ -44,17 +44,12 @@ end
 function ENT:SetContents(s, c, w)
 	self.Entity:SetNWString("contents", s)
 	self.Entity:SetNWInt("count", c)
-	if w and w > 0 then
-		local phys = self.Entity:GetPhysicsObject()
-		if phys and phys:IsValid() then phys:SetMass(math.floor((((w * c) + 15)*100)+0.5)/100) end
-	end
-	self.Entity:SetNWFloat("itemWt", w)
 end
 
 function ENT:Use()
 	if not self.locked then
 		self.locked = true -- One activation per second
-		self.Entity:SetNWBool("sparking",true)
+		self.sparking = true
 		timer.Create(self.Entity:EntIndex() .. "crate", 1, 1, self.SpawnItem, self)
 	end
 end
@@ -62,7 +57,7 @@ end
 function ENT:SpawnItem()
 	if not ValidEntity(self.Entity) then return end
 	timer.Destroy(self.Entity:EntIndex() .. "crate")
-	self.Entity:SetNWBool("sparking",false)
+	self.sparking = false
 	local count = self.Entity:GetNWInt("count")
 	local pos = self:GetPos()
 	if count <= 1 then self.Entity:Remove() end
@@ -70,7 +65,7 @@ function ENT:SpawnItem()
 	local weapon = ents.Create("spawned_weapon")
 	if not ShipmentWeaponClasses[contents] then return end
 	for ent, mdl in pairs(ShipmentWeaponClasses[contents]) do
-		weapon:SetNWString("weaponclass", ent)
+		weapon.weaponclass = ent
 		weapon:SetModel(mdl)
 	end
 	weapon:SetNWString("Owner", "Shared")
@@ -79,16 +74,11 @@ function ENT:SpawnItem()
 	weapon:Spawn()
 	count = count - 1
 	self.Entity:SetNWInt("count", count)
-	local newmass = math.floor((((count*self.Entity:GetNWFloat("itemWt")) + 15) * 100) + 0.5) / 100
-	if newmass and newmass > 0 then
-		local phys = self.Entity:GetPhysicsObject()
-		if phys and phys:IsValid() then phys:SetMass(newmass) end
-	end
 	self.locked = false
 end
 
 function ENT:Think()
-	if self.Entity:GetNWBool("sparking") then
+	if self.sparking then
 		local effectdata = EffectData()
 		effectdata:SetOrigin(self.Entity:GetPos())
 		effectdata:SetMagnitude(1)
@@ -120,7 +110,7 @@ function ENT:Destruct()
 	for i=1, count, 1 do
 		local weapon = ents.Create("spawned_weapon")
 		weapon:SetModel(model)
-		weapon:SetNWString("weaponclass", class)
+		weapon.weaponclass = class
 		weapon:SetNWString("Owner", "Shared")
 		weapon:SetPos(Vector(vPoint.x, vPoint.y, vPoint.z + (i*5)))
 		weapon.nodupe = true

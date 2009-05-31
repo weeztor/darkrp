@@ -80,8 +80,6 @@ function PANEL:UpdatePlayerData()
 	self:SetInfo(2, "Props:", self.Player:GetCount("props") + self.Player:GetCount("ragdolls") + self.Player:GetCount("effects"))
 	self:SetInfo(2, "HoverBalls:", self.Player:GetCount("hoverballs"))
 	self:SetInfo(2, "Thrusters:", self.Player:GetCount("thrusters"))
-	self:SetInfo(2, "GunLabs:", self.Player:GetNWInt("maxgunlabs"))
-	self:SetInfo(2, "Microwaves:", self.Player:GetNWInt("maxmicrowaves"))
 	self:SetInfo(2, "SENTs:", self.Player:GetCount("sents"))
 
 	self:InvalidateLayout()

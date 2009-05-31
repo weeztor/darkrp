@@ -59,7 +59,7 @@ function SWEP:PrimaryAttack()
 	local trace = self.Owner:GetEyeTrace()
 	if trace.Entity:GetClass() == "prop_ragdoll" then
 		for k,v in pairs(player.GetAll()) do
-			if trace.Entity:GetNWInt("OwnerINT") == v:EntIndex() then
+			if trace.Entity.OwnerINT and trace.Entity.OwnerINT == v:EntIndex() then
 				KnockoutToggle(v, true)
 				return
 			end

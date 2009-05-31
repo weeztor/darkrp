@@ -12,17 +12,21 @@ function ENT:Initialize()
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self.Entity:SetUseType(SIMPLE_USE)
 	local phys = self.Entity:GetPhysicsObject()
 	if phys and phys:IsValid() then phys:Wake() end
-	self.Entity:SetNWBool("sparking",false)
-	self.Entity:SetNWInt("damage",100)
+	self.sparking = false
+	self.damage = 100
 	local ply = self.Entity:GetNWEntity("owning_ent")
-	ply:SetNWInt("maxMicrowaves", ply:GetNWInt("maxMicrowaves") + 1)
+	if not ply.maxMicrowaves then
+		ply.maxMicrowaves = 0
+	end
+	ply.maxMicrowaves = ply.maxMicrowaves + 1
 end
 
 function ENT:OnTakeDamage(dmg)
-	self.Entity:SetNWInt("damage",self.Entity:GetNWInt("damage") - dmg:GetDamage())
-	if (self.Entity:GetNWInt("damage") <= 0) then
+	self.damage = self.damage - dmg:GetDamage()
+	if (self.damage <= 0) then
 		self.Entity:Destruct()
 		self.Entity:Remove()
 	end
@@ -52,10 +56,11 @@ function ENT:SalePrice(activator)
 		return self:GetNWInt("price")
 	end
 end
+
 ENT.Once = false
 function ENT:Use(activator,caller)
 	local owner = self.Entity:GetNWEntity("owning_ent")
-	self.Entity:SetNWEntity("user", activator)
+	self.user = activator
 	if not activator:CanAfford(self:SalePrice(activator)) then
 		Notify(activator, 1, 3, "You do not have enough money to purchase food!")
 		return ""
@@ -65,11 +70,11 @@ function ENT:Use(activator,caller)
 		Notify(activator, 1, 3, "Microwave owner is too poor to subsidize this sale!")
 		return ""
 	end
-	if (activator:GetNWInt("maxFoods") >= CfgVars["maxfoods"]) then
+	if (activator.maxFoods and activator.maxFoods >= CfgVars["maxfoods"]) then
 		Notify(activator, 1, 3, "You have reached the food limit.")
 	elseif not self.Once then
 		self.Once = true
-		self.Entity:SetNWBool("sparking", true)
+		self.sparking = true
 		
 		local discounted = math.ceil(GetGlobalInt("microwavefoodcost") * 0.82)
 		local cash = self:SalePrice(activator)
@@ -98,7 +103,7 @@ function ENT:Use(activator,caller)
 end
 
 function ENT:createFood()
-	activator = self.Entity:GetNWEntity("user")
+	activator = self.user
 	self.Once = false
 	local foodPos = self.Entity:GetPos()
 	food = ents.Create("food")
@@ -107,12 +112,15 @@ function ENT:createFood()
 	food:SetNetworkedString("Owner", "Shared")
 	food.nodupe = true
 	food:Spawn()
-	activator:SetNWInt("maxFoods",activator:GetNWInt("maxFoods") + 1)
-	self.Entity:SetNWBool("sparking", false)
+	if not activator.maxFoods then
+		activator.maxFoods = 0
+	end
+	activator.maxFoods = activator.maxFoods + 1
+	self.sparking = false
 end
 
 function ENT:Think()
-	if (self.Entity:GetNWBool("sparking") == true) then
+	if self.sparking then
 		local effectdata = EffectData()
 		effectdata:SetOrigin(self.Entity:GetPos())
 		effectdata:SetMagnitude(1)
@@ -125,5 +133,5 @@ end
 function ENT:OnRemove()
 	timer.Destroy(self.Entity:EntIndex())
 	local ply = self.Entity:GetNWEntity("owning_ent")
-	ply:SetNWInt("maxMicrowaves",ply:GetNWInt("maxMicrowaves") - 1)
+	ply.maxMicrowaves = ply.maxMicrowaves - 1
 end

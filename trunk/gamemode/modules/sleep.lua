@@ -61,11 +61,11 @@ function KnockoutToggle(player, command, args, caller)
 				ragdoll:Spawn()
 				ragdoll:Activate()
 				ragdoll:SetVelocity(player:GetVelocity())
-				ragdoll:SetNWInt("OwnerINT", player:EntIndex())
+				ragdoll.OwnerINT = player:EntIndex()
 				player:StripWeapons()
 				player:Spectate(OBS_MODE_CHASE)
 				player:SpectateEntity(ragdoll)
-				player:SetNWInt("slp", 1)
+				player.IsSleeping = true
 				player:SetNetworkedEntity("Ragdoll", ragdoll)
 				player:SetNetworkedBool("Knockedout", true)
 				player:SetNetworkedFloat("KnockoutTimer", CurTime())
@@ -95,7 +95,7 @@ AddChatCommand("/wake", KnockoutToggle)
 AddChatCommand("/wakeup", KnockoutToggle)
 
 local function DamageSleepers(ent, inflictor, attacker, amount, dmginfo)
-	local ownerint = ent:GetNWInt("OwnerINT")
+	local ownerint = ent.OwnerINT
 	if ownerint and ownerint ~= 0 then
 		for k,v in pairs(player.GetAll()) do 
 			if v:EntIndex() == ownerint then

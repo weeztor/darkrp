@@ -5,9 +5,9 @@ ENT.Author = "Rickster"
 ENT.Contact = "Rickyman35@hotmail.com"
 
 function ENT:SetOffset(v)
-	self.Entity:SetNetworkedVector("Offset", v, true)
+	self.Offset = v
 end
 
 function ENT:GetOffset(name)
-	return self.Entity:GetNWVector("Offset")
+	return self.Offset
 end

@@ -30,6 +30,7 @@ if SERVER then
 	hook.Add("PlayerSpawn", "PooPee.PlayerSpawn", PooPee.PlayerSpawn)
 
 	function PooPee.AteFood(ply, food)
+		if GetGlobalInt("poopeemod") ~= 1 then return end
 		local food2 = string.lower(food)
 		if string.find(food2, "milk") or string.find(food2, "bottle") or string.find(food2, "popcan") then
 			ply:SetNWInt("Pee", math.Clamp(ply:GetNWInt("Pee") + 9, 0, 100))

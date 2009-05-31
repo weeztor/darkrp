@@ -18,7 +18,7 @@ end
 
 
 function ENT:Use(activator,caller)
-	local class = self.Entity:GetNWString("weaponclass")
+	local class = self.Entity.weaponclass
 	local weapon = ents.Create(class)
 
 	if not weapon:IsValid() then return false end
