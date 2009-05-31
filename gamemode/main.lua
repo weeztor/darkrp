@@ -456,10 +456,24 @@ weaponClasses["weapon_knife2"] = "models/weapons/w_knife_t.mdl"
 for k,v in pairs(CustomShipments) do
 	weaponClasses[v.entity] = v.model
 end
+
 function DropWeapon(ply)
 	local ent = ply:GetActiveWeapon()
 	if not ValidEntity(ent) then return "" end
 	
+	if CfgVars["RestrictDrop"] == 1 then
+		local found = false
+		for k,v in pairs(weaponClasses) do
+			if k == ent:GetClass() then
+				found = true
+				break
+			end
+		end
+		if not found then
+			Notify(ply, 1, 4, "Can't drop this weapon!")
+			return "" 
+		end
+	end
 	ply:DropWeapon(ent)
 	return ""
 end

@@ -14,15 +14,15 @@ function ccValueCommand(ply, cmd, args)
 	if #args < 1 or not tonumber(args[1]) then
 		if valuecmd.global then
 			if ply:EntIndex() == 0 then
-				print(cmd .. " = " .. GetGlobalInt(valuecmd.var))
+				print(cmd .. " = " .. tostring(GetGlobalInt(valuecmd.var)))
 			else
-				ply:PrintMessage(2, cmd .. " = " .. GetGlobalInt(valuecmd.var))
+				ply:PrintMessage(2, cmd .. " = " .. tostring(GetGlobalInt(valuecmd.var)))
 			end
 		else
 			if ply:EntIndex() == 0 then
-				print(cmd .. " = " .. CfgVars[valuecmd.var])
+				print(cmd .. " = " .. tostring(CfgVars[valuecmd.var]))
 			else
-				ply:PrintMessage(2, cmd .. " = " .. CfgVars[valuecmd.var])
+				ply:PrintMessage(2, cmd .. " = " .. tostring(CfgVars[valuecmd.var]))
 			end
 		end
 		return
@@ -71,9 +71,9 @@ function ccToggleCommand(ply, cmd, args)
 			end
 		else
 			if ply:EntIndex() == 0 then
-				print(cmd .. " = " .. CfgVars[togglecmd.var])
+				print(cmd .. " = " .. tostring(CfgVars[togglecmd.var]))
 			else
-				ply:PrintMessage(2, cmd .. " = " .. CfgVars[togglecmd.var])
+				ply:PrintMessage(2, cmd .. " = " .. tostring(CfgVars[togglecmd.var]))
 			end
 		end
 		return
