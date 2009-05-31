@@ -385,7 +385,8 @@ function GM:PlayerInitialSpawn(ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") has joined the game")
 	ply.bannedfrom = {}
 	ply:NewData()
-	ply:InitSID()
+	//ply:InitSID()
+	ply.SID = self:UserID()
 	DB.RetrieveSalary(ply)
 	DB.RetrieveMoney(ply)
 	timer.Simple(10, ply.CompleteSentence, ply)
@@ -481,14 +482,14 @@ function GM:PlayerSpawn(ply)
 	end
 
 	if CfgVars["babygod"] == 1 and not ply.IsSleeping then
-		ply:SetNWBool("Babygod", true)
+		ply.Babygod = true
 		ply:GodEnable()
 		local r,g,b,a = ply:GetColor()
 		ply:SetColor(r, g, b, 100)
 		ply:SetCollisionGroup(  COLLISION_GROUP_WORLD )
 		timer.Simple(CfgVars["babygodtime"] or 5, function()
-			if not ValidEntity(ply) then return end
-			ply:SetNWBool("Babygod", false)
+			if not ValidEntity(ply) then print("NOT VALID PLY AT BABYGOD") return end
+			ply.Babygod = false
 			ply:SetColor(r, g, b, a)
 			ply:GodDisable()
 			ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
