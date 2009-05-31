@@ -83,7 +83,7 @@ function SWEP:PrimaryAttack()
 		if trace.Entity:IsNPC() then
 			trace.Entity:SetPos(DB.RetrieveJailPos())
 		else
-			if not trace.Entity:GetNWBool("Babygod") then
+			if not trace.Entity.Babygod then
 				trace.Entity:Arrest()
 				Notify(trace.Entity, 1, 4, "You've been arrested by " .. self.Owner:Nick())
 			else
