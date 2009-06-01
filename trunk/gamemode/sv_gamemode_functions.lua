@@ -386,7 +386,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply.bannedfrom = {}
 	ply:NewData()
 	//ply:InitSID()
-	ply.SID = self:UserID()
+	ply.SID = ply:UserID()
 	DB.RetrieveSalary(ply)
 	DB.RetrieveMoney(ply)
 	timer.Simple(10, ply.CompleteSentence, ply)
@@ -488,7 +488,7 @@ function GM:PlayerSpawn(ply)
 		ply:SetColor(r, g, b, 100)
 		ply:SetCollisionGroup(  COLLISION_GROUP_WORLD )
 		timer.Simple(CfgVars["babygodtime"] or 5, function()
-			if not ValidEntity(ply) then print("NOT VALID PLY AT BABYGOD") return end
+			if not ValidEntity(ply) then return end
 			ply.Babygod = false
 			ply:SetColor(r, g, b, a)
 			ply:GodDisable()
@@ -637,7 +637,22 @@ function GM:GetFallDamage( ply, flFallSpeed )
 	return 10
 end
 
-function GM:PlayerSay(ply, text)
-	//self.BaseClass:PlayerSay(ply, text)
-	return RP_PlayerChat(ply, text)
+local otherhooks = {}
+function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's playersay has been run.
+	local text2 = text
+	local callback
+	text2, callback = RP_PlayerChat(ply, text2)
+	if callback ~= "" then return "" end
+	for k,v in pairs(otherhooks) do
+		text2 = v(ply, text2) or text2
+	end
+	text2 = RP_ActualDoSay(ply, text2, callback)
+	return ""
+end
+
+function GM:InitPostEntity() -- Remove all PlayerSay hooks, they all interfere with DarkRP's PlayerSay
+	for k,v in pairs(hook.GetTable().PlayerSay) do
+		table.insert(otherhooks, v)
+		hook.Remove("PlayerSay", k)
+	end
 end
