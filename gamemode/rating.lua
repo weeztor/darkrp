@@ -52,21 +52,21 @@
  	local Target 	= Entity( tonumber( arguments[1] ) ) 
  	local Rating	= arguments[2] 
  	 
- 	// Don't rate non players 
+ 	-- Don't rate non players 
  	if ( !Target:IsPlayer() ) then return end 
  	 
- 	// Don't rate self 
+ 	-- Don't rate self 
  	if ( Rater == Target ) then return end 
  	 
  	local RatingID = GetRatingID( Rating ) 
  	local RaterID = Rater:UniqueID() 
  	local TargetID = Target:UniqueID() 
  	 
- 	// Rating isn't valid 
+ 	-- Rating isn't valid 
  	if (!RatingID) then return end 
  	 
- 	// When was the last time this player rated this player 
- 	// Only let them rate each other evre 60 seconds 
+ 	-- When was the last time this player rated this player 
+ 	-- Only let them rate each other evre 60 seconds 
  	Target.RatingTimers = Target.RatingTimers or {} 
  	if ( Target.RatingTimers[ RaterID ] && Target.RatingTimers[ RaterID ] > CurTime() - 60 ) then 
  	 
@@ -79,12 +79,12 @@
  	 
  	Notify(Target, 1, 4, Rater:Nick().. " has given you a "..Rating ); 
  		 
- 	// Let the rater know that their vote was counted 
+ 	-- Let the rater know that their vote was counted 
  	Notify(Rater, 2, 4,  "You have rated ".. Target:Nick() .." a "..Rating.."!\n" ); 
  	 
  	sql.Query( "INSERT INTO ratings ( target, rater, rating ) VALUES ( "..TargetID..", "..RaterID..", "..RatingID.." )" ) 
    
- 	// We changed something so update the networked vars 
+ 	-- We changed something so update the networked vars 
  	UpdatePlayerRatings( Target ) 
  	 
  end 

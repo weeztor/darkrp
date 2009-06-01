@@ -70,7 +70,7 @@ function KnockoutToggle(player, command, args, caller)
 				player:SetNetworkedBool("Knockedout", true)
 				player:SetNetworkedFloat("KnockoutTimer", CurTime())
 				player:GetTable().BeforeSleepTeam = player:Team()
-				//Make sure noone can pick it up:
+				--Make sure noone can pick it up:
 				SPropProtection.PlayerMakePropOwner(player, ragdoll)
 				local RP = RecipientFilter()
 				RP:RemoveAllPlayers()

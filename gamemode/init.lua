@@ -91,9 +91,9 @@ lastmagnitudes = {} -- The magnitudes of the last tremors
 
 DB = {}
 
-// sv_alltalk must be 0
-// note, everyone will STILL hear everyone UNLESS rp_voiceradius is 1!!!
-// This will fix the rp_voiceradius not working
+-- sv_alltalk must be 0
+-- note, everyone will STILL hear everyone UNLESS rp_voiceradius is 1!!!
+-- This will fix the rp_voiceradius not working
 game.ConsoleCommand("sv_alltalk 0\n")
 
 include("shared.lua")
@@ -242,7 +242,7 @@ end
 if not DB.RetrieveGlobals() then
 	RefreshGlobals()
 end
-timer.Simple(10.5, DB.RetrieveGlobals) // for some reason I don't know about the vars reset after 10 seconds...
+timer.Simple(10.5, DB.RetrieveGlobals) -- for some reason I don't know about the vars reset after 10 seconds...
 
 timer.Simple(5, function()
 	DB.SetUpNonOwnableDoors()

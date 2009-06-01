@@ -385,7 +385,6 @@ function GM:PlayerInitialSpawn(ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") has joined the game")
 	ply.bannedfrom = {}
 	ply:NewData()
-	//ply:InitSID()
 	ply.SID = ply:UserID()
 	DB.RetrieveSalary(ply)
 	DB.RetrieveMoney(ply)
@@ -581,7 +580,7 @@ function GM:PlayerLoadout(ply)
 		end
 	end
 	
-	// Switch to prefered weapon if they have it
+	-- Switch to prefered weapon if they have it
 	local cl_defaultweapon = ply:GetInfo( "cl_defaultweapon" )
 	
 	if ( ply:HasWeapon( cl_defaultweapon )  ) then

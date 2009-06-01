@@ -6,12 +6,12 @@ local LetterWritePanel
 function MsgDoVote(msg)
 	local question = msg:ReadString()
 	local voteid = msg:ReadString()
-	local timeleft = msg:ReadFloat() // 30
+	local timeleft = msg:ReadFloat()
 	if timeleft == 0 then
 		timeleft = 100
 	end
 	local OldTime = CurTime()
-	if string.find(voteid, LocalPlayer():EntIndex()) then return end //If it's about you then go away
+	if string.find(voteid, LocalPlayer():EntIndex()) then return end --If it's about you then go away
 
 	LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
 	local panel = vgui.Create("DFrame")

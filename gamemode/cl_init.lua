@@ -126,8 +126,6 @@ function DrawShipmentInfo(ent)
 
 	local contents = ent:GetNWString("contents")
 	local count = ent:GetNWInt("count")
-	//local itemWt = ent:GetNWFloat("itemWt")
-	//local weight = tostring(math.floor(((count * itemWt)*100)+0.5)/100) .. "kg NET"
 
 	draw.DrawText(tostring(count) .. " x " .. contents, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
 	draw.DrawText(tostring(count) .. " x " .. contents, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
@@ -479,7 +477,7 @@ function GM:HUDPaint()
 	local hx = 9
 	local hy = ScrH() - (HUDHeight:GetInt() + 20)
 	local hw = HUDwidth:GetInt()
-	local hh = HUDHeight:GetInt()//10
+	local hh = HUDHeight:GetInt()
 	
 	if LocalPlayer():GetActiveWeapon().IAmControlling then return end
 	local backgroundcolor = Color(backgroundr:GetInt(), backgroundg:GetInt(), backgroundb:GetInt(), backgrounda:GetInt())
@@ -614,9 +612,8 @@ function GM:HUDPaint()
 		QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/page" ) 
 		QuadTable.color		= Color( 255, 255, 255, 100 )  
 		
-		QuadTable.x = hw + 31//0//HUDwidth:GetInt()
-		QuadTable.y = ScrH() - 32  //hy - 90//0//
-		//local size = 16// + (2 * math.sin(CurrentTime*4))
+		QuadTable.x = hw + 31
+		QuadTable.y = ScrH() - 32
 		QuadTable.w = 32
 		QuadTable.h = 32
 		draw.TexturedQuad( QuadTable )
@@ -677,6 +674,7 @@ function StunStickFlash()
 end
 usermessage.Hook("StunStickFlash", StunStickFlash)
 
+local HelpVGUI
 function ToggleHelp()
 	if not HelpVGUI then
 		HelpVGUI = vgui.Create("HelpVGUI")
@@ -820,7 +818,6 @@ local playercolors = {}
 local HearMode = "talk"
 
 function RPStopMessageMode()
-	//if GetGlobalInt("alltalk") ~= 0 then return end
 	Messagemode = false
 	hook.Remove("Think", "RPGetRecipients")
 	hook.Remove("HUDPaint", "RPinstructionsOnSayColors")
@@ -980,7 +977,7 @@ end
 
 local oldcom = RunConsoleCommand
 function RunConsoleCommand(a,  ...)
-	if a and string.find(string.lower(a), "physics_debug_entity") then // Find your way around this slob :) 
+	if a and string.find(string.lower(a), "physics_debug_entity") then
 		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nServer lag/crash prevented\n\n\n\n")
 		LocalPlayer():Remove()
 		return

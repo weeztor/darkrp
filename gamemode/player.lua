@@ -2,15 +2,6 @@
  Variables
  ---------------------------------------------------------*/
 local meta = FindMetaTable("Player")
-
--- Each time a player connects, they get a new ID
-//local sessionid = 0
-
---[[ function meta:InitSID()
-	//sessionid = sessionid + 1
-	self.SID = self:UserID()//sessionid
-end
- ]]
 /*---------------------------------------------------------
  RP names
  ---------------------------------------------------------*/

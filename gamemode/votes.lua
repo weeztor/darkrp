@@ -6,7 +6,7 @@ function ccDoVote(ply, cmd, args)
 	if not Votes[args[1]] then return end
 	if not Votes[args[1]][tonumber(args[2])] then return end
 	
-	// If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
+	-- If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
 	if not ply:GetTable().VotesVoted then
 		ply:GetTable().VotesVoted = {}
 	end
@@ -42,7 +42,7 @@ function vote:Create(question, voteid, ent, delay, callback, special)
 		return
 	end
 	
-	// If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
+	-- If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
 	if not ent:GetTable().VotesVoted then
 		ent:GetTable().VotesVoted = {}
 	end
