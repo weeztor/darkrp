@@ -47,6 +47,9 @@ SWEP.Secondary.Ammo = "none"
 function SWEP:Initialize()
 	if (SERVER) then
 		self:SetWeaponHoldType("normal")
+		self:SetNPCMinBurst( 30 )
+		self:SetNPCMaxBurst( 30 )
+		self:SetNPCFireRate( 0.01 )
 	end
 
 	self.Ironsights = false
@@ -87,6 +90,8 @@ function SWEP:PrimaryAttack()
 
 	-- Remove 1 bullet from our clip
 	self:TakePrimaryAmmo(1)
+	
+	if ( self.Owner:IsNPC() ) then return end
 
 	-- Punch the player's view
 	self.Owner:ViewPunch(Angle(math.Rand(-0.2,-0.1) * self.Primary.Recoil, math.Rand(-0.1,0.1) *self.Primary.Recoil, 0))
@@ -109,17 +114,18 @@ function SWEP:CSShootBullet(dmg, recoil, numbul, cone)
 	bullet.Force = 5        -- Amount of force to give to phys objects
 	bullet.Damage = dmg
 
-
 	self.Owner:FireBullets(bullet)
 	self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)      -- View model animation
 	self.Owner:MuzzleFlash()        -- Crappy muzzle light
 	self.Owner:SetAnimation(PLAYER_ATTACK1)       -- 3rd Person Animation
+	
+	if ( self.Owner:IsNPC() ) then return end
 
-	-- CUSTOM RECOIL !
-	if ((SinglePlayer() and SERVER) or (not SinglePlayer() and CLIENT)) then
+	// CUSTOM RECOIL !
+	if ( (SinglePlayer() && SERVER) || ( !SinglePlayer() && CLIENT && IsFirstTimePredicted() ) ) then
 		local eyeang = self.Owner:EyeAngles()
 		eyeang.pitch = eyeang.pitch - recoil
-		self.Owner:SetEyeAngles(eyeang)
+		self.Owner:SetEyeAngles( eyeang )
 	end
 end
 
