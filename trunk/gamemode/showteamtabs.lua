@@ -337,7 +337,7 @@ function JobsTab()
 			Information:SetSpacing(10)
 			Information:EnableHorizontal( false )
 			Information:EnableVerticalScrollbar( true )
-			function Information:Rebuild() // YES IM OVERRIDING IT AND CHANGE ONLY ONE LINE BUT I HAVE A FUCKING GOOD REASON TO DO IT!
+			function Information:Rebuild() -- YES IM OVERRIDING IT AND CHANGE ONLY ONE LINE BUT I HAVE A FUCKING GOOD REASON TO DO IT!
 				local Offset = 0
 				if ( self.Horizontal ) then
 					local x, y = self.Padding, self.Padding;

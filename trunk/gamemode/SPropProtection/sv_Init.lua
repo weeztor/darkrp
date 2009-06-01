@@ -3,11 +3,15 @@
 --	By Spacetech edited by FPtje
 ------------------------------------
 
+/*---------------------------------------------------------
+Variables
+---------------------------------------------------------*/
 SPropProtection = {} -- Make a table for like every function and subvariable.
 SPropProtection.Version = "DarkRP"
 SPropProtection["Props"] = {} -- a table with the props that players own.
 -- Table with RP objects that can't be copied:
 SPropProtection.AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool", "spawned_food"}
+local Meta = FindMetaTable("Player")
 
 -- Put all existing weapons in after 5 seconds
 timer.Simple(5, function()
@@ -15,35 +19,6 @@ timer.Simple(5, function()
 		table.insert(SPropProtection.AntiCopy, v.Classname)
 	end
 end)
-
-function SPropProtection.LoadBuddies(ply)
-	local PData = ply:GetPData("SPPBuddies", "")
-	if PData ~= "" then
-		for k, v in pairs(string.Explode(";", PData)) do
-			local String = string.Trim(v)
-			if String ~= "" then
-				table.insert(SPropProtection[ply:SteamID()], String)
-			end
-		end
-	end
-end
-
-function SPropProtection.PlayerMakePropOwner(ply, ent)
-	if ent:GetClass() == "transformer" and ent.spawned and not ent.Part then
-		for k, v in pairs(transpiece[ent]) do
-			v.Part = true
-			SPropProtection.PlayerMakePropOwner(ply, v)
-		end
-	end
-	if ent:IsPlayer() then
-		return false
-	end
-	SPropProtection["Props"][ent:EntIndex()] = {ply:SteamID(), ent, ply}
-	ent:SetNetworkedString("Owner", ply:Nick())
-	ent:SetNetworkedEntity("OwnerObj", ply)
-	gamemode.Call("CPPIAssignOwnership", ply, ent)
-	return true
-end
 
 if cleanup then
 	local Clean = cleanup.Add
@@ -59,7 +34,6 @@ if cleanup then
 	end
 end
 
-local Meta = FindMetaTable("Player")
 if Meta.AddCount then
 	local Backup = Meta.AddCount
 	function Meta:AddCount(Type, Entity)
@@ -68,100 +42,9 @@ if Meta.AddCount then
 	end
 end
 
-function SPropProtection.IsBuddy(ply, ent)
-	local Players = player.GetAll()
-	if table.Count(Players) == 1 then
-		return true
-	end
-	for k, v in pairs(Players) do
-		if v and ValidEntity(v) and v ~= ply then
-	        if SPropProtection["Props"][ent:EntIndex()][1] == v:SteamID() then 
-                if SPropProtection[v:SteamID()] and table.HasValue(SPropProtection[v:SteamID()], ply:SteamID()) then
-					return true
-				else
-					return false
-				end
-            end
-		end
-	end	
-end
-
-function SPropProtection.CanNotTouch(ply)
-	if not ValidEntity(ply) then return end
-	umsg.Start("SPPCantTouch", ply)
-	umsg.End()
-	return false
-end
-
-function SPropProtection.PlayerCanTouch(ply, ent)
-	if tonumber(CfgVars["spp_on"]) == 0 or ent:GetClass() == "worldspawn" then
-		return true
-	end
-	local class = ent:GetClass()
-	
-	if string.find(class, "stone_") == 1 or string.find(class, "rock_") == 1 or string.find(class, "stargate_") == 0 or string.find(class, "dhd_") == 0 or class == "flag" or class == "item" then
-		if not ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" then
-			ent:SetNetworkedString("Owner", "World")
-		end
-		if ply:GetActiveWeapon():GetClass() ~= "weapon_physgun" and ply:GetActiveWeapon():GetClass() ~= "gmod_tool" then
-			return true
-		end
-	end
-	
-	if not ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and not ent:IsPlayer() then
-		SPropProtection.PlayerMakePropOwner(ply, ent)
-		Notify(ply, 1, 4, "You now own this prop")
-		return true
-	end
-	
-	if SPropProtection["Props"][ent:EntIndex()] ~= nil then
-		if SPropProtection["Props"][ent:EntIndex()][1] == ply:SteamID() or SPropProtection.IsBuddy(ply, ent) then
-			return true
-		end
-	else
-		for k, v in pairs(g_SBoxObjects) do
-			for b, j in pairs(v) do
-				for _, e in pairs(j) do
-					if k == ply:SteamID() and e == ent then
-						SPropProtection.PlayerMakePropOwner(ply, ent)
-						Notify(ply, 1, 4, "You now own this prop")
-						return true
-					end
-				end
-			end
-		end
-		for k, v in pairs(GAMEMODE.CameraList) do
-			for b, j in pairs(v) do
-				if j == ent then
-					if k == ply:SteamID() and e == ent then
-						SPropProtection.PlayerMakePropOwner(ply, ent)
-						Notify(ply, 1, 4, "You now own this prop")
-						return true
-					end
-				end
-			end
-		end
-	end
-	
-
-	if ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick() then return true end
-
-	if game.GetMap() == "gm_construct" and ent:GetNetworkedString("Owner") == "World" then
-		return true
-	end
-
-	if ent:GetNetworkedString("Owner") == "World" then
-		if (tonumber(CfgVars["spp_touchworldprops"]) == 1 or (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1)) and (string.lower(class) == "prop_physics" or  string.lower(class) == "func_physbox" or string.lower(class) == "prop_physics_multiplayer") then
-			return true
-		end
-	elseif ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1 then
-		return true
-	elseif ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 0 then
-		return false
-	end
-	return false
-end
-
+/*---------------------------------------------------------
+Cleaning up
+---------------------------------------------------------*/
 function SPropProtection.DRemove(SteamID, PlayerName)
 	for k, v in pairs(SPropProtection["Props"]) do
 		if v[1] == SteamID and v[2]:IsValid() then
@@ -172,6 +55,56 @@ function SPropProtection.DRemove(SteamID, PlayerName)
 	NotifyAll(1, 5, tostring(PlayerName).."'s props have been cleaned up")
 end
 
+function SPropProtection.CleanupDisconnectedProps(ply, cmd, args)
+	if not ply:IsAdmin() then return end
+	for k1, v1 in pairs(SPropProtection["Props"]) do
+		local FoundUID = false
+		for k2, v2 in pairs(player.GetAll()) do
+			if v1[1] == v2:SteamID() then
+				FoundUID = true
+			end
+		end
+		if FoundUID == false and v1[2]:IsValid() then
+			v1[2]:Remove()
+			SPropProtection["Props"][k1] = nil
+		end
+	end
+	NotifyAll(1, 4, "Disconnected players props have been cleaned up")
+end
+concommand.Add("SPropProtection_CleanupDisconnectedProps", SPropProtection.CleanupDisconnectedProps)
+
+function SPropProtection.CleanupProps(ply, cmd, args)
+	if not args[1] or args[1] == "" then
+		for k, v in pairs(SPropProtection["Props"]) do
+			if v[1] == ply:SteamID() then
+				if v[2]:IsValid() then
+					v[2]:Remove()
+					SPropProtection["Props"][k] = nil
+				end
+			end
+		end	
+		Notify(ply, 1, 4, "Your props have been cleaned up")
+	elseif ply:IsAdmin() then
+		local find = FindPlayer(args[1])
+		if not ValidEntity(find) then
+			Notify(ply, 1, 4, "Could not find player "..args[1])
+			return
+		end
+		
+		for k,v in pairs(SPropProtection["Props"]) do
+			if v[1] == find:SteamID() then
+				if v[2]:IsValid() then v[2]:Remove() end
+				SPropProtection["Props"][k] = nil
+			end
+		end
+		NotifyAll(1, 4, find:Nick().."'s props have been cleaned up")
+	end
+end
+concommand.Add("SPropProtection_CleanupProps", SPropProtection.CleanupProps)
+
+/*---------------------------------------------------------
+Hooks
+---------------------------------------------------------*/
 function SPropProtection.PlayerInitialSpawn(ply)
 	SPropProtection[ply:SteamID()] = {}
 	SPropProtection.LoadBuddies(ply)
@@ -257,7 +190,7 @@ hook.Add("GravGunPunt", "SPropProtection.GravGunPunt", SPropProtection.GravGunPu
 
 function SPropProtection.CanTool(ply, tr, toolgun)
 	if string.find(toolgun, "duplicator") then
-		//NORMAL DUPLICATOR
+		--NORMAL DUPLICATOR
 		local Ents = ply:UniqueIDTable( "Duplicator" ).Entities
 		if Ents then
 			for k,v in pairs(Ents) do
@@ -288,7 +221,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 			end
 		end
 		
-		//ADVANCED DUPLICATOR:
+		--ADVANCED DUPLICATOR:
 		if toolgun == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 			for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 				for a, b in pairs(v) do
@@ -436,52 +369,38 @@ function SPropProtection.PlayerSpawnedVehicle(ply, ent)
 end
 hook.Add("PlayerSpawnedVehicle", "SPropProtection.PlayerSpawnedVehicle", SPropProtection.PlayerSpawnedVehicle)
 
-function SPropProtection.CleanupDisconnectedProps(ply, cmd, args)
-	if not ply:IsAdmin() then return end
-	for k1, v1 in pairs(SPropProtection["Props"]) do
-		local FoundUID = false
-		for k2, v2 in pairs(player.GetAll()) do
-			if v1[1] == v2:SteamID() then
-				FoundUID = true
+/*---------------------------------------------------------
+Buddies
+---------------------------------------------------------*/
+function SPropProtection.LoadBuddies(ply)
+	local PData = ply:GetPData("SPPBuddies", "")
+	if PData ~= "" then
+		for k, v in pairs(string.Explode(";", PData)) do
+			local String = string.Trim(v)
+			if String ~= "" then
+				table.insert(SPropProtection[ply:SteamID()], String)
 			end
 		end
-		if FoundUID == false and v1[2]:IsValid() then
-			v1[2]:Remove()
-			SPropProtection["Props"][k1] = nil
-		end
 	end
-	NotifyAll(1, 4, "Disconnected players props have been cleaned up")
 end
-concommand.Add("SPropProtection_CleanupDisconnectedProps", SPropProtection.CleanupDisconnectedProps)
 
-function SPropProtection.CleanupProps(ply, cmd, args)
-	if not args[1] or args[1] == "" then
-		for k, v in pairs(SPropProtection["Props"]) do
-			if v[1] == ply:SteamID() then
-				if v[2]:IsValid() then
-					v[2]:Remove()
-					SPropProtection["Props"][k] = nil
-				end
-			end
-		end	
-		Notify(ply, 1, 4, "Your props have been cleaned up")
-	elseif ply:IsAdmin() then
-		local find = FindPlayer(args[1])
-		if not ValidEntity(find) then
-			Notify(ply, 1, 4, "Could not find player "..args[1])
-			return
-		end
-		
-		for k,v in pairs(SPropProtection["Props"]) do
-			if v[1] == find:SteamID() then
-				if v[2]:IsValid() then v[2]:Remove() end
-				SPropProtection["Props"][k] = nil
-			end
-		end
-		NotifyAll(1, 4, find:Nick().."'s props have been cleaned up")
+function SPropProtection.IsBuddy(ply, ent)
+	local Players = player.GetAll()
+	if table.Count(Players) == 1 then
+		return true
 	end
+	for k, v in pairs(Players) do
+		if v and ValidEntity(v) and v ~= ply then
+	        if SPropProtection["Props"][ent:EntIndex()][1] == v:SteamID() then 
+                if SPropProtection[v:SteamID()] and table.HasValue(SPropProtection[v:SteamID()], ply:SteamID()) then
+					return true
+				else
+					return false
+				end
+            end
+		end
+	end	
 end
-concommand.Add("SPropProtection_CleanupProps", SPropProtection.CleanupProps)
 
 function SPropProtection.ApplyBuddySettings(ply, cmd, args)
 	local Players = player.GetAll()
@@ -549,6 +468,105 @@ function SPropProtection.ClearBuddies(ply, cmd, args)
 	Notify(ply, 1, 4, "Your buddies have been cleared")
 end
 concommand.Add("SPropProtection_ClearBuddies", SPropProtection.ClearBuddies)
+
+/*---------------------------------------------------------
+Touching
+---------------------------------------------------------*/
+function SPropProtection.CanNotTouch(ply)
+	if not ValidEntity(ply) then return end
+	umsg.Start("SPPCantTouch", ply)
+	umsg.End()
+	return false
+end
+
+function SPropProtection.PlayerCanTouch(ply, ent)
+	if tonumber(CfgVars["spp_on"]) == 0 or ent:GetClass() == "worldspawn" then
+		return true
+	end
+	local class = ent:GetClass()
+	
+	if string.find(class, "stone_") == 1 or string.find(class, "rock_") == 1 or string.find(class, "stargate_") == 0 or string.find(class, "dhd_") == 0 or class == "flag" or class == "item" then
+		if not ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" then
+			ent:SetNetworkedString("Owner", "World")
+		end
+		if ply:GetActiveWeapon():GetClass() ~= "weapon_physgun" and ply:GetActiveWeapon():GetClass() ~= "gmod_tool" then
+			return true
+		end
+	end
+	
+	if not ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and not ent:IsPlayer() then
+		SPropProtection.PlayerMakePropOwner(ply, ent)
+		Notify(ply, 1, 4, "You now own this prop")
+		return true
+	end
+	
+	if SPropProtection["Props"][ent:EntIndex()] ~= nil then
+		if SPropProtection["Props"][ent:EntIndex()][1] == ply:SteamID() or SPropProtection.IsBuddy(ply, ent) then
+			return true
+		end
+	else
+		for k, v in pairs(g_SBoxObjects) do
+			for b, j in pairs(v) do
+				for _, e in pairs(j) do
+					if k == ply:SteamID() and e == ent then
+						SPropProtection.PlayerMakePropOwner(ply, ent)
+						Notify(ply, 1, 4, "You now own this prop")
+						return true
+					end
+				end
+			end
+		end
+		for k, v in pairs(GAMEMODE.CameraList) do
+			for b, j in pairs(v) do
+				if j == ent then
+					if k == ply:SteamID() and e == ent then
+						SPropProtection.PlayerMakePropOwner(ply, ent)
+						Notify(ply, 1, 4, "You now own this prop")
+						return true
+					end
+				end
+			end
+		end
+	end
+	
+
+	if ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick() then return true end
+
+	if game.GetMap() == "gm_construct" and ent:GetNetworkedString("Owner") == "World" then
+		return true
+	end
+
+	if ent:GetNetworkedString("Owner") == "World" then
+		if (tonumber(CfgVars["spp_touchworldprops"]) == 1 or (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1)) and (string.lower(class) == "prop_physics" or  string.lower(class) == "func_physbox" or string.lower(class) == "prop_physics_multiplayer") then
+			return true
+		end
+	elseif ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1 then
+		return true
+	elseif ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 0 then
+		return false
+	end
+	return false
+end
+
+/*---------------------------------------------------------
+Prop owning
+---------------------------------------------------------*/
+function SPropProtection.PlayerMakePropOwner(ply, ent)
+	if ent:GetClass() == "transformer" and ent.spawned and not ent.Part then
+		for k, v in pairs(transpiece[ent]) do
+			v.Part = true
+			SPropProtection.PlayerMakePropOwner(ply, v)
+		end
+	end
+	if ent:IsPlayer() then
+		return false
+	end
+	SPropProtection["Props"][ent:EntIndex()] = {ply:SteamID(), ent, ply}
+	ent:SetNetworkedString("Owner", ply:Nick())
+	ent:SetNetworkedEntity("OwnerObj", ply)
+	gamemode.Call("CPPIAssignOwnership", ply, ent)
+	return true
+end
 
 function SPropProtection.WorldOwner()
 	local WorldEnts = 0

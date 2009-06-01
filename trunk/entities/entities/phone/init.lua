@@ -29,7 +29,7 @@ function ENT:Use( activator, caller )
 
 	if ( !activator:IsPlayer() ) then return end
 	
-	// Someone is already using the phone
+	-- Someone is already using the phone
 	if ( self.LastUser && self.LastUser:IsValid() ) then return end
 
 	if ValidEntity(self.Caller) and activator == self.Caller then return end
@@ -51,7 +51,7 @@ function ENT:Use( activator, caller )
 	self:SetParent(activator)
 	self:SetNWBool("IsBeingHeld", true)
 	
-	if ValidEntity(self.Caller) then // if you're BEING called and pick up the phone...
+	if ValidEntity(self.Caller) then -- if you're BEING called and pick up the phone...
 		local ply = self.Caller -- the one who called you
 		ply:GetNWEntity("phone").Caller = activator -- Make sure he knows YOU picked up the phone
 		ply:GetNWEntity("phone").HePickedUp = true

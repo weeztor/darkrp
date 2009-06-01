@@ -95,7 +95,7 @@ if SERVER then
 		end
 		if not ply:Alive() then return "" end
 		
-		umsg.Start("PlayerPeeParticles") // usermessage to everyone
+		umsg.Start("PlayerPeeParticles") -- usermessage to everyone
 			umsg.Entity(ply)
 			umsg.Long(ply:GetNWInt("Pee"))
 		umsg.End()
@@ -107,7 +107,7 @@ if SERVER then
 	end
 	AddChatCommand("/pee", PooPee.DoPee)
 	
-	return //The server doesn't have anything more to do in this file. so KTHXBAI
+	return --The server doesn't have anything more to do in this file. so KTHXBAI
 end
 
 function PooPee.HUDPaint()
@@ -158,7 +158,6 @@ function PooPee.DoPee(umsg)
 			if not ply:IsValid() then return end
 			local part = em:Add("sprites/orangecore2",ply:GetPos() + Vector(0,0,32)) 
 			if part then 
-				//part:SetColor(215,255,0,255) 
 				part:SetVelocity(ply:GetAimVector() * 1000 + Vector(math.random(-50,50),math.random(-50,50),0) ) 
 				part:SetDieTime(30) 
 				part:SetLifeTime(1) 

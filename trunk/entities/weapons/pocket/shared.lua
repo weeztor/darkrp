@@ -47,7 +47,7 @@ function SWEP:Deploy()
 	end
 end
 
-local blacklist = {"drug_lab", "money_printer", "meteor", "door", "func_", "player", "beam", "worldspawn", "env_", "path_"/*, "spawned_weapon"*/}
+local blacklist = {"drug_lab", "money_printer", "meteor", "door", "func_", "player", "beam", "worldspawn", "env_", "path_"}
 function SWEP:PrimaryAttack()
 	if CLIENT then return end
 
@@ -72,7 +72,7 @@ function SWEP:PrimaryAttack()
 	end
 	
 	if not self.Owner:GetTable().Pocket then self.Owner:GetTable().Pocket = {} end
-	if /*trace.Entity:IsWeapon() or */not SPropProtection.GravGunThings(self.Owner, trace.Entity) or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) then
+	if not SPropProtection.GravGunThings(self.Owner, trace.Entity) or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) then
 		Notify(self.Owner, 1, 4, "You can not put this object in your pocket!")
 		return
 	end

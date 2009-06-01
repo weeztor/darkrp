@@ -16,7 +16,7 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end end)		
 		return
 	end
-	local AllowedClasses = classes or {} // if classes isn't entered then anyone
+	local AllowedClasses = classes or {}
 	if not classes then
 		for k,v in pairs(team.GetAllTeams()) do
 			table.insert(AllowedClasses, k)
