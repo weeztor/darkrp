@@ -68,6 +68,7 @@ SVN version
 [FIX] Health showing below 0
 [FIX] SPP exploit where clients could retrieve steamID's with Lua.(Should only be possible with status in console)
 [FIX] Bug in SPP menu that made the settings reset themselves(The settings now use the DarkRP settings system)
+[FIX] Weapon predictions
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
