@@ -26,11 +26,11 @@ function SPropProtection.HUDPaint()
 	if tr.HitNonWorld then
 		if tr.Entity:IsValid() and not tr.Entity:IsPlayer() and not LocalPlayer():InVehicle() then
 			local PropOwner = "Owner: "
-			local OwnerObj = tr.Entity:GetNetworkedEntity("OwnerObj", false)
-			if OwnerObj and OwnerObj:IsValid() then
-				PropOwner = PropOwner..OwnerObj:Name()
+			local OwnerObj = tr.Entity:GetNWString("Owner")
+			if OwnerObj ~= "" then
+				PropOwner = PropOwner..OwnerObj
 			else
-				PropOwner = PropOwner..tostring(tr.Entity:GetNetworkedString("Owner", "N/A"))
+				PropOwner = PropOwner.."N/A"
 			end
 			
 			surface.SetFont("Default")

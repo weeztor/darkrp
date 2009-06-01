@@ -51,22 +51,22 @@ function SWEP:Reload()
 	self:SetIronsights(false)
 
 	-- Already reloading
-	if (self.Weapon:GetNWBool("reloading", false)) then return end
+	if not self.Weapon.reloading then return end
 
 	-- Start reloading if we can
 	if (self.Weapon:Clip1() < self.Primary.ClipSize and self.Owner:GetAmmoCount(self.Primary.Ammo) > 0) then
-		self.Weapon:SetNetworkedBool("reloading", true)
+		self.Weapon.reloading = true
 		self.Weapon:SetVar("reloadtimer", CurTime() + 0.3)
 		self.Weapon:SendWeaponAnim(ACT_VM_RELOAD)
 	end
 end
 
 function SWEP:Think()
-	if (self.Weapon:GetNWBool("reloading", false)) then
+	if not self.Weapon.reloading then
 		if (self.Weapon:GetVar("reloadtimer", 0) < CurTime()) then
 			-- Finsished reload -
 			if (self.Weapon:Clip1() >= self.Primary.ClipSize or self.Owner:GetAmmoCount(self.Primary.Ammo) <= 0) then
-				self.Weapon:SetNetworkedBool("reloading", false)
+				self.Weapon.reloading = false
 				return
 			end
 

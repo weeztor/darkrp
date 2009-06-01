@@ -404,7 +404,7 @@ function DB.StoreRPName(ply, name)
 
 	-- Change the owner of all props to the new name
 	for k, v in pairs(ents.FindByClass("prop_*")) do
-		if v:GetNWString("Owner") == ply:Name() then
+		if v:GetNWString("Owner") == ply:Name() and v:GetNWString("Owner") ~= "" then
 			v:SetNWString("Owner", name)
 		end
 	end
@@ -519,7 +519,7 @@ end
 
 function DB.StoreNonOwnableDoorTitle(ent, text)
 	sql.Query("UPDATE darkrp_disableddoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
-	ent:SetNWString("dTitle", text)
+	ent:SetNWString("title", text)
 end
 
 function DB.SetUpNonOwnableDoors()
@@ -529,7 +529,7 @@ function DB.SetUpNonOwnableDoors()
 	for _, row in pairs(r) do
 		local e = ents.GetByIndex(tonumber(row.idx))
 		e:SetNWBool("nonOwnable", true)
-		e:SetNWString("dTitle", row.title)
+		e:SetNWString("title", row.title)
 	end
 end
 
@@ -549,7 +549,7 @@ end
 
 function DB.StoreCPOwnableDoorTitle(ent, text)
 	sql.Query("UPDATE darkrp_cpdoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
-	ent:SetNWString("dTitle", text)
+	ent:SetNWString("title", text)
 end
 
 function DB.SetUpCPOwnableDoors()
@@ -559,7 +559,7 @@ function DB.SetUpCPOwnableDoors()
 	for _, row in pairs(r) do
 		local e = ents.GetByIndex(tonumber(row.idx))
 		e:SetNWBool("CPOwnable", true)
-		e:SetNWString("dTitle", row.title)
+		e:SetNWString("title", row.title)
 	end
 end
 

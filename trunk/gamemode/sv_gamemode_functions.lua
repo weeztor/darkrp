@@ -84,7 +84,7 @@ end
 function GM:PlayerSpawnedProp(ply, model, ent)
 	self.BaseClass:PlayerSpawnedProp(ply, model, ent)
 	ent.SID = ply.SID
-	ent:SetNetworkedEntity("TheFingOwner", ply)
+	ent.Owner = ply
 end
 
 function GM:PlayerSpawnedSWEP(ply, model, ent)

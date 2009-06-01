@@ -22,8 +22,6 @@ if SERVER then
 	end
 
 	function PooPee.PlayerSpawn(ply)
-		ply:SetNWInt("Poop", 0)
-		ply:SetNWInt("Pee", 0)
 		ply:GetTable().LastPeeUpdate = CurTime()
 		ply:GetTable().LastPoopUpdate = CurTime()
 	end
