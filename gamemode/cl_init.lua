@@ -302,8 +302,8 @@ local function DrawDisplay()
 			local ownerstr = ""
 			local ent = tr.Entity
 
-			if ent:GetNWInt("Ownerz") > 0 then
-				ownerstr = ent:GetNWString("OwnerName") .. "\n"
+			if ValidEntity(ent:GetNWEntity("TheOwner")) then
+				ownerstr = ent:GetDoorOwner():Nick() .. "\n"
 			end
 
 			local num = ent:GetNWInt("OwnerCount")
@@ -338,7 +338,7 @@ local function DrawDisplay()
 					whiteText = true
 					if superAdmin then
 						if blocked then
-							st = ent:GetNWString("dTitle") .. "\n(Press Reload with keys or F2 to allow ownership)"
+							st = ent:GetNWString("title") .. "\n(Press Reload with keys or F2 to allow ownership)"
 						else
 							if ownerstr == "" then
 								st = ent:GetNWString("title") .. "\n(Press Reload with keys or F2 to disallow ownership)"
@@ -359,7 +359,7 @@ local function DrawDisplay()
 						end
 					else
 						if blocked then
-							st = ent:GetNWString("dTitle")
+							st = ent:GetNWString("title")
 						else
 							if ownerstr == "" then
 								st = ent:GetNWString("title")
@@ -377,7 +377,7 @@ local function DrawDisplay()
 					if superAdmin then
 						if blocked then
 							whiteText = true
-							st = ent:GetNWString("dTitle") .. "\n(Press Reload with keys or F2 to allow ownership)"
+							st = ent:GetNWString("title") .. "\n(Press Reload with keys or F2 to allow ownership)"
 						else
 							if CPOnly then
 								whiteText = true
@@ -395,7 +395,7 @@ local function DrawDisplay()
 					else
 						if blocked then
 							whiteText = true
-							st = ent:GetNWString("dTitle")
+							st = ent:GetNWString("title")
 						else
 							if CPOnly then
 								whiteText = true

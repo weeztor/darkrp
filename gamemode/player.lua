@@ -32,12 +32,12 @@ function RPName(ply, args)
 		return ""
 	end
 	
-	--update the door names
+	--[[ --update the door names
 	for k,v in pairs(ents.GetAll()) do
-		if v:IsDoor() and v:GetNWInt("Ownerz") == ply:EntIndex() then
-			v:SetNWString("OwnerName", ply:Nick())
+		if v:IsDoor() and v:GetDoorOwner() == ply then
+			//v:SetNWString("OwnerName", ply:Nick())
 		end
-	end
+	end ]]
 
 	ply:SetRPName(args)
 	NotifyAll(2, 6, "Steam player: " .. ply:SteamName() .. " changed his/her RP name to: " .. args)

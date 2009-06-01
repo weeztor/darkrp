@@ -49,20 +49,20 @@ if not Entity then
 end
 
 function Entity:CPPIGetOwner()
-	local Player = self:GetNetworkedEntity("OwnerObj")
+	local Player = self:GetNWString("Owner")
 	
 	if SERVER then
 		Player = SPropProtection["Props"][self:EntIndex()][3]
 	end
 	
-	if not Player or not Player:IsValid() then
+	if not Player then
 		return nil, CPPI_NOTIMPLEMENTED
 	end
 	
 	local UID = CPPI_NOTIMPLEMENTED
 	
 	if SERVER then
-		UID = Player:UniqueID()
+		UID = Player
 	end
 	
 	return Player, UID

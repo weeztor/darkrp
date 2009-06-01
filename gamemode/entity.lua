@@ -32,17 +32,17 @@ function meta:IsOwned()
 		end
 	end
 
-	if self:GetNWInt("Ownerz") ~= 0 or num > 0 then return true end
+	if ValidEntity(self:GetNWEntity("TheOwner")) or num > 0 then return true end
 
 	return false
 end
 
 function meta:GetDoorOwner()
-	return player.GetByID(self:GetNWInt("Ownerz")) or NULL
+	return self:GetNWEntity("TheOwner")
 end
 
 function meta:IsMasterOwner(ply)
-	if ply:EntIndex() == self:GetNWInt("Ownerz") then
+	if ply == self:GetDoorOwner() then
 		return true
 	end
 
@@ -50,7 +50,7 @@ function meta:IsMasterOwner(ply)
 end
 
 function meta:OwnedBy(ply)
-	if self:GetNWInt("Ownerz") == ply:EntIndex() then return true end
+	if ply == self:GetDoorOwner() then return true end
 
 	local num = self:GetNWInt("OwnerCount")
 
@@ -191,7 +191,7 @@ function meta:UnOwn(ply)
 	end
 
 	if self:IsMasterOwner(ply) then
-		self:SetNWInt("Ownerz", 0)
+		self:SetNWEntity("TheOwner", NULL)
 	else
 		self:RemoveOwner(ply)
 	end
@@ -204,7 +204,7 @@ function meta:UnOwn(ply)
 		end
 	end
 
-	if self:GetNWInt("Ownerz") == 0 and num == 0 then
+	if not self:GetDoorOwner():IsValid() and num == 0 then
 		num = self:GetNWInt("AllowedNum")
 		for n = 1, num do
 			self:SetNWInt("Allowed" .. n, -1)
@@ -258,10 +258,9 @@ function meta:Own(ply)
 	end
 
 	if not self:IsOwned() and not self:OwnedBy(ply) then
-		self:SetNWInt("Ownerz", ply:EntIndex())
-		self:SetNWString("OwnerName", ply:Nick())
-		self:SetNWInt("OwnerCount", 0)
-		self:SetNWString("title", "")
+		self:SetNWEntity("TheOwner", ply)
+		//self:SetNWInt("OwnerCount", 0)
+		//self:SetNWString("title", "")
 	end
 end
 

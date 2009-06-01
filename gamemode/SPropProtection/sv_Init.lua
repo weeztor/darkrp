@@ -11,6 +11,7 @@ SPropProtection.Version = "DarkRP"
 SPropProtection["Props"] = {} -- a table with the props that players own.
 -- Table with RP objects that can't be copied:
 SPropProtection.AntiCopy = {"func_breakable_surf", "drug", "drug_lab", "food", "gunlab", "letter", "meteor", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "weapon", "stick", "door_ram", "lockpick", "med_kit", "keys", "gmod_tool", "spawned_food"}
+SPropProtection.WorldProps = {}
 local Meta = FindMetaTable("Player")
 
 -- Put all existing weapons in after 5 seconds
@@ -166,9 +167,9 @@ end
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
 
 function SPropProtection.GravGunThings(ply, ent)
-	if not ValidEntity(ent) then return SPropProtection.CanNotTouch(ply) end
+	if not ValidEntity(ent) then return false end
 	if ent:IsVehicle() then return SPropProtection.CanNotTouch(ply) end
-	if string.find(ent:GetClass(), "func_") then return SPropProtection.CanNotTouch(ply) end
+	if string.find(ent:GetClass(), "func_") then return false end
 	for k,v in pairs(SPropProtection.AntiCopy) do
 		if ent:GetClass() == v then return true end
 	end
@@ -314,7 +315,7 @@ function SPropProtection.PlayerUse(ply, ent)
 			return true
 		end
 	end
-	if ent:IsValid() and tonumber(CfgVars["spp_use"]) == 1 and not SPropProtection.PlayerCanTouch(ply, ent) and ent:GetNetworkedString("Owner") ~= "World" then
+	if ent:IsValid() and tonumber(CfgVars["spp_use"]) == 1 and not SPropProtection.PlayerCanTouch(ply, ent) and table.HasValue(SPropProtection.WorldProps, ent) then
 		return SPropProtection.CanNotTouch(ply)
 	end
 end
@@ -487,14 +488,14 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 	
 	if string.find(class, "stone_") == 1 or string.find(class, "rock_") == 1 or string.find(class, "stargate_") == 0 or string.find(class, "dhd_") == 0 or class == "flag" or class == "item" then
 		if not ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" then
-			ent:SetNetworkedString("Owner", "World")
+			SPropProtection.WorldProps[ent:EntIndex()] = ent
 		end
 		if ply:GetActiveWeapon():GetClass() ~= "weapon_physgun" and ply:GetActiveWeapon():GetClass() ~= "gmod_tool" then
 			return true
 		end
 	end
 	
-	if not ent:GetNetworkedString("Owner") or ent:GetNetworkedString("Owner") == "" and not ent:IsPlayer() then
+	if ent:GetNetworkedString("Owner") == "" and not ent:IsPlayer() and not table.HasValue(SPropProtection.WorldProps, ent) then
 		SPropProtection.PlayerMakePropOwner(ply, ent)
 		Notify(ply, 1, 4, "You now own this prop")
 		return true
@@ -532,11 +533,11 @@ function SPropProtection.PlayerCanTouch(ply, ent)
 
 	if ent:GetNetworkedString("Owner") == "Shared" or ent:GetNetworkedString("Owner") == ply:Nick() then return true end
 
-	if game.GetMap() == "gm_construct" and ent:GetNetworkedString("Owner") == "World" then
+	if game.GetMap() == "gm_construct" and table.HasValue(SPropProtection.WorldProps, ent) then
 		return true
 	end
 
-	if ent:GetNetworkedString("Owner") == "World" then
+	if table.HasValue(SPropProtection.WorldProps, ent) then
 		if (tonumber(CfgVars["spp_touchworldprops"]) == 1 or (ply:IsAdmin() and tonumber(CfgVars["spp_admin"]) == 1)) and (string.lower(class) == "prop_physics" or  string.lower(class) == "func_physbox" or string.lower(class) == "prop_physics_multiplayer") then
 			return true
 		end
@@ -562,8 +563,8 @@ function SPropProtection.PlayerMakePropOwner(ply, ent)
 		return false
 	end
 	SPropProtection["Props"][ent:EntIndex()] = {ply:SteamID(), ent, ply}
+	print(table.HasValue(SPropProtection.WorldProps, ent),ent)
 	ent:SetNetworkedString("Owner", ply:Nick())
-	ent:SetNetworkedEntity("OwnerObj", ply)
 	gamemode.Call("CPPIAssignOwnership", ply, ent)
 	return true
 end
@@ -571,8 +572,9 @@ end
 function SPropProtection.WorldOwner()
 	local WorldEnts = 0
 	for k, v in pairs(ents.FindByClass("*")) do
-		if not v:IsPlayer() and not v:GetNetworkedEntity("OwnerObj"):IsValid() then
-			v:SetNetworkedString("Owner", "World")
+		if not v:IsPlayer() and v:GetNWString("Owner") == "" then
+			//v:SetNetworkedString("Owner", "World")
+			SPropProtection.WorldProps[v:EntIndex()] = v
 			WorldEnts = WorldEnts + 1
 		end
 	end
@@ -580,4 +582,4 @@ function SPropProtection.WorldOwner()
 	Msg("Simple RP Prop Protection: "..tostring(WorldEnts).." props belong to world\n")
 	Msg("=================================================\n")
 end
-timer.Simple(10, SPropProtection.WorldOwner)
+timer.Simple(10, SPropProtection.WorldOwner) 

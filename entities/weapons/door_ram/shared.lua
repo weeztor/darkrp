@@ -79,7 +79,7 @@ function SWEP:PrimaryAttack()
 	
 	local a = CfgVars["copscanunfreeze"] == 1
 	local b = trace.Entity:GetClass() == "prop_physics"
-	local c = trace.Entity:GetNetworkedEntity("TheFingOwner").warranted
+	local c = trace.Entity.Owner.warranted
 	if (trace.Entity:IsDoor()) then
 		local allowed = false
 		local team = self.Owner:Team()

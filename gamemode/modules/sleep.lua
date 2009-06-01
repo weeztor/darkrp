@@ -1,8 +1,8 @@
 KnockoutTime = 5
 
 function ResetKnockouts(player)
-	player:SetNetworkedEntity("Ragdoll", NULL)
-	player:SetNetworkedFloat("KnockoutTimer", 0)
+	player.SleepRagdoll = nil
+	player.KnockoutTimer = 0
 end
 hook.Add("PlayerSpawn", "Knockout", ResetKnockouts)
 
@@ -12,10 +12,10 @@ function KnockoutToggle(player, command, args, caller)
 		player.SleepSound = CreateSound(player, "npc/ichthyosaur/water_breath.wav")
 	end
 	if player:Alive() then
-		if player:GetNWFloat("KnockoutTimer") + KnockoutTime < CurTime() then
-			if player:GetNWEntity("Ragdoll") ~= NULL then
+		if player.KnockoutTimer and player.KnockoutTimer + KnockoutTime < CurTime() then
+			if player.Sleeping and ValidEntity(player.SleepRagdoll) then
 				player.SleepSound:Stop()
-				local ragdoll = player:GetNWEntity("Ragdoll")
+				local ragdoll = player.SleepRagdoll
 				local health = player:Health()
 				player:Spawn()
 				player:SetHealth(health)
@@ -24,8 +24,6 @@ function KnockoutToggle(player, command, args, caller)
 				player:UnSpectate()
 				player:StripWeapons()
 				ragdoll:Remove()
-				player:SetNetworkedBool("Knockedout", false)
-				player:SetNetworkedEntity("Ragdoll", NULL)
 				if player.WeaponsForSleep and player:GetTable().BeforeSleepTeam == player:Team() then
 					for k,v in pairs(player.WeaponsForSleep) do
 						player:Give(v)
@@ -34,6 +32,7 @@ function KnockoutToggle(player, command, args, caller)
 					if ( player:HasWeapon( cl_defaultweapon )  ) then
 						player:SelectWeapon( cl_defaultweapon ) 
 					end
+					player:GetTable().BeforeSleepTeam = nil
 				else
 					GAMEMODE:PlayerLoadout(player)
 				end 
@@ -49,6 +48,7 @@ function KnockoutToggle(player, command, args, caller)
 				if command == true then
 					player:Arrest()
 				end
+				player.Sleeping = false
 			else
 				player.WeaponsForSleep = {}
 				for k,v in pairs(player:GetWeapons( )) do
@@ -66,9 +66,8 @@ function KnockoutToggle(player, command, args, caller)
 				player:Spectate(OBS_MODE_CHASE)
 				player:SpectateEntity(ragdoll)
 				player.IsSleeping = true
-				player:SetNetworkedEntity("Ragdoll", ragdoll)
-				player:SetNetworkedBool("Knockedout", true)
-				player:SetNetworkedFloat("KnockoutTimer", CurTime())
+				player.SleepRagdoll = ragdoll
+				player.KnockoutTimer = CurTime()
 				player:GetTable().BeforeSleepTeam = player:Team()
 				--Make sure noone can pick it up:
 				SPropProtection.PlayerMakePropOwner(player, ragdoll)
@@ -82,6 +81,7 @@ function KnockoutToggle(player, command, args, caller)
 				RP:AddAllPlayers()
 				player.SleepSound = CreateSound(ragdoll, "npc/ichthyosaur/water_breath.wav")
 				player.SleepSound:PlayEx(0.10, 100)
+				player.Sleeping = true
 			end
 		end
 		return ""

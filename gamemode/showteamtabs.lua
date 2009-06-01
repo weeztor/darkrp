@@ -276,7 +276,7 @@ function MoneyTab()
 					end	
 				ActionsPanel:AddItem(sleep)
 					local Drop = vgui.Create("DButton")
-					Drop:SetText("Drop current weapon(must be an RP weapon)")
+					Drop:SetText("Drop current weapon")
 					Drop.DoClick = function() LocalPlayer():ConCommand("say /drop") end
 				ActionsPanel:AddItem(Drop)
 					local health = vgui.Create("DButton")
