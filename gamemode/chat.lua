@@ -20,7 +20,12 @@ function RP_PlayerChat(ply, text)
 		end
 	end
 	if callback ~= "" then callback = callback.." " end
-	
+	return text, callback
+end
+
+function RP_ActualDoSay(ply, text, callback)
+	callback = callback or ""
+	if text == "" then return "" end
 	local col = team.GetColor(ply:Team())
 	local col2 = Color(255,255,255,255)
 	if not ply:Alive() then
@@ -35,5 +40,5 @@ function RP_PlayerChat(ply, text)
 	else
 		TalkToRange(ply, callback..ply:Name(), text, 250)
 	end
-	return ""
+	return "" 
 end
