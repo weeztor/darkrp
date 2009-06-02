@@ -139,6 +139,7 @@ function SPropProtection.ClientPanel(Panel)
 		Panel:AddControl("Button", {Text  = "Apply Settings", Command = "SPropProtection_ApplyBuddySettings"})
 	end
 	Panel:AddControl("Button", {Text  = "Clear All Buddies", Command = "SPropProtection_ClearBuddies"})
+	Panel:AddControl("Button", {Text  = "Unown the entity you're looking at", Command = "SPropProtection_unown"})
 end
 
 function SPropProtection.SpawnMenuOpen()
