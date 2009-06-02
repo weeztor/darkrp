@@ -166,6 +166,15 @@ function SPropProtection.PhysGravGunPickup(ply, ent)
 end
 hook.Add("PhysgunPickup", "SPropProtection.PhysgunPickup", SPropProtection.PhysGravGunPickup)
 
+function SPropProtection.PhysgGunDrop(ply, ent)
+	if CfgVars["DropEntitiesAfterPhysGunDrop"] == 1 then
+		local phys = ent:GetPhysicsObject()
+		if not phys:IsValid() then return end
+		phys:SetVelocity(Vector(0,0,0))
+	end
+end
+hook.Add("PhysgunDrop", "SPropProtection.PhysgGunDrop", SPropProtection.PhysgGunDrop)
+
 function SPropProtection.GravGunThings(ply, ent)
 	if not ValidEntity(ent) then return false end
 	if ent:IsVehicle() then return SPropProtection.CanNotTouch(ply) end
@@ -563,7 +572,6 @@ function SPropProtection.PlayerMakePropOwner(ply, ent)
 		return false
 	end
 	SPropProtection["Props"][ent:EntIndex()] = {ply:SteamID(), ent, ply}
-	print(table.HasValue(SPropProtection.WorldProps, ent),ent)
 	ent:SetNetworkedString("Owner", ply:Nick())
 	gamemode.Call("CPPIAssignOwnership", ply, ent)
 	return true
@@ -583,3 +591,12 @@ function SPropProtection.WorldOwner()
 	Msg("=================================================\n")
 end
 timer.Simple(10, SPropProtection.WorldOwner) 
+
+function SPropProtection.UnOwnProp(ply)
+	local ent = ply:GetEyeTrace().Entity
+	if not ent:IsValid() then Notify(ply, 1, 4, "You have to be looking at an entity!") return end
+	if ent:GetNWString("Owner") ~= ply:Nick() then Notify(ply, 1, 4, "You have to own this entity!") return end
+	ent:SetNWString("Owner", "Shared")
+	Notify(ply, 1, 4, "Unowned this entity!")
+end
+concommand.Add("SPropProtection_unown", SPropProtection.UnOwnProp)

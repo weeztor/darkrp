@@ -188,6 +188,7 @@ function RefreshRPSettings(RESET)
 	CfgVars["spp_propdeletion"] = 1
 	CfgVars["spp_deleteadminents"] = 1
 	CfgVars["spp_deletedelay"] = 120
+	CfgVars["DropEntitiesAfterPhysGunDrop"] = 0
 
 	-- You can set the exact value of the below items:
 

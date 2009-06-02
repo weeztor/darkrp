@@ -28,6 +28,7 @@ SVN version
 [ADD] rp_tellall, put a message in everyone's screen(admin only)
 [ADD] Effect when trying to touch an entity you can't touch.
 [ADD] Compatability with mods that use PlayerSay(Like the ASS grammar plugin!
+[ADD] Option to unown entities(for clients)
 [FIX] Version number in the help screen
 [FIX] Battering ram not working on warranted people
 [FIX] Zombie spawns not saving, jailpositions not saving AND custom spawns not saving!
