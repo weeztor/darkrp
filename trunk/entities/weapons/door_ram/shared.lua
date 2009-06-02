@@ -50,6 +50,10 @@ function SWEP:Initialize()
 	end
 end
 
+function SWEP:Deploy()
+	self.Ready = false
+end
+
 /*---------------------------------------------------------
 Name: SWEP:PrimaryAttack()
 Desc: +attack1 has been pressed
@@ -60,7 +64,7 @@ function SWEP:PrimaryAttack()
 	if not self.Ready then return end
 
 	local trace = self.Owner:GetEyeTrace()
-	
+
 	self.Weapon:SetNextPrimaryFire(CurTime() + 2.5)
 	if (not ValidEntity(trace.Entity) or (not trace.Entity:IsDoor() and not trace.Entity:IsVehicle() and trace.Entity:GetClass() ~= "prop_physics")) then
 		return
@@ -79,7 +83,10 @@ function SWEP:PrimaryAttack()
 	
 	local a = CfgVars["copscanunfreeze"] == 1
 	local b = trace.Entity:GetClass() == "prop_physics"
-	local c = trace.Entity.Owner.warranted
+	local c = true
+	if trace.Entity.Owner then
+		c = trace.Entity.Owner.warranted
+	end
 	if (trace.Entity:IsDoor()) then
 		local allowed = false
 		local team = self.Owner:Team()
@@ -101,6 +108,7 @@ function SWEP:PrimaryAttack()
 		if allowed then
 			trace.Entity:Fire("unlock", "", .5)
 			trace.Entity:Fire("open", "", .6)
+			trace.Entity:Fire("setanimation","open",.6)
 		else
 			Notify(self.Owner, 1, 5, "You need a warrant in order to be able to unlock this door.")
 		end

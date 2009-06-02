@@ -68,8 +68,8 @@ function SWEP:PrimaryAttack()
 	bullet.Damage = 0
 
 	local e = trace.Entity
-	if e ~= nil then
-		if (ValidEntity(e) and (trace.HitPos:Distance(self.Owner:GetShootPos()) <= 100 and (e:IsDoor() or e:IsVehicle()))) then
+	if ValidEntity(e) then
+		if trace.HitPos:Distance(self.Owner:GetShootPos()) <= 100 and (e:IsDoor() or e:IsVehicle()) then
 			if SERVER then
 				self:SetWeaponHoldType("pistol")
 				timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
@@ -81,11 +81,16 @@ function SWEP:PrimaryAttack()
 				if trace.Entity.Fire then
 					trace.Entity:Fire("unlock", "", .5)
 					trace.Entity:Fire("open", "", .6)
+					trace.Entity:Fire("setanimation","open",.6)
 				end
 			end
-		else
-			self.Weapon:EmitSound("weapons/iceaxe/iceaxe_swing1.wav")
-			self.Weapon:SendWeaponAnim(ACT_VM_MISSCENTER)
+		//else
+			//self.Weapon:EmitSound("weapons/iceaxe/iceaxe_swing1.wav")
+			//self.Weapon:SendWeaponAnim(ACT_VM_MISSCENTER)
 		end
 	end
+end
+
+function SWEP:SecondaryAttack()
+	self:PrimaryAttack()
 end
