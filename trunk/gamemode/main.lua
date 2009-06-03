@@ -1031,7 +1031,15 @@ function BuyVehicle(ply, args)
 		if string.lower(v.name) == string.lower(args) then found = CustomVehicles[k] break end
 	end
 	if not found then return "" end
-	if not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, "You don't have the right job!") return ""  end	
+	if not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, "You don't have the right job!") return ""  end
+	
+	if not ply.Vehicles then ply.Vehicles = 0 end
+	if CfgVars["maxvehicles"] ~= 0 and ply.Vehicles >= CfgVars["maxvehicles"] then
+		Notify(ply, 1, 4, "You are unable to buy a vehicle as the limit is reached.")
+		return ""
+	end
+	ply.Vehicles = ply.Vehicles + 1
+	
 	if not ply:CanAfford(found.price) then Notify(ply, 1, 4, "need "..CUR..found.price.."!") return "" end
 	ply:AddMoney(-found.price)
 	Notify(ply, 1, 4, "You have bought a "..found.name.." for " .. CUR .. found.price)
@@ -1067,6 +1075,7 @@ function BuyVehicle(ply, args)
 	ent:Activate()
 	ent.SID = ply.SID
 	ent.ClassOverride = Vehicle.Class
+	ent:Own(ply)
 	return ""
 end
 AddChatCommand("/buyvehicle", BuyVehicle)
