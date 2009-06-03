@@ -97,6 +97,18 @@ function GM:PlayerSpawnedRagdoll(ply, model, ent)
 	ent.SID = ply.SID
 end
 
+function GM:EntityRemoved(ent)
+	self.BaseClass:EntityRemoved(ent)
+	if ent:IsVehicle() then
+		local found
+		local Owner = ent:GetNWString("Owner")
+		for k,v in pairs(player.GetAll()) do
+			if v:Nick() == Owner then found = v break end
+		end
+		found.Vehicles = found.Vehicles - 1
+	end
+end
+
 function GM:ShowSpare1(ply)
 	umsg.Start("ToggleClicker", ply)
 	umsg.End()

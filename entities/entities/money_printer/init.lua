@@ -65,8 +65,9 @@ function ENT:Fireball()
 end
 
 local function PrintMore(ent)
+	print("PRINTING MORE") 
 	if ValidEntity(ent) then
-		self.sparking = true
+		ent.sparking = true
 		timer.Simple(3, ent.CreateMoneybag, ent)
 	end
 end
@@ -91,6 +92,7 @@ function ENT:CreateMoneybag()
 	end
 	moneybag:GetTable().Amount = amount
 	self.sparking = false
+	print("About to print more")
 	timer.Simple(math.random(40, 350), PrintMore, self) -- Print more cash in 40 to 350 seconds
 end
 

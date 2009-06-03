@@ -401,6 +401,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pocketitems <Number> - Sets the amo
 AddValueCommand("rp_paydelay", "paydelay", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_paydelay <Number> - Sets how long it takes before people get salary")
 
+AddValueCommand("rp_maxvehicles", "maxvehicles", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxvehicles <Number> - Sets how many vehicles one can buy.")
+
 function AddTeamCommands(CTeam)
 	local k = 0
 	for num,v in pairs(RPExtraTeams) do
