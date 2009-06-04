@@ -90,6 +90,7 @@ SVN version
 [CHANGE] You can't shoot unless you see through the sight post (ANTI DM!)
 [CHANGE] Weapon animations, they are now standard holstered, unless you see through the sight post
 [CHANGE] the way chat colours work, it now works completely different!
+[CHANGE] The way lockpick works.
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings

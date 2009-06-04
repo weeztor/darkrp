@@ -105,6 +105,7 @@ function GM:EntityRemoved(ent)
 		for k,v in pairs(player.GetAll()) do
 			if v:Nick() == Owner then found = v break end
 		end
+		found.Vehicles = found.Vehicles or 1
 		found.Vehicles = found.Vehicles - 1
 	end
 end
@@ -654,7 +655,7 @@ function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's 
 	local callback
 	text2, callback = RP_PlayerChat(ply, text2)
 	if callback ~= "" then return "" end
-	for k,v in pairs(otherhooks) do
+	for k,v in SortedPairs(otherhooks, function(a, b) return a < b end) do
 		text2 = v(ply, text2) or text2
 	end
 	text2 = RP_ActualDoSay(ply, text2, callback)
@@ -663,7 +664,7 @@ end
 
 function GM:InitPostEntity() -- Remove all PlayerSay hooks, they all interfere with DarkRP's PlayerSay
 	for k,v in pairs(hook.GetTable().PlayerSay) do
-		table.insert(otherhooks, v)
+		otherhooks[k] = v
 		hook.Remove("PlayerSay", k)
 	end
 end
