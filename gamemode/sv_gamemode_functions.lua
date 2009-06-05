@@ -654,11 +654,13 @@ function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's 
 	local text2 = text
 	local callback
 	text2, callback = RP_PlayerChat(ply, text2)
-	if callback ~= "" then return "" end
-	for k,v in SortedPairs(otherhooks, function(a, b) return a < b end) do
-		text2 = v(ply, text2) or text2
+	if tostring(callback) ~= "" then return "" end
+	for k,v in SortedPairs(otherhooks, false) do
+		if type(v) == "function" then
+			text2 = v(ply, text2) or text2
+		end
 	end
-	text2 = RP_ActualDoSay(ply, text2, callback)
+	text2 = RP_ActualDoSay(ply, text2, callback) 
 	return ""
 end
 
@@ -666,5 +668,10 @@ function GM:InitPostEntity() -- Remove all PlayerSay hooks, they all interfere w
 	for k,v in pairs(hook.GetTable().PlayerSay) do
 		otherhooks[k] = v
 		hook.Remove("PlayerSay", k)
+	end
+	for a,b in pairs(otherhooks) do
+		if type(b) ~= "function" then
+			otherhooks[a] = nil
+		end
 	end
 end
