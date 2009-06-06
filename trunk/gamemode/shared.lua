@@ -89,7 +89,7 @@ Type /jailpos to set the Jail Position
 Type /lockdown initiate a lockdown of the city. 
 Everyone must be inside during a lockdown. 
 The cops patrol the area
-/unlockdown to end a lockdown]], {"item_ammo_pistol"}, "mayor", 1, 85, 0, true, false, {TEAM_CHIEF, TEAM_POLICE})
+/unlockdown to end a lockdown]], {"item_ammo_pistol"}, "mayor", 1, 85, 0, true, false/*, {TEAM_CHIEF, TEAM_POLICE}*/)
 /*
 --------------------------------------------------------
 HOW TO MAKE AN EXTRA CLASS!!!!

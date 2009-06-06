@@ -84,11 +84,12 @@ end
 function ENT:HangUp(force)
 	local ply = self:GetNWEntity("owning_ent")
 	local him = self.Caller
-	local HisPhone = him:GetNWEntity("phone")
+	local HisPhone
 
 	timer.Remove("PhoneCallCosts"..ply:EntIndex())
 	
 	if ValidEntity(him) then
+		HisPhone = him:GetNWEntity("phone")
 		timer.Remove("PhoneCallCosts"..him:EntIndex())
 		him:ConCommand("-voicerecord")
 	end

@@ -217,7 +217,10 @@ function meta:ChangeTeam(t, force)
 			self:UpdateJob(v.name)
 			DB.StoreSalary(self, v.salary)
 			NotifyAll(1, 4, self:Name() .. " has been made a " .. v.name .. "!")
-			if v.Haslicense then
+			if self:GetNWBool("HasGunlicense") then
+				self:SetNWBool("HasGunlicense", false)
+			end
+			if v.Haslicense and CfgVars["license"] ~= 0 then
 				self:SetNWBool("HasGunlicense", true)
 			end
 		end
@@ -231,10 +234,6 @@ function meta:ChangeTeam(t, force)
 		self:SetNWBool("helpBoss", true)
 	elseif t == TEAM_MAYOR then
 		self:SetNWBool("helpMayor", true)
-	end
-	
-	if self:GetNWBool("HasGunlicense") then
-		self:SetNWBool("HasGunlicense", false)
 	end
 
 	if CfgVars["removeclassitems"] == 1 then
