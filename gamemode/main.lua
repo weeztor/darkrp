@@ -1004,7 +1004,7 @@ function BuyVehicle(ply, args)
 		if string.lower(v.name) == string.lower(args) then found = CustomVehicles[k] break end
 	end
 	if not found then return "" end
-	if not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, "You don't have the right job!") return ""  end
+	if found.allowed and not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, "You don't have the right job!") return ""  end
 	
 	if not ply.Vehicles then ply.Vehicles = 0 end
 	if CfgVars["maxvehicles"] ~= 0 and ply.Vehicles >= CfgVars["maxvehicles"] then
