@@ -877,7 +877,7 @@ function GM:ChatTextChanged(text)
 				end
 			end
 		end
-	elseif string.sub(string.lower(text), 1, 2) == "/w" then
+	elseif string.sub(string.lower(text), 1, 3) == "/w " then
 		HearMode = "whisper"
 	elseif string.sub(string.lower(text), 1, 2) == "/y" then
 		HearMode = "yell"

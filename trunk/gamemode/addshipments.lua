@@ -30,14 +30,16 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 end
 
 function AddCustomVehicle(Name_of_vehicle, price, Jobs_that_can_buy_it)
-	local function warn()
-		local text = "FAILURE IN CUSTOM VEHICLE, YOU MADE IT WRONG. LOOK AT IT CAREFULLY!"
+	local function warn(add)
+		local text
+		if Name_of_vehicle then text = Name_of_vehicle end
+		text = text.." FAILURE IN CUSTOM VEHICLE!"
 		print(text)
 		hook.Add("PlayerSpawn", "VehicleError", function(ply)
-			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end end)		
+			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text.." "..add) end end)		
 	end
 	if not Name_of_vehicle or not price then
-		warn()
+		warn("The name or the price is invalid/missing")
 		return
 	end
 	local found = false
@@ -45,12 +47,8 @@ function AddCustomVehicle(Name_of_vehicle, price, Jobs_that_can_buy_it)
 		if string.lower(k) == string.lower(Name_of_vehicle) then found = true break end
 	end
 	if not found then
-		warn()
+		warn("vehicle not found!")
 		return
-	end
-	if type(Jobs_that_can_buy_it) ~= "table" then
-		Jobs_that_can_buy_it = {}
-		for k,v in pairs(team.GetAllTeams()) do table.insert(Jobs_that_can_buy_it, k) end
 	end
 	table.insert(CustomVehicles, {name = Name_of_vehicle, price = price, allowed = Jobs_that_can_buy_it})
 end

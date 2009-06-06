@@ -572,7 +572,7 @@ function EntitiesTab()
 				
 				local founds = 0
 				for k,v in pairs(CustomVehicles) do
-					if table.HasValue(v.allowed, LocalPlayer():Team()) then
+					if not v.allowed or table.HasValue(v.allowed, LocalPlayer():Team()) then
 						local Vehicle = list.Get("Vehicles")[v.name]
 						AddVehicleIcon(Vehicle.Model, "Buy a "..Vehicle.Name.." for "..CUR..v.price, "/buyvehicle "..v.name)
 						founds = founds + 1
