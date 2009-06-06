@@ -260,8 +260,6 @@ function meta:Own(ply)
 
 	if not self:IsOwned() and not self:OwnedBy(ply) then
 		self:SetNWEntity("TheOwner", ply)
-		//self:SetNWInt("OwnerCount", 0)
-		//self:SetNWString("title", "")
 	end
 end
 

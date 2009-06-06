@@ -46,15 +46,12 @@ function SWEP:Initialize()
 	if (SERVER) then
 		self:SetWeaponHoldType("normal")
 	end
-	//util.PrecacheSound("physics/flesh/flesh_impact_bullet" .. math.random(3, 5) .. ".wav")
-	//util.PrecacheSound("weapons/iceaxe/iceaxe_swing1.wav")
 end
 
 /*---------------------------------------------------------
 Name: SWEP:PrimaryAttack()
 Desc: +attack1 has been pressed
 ---------------------------------------------------------*/
-
 function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + .4)
 	if self.IsLockPicking then return end

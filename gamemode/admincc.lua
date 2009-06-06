@@ -80,7 +80,7 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	if (ply:EntIndex() ~= 0 and not DB.HasPriv(ply, ADMIN)) or (togglecmd.superadmin and not ply:IsSuperAdmin()) then
-		ply:PrintMessage(2, "(Super)/Admin only!")
+		ply:PrintMessage(2, "(Super)Admin only!")
 		return
 	end
 
