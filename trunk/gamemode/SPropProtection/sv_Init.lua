@@ -581,7 +581,6 @@ function SPropProtection.WorldOwner()
 	local WorldEnts = 0
 	for k, v in pairs(ents.FindByClass("*")) do
 		if not v:IsPlayer() and v:GetNWString("Owner") == "" then
-			//v:SetNetworkedString("Owner", "World")
 			SPropProtection.WorldProps[v:EntIndex()] = v
 			WorldEnts = WorldEnts + 1
 		end

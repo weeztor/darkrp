@@ -105,8 +105,10 @@ function GM:EntityRemoved(ent)
 		for k,v in pairs(player.GetAll()) do
 			if v:Nick() == Owner then found = v break end
 		end
-		found.Vehicles = found.Vehicles or 1
-		found.Vehicles = found.Vehicles - 1
+		if found then
+			found.Vehicles = found.Vehicles or 1
+			found.Vehicles = found.Vehicles - 1
+		end
 	end
 end
 

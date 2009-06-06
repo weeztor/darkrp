@@ -65,7 +65,6 @@ function ENT:Fireball()
 end
 
 local function PrintMore(ent)
-	print("PRINTING MORE") 
 	if ValidEntity(ent) then
 		ent.sparking = true
 		timer.Simple(3, ent.CreateMoneybag, ent)
@@ -87,12 +86,10 @@ function ENT:CreateMoneybag()
 	moneybag:GetTable().MoneyBag = true
 	local amount = GetGlobalInt("mprintamount")
 	if amount == 0 then
-		print("MONEY PRINTER AMOUNT IS 0!!!")
 		amount = 250
 	end
 	moneybag:GetTable().Amount = amount
 	self.sparking = false
-	print("About to print more")
 	timer.Simple(math.random(40, 350), PrintMore, self) -- Print more cash in 40 to 350 seconds
 end
 
@@ -109,5 +106,8 @@ end
 
 function ENT:OnRemove()
 	local ply = self:GetNWEntity("owning_ent")
+	if not ply.maxmprinters then
+		ply.maxmprinters = 1
+	end
 	ply.maxmprinters = ply.maxmprinters - 1
 end
