@@ -62,7 +62,7 @@ hook.Add("InitPostEntity", "AddShipments", function()
 		if CLIENT and not LocalPlayer():IsSuperAdmin() then file.Delete("CustomShipments.txt") end
 	end
 end)
-AddCustomVehicle("Jeep", 100)
+
 /*
 How to add custom vehicles:
 FIRST

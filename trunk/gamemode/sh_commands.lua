@@ -116,15 +116,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enforcemodels - Whether or not t
 AddToggleCommand("rp_letters", "letters", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_letters - Enable/disable letter writing / typing.")
 
-AddToggleCommand("rp_cpvoting", "cpvoting", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_cpvoting - Enable/disable /votecop.")
-
-AddToggleCommand("rp_mayorvoting", "mayorvoting", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_mayorvoting - Enable/disable /votemayor.")
-
-AddToggleCommand("rp_cptomayor", "cptomayoronly", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_cptomayor - Enable/disable whether /votemayor is a CP only command.")
-
 AddToggleCommand("rp_earthquakes", "earthquakes", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_earthquakes - Enable/disable earthquakes.")
 
@@ -152,9 +143,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_needwantedforarrest - Enable/dis
 AddToggleCommand("rp_license", "license", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_license - Enable/disable People need a license to be able to pick up guns")
 
-AddToggleCommand("rp_allowgang", "allowgang", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowgang - Enable/disable gangsters & mob boss.")
-
 AddToggleCommand("rp_allowvehiclenocollide", "allowvnocollide", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowvehiclenocollide - Enable/disable the ability to no-collide a vehicle (for security).")
 
@@ -169,18 +157,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_chiefjailpos - Allow the Chief t
 
 AddToggleCommand("rp_physgun", "physgun", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_physgun - Enable/disable Players spawning with physguns.")
-
-AddToggleCommand("rp_allowmedics", "allowmedics", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowmedics - Enable/disable Medics.")
-
-AddToggleCommand("rp_allowgundealers", "allowdealers", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowgundealers - Enable/disable Gun Dealers.")
-
-AddToggleCommand("rp_allowcooks", "allowcooks", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowcooks - Enable/disable Cooks.")
-
-AddToggleCommand("rp_allowpdchief", "allowpdchief", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowpdchief - Enable/disable CP Chief as a job.")
 
 AddToggleCommand("rp_enableshipments", "enableshipments", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enableshipments - Turn /buyshipment on of off.")
@@ -296,23 +272,11 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxletters <Number> - Sets max lett
 AddValueCommand("rp_babygodtime", "babygodtime", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_babygodtime <Number> - How long the babygod lasts")
 
-AddValueCommand("rp_maxgangsters", "maxgangsters", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxgangsters <Number> - Sets max gangsters.")
-
 AddValueCommand("rp_doorcost", "doorcost", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_doorcost <Number> - Sets the cost of a door.")
 
 AddValueCommand("rp_vehiclecost", "vehiclecost", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_vehiclecost <Number> - Sets the cost of a vehicle (To own it).")
-
-AddValueCommand("rp_maxmedics", "maxmedics", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmedics <Number> - Sets the max number of Medics.")
-
-AddValueCommand("rp_maxgundealers", "maxgundealers", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxgundealers <Number> - Sets the max number of Gun Dealers.")
-
-AddValueCommand("rp_maxcooks", "maxcooks", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcooks <Number> - Sets the max number of Cooks.")
 
 AddValueCommand("rp_microwavefoodcost", "microwavefoodcost", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_microwavefoodcost <Number> - Sets the sale price of Microwave Food.")
@@ -392,9 +356,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_lotterycommitcost <Number> - How mu
 AddValueCommand("rp_propcost", "propcost", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_propcost <Number> - How much prop spawning should cost. (prop paying must be enabled for this to have an effect)")
 
-AddValueCommand("rp_maxcps", "maxcps", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcps <Number> - Maximum number of CPs.")
-
 AddValueCommand("rp_pocketitems", "pocketitems", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pocketitems <Number> - Sets the amount of objects the pocket can carry")
 
@@ -431,12 +392,21 @@ function AddTeamCommands(CTeam)
 				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." since they are disabled!")
 				return ""
 			end
-			if #player.GetAll() == 1 then
-				Notify(ply, 1, 4, "You've won the vote since you're alone in the server.")
-				ply:ChangeTeam(k+9)
+			if type(CTeam.NeedToChangeFrom) == "number" and ply:Team() ~= CTeam.NeedToChangeFrom then
+				Notify(ply, 1,4, "You need to be "..team.GetName(CTeam.NeedToChangeFrom).." first in order to become " .. CTeam.name)
+				return "" 
+			elseif type(CTeam.NeedToChangeFrom) == "table" and not table.HasValue(CTeam.NeedToChangeFrom, ply:Team()) then
+				local teamnames = ""
+				for a,b in pairs(CTeam.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
+				Notify(ply, 1,4, "You need to be "..string.sub(teamnames, 5).." first in order to become " .. CTeam.name)
 				return ""
 			end
-			if not ply:ChangeAllowed(9 + k) then
+			if #player.GetAll() == 1 then
+				Notify(ply, 1, 4, "You've won the vote since you're alone in the server.")
+				ply:ChangeTeam(k)
+				return ""
+			end
+			if not ply:ChangeAllowed(k) then
 				Notify(ply, 1, 4, "You were either banned from this team or you were demoted.")
 				return ""
 			end
@@ -448,18 +418,18 @@ function AddTeamCommands(CTeam)
 				Notify(ply, 1, 4,  "There already is a vote!")
 				return ""
 			end
-			if ply:Team() == (k + 9) then
+			if ply:Team() == k then
 				Notify(ply, 1, 4,  "You already are "..CTeam.name.."!")
 				return ""
 			end
-			if team.NumPlayers(9 + k) >= CfgVars["max"..CTeam.command.."s"] then
+			if team.NumPlayers(k) >= CfgVars["max"..CTeam.command.."s"] then
 				Notify(ply, 1, 4,  "There can only be "..tostring(CTeam.max).." "..CTeam.name.."'s at a time!")
 				return ""
 			end
 			vote:Create(ply:Nick() .. ":\nwants to be "..CTeam.name, ply:EntIndex() .. "votecop", ply, 20, function(choice, ply)
 				VoteCopOn = false
 				if choice == 1 then
-					ply:ChangeTeam(k + 9)
+					ply:ChangeTeam(k)
 				else
 					NotifyAll(1, 4, ply:Nick() .. " has not been made "..CTeam.name.."!")
 				end
@@ -471,6 +441,10 @@ function AddTeamCommands(CTeam)
 		AddChatCommand("/"..CTeam.command, function(ply)
 			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
 				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." as it is disabled!")
+				return ""
+			end
+			if ply:GetNWBool("Priv"..CTeam.command) then
+				ply:ChangeTeam(k, true)
 				return ""
 			end
 			if CTeam.admin == 0 and not ply:IsAdmin() then
@@ -486,7 +460,7 @@ function AddTeamCommands(CTeam)
 				Notify(ply, 1, 4, "You can't become "..CTeam.name.." since you don't have the proper access.")
 				return "" 
 			end
-			ply:ChangeTeam(9 + k)
+			ply:ChangeTeam(k, true)
 			return ""
 		end)
 	else
@@ -503,7 +477,7 @@ function AddTeamCommands(CTeam)
 				Notify(ply, 1, 4, "You need to be a superadmin to become "..CTeam.name.."!")
 				return ""
 			end
-			ply:ChangeTeam(9 + k)
+			ply:ChangeTeam(k)
 			return ""
 		end)
 	end
@@ -531,7 +505,7 @@ function AddTeamCommands(CTeam)
 		local target = FindPlayer(args[1])
 		
         if (target) then
-			target:ChangeTeam(9 + k)
+			target:ChangeTeam(k)
 			if (ply:EntIndex() ~= 0) then
 				nick = ply:Nick()
 			else
@@ -595,10 +569,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_chatprefix <Prefix> - Set the chat 
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_paydaytime <Delay> - Pay interval. (in seconds)")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_arrest [Nick|SteamID|UserID] <Length> - Arrest a player for a custom amount of time. If no time is specified, it will default to " .. GetGlobalInt("jailtimer") .. " seconds.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_unarrest [Nick|SteamID|UserID] - Unarrest a player.")
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_mayor [Nick|SteamID|UserID] - Make a player the Mayor.")
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_cpchief [Nick|SteamID|UserID] - Make a player the CP Chief.")
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_cp [Nick|SteamID|UserID] - Make a player into a CP.")
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_citizen [Nick|SteamID|UserID] - Make a player become a Citizen.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_kickban [Nick|SteamID|UserID] <Length in minutes> - Kick and ban a player.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_kick [Nick|SteamID|UserID] <Kick reason> - Kick a player. The reason is optional.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_setmoney [Nick|SteamID|UserID] <Amount> - Set a player's money to a specific amount.")

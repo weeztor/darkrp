@@ -91,6 +91,7 @@ SVN version
 [CHANGE] Weapon animations, they are now standard holstered, unless you see through the sight post
 [CHANGE] the way chat colours work, it now works completely different!
 [CHANGE] The way lockpick works.
+[CHANGE] All standard teams are now made the same way as custom teams
 [REMOVE] The easter egg :(
 [REMOVE] the player possessor
 [REMOVE] refesh_int concommand, it's been replaced by rp_resetallsettings

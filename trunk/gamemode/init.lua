@@ -141,18 +141,11 @@ function RefreshRPSettings(RESET)
 	CfgVars["enforceplayermodel"] = 1 --Should player models be enforced? (Bans using player models like zombie/combine/etc)
 	CfgVars["proppaying"] = 0 --Should players pay for props
 	CfgVars["letters"] = 1 --Allow letter writing
-	CfgVars["cpvoting"] = 1 --Allow CP voting
-	CfgVars["mayorvoting"] = 1 --Allow Mayor voting
 	CfgVars["enablemayorsetsalary"] = 1 --Allow the Mayor to decide salaries of other players
-	CfgVars["cptomayoronly"] = 0 --Only CPs can do /votemayor
 	CfgVars["chiefjailpos"] = 1 -- Can the Chief set the jail positions?
 	CfgVars["physgun"] = 1 --Physguns for everybody? 0 = Admins only
 	CfgVars["teletojail"] = 1 --Should Criminals Be AUTOMATICALLY Teleported TO jail?
 	CfgVars["telefromjail"] = 1 --Should Jailed People be automatically Teleported FROM jail?
-	CfgVars["allowgang"] = 1 -- Should Gangs be allowed?
-	CfgVars["allowmedics"] = 1 -- Should Medics be allowed?
-	CfgVars["allowdealers"] = 1 -- Should Gun Dealers be allowed?
-	CfgVars["allowcooks"] = 1 -- Should Cooks be allowed?
 	CfgVars["customspawns"] = 1 -- Custom spawn points enabled?
 	CfgVars["earthquakes"] = 1 -- Should earthquakes be enabled?
 	CfgVars["dmautokick"] = 1 -- Enable deathmatch auto-kick
@@ -167,7 +160,6 @@ function RefreshRPSettings(RESET)
 	CfgVars["copscanunfreeze"] = 1  -- Cops can unfreeze props with the battering ram
 	CfgVars["removeclassitems"] = 1 -- Remove(example) every gun shipment when the gundealer changes to a medic or something
 	CfgVars["enablebuypistol"] = 1 -- People can do /buy
-	CfgVars["allowpdchief"] = 1 --Allow the chief
 	CfgVars["enableshipments"] = 1 --Enable gun shipments
 	CfgVars["lottery"] = 1 -- Enable the lottery
 	CfgVars["restrictallteams"] = 0
@@ -210,10 +202,6 @@ function RefreshRPSettings(RESET)
 	CfgVars["maxgunlabs"] = 1 -- Maximum gun labs per player
 	CfgVars["maxmprinters"] = 2 -- Maximum money printers per player
 	CfgVars["maxletters"] = 4 -- Maximum number of letters per player
-	CfgVars["maxgangsters"] = 3 -- Maximum number of Gangsters
-	CfgVars["maxmedics"] = 3 -- Maximum number of Medics
-	CfgVars["maxgundealers"] = 2 -- Maximum number of Gun Dealers
-	CfgVars["maxcooks"] = 2 -- Maximum number of Cooks
 	CfgVars["quakechance"] = 4000 -- Earthquake probability (1 in 4000)
 	CfgVars["dmgracetime"] = 30 -- Players have a 30 second grace time by default
 	CfgVars["dmmaxkills"] = 3 -- ...in which they can make a maximum of 3 kills

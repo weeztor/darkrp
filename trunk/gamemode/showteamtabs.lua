@@ -434,132 +434,8 @@ function JobsTab()
 			end
 		end
 		
-		if LocalPlayer():Team() ~= TEAM_CITIZEN then
-			AddIcon("models/player/Group01/male_02.mdl", "Citizen", [[The Citizen is the most basic level of society you can hold
-			besides being a hobo. 
-				You have no specific role in city life.]], [[Keys
-				Gravity gun
-				camera
-				]], "/citizen")
-		end
-
-		
-		if LocalPlayer():Team() ~= TEAM_COOK then
-			AddIcon("models/player/mossman.mdl", "Cook", [[As a cook, it is your responsibility to feed the other members 
-			of your city. 
-			You can spawn a microwave and sell the food you make:
-			/Buymicrowave]]
-				, [[Keys
-				Gravity gun
-				camera
-				]], "/cook")
-		end
-		if LocalPlayer():Team() ~= TEAM_MEDIC then
-			AddIcon("models/player/kleiner.mdl", "Medic", [[With your medical knowledge, you heal players to proper 
-			health. 
-			Without a medic, people can not be healed. 
-			Left click with the Medical Kit to heal other players.
-			Right click with the Medical Kit to heal yourself.]]
-				, [[Keys
-				Gravity gun
-				camera
-				Medic kit
-				]], "/medic")
-		end
-		if LocalPlayer():Team() ~= TEAM_GUN then
-			AddIcon("models/player/monk.mdl", "Gundealer", [[A gun dealer is the only person who can sell guns to other 
-				people. 
-				However, make sure you aren't caught selling guns that are illegal to 
-				the public.
-				/Buyshipment <name> to Buy a  weapon shipment
-				/Buygunlab to Buy a gunlab that spawns P228 pistols]]
-				, [[Keys
-				Gravity gun
-				camera
-				]], "/gundealer")
-		end
-		
-		if LocalPlayer():Team() ~= TEAM_MOB then
-			AddIcon("models/player/gman_high.mdl", "Mobboss", [[The Mobboss is the crimboss in the city. 
-				With his power he coordinates the gangsters and forms an efficent crime
-				organization. 
-				He has the ability to break into houses by using a lockpick. 
-				The Mobboss also can unarrest you.]]
-				, [[Keys
-				Gravity gun
-				camera
-				Lock pick
-				]], "/mobboss")
-		end
-		if LocalPlayer():Team() ~= TEAM_GANG then
-			AddIcon("models/player/group03/male_01.mdl", "Gangster", [[The lowest person of crime. 
-			A gangster generally works for the Mobboss who runs the crime family. 
-			The Mobboss sets your agenda and you follow it or you might be punished.]]
-				, [[Keys
-				Gravity gun
-				camera
-				]], "/gangster")
-		end
-		if LocalPlayer():Team() ~= TEAM_POLICE and LocalPlayer():Team() ~= TEAM_CHIEF then
-			AddIcon("models/player/police.mdl", "Civil protection officer", [[The protector of every citizen that lives in the city . 
-			You have the power to arrest criminals and protect innocents. 
-			Hit them with your arrest baton to put them in jail
-			Bash them with a stunstick and they might learn better than to disobey 
-			the law.
-			The Battering Ram can break down the door of a criminal with a warrant 
-			for his/her arrest.
-			The Battering Ram can also unfreeze frozen props(if enabled).
-			Type /wanted <name> to alert the public to this criminal
-				OR go to tab and warrant someone by clicking the warrant button
-				]]
-				, [[Keys
-				Gravity gun
-				camera
-				Arrest baton
-				Unarrest baton
-				Glock
-				Stun Stick
-				Battering ram
-				]], "/votecop", LocalPlayer():IsAdmin() or LocalPlayer():GetNWBool("Privcp") or LocalPlayer():GetNWBool("Privadmin"), "/cp")
-		elseif LocalPlayer():Team() ~= TEAM_CHIEF then
-			AddIcon("models/player/combine_soldier_prisonguard.mdl", "Civil protection Chief", [[The Chief is the leader of the Civil Protection unit. 
-			Coordinate the police forces to bring law to the city
-			Hit them with arrest baton to put them in jail
-			Bash them with a stunstick and they might learn better than to 
-			disobey the law.
-			The Battering Ram can break down the door of a criminal with a 
-			warrant for his/her arrest.
-			Type /wanted <name> to alert the public to this criminal
-			Type /jailpos to set the Jail Position]]
-				, [[Keys
-				Gravity gun
-				camera
-				Arrest baton
-				Unarrest baton
-				Desert Eagle
-				Stun Stick
-				Battering ram]]
-				, "/chief")
-		end
-		
-		if LocalPlayer():Team() ~= TEAM_MAYOR then
-			AddIcon("models/player/breen.mdl", "Mayor", [[The Mayor of the city creates laws to serve the greater good 
-			of the people.
-			If you are the mayor you may create and accept warrants.
-			Type /wanted <name>  to warrant a player
-			Type /jailpos to set the Jail Position
-			Type /lockdown initiate a lockdown of the city. 
-			Everyone must be inside during a lockdown. 
-			The cops patrol the area
-			/unlockdown to end a lockdown]]
-				, [[Keys
-				Gravity gun
-				camera
-				]]
-				, "/votemayor", LocalPlayer():IsAdmin() or LocalPlayer():GetNWBool("Privmayor") or LocalPlayer():GetNWBool("Privadmin"), "/mayor")
-		end
-		for k,v in pairs(RPExtraTeams) do
-			if LocalPlayer():Team() ~= (9 + k) then
+		for k,v in ipairs(RPExtraTeams) do
+			if LocalPlayer():Team() ~= k then
 				local nodude = true
 				if v.admin == 1 and not LocalPlayer():IsAdmin() then
 					nodude = false
@@ -567,13 +443,17 @@ function JobsTab()
 				if v.admin > 1 and not LocalPlayer():IsSuperAdmin() then
 					nodude = false
 				end
+				if (type(v.NeedToChangeFrom) == "number" and LocalPlayer():Team() ~= v.NeedToChangeFrom) or (type(v.NeedToChangeFrom) == "table" and not table.HasValue(v.NeedToChangeFrom, LocalPlayer():Team())) then
+					nodude = false
+				end
+				
 				if nodude then
 					local weps = "no extra weapons"
 					if #v.Weapons > 0 then
 						weps = table.concat(v.Weapons, "\n")
 					end
 					if v.Vote then
-						local condition = ((v.admin == 0 and LocalPlayer():IsAdmin()) or (v.admin == 1 and LocalPlayer():IsSuperAdmin()))
+						local condition = ((v.admin == 0 and LocalPlayer():IsAdmin()) or (v.admin == 1 and LocalPlayer():IsSuperAdmin()) or LocalPlayer():GetNWBool("Priv"..v.command))
 						AddIcon(v.model, v.name, v.Des, weps, "/vote"..v.command, condition, "/"..v.command)
 					else
 						AddIcon(v.model, v.name, v.Des, weps, "/"..v.command)

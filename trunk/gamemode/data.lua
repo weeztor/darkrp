@@ -127,7 +127,7 @@ function DB.GrantPriv(ply, priv)
 	if DB.privcache[steamID] == nil then
 		DB.privcache[steamID] = {}
 	end
-
+	ply:SetNWBool("Priv"..p, true)
 	DB.privcache[steamID][p] = 1
 	return true
 end
@@ -144,6 +144,9 @@ function DB.RevokePriv(ply, priv)
 		DB.privcache[steamID] = {}
 	end
 	DB.privcache[steamID][p] = 0
+	if ply:GetNWBool("Priv"..p) then
+		ply:SetNWBool("Priv"..p, false)
+	end
 	return true
 end
 

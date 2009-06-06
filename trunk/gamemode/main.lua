@@ -607,46 +607,19 @@ function SetSpawnPos(ply, args)
 
 	local pos = string.Explode(" ", tostring(ply:GetPos()))
 	local selection = "citizen"
-	local t = 99
-
-	if args == "citizen" then
-		t = TEAM_CITIZEN
-		Notify(ply, 1, 4, "You have set the Citizen Spawn Position.")
-	elseif args == "cp" then
-		t = TEAM_POLICE
-		Notify(ply, 1, 4, "You have set the CP Spawn Position.")
-	elseif args == "mayor" then
-		t = TEAM_MAYOR
-		Notify(ply, 1, 4, "You have set the Mayor Spawn Position.")
-	elseif args == "gangster" then
-		t = TEAM_GANG
-		Notify(ply, 1, 4, "You have set the Gangster Spawn Position.")
-	elseif args == "mobboss" then
-		t = TEAM_MOB
-		Notify(ply, 1, 4, "You have set the mob boss Spawn Position.")
-	elseif args == "gundealer" then
-		t = TEAM_GUN
-		Notify(ply, 1, 4, "You have set the Gun Dealer Spawn Position.")
-	elseif args == "medic" then
-		t = TEAM_MEDIC
-		Notify(ply, 1, 4, "You have set the Medic Spawn Position.")
-	elseif args == "cook" then
-		t = TEAM_COOK
-		Notify(ply, 1, 4, "You have set the Cook Spawn Position.")
-	elseif args == "chief" then
-		t = TEAM_CHIEF
-		Notify(ply, 1, 4, "You have set the Chief Spawn Position.")
-	end
+	local t
 	
 	for k,v in pairs(RPExtraTeams) do
 		if args == v.command then
-			t = 9 + k
+			t = k
 			Notify(ply, 1, 4, "You have set the ".. v.name .. " Spawn Position.")
 		end
 	end
 
-	if t ~= 99 then
+	if t then
 		DB.StoreTeamSpawnPos(t, pos)
+	else
+		Notify(ply, 1, 4, "Team "..args.." not found!")
 	end
 
 	return ""
@@ -1349,18 +1322,6 @@ hook.Add("KeyPress", "HangUpPhone", HangUp)
 /*---------------------------------------------------------
  Jobs
  ---------------------------------------------------------*/
-function MakeGangster(ply)
-	ply:ChangeTeam(TEAM_GANG)
-	return ""
-end
-AddChatCommand("/gangster", MakeGangster)
-
-function MakeMobBoss(ply)
-	ply:ChangeTeam(TEAM_MOB)
-	return ""
-end
-AddChatCommand("/mobboss", MakeMobBoss)
-
 function CreateAgenda(ply, args)
 	if ply:Team() == TEAM_MOB then
 		CfgVars["mobagenda"] = string.gsub(args, "//", "\n")
@@ -1420,56 +1381,9 @@ function ChangeJob(ply, args)
 	local jl = string.lower(args)
 	local t = ply:Team()
 
-	if (jl == "cp" or jl == "cop" or jl == "police" or jl == "civil protection" or jl == "civilprotection") and t ~= TEAM_POLICE then
-		if ply:HasPriv(CP) or ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) then
-			if VoteCopOn then
-				Notify(ply, 1, 4,  "Please wait for the current vote to finish first.")
-			else
-				ply:ChangeTeam(TEAM_POLICE)
-			end
-		else
-			Notify(ply, 1, 4, "You need to be on the CP or Mayor List or Admin!")
-		end
-		return ""
-	elseif jl == "mayor" and t ~= TEAM_MAYOR then
-		if ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) then
-			if VoteCopOn then
-				Notify(ply, 1, 4,  "Please wait for the current vote to finish first.")
-			else
-				ply:ChangeTeam(TEAM_MAYOR)
-			end
-		else
-			Notify(ply, 1, 4, "You need to be on the Mayor List or Admin!")
-		end
-		return ""
-	elseif jl == "gangster" and t ~= TEAM_GANG then
-		ply:ChangeTeam(TEAM_GANG)
-		return ""
-	elseif jl == "citizen" and t ~= TEAM_CITIZEN then
-		ply:ChangeTeam(TEAM_CITIZEN)
-		return ""
-	elseif (jl == "mob boss" or jl == "mobboss") and t ~= TEAM_MOB then
-		ply:ChangeTeam(TEAM_MOB)
-		return ""
-	elseif (jl == "gun dealer" or jl == "gundealer") and t ~= TEAM_GUN then
-		ply:ChangeTeam(TEAM_GUN)
-		return ""
-	elseif jl == "medic" and t ~= TEAM_MEDIC then
-		ply:ChangeTeam(TEAM_MEDIC)
-		return ""
-	elseif jl == "cook" and t ~= TEAM_COOK then
-		ply:ChangeTeam(TEAM_COOK)
-		return ""
-	elseif (jl == "chief" or jl == "cheif" or jl == "civil protection chief") and t ~= TEAM_CHIEF then
-		ply:ChangeTeam(TEAM_CHIEF)
-		return ""
-	elseif (jl == "bum" or jl == "unemployed") and t ~= TEAM_CITIZEN then
-		ply:ChangeTeam(TEAM_CITIZEN)
-		-- Don't return here because we want to run the notify below.
-	end
 	for k,v in pairs(RPExtraTeams) do
 		if jl == v.name then
-			ply:ChangeTeam(9 + k)
+			ply:ChangeTeam(k)
 		end
 	end
 	NotifyAll(2, 4, ply:Nick() .. " has set his/her job to '" .. args .. "'")
@@ -1532,206 +1446,6 @@ local function Demote(ply, args)
 	end
 end
 AddChatCommand("/demote", Demote)
-
-local function FinishVoteMayor(choice, ply)
-	VoteCopOn = false
-
-	if choice == 1 then
-		ply:ChangeTeam(TEAM_MAYOR)
-	else
-		NotifyAll(1, 4, ply:Nick() .. " has not been made Mayor!")
-	end
-end
-
-local function FinishVoteCop(choice, ply)
-	VoteCopOn = false
-
-	if choice == 1 then
-		ply:ChangeTeam(TEAM_POLICE)
-	else
-		NotifyAll(1, 4, ply:Nick() .. " has not been made civil protection!")
-	end
-end
-
-local function DoVoteMayor(ply, args)
-	
-	if #player.GetAll() == 1 then
-		Notify(ply, 1, 4, "You have won the vote since you are alone in the server.")
-		ply:ChangeTeam(TEAM_MAYOR)
-		return ""
-	end
-	
-	if CfgVars["mayorvoting"] == 0 then
-		Notify(ply, 1, 4,  "Mayor voting is disabled!")
-		return ""
-	end
-
-	if not ply:ChangeAllowed(TEAM_MAYOR) then
-		Notify(ply, 1, 4, "You can not become mayor. You're either banned from the team or you were demoted.")
-		return ""
-	end
-
-	if CurTime() - ply:GetTable().LastVoteCop < 80 then
-		Notify(ply, 1, 4, "You need to wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before using /votemayor!")
-		return ""
-	end
-
-	if VoteCopOn then
-		Notify(ply, 1, 4,  "There already is a vote!")
-		return ""
-	end
-
-	if CfgVars["cptomayoronly"] == 1 then
-		if ply:Team() ~= TEAM_POLICE and ply:Team() ~= TEAM_CHIEF then
-			Notify(ply, 1, 4,  "You have to be in the civil protection team!")
-			return ""
-		end
-	end
-
-	if ply:Team() == TEAM_MAYOR then
-		Notify(ply, 1, 4,  "You already are the Mayor!")
-		return ""
-	end
-
-	if team.NumPlayers(TEAM_MAYOR) >= 1 then
-		Notify(ply, 1, 4,  "There can only be one Mayor at a time!")
-		return ""
-	end
-
-	vote:Create(ply:Nick() .. ":\nwants to be Mayor", ply:EntIndex() .. "votecop", ply, 20, FinishVoteMayor)
-	ply:GetTable().LastVoteCop = CurTime()
-	VoteCopOn = true
-
-	return ""
-end
-AddChatCommand("/votemayor", DoVoteMayor)
-
-local function DoVoteCop(ply, args)	
-	if CfgVars["cpvoting"] == 0 then
-		Notify(ply, 1, 4,  "Cop voting is disabled!")
-		return ""
-	end
-
-	if not ply:ChangeAllowed(TEAM_POLICE) then
-		Notify(ply, 1, 4, "You're either banned from this job or you were demoted.")
-		return ""
-	end
-
-	if CurTime() - ply:GetTable().LastVoteCop < 60 then
-		Notify(ply, 1, 4, "You need to wait another " .. math.ceil(60 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds to vote for Cop.")
-		return ""
-	end
-	
-	if #player.GetAll() == 1 then
-		Notify(ply, 1, 4, "You have won the vote since you are alone in this server.")
-		ply:ChangeTeam(TEAM_POLICE)
-		return ""
-	end
-
-	if VoteCopOn then
-		Notify(ply, 1, 4,  "There is already a vote for Cop!")
-		return ""
-	end
-
-	if ply:Team() == TEAM_POLICE then
-		Notify(ply, 1, 4,  "You already are in the Civil Protection!")
-		return ""
-	end
-
-	if team.NumPlayers(TEAM_POLICE) >= CfgVars["maxcps"] then
-		Notify(ply, 1, 4,  "Max number of CP's are: " .. CfgVars["maxcps"])
-		return ""
-	end
-
-	vote:Create(ply:Nick() .. ":\nwants to be a Cop", ply:EntIndex() .. "votecop", ply, 20, FinishVoteCop)
-	ply:GetTable().LastVoteCop = CurTime()
-	VoteCopOn = true
-
-	return ""
-end
-AddChatCommand("/votecop", DoVoteCop)
-
-function MakeMayor(ply, args)
-	if ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) or ply:IsAdmin() then
-		if VoteCopOn then
-			Notify(ply, 1, 4,  "Please wait for the current vote to finish first.")
-		else
-			ply:ChangeTeam(TEAM_MAYOR)
-		end
-	else
-		Notify(ply, 1, 4, "You need to be on the Mayor list or Admin!")
-	end
-	return ""
-end
-AddChatCommand("/mayor", MakeMayor)
-
-function MakeCitizen(ply, args)
-	ply:ChangeTeam(TEAM_CITIZEN)
-	return ""
-end
-AddChatCommand("/citizen", MakeCitizen)
-
-function MakeCP(ply, args)
-	if ply:HasPriv(CP) or ply:HasPriv(ADMIN) or ply:HasPriv(MAYOR) or ply:IsAdmin() or ply:Team() == TEAM_CHIEF then
-		if VoteCopOn then
-			Notify(ply, 1, 4,  "Please wait for the current vote to finish first.")
-		else
-			ply:ChangeTeam(TEAM_POLICE)
-		end
-	else
-		Notify(ply, 1, 4, "You need to be on the CP or the Mayor list or Admin!")
-	end
-	return ""
-end
-AddChatCommand("/cp", MakeCP)
-
-function MakeDealer(ply, args)
-	ply:ChangeTeam(TEAM_GUN)
-	return ""
-end
-AddChatCommand("/gundealer", MakeDealer)
-
-function MakePDChief(ply, args)
-	ply:ChangeTeam(TEAM_CHIEF)
-	return ""
-end
-AddChatCommand("/chief", MakePDChief)
-
-function MakeMedic(ply, args)
-	ply:ChangeTeam(TEAM_MEDIC)
-	return ""
-end
-AddChatCommand("/medic", MakeMedic)
-
-function MakeCook(ply, args)
-	ply:ChangeTeam(TEAM_COOK)
-	return ""
-end
-AddChatCommand("/cook", MakeCook)
-
-function GroupMsg(ply, args)
-	local t = ply:Team()
-	local audience = {}
-
-	if t == TEAM_POLICE or t == TEAM_CHIEF or t == TEAM_MAYOR then
-		for k, v in pairs(player.GetAll()) do
-			local vt = v:Team()
-			if vt == TEAM_POLICE or vt == TEAM_CHIEF or vt == TEAM_MAYOR then table.insert(audience, v) end
-		end
-	elseif t == TEAM_MOB or t == TEAM_GANG then
-		for k, v in pairs(player.GetAll()) do
-			local vt = v:Team()
-			if vt == TEAM_MOB or vt == TEAM_GANG then table.insert(audience, v) end
-		end
-	end
-
-	for k, v in pairs(audience) do
-		local col = team.GetColor(ply:Team())
-		TalkToPerson(v, col, "(GROUP) "..ply:Nick(),Color(255,255,255,255), args, ply)
-	end
-	return ""
-end
-AddChatCommand("/g", GroupMsg)
 
 function DoTeamBan(ply, args, cmdargs)
 	if not ply:IsAdmin() then 
@@ -1939,6 +1653,30 @@ function CombineRequest(ply, args)
 	return ""
 end
 AddChatCommand("/cr", CombineRequest)
+
+function GroupMsg(ply, args)
+	local t = ply:Team()
+	local audience = {}
+
+	if t == TEAM_POLICE or t == TEAM_CHIEF or t == TEAM_MAYOR then
+		for k, v in pairs(player.GetAll()) do
+			local vt = v:Team()
+			if vt == TEAM_POLICE or vt == TEAM_CHIEF or vt == TEAM_MAYOR then table.insert(audience, v) end
+		end
+	elseif t == TEAM_MOB or t == TEAM_GANG then
+		for k, v in pairs(player.GetAll()) do
+			local vt = v:Team()
+			if vt == TEAM_MOB or vt == TEAM_GANG then table.insert(audience, v) end
+		end
+	end
+
+	for k, v in pairs(audience) do
+		local col = team.GetColor(ply:Team())
+		TalkToPerson(v, col, "(GROUP) "..ply:Nick(),Color(255,255,255,255), args, ply)
+	end
+	return ""
+end
+AddChatCommand("/g", GroupMsg)
 
 -- here's the new easter egg. Easier to find, more subtle, doesn't only credit FPtje and unib5
 local CreditsWait = true
