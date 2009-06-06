@@ -31,10 +31,6 @@ SWEP.Secondary.Automatic = true
 SWEP.Secondary.Delay = 0.3
 SWEP.Secondary.Ammo = "none"
 
-util.PrecacheSound("HL1/fvox/medical_repaired.wav")
-util.PrecacheSound("HL1/fvox/radiation_detected.wav")
-util.PrecacheSound("HL1/fvox/automedic_on.wav")
-
 function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 	trace = {}

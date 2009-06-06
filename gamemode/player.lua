@@ -159,7 +159,7 @@ function meta:NewData()
 
 	-- Whether or not a player is being prevented from joining
 	-- a specific team for a certain length of time
-	for i = 1, 9 + #RPExtraTeams do
+	for i = 1, #RPExtraTeams do
 		if CfgVars["restrictallteams"] == 1 then
 			self.bannedfrom[i] = 1
 		else
@@ -175,7 +175,7 @@ end
 /*---------------------------------------------------------
  Teams/jobs
  ---------------------------------------------------------*/
-function meta:ChangeTeam(t)
+function meta:ChangeTeam(t, force)
 	if RPArrestedPlayers[self:SteamID()] then
 		if not self:Alive() then
 			Notify(self, 1, 4, "You can not change your job whilst being dead in jail.")
@@ -189,192 +189,28 @@ function meta:ChangeTeam(t)
 	self:SetNWBool("helpBoss",false)
 	self:SetNWBool("helpCop",false)
 	self:SetNWBool("helpMayor",false)
-	
-	if self:GetNWBool("HasGunlicense") and t ~= TEAM_POLICE and t ~= TEAM_CHIEF then
-		self:SetNWBool("HasGunlicense", false)
-	end
 
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) then
 		Notify(self, 1, 4, "You were either banned from this team or you were demoted.)")
 		return
 	end
-
-	if t == TEAM_CITIZEN then
-		self:UpdateJob("Citizen")
-		DB.StoreSalary(self, GetGlobalInt("normalsalary"))
-		NotifyAll(1, 4, self:Name() .. " is now an ordinary Citizen!")
-	elseif t == TEAM_POLICE then
-		if self:Team() == t then
-			Notify(self, 1, 4, "You already are a CP!")
-			return
-		end
-
-		if team.NumPlayers(t) >= CfgVars["maxcps"] then
-			Notify(self, 1, 4,  "You can not become CP as the limit of CPs is reached.")
-			return
-		end
-
-		self:UpdateJob("Civil Protection")
-		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 20)
-		self:SetNWBool("helpCop", true)
-		self:SetNWBool("HasGunlicense", true)
-		NotifyAll(1, 4, self:Name() .. " has been made a CP!")
-	elseif t == TEAM_MAYOR then
-		if self:Team() == t then
-			Notify(self, 1, 4, "You already are the Mayor!")
-			return
-		end
-
-		if team.NumPlayers(t) >= 1 then
-			Notify(self, 1, 4,  "You cannot become mayor since the limit of mayors is reached.")
-			return
-		end
-
-		if CfgVars["cptomayoronly"] == 1 and (self:Team() ~= TEAM_POLICE and self:Team() ~= TEAM_CHIEF) then
-			Notify(self, 1, 4,  "You have to be in the Civil Protection first to become Mayor!")
-			return
-		end
-
-		self:UpdateJob("Mayor")
-		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 40)
-		self:SetNWBool("helpMayor", true)
-		NotifyAll(1, 4, self:Name() .. " has been made Mayor!")
-	elseif t == TEAM_GANG then
-		if self:Team() == t then
-			Notify(self, 1, 4, "You already are a Gangster!")
-			return
-		end
-				
-		if CfgVars["allowgang"] == 0 then
-			Notify(self, 1, 4, "You can not become gangster as they are disabled.")
-			return
-		end
-
-		if team.NumPlayers(t) >= CfgVars["maxgangsters"] then
-			Notify(self, 1, 4, "You can not become gangster as the gangster limit is reached.")
-			return
-		end
-
-		self:UpdateJob("Gangster")
-		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 10)
-		self:SetNWString("agenda", CfgVars["mobagenda"])
-		NotifyAll(1, 4, self:Name() .. " has been made a Gangster!")
-	elseif t == TEAM_MOB then
-		if self:Team() == t then
-			Notify(self, 1, 4, "You already are the mob boss!")
-			return
-		end
-				
-		if CfgVars["allowgang"] == 0 then
-			Notify(self, 1, 4, "You cannot become gangster as they are disabled.")
-			return
-		end
-
-		if team.NumPlayers(t) >= 1 then
-			Notify(self, 1, 4, "You can not become mob boss since only one mob boss is allowed.")
-			return
-		end
-
-		self:UpdateJob("mob boss")
-		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 15)
-		self:SetNWBool("helpBoss", true)
-		self:SetNWString("agenda", CfgVars["mobagenda"])
-		NotifyAll(1, 4, self:Name() .. " has been made mob boss!")
-	elseif t == TEAM_GUN then
-		if self:Team() == t then
-			Notify(self, 1, 4, "You already are a Gun Dealer!")
-			return
-		end
-
-		if CfgVars["noguns"] == 1 then
-			Notify(self, 1, 4, "You can not become gundealer because guns are disabled.")
-			return
-		end
-
-		if CfgVars["allowdealers"] == 0 then
-			Notify(self, 1, 4, "You can not become gun dealer as they are disabled.")
-			return
-		end
-
-		if team.NumPlayers(t) >= CfgVars["maxgundealers"] then
-			Notify(self, 1, 4,  "You can not become gundealer since the limit of gundealers is reached.")
-			return
-		end
-
-		self:UpdateJob("Gun Dealer")
-		DB.StoreSalary(self, GetGlobalInt("normalsalary"))
-		NotifyAll(1, 4, self:Name() .. " has been made a Gun Dealer!")
-	elseif t == TEAM_MEDIC then
-		if self:Team() == t then
-			Notify(self, 1, 4, "You already are a Medic!")
-			return
-		end
-
-		if CfgVars["allowmedics"] == 0 then
-			Notify(self, 1, 4, "You can not become a medic as they are disabled.")
-			return
-		end
-
-		if team.NumPlayers(t) >= CfgVars["maxmedics"] then
-			Notify(self, 1, 4,  "You can not become a medic since the limit of medics is reached.")
-			return
-		end
-		self:UpdateJob("Medic")
-		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 15)
-		NotifyAll(1, 4, self:Name() .. " has been made a Medic!")
-	elseif t == TEAM_COOK then
-		if self:Team() == t then
-			Notify(self, 1, 4, "You already are a Cook!")
-			return
-		end
-
-		if CfgVars["allowcooks"] == 0 then
-			Notify(self, 1, 4, "You can not become a cook as they are disabled.")
-			return
-		end
-
-		if team.NumPlayers(t) >= CfgVars["maxcooks"] then
-			Notify(self, 1, 4,  "You can not become a cook since the limit of cook is reached.")
-			return
-		end
-
-		self:UpdateJob("Cook")
-		DB.StoreSalary(self, GetGlobalInt("normalsalary"))
-		NotifyAll(1, 4, self:Name() .. " has been made a Cook!")
-	elseif t == TEAM_CHIEF then
-		if self:Team() == t then
-			Notify(self, 1, 4, "You already are the civil protection chief!")
-			return
-		end
-
-		if self:Team() ~= TEAM_POLICE then
-			Notify(self, 1, 4, "You must be a CP first in order to become Chief!")
-			return
-		end
-
-		if team.NumPlayers(t) >= 1 then
-			Notify(self, 1, 4,  "You can not become the chief since the limit of chiefs is reached.")
-			return
-		end
-
-		self:UpdateJob("Civil Protection Chief")
-		DB.StoreSalary(self, GetGlobalInt("normalsalary") + 30)
-		NotifyAll(1, 4, self:Name() .. " has been made Chief!")
-		self:SetNWBool("HasGunlicense", true)
-	end
-	
 	
 	for k,v in pairs(RPExtraTeams) do
-		if t == (9 + k) then
+		if t == k then
 			if self:Team() == t then
 				Notify(self, 1, 4, "You already are a " .. v.name .. "!")	
 				return
 			end
-			if v.NeedToChangeFrom and self:Team() ~= v.NeedToChangeFrom then
-				Notify(self, 1,4, "You need to be "..team.GetName(v.NeedToChangeFrom).." first in order to become " .. team.GetName(t))
+			if type(v.NeedToChangeFrom) == "number" and self:Team() ~= v.NeedToChangeFrom and not force then
+				Notify(self, 1,4, "You need to be "..team.GetName(v.NeedToChangeFrom).." first in order to become " .. v.name)
+				return
+			elseif type(v.NeedToChangeFrom) == "table" and not table.HasValue(v.NeedToChangeFrom, self:Team()) and not force then
+				local teamnames = ""
+				for a,b in pairs(v.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
+				Notify(self, 1,4, "You need to be "..string.sub(teamnames, 5).." first in order to become " .. v.name)
 				return
 			end
-			if CfgVars["max"..v.command.."s"] and team.NumPlayers(t) >= CfgVars["max"..v.command.."s"] then
+			if CfgVars["max"..v.command.."s"] and CfgVars["max"..v.command.."s"] ~= 0 and team.NumPlayers(t) >= CfgVars["max"..v.command.."s"] and not force then
 				Notify(self, 1, 4,  "You can not become "..v.name.." since the limit of "..v.name.." is reached.")
 				return
 			end
@@ -385,6 +221,20 @@ function meta:ChangeTeam(t)
 				self:SetNWBool("HasGunlicense", true)
 			end
 		end
+	end
+	
+	if t == TEAM_POLICE then	
+		self:SetNWBool("helpCop", true)
+	elseif t == TEAM_GANG then
+		self:SetNWString("agenda", CfgVars["mobagenda"])
+	elseif t == TEAM_MOB then
+		self:SetNWBool("helpBoss", true)
+	elseif t == TEAM_MAYOR then
+		self:SetNWBool("helpMayor", true)
+	end
+	
+	if self:GetNWBool("HasGunlicense") then
+		self:SetNWBool("HasGunlicense", false)
 	end
 
 	if CfgVars["removeclassitems"] == 1 then
@@ -436,13 +286,7 @@ function meta:UpdateJob(job)
 	self:GetTable().Pay = 1
 	self:GetTable().LastPayDay = CurTime()
 
-	local l = string.lower(job)
-
-	if l == "unemployed" or l == "bum" or l == "hobo" then
-		DB.StoreSalary(self, 0)
-	else
-		timer.Create(self:SteamID() .. "jobtimer", CfgVars["paydelay"], 0, self.PayDay, self)
-	end
+	timer.Create(self:SteamID() .. "jobtimer", CfgVars["paydelay"], 0, self.PayDay, self)
 end
 
 /*---------------------------------------------------------

@@ -81,7 +81,7 @@ function ENT:createDrug()
 		userb.maxDrugs = 0
 	end
 	userb.maxDrugs = userb.maxDrugs + 1
-	self.sparking = true
+	self.sparking = false
 end
 
 function ENT:Think()

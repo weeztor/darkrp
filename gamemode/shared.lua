@@ -1,24 +1,3 @@
--- Teams
-TEAM_CITIZEN = 1 -- Normal Citizens
-TEAM_POLICE = 2 -- Police Officers (CPs)
-TEAM_MAYOR = 3 -- Mayors
-TEAM_GANG = 4 -- Gangsters
-TEAM_MOB = 5 -- mob bosses
-TEAM_GUN = 6 -- Gun Dealers
-TEAM_MEDIC = 7 -- Medics
-TEAM_COOK = 8 -- Cooks
-TEAM_CHIEF = 9 -- Police Chiefs (CP Chiefs)
-
-team.SetUp(TEAM_CITIZEN, "Citizen", Color(20, 150, 20, 255))
-team.SetUp(TEAM_POLICE, "Civil Protection", Color(25, 25, 170, 255))
-team.SetUp(TEAM_MAYOR, "Mayor", Color(150, 20, 20, 255))
-team.SetUp(TEAM_GANG, "Gangster", Color(75, 75, 75, 255))
-team.SetUp(TEAM_MOB, "mob boss", Color(25, 25, 25, 255))
-team.SetUp(TEAM_GUN, "Gun Dealer", Color(255, 140, 0, 255))
-team.SetUp(TEAM_MEDIC, "Medic", Color(47, 79, 79, 255))
-team.SetUp(TEAM_COOK, "Cook", Color(238, 99, 99, 255))
-team.SetUp(TEAM_CHIEF, "Civil Protection Chief", Color(20, 20, 255, 255))
-
 RPExtraTeams = {}
 function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote, Haslicense, NeedToChangeFrom)
 	if not Name or not color or not model or not Description or not Weapons or not command or not maximum_amount_of_this_class or not Salary or not admin or Vote == nil then
@@ -30,8 +9,8 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 	end
 	local CustomTeam = {name = Name, model = model, Des = Description, Weapons = Weapons, command = command, max = maximum_amount_of_this_class, salary = Salary, admin = admin or 0, Vote = tobool(Vote), NeedToChangeFrom = NeedToChangeFrom, Haslicense = Haslicense}
 	table.insert(RPExtraTeams, CustomTeam)
-	team.SetUp(9 + #RPExtraTeams, Name, color)
-	local Team = 9 + #RPExtraTeams
+	team.SetUp(#RPExtraTeams, Name, color)
+	local Team = #RPExtraTeams
 	if SERVER then
 		timer.Simple(0.1, function(CustomTeam) AddTeamCommands(CustomTeam) end, CustomTeam)
 	end
@@ -46,6 +25,71 @@ hook.Add("InitPostEntity", "AddTeams", function()
 	end
 end)
 
+/*--------------------------------------------------------
+Default teams
+--------------------------------------------------------*/
+TEAM_CITIZEN = AddExtraTeam("Citizen", Color(20, 150, 20, 255), "models/player/group01/male_01.mdl", [[The Citizen is the most basic level of society you can hold
+besides being a hobo. 
+You have no specific role in city life.]], {}, "citizen", 0, 45, 0, false, false)
+
+TEAM_POLICE = AddExtraTeam("Civil Protection", Color(25, 25, 170, 255), "models/player/police.mdl", [[The protector of every citizen that lives in the city . 
+You have the power to arrest criminals and protect innocents. 
+Hit them with your arrest baton to put them in jail
+Bash them with a stunstick and they might learn better than to disobey 
+the law.
+The Battering Ram can break down the door of a criminal with a warrant 
+for his/her arrest.
+The Battering Ram can also unfreeze frozen props(if enabled).
+Type /wanted <name> to alert the public to this criminal
+OR go to tab and warrant someone by clicking the warrant button]], {"arrest_stick", "unarrest_stick", "weapon_glock2", "stunstick", "door_ram", "weaponchecker", "item_ammo_pistol"}, "cp", 4, 65, 0, true, true)
+
+TEAM_GANG = AddExtraTeam("Gangster", Color(75, 75, 75, 255), "models/player/group03/male_01.mdl", [[The lowest person of crime. 
+A gangster generally works for the Mobboss who runs the crime family. 
+The Mobboss sets your agenda and you follow it or you might be punished.]], {}, "gangster", 3, 45, 0, false, false)
+
+TEAM_MOB = AddExtraTeam("Mob boss", Color(25, 25, 25, 255), "models/player/gman_high.mdl", [[The Mobboss is the crimboss in the city. 
+With his power he coordinates the gangsters and forms an efficent crime
+organization. 
+He has the ability to break into houses by using a lockpick. 
+The Mobboss also can unarrest you.]], {"lockpick", "unarrest_stick"}, "mobboss", 3, 60, 0, false, false)
+
+TEAM_GUN = AddExtraTeam("Gun Dealer", Color(255, 140, 0, 255), "models/player/monk.mdl", [[A gun dealer is the only person who can sell guns to other 
+people. 
+However, make sure you aren't caught selling guns that are illegal to 
+the public.
+/Buyshipment <name> to Buy a  weapon shipment
+/Buygunlab to Buy a gunlab that spawns P228 pistols]], {}, "gundealer", 2, 45, 0, false, false)
+
+TEAM_MEDIC = AddExtraTeam("Medic", Color(47, 79, 79, 255), "models/player/kleiner.mdl", [[With your medical knowledge, you heal players to proper 
+health. 
+Without a medic, people can not be healed. 
+Left click with the Medical Kit to heal other players.
+Right click with the Medical Kit to heal yourself.]], {"med_kit"}, "medic", 3, 45, 0, false, false)
+
+TEAM_COOK = AddExtraTeam("Cook", Color(238, 99, 99, 255), "models/player/mossman.mdl", [[As a cook, it is your responsibility to feed the other members 
+of your city. 
+You can spawn a microwave and sell the food you make:
+/Buymicrowave]], {}, "cook", 2, 45, 0, 0, false)
+
+TEAM_CHIEF = AddExtraTeam("Civil Protection Chief", Color(20, 20, 255, 255), "models/player/combine_soldier_prisonguard.mdl", [[The Chief is the leader of the Civil Protection unit. 
+Coordinate the police forces to bring law to the city
+Hit them with arrest baton to put them in jail
+Bash them with a stunstick and they might learn better than to 
+disobey the law.
+The Battering Ram can break down the door of a criminal with a 
+warrant for his/her arrest.
+Type /wanted <name> to alert the public to this criminal
+Type /jailpos to set the Jail Position]], {"arrest_stick", "unarrest_stick", "weapon_deagle2", "stunstick", "door_ram", "weaponchecker", "item_ammo_pistol"}, "chief", 1, 75, 0, false, true, TEAM_POLICE)
+
+TEAM_MAYOR = AddExtraTeam("Mayor", Color(150, 20, 20, 255), "models/player/breen.mdl", [[The Mayor of the city creates laws to serve the greater good 
+of the people.
+If you are the mayor you may create and accept warrants.
+Type /wanted <name>  to warrant a player
+Type /jailpos to set the Jail Position
+Type /lockdown initiate a lockdown of the city. 
+Everyone must be inside during a lockdown. 
+The cops patrol the area
+/unlockdown to end a lockdown]], {"item_ammo_pistol"}, "mayor", 1, 85, 0, true, false, {TEAM_CHIEF, TEAM_POLICE})
 /*
 --------------------------------------------------------
 HOW TO MAKE AN EXTRA CLASS!!!!

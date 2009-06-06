@@ -334,22 +334,27 @@ local CivModels = {
 function GM:PlayerSetModel(ply)
 	local EndModel = ""
 	if CfgVars["enforceplayermodel"] == 1 then
+		for k,v in pairs(RPExtraTeams) do
+			if ply:Team() == (k) then
+				EndModel = v.model
+			end
+		end
+		
 		if ply:Team() == TEAM_CITIZEN then
 			local validmodel = false
-
 			for k, v in pairs(CivModels) do
 				if ply:GetTable().PlayerModel == v then
 					validmodel = true
 					break
 				end
 			end
-
+			
 			if not validmodel then
 				ply:GetTable().PlayerModel = nil
 			end
-
+			
 			local model = ply:GetModel()
-
+			
 			if model ~= ply:GetTable().PlayerModel then
 				for k, v in pairs(CivModels) do
 					if v == model then
@@ -358,35 +363,16 @@ function GM:PlayerSetModel(ply)
 						break
 					end
 				end
-
+				
 				if not validmodel and not ply:GetTable().PlayerModel then
 					ply:GetTable().PlayerModel = CivModels[math.random(1, #CivModels)]
 				end
-
+				
 				EndModel = ply:GetTable().PlayerModel
 			end
-		elseif ply:Team() == TEAM_POLICE then
-			EndModel = "models/player/police.mdl"
-		elseif ply:Team() == TEAM_MAYOR then
-			EndModel = "models/player/breen.mdl"
-		elseif ply:Team() == TEAM_GANG then
-			EndModel = "models/player/group03/male_01.mdl"
-		elseif ply:Team() == TEAM_MOB  then
-			EndModel = "models/player/gman_high.mdl"
-		elseif ply:Team() == TEAM_GUN then
-			EndModel = "models/player/monk.mdl"
-		elseif ply:Team() == TEAM_MEDIC then
-			EndModel = "models/player/kleiner.mdl"
-		elseif ply:Team() == TEAM_COOK then
-			EndModel = "models/player/mossman.mdl"
-		elseif ply:Team() == TEAM_CHIEF then
-			EndModel = "models/player/combine_soldier_prisonguard.mdl"
-		end
-		
-		for k,v in pairs(RPExtraTeams) do
-			if ply:Team() == (9+k) then
-				EndModel = v.model
-			end
+		else
+			local cl_playermodel = ply:GetInfo( "cl_playermodel" )
+			local EndModel = player_manager.TranslatePlayerModel( cl_playermodel )
 		end
 		util.PrecacheModel(EndModel)
 		ply:SetModel(EndModel)
@@ -554,7 +540,7 @@ function GM:PlayerLoadout(ply)
 		ply:Give("weapon_physgun")
 	end
 	
-	if team == TEAM_POLICE or team == TEAM_CHIEF or (ply:HasPriv(ADMIN) and CfgVars["AdminsSpawnWithCopWeapons"] == 1) then
+	if ply:HasPriv(ADMIN) and CfgVars["AdminsSpawnWithCopWeapons"] == 1 then
 		ply:Give("door_ram")
 		ply:Give("arrest_stick")
 		ply:Give("unarrest_stick")
@@ -562,33 +548,8 @@ function GM:PlayerLoadout(ply)
 		ply:Give("weaponchecker") 
 	end
 
-	if team == TEAM_POLICE then
-		if CfgVars["noguns"] ~= 1 then
-			ply:Give("weapon_glock2")
-			ply:GiveAmmo(30, "Pistol")
-		end
-	elseif team == TEAM_MAYOR then
-		if CfgVars["noguns"] ~= 1 then ply:GiveAmmo(28, "Pistol") end
-	elseif team == TEAM_GANG then
-		if CfgVars["noguns"] ~= 1 then ply:GiveAmmo(1, "Pistol") end
-	elseif team == TEAM_MOB then
-		ply:Give("unarrest_stick")
-		ply:Give("lockpick")
-		if CfgVars["noguns"] ~= 1 then ply:GiveAmmo(1, "Pistol") end
-	elseif team == TEAM_GUN then
-		if CfgVars["noguns"] ~= 1 then ply:GiveAmmo(1, "Pistol") end
-	elseif team == TEAM_MEDIC then
-		ply:Give("med_kit")
-	elseif team == TEAM_COOK then
-		if CfgVars["noguns"] ~= 1 then ply:GiveAmmo(1, "Pistol") end
-	elseif team == TEAM_CHIEF then
-		if CfgVars["noguns"] ~= 1 then
-			ply:Give("weapon_deagle2")
-			ply:GiveAmmo(30, "Pistol")
-		end
-	end
 	for k,v in pairs(RPExtraTeams) do
-		if team == (9 + k) then
+		if team == k then
 			for _,b in pairs(v.Weapons) do ply:Give(b) end
 		end
 	end
@@ -596,8 +557,8 @@ function GM:PlayerLoadout(ply)
 	-- Switch to prefered weapon if they have it
 	local cl_defaultweapon = ply:GetInfo( "cl_defaultweapon" )
 	
-	if ( ply:HasWeapon( cl_defaultweapon )  ) then
-		ply:SelectWeapon( cl_defaultweapon ) 
+	if ply:HasWeapon( cl_defaultweapon ) then
+		ply:SelectWeapon( cl_defaultweapon )
 	end
 end
 
