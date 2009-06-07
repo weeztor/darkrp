@@ -51,7 +51,7 @@ TEAM_MOB = AddExtraTeam("Mob boss", Color(25, 25, 25, 255), "models/player/gman_
 With his power he coordinates the gangsters and forms an efficent crime
 organization. 
 He has the ability to break into houses by using a lockpick. 
-The Mobboss also can unarrest you.]], {"lockpick", "unarrest_stick"}, "mobboss", 3, 60, 0, false, false)
+The Mobboss also can unarrest you.]], {"lockpick", "unarrest_stick"}, "mobboss", 1, 60, 0, false, false)
 
 TEAM_GUN = AddExtraTeam("Gun Dealer", Color(255, 140, 0, 255), "models/player/monk.mdl", [[A gun dealer is the only person who can sell guns to other 
 people. 
