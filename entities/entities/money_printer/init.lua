@@ -90,7 +90,7 @@ function ENT:CreateMoneybag()
 	end
 	moneybag:GetTable().Amount = amount
 	self.sparking = false
-	timer.Simple(math.random(40, 350), PrintMore, self) -- Print more cash in 40 to 350 seconds
+	timer.Simple(math.random(100, 350), PrintMore, self)
 end
 
 function ENT:Think()
@@ -107,7 +107,8 @@ end
 function ENT:OnRemove()
 	local ply = self:GetNWEntity("owning_ent")
 	if not ply.maxmprinters then
-		ply.maxmprinters = 1
+		ply.maxmprinters = 0
+		return
 	end
 	ply.maxmprinters = ply.maxmprinters - 1
 end

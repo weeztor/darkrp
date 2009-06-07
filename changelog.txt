@@ -1,4 +1,5 @@
-SVN version
+DarkRP 2.3.7
+Updated by: FPtje Falco
 
 [ADD] /demote <reason> People need to specify a reason to demote
 [ADD] rp_needwantedforarrest to prevent cops from random arresting
@@ -71,6 +72,8 @@ SVN version
 [FIX] SPP exploit where clients could retrieve steamID's with Lua.(Should only be possible with status in console)
 [FIX] Bug in SPP menu that made the settings reset themselves(The settings now use the DarkRP settings system)
 [FIX] Weapon predictions
+[FIX] Meteor erroring etc.
+[FIX] Message about someone being unwanted when he already wasn't wanted anymore.
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof

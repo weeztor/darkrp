@@ -140,7 +140,7 @@ function meta:NewData()
 
 	DB.StoreSalary(self, GetGlobalInt("normalsalary"))
 
-	self:UpdateJob("Citizen")
+	self:UpdateJob(team.GetName(1))
 
 	self:GetTable().Ownedz = { }
 	self:GetTable().OwnedNumz = 0
@@ -148,7 +148,7 @@ function meta:NewData()
 	self:GetTable().LastLetterMade = CurTime() - 61
 	self:GetTable().LastVoteCop = CurTime() - 61
 
-	self:SetTeam(TEAM_CITIZEN)
+	self:SetTeam(1)
 
 	-- Whether or not a player is being prevented from joining
 	-- a specific team for a certain length of time
@@ -290,6 +290,7 @@ function meta:CanAfford(amount)
 end
 
 function meta:AddMoney(amount)
+	if not amount then return false end
 	DB.StoreMoney(self, DB.RetrieveMoney(self) + math.floor(amount))
 end
 
@@ -376,6 +377,7 @@ function meta:Arrest(time, rejoin)
 		
 		timer.Create(ID .. "jailtimer", time, 1, function() self:Unarrest(ID) end)
 		umsg.Start("GotArrested", ply)
+			umsg.Float(time)
 		umsg.End()
 	end
 end

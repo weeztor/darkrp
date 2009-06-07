@@ -266,7 +266,7 @@ function ControlStorm()
 end
 
 function StartShower()
-	timer.Adjust("start", math.random(.5,1.5), 0, StartShower)
+	timer.Adjust("start", math.random(.1,1), 0, StartShower)
 	for k, v in pairs(player.GetAll()) do
 		if math.random(0, 2) == 0 then
 			if v:Alive() then
@@ -313,7 +313,6 @@ timer.Stop("stormControl")
 /*---------------------------------------------------------
  Earthquake
  ---------------------------------------------------------*/
-local next_update_time
 local tremor = ents.Create("env_physexplosion")
 tremor:SetPos(Vector(0,0,0))
 tremor:SetKeyValue("radius",9999999999)
@@ -572,7 +571,7 @@ function PlayerUnWanted(ply, args)
 		Notify(ply, 1, 6, "You must be a Cop or the Mayor in order to be able to make someone unwanted.")
 	else
 		local p = FindPlayer(args)
-		if p and p:Alive() then
+		if p and p:Alive() and p:GetNWBool("wanted") then
 			p:SetNWBool("wanted", false)
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, p:Nick() .. " is no longer wanted by the Police.")
@@ -588,7 +587,7 @@ AddChatCommand("/unwanted", PlayerUnWanted)
 
 function TimerUnwanted(ply, args)
 	local p = FindPlayer(args)
-	if p and p:Alive() then
+	if p and p:Alive() and p:GetNWBool("wanted") then
 		p:SetNWBool("wanted", false)
 		for a, b in pairs(player.GetAll()) do
 			b:PrintMessage(HUD_PRINTCENTER, "The wanted for " .. p:Nick() .. " has expired.")
@@ -720,6 +719,7 @@ local function MakeLetter(ply, args, type)
 	-- Instruct the player's letter window to open
 
 	local ftext = string.gsub(args, "//", "\n")
+	ftext = string.gsub(args, "\\n", "\n")
 	local length = string.len(ftext)
 
 	local numParts = math.floor(length / 39) + 1
@@ -801,7 +801,7 @@ function SetPrice(ply, args)
 	if ValidEntity(tr.Entity) and (tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave") or tr.Entity:GetClass() == "drug_lab") and tr.Entity.SID == ply.SID then
 		tr.Entity:SetNWInt("price", b)
 	else
-		Notify(ply, 1, 4, "You You need to be looking at a Gun Lab, druglab or Microwave!")
+		Notify(ply, 1, 4, "You need to be looking at a Gun Lab, druglab or Microwave!")
 	end
 	return ""
 end
@@ -1253,11 +1253,16 @@ function BuyHealth(ply)
 	end
 	if ply:Team() ~= TEAM_MEDIC and team.NumPlayers(TEAM_MEDIC) > 0 then
 		Notify(ply, 1, 4, "/buyhealth is disabled since there are Medics.")
-	else
-		ply:AddMoney(-cost)
-		Notify(ply, 1, 4, "You have bought Health for " .. CUR .. tostring(cost))
-		ply:SetHealth(100)
+		return ""
 	end
+	if ply.StartHealth and ply:Health() >= ply.StartHealth then
+		Notify(ply, 1, 4, "You have too much health to buy health!")
+		return "" 
+	end
+	ply.StartHealth = ply.StartHealth or 100
+	ply:AddMoney(-cost)
+	Notify(ply, 1, 4, "You have bought Health for " .. CUR .. tostring(cost))
+	ply:SetHealth(ply.StartHealth)
 	return ""
 end
 AddChatCommand("/buyhealth", BuyHealth)
@@ -1324,7 +1329,7 @@ hook.Add("KeyPress", "HangUpPhone", HangUp)
  ---------------------------------------------------------*/
 function CreateAgenda(ply, args)
 	if ply:Team() == TEAM_MOB then
-		CfgVars["mobagenda"] = string.gsub(args, "//", "\n")
+		CfgVars["mobagenda"] = string.gsub(string.gsub(args, "//", "\n"), "\\n", "\n")
 
 		for k, v in pairs(player.GetAll()) do
 			local t = v:Team()
@@ -1560,7 +1565,7 @@ function PM(ply, args)
 
 	local name = string.sub(args, 1, namepos - 1)
 	local msg = string.sub(args, namepos + 1)
-
+	if msg == "" then return "" end
 	target = FindPlayer(name)
 
 	if target then
@@ -1635,7 +1640,7 @@ function SayThroughRadio(ply,args)
 	end
 	for k,v in pairs(player.GetAll()) do
 		if v.RadioChannel == ply.RadioChannel then
-			TalkToPerson(v, Color(180,180,180,255), "Radio ".. tostring(ply.RadioChannel), Color(180,180,180,255), args)
+			TalkToPerson(v, Color(180,180,180,255), "Radio: ".. tostring(ply.RadioChannel), Color(180,180,180,255), args)
 		end
 	end
 	return ""

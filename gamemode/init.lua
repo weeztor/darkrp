@@ -1,4 +1,4 @@
-GM.Name = "DarkRP 2.3.5+"
+GM.Name = "DarkRP 2.3.7"
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
 
 CUR = "$"

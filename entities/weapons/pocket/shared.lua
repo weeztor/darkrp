@@ -199,8 +199,9 @@ if CLIENT then
 		if frame and frame:IsValid() and frame:IsVisible() then return end
 		if LocalPlayer():GetActiveWeapon():GetClass() ~= "pocket" then return end
 		if not LocalPlayer():GetTable().Pocket then LocalPlayer():GetTable().Pocket = {} return end
-		for k,v in pairs(LocalPlayer():GetTable().Pocket) do if not ValidEntity(v) then LocalPlayer():GetTable().Pocket[k] = nil end end
+		for k,v in pairs(LocalPlayer():GetTable().Pocket) do if not ValidEntity(v) then table.Remove(LocalPlayer():GetTable().Pocket, k) end end
 		if #LocalPlayer():GetTable().Pocket <= 0 then return end
+		LocalPlayer():GetTable().Pocket = table.ClearKeys(LocalPlayer():GetTable().Pocket)
 		frame = vgui.Create( "DFrame" )
 		frame:SetTitle( "Drop item" )
 		frame:SetVisible( true )
