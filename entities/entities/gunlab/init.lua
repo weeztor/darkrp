@@ -127,5 +127,6 @@ end
 function ENT:OnRemove()
 	timer.Destroy(self.Entity)
 	local ply = self.Entity:GetNWEntity("owning_ent")
+	if not ValidEntity(ply) then return end
 	ply.maxgunlabs = ply.maxgunlabs - 1
 end

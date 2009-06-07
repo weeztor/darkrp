@@ -133,5 +133,7 @@ end
 function ENT:OnRemove()
 	timer.Destroy(self.Entity:EntIndex())
 	local ply = self.Entity:GetNWEntity("owning_ent")
+	if not ValidEntity(ply) then return end
+	if not ply.maxMicrowaves then ply.maxMicrowaves = 0 return end
 	ply.maxMicrowaves = ply.maxMicrowaves - 1
 end
