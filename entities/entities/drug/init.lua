@@ -47,5 +47,6 @@ end
 
 function ENT:OnRemove()
 	local ply = self.Entity:GetNWEntity("owning_ent")
+	if not ValidEntity(ply) then return end
 	ply.maxDrugs = ply.maxDrugs - 1
 end
