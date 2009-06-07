@@ -1634,13 +1634,15 @@ end
 AddChatCommand("/channel", SetRadioChannel)
 
 function SayThroughRadio(ply,args)
+	print(args)
+	if not ply.RadioChannel then ply.RadioChannel = 1 end
 	if not args or args == "" then
 		Notify(ply, 1, 4, "Please enter a message!")
 		return ""
 	end
 	for k,v in pairs(player.GetAll()) do
 		if v.RadioChannel == ply.RadioChannel then
-			TalkToPerson(v, Color(180,180,180,255), "Radio: ".. tostring(ply.RadioChannel), Color(180,180,180,255), args)
+			TalkToPerson(v, Color(180,180,180,255), "Radio ".. tostring(ply.RadioChannel), Color(180,180,180,255), args, ply)
 		end
 	end
 	return ""
