@@ -204,28 +204,30 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 		local Ents = ply:UniqueIDTable( "Duplicator" ).Entities
 		if Ents then
 			for k,v in pairs(Ents) do
-				if not string.find(v.Entity:GetClass(), "gmod_cameraprop") and (ValidEntity(v.Entity) and (v.Entity:IsWeapon() or string.find(v.Entity:GetClass(), "weapon"))) or (v.Classname and string.find(v.Classname, "weapon")) or ValidEntity(v.Weapon) then
-					print(ply:Nick(), "tried to spawn a ", v.Entity:GetClass(), ", He failed")
-					for NUMBER, PLAYER in pairs(player.GetAll()) do
-						if PLAYER:IsAdmin() then
-							PLAYER:ChatPrint(ply:Nick().. " tried to spawn a " .. v.Entity:GetClass() .. " with adv.duplicator, He failed")
-						end
-					end
-					Notify(ply, 1, 4, "You are not allowed to duplicate weapons!")
-					ply:UniqueIDTable( "Duplicator" ).Entities = nil
-					return SPropProtection.CanNotTouch(ply)
-				end
-				for a,b in pairs(SPropProtection.AntiCopy) do 
-					if ValidEntity(v.Entity) and string.find(v.Entity:GetClass(), b) then
+				if ValidEntity(v.Entity) then
+					if not string.find(v.Entity:GetClass(), "gmod_cameraprop") and (ValidEntity(v.Entity) and (v.Entity:IsWeapon() or string.find(v.Entity:GetClass(), "weapon"))) or (v.Classname and string.find(v.Classname, "weapon")) or ValidEntity(v.Weapon) then
 						print(ply:Nick(), "tried to spawn a ", v.Entity:GetClass(), ", He failed")
 						for NUMBER, PLAYER in pairs(player.GetAll()) do
 							if PLAYER:IsAdmin() then
 								PLAYER:ChatPrint(ply:Nick().. " tried to spawn a " .. v.Entity:GetClass() .. " with adv.duplicator, He failed")
 							end
 						end
-						Notify(ply, 1, 4, "You are not allowed to duplicate this entity!")
+						Notify(ply, 1, 4, "You are not allowed to duplicate weapons!")
 						ply:UniqueIDTable( "Duplicator" ).Entities = nil
 						return SPropProtection.CanNotTouch(ply)
+					end
+					for a,b in pairs(SPropProtection.AntiCopy) do 
+						if ValidEntity(v.Entity) and string.find(v.Entity:GetClass(), b) then
+							print(ply:Nick(), "tried to spawn a ", v.Entity:GetClass(), ", He failed")
+							for NUMBER, PLAYER in pairs(player.GetAll()) do
+								if PLAYER:IsAdmin() then
+									PLAYER:ChatPrint(ply:Nick().. " tried to spawn a " .. v.Entity:GetClass() .. " with adv.duplicator, He failed")
+								end
+							end
+							Notify(ply, 1, 4, "You are not allowed to duplicate this entity!")
+							ply:UniqueIDTable( "Duplicator" ).Entities = nil
+							return SPropProtection.CanNotTouch(ply)
+						end
 					end
 				end
 			end
