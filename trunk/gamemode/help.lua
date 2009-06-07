@@ -20,7 +20,6 @@ function ChangeHelpLabel(id, text)
 	end
 end
 
-
 function AddHelpLabel(id, category, text, constant)
 	table.insert(HelpLabels, { id = id, category = category, text = text, constant = (constant or 0) })
 end

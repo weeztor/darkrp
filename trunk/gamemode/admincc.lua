@@ -192,7 +192,7 @@ function ccAddOwner(ply, cmd, args)
 			trace.Entity:Own(target)
 		end
 	else
-		ply:PrintMessage(2, "Could not find player: " .. args)
+		ply:PrintMessage(2, "Could not find player: " .. tostring(args))
 	end
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-added a door owner with rp_addowner" )
 end
@@ -225,7 +225,7 @@ function ccRemoveOwner(ply, cmd, args)
 			trace.Entity:RemoveOwner(target)
 		end
 	else
-		ply:PrintMessage(2, "Could not find player: " .. args)
+		ply:PrintMessage(2, "Could not find player: " .. tostring(args))
 	end
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed a door owner with rp_removeowner" )
 end
@@ -277,6 +277,7 @@ end
 concommand.Add("rp_unlock", ccUnLock)
 
 function ccTell(ply, cmd, args)
+	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
@@ -307,11 +308,11 @@ function ccTell(ply, cmd, args)
 			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
 	end
-	
 end
 concommand.Add("rp_tell", ccTell)
 
 function ccTellAll(ply, cmd, args)
+	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
@@ -365,6 +366,7 @@ end
 concommand.Add("rp_removeletters", ccRemoveLetters)
 
 function ccPayDayTime(ply, cmd, args)
+	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:IsAdmin() and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, "You're not a server admin")
 		return
@@ -397,6 +399,7 @@ end
 concommand.Add("rp_paydaytime", ccPayDayTime)
 
 function ccArrest(ply, cmd, args)
+	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You need admin privileges in order to be able to arrest someone through rp_arrest.")
 		return
@@ -437,6 +440,7 @@ end
 concommand.Add("rp_arrest", ccArrest)
 
 function ccUnarrest(ply, cmd, args)
+	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
@@ -465,6 +469,7 @@ end
 concommand.Add("rp_unarrest", ccUnarrest)
 
 function ccKickBan(ply, cmd, args)
+	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
@@ -501,6 +506,7 @@ end
 concommand.Add("rp_kickban", ccKickBan)
 
 function ccKick(ply, cmd, args)
+	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, "You're not an admin!")
 		return
@@ -541,6 +547,7 @@ end
 concommand.Add("rp_kick", ccKick)
 
 function ccSetMoney(ply, cmd, args)
+	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, "You're not a super admin!")
 		return
@@ -589,6 +596,7 @@ end
 concommand.Add("rp_setmoney", ccSetMoney)
 
 function ccSetSalary(ply, cmd, args)
+	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, "You're not a super admin!")
 		return

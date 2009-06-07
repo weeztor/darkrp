@@ -41,8 +41,6 @@ function GM:DrawDeathNotice(x, y)
 	self.BaseClass:DrawDeathNotice(x, y)
 end
 
-CreateClientConVar("physics_debug_entity", 0, false,false)
-
 function DisplayNotify(msg)
 	local txt = msg:ReadString()
 	GAMEMODE:AddNotify(txt, msg:ReadShort(), msg:ReadLong())
@@ -252,8 +250,10 @@ local HUDHeight = CreateClientConVar("HudHeight", 10, true, false)
 
 
 local arresttime = 0
-local function GetArrested()
+local arresteduntil = 120
+local function GetArrested(msg)
 	arresttime = CurTime()
+	arresteduntil = msg:ReadFloat()
 end
 usermessage.Hook("GotArrested", GetArrested)
 
@@ -468,8 +468,8 @@ function GM:HUDPaint()
 	local salary = LocalPlayer():GetNWInt("salary")
 	local CurrentTime = CurTime()
 	
-	if arresttime ~= 0 and CurrentTime - arresttime <= GetGlobalInt("jailtimer") and LocalPlayer():GetNWBool("Arrested") then
-		draw.DrawText("You are arrested for "..tostring(math.ceil(GetGlobalInt("jailtimer") - (CurrentTime - arresttime))).." seconds!","ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
+	if arresttime ~= 0 and CurrentTime - arresttime <= arresteduntil and LocalPlayer():GetNWBool("Arrested") then
+		draw.DrawText("You are arrested for "..tostring(math.ceil(arresteduntil - (CurrentTime - arresttime))).." seconds!","ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
 	elseif arresttime ~= 0 or not LocalPlayer():GetNWBool("Arrested") then arresttime = 0
 	end
 	self.BaseClass:HUDPaint()

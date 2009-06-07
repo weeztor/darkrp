@@ -19,20 +19,6 @@ function ENT:Initialize()
 	self.Entity:GetPhysicsObject():EnableGravity(false)
 end
 
-function ENT:findSky(ply)
-	local foundSky = util.IsInWorld(ply:GetPos())
-	local zPos = ply:GetPos().z
-
-	while fountSky == true do
-		zPos = zPos + 100
-		foundSky = util.IsInWorld(Vector(ply:GetPos().x ,ply:GetPos().y ,zPos))
-		print("My Z: " .. ply.GeyPos().z .. " -- zPos: " .. zPos .. " -- Is in world: " .. foundSky)
-	end
-
-	return zPos - 20
-end
-
-
 function ENT:SetTarget(ent)
 	local foundSky = util.IsInWorld(ent:GetPos())
 	local zPos = ent:GetPos().z

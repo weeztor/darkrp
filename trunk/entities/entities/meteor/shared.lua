@@ -9,5 +9,5 @@ function ENT:SetOffset(v)
 end
 
 function ENT:GetOffset(name)
-	return self.Offset
+	return self.Offset or Vector(math.Rand(-3, 3), math.Rand(-3, 3), math.Rand(-3, 3))
 end

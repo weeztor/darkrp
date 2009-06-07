@@ -26,7 +26,7 @@ hook.Add("InitPostEntity", "AddTeams", function()
 end)
 
 /*--------------------------------------------------------
-Default teams
+Default teams. If you make a team above the citizen team, people will spawn with that team!
 --------------------------------------------------------*/
 TEAM_CITIZEN = AddExtraTeam("Citizen", Color(20, 150, 20, 255), "models/player/group01/male_01.mdl", [[The Citizen is the most basic level of society you can hold
 besides being a hobo. 
