@@ -203,6 +203,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_logging - Enable/disable logging
 AddToggleCommand("rp_RestrictDrop", "RestrictDrop", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_RestrictDrop - Enable/disable restricting which weapons players can drop.")
 
+AddToggleCommand("rp_ironshoot", "ironshoot", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_RestrictDrop - Enable/disable whether people need iron sights to shoot.")
+
 -- Here be dragons, get out.
 AddToggleCommand("rp_DropEntitiesAfterPhysGunDrop", "DropEntitiesAfterPhysGunDrop", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_DropEntitiesAfterPhysGunDrop - Enable/disable dropping an entity after physgun drop.")

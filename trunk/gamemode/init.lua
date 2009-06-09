@@ -170,6 +170,7 @@ function RefreshRPSettings(RESET)
 	CfgVars["license"] = 1
 	CfgVars["pocket"] = 1
 	CfgVars["logging"] = 1
+	CfgVars["ironshoot"] = 1
 	
 	CfgVars["spp_on"] = 1
 	CfgVars["spp_admin"] = 1

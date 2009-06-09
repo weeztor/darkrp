@@ -81,7 +81,7 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
 	if not self:CanPrimaryAttack() then return end
-	if not self.Ironsights then return end
+	if not self.Ironsights and GetGlobalInt("ironshoot") ~= 0 then return end
 	-- Play shoot sound
 	self.Weapon:EmitSound(self.Primary.Sound)
 
@@ -167,7 +167,10 @@ function SWEP:GetViewModelPosition(pos, ang)
 
 	local fIronTime = self.fIronTime or 0
 	
-	ang:RotateAroundAxis(ang:Right(), -15)
+	if GetGlobalInt("ironshoot") ~= 0 then
+		ang:RotateAroundAxis(ang:Right(), -15)
+	end
+	
 	if (not bIron and fIronTime < CurTime() - IRONSIGHT_TIME) then	
 		return pos, ang
 	end
@@ -189,7 +192,11 @@ function SWEP:GetViewModelPosition(pos, ang)
 		ang:RotateAroundAxis(ang:Forward(), 	self.IronSightsAng.z * Mul)
 	end
 	
-	ang:RotateAroundAxis(ang:Right(), Mul * 15)
+	if GetGlobalInt("ironshoot") ~= 0 then
+		ang:RotateAroundAxis(ang:Right(), Mul * 15)
+	else
+		ang:RotateAroundAxis(ang:Right(), Mul)
+	end
 
 	local Right 	= ang:Right()
 	local Up 		= ang:Up()
