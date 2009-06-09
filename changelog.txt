@@ -1,3 +1,7 @@
+DarkRP 2.3.7 SVN
+
+[ADD] rp_ironshoot, set if people have to see through the ironsights to shoot
+
 DarkRP 2.3.7
 Updated by: FPtje Falco
 
