@@ -105,8 +105,8 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
-	if not ValidEntity(ply) then return end
 	local ply = self:GetNWEntity("owning_ent")
+	if not ValidEntity(ply) then return end
 	if not ply.maxmprinters then
 		ply.maxmprinters = 0
 		return
