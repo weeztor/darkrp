@@ -450,18 +450,19 @@ function AddTeamCommands(CTeam)
 				ply:ChangeTeam(k, true)
 				return ""
 			end
-			if CTeam.admin == 0 and not ply:IsAdmin() then
-				Notify(ply, 1, 4, "You need to be an admin/make a vote to become "..CTeam.name.."!")
+			local a = CTeam.admin
+			if a > 0 and not ply:IsAdmin()
+			or a > 1 and not ply:IsSuperAdmin()
+			then
+				Notify(ply, 1, 4, "You do not have the required access to become a "..CTeam.name.."!")
 				return ""
-			elseif CTeam.admin == 1 and ply:IsAdmin() and not ply:IsSuperAdmin() then
-				Notify(ply, 1, 4, "You have to make a vote to become "..CTeam.name.."!")
+			end
+			if a == 0 and not ply:IsAdmin()
+			or a == 1 and not ply:IsSuperAdmin()
+			or a == 2
+			then
+				Notify(ply, 1, 4, "You need to make a vote to become a "..CTeam.name.."!")
 				return ""
-			elseif CTeam.admin == 2 and ply:IsSuperAdmin() then
-				Notify(ply, 1, 4, "You have to make a vote to become "..CTeam.name.."!")
-				return ""
-			elseif CTeam.admin == 2 and ply:IsAdmin() then
-				Notify(ply, 1, 4, "You can't become "..CTeam.name.." since you don't have the proper access.")
-				return "" 
 			end
 			ply:ChangeTeam(k, true)
 			return ""
