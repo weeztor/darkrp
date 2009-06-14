@@ -99,6 +99,26 @@ function SPropProtection.AdminPanel(Panel)
 	AddOption("Disconnect Prop Deletion On/Off", "rp_spp_propdeletion", "spp_propdeletion")
 	AddOption("Delete Admin Entities On/Off", "rp_spp_deleteadminents", "spp_deleteadminents")
 
+	local ddelay = vgui.Create("DNumSlider")
+	ddelay:SetMinMax(0, 500)
+	ddelay:SetText("Deletion delay after disconnect")
+	ddelay:SetDecimals(0)
+	ddelay.Slider.OnMouseReleased = function(mcode)
+		ddelay.Slider:SetDragging( false )
+        ddelay.Slider:MouseCapture( false )
+		RunConsoleCommand("rp_spp_deletedelay", ddelay:GetValue())
+	end
+	
+	ddelay.Wang.OnMouseReleased = function()
+		RunConsoleCommand("rp_spp_deletedelay", ddelay:GetValue())
+		if self.Dragging then
+			self:EndWang()
+        return end
+	end
+	ddelay:SetValue(GetGlobalInt("spp_deletedelay"))
+	Panel:AddPanel(ddelay)
+	
+	
 	Panel:AddControl("Label", {Text = "Cleanup Panel"})
 	
 	for k, ply in pairs(player.GetAll()) do
