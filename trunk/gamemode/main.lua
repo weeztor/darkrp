@@ -2132,7 +2132,7 @@ concommand.Add("rp_givelicense", rp_GiveLicense)
 
 function rp_RevokeLicense(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You need to be superadmin in order to be able to be able to revoke a license.")
+		ply:PrintMessage(2, "You need to be superadmin in order to be able to revoke a license.")
 		return
 	end
 

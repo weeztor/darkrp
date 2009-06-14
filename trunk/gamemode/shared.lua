@@ -47,7 +47,7 @@ TEAM_GANG = AddExtraTeam("Gangster", Color(75, 75, 75, 255), "models/player/grou
 A gangster generally works for the Mobboss who runs the crime family. 
 The Mobboss sets your agenda and you follow it or you might be punished.]], {}, "gangster", 3, 45, 0, false, false)
 
-TEAM_MOB = AddExtraTeam("Mob boss", Color(25, 25, 25, 255), "models/player/gman_high.mdl", [[The Mobboss is the crimboss in the city. 
+TEAM_MOB = AddExtraTeam("Mob boss", Color(25, 25, 25, 255), "models/player/gman_high.mdl", [[The Mobboss is the boss of the criminals in the city. 
 With his power he coordinates the gangsters and forms an efficent crime
 organization. 
 He has the ability to break into houses by using a lockpick. 
