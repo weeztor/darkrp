@@ -1,5 +1,3 @@
-#Here's how you call someone
-
 = Description=
 
 say /call, then it will call someone. 
