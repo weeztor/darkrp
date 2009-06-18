@@ -1,0 +1,5 @@
+Get notepad++ to open files properly, the windows notepad isn't the nicest program for this purpose.
+
+http://sourceforge.net/project/downloading.php?group_id=95717&filename=npp.5.3.1.Installer.exe
+
+Whenever it asks "open with" on a Lua file click "program from list" and then select notepad++
