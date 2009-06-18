@@ -1,0 +1,6 @@
+#Here's how you call someone
+
+= Description=
+
+say /call, then it will call someone. 
+1 dollar per 20 seconds!
