@@ -1,4 +1,4 @@
 = Description=
 
-say /call <name>, then it will call that person. 
+say /call <i>name</i>, then it will call that person. 
 1 dollar per 20 seconds!
