@@ -263,7 +263,7 @@ function SPropProtection.CanTool(ply, tr, toolgun)
 	end
 	if ent:IsWeapon() then return SPropProtection.CanNotTouch(ply) end
 	if ent:IsWeapon() or string.find(ent:GetClass(), "weapon") then return SPropProtection.CanNotTouch(ply) end
-	if ent:IsDoor() then return SPropProtection.CanNotTouch(ply) end
+	if ent:IsDoor() and ent:GetNWString("Owner") == "" then return SPropProtection.CanNotTouch(ply) end
 		
 	if not SPropProtection.PlayerCanTouch(ply, ent) then
 		return SPropProtection.CanNotTouch(ply)

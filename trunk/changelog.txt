@@ -1,6 +1,8 @@
 DarkRP 2.3.7 SVN
 
 [ADD] rp_ironshoot, set if people have to see through the ironsights to shoot
+[FIX] Unable to remove door tool doors
+[FIX] People with the admin privilege can now see the admin menu
 
 DarkRP 2.3.7
 Updated by: FPtje Falco
