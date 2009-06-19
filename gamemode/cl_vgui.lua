@@ -226,7 +226,7 @@ function ChangeJobVGUI()
 		F4MenuTabs:AddSheet("Jobs", F4Tabs[2], "gui/silkicons/arrow_refresh", false, false)
 		F4MenuTabs:AddSheet("Entities/weapons", F4Tabs[3], "gui/silkicons/application_view_tile", false, false)
 		F4MenuTabs:AddSheet("HUD", F4Tabs[4], "gui/silkicons/user", false, false)
-		if LocalPlayer():IsAdmin() then
+		if LocalPlayer():IsAdmin() or LocalPlayer():GetNWBool("Privadmin") then
 			F4MenuTabs:AddSheet("Admin", F4Tabs[5], "gui/silkicons/wrench", false, false)
 		end
 		if LocalPlayer():IsSuperAdmin() then
