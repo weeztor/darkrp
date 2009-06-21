@@ -72,6 +72,7 @@ function SWEP:PrimaryAttack()
 		if CLIENT then
 			self.Dots = self.Dots or ""
 			timer.Create("LockPickDots", 0.5, 0, function(wep) 
+				if not wep:IsValid() then timer.Destroy("LockPickDots") return end
 				local len = string.len(wep.Dots)
 				local dots = {[0]=".", [1]="..", [2]="...", [3]=""}
 				wep.Dots = dots[len]
