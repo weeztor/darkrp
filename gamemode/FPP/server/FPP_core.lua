@@ -148,7 +148,7 @@ function FPP.Protect.PhysgunReload(weapon, ply)
 	
 	if ent.SharePhysgun then return true end
 	
-	if not ValidEntity(ent) then return FPP.CanTouch(ply, "FPP_PHYSGUN", "Not valid!", false) end
+	if not ValidEntity(ent) then return end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN") then 
 		return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
