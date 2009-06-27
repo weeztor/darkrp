@@ -2,15 +2,6 @@ GlobalInts = {}
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
 
---Clientside prop protection merge
-
-SPropProtection = {}
-SPropProtection.Version = 1.5
-
-CPPI = {}
-CPPI_NOTIMPLEMENTED = 26
-CPPI_DEFER = 16
-
 CUR = "$"
 
 local GUIToggled = false

@@ -72,7 +72,7 @@ function SWEP:PrimaryAttack()
 	end
 	
 	if not self.Owner:GetTable().Pocket then self.Owner:GetTable().Pocket = {} end
-	if not SPropProtection.GravGunThings(self.Owner, trace.Entity) or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) then
+	if not FPP.PlayerCanTouchEnt(self.Owner, trace.Entity, "Gravgun", "FPP_GRAVGUN") or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) then
 		Notify(self.Owner, 1, 4, "You can not put this object in your pocket!")
 		return
 	end
