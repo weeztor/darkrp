@@ -114,10 +114,16 @@ include("main.lua")
 include("bannedprops.lua")
 include("hints.lua")
 include("rating.lua")
-AddCSLuaFile("SPropProtection/cl_Init.lua")
-AddCSLuaFile("SPropProtection/sh_CPPI.lua")
-include("SPropProtection/sv_Init.lua")
-include("SPropProtection/sh_CPPI.lua")
+
+
+--Falco's prop protection
+
+AddCSLuaFile("FPP/client/FPP_Menu.lua")
+AddCSLuaFile("FPP/client/FPP_HUD.lua")
+AddCSLuaFile("FPP/client/FPP_Buddies.lua")
+
+include("FPP/server/FPP_Settings.lua")
+include("FPP/server/FPP_Core.lua")
 
 local files = file.Find("../gamemodes/DarkRP/gamemode/modules/*.lua")
 for k, v in pairs(files) do
@@ -171,17 +177,6 @@ function RefreshRPSettings(RESET)
 	CfgVars["pocket"] = 1
 	CfgVars["logging"] = 1
 	CfgVars["ironshoot"] = 1
-	
-	CfgVars["spp_on"] = 1
-	CfgVars["spp_admin"] = 1
-	CfgVars["spp_use"] = 0
-	CfgVars["spp_entdamage"] = 1
-	CfgVars["spp_physreload"] = 1
-	CfgVars["spp_touchworldprops"] = 0
-	CfgVars["spp_propdeletion"] = 1
-	CfgVars["spp_deleteadminents"] = 1
-	CfgVars["spp_deletedelay"] = 120
-	CfgVars["DropEntitiesAfterPhysGunDrop"] = 0
 
 	-- You can set the exact value of the below items:
 
