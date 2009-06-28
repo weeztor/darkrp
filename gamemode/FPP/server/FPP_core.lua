@@ -6,6 +6,9 @@ if cleanup then
 	FPP.oldcleanup = FPP.oldcleanup or cleanup.Add
 	function cleanup.Add(ply, Type, ent)
 		if ValidEntity(ply) and ValidEntity(ent) then
+			if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and ent:GetClass() == "prop_physics" then
+				ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+			end
 			ent.Owner = ply
 			ent.OwnerID = ply:SteamID()
 		end
@@ -18,6 +21,9 @@ local PLAYER = FindMetaTable("Player")
 if PLAYER.AddCount then
 	FPP.oldcount = FPP.oldcount or PLAYER.AddCount
 	function PLAYER:AddCount(Type, ent)
+		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and ent:GetClass() == "prop_physics" then
+			ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+		end
 		ent.Owner = self
 		ent.OwnerID = self:SteamID()
 		return FPP.oldcount(self, Type, ent)
