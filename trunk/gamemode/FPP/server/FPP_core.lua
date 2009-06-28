@@ -29,7 +29,7 @@ end
 --When you can't touch something
 --------------------------------------------------------------------------------------
 function FPP.CanTouch(ply, Type, Owner, Toggle)
-	if not ValidEntity(ply) or not util.tobool(FPP.Settings[Type].shownocross) then return false end
+	if not ValidEntity(ply) or FPP.Settings[Type] or not tobool(FPP.Settings[Type].shownocross) then return false end
 	umsg.Start("FPP_CanTouch", ply)
 		if type(Owner) == "string" then
 			umsg.String(Owner)
@@ -55,13 +55,13 @@ function FPP.PlayerCanTouchEnt(ply, ent, Type1, Type2, TryingToShare)
 	
 	local Returnal 
 	for k,v in pairs(FPP.Blocked[Type1]) do
-		if util.tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), v) then --If it's a whitelist and the entity is found in the whitelist
+		if tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), v) then --If it's a whitelist and the entity is found in the whitelist
 			return true
-		elseif (not util.tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), v)) or -- if it's a banned prop( and the blocked list is not a whitlist)
-		(util.tobool(FPP.Settings[Type2].iswhitelist) and not string.find(string.lower(ent:GetClass()), v)) then -- or if it's a white list and that entity is NOT in the whitelist
-			if ply:IsAdmin() and util.tobool(FPP.Settings[Type2].admincanblocked) then
+		elseif (not tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), v)) or -- if it's a banned prop( and the blocked list is not a whitlist)
+		(tobool(FPP.Settings[Type2].iswhitelist) and not string.find(string.lower(ent:GetClass()), v)) then -- or if it's a white list and that entity is NOT in the whitelist
+			if ply:IsAdmin() and tobool(FPP.Settings[Type2].admincanblocked) then
 				Returnal = true
-			elseif util.tobool(FPP.Settings[Type2].canblocked) then
+			elseif tobool(FPP.Settings[Type2].canblocked) then
 				Returnal = true
 			else
 				Returnal = false
@@ -80,13 +80,13 @@ function FPP.PlayerCanTouchEnt(ply, ent, Type1, Type2, TryingToShare)
 		if not TryingToShare and ValidEntity(ent.Owner) and ent.Owner.Buddies and ent.Owner.Buddies[ply] and ent.Owner.Buddies[ply][string.lower(Type1)] then
 			FPP.CanTouch(ply, Type2, ent.Owner, true)
 			return true
-		elseif ent.Owner and ply:IsAdmin() and util.tobool(FPP.Settings[Type2].adminall) then -- if not world prop AND admin allowed
+		elseif ent.Owner and ply:IsAdmin() and tobool(FPP.Settings[Type2].adminall) then -- if not world prop AND admin allowed
 			FPP.CanTouch(ply, Type2, ent.Owner, true)
 			return true
 		elseif not ValidEntity(ent.Owner) then --If world prop or a prop belonging to someone who left
-			if ply:IsAdmin() and util.tobool(FPP.Settings[Type2].adminworldprops) then -- if admin and admin allowed
+			if ply:IsAdmin() and tobool(FPP.Settings[Type2].adminworldprops) then -- if admin and admin allowed
 				return true
-			elseif util.tobool(FPP.Settings[Type2].worldprops) then -- if worldprop allowed
+			elseif tobool(FPP.Settings[Type2].worldprops) then -- if worldprop allowed
 				return true
 			end -- if not allowed then
 			return false
@@ -104,7 +104,7 @@ local function FindOutOwner(ply, key)
 			return FPP.CanTouch(ply, ent, "FPP_PHYSGUN", ent.Owner, true)
 		elseif not FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN") then
 			return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
-		elseif util.tobool(FPP.Settings.FPP_PHYSGUN.checkconstrained) then
+		elseif tobool(FPP.Settings.FPP_PHYSGUN.checkconstrained) then
 			for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 				if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN") then
 					return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
@@ -116,33 +116,74 @@ local function FindOutOwner(ply, key)
 end
 hook.Add("KeyPress", "FPP_FindOutOwner", FindOutOwner)
 
+local function AntiNoob(ent)
+	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end 
+	ent:SetNotSolid(true)
+	ent:SetRenderMode(RENDERMODE_TRANSALPHA)
+	ent:DrawShadow(false)
+	ent.OldColor = {ent:GetColor()}
+	ent.StartPos = ent:GetPos()
+	ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4] - 155)
+end
+
 --Physgun Pickup
 function FPP.Protect.PhysgunPickup(ply, ent)
-	if not util.tobool(FPP.Settings.FPP_PHYSGUN.toggle) then return end
+	if not tobool(FPP.Settings.FPP_PHYSGUN.toggle) then return end
 	if not ent:IsValid() then return FPP.CanTouch(ply, "FPP_PHYSGUN", "Not valid!", false) end
 	
 	if ent:IsPlayer() then return end
-	if ent.SharePhysgun then return true end
+	if ent.SharePhysgun then AntiNoob(ent) return true end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN") then
 		return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
 	end
 	
-	if util.tobool(FPP.Settings.FPP_PHYSGUN.checkconstrained) then-- if we're ought to check the constraints
+	if tobool(FPP.Settings.FPP_PHYSGUN.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN") then
+			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN") and not v.SharePhysgun then
 				return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
 			end
 		end
 	end 
+	AntiNoob(ent)
 	return true
 end
 hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup)
 
+function FPP.Protect.PhysgunDrop(ply,ent)
+	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end --Antinoob only code in the physgundrop
+	ent:SetNotSolid(false)
+	ent:DrawShadow(true)
+	local phys = ent:GetPhysicsObject()
+	if phys:IsValid() and phys:IsMoveable() then
+		ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)--Collides with everything but players -> No prop killing!
+	else
+		ent:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
+	end
+	if ent.OldColor then
+		ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
+	end
+	
+	local tr = {}
+	tr.start = ent.StartPos
+	tr.endpos = ent:GetPos()
+	tr.filter = player.GetAll()
+	local trace = util.TraceLine(tr)
+	tr.start = ply:GetShootPos()
+	local trace2 = util.TraceLine(tr)
+	if trace2.Entity ~= ent then
+		local vFlushPoint = trace.HitPos - ( trace.HitNormal * 512 )  // Find a point that is definitely out of the object in the direction of the floor
+		vFlushPoint = ent:NearestPoint( vFlushPoint )                   // Find the nearest point inside the object to that point
+		vFlushPoint = ent:GetPos() - vFlushPoint                                // Get the difference
+		vFlushPoint = trace.HitPos + vFlushPoint                                   // Add it to our target pos
+		ent:SetPos(vFlushPoint)
+	end
+end
+hook.Add("PhysgunDrop", "FPP.Protect.PhysgunDrop", FPP.Protect.PhysgunDrop)
 
 --Physgun reload
 function FPP.Protect.PhysgunReload(weapon, ply)
-	if not util.tobool(FPP.Settings.FPP_PHYSGUN.reloadprotection) then return end
+	if not tobool(FPP.Settings.FPP_PHYSGUN.reloadprotection) then return end
 	
 	local ent = ply:GetEyeTrace().Entity
 	
@@ -154,9 +195,9 @@ function FPP.Protect.PhysgunReload(weapon, ply)
 		return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
 	end
 	
-	if util.tobool(FPP.Settings.FPP_PHYSGUN.checkconstrained) then-- if we're ought to check the constraints
+	if tobool(FPP.Settings.FPP_PHYSGUN.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-			if not FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN") then
+			if not FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN") and not v.SharePhysgun then
 				return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
 			end
 		end
@@ -167,7 +208,7 @@ hook.Add("OnPhysgunReload", "FPP.Protect.PhysgunReload", FPP.Protect.PhysgunRelo
 
 --Gravgun pickup
 function FPP.Protect.GravGunPickup(ply, ent)
-	if not util.tobool(FPP.Settings.FPP_GRAVGUN.toggle) then return end
+	if not tobool(FPP.Settings.FPP_GRAVGUN.toggle) then return end
 	
 	if not ValidEntity(ent) then return false end-- You don't want a cross when looking at the floor while holding right mouse
 	
@@ -179,9 +220,9 @@ function FPP.Protect.GravGunPickup(ply, ent)
 		return FPP.CanTouch(ply, "FPP_GRAVGUN", ent.Owner, false)
 	end
 	
-	if util.tobool(FPP.Settings.FPP_GRAVGUN.checkconstrained) then-- if we're ought to check the constraints
+	if tobool(FPP.Settings.FPP_GRAVGUN.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Gravgun", "FPP_GRAVGUN") then
+			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Gravgun", "FPP_GRAVGUN") and not v.ShareGravgun then
 				return FPP.CanTouch(ply, "FPP_GRAVGUN", ent.Owner, false)
 			end
 		end
@@ -192,7 +233,7 @@ hook.Add("GravGunPickupAllowed", "FPP.Protect.GravGunPickup", FPP.Protect.GravGu
 
 --Gravgun punting
 function FPP.Protect.GravGunPunt(ply, ent)
-	if util.tobool(FPP.Settings.FPP_GRAVGUN.noshooting) then DropEntityIfHeld(ent) return false end
+	if tobool(FPP.Settings.FPP_GRAVGUN.noshooting) then DropEntityIfHeld(ent) return false end
 	
 	if not ValidEntity(ent) then return FPP.CanTouch(ply, "FPP_GRAVGUN", "Not valid!", false) end
 	
@@ -202,9 +243,9 @@ function FPP.Protect.GravGunPunt(ply, ent)
 		return FPP.CanTouch(ply, "FPP_GRAVGUN", ent.Owner, false)
 	end
 	
-	if util.tobool(FPP.Settings.FPP_GRAVGUN.checkconstrained) then-- if we're ought to check the constraints
+	if tobool(FPP.Settings.FPP_GRAVGUN.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Gravgun", "FPP_GRAVGUN") then
+			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Gravgun", "FPP_GRAVGUN") and not v.ShareGravgun then
 				return FPP.CanTouch(ply, "FPP_GRAVGUN", ent.Owner, false)
 			end
 		end
@@ -215,7 +256,7 @@ hook.Add("GravGunPunt", "FPP.Protect.GravGunPunt", FPP.Protect.GravGunPunt)
 
 --PlayerUse
 function FPP.Protect.PlayerUse(ply, ent)
-	if not util.tobool(FPP.Settings.FPP_PLAYERUSE.toggle) then return end
+	if not tobool(FPP.Settings.FPP_PLAYERUSE.toggle) then return end
 	
 	if not ValidEntity(ent) then return FPP.CanTouch(ply, "FPP_PLAYERUSE", "Not valid!", false) end
 	
@@ -225,9 +266,9 @@ function FPP.Protect.PlayerUse(ply, ent)
 		return FPP.CanTouch(ply, "FPP_PLAYERUSE", ent.Owner, false)
 	end
 	
-	if util.tobool(FPP.Settings.FPP_PLAYERUSE.checkconstrained) then-- if we're ought to check the constraints
+	if tobool(FPP.Settings.FPP_PLAYERUSE.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "PlayerUse", "FPP_PLAYERUSE") then
+			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "PlayerUse", "FPP_PLAYERUSE") and not v.SharePlayerUse then
 				return FPP.CanTouch(ply, "FPP_PLAYERUSE", ent.Owner, false)
 			end
 		end
@@ -238,7 +279,7 @@ hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
 
 --EntityDamage
 function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
-	if not util.tobool(FPP.Settings.FPP_ENTITYDAMAGE.toggle) then return end
+	if not tobool(FPP.Settings.FPP_ENTITYDAMAGE.toggle) then return end
 	if not attacker:IsPlayer() then return end
 	if ent:IsPlayer() then return end
 	
@@ -255,9 +296,9 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 		return FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", ent.Owner, false)
 	end
 	
-	if util.tobool(FPP.Settings.FPP_ENTITYDAMAGE.checkconstrained) then-- if we're ought to check the constraints
+	if tobool(FPP.Settings.FPP_ENTITYDAMAGE.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-			if v ~= ent and not FPP.PlayerCanTouchEnt(attacker, v, "EntityDamage", "FPP_ENTITYDAMAGE") then
+			if v ~= ent and not FPP.PlayerCanTouchEnt(attacker, v, "EntityDamage", "FPP_ENTITYDAMAGE") and not v.ShareDamage then
 				dmginfo:SetDamage(0)
 				return FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", ent.Owner, false)
 			end
@@ -276,16 +317,16 @@ end
 function FPP.Protect.CanTool(ply, trace, tool)
 	local ent = trace.Entity
 	
-	if util.tobool(FPP.Settings.FPP_TOOLGUN.toggle) then
+	if tobool(FPP.Settings.FPP_TOOLGUN.toggle) then
 		if ValidEntity(ent) and ent.ShareToolgun then return true end
 		
 		if ValidEntity(ent) and not FPP.PlayerCanTouchEnt(ply, ent, "Toolgun", "FPP_TOOLGUN") then
 			return FPP.CanTouch(ply, "FPP_TOOLGUN", ent.Owner, false)
 		end
 		
-		if ValidEntity(ent) and util.tobool(FPP.Settings.FPP_TOOLGUN.checkconstrained) then-- if we're ought to check the constraints
+		if ValidEntity(ent) and tobool(FPP.Settings.FPP_TOOLGUN.checkconstrained) then-- if we're ought to check the constraints
 			for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-				if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Toolgun", "FPP_TOOLGUN") then
+				if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Toolgun", "FPP_TOOLGUN") and not v.ShareToolgun then
 					return FPP.CanTouch(ply, "FPP_TOOLGUN", ent.Owner, false)
 				end
 			end
@@ -295,21 +336,21 @@ function FPP.Protect.CanTool(ply, trace, tool)
 	if tool ~= "adv_duplicator" and tool ~= "duplicator" then return true end
 	if tool == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 		for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
-			if util.tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) then
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) then
 				for c, d in pairs(allweapons) do
 					if string.lower(v.Class) == string.lower(d) then
 						ply:GetActiveWeapon():GetToolObject().Entities[k] = nil
 					end
 				end
 			end
-			if util.tobool(FPP.Settings.FPP_TOOLGUN.duplicatorprotect) then
-				local setspawning = util.tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist)
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatorprotect) then
+				local setspawning = tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist)
 				for c, d in pairs(FPP.Blocked.Spawning) do
-					if not util.tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then
+					if not tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then
 						ply:GetActiveWeapon():GetToolObject().Entities[k] = nil
 						break
 					end
-					if util.tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then -- if the whitelist is on you can't spawn it unless it's found
+					if tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then -- if the whitelist is on you can't spawn it unless it's found
 						setspawning = false
 						break
 					end
@@ -325,21 +366,21 @@ function FPP.Protect.CanTool(ply, trace, tool)
 	if tool == "duplicator" and ply:UniqueIDTable( "Duplicator" ).Entities then
 		local Ents = ply:UniqueIDTable( "Duplicator" ).Entities
 		for k,v in pairs(Ents) do
-			if util.tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) then
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) then
 				for c, d in pairs(allweapons) do
 					if string.lower(v.Class) == string.lower(d) then
 						ply:UniqueIDTable( "Duplicator" ).Entities[k] = nil
 					end
 				end
 			end
-			if util.tobool(FPP.Settings.FPP_TOOLGUN.duplicatorprotect) then
-				local setspawning = util.tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist)
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatorprotect) then
+				local setspawning = tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist)
 				for c, d in pairs(FPP.Blocked.Spawning) do
-					if not util.tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then
+					if not tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then
 						ply:UniqueIDTable( "Duplicator" ).Entities[k] = nil
 						break
 					end
-					if util.tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then -- if the whitelist is on you can't spawn it unless it's found
+					if tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then -- if the whitelist is on you can't spawn it unless it's found
 						setspawning = false
 						break
 					end
@@ -355,8 +396,8 @@ hook.Add("CanTool", "FPP.Protect.CanTool", FPP.Protect.CanTool)
 
 --Player disconnect, not part of the Protect table.
 function FPP.PlayerDisconnect(ply)
-	if util.tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnected) and FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime then
-		if ply:IsAdmin() and not util.tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupadmin) then return end
+	if tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnected) and FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime then
+		if ply:IsAdmin() and not tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupadmin) then return end
 		timer.Simple(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime, function(SteamID)
 			for k,v in pairs(player.GetAll()) do
 				if v:SteamID() == SteamID then
