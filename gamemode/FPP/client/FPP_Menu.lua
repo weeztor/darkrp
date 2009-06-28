@@ -196,7 +196,7 @@ function FPP.AdminMenu(Panel)
 	addchk("The blocked list is a white list", {"FPP_TOOLGUN", "iswhitelist"}, toolgun)
 	addchk("The blocked Duplicator list is a white list", {"FPP_TOOLGUN", "spawniswhitelist"}, toolgun)
 	addblock(toolgun, "Toolgun")
-	addblock(toolgun, "Duplicator")
+	addblock(toolgun, "Spawning")
 	
 	local usecat, playeruse = MakeOption("Player use options")
 	addchk("Use protection enabled", {"FPP_PLAYERUSE", "toggle"}, playeruse)
@@ -219,7 +219,7 @@ function FPP.AdminMenu(Panel)
 	addchk("Show cross when unable to damage entities", {"FPP_ENTITYDAMAGE", "shownocross"}, damage)
 	addchk("Check constrained entities", {"FPP_ENTITYDAMAGE", "checkconstrained"}, damage)
 	addchk("The blocked list is a white list", {"FPP_ENTITYDAMAGE", "iswhitelist"}, damage)
-	addblock(damage, "Damage")
+	addblock(damage, "EntityDamage")
 	Panel:AddControl("Label", {Text = "\nFalco's Prop Protection\nMade by Falco A.K.A. FPtje"})
 end
 
@@ -237,7 +237,7 @@ function FPP.BuddiesMenu(Panel)
 	BuddiesPanel = BuddiesPanel or Panel
 	Panel:ClearControls()
 	
-	Panel:AddControl("Label", {Text = "\nBuddies menu\nNote:Your buddies are saved and will work in all servers with FPP\nThe buddies list includes players that aren't here\n\nYour buddies:"})
+	Panel:AddControl("Label", {Text = "\nBuddies menu\nNote: Your buddies are saved and will work in all servers with FPP\nThe buddies list includes players that aren't here\n\nYour buddies:"})
 	local BuddiesList = vgui.Create("DListView")
 	BuddiesList:AddColumn("Steam ID")
 	BuddiesList:AddColumn("Name")
