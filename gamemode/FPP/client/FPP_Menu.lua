@@ -165,6 +165,7 @@ function FPP.AdminMenu(Panel)
 	addchk("Admins can physgun blocked entities", {"FPP_PHYSGUN", "admincanblocked"}, physgun)
 	addchk("Show cross when unable to physgun entities", {"FPP_PHYSGUN", "shownocross"}, physgun)
 	addchk("Check constrained entities", {"FPP_PHYSGUN", "checkconstrained"}, physgun)
+	addchk("Prop surf/push/kill protection", {"FPP_PHYSGUN", "antinoob"}, physgun)
 	addchk("Physgun reload protection enabled", {"FPP_PHYSGUN", "reloadprotection"}, physgun)
 	addchk("The blocked list is a white list", {"FPP_PHYSGUN", "iswhitelist"}, physgun)
 	addblock(physgun, "Physgun")
@@ -331,7 +332,7 @@ function FPP.SetBuddyMenu(SteamID, Name, data)
 		
 		box:SetPos(10, count * 20)
 		count = count + 1
-		box:SetValue(util.tobool(value))
+		box:SetValue(tobool(value))
 		box.Button.Toggle = function()
 			if box.Button:GetChecked() == nil or not box.Button:GetChecked() then 
 				box.Button:SetValue( true ) 
