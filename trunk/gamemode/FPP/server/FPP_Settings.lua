@@ -81,6 +81,19 @@ FPP.Settings = {}
 		cleanupdisconnectedtime = 120,
 		cleanupadmin = 1}
 
+function FPP.Notify(ply, text, bool)
+	umsg.Start("FPP_Notify", ply)
+		umsg.String(text)
+		umsg.Bool(bool)
+	umsg.End()
+end
+
+function FPP.NotifyAll(text, bool)
+	umsg.Start("FPP_Notify")
+		umsg.String(text)
+		umsg.Bool(bool)
+	umsg.End()
+end
 
 local function FPP_SetSetting(ply, cmd, args)
 	if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
@@ -97,10 +110,8 @@ local function FPP_SetSetting(ply, cmd, args)
 	elseif tonumber(data) ~= args[3] then
 		sql.Query("UPDATE ".. args[1] .. " SET value = " .. args[3] .. " WHERE key = " .. sql.SQLStr(args[2]) .. ";")
 	end
-	umsg.Start("FPP_Notify")
-		umsg.String(ply:Nick().. " set ".. string.lower(string.gsub(args[1], "FPP_", "")) .. " "..args[2].." to " .. tostring(args[3]))
-		umsg.Bool(util.tobool(tonumber(args[3])))
-	umsg.End()
+
+	FPP.NotifyAll(ply:Nick().. " set ".. string.lower(string.gsub(args[1], "FPP_", "")) .. " "..args[2].." to " .. tostring(args[3]), util.tobool(tonumber(args[3])))
 end
 concommand.Add("FPP_setting", FPP_SetSetting)
 
@@ -126,10 +137,8 @@ local function AddBlocked(ply, cmd, args)
 		--insert
 		sql.Query("INSERT INTO FPP_BLOCKED VALUES(1, " .. sql.SQLStr(args[1]) .. ", " .. sql.SQLStr(args[2]) .. ");")
 	end
-	umsg.Start("FPP_Notify")
-		umsg.String(ply:Nick().. " added ".. args[2] .. " to the "..args[1] .. " black/whitelist")
-		umsg.Bool(true)
-	umsg.End()
+	
+	FPP.NotifyAll(ply:Nick().. " added ".. args[2] .. " to the "..args[1] .. " black/whitelist", true)
 end
 concommand.Add("FPP_AddBlocked", AddBlocked)
 
@@ -163,10 +172,7 @@ local function RemoveBlocked(ply, cmd, args)
 			sql.Query("UPDATE FPP_BLOCKED SET id = "..sql.SQLStr(k).." WHERE key = "..sql.SQLStr(v.key).. " AND value = "..sql.SQLStr(v.value)..";")
 		end
 	end
-	umsg.Start("FPP_Notify")
-		umsg.String(ply:Nick().. " removed ".. args[2] .. " from the "..args[1] .. " black/whitelist")
-		umsg.Bool(false)
-	umsg.End()
+	FPP.NotifyAll(ply:Nick().. " removed ".. args[2] .. " from the "..args[1] .. " black/whitelist", false)
 end
 concommand.Add("FPP_RemoveBlocked", RemoveBlocked)
 
@@ -189,18 +195,12 @@ local function ShareProp(ply, cmd, args)
 		else
 			if toggle and not table.HasValue(ent.AllowedPlayers, target) then
 				table.insert(ent.AllowedPlayers, target)
-				umsg.Start("FPP_Notify", target)
-					umsg.String(ply:Nick().. " shared an entity with you!")
-					umsg.Bool(true)
-				umsg.End()
+				FPP.Notify(target, ply:Nick().. " shared an entity with you!", true)
 			elseif not toggle then
 				for k,v in pairs(ent.AllowedPlayers) do
 					if v == target then
 						table.remove(ent.AllowedPlayers, k)
-						umsg.Start("FPP_Notify", target)
-							umsg.String(ply:Nick().. " unshared an entity with you!")
-							umsg.Bool(false)
-						umsg.End()
+						FPP.Notify(target, ply:Nick().. " unshared an entity with you!", false)
 					end
 				end
 			end
@@ -309,6 +309,8 @@ local function CleanupDisconnected(ply, cmd, args)
 				v:Remove()
 			end
 		end
+		FPP.NotifyAll(ply:Nick() .. " removed all disconnected players' props", true)
+		return
 	elseif not ValidEntity(Player(args[1])) then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid player") return 
 	end
 	
@@ -317,5 +319,6 @@ local function CleanupDisconnected(ply, cmd, args)
 			v:Remove()
 		end
 	end
+	FPP.NotifyAll(ply:Nick() .. " removed "..Player(args[1]):Nick().. "'s entities", true)
 end
 concommand.Add("FPP_Cleanup", CleanupDisconnected)
