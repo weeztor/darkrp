@@ -35,7 +35,7 @@ end
 --When you can't touch something
 --------------------------------------------------------------------------------------
 function FPP.CanTouch(ply, Type, Owner, Toggle)
-	if not ValidEntity(ply) or FPP.Settings[Type] or not tobool(FPP.Settings[Type].shownocross) then return false end
+	if not ValidEntity(ply) or not FPP.Settings[Type] or not tobool(FPP.Settings[Type].shownocross) then return false end
 	umsg.Start("FPP_CanTouch", ply)
 		if type(Owner) == "string" then
 			umsg.String(Owner)

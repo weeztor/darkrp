@@ -6,8 +6,8 @@ FPP = FPP or {}
 function FPP.AdminMenu(Panel)
 	AdminPanel = AdminPanel or Panel
 	Panel:ClearControls()
-	
-	if not LocalPlayer():IsSuperAdmin() then
+	local superadmin = LocalPlayer():IsSuperAdmin()
+	if not superadmin then
 		Panel:AddControl("Label", {Text = "You are not a superadmin\nThe changes you make will not have any effect."})
 	end
 	
@@ -36,6 +36,7 @@ function FPP.AdminMenu(Panel)
 		box:SetText(label)
 		box:SetValue(GetGlobalInt(command[1].."_"..command[2]))
 		box.Button.Toggle = function()
+			if not superadmin then return end--Hehe now you can't click it anymore non-admin!
 			if box.Button:GetChecked() == nil or not box.Button:GetChecked() then 
 				box.Button:SetValue( true ) 
 			else 
@@ -63,6 +64,7 @@ function FPP.AdminMenu(Panel)
 		
 		local RemoveSelected = vgui.Create("DButton")
 		RemoveSelected:SetText("Remove Selected items from the list")
+		RemoveSelected:SetDisabled(not superadmin)
 		RemoveSelected.DoClick = function()
 			for k,v in pairs(lview.Lines) do
 				if v:GetSelected() then
@@ -78,6 +80,7 @@ function FPP.AdminMenu(Panel)
 		
 		local AddLA = vgui.Create("DButton")
 		AddLA:SetText("Add the entity you're looking at")
+		AddLA:SetDisabled(not superadmin)
 		AddLA.DoClick = function()
 			local ent = LocalPlayer():GetEyeTrace().Entity
 			if not ValidEntity(ent) then return end
@@ -95,6 +98,7 @@ function FPP.AdminMenu(Panel)
 		
 		local AddManual = vgui.Create("DButton")
 		AddManual:SetText("Add entity manually")
+		AddManual:SetDisabled(not superadmin)
 		AddManual.DoClick = function()
 			Derma_StringRequest("Enter entity manually", "Enter the classname of the entity you would like to add.", nil, 
 			function(a) 
@@ -115,6 +119,10 @@ function FPP.AdminMenu(Panel)
 		function deltime.Slider:OnMouseReleased()
 			self:SetDragging( false ) 
 			self:MouseCapture( false ) 
+			if not superadmin then
+				deltime:SetValue(GetGlobalInt("FPP_GLOBALSETTINGS_cleanupdisconnectedtime"))
+				return
+			end
 			RunConsoleCommand("FPP_Setting", "FPP_GLOBALSETTINGS", "cleanupdisconnectedtime", deltime:GetValue())
 		end
 		function deltime.Wang:EndWang()
@@ -123,10 +131,19 @@ function FPP.AdminMenu(Panel)
 			self.HoldPos = nil 
 			self.Wanger:SetCursor( "" ) 
 			if ( ValidPanel( self.IndicatorT ) ) then self.IndicatorT:Remove() end 
-			if ( ValidPanel( self.IndicatorB ) ) then self.IndicatorB:Remove() end 
+			if ( ValidPanel( self.IndicatorB ) ) then self.IndicatorB:Remove() end
+			if not superadmin then
+				deltime:SetValue(GetGlobalInt("FPP_GLOBALSETTINGS_cleanupdisconnectedtime"))
+				return
+			end			
 			RunConsoleCommand("FPP_Setting", "FPP_GLOBALSETTINGS", "cleanupdisconnectedtime", deltime:GetValue())
 		end
+		
 		function deltime.Wang.TextEntry:OnEnter()
+			if not superadmin then
+				deltime:SetValue(GetGlobalInt("FPP_GLOBALSETTINGS_cleanupdisconnectedtime"))
+				return
+			end
 			RunConsoleCommand("FPP_Setting", "FPP_GLOBALSETTINGS", "cleanupdisconnectedtime", deltime:GetValue())
 		end
 		general:AddItem(deltime)
@@ -134,6 +151,7 @@ function FPP.AdminMenu(Panel)
 		local delnow = vgui.Create("DButton")
 		delnow:SetText("Delete disconnected players' props")
 		delnow:SetConsoleCommand("FPP_cleanup", "disconnected")
+		delnow:SetDisabled(not superadmin)
 		general:AddItem(delnow)
 		
 		local other = Label("\nDelete other player's props:")
@@ -147,6 +165,7 @@ function FPP.AdminMenu(Panel)
 				local rm = vgui.Create("DButton")
 				rm:SetText(v:Nick())
 				rm:SetConsoleCommand("FPP_Cleanup", v:UserID())
+				rm:SetDisabled(not superadmin)
 				general:AddItem(rm)
 			end
 		end
