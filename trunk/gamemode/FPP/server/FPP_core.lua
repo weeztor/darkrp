@@ -170,18 +170,38 @@ function FPP.Protect.PhysgunDrop(ply,ent)
 		ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
 	end
 	
+	--Make a traceline from where you started picking it up to where you ended picking it up
 	local tr = {}
 	tr.start = ent.StartPos
 	tr.endpos = ent:GetPos()
 	tr.filter = player.GetAll()
 	local trace = util.TraceLine(tr)
-	tr.start = ply:GetShootPos()
+	tr.start = ply:GetShootPos() -- Also make a line between your head and the prop, to see if you can still see the prop
 	local trace2 = util.TraceLine(tr)
+	
+	--Prop in player prevention(This is better than removing all players from the trace filter)
+	for k,v in pairs(player.GetAll()) do
+		local intr = {}
+		intr.start = v:EyePos()--Eyes
+		intr.endpos = v:GetPos()--Returns their feet
+		intr.filter = v -- Don't hit the player himself
+		intr.mins = v:OBBMins()
+		intr.maxs = v:OBBMaxs()
+		local trace3 = util.TraceHull(intr)
+		if trace3.Entity == ent then 
+			if phys:IsValid() then
+				phys:EnableMotion(true)
+				ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+			end
+		end -- If the entity you're dropping is between the eyes and the feet 
+	end
+	
+	--teleport it where it belongs if it's not where it's supposed to be
 	if trace2.Entity ~= ent then
-		local vFlushPoint = trace.HitPos - ( trace.HitNormal * 512 )  // Find a point that is definitely out of the object in the direction of the floor
-		vFlushPoint = ent:NearestPoint( vFlushPoint )                   // Find the nearest point inside the object to that point
-		vFlushPoint = ent:GetPos() - vFlushPoint                                // Get the difference
-		vFlushPoint = trace.HitPos + vFlushPoint                                   // Add it to our target pos
+		local vFlushPoint = trace.HitPos - ( trace.HitNormal * 512 ) -- Find a point that is definitely out of the object in the direction of the floor
+		vFlushPoint = ent:NearestPoint( vFlushPoint ) -- Find the nearest point inside the object to that point
+		vFlushPoint = ent:GetPos() - vFlushPoint -- Get the difference
+		vFlushPoint = trace.HitPos + vFlushPoint -- Add it to our target pos
 		ent:SetPos(vFlushPoint)
 	end
 end
