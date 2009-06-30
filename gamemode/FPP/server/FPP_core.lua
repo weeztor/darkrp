@@ -6,9 +6,6 @@ if cleanup then
 	FPP.oldcleanup = FPP.oldcleanup or cleanup.Add
 	function cleanup.Add(ply, Type, ent)
 		if ValidEntity(ply) and ValidEntity(ent) then
-			if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and ent:GetClass() == "prop_physics" then
-				ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-			end
 			ent.Owner = ply
 			ent.OwnerID = ply:SteamID()
 		end
@@ -21,9 +18,6 @@ local PLAYER = FindMetaTable("Player")
 if PLAYER.AddCount then
 	FPP.oldcount = FPP.oldcount or PLAYER.AddCount
 	function PLAYER:AddCount(Type, ent)
-		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and ent:GetClass() == "prop_physics" then
-			ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-		end
 		ent.Owner = self
 		ent.OwnerID = self:SteamID()
 		return FPP.oldcount(self, Type, ent)
@@ -160,12 +154,8 @@ function FPP.Protect.PhysgunDrop(ply,ent)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end --Antinoob only code in the physgundrop
 	ent:SetNotSolid(false)
 	ent:DrawShadow(true)
-	local phys = ent:GetPhysicsObject()
-	if phys:IsValid() and phys:IsMoveable() then
-		ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)--Collides with everything but players -> No prop killing!
-	else
-		ent:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE)
-	end
+	if ent.OldCollisionGroup then ent:SetCollisionGroup(ent.OldCollisionGroup) end
+	
 	if ent.OldColor then
 		ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
 	end
@@ -188,12 +178,14 @@ function FPP.Protect.PhysgunDrop(ply,ent)
 		intr.mins = v:OBBMins()
 		intr.maxs = v:OBBMaxs()
 		local trace3 = util.TraceHull(intr)
-		if trace3.Entity == ent then 
+		if trace3.Entity == ent then -- If the entity you're dropping is between the eyes and the feet 
+			local phys = ent:GetPhysicsObject()
 			if phys:IsValid() then
 				phys:EnableMotion(true)
-				ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+				ent.OldCollisionGroup = ent:GetCollisionGroup()
+				ent:SetCollisionGroup(COLLISION_GROUP_WEAPON) -- make it go through players kthxbai
 			end
-		end -- If the entity you're dropping is between the eyes and the feet 
+		end 
 	end
 	
 	--teleport it where it belongs if it's not where it's supposed to be
@@ -306,8 +298,13 @@ hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
 --EntityDamage
 function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 	if not tobool(FPP.Settings.FPP_ENTITYDAMAGE.toggle) then return end
+	if ent:IsPlayer() then
+		if attacker.Owner != ent and tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then
+			dmginfo:SetDamage(0)
+		end
+		return 
+	end
 	if not attacker:IsPlayer() then return end
-	if ent:IsPlayer() then return end
 	
 	if not ValidEntity(ent) then return FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", "Not valid!", false) end
 	
