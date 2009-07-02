@@ -154,7 +154,7 @@ function FPP.Protect.PhysgunDrop(ply,ent)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end --Antinoob only code in the physgundrop
 	ent:SetNotSolid(false)
 	ent:DrawShadow(true)
-	if ent.OldCollisionGroup then ent:SetCollisionGroup(ent.OldCollisionGroup) end
+	if ent.OldCollisionGroup then ent:SetCollisionGroup(ent.OldCollisionGroup) ent.OldCollisionGroup = nil end
 	
 	if ent.OldColor then
 		ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
@@ -299,7 +299,7 @@ hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
 function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 	if not tobool(FPP.Settings.FPP_ENTITYDAMAGE.toggle) then return end
 	if ent:IsPlayer() then
-		if attacker.Owner != ent and tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then
+		if ValidEntity(attacker.Owner) and attacker.Owner != ent and tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then
 			dmginfo:SetDamage(0)
 		end
 		return 
