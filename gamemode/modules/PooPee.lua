@@ -72,7 +72,7 @@ if SERVER then
 		end
 		local turd = ents.Create("prop_physics")
 		turd:SetModel("models/Gibs/HGIBS_spine.mdl")
-		turd:SetNWString("Owner", "Shared")
+		turd.ShareGravgun = true
 		turd:SetPos(ply:GetPos() + Vector(0,0,32))
 		turd:Spawn()
 		turd:SetColor(80, 45, 0, 255)

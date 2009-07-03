@@ -405,12 +405,6 @@ function DB.StoreRPName(ply, name)
 		sql.Query("INSERT INTO darkrp_rpnames VALUES(" .. sql.SQLStr(ply:SteamID()) .. ", " .. sql.SQLStr(name) .. ");")
 	end
 
-	-- Change the owner of all props to the new name
-	for k, v in pairs(ents.FindByClass("prop_*")) do
-		if v:GetNWString("Owner") == ply:Name() and v:GetNWString("Owner") ~= "" then
-			v:SetNWString("Owner", name)
-		end
-	end
 	ply:SetNWString("rpname", name)
 end
 

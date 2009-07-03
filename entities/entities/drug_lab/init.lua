@@ -21,7 +21,7 @@ function ENT:Initialize()
 	self.SID = ply.SID
 	self.Entity:SetNWInt("price", 100)
 	self.Entity.CanUse = true
-	self:SetNetworkedString("Owner", ply:Nick())
+	self.ShareGravgun = true
 	if not ply.maxDrug then
 		ply.maxDrug = 0
 	end
@@ -74,6 +74,7 @@ function ENT:createDrug()
 	drug:SetNWEntity("owning_ent", userb)
 	drug.SID = userb.SID
 	drug:SetNWString("Owner", userb:Nick())
+	drug.ShareGravgun = true
 	drug.nodupe = true
 	drug:SetNWInt("price", self.Entity:GetNWInt("price"))
 	drug:Spawn()
