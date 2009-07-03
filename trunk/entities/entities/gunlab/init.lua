@@ -107,7 +107,7 @@ function ENT:createGun()
 	gun.weaponclass = "weapon_p2282"
 	local gunPos = self.Entity:GetPos()
 	gun:SetPos(Vector(gunPos.x, gunPos.y, gunPos.z + 27))
-	gun:SetNetworkedString("Owner", "Shared")
+	gun.ShareGravgun = true
 	gun.nodupe = true
 	gun:Spawn()
 	self.sparking = false

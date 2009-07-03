@@ -29,7 +29,7 @@ function ENT:Initialize()
 	self.Entity:SetNWBool("shipment", true)
 	self.locked = false
 	self.damage = 100
-	self.Entity:SetNWString("Owner", "Shared")
+	self.Entity.ShareGravgun = true
 	local phys = self.Entity:GetPhysicsObject()
 	if phys and phys:IsValid() then phys:Wake() end
 end
@@ -68,7 +68,7 @@ function ENT:SpawnItem()
 		weapon.weaponclass = ent
 		weapon:SetModel(mdl)
 	end
-	weapon:SetNWString("Owner", "Shared")
+	weapon.ShareGravgun = true
 	weapon:SetPos(pos + Vector(0,0,35))
 	weapon.nodupe = true
 	weapon:Spawn()
@@ -111,7 +111,7 @@ function ENT:Destruct()
 		local weapon = ents.Create("spawned_weapon")
 		weapon:SetModel(model)
 		weapon.weaponclass = class
-		weapon:SetNWString("Owner", "Shared")
+		weapon.ShareGravgun = true
 		weapon:SetPos(Vector(vPoint.x, vPoint.y, vPoint.z + (i*5)))
 		weapon.nodupe = true
 		weapon:Spawn()

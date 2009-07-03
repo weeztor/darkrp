@@ -79,7 +79,7 @@ function ENT:CreateMoneybag()
 	if math.random(1, 22) == 3 then self:BurstIntoFlames() end
 	local moneybag = ents.Create("prop_physics")
 	moneybag:SetModel("models/props/cs_assault/money.mdl")
-	moneybag:SetNWString("Owner", "Shared")
+	moneybag.ShareGravgun = true
 	moneybag:SetPos(Vector(MoneyPos.x + 15, MoneyPos.y, MoneyPos.z + 15))
 	moneybag.nodupe = true
 	moneybag:Spawn()

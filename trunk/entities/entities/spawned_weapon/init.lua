@@ -25,7 +25,7 @@ function ENT:Use(activator,caller)
 
 	weapon:SetAngles(self.Entity:GetAngles())
 	weapon:SetPos(self.Entity:GetPos())
-	weapon:SetNetworkedString("Owner", "Shared")
+	weapon.ShareGravgun = true
 	weapon.nodupe = true
 	weapon:Spawn()
 	self.Entity:Remove()

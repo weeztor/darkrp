@@ -100,11 +100,7 @@ end
 function GM:EntityRemoved(ent)
 	self.BaseClass:EntityRemoved(ent)
 	if ent:IsVehicle() then
-		local found
-		local Owner = ent:GetNWString("Owner")
-		for k,v in pairs(player.GetAll()) do
-			if v:Nick() == Owner then found = v break end
-		end
+		local found = ent.Owner
 		if found then
 			found.Vehicles = found.Vehicles or 1
 			found.Vehicles = found.Vehicles - 1

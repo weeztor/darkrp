@@ -109,7 +109,7 @@ function ENT:createFood()
 	food = ents.Create("food")
 	food:SetPos(Vector(foodPos.x,foodPos.y,foodPos.z + 23))
 	food:SetNWEntity("owning_ent", activator)
-	food:SetNetworkedString("Owner", "Shared")
+	food.ShareGravgun = true
 	food.nodupe = true
 	food:Spawn()
 	if not activator.maxFoods then

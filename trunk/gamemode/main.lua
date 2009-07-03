@@ -733,7 +733,7 @@ local function MakeLetter(ply, args, type)
 	local letter = ents.Create("letter")
 	letter:SetModel("models/props_c17/paper01.mdl")
 	letter:SetNWEntity("owning_ent", ply)
-	letter:SetNWString("Owner", "Shared")
+	letter.ShareGravgun = true
 	letter:SetPos(trace.HitPos)
 	letter.nodupe = true
 	letter:Spawn()
@@ -901,7 +901,7 @@ function BuyPistol(ply, args)
 	local weapon = ents.Create("spawned_weapon")
 	weapon:SetModel(model)
 	weapon.weaponclass = class
-	weapon:SetNWString("Owner", "Shared")
+	weapon.ShareGravgun = true
 	weapon:SetPos(tr.HitPos)
 	weapon.nodupe = true
 	weapon:Spawn()
@@ -1043,7 +1043,7 @@ function BuyVehicle(ply, args)
 	ent:SetPos(tr.HitPos)
 	ent.VehicleName = found.Name
 	ent.VehicleTable = found
-	ent:SetNWString("Owner", ply:Nick())
+	ent.Owner = ply
 	ent:Spawn()
 	ent:Activate()
 	ent.SID = ply.SID
@@ -1200,7 +1200,7 @@ function BuyMoneyPrinter(ply, args)
 	Notify(ply, 1, 4, "You have bought a Money Printer for " .. CUR .. tostring(cost))
 	local moneyprinter = ents.Create("money_printer")
 	moneyprinter:SetNWEntity("owning_ent", ply)
-	moneyprinter:SetNWString("Owner", "Shared") -- So people can run off with them!
+	moneyprinter.ShareGravgun = true
 	moneyprinter:SetPos(tr.HitPos)
 	moneyprinter.onlyremover = true
 	moneyprinter.SID = ply.SID
@@ -1284,7 +1284,7 @@ local function MakeACall(ply,args)
 	local banana = ents.Create("phone")
 	
 	banana:SetNWEntity("owning_ent", p)
-	banana:SetNWString("Owner", "Shared") 
+	banana.ShareGravgun = true
 	banana.Caller = ply
 	
 	banana:SetPos(tr.HitPos)
@@ -1296,7 +1296,7 @@ local function MakeACall(ply,args)
 	local ownphone = ents.Create("phone")
 	
 	ownphone:SetNWEntity("owning_ent", ply)
-	ownphone:SetNWString("Owner", "Shared") 
+	ownphone.ShareGravgun = true
 	ownphone:SetNWBool("IsBeingHeld", true)
 	ply:SetNWEntity("phone", ownphone)
 	
@@ -1762,7 +1762,7 @@ function DropMoney(ply, args)
 	local tr = util.TraceLine(trace)
 	local moneybag = ents.Create("prop_physics")
 	moneybag:SetModel("models/props/cs_assault/money.mdl")
-	moneybag:SetNWString("Owner", "Shared")
+	moneybag.ShareGravgun = true
 	moneybag:SetPos(tr.HitPos)
 	moneybag.nodupe = true
 	moneybag:Spawn()

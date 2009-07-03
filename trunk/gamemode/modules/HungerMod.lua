@@ -120,7 +120,7 @@ function BuyFood(ply, args)
 			Notify(ply, 1, 4, "You have bought a "..k)
 			local SpawnedFood = ents.Create("spawned_food")
 			SpawnedFood:SetNWEntity("owning_ent", ply)
-			SpawnedFood:SetNWString("Owner", "Shared") -- So people can run off with them!
+			SpawnedFood.ShareGravgun = true
 			SpawnedFood:SetPos(tr.HitPos)
 			SpawnedFood.onlyremover = true
 			SpawnedFood.SID = ply.SID
