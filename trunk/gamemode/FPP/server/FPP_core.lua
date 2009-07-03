@@ -118,12 +118,16 @@ hook.Add("KeyPress", "FPP_FindOutOwner", FindOutOwner)
 
 local function AntiNoob(ent)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end 
-	ent:SetNotSolid(true)
-	ent:SetRenderMode(RENDERMODE_TRANSALPHA)
-	ent:DrawShadow(false)
-	ent.OldColor = {ent:GetColor()}
-	ent.StartPos = ent:GetPos()
-	ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4] - 155)
+	local Ents = constraint.GetAllConstrainedEntities(ent)
+	
+	for k,v in pairs(Ents) do
+		v:SetNotSolid(true)
+		v:SetRenderMode(RENDERMODE_TRANSALPHA)
+		v:DrawShadow(false)
+		v.OldColor = {v:GetColor()}
+		v.StartPos = v:GetPos()
+		v:SetColor(v.OldColor[1], v.OldColor[2], v.OldColor[3], v.OldColor[4] - 155)
+	end
 end
 
 --Physgun Pickup
@@ -150,51 +154,55 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 end
 hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup)
 
-function FPP.Protect.PhysgunDrop(ply,ent)
+function FPP.Protect.PhysgunDrop(ply, DropEnt)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end --Antinoob only code in the physgundrop
-	ent:SetNotSolid(false)
-	ent:DrawShadow(true)
-	if ent.OldCollisionGroup then ent:SetCollisionGroup(ent.OldCollisionGroup) ent.OldCollisionGroup = nil end
+	local Ents = constraint.GetAllConstrainedEntities(DropEnt)
 	
-	if ent.OldColor then
-		ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
-	end
+	for k,ent in pairs(Ents) do
+		ent:SetNotSolid(false)
+		ent:DrawShadow(true)
+		if ent.OldCollisionGroup then ent:SetCollisionGroup(ent.OldCollisionGroup) ent.OldCollisionGroup = nil end
+		
+		if ent.OldColor then
+			ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
+		end
 	
-	--Make a traceline from where you started picking it up to where you ended picking it up
-	local tr = {}
-	tr.start = ent.StartPos
-	tr.endpos = ent:GetPos()
-	tr.filter = player.GetAll()
-	local trace = util.TraceLine(tr)
-	tr.start = ply:GetShootPos() -- Also make a line between your head and the prop, to see if you can still see the prop
-	local trace2 = util.TraceLine(tr)
-	
-	--Prop in player prevention(This is better than removing all players from the trace filter)
-	for k,v in pairs(player.GetAll()) do
-		local intr = {}
-		intr.start = v:EyePos()--Eyes
-		intr.endpos = v:GetPos()--Returns their feet
-		intr.filter = v -- Don't hit the player himself
-		intr.mins = v:OBBMins()
-		intr.maxs = v:OBBMaxs()
-		local trace3 = util.TraceHull(intr)
-		if trace3.Entity == ent then -- If the entity you're dropping is between the eyes and the feet 
-			local phys = ent:GetPhysicsObject()
-			if phys:IsValid() then
-				phys:EnableMotion(true)
-				ent.OldCollisionGroup = ent:GetCollisionGroup()
-				ent:SetCollisionGroup(COLLISION_GROUP_WEAPON) -- make it go through players kthxbai
-			end
-		end 
-	end
-	
-	--teleport it where it belongs if it's not where it's supposed to be
-	if trace2.Entity ~= ent then
-		local vFlushPoint = trace.HitPos - ( trace.HitNormal * 512 ) -- Find a point that is definitely out of the object in the direction of the floor
-		vFlushPoint = ent:NearestPoint( vFlushPoint ) -- Find the nearest point inside the object to that point
-		vFlushPoint = ent:GetPos() - vFlushPoint -- Get the difference
-		vFlushPoint = trace.HitPos + vFlushPoint -- Add it to our target pos
-		ent:SetPos(vFlushPoint)
+		--Make a traceline from where you started picking it up to where you ended picking it up
+		local tr = {}
+		tr.start = ent.StartPos
+		tr.endpos = ent:GetPos()
+		tr.filter = Ents
+		local trace = util.TraceLine(tr)
+		tr.start = ply:GetShootPos() -- Also make a line between your head and the prop, to see if you can still see the prop
+		local trace2 = util.TraceLine(tr)
+		
+		--Prop in player prevention(This is better than removing all players from the trace filter)
+		for k,v in pairs(player.GetAll()) do
+			local intr = {}
+			intr.start = v:EyePos()--Eyes
+			intr.endpos = v:GetPos()--Returns their feet
+			intr.filter = v -- Don't hit the player himself
+			intr.mins = v:OBBMins()
+			intr.maxs = v:OBBMaxs()
+			local trace3 = util.TraceHull(intr)
+			if trace3.Entity == ent then -- If the entity you're dropping is between the eyes and the feet 
+				local phys = ent:GetPhysicsObject()
+				if phys:IsValid() then
+					phys:EnableMotion(true)
+					ent.OldCollisionGroup = ent:GetCollisionGroup()
+					ent:SetCollisionGroup(COLLISION_GROUP_WEAPON) -- make it go through players kthxbai
+				end
+			end 
+		end
+		
+		--teleport it where it belongs if it's not where it's supposed to be
+		if trace2.Entity ~= ent then
+			local vFlushPoint = trace.HitPos - ( trace.HitNormal * 512 ) -- Find a point that is definitely out of the object in the direction of the floor
+			vFlushPoint = ent:NearestPoint( vFlushPoint ) -- Find the nearest point inside the object to that point
+			vFlushPoint = ent:GetPos() - vFlushPoint -- Get the difference
+			vFlushPoint = trace.HitPos + vFlushPoint -- Add it to our target pos
+			ent:SetPos(vFlushPoint)
+		end
 	end
 end
 hook.Add("PhysgunDrop", "FPP.Protect.PhysgunDrop", FPP.Protect.PhysgunDrop)
