@@ -6,6 +6,27 @@ if cleanup then
 	FPP.oldcleanup = FPP.oldcleanup or cleanup.Add
 	function cleanup.Add(ply, Type, ent)
 		if ValidEntity(ply) and ValidEntity(ent) then
+			--Make sure people can't get stuck in it
+			if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then
+				for k,v in pairs(player.GetAll()) do
+					local intr = {}
+					intr.start = v:EyePos()--Eyes
+					intr.endpos = v:GetPos()--Returns their feet
+					intr.filter = v -- Don't hit the player himself
+					intr.mins = v:OBBMins()
+					intr.maxs = v:OBBMaxs()
+					local trace3 = util.TraceHull(intr)
+					if trace3.Entity == ent then -- If the entity you're dropping is between the eyes and the feet 
+						local phys = ent:GetPhysicsObject()
+						if phys:IsValid() then
+							phys:EnableMotion(true)
+							ent.OldCollisionGroup = ent:GetCollisionGroup()
+							ent:SetCollisionGroup(COLLISION_GROUP_WEAPON) -- make it go through players kthxbai
+						end
+					end 
+				end
+			end
+			--Set the owner of the entity
 			ent.Owner = ply
 			ent.OwnerID = ply:SteamID()
 		end
@@ -18,6 +39,7 @@ local PLAYER = FindMetaTable("Player")
 if PLAYER.AddCount then
 	FPP.oldcount = FPP.oldcount or PLAYER.AddCount
 	function PLAYER:AddCount(Type, ent)
+		--Set the owner of the entity
 		ent.Owner = self
 		ent.OwnerID = self:SteamID()
 		return FPP.oldcount(self, Type, ent)
@@ -174,6 +196,7 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 		tr.filter = Ents
 		local trace = util.TraceLine(tr)
 		tr.start = ply:GetShootPos() -- Also make a line between your head and the prop, to see if you can still see the prop
+		tr.filter = ply
 		local trace2 = util.TraceLine(tr)
 		
 		--Prop in player prevention(This is better than removing all players from the trace filter)
@@ -307,7 +330,7 @@ hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
 function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 	if not tobool(FPP.Settings.FPP_ENTITYDAMAGE.toggle) then return end
 	if ent:IsPlayer() then
-		if ValidEntity(attacker.Owner) and attacker.Owner != ent and tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then
+		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and ((ValidEntity(attacker.Owner) and attacker.Owner != ent) or (ValidEntity(inflictor.Owner) and inflictor.Owner != ent)) then
 			dmginfo:SetDamage(0)
 		end
 		return 
@@ -346,6 +369,11 @@ for k,v in pairs(weapons.GetList()) do
 end
 
 function FPP.Protect.CanTool(ply, trace, tool)
+	-- Anti model server crash
+	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetToolObject() and string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") then
+		FPP.Notify(ply, "Can not crash the server!", false)
+		return FPP.CanTouch(ply, "FPP_TOOLGUN", "The model of the tool is invalid!", false)
+	end
 	local ent = trace.Entity
 	
 	if tobool(FPP.Settings.FPP_TOOLGUN.toggle) then
