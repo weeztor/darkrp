@@ -328,13 +328,15 @@ hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
 
 --EntityDamage
 function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
-	if not tobool(FPP.Settings.FPP_ENTITYDAMAGE.toggle) then return end
 	if ent:IsPlayer() then
 		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and ((ValidEntity(attacker.Owner) and attacker.Owner != ent) or (ValidEntity(inflictor.Owner) and inflictor.Owner != ent)) then
 			dmginfo:SetDamage(0)
 		end
 		return 
 	end
+	
+	if not tobool(FPP.Settings.FPP_ENTITYDAMAGE.toggle) then return end
+	
 	if not attacker:IsPlayer() then return end
 	
 	if not ValidEntity(ent) then return FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", "Not valid!", false) end
