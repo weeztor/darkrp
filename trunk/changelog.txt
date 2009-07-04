@@ -1,7 +1,8 @@
 DarkRP 2.3.7 SVN
 
 [ADD] rp_ironshoot, set if people have to see through the ironsights to shoot
-[ADD] Falco's Prop protection, reporting for duty to replace Simple Prop Protection!
+[ADD] Falco's Prop protection (FPP), reporting for duty to replace Simple Prop Protection!
+[ADD] Anti tool model crash(FPP feature)
 [FIX] Unable to remove door tool doors
 [FIX] People with the admin privilege can now see the admin menu
 [REMOVE] Simple Prop protection. You have served us well, goodbye.
