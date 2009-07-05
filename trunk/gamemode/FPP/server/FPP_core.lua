@@ -329,7 +329,7 @@ hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
 --EntityDamage
 function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 	if ent:IsPlayer() then
-		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and ((ValidEntity(attacker.Owner) and attacker.Owner != ent) or (ValidEntity(inflictor.Owner) and inflictor.Owner != ent)) then
+		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and not dmginfo:IsBulletDamage() and ((ValidEntity(attacker.Owner) and attacker.Owner != ent) or (ValidEntity(inflictor.Owner) and inflictor.Owner != ent)) then
 			dmginfo:SetDamage(0)
 		end
 		return 
@@ -372,9 +372,10 @@ end
 
 function FPP.Protect.CanTool(ply, trace, tool)
 	-- Anti model server crash
-	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetToolObject() and string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") then
-		FPP.Notify(ply, "Can not crash the server!", false)
-		return FPP.CanTouch(ply, "FPP_TOOLGUN", "The model of the tool is invalid!", false)
+	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetToolObject() and 
+	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ), "*")) then
+		FPP.Notify(ply, "The material/model of the tool is invalid!", false)
+		return FPP.CanTouch(ply, "FPP_TOOLGUN", "The material/model of the tool is invalid!", false)
 	end
 	local ent = trace.Entity
 	
