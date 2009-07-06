@@ -672,9 +672,9 @@ function ccGrantPriv(ply, cmd, args)
 	local target = FindPlayer(args[1])
 	if not target then
 		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[2])
+			print("Could not find player: " .. args[1])
 		else
-			ply:PrintMessage(2, "Could not find player: " .. args[2])
+			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
 		return
 	end
@@ -766,9 +766,9 @@ function ccRevokePriv(ply, cmd, args)
 	local target = FindPlayer(args[1])
 	if not target then
 		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[2])
+			print("Could not find player: " .. args[1])
 		else
-			ply:PrintMessage(2, "Could not find player: " .. args[2])
+			ply:PrintMessage(2, "Could not find player: " .. args[1])
 		end
 		return
 	end
