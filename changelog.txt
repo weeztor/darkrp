@@ -5,6 +5,7 @@ DarkRP 2.3.7 SVN
 [ADD] Anti tool model crash(FPP feature)
 [FIX] Unable to remove door tool doors
 [FIX] People with the admin privilege can now see the admin menu
+[FIX] Hunger resetting after sleep
 [REMOVE] Simple Prop protection. You have served us well, goodbye.
 
 DarkRP 2.3.7
