@@ -14,6 +14,7 @@ function KnockoutToggle(player, command, args, caller)
 	if player:Alive() then
 		if player.KnockoutTimer and player.KnockoutTimer + KnockoutTime < CurTime() then
 			if player.Sleeping and ValidEntity(player.SleepRagdoll) then
+				player.OldHunger = player:GetNWInt("Energy")
 				player.SleepSound:Stop()
 				local ragdoll = player.SleepRagdoll
 				local health = player:Health()
@@ -49,6 +50,8 @@ function KnockoutToggle(player, command, args, caller)
 					player:Arrest()
 				end
 				player.Sleeping = false
+				player:SetNWInt("Energy", player.OldHunger)
+				player.OldHunger = nil
 			else
 				player.WeaponsForSleep = {}
 				for k,v in pairs(player:GetWeapons( )) do
