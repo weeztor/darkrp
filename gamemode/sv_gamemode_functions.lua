@@ -509,8 +509,8 @@ function GM:PlayerSpawn(ply)
 	end
 	
 	ply:GetTable().StartHealth = ply:Health()
-	GAMEMODE:PlayerSetModel(ply)
-	GAMEMODE:PlayerLoadout( ply )
+	gamemode.Call("PlayerSetModel", ply)
+	gamemode.Call("PlayerLoadout", ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned")
 end
 
