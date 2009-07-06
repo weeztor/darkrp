@@ -77,10 +77,10 @@ function FPP.PlayerCanTouchEnt(ply, ent, Type1, Type2, TryingToShare)
 	
 	local Returnal 
 	for k,v in pairs(FPP.Blocked[Type1]) do
-		if tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), v) then --If it's a whitelist and the entity is found in the whitelist
+		if tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), string.lower(v)) then --If it's a whitelist and the entity is found in the whitelist
 			return true
-		elseif (not tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), v)) or -- if it's a banned prop( and the blocked list is not a whitlist)
-		(tobool(FPP.Settings[Type2].iswhitelist) and not string.find(string.lower(ent:GetClass()), v)) then -- or if it's a white list and that entity is NOT in the whitelist
+		elseif (not tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), string.lower(v))) or -- if it's a banned prop( and the blocked list is not a whitlist)
+		(tobool(FPP.Settings[Type2].iswhitelist) and not string.find(string.lower(ent:GetClass()), string.lower(v))) then -- or if it's a white list and that entity is NOT in the whitelist
 			if ply:IsAdmin() and tobool(FPP.Settings[Type2].admincanblocked) then
 				Returnal = true
 			elseif tobool(FPP.Settings[Type2].canblocked) then
@@ -91,7 +91,7 @@ function FPP.PlayerCanTouchEnt(ply, ent, Type1, Type2, TryingToShare)
 		end
 	end
 	
-	if Returnal ~= nil then FPP.CanTouch(ply, Type2, "Blocked!", Returnal) return Returnal end
+	if Returnal ~= nil and (not ent.Owner or ent.Owner == ply) then FPP.CanTouch(ply, Type2, "Blocked!", Returnal) return Returnal end
 	
 	if not TryingToShare and ent.AllowedPlayers and table.HasValue(ent.AllowedPlayers, ply) then 
 		FPP.CanTouch(ply, Type2, ent.Owner, true)
@@ -111,8 +111,10 @@ function FPP.PlayerCanTouchEnt(ply, ent, Type1, Type2, TryingToShare)
 			elseif tobool(FPP.Settings[Type2].worldprops) then -- if worldprop allowed
 				return true
 			end -- if not allowed then
+			FPP.CanTouch(ply, Type2, ent.Owner, false)
 			return false
 		else -- You don't own this, simple
+			FPP.CanTouch(ply, Type2, ent.Owner, false)
 			return false
 		end
 	end 
@@ -143,12 +145,15 @@ local function AntiNoob(ent)
 	local Ents = constraint.GetAllConstrainedEntities(ent)
 	
 	for k,v in pairs(Ents) do
-		v:SetNotSolid(true)
+		//v:SetNotSolid(true)
 		v:SetRenderMode(RENDERMODE_TRANSALPHA)
 		v:DrawShadow(false)
 		v.OldColor = {v:GetColor()}
 		v.StartPos = v:GetPos()
 		v:SetColor(v.OldColor[1], v.OldColor[2], v.OldColor[3], v.OldColor[4] - 155)
+
+		v:SetCollisionGroup( COLLISION_GROUP_WORLD )
+		v.CollisionGroup = COLLISION_GROUP_WORLD
 	end
 end
 
@@ -161,13 +166,13 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 	if ent.SharePhysgun then AntiNoob(ent) return true end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN") then
-		return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
+		return false
 	end
 	
 	if tobool(FPP.Settings.FPP_PHYSGUN.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN") and not v.SharePhysgun then
-				return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
+				return false
 			end
 		end
 	end 
@@ -181,14 +186,17 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 	local Ents = constraint.GetAllConstrainedEntities(DropEnt)
 	
 	for k,ent in pairs(Ents) do
-		ent:SetNotSolid(false)
+		//ent:SetNotSolid(false)
 		ent:DrawShadow(true)
 		if ent.OldCollisionGroup then ent:SetCollisionGroup(ent.OldCollisionGroup) ent.OldCollisionGroup = nil end
 		
 		if ent.OldColor then
 			ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
 		end
-	
+
+		ent:SetCollisionGroup( COLLISION_GROUP_NONE )
+		ent.CollisionGroup = COLLISION_GROUP_NONE
+		
 		--Make a traceline from where you started picking it up to where you ended picking it up
 		local tr = {}
 		tr.start = ent.StartPos
@@ -197,7 +205,7 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 		local trace = util.TraceLine(tr)
 		tr.start = ply:GetShootPos() -- Also make a line between your head and the prop, to see if you can still see the prop
 		tr.filter = ply
-		local trace2 = util.TraceLine(tr)
+		local trace2 = util.TraceLine(tr) 
 		
 		--Prop in player prevention(This is better than removing all players from the trace filter)
 		for k,v in pairs(player.GetAll()) do
@@ -241,13 +249,13 @@ function FPP.Protect.PhysgunReload(weapon, ply)
 	if not ValidEntity(ent) then return end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN") then 
-		return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
+		return false
 	end
 	
 	if tobool(FPP.Settings.FPP_PHYSGUN.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 			if not FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN") and not v.SharePhysgun then
-				return FPP.CanTouch(ply, "FPP_PHYSGUN", ent.Owner, false)
+				return false
 			end
 		end
 	end
@@ -266,13 +274,13 @@ function FPP.Protect.GravGunPickup(ply, ent)
 	if ent:IsPlayer() then return false end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Gravgun", "FPP_GRAVGUN") then
-		return FPP.CanTouch(ply, "FPP_GRAVGUN", ent.Owner, false)
+		return false
 	end
 	
 	if tobool(FPP.Settings.FPP_GRAVGUN.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Gravgun", "FPP_GRAVGUN") and not v.ShareGravgun then
-				return FPP.CanTouch(ply, "FPP_GRAVGUN", ent.Owner, false)
+				return false
 			end
 		end
 	end
@@ -289,13 +297,13 @@ function FPP.Protect.GravGunPunt(ply, ent)
 	if ent.ShareGravgun then return true end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Gravgun", "FPP_GRAVGUN") then
-		return FPP.CanTouch(ply, "FPP_GRAVGUN", ent.Owner, false)
+		return false
 	end
 	
 	if tobool(FPP.Settings.FPP_GRAVGUN.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "Gravgun", "FPP_GRAVGUN") and not v.ShareGravgun then
-				return FPP.CanTouch(ply, "FPP_GRAVGUN", ent.Owner, false)
+				return false
 			end
 		end
 	end
@@ -312,13 +320,13 @@ function FPP.Protect.PlayerUse(ply, ent)
 	if ent.SharePlayerUse then return true end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "PlayerUse", "FPP_PLAYERUSE") then
-		return FPP.CanTouch(ply, "FPP_PLAYERUSE", ent.Owner, false)
+		return false
 	end
 	
 	if tobool(FPP.Settings.FPP_PLAYERUSE.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 			if v ~= ent and not FPP.PlayerCanTouchEnt(ply, v, "PlayerUse", "FPP_PLAYERUSE") and not v.SharePlayerUse then
-				return FPP.CanTouch(ply, "FPP_PLAYERUSE", ent.Owner, false)
+				return false
 			end
 		end
 	end
@@ -349,14 +357,14 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 		if ValidEntity(attacker:GetActiveWeapon()) and attacker:GetActiveWeapon():GetClass() == "weapon_physcannon" then -- Bug fix that you get the no cross when gravgunning someone else's entity while you can punt it
 			return false
 		end
-		return FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", ent.Owner, false)
+		return false
 	end
 	
 	if tobool(FPP.Settings.FPP_ENTITYDAMAGE.checkconstrained) then-- if we're ought to check the constraints
 		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 			if v ~= ent and not FPP.PlayerCanTouchEnt(attacker, v, "EntityDamage", "FPP_ENTITYDAMAGE") and not v.ShareDamage then
 				dmginfo:SetDamage(0)
-				return FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", ent.Owner, false)
+				return false
 			end
 		end
 	end

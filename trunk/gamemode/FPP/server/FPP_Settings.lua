@@ -24,7 +24,7 @@ FPP.Settings = {}
 	FPP.Settings.FPP_PHYSGUN = {
 		toggle = 1,
 		adminall = 1,
-		worldprops = 1, 
+		worldprops = 0, 
 		adminworldprops = 1,
 		canblocked = 0,
 		admincanblocked = 0,
@@ -38,8 +38,8 @@ FPP.Settings = {}
 		adminall = 1,
 		worldprops = 1, 
 		adminworldprops = 1,
-		canblocked = 1,
-		admincanblocked = 1,
+		canblocked = 0,
+		admincanblocked = 0,
 		shownocross = 1,
 		checkconstrained = 1,
 		noshooting = 1,
@@ -49,8 +49,8 @@ FPP.Settings = {}
 		adminall = 1,
 		worldprops = 1, 
 		adminworldprops = 1,
-		canblocked = 1,
-		admincanblocked = 1,
+		canblocked = 0,
+		admincanblocked = 0,
 		shownocross = 1,
 		checkconstrained = 1,
 		duplicatorprotect = 1,
@@ -235,6 +235,7 @@ function FRetrieveBlocked()
 		data = sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKED('id' INTEGER NOT NULL, 'key' TEXT NOT NULL, 'value' TEXT NOT NULL, PRIMARY KEY('id'));")
 		FPP.Blocked.Physgun = {
 			"func_breakable_surf",
+			"func_brush",
 			"drug", 
 			"drug_lab", 
 			"food", 
@@ -245,11 +246,12 @@ function FRetrieveBlocked()
 			"money_printer", 
 			"spawned_shipment", 
 			"spawned_weapon",  
-			"spawned_food",
-			"vehicle_"}
+			"spawned_food"}
 		FPP.Blocked.Spawning = {}
 		FPP.Blocked.Gravgun = {"func_breakable_surf", "vehicle_"}
 		FPP.Blocked.Toolgun = {"func_breakable_surf",
+			"player",
+			"func_door",
 			"drug", 
 			"drug_lab", 
 			"food", 

@@ -109,8 +109,8 @@ function FPP.AdminMenu(Panel)
 	end
 	
 	local GeneralCat, general = MakeOption("General options")
-	addchk("Cleanup disconnected player's props", {"FPP_GLOBALSETTINGS", "cleanupdisconnected"}, general)
-	addchk("Cleanup admin's props on disconnect", {"FPP_GLOBALSETTINGS", "cleanupadmin"}, general)
+	addchk("Cleanup disconnected players's entities", {"FPP_GLOBALSETTINGS", "cleanupdisconnected"}, general)
+	addchk("Cleanup admin's entities on disconnect", {"FPP_GLOBALSETTINGS", "cleanupadmin"}, general)
 		local deltime = vgui.Create("DNumSlider")
 		deltime:SetMinMax(0, 300)
 		deltime:SetDecimals(0)
@@ -149,12 +149,12 @@ function FPP.AdminMenu(Panel)
 		general:AddItem(deltime)
 		
 		local delnow = vgui.Create("DButton")
-		delnow:SetText("Delete disconnected players' props")
+		delnow:SetText("Delete disconnected players' entities")
 		delnow:SetConsoleCommand("FPP_cleanup", "disconnected")
 		delnow:SetDisabled(not superadmin)
 		general:AddItem(delnow)
 		
-		local other = Label("\nDelete other player's props:")
+		local other = Label("\nDelete other player's entities:")
 		other:SizeToContents()
 		general:AddItem(other)
 		
