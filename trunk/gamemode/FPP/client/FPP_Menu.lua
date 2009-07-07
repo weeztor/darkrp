@@ -250,6 +250,7 @@ local function retrieveblocked(um)
 	local line = BlockedLists[Type]:AddLine(text)
 	line.text = text
 	BlockedLists[Type]:SetTall(18 + #BlockedLists[Type]:GetLines() * 17)
+	BlockedLists[Type]:GetParent():GetParent():GetParent():GetParent():InvalidateLayout()
 end
 usermessage.Hook("FPP_blockedlist", retrieveblocked)
 
