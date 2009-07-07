@@ -35,7 +35,7 @@ function ENT:SetTarget(ent)
 	self.Entity:SetPos(Vector(ent:GetPos().x + math.random(-4000,4000),ent:GetPos().y + math.random(-4000,4000), zPos))
 	local speed = 100000000
 	local VNormal = (Vector(ent:GetPos().x + math.random(-500,500),ent:GetPos().y + math.random(-500,500),ent:GetPos().z) - self.Entity:GetPos()):GetNormal()
-	meteor:GetPhysicsObject():ApplyForceCenter(VNormal * speed)
+	self:GetPhysicsObject():ApplyForceCenter(VNormal * speed)
 end
 
 function ENT:Destruct()
@@ -66,6 +66,7 @@ function ENT:OnTakeDamage(dmg)
 end
 
 function ENT:PhysicsCollide(data, physobj)
+	if data.HitEntity:GetClass() == "func_breakable_surf" then self:Remove() return end
 	self.Entity:Destruct()
 	self.Entity:Remove()
 end

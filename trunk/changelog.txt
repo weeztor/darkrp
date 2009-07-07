@@ -6,6 +6,7 @@ DarkRP 2.3.7 SVN
 [FIX] Unable to remove door tool doors
 [FIX] People with the admin privilege can now see the admin menu
 [FIX] Hunger resetting after sleep
+[FIX] Max microwaves
 [REMOVE] Simple Prop protection. You have served us well, goodbye.
 
 DarkRP 2.3.7
