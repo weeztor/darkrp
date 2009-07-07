@@ -268,10 +268,8 @@ end
 function StartShower()
 	timer.Adjust("start", math.random(.1,1), 0, StartShower)
 	for k, v in pairs(player.GetAll()) do
-		if math.random(0, 2) == 0 then
-			if v:Alive() then
-				AttackEnt(v)
-			end
+		if math.random(0, 2) == 0 and v:Alive() then
+			AttackEnt(v)
 		end
 	end
 end
@@ -1082,7 +1080,6 @@ function BuyDrugLab(ply)
 	Notify(ply, 1, 4, "You have bought a Drug Lab for " .. CUR .. tostring(cost))
 	local druglab = ents.Create("drug_lab")
 	druglab:SetNWEntity("owning_ent", ply)
-	druglab:SetNWString("Owner", ply:Nick())
 	druglab:SetPos(tr.HitPos)
 	druglab.SID = ply.SID
 	druglab.onlyremover = true
@@ -1109,7 +1106,7 @@ function BuyMicrowave(ply)
 		return ""
 	end
 
-	if ply:GetNWInt("maxmicrowaves") == CfgVars["maxmicrowaves"] then
+	if ply.maxMicrowaves >= CfgVars["maxmicrowaves"] then
 		Notify(ply, 1, 4, "You have reached the limit of microwaves.")
 		return ""
 	end
@@ -1120,7 +1117,6 @@ function BuyMicrowave(ply)
 		local microwave = ents.Create("microwave")
 		microwave:SetNWInt("price", GetGlobalInt("microwavefoodcost"))
 		microwave:SetNWEntity("owning_ent", ply)
-		microwave:SetNWString("Owner", ply:Nick())
 		microwave:SetNWBool("microwave", true)
 		microwave:SetPos(tr.HitPos)
 		microwave.nodupe = true
@@ -1160,7 +1156,6 @@ function BuyGunlab(ply)
 		Notify(ply, 1, 4, "You have bought a Gun Lab for " .. CUR .. tostring(cost))
 		local gunlab = ents.Create("gunlab")
 		gunlab:SetNWEntity("owning_ent", ply)
-		gunlab:SetNWString("Owner", ply:Nick())
 		gunlab:SetNWInt("price", GetGlobalInt("p228cost"))
 		gunlab:SetNWBool("gunlab", true)
 		gunlab:SetPos(tr.HitPos)
@@ -1634,7 +1629,6 @@ end
 AddChatCommand("/channel", SetRadioChannel)
 
 function SayThroughRadio(ply,args)
-	print(args)
 	if not ply.RadioChannel then ply.RadioChannel = 1 end
 	if not args or args == "" then
 		Notify(ply, 1, 4, "Please enter a message!")
