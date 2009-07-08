@@ -47,7 +47,7 @@ function SWEP:Deploy()
 	end
 end
 
-local blacklist = {"drug_lab", "money_printer", "meteor", "door", "func_", "player", "beam", "worldspawn", "env_", "path_", "spawned_shipment"}
+local blacklist = {"drug_lab", "money_printer", "meteor", "microwave", "door", "func_", "player", "beam", "worldspawn", "env_", "path_", "spawned_shipment"}
 function SWEP:PrimaryAttack()
 	if CLIENT then return end
 
