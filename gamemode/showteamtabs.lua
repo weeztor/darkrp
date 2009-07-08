@@ -488,10 +488,6 @@ function EntitiesTab()
 						icon.DoClick = function() LocalPlayer():ConCommand("say "..command) end
 						WepPanel:AddItem(icon)
 					end
-					AddIcon("models/weapons/w_pist_glock18.mdl", "Buy a glock: " .. CUR .. tostring(GetGlobalInt("glockcost")), "/buy glock")
-					AddIcon("models/weapons/w_pist_deagle.mdl", "Buy a Desert eagle: " .. CUR .. tostring(GetGlobalInt("deaglecost")), "/buy deagle")
-					AddIcon("models/weapons/w_pist_fiveseven.mdl", "Buy a fiveseven: " .. CUR .. tostring(GetGlobalInt("fivesevencost")), "/buy fiveseven")
-					AddIcon("models/weapons/w_pist_p228.mdl", "Buy a P228: " .. CUR .. tostring(GetGlobalInt("p228cost")), "/buy p228")
 					
 					for k,v in pairs(CustomShipments) do
 						if v.seperate and (table.HasValue(v.allowed, LocalPlayer():Team()) or #v.allowed == 0) then
@@ -526,15 +522,7 @@ function EntitiesTab()
 						AddEntIcon("models/props_lab/crematorcase.mdl", "Buy a druglab " .. CUR .. tostring(GetGlobalInt("druglabcost")), "/Buydruglab")
 					end
 					AddEntIcon("models/props_c17/consolebox01a.mdl", "Buy a Money printer " .. CUR .. tostring(GetGlobalInt("mprintercost")), "/Buymoneyprinter")
-					if LocalPlayer():Team() == TEAM_GUN then
-						AddEntIcon("models/props_c17/trappropeller_engine.mdl", "Buy a gunlab " .. CUR .. tostring(GetGlobalInt("gunlabcost")), "/Buygunlab")
-						AddEntIcon("models/weapons/w_rif_m4a1.mdl", "Buy an M16 shipment " .. CUR .. tostring(GetGlobalInt("m16cost")), "/buyshipment m16")
-						AddEntIcon("models/weapons/w_rif_ak47.mdl", "Buy an AK47 shipment " .. CUR .. tostring(GetGlobalInt("ak47cost")), "/buyshipment ak47")
-						AddEntIcon("models/weapons/w_snip_g3sg1.mdl", "Buy a sniper shipment " .. CUR .. tostring(GetGlobalInt("snipercost")), "/buyshipment sniper")
-						AddEntIcon("models/weapons/w_smg_mp5.mdl", "Buy an mp5 shipment " .. CUR .. tostring(GetGlobalInt("mp5cost")), "/buyshipment mp5")
-						AddEntIcon("models/weapons/w_shot_m3super90.mdl", "Buy a shotgun shipment " .. CUR .. tostring(GetGlobalInt("shotguncost")), "/buyshipment shotgun")
-						AddEntIcon("models/weapons/w_smg_mac10.mdl", "Buy a mac10 shipment " .. CUR .. tostring(GetGlobalInt("mac10cost")), "/buyshipment mac10")
-					elseif LocalPlayer():Team() == TEAM_COOK then
+					if LocalPlayer():Team() == TEAM_COOK then
 						AddEntIcon("models/props/cs_office/microwave.mdl", "Buy a microwave " .. CUR .. tostring(GetGlobalInt("microwavecost")) , "/Buymicrowave")
 					end
 					if  FoodItems and (GetGlobalInt("foodspawn") ~= 0 or LocalPlayer():Team() == TEAM_COOK) and (GetGlobalInt("hungermod") == 1 or LocalPlayer():Team() == TEAM_COOK) then
