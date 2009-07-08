@@ -1,6 +1,5 @@
 CustomVehicles = {}
 CustomShipments = {}
-ShipmentWeaponClasses = {} --Global since it's used for custom shipments.
 function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shipment, Sold_seperately, price_seperately, noshipment, classes, shipmodel)
 	if not name or not model or not entity or not price or not Amount_of_guns_in_one_shipment or (Sold_seperately and not price_seperately) then
 		local text = "One of the custom shipments is wrongly made! Attempt to give name of the wrongly made shipment!(if it's nil then I failed):\n" .. tostring(name)
@@ -25,8 +24,6 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 	local price = tonumber(price)
 	local shipmentmodel = shipmodel or "models/Items/item_item_crate.mdl"
 	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
-	ShipmentWeaponClasses[name] = {}
-	ShipmentWeaponClasses[name][entity] = model
 end
 
 function AddCustomVehicle(Name_of_vehicle, price, Jobs_that_can_buy_it)
@@ -60,6 +57,18 @@ hook.Add("InitPostEntity", "AddShipments", function()
 		if CLIENT and not LocalPlayer():IsSuperAdmin() then file.Delete("CustomShipments.txt") end
 	end
 end)
+
+AddCustomShipment("Desert eagle", "models/weapons/w_pist_deagle.mdl", "weapon_deagle2", 215, 10, true, 215, true)
+AddCustomShipment("Fiveseven", "models/weapons/w_pist_fiveseven.mdl", "weapon_fiveseven2", 0, 10, true, 205, true)
+AddCustomShipment("Glock", "models/weapons/w_pist_glock18.mdl", "weapon_glock2", 0, 10, true, 160, true)
+AddCustomShipment("P228", "models/weapons/w_pist_p228.mdl", "weapon_p2282", 0, 10, true, 185, true)
+
+AddCustomShipment("AK47", "models/weapons/w_rif_ak47.mdl", "weapon_ak472", 2450, 10, false, nil, false, {TEAM_GUN}) 
+AddCustomShipment("MP5", "models/weapons/w_smg_mp5.mdl", "weapon_mp52", 2200, 10, false, nil, false, {TEAM_GUN}) 
+AddCustomShipment("M4", "models/weapons/w_rif_m4a1.mdl", "weapon_m42", 2450, 10, false, nil, false, {TEAM_GUN}) 
+AddCustomShipment("Mac 10", "models/weapons/w_smg_mac10.mdl", "weapon_mac102", 2150, 10, false, nil, false, {TEAM_GUN}) 
+AddCustomShipment("Pump shotgun", "models/weapons/w_shot_m3super90.mdl", "weapon_pumpshotgun2", 1750, 10, false, nil, false, {TEAM_GUN}) 
+AddCustomShipment("Sniper rifle", "models/weapons/w_snip_g3sg1.mdl", "ls_sniper", 3750, 10, false, nil, false, {TEAM_GUN}) 
 
 /*
 How to add custom vehicles:

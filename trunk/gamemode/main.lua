@@ -434,34 +434,14 @@ end
 /*---------------------------------------------------------
  Shipments
  ---------------------------------------------------------*/
-local weaponClasses = {}
-weaponClasses["weapon_deagle2"] = "models/weapons/w_pist_deagle.mdl"
-weaponClasses["weapon_fiveseven2"] = "models/weapons/w_pist_fiveseven.mdl"
-weaponClasses["weapon_glock2"] = "models/weapons/w_pist_glock18.mdl"
-weaponClasses["weapon_ak472"] = "models/weapons/w_rif_ak47.mdl"
-weaponClasses["weapon_mp52"] = "models/weapons/w_smg_mp5.mdl"
-weaponClasses["weapon_m42"] = "models/weapons/w_rif_m4a1.mdl"
-weaponClasses["weapon_mac102"] = "models/weapons/w_smg_mac10.mdl"
-weaponClasses["weapon_para2"] = "models/weapons/w_mach_m249para.mdl"
-weaponClasses["weapon_pumpshotgun2"] = "models/weapons/w_shot_m3super90.mdl"
-weaponClasses["weapon_tmp2"] = "models/weapons/w_smg_tmp.mdl"
-weaponClasses["ls_sniper"] = "models/weapons/w_snip_g3sg1.mdl"
-weaponClasses["weapon_usp2"] = "models/weapons/w_pist_usp.mdl"
-weaponClasses["weapon_p2282"] = "models/weapons/w_pist_p228.mdl"
-weaponClasses["weapon_p90"] = "models/weapons/w_smg_p90.mdl"
-weaponClasses["weapon_knife2"] = "models/weapons/w_knife_t.mdl"
-for k,v in pairs(CustomShipments) do
-	weaponClasses[v.entity] = v.model
-end
-
 function DropWeapon(ply)
 	local ent = ply:GetActiveWeapon()
 	if not ValidEntity(ent) then return "" end
 	
 	if CfgVars["RestrictDrop"] == 1 then
 		local found = false
-		for k,v in pairs(weaponClasses) do
-			if k == ent:GetClass() then
+		for k,v in pairs(CustomShipments) do
+			if v.entity == ent:GetClass() then
 				found = true
 				break
 			end
@@ -908,14 +888,6 @@ function BuyPistol(ply, args)
 end
 AddChatCommand("/buy", BuyPistol)
 
-local rifleWeights = {}
-rifleWeights["ak47"] = 4.0
-rifleWeights["mp5"] = 3.0
-rifleWeights["m16"] = 3.0
-rifleWeights["mac10"] = 2.5
-rifleWeights["shotgun"] = 3.3
-rifleWeights["sniper"] = 5.9
-
 function BuyShipment(ply, args)
 	if args == "" then return "" end
 
@@ -929,14 +901,6 @@ function BuyShipment(ply, args)
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
 	
 	local found = false
-	for k, v in pairs(rifleWeights) do
-		if k == args then found = true 
-			if ply:Team() ~= TEAM_GUN then
-				Notify(ply, 1, 4, "You must be a Gun Dealer to buy gun shipments!")
-				return ""
-			end
-		end
-	end
 	for k,v in pairs(CustomShipments) do
 		if string.lower(args) == string.lower(v.name) and not v.noship then
 			found = v
@@ -959,9 +923,7 @@ function BuyShipment(ply, args)
 	end
 	
 	local cost
-	if found == true then
-		cost = GetGlobalInt(args .. "cost")
-	else
+	if found then
 		cost = found.price
 	end
 	
@@ -982,7 +944,7 @@ function BuyShipment(ply, args)
 	crate:SetPos(Vector(tr.HitPos.x, tr.HitPos.y, tr.HitPos.z))
 	crate.nodupe = true
 	crate:Spawn()
-	if type(found) == "table" and found.shipmodel then
+	if found.shipmodel then
 		crate:SetModel(found.shipmodel)
 		crate:PhysicsInit(SOLID_VPHYSICS)
 		crate:SetMoveType(MOVETYPE_VPHYSICS)

@@ -215,36 +215,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_DropEntitiesAfterPhysGunDrop - E
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
 
-AddValueCommand("rp_ak47cost", "ak47cost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_ak47cost <Number> - Sets the cost of a shipment of AK47s.")
-
-AddValueCommand("rp_mp5cost", "mp5cost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_mp5cost <Number> - Sets the cost of a shipment of mp5s.")
-
-AddValueCommand("rp_m16cost", "m16cost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_m16cost <Number> - Sets the cost of a shipment of m16s.")
-
-AddValueCommand("rp_mac10cost", "mac10cost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_mac10cost <Number> - Sets the cost of a shipment of mac10s.")
-
-AddValueCommand("rp_shotguncost", "shotguncost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_shotguncost <Number> - Sets the cost of a shipment of shotguns.")
-
-AddValueCommand("rp_snipercost", "snipercost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_snipercost <Number> - Sets the cost of a shipment of snipers.")
-
-AddValueCommand("rp_deaglecost", "deaglecost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_deaglecost <Number> - Sets the cost of a deagle.")
-
-AddValueCommand("rp_fivesevencost", "fivesevencost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_fivesevencost <Number> - Sets the cost of a five seven.")
-
-AddValueCommand("rp_glockcost", "glockcost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_glockcost <Number> - Sets the cost of a glock.")
-
-AddValueCommand("rp_p228cost", "p228cost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_p228cost <Number> - Sets the cost of a p228.")
-
 AddValueCommand("rp_druglabcost", "druglabcost", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_druglabcost <Number> - Sets the cost of a druglab.")
 
