@@ -1068,6 +1068,7 @@ function BuyMicrowave(ply)
 		return ""
 	end
 
+	if not ply.maxMicrowaves then ply.maxMicrowaves = 0 end
 	if ply.maxMicrowaves >= CfgVars["maxmicrowaves"] then
 		Notify(ply, 1, 4, "You have reached the limit of microwaves.")
 		return ""
