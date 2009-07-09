@@ -374,6 +374,11 @@ function GM:PlayerSetModel(ply)
 		end
 		util.PrecacheModel(EndModel)
 		ply:SetModel(EndModel)
+	else
+		local cl_playermodel = ply:GetInfo( "cl_playermodel" )
+        local modelname = player_manager.TranslatePlayerModel( cl_playermodel )
+        util.PrecacheModel( modelname )
+        ply:SetModel( modelname )
 	end
 end
 
