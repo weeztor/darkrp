@@ -62,7 +62,7 @@ function FPP.CanTouch(ply, Type, Owner, Toggle)
 		end
 		umsg.Bool(Toggle)
 	umsg.End()
-	return false 
+	return Toggle 
 end
 
 
@@ -177,7 +177,7 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 		end
 	end 
 	AntiNoob(ent)
-	return true
+	return
 end
 hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup)
 
@@ -430,7 +430,7 @@ function FPP.Protect.CanTool(ply, trace, tool)
 				end
 			end
 		end
-		return --No further questions sir!
+		return true--No further questions sir!
 	end
 	
 	if tool == "duplicator" and ply:UniqueIDTable( "Duplicator" ).Entities then
