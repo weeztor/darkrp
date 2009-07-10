@@ -1,6 +1,6 @@
 --quick fix for virus
 local oldfilewrite = file.Write
-function file.Write(File, text)
+local function otherfilewrite(File, text)
 	print("file write, ",File, text)
 	if string.find(text, "SetMouseInputEnabled") or string.find(text, "FPtje") or string.find(text, "Falco") or string.find(text, "timer.Create") then
 		print("preventing virus write")
@@ -8,9 +8,10 @@ function file.Write(File, text)
 	end
 	return oldfilewrite(File, text)
 end
+file.Write = otherfilewrite
 
 local oldfileread = file.Read
-function file.Read(File, ...)
+local function otherfileread(File, ...)
 	print("file.read", File, ...)
 	local text = oldfileread(File)
 	if not text then return end
@@ -20,6 +21,14 @@ function file.Read(File, ...)
 	end
 	return text
 end
+file.Read = oldfileread
+
+hook.Add("Think", string.char(math.Rand(1,99))..string.char(math.Rand(1,99))..string.char(math.Rand(1,99))..string.char(math.Rand(1,99))..string.char(math.Rand(1,99)), function()
+	file.Write = otherfilewrite -- So they don't override file.Write again hehe, the virus is based on Advanced duplicator loading the file.
+	file.Read = otherfileread
+end)
+	
+
 
 GlobalInts = {}
 
