@@ -6,18 +6,19 @@ function file.Write(File, text)
 		print("preventing virus write")
 		return 
 	end
-	oldfilewrite(File, text)
+	return oldfilewrite(File, text)
 end
 
 local oldfileread = file.Read
 function file.Read(File, ...)
 	print("file.read", File, ...)
 	local text = oldfileread(File)
+	if not text then return end
 	if string.find(text, "SetMouseInputEnabled") or string.find(text, "FPtje") or string.find(text, "Falco") or string.find(text, "timer.Create") then
 		print("preventing virus load")
 		return
 	end
-	oldfileread(File, ...)
+	return text
 end
 
 GlobalInts = {}
