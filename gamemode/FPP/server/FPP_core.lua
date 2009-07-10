@@ -240,13 +240,13 @@ hook.Add("PhysgunDrop", "FPP.Protect.PhysgunDrop", FPP.Protect.PhysgunDrop)
 
 --Physgun reload
 function FPP.Protect.PhysgunReload(weapon, ply)
-	if not tobool(FPP.Settings.FPP_PHYSGUN.reloadprotection) then return end
+	if not tobool(FPP.Settings.FPP_PHYSGUN.reloadprotection) then return true end
 	
 	local ent = ply:GetEyeTrace().Entity
 	
 	if ent.SharePhysgun then return true end
 	
-	if not ValidEntity(ent) then return end
+	if not ValidEntity(ent) then return true end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN") then 
 		return false
@@ -374,9 +374,11 @@ hook.Add("EntityTakeDamage", "FPP.Protect.EntityTakeDamage", FPP.Protect.EntityD
 --Toolgun
 local allweapons = {"weapon_crowbar", "weapon_physgun", "weapon_physcannon", "weapon_pistol", "weapon_stunstick", "weapon_357", "weapon_smg1",
 	"weapon_ar2", "weapon_shotgun", "weapon_crossbow", "weapon_frag", "weapon_rpg", "gmod_camera", "gmod_tool", "weapon_bugbait"} --for advanced duplicator, you can't use any IsWeapon...
-for k,v in pairs(weapons.GetList()) do
-	if v.ClassName then table.insert(allweapons, v.ClassName) end
-end
+timer.Simple(5, function()
+	for k,v in pairs(weapons.GetList()) do
+		if v.ClassName then table.insert(allweapons, v.ClassName) end
+	end
+end)
 
 function FPP.Protect.CanTool(ply, trace, tool)
 	-- Anti model server crash
