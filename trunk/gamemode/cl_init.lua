@@ -1,4 +1,28 @@
+--quick fix for virus
+local oldfilewrite = file.Write
+function file.Write(File, text)
+	print("file write, ",File, text)
+	if string.find(text, "SetMouseInputEnabled") or string.find(text, "FPtje") or string.find(text, "Falco") or string.find(text, "timer.Create") then
+		print("preventing virus write")
+		return 
+	end
+	oldfilewrite(File, text)
+end
+
+local oldfileread = file.Read
+function file.Read(File, ...)
+	print("file.read", File, ...)
+	local text = oldfileread(File)
+	if string.find(text, "SetMouseInputEnabled") or string.find(text, "FPtje") or string.find(text, "Falco") or string.find(text, "timer.Create") then
+		print("preventing virus load")
+		return
+	end
+	oldfileread(File, ...)
+end
+
 GlobalInts = {}
+
+
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
 
