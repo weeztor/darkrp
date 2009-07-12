@@ -690,7 +690,7 @@ end
  Logging
  ---------------------------------------------------------*/
 function DB.Log(text)
-	if not util.tobool(CfgVars["logging"]) then return end
+	if not util.tobool(CfgVars["logging"]) or not text then return end
 	if not DB.File then -- The log file of this session, if it's not there then make it!
 		if not file.IsDir("DarkRP_logs") then
 			file.CreateDir("DarkRP_logs")
