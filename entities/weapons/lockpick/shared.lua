@@ -65,6 +65,7 @@ function SWEP:PrimaryAttack()
 		if SERVER then
 			self:SetWeaponHoldType("pistol")
 			timer.Create("LockPickSounds", 1, self.LockPickTime, function(wep)
+				if not ValidEntity(wep) then return end
 				local snd = {1,3,4}
 				wep:EmitSound("weapons/357/357_reload".. tostring(snd[math.random(1, #snd)]) ..".wav", 100, 100)
 			end, self)
