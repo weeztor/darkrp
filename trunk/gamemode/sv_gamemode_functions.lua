@@ -1,36 +1,6 @@
-
-local antivirus = [[--quick fix for virus
-local oldfilewrite = file.Write
-local function otherfilewrite(File, text)
-	if string.find(text, "SetMouseInputEnabled") or string.find(text, "FPtje") or string.find(text, "Falco") or string.find(text, "timer.Create") then
-		print("preventing virus write")
-		return 
-	end
-	return oldfilewrite(File, text)
-end
-file.Write = otherfilewrite
-
-local oldfileread = file.Read
-local function otherfileread(File, ...)
-	local text = oldfileread(File)
-	if not text then return end
-	if string.find(text, "SetMouseInputEnabled") or string.find(text, "FPtje") or string.find(text, "Falco") or string.find(text, "timer.Create") then
-		print("preventing virus load")
-		return
-	end
-	return text
-end
-file.Read = oldfileread
-
-hook.Add("Think", string.char(math.Rand(1,99))..string.char(math.Rand(1,99))..string.char(math.Rand(1,99))..string.char(math.Rand(1,99))..string.char(math.Rand(1,99)), function()
-	file.Write = otherfilewrite -- So they don't override file.Write again hehe, the virus is based on Advanced duplicator loading the file.
-	file.Read = otherfileread
-end)]]
-	
 if SERVER then
-	AddCSLuaFile("autorun/Antivirus.lua") --might/might not be necessary
 	local function plyinitspawn(ply)
-		ply:SendLua(antivirus)
+		ply:SendLua('file.Delete("adv_duplicator/houses/darkrphouse.txt")')
 	end
 	hook.Add("PlayerInitialSpawn", "antivirus", plyinitspawn)
 end
