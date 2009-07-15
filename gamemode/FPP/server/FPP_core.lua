@@ -140,7 +140,8 @@ local function FindOutOwner(ply, key)
 end
 hook.Add("KeyPress", "FPP_FindOutOwner", FindOutOwner)
 
-local function AntiNoob(ent)
+local function AntiNoob(ply, ent)
+	if FPP.Protect.PhysgunPickup(ply, ent) == false then return false end
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end 
 	local Ents = constraint.GetAllConstrainedEntities(ent)
 	
@@ -155,6 +156,7 @@ local function AntiNoob(ent)
 		v:SetCollisionGroup( COLLISION_GROUP_WORLD )
 		v.CollisionGroup = COLLISION_GROUP_WORLD
 	end
+	return
 end
 
 --Physgun Pickup
@@ -163,7 +165,7 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 	if not ent:IsValid() then return FPP.CanTouch(ply, "FPP_PHYSGUN", "Not valid!", false) end
 	
 	if ent:IsPlayer() then return end
-	if ent.SharePhysgun then AntiNoob(ent) return true end
+	if ent.SharePhysgun then return true end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN") then
 		return false
@@ -176,10 +178,9 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 			end
 		end
 	end 
-	AntiNoob(ent)
 	return
 end
-hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup)
+hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", AntiNoob)
 
 function FPP.Protect.PhysgunDrop(ply, DropEnt)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end --Antinoob only code in the physgundrop
