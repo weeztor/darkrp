@@ -18,11 +18,6 @@ function ENT:Initialize()
 
 	self.sparking = false
 	self.damage = 100
-	local ply = self.Entity:GetNWEntity("owning_ent")
-	if not ply.maxgunlabs then
-		ply.maxgunlabs = 0
-	end
-	ply.maxgunlabs = ply.maxgunlabs + 1
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -126,7 +121,4 @@ end
 
 function ENT:OnRemove()
 	timer.Destroy(self.Entity)
-	local ply = self.Entity:GetNWEntity("owning_ent")
-	if not ValidEntity(ply) then return end
-	ply.maxgunlabs = ply.maxgunlabs - 1
 end

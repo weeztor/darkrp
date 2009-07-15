@@ -22,10 +22,6 @@ function ENT:Initialize()
 	self.Entity:SetNWInt("price", 100)
 	self.Entity.CanUse = true
 	self.ShareGravgun = true
-	if not ply.maxDrug then
-		ply.maxDrug = 0
-	end
-	ply.maxDrug = ply.maxDrug + 1
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -101,6 +97,4 @@ end
 function ENT:OnRemove()
 	self:Destruct()
 	timer.Destroy(self)
-	local ply = self:GetNWEntity("owning_ent")
-	if ValidEntity(ply) then ply.maxDrug = ply.maxDrug - 1 end
 end
