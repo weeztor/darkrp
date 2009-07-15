@@ -518,14 +518,22 @@ function EntitiesTab()
 						icon.DoClick = function() LocalPlayer():ConCommand("say "..command) end
 						EntPanel:AddItem(icon)
 					end
-					if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB then
-						AddEntIcon("models/props_lab/crematorcase.mdl", "Buy a druglab " .. CUR .. tostring(GetGlobalInt("druglabcost")), "/Buydruglab")
+					
+					for k,v in pairs(DarkRPEntities) do
+						if not v.allowed or (type(v.allowed) == "table" and table.HasValue(v.allowed, LocalPlayer():Team())) then
+							local cmdname = string.gsub(v.cmd, " ", "_")
+							
+							if tobool(GetGlobalInt("disable"..cmdname)) then return end
+							
+							local price = GetGlobalInt(cmdname.."_price")
+							if price == 0 then 
+								price = v.price
+							end
+							AddEntIcon(v.model, "Buy a " .. v.name .." " .. CUR .. price, v.cmd)
+						end
 					end
-					AddEntIcon("models/props_c17/consolebox01a.mdl", "Buy a Money printer " .. CUR .. tostring(GetGlobalInt("mprintercost")), "/Buymoneyprinter")
-					if LocalPlayer():Team() == TEAM_COOK then
-						AddEntIcon("models/props/cs_office/microwave.mdl", "Buy a microwave " .. CUR .. tostring(GetGlobalInt("microwavecost")) , "/Buymicrowave")
-					end
-					if  FoodItems and (GetGlobalInt("foodspawn") ~= 0 or LocalPlayer():Team() == TEAM_COOK) and (GetGlobalInt("hungermod") == 1 or LocalPlayer():Team() == TEAM_COOK) then
+					
+					if FoodItems and (GetGlobalInt("foodspawn") ~= 0 or LocalPlayer():Team() == TEAM_COOK) and (GetGlobalInt("hungermod") == 1 or LocalPlayer():Team() == TEAM_COOK) then
 						for k,v in pairs(FoodItems) do
 							AddEntIcon(v.model, "Buy a(n) ".. k .. " for a few bucks", "/buyfood "..k)
 						end

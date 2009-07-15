@@ -14,11 +14,6 @@ function ENT:Initialize()
 	self.sparking = false
 	self.damage = 100
 	self.IsMoneyPrinter = true
-	local ply = self:GetNWEntity("owning_ent")
-	if not ply.maxmprinters then
-		ply.maxmprinters = 0
-	end
-	ply.maxmprinters = ply.maxmprinters + 1
 	timer.Simple(30, self.CreateMoneybag, self)
 end
 
@@ -102,14 +97,4 @@ function ENT:Think()
 	effectdata:SetScale(1)
 	effectdata:SetRadius(2)
 	util.Effect("Sparks", effectdata)
-end
-
-function ENT:OnRemove()
-	local ply = self:GetNWEntity("owning_ent")
-	if not ValidEntity(ply) then return end
-	if not ply.maxmprinters then
-		ply.maxmprinters = 0
-		return
-	end
-	ply.maxmprinters = ply.maxmprinters - 1
 end

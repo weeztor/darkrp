@@ -114,6 +114,18 @@ function GM:EntityRemoved(ent)
 			found.Vehicles = found.Vehicles - 1
 		end
 	end
+	
+	for k,v in pairs(DarkRPEntities) do
+		if ent:IsValid() and ent:GetClass() == v.ent and ValidEntity(ent:GetNWEntity("owning_ent")) and not ent.IsRemoved then
+			local ply = ent:GetNWEntity("owning_ent")
+			local cmdname = string.gsub(v.cmd, " ", "_")
+			if not ply["max"..cmdname] then
+				ply["max"..cmdname] = 1
+			end
+			ply["max"..cmdname] = ply["max"..cmdname] - 1
+			ent.IsRemoved = true
+		end
+	end
 end
 
 function GM:ShowSpare1(ply)

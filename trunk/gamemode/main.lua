@@ -1013,159 +1013,61 @@ function BuyVehicle(ply, args)
 end
 AddChatCommand("/buyvehicle", BuyVehicle)
 
-function BuyDrugLab(ply)
-	if args == "" then return "" end
-	if RPArrestedPlayers[ply:SteamID()] then return "" end
-	
-	local trace = {}
-	trace.start = ply:EyePos()
-	trace.endpos = trace.start + ply:GetAimVector() * 85
-	trace.filter = ply
-	
-	if ply:Team() ~= TEAM_GANG and ply:Team() ~= TEAM_MOB then
-		Notify(ply, 1, 4, "You must be a gangster or mobboss!")
-		return "" 
-	end
-
-	local tr = util.TraceLine(trace)
-
-	local cost = GetGlobalInt("druglabcost")
-	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "You You can not afford this!")
+for k,v in pairs(DarkRPEntities) do
+	local function buythis(ply, args)
+		if RPArrestedPlayers[ply:SteamID()] then return "" end
+		if type(v.allowed) == "table" and not table.HasValue(v.allowed, ply:Team()) then
+			Notify(ply, 1, 4, "You do not have the right job to buy this entity!")
+			return "" 
+		end
+		local cmdname = string.gsub(v.cmd, " ", "_")
+		local disabled = tobool(GetGlobalInt("disable"..cmdname))
+		if disabled then
+			Notify(ply, 1, 4, "Can not buy this entity as it is disabled!")
+			return "" 
+		end
+		
+		//TODO
+		local max = GetGlobalInt("max"..cmdname)
+		if max == 0 then max = v.max end
+		if ply["max"..cmdname] and ply["max"..cmdname] >= max then
+			Notify(ply, 1, 4, "Could not buy this entity as you have reached the limit!")
+			return ""
+		end
+		
+		local price = GetGlobalInt(cmdname.."_price")
+		if price == 0 then 
+			price = v.price
+		end
+		
+		if not ply:CanAfford(price) then
+			Notify(ply, 1, 4, "You You can not afford this!")
+			return ""
+		end
+		ply:AddMoney(-price)
+		
+		local trace = {}
+		trace.start = ply:EyePos()
+		trace.endpos = trace.start + ply:GetAimVector() * 85
+		trace.filter = ply
+		
+		local tr = util.TraceLine(trace)
+		
+		local item = ents.Create(v.ent)
+		item:SetNWEntity("owning_ent", ply)
+		item:SetPos(tr.HitPos)
+		item.SID = ply.SID
+		item.onlyremover = true
+		item:Spawn()
+		Notify(ply, 1, 4, "You have bought a "..v.name.." for "..CUR..price)
+		if not ply["max"..cmdname] then
+			ply["max"..cmdname] = 0
+		end
+		ply["max"..cmdname] = ply["max"..cmdname] + 1
 		return ""
 	end
-	if ply.maxDrug and ply.maxDrug == CfgVars["maxdruglabs"] then
-		Notify(ply, 1, 4, "You have reached the limit of druglabs.")
-		return ""
-	end
-	ply:AddMoney(-cost)
-	Notify(ply, 1, 4, "You have bought a Drug Lab for " .. CUR .. tostring(cost))
-	local druglab = ents.Create("drug_lab")
-	druglab:SetNWEntity("owning_ent", ply)
-	druglab:SetPos(tr.HitPos)
-	druglab.SID = ply.SID
-	druglab.onlyremover = true
-	druglab:Spawn()
-	return ""
+	AddChatCommand(v.cmd, buythis)
 end
-AddChatCommand("/buydruglab", BuyDrugLab)
-
-function BuyMicrowave(ply)
-	if args == "" then return "" end
-
-	local trace = {}
-	trace.start = ply:EyePos()
-	trace.endpos = trace.start + ply:GetAimVector() * 85
-	trace.filter = ply
-
-	if RPArrestedPlayers[ply:SteamID()] then return "" end
-	local tr = util.TraceLine(trace)
-
-	local cost = GetGlobalInt("microwavecost")
-
-	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "You You can not afford this!")
-		return ""
-	end
-
-	if not ply.maxMicrowaves then ply.maxMicrowaves = 0 end
-	if ply.maxMicrowaves >= CfgVars["maxmicrowaves"] then
-		Notify(ply, 1, 4, "You have reached the limit of microwaves.")
-		return ""
-	end
-
-	if ply:Team() == TEAM_COOK then
-		ply:AddMoney(-cost)
-		Notify(ply, 1, 4, "You have bought a Microwave for " .. CUR .. tostring(cost))
-		local microwave = ents.Create("microwave")
-		microwave:SetNWInt("price", GetGlobalInt("microwavefoodcost"))
-		microwave:SetNWEntity("owning_ent", ply)
-		microwave:SetNWBool("microwave", true)
-		microwave:SetPos(tr.HitPos)
-		microwave.nodupe = true
-		microwave:Spawn()
-		microwave.SID = ply.SID
-		return ""
-	else
-		Notify(ply, 1, 4, "You need to be a Cook to be able to buy this!")
-	end
-	return ""
-end
-AddChatCommand("/buymicrowave", BuyMicrowave)
-
-function BuyGunlab(ply)
-	if args == "" then return "" end
-
-	local trace = {}
-	trace.start = ply:EyePos()
-	trace.endpos = trace.start + ply:GetAimVector() * 85
-	trace.filter = ply
-
-	if RPArrestedPlayers[ply:SteamID()] then return "" end
-	local tr = util.TraceLine(trace)
-
-	local cost = GetGlobalInt("gunlabcost")
-
-	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "You You can not afford this!")
-		return ""
-	end
-	if ply.maxgunlabs and ply.maxgunlabs == CfgVars["maxgunlabs"] then
-		Notify(ply, 1, 4, "You have reached the limit of gunlabs!")
-		return ""
-	end
-	if ply:Team() == TEAM_GUN then
-		ply:AddMoney(-cost)
-		Notify(ply, 1, 4, "You have bought a Gun Lab for " .. CUR .. tostring(cost))
-		local gunlab = ents.Create("gunlab")
-		gunlab:SetNWEntity("owning_ent", ply)
-		gunlab:SetNWInt("price", GetGlobalInt("p228cost"))
-		gunlab:SetNWBool("gunlab", true)
-		gunlab:SetPos(tr.HitPos)
-		gunlab.nodupe = true
-		gunlab:Spawn()
-		gunlab.SID = ply.SID
-		return ""
-	else
-		Notify(ply, 1, 4, "You need to be a Gun Dealer!")
-	end
-	return ""
-end
-AddChatCommand("/buygunlab", BuyGunlab)
-
-function BuyMoneyPrinter(ply, args)
-	if RPArrestedPlayers[ply:SteamID()] then return "" end
-
-	local trace = {}
-	trace.start = ply:EyePos()
-	trace.endpos = trace.start + ply:GetAimVector() * 85
-	trace.filter = ply
-	local tr = util.TraceLine(trace)
-
-	local cost = GetGlobalInt("mprintercost")
-	if cost == 0 then cost = 1000 end
-	if not ply:CanAfford(cost) then
-		Notify(ply, 1, 4, "You You can not afford this!")
-		return ""
-	end
-
-	if ply.maxmprinters and ply.maxmprinters >= CfgVars["maxmprinters"] then
-		Notify(ply, 1, 4, "You have reached the limit of money printers!")
-		return ""
-	end
-
-	ply:AddMoney(-cost)
-	Notify(ply, 1, 4, "You have bought a Money Printer for " .. CUR .. tostring(cost))
-	local moneyprinter = ents.Create("money_printer")
-	moneyprinter:SetNWEntity("owning_ent", ply)
-	moneyprinter.ShareGravgun = true
-	moneyprinter:SetPos(tr.HitPos)
-	moneyprinter.onlyremover = true
-	moneyprinter.SID = ply.SID
-	moneyprinter:Spawn()
-	return ""
-end
-AddChatCommand("/buymoneyprinter", BuyMoneyPrinter)
 
 function BuyAmmo(ply, args)
 	if args == "" then return "" end

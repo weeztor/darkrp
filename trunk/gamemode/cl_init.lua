@@ -53,13 +53,12 @@ function LoadModules(msg)
 end
 usermessage.Hook("LoadModules", LoadModules)
 
-include("shared.lua")
+include("MakeThings.lua")
 include("cl_vgui.lua")
 include("entity.lua")
 include("cl_scoreboard.lua")
 include("cl_helpvgui.lua")
 include("showteamtabs.lua")
-include("addshipments.lua")
 include("scoreboard/admin_buttons.lua")
 include("scoreboard/player_frame.lua")
 include("scoreboard/player_infocard.lua")
@@ -759,11 +758,13 @@ function ChangeHelpLabel(msg)
 	timer.Simple(.01, tChangeHelpLabel, id, text)
 end
 usermessage.Hook("ChangeHelpLabel", ChangeHelpLabel)
-
 function AddHelpCategory(id, name)
 	table.insert(HelpCategories, { id = id, text = name })
 end
+	
 include("sh_commands.lua")
+include("shared.lua")
+include("addentities.lua")
 
 local function DoSpecialEffects(Type)
 	local thetype = Type:ReadString()

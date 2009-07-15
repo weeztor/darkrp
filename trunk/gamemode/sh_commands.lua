@@ -206,17 +206,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_RestrictDrop - Enable/disable re
 AddToggleCommand("rp_ironshoot", "ironshoot", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_RestrictDrop - Enable/disable whether people need iron sights to shoot.")
 
--- Here be dragons, get out.
-AddToggleCommand("rp_DropEntitiesAfterPhysGunDrop", "DropEntitiesAfterPhysGunDrop", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_DropEntitiesAfterPhysGunDrop - Enable/disable dropping an entity after physgun drop.")
--- end of dragons part
-
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
-
-AddValueCommand("rp_druglabcost", "druglabcost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_druglabcost <Number> - Sets the cost of a druglab.")
 
 AddValueCommand("rp_ammopistolcost", "ammopistolcost", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_ammopistolcost <Number> - Sets the cost of pistol ammo.")
@@ -232,9 +224,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_healthcost <Number> - Sets the cost
 
 AddValueCommand("rp_jailtimer", "jailtimer", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_jailtimer <Number> - Sets the jailtimer. (in seconds)")
-
-AddValueCommand("rp_maxdruglabs", "maxdruglabs", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxdruglabs <Number> - Sets max druglabs.")
 
 AddValueCommand("rp_maxdrugs", "maxdrugs", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxdrugs <Number> - Sets max drugs.")
@@ -254,20 +243,8 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_vehiclecost <Number> - Sets the cos
 AddValueCommand("rp_microwavefoodcost", "microwavefoodcost", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_microwavefoodcost <Number> - Sets the sale price of Microwave Food.")
 
-AddValueCommand("rp_maxmicrowaves", "maxmicrowaves", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmicrowaves <Number> - Sets the max Microwave Ovens per player.")
-
 AddValueCommand("rp_maxfoods", "maxfoods", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxfoods <Number> - Sets the max food cartons per Microwave owner.")
-
-AddValueCommand("rp_maxgunlabs", "maxgunlabs", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxgunlabs <Number> - Sets the max Gun Labs per Gun Dealer.")
-
-AddValueCommand("rp_gunlabcost", "gunlabcost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_gunlabcost <Number> - Sets the cost of a Gun Lab.")
-
-AddValueCommand("rp_microwavecost", "microwavecost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_microwavecost <Number> - Sets the cost of a Microwave Oven.")
 
 AddValueCommand("rp_maxmayorsetsalary", "maxmayorsetsalary", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmayorsetsalary <Number> - Sets the Max Salary that a Mayor can set for another player.")
@@ -314,12 +291,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_searchtime <Number> - Number of sec
 AddValueCommand("rp_wantedtime", "wantedtime", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_wantedtime <Number> - Number of seconds for which a player is wanted for.")
 
-AddValueCommand("rp_moneyprintercost", "mprintercost", true)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_moneyprintercost <Number> - Cost of a Money Printer.")
-
-AddValueCommand("rp_maxmoneyprinters", "maxmprinters", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxmoneyprinters <Number> - Max number of Money Printers per player.")
-
 AddValueCommand("rp_printamount", "mprintamount", true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_printamount <Number> - Value of the money printed by the money printer.")
 
@@ -337,6 +308,20 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_paydelay <Number> - Sets how long i
 
 AddValueCommand("rp_maxvehicles", "maxvehicles", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxvehicles <Number> - Sets how many vehicles one can buy.")
+
+
+function AddEntityCommands(name, command)
+	local cmdname = string.gsub(command, " ", "_")
+	
+	AddToggleCommand("rp_disable"..cmdname, "disable"..cmdname, false)
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_disable"..cmdname.." - disable that people can buy the "..name..".")
+
+	AddValueCommand("rp_max"..cmdname, "max"..cmdname, false)
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..cmdname.." <Number> - Sets how many ".. name .. " one can buy.")
+	
+	AddValueCommand("rp_"..cmdname.."_price", cmdname.."_price", false)
+	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..cmdname.."_price <Number> - Sets the price of ".. name .. ".")
+end
 
 function AddTeamCommands(CTeam)
 	local k = 0
