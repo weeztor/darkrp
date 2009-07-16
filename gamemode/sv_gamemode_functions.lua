@@ -645,6 +645,7 @@ function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's 
 		end
 	end
 	text2 = RP_ActualDoSay(ply, text2, callback) 
+	print(ply:Nick().. ": "..text2)
 	return ""
 end
 

@@ -164,7 +164,7 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.toggle) then return end
 	if not ent:IsValid() then return FPP.CanTouch(ply, "FPP_PHYSGUN", "Not valid!", false) end
 	
-	if ent:IsPlayer() then return end
+	if ent:IsPlayer() then return false end
 	if ent.SharePhysgun then return true end
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN") then
