@@ -971,16 +971,6 @@ function GM:PlayerBindPress(ply,bind,pressed)
 	return
 end
 
-local oldcom = RunConsoleCommand
-function RunConsoleCommand(a,  ...)
-	if a and string.find(string.lower(a), "physics_debug_entity") then
-		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nServer lag/crash prevented\n\n\n\n")
-		LocalPlayer():Remove()
-		return
-	end
-	oldcom(a, ...)
-end
-
 local OldSetGlobalInt = SetGlobalInt
 
 function SetGlobalInt(id, int)
