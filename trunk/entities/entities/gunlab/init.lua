@@ -14,6 +14,7 @@ function ENT:Initialize()
 	self.Entity:SetSolid(SOLID_VPHYSICS)
 	local phys = self.Entity:GetPhysicsObject()
 
+	self.Entity:SetNWInt("price", 30)
 	if phys and phys:IsValid() then phys:Wake() end
 
 	self.sparking = false
