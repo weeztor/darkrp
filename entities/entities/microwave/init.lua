@@ -17,6 +17,7 @@ function ENT:Initialize()
 	if phys and phys:IsValid() then phys:Wake() end
 	self.sparking = false
 	self.damage = 100
+	self.Entity:SetNWInt("price", 30)
 	local ply = self.Entity:GetNWEntity("owning_ent")
 	if not ply.maxMicrowaves then
 		ply.maxMicrowaves = 0

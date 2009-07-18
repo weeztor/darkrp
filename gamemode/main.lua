@@ -776,7 +776,8 @@ function SetPrice(ply, args)
 
 	local tr = util.TraceLine(trace)
 
-	if ValidEntity(tr.Entity) and (tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave") or tr.Entity:GetClass() == "drug_lab") and tr.Entity.SID == ply.SID then
+	local class = tr.Entity:GetClass()
+	if ValidEntity(tr.Entity) and (class == "gunlab" or class == "microwave" or class == "drug_lab") and tr.Entity.SID == ply.SID then
 		tr.Entity:SetNWInt("price", b)
 	else
 		Notify(ply, 1, 4, "You need to be looking at a Gun Lab, druglab or Microwave!")
