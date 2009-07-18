@@ -52,7 +52,7 @@ function meta:SetRPName(name, firstRun)
 		end
 	end
 	
-	if string.len(lowername) < 3 then return end
+	if string.len(lowername) < 2 and not firstrun then return end
 	-- If we found that this name exists for another player
 	if taken then
 		if firstRun then

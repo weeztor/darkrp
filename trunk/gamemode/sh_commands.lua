@@ -204,7 +204,7 @@ AddToggleCommand("rp_RestrictDrop", "RestrictDrop", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_RestrictDrop - Enable/disable restricting which weapons players can drop.")
 
 AddToggleCommand("rp_ironshoot", "ironshoot", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_RestrictDrop - Enable/disable whether people need iron sights to shoot.")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_ironshoot - Enable/disable whether people need iron sights to shoot.")
 
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 

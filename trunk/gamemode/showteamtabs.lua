@@ -570,6 +570,7 @@ function EntitiesTab()
 				for k,v in pairs(CustomVehicles) do
 					if not v.allowed or table.HasValue(v.allowed, LocalPlayer():Team()) then
 						local Vehicle = list.Get("Vehicles")[v.name]
+						if not Vehicle then LocalPlayer():ChatPrint("VEHICLE "..v.name.." DOESN'T EXIST!") return end
 						AddVehicleIcon(Vehicle.Model, "Buy a "..Vehicle.Name.." for "..CUR..v.price, "/buyvehicle "..v.name)
 						founds = founds + 1
 					end
