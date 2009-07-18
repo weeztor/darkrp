@@ -120,10 +120,12 @@ include("rating.lua")
 
 --Falco's prop protection
 
+AddCSLuaFile("FPP/sh_CPPI.lua")
 AddCSLuaFile("FPP/client/FPP_Menu.lua")
 AddCSLuaFile("FPP/client/FPP_HUD.lua")
 AddCSLuaFile("FPP/client/FPP_Buddies.lua")
 
+include("FPP/sh_CPPI.lua")
 include("FPP/server/FPP_Settings.lua")
 include("FPP/server/FPP_Core.lua")
 

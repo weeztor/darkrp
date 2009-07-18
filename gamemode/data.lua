@@ -397,7 +397,7 @@ function DB.RetrieveJailStatus(ply)
 end
 
 function DB.StoreRPName(ply, name)
-	if not name or string.len(name) < 3 then return end
+	if not name or string.len(name) < 2 then return end
 	local r = sql.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
 	if r then
 		sql.Query("UPDATE darkrp_rpnames SET name = " .. sql.SQLStr(name) .. " WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
@@ -408,9 +408,15 @@ function DB.StoreRPName(ply, name)
 	ply:SetNWString("rpname", name)
 end
 
+local rpnameslist --Make sure the DB doesn't get checked for ALL RPnames when someone InitialSpawns
 function DB.RetrieveRPNames()
+	if rpnameslist then
+		return rpnameslist
+	end
+	
 	local r = sql.Query("SELECT * FROM darkrp_rpnames;")
-	if r then return r else return {} end
+	if r then rpnameslist = r return rpnameslist 
+	else rpnameslist = {} return {} end
 end
 
 function DB.RetrieveRPName(ply)
