@@ -274,15 +274,16 @@ local function DrawDisplay()
 			if tr.Entity:IsPlayer() then DrawPlayerInfo(tr.Entity) end
 		end
 
-		if tr.Entity:GetNWBool("shipment") then
+		local class = tr.Entity:GetClass()
+		if class == "spawned_shipment" then
 			DrawShipmentInfo(tr.Entity)
 		end
 
-		if tr.Entity:GetNWBool("money_printer") then
+		if class == "money_printer" then
 			DrawMoneyPrinterInfo(tr.Entity)
 		end
 
-		if tr.Entity:GetNWBool("gunlab") or tr.Entity:GetNWBool("microwave") then
+		if class == "gunlab" or class == "microwave" then
 			DrawPriceInfo(tr.Entity)
 		end
 		
