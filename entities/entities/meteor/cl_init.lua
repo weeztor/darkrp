@@ -14,6 +14,7 @@ function ENT:Think()
 	local vOffset = self.Entity:LocalToWorld(Vector(math.Rand(-3, 3), math.Rand(-3, 3), math.Rand(-3, 3))) + Vector(math.Rand(-3, 3), math.Rand(-3, 3), math.Rand(-3, 3))
 	local vNormal = (vOffset - self.Entity:GetPos()):GetNormalized()
 	self.emitter = ParticleEmitter(vOffset)
+	if not self.emitter then return end
 	local particle = self.emitter:Add("particles/smokey", vOffset)
 	particle:SetVelocity(vNormal * math.Rand(10, 30))
 	particle:SetDieTime(2.0)

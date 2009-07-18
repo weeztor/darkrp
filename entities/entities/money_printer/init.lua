@@ -10,7 +10,6 @@ function ENT:Initialize()
 	self:SetSolid(SOLID_VPHYSICS)
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then phys:Wake() end
-	self:SetNWBool("money_printer", true)
 	self.sparking = false
 	self.damage = 100
 	self.IsMoneyPrinter = true

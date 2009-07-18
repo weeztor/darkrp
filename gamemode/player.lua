@@ -159,10 +159,6 @@ function meta:NewData()
 			self.bannedfrom[i] = 0
 		end
 	end
-
-	if self:IsSuperAdmin() or self:IsAdmin() then
-		self:GrantPriv(ADMIN)
-	end
 end
 
 /*---------------------------------------------------------
@@ -346,7 +342,7 @@ end
 AddChatCommand("/addjailpos", AddJailPos)
 
 function meta:Arrest(time, rejoin)
-	self:SetNetworkedBool("wanted", false)
+	self:SetNWBool("wanted", false)
 	self.warranted = false
 	self:SetNWBool("HasGunlicense", false)
 	self:SetNWBool("Arrested", true)

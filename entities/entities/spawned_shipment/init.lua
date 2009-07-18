@@ -13,7 +13,6 @@ function ENT:Initialize()
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	self.Entity:SetSolid(SOLID_VPHYSICS)
-	self.Entity:SetNWBool("shipment", true)
 	self.locked = false
 	self.damage = 100
 	self.Entity.ShareGravgun = true

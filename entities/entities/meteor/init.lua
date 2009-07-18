@@ -38,35 +38,28 @@ function ENT:SetTarget(ent)
 	self:GetPhysicsObject():ApplyForceCenter(VNormal * speed)
 end
 
-function ENT:Destruct()
-	util.BlastDamage(self.Entity, self.Entity, self.Entity:GetPos(), 200, 60)
+function ENT:Destruct(notexplode)
+	if not notexplode then
+		util.BlastDamage(self.Entity, self.Entity, self.Entity:GetPos(), 200, 60)
+	end
 
+	self:Extinguish()
 	local vPoint = self.Entity:GetPos()
 	local effectdata = EffectData()
 	effectdata:SetStart(vPoint)
 	effectdata:SetOrigin(vPoint)
 	effectdata:SetScale(1)
 	util.Effect("Explosion", effectdata)
-end
-
-function ENT:Destruct2()
-	local vPoint = self.Entity:GetPos()
-	local effectdata = EffectData()
-	effectdata:SetStart(vPoint)
-	effectdata:SetOrigin(vPoint)
-	effectdata:SetScale(10)
-	util.Effect("Explosion", effectdata)
+	self.Entity:Remove()
 end
 
 function ENT:OnTakeDamage(dmg)
 	if (dmg:GetDamage() > 5) then
-		self.Entity:Destruct2()
-		self.Entity:Remove()
+		self.Entity:Destruct(true)
 	end
 end
 
 function ENT:PhysicsCollide(data, physobj)
 	if data.HitEntity:GetClass() == "func_breakable_surf" then self:Remove() return end
 	self.Entity:Destruct()
-	self.Entity:Remove()
 end
