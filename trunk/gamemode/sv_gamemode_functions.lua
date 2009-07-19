@@ -551,7 +551,7 @@ function GM:PlayerLoadout(ply)
 	ply:Give("weapon_physcannon")
 	ply:Give("gmod_camera")
 
-	if CfgVars["toolgun"] == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(TOOL) then
+	if CfgVars["toolgun"] == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PTOOL) then
 		ply:Give("gmod_tool")
 	end
 	
