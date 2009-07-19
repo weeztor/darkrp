@@ -787,17 +787,6 @@ end
 AddChatCommand("/price", SetPrice)
 AddChatCommand("/setprice", SetPrice)
 
-local buyPistols = {}
-buyPistols["deagle"] = {}
-buyPistols["deagle"]["weapon_deagle2"] = "models/weapons/w_pist_deagle.mdl"
-buyPistols["fiveseven"] = {}
-buyPistols["fiveseven"]["weapon_fiveseven2"] = "models/weapons/w_pist_fiveseven.mdl"
-buyPistols["glock"] = {}
-buyPistols["glock"]["weapon_glock2"] = "models/weapons/w_pist_glock18.mdl"
-buyPistols["p228"] = {}
-buyPistols["p228"]["weapon_p2282"] = "models/weapons/w_pist_p228.mdl"
-
-
 function BuyPistol(ply, args)
 	if args == "" then return "" end
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
@@ -820,14 +809,7 @@ function BuyPistol(ply, args)
 	
 	local class = nil
 	local model = nil
-	for k, v in pairs(buyPistols) do
-		if k == args then
-			for cls, mdl in pairs(v) do
-				class = cls
-				model = mdl
-			end
-		end
-	end
+	
 	local custom = false
 	local price = 0
 	for k,v in pairs(CustomShipments) do
@@ -844,6 +826,11 @@ function BuyPistol(ply, args)
 				end
 			end
 			
+			
+			if v.allowed[1] == TEAM_GUN and not v.allowed[2] and ply:Team() ~= TEAM_GUN and CfgVars["restrictbuypistol"] == 0 then
+				canbuy = true
+			end
+			
 			if not canbuy then
 				Notify(ply, 1, 4, "You do not have the correct class to buy this pistol!")
 				return ""
@@ -856,10 +843,6 @@ function BuyPistol(ply, args)
 		return ""
 	end
 	
-	if (not custom or (#custom.allowed == 1 and custom[1] == TEAM_GUN)) and CfgVars["restrictbuypistol"] ~= 0 and ply:Team() ~= TEAM_GUN and team.NumPlayers(TEAM_GUN) > 0 then
-		Notify(ply, 1, 4, "/buy is disabled because there are Gun Dealers.")
-		return ""
-	end
 	if not custom then
 		if ply:Team() == TEAM_GUN then
 			price = math.ceil(GetGlobalInt(args .. "cost") * 0.88)

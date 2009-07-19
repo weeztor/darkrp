@@ -490,7 +490,7 @@ function EntitiesTab()
 					end
 					
 					for k,v in pairs(CustomShipments) do
-						if v.seperate and (table.HasValue(v.allowed, LocalPlayer():Team()) or #v.allowed == 0) then
+						if v.seperate and (table.HasValue(v.allowed, LocalPlayer():Team()) or #v.allowed == 0 or (v.allowed[1] == TEAM_GUN and not v.allowed[2] and LocalPlayer():Team() ~= TEAM_GUN and GetGlobalInt("restrictbuypistol") == 0)) then
 							AddIcon(v.model, "Buy a "..v.name..": "..CUR..v.pricesep, "/buy "..v.name)
 						end
 					end
