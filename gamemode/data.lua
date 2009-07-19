@@ -46,7 +46,7 @@ function DB.CreatePrivs()
 			if b == ADMIN then admin = 1 end
 			if b == MAYOR then mayor = 1 end
 			if b == CP then cp = 1 end
-			if b == TOOL then tool = 1 end
+			if b == PTOOL then tool = 1 end
 			if b == PHYS then phys = 1 end
 			if b == PROP then prop = 1 end
 		end
@@ -67,7 +67,7 @@ function DB.Priv2Text(priv)
 		return "mayor"
 	elseif priv == CP then
 		return "cp"
-	elseif priv == TOOL then
+	elseif priv == PTOOL then
 		return "tool"
 	elseif priv == PHYS then
 		return "phys"

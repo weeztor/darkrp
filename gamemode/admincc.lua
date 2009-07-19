@@ -2,7 +2,7 @@
 ADMIN = 0			-- DarkRP Admin
 MAYOR = 1			-- Can become Mayor without a vote (Uses /mayor)
 CP = 2					-- Can become CP without a vote (Uses /cp)
-TOOL = 3				-- Always spawns with the toolgun
+PTOOL = 3				-- Always spawns with the toolgun
 PHYS = 4				-- Always spawns with the physgun
 PROP = 5			-- Can always spawn props (unless jailed)
 
@@ -688,7 +688,7 @@ function ccGrantPriv(ply, cmd, args)
 	end
 	
 	if args[2] == "tool" then
-		DB.GrantPriv(target, TOOL)
+		DB.GrantPriv(target, PTOOL)
 		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." toolgun priveleges.")
 		if ply:EntIndex() == 0 then
 			DB.Log("Console has granted "..target:Nick().." toolgun priveleges." )
@@ -781,7 +781,7 @@ function ccRevokePriv(ply, cmd, args)
 	end
 		
 	if args[2] == "tool" then
-		DB.RevokePriv(target, TOOL)
+		DB.RevokePriv(target, PTOOL)
 		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..target:Nick().."'s toolgun priveleges.")
 		if ply:EntIndex() == 0 then
 			DB.Log("Console has revoked "..target:Nick().." toolgun priveleges." )

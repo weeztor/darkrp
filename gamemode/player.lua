@@ -149,6 +149,14 @@ function meta:NewData()
 	self:GetTable().LastVoteCop = CurTime() - 61
 
 	self:SetTeam(1)
+	
+	--set up privileges
+	for i=0,5 do
+		if DB.HasPriv(self, i) then
+			local p = DB.Priv2Text(i)
+			self:SetNWBool("Priv"..p, true)
+		end
+	end
 
 	-- Whether or not a player is being prevented from joining
 	-- a specific team for a certain length of time
@@ -190,18 +198,21 @@ function meta:ChangeTeam(t, force)
 				Notify(self, 1, 4, "You already are a " .. v.name .. "!")	
 				return
 			end
-			if type(v.NeedToChangeFrom) == "number" and self:Team() ~= v.NeedToChangeFrom and not force then
-				Notify(self, 1,4, "You need to be "..team.GetName(v.NeedToChangeFrom).." first in order to become " .. v.name)
-				return
-			elseif type(v.NeedToChangeFrom) == "table" and not table.HasValue(v.NeedToChangeFrom, self:Team()) and not force then
-				local teamnames = ""
-				for a,b in pairs(v.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
-				Notify(self, 1,4, "You need to be "..string.sub(teamnames, 5).." first in order to become " .. v.name)
-				return
-			end
-			if CfgVars["max"..v.command.."s"] and CfgVars["max"..v.command.."s"] ~= 0 and team.NumPlayers(t) >= CfgVars["max"..v.command.."s"] and not force then
-				Notify(self, 1, 4,  "You can not become "..v.name.." since the limit of "..v.name.." is reached.")
-				return
+			
+			if not self:GetNWBool("Priv"..v.command) then
+				if type(v.NeedToChangeFrom) == "number" and self:Team() ~= v.NeedToChangeFrom and not force then
+					Notify(self, 1,4, "You need to be "..team.GetName(v.NeedToChangeFrom).." first in order to become " .. v.name)
+					return
+				elseif type(v.NeedToChangeFrom) == "table" and not table.HasValue(v.NeedToChangeFrom, self:Team()) and not force then
+					local teamnames = ""
+					for a,b in pairs(v.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
+					Notify(self, 1,4, "You need to be "..string.sub(teamnames, 5).." first in order to become " .. v.name)
+					return
+				end
+				if CfgVars["max"..v.command.."s"] and CfgVars["max"..v.command.."s"] ~= 0 and team.NumPlayers(t) >= CfgVars["max"..v.command.."s"] and not force then
+					Notify(self, 1, 4,  "You can not become "..v.name.." since the limit of "..v.name.." is reached.")
+					return
+				end
 			end
 			self:UpdateJob(v.name)
 			DB.StoreSalary(self, v.salary)

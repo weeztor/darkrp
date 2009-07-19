@@ -397,14 +397,17 @@ function AddTeamCommands(CTeam)
 			return ""
 		end)
 		AddChatCommand("/"..CTeam.command, function(ply)
+			
 			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
 				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." as it is disabled!")
 				return ""
 			end
+			
 			if ply:GetNWBool("Priv"..CTeam.command) then
 				ply:ChangeTeam(k, true)
 				return ""
 			end
+			
 			local a = CTeam.admin
 			if a > 0 and not ply:IsAdmin()
 			or a > 1 and not ply:IsSuperAdmin()
