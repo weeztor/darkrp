@@ -149,7 +149,7 @@ local function AntiNoob(ply, ent)
 		//v:SetNotSolid(true)
 		v:SetRenderMode(RENDERMODE_TRANSALPHA)
 		v:DrawShadow(false)
-		v.OldColor = {v:GetColor()}
+		v.OldColor = v.OldColor or {v:GetColor()}
 		v.StartPos = v:GetPos()
 		v:SetColor(v.OldColor[1], v.OldColor[2], v.OldColor[3], v.OldColor[4] - 155)
 
@@ -194,7 +194,9 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 		if ent.OldColor then
 			ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
 		end
-
+		ent.OldColor = nil
+		
+		
 		ent:SetCollisionGroup( COLLISION_GROUP_NONE )
 		ent.CollisionGroup = COLLISION_GROUP_NONE
 		
@@ -464,6 +466,7 @@ function FPP.Protect.CanTool(ply, trace, tool)
 			end
 		end
 	end
+	return true
 end
 hook.Add("CanTool", "FPP.Protect.CanTool", FPP.Protect.CanTool)
 
