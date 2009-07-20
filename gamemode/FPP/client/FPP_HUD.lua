@@ -1,8 +1,11 @@
+FPP = FPP or {}
+
 local TouchAlpha = 0
 local CantTouchOwner = ""
 local cantouch = false
-FPP = FPP or {}
-function CanTouch(um)
+
+-- Can/can not touch sir!
+local function CanTouch(um)
 	if TouchAlpha ~= 0 then return end
 	CantTouchOwner = um:ReadString()
 	cantouch = um:ReadBool()
@@ -17,6 +20,14 @@ function CanTouch(um)
 	end
 end
 usermessage.Hook("FPP_CanTouch", CanTouch)
+
+--Show the owner!
+local CanTouchLookingAt, Why, LookingatEntity
+local function RetrieveOwner(um)
+	LookingatEntity, CanTouchLookingAt, Why = um:ReadEntity(), um:ReadBool(), um:ReadString()
+end
+usermessage.Hook("FPP_Owner", RetrieveOwner)
+
 
 local HUDNote_c = 0
 local HUDNote_i = 1
@@ -118,15 +129,44 @@ local function DrawNotice( self, k, v, i )
 end
 
 local function HUDPaint()
+	
+	--Show the owner:
+	local LAEnt = LocalPlayer():GetEyeTrace().Entity
+	if CanTouchLookingAt ~= nil and (LAEnt == LookingatEntity or (LookingatEntity == NULL and LAEnt:EntIndex() ~= 0)) then--LookingatEntity is null when you look at a prop you just spawned(haven't spawned on client yet)
+		local QuadTable = {}  
+		
+		if CanTouchLookingAt then
+			QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_on" ) 
+		else
+			QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_off" ) 
+		end
+		QuadTable.color = Color( 255, 255, 255, 255 )  
+		
+		QuadTable.x = 0
+		QuadTable.y = ScrH()/2 - 12
+		QuadTable.w = 16
+		QuadTable.h = 16
+		
+		surface.SetFont("Default")
+		local w,h = surface.GetTextSize(Why)
+		local col = Color(255,0,0,255)
+		if CanTouchLookingAt then col = Color(0,255,0,255) end
+		draw.RoundedBox(4, 0, ScrH()/2 - h, 28 + w, 16, Color(50,50,75,100))
+		draw.DrawText(Why, "Default", 24, ScrH()/2 - h, col, 0) 
+		draw.TexturedQuad( QuadTable )
+	elseif CanTouchLookingAt ~= nil then
+		CanTouchLookingAt, Why, LookingatEntity = nil, nil, nil
+	end
+	-- Messsage when you can't touch something
 	if TouchAlpha ~= 0 then
 		local QuadTable = {}  
 		
 		if cantouch then
-			QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/check_on" ) 
+			QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_on" ) 
 		else
-			QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/check_off" ) 
+			QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_off" ) 
 		end
-		QuadTable.color		= Color( 255, 255, 255, TouchAlpha )  
+		QuadTable.color	= Color( 255, 255, 255, TouchAlpha )  
 		
 		QuadTable.x = ScrW()/2 - 8
 		QuadTable.y = ScrH()/2 - 8
@@ -142,7 +182,6 @@ local function HUDPaint()
 			draw.WordBox(4, ScrW()/2 - 0.51*w, ScrH()/2 + h, CantTouchOwner, "Default", Color(50,50,75,100), col) 
 		end
 	end
-	
 	
 	if not HUDNotes then return end
 	local i = 0
