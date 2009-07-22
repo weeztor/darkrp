@@ -24,7 +24,7 @@ function ENT:Use(activator,caller)
 	activator:SetNWInt("Energy", math.Clamp(activator:GetNWInt("Energy") + self.Entity:GetTable().FoodEnergy, 0, 100))
 	umsg.Start("AteFoodIcon", activator)
 	umsg.End()
-	PooPee.AteFood(activator, self.Entity:GetModel())
+	if PooPee then PooPee.AteFood(activator, self.Entity:GetModel()) end
 	self.Entity:Remove()
 	activator:EmitSound("vo/sandwicheat09.wav", 100, 100)
 end
