@@ -108,9 +108,9 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 			return true
 		elseif not ValidEntity(ent.Owner) then --If world prop or a prop belonging to someone who left
 			if ply:IsAdmin() and tobool(FPP.Settings[Type2].adminworldprops) then -- if admin and admin allowed
-				return true
+				return true, "World prop"
 			elseif tobool(FPP.Settings[Type2].worldprops) then -- if worldprop allowed
-				return true
+				return true, "World prop"
 			end -- if not allowed then
 			return false, "No owner!"
 		else -- You don't own this, simple
