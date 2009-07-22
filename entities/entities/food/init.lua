@@ -30,7 +30,7 @@ function ENT:OnTakeDamage(dmg)
 end
 
 function ENT:Use(activator,caller)
-	PooPee.AteFood(caller, "models/props_junk/garbage_takeoutcarton001a.mdl")
+	if PooPee then PooPee.AteFood(caller, "models/props_junk/garbage_takeoutcarton001a.mdl") end
 	FoodHeal(caller, 100)
 	self.Entity:Remove()
 end
