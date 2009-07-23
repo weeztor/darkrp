@@ -128,6 +128,7 @@ AddCSLuaFile("FPP/client/FPP_Buddies.lua")
 include("FPP/sh_CPPI.lua")
 include("FPP/server/FPP_Settings.lua")
 include("FPP/server/FPP_Core.lua")
+include("FPP/server/FPP_Antispam.lua")
 
 local files = file.Find("../gamemodes/DarkRP/gamemode/modules/*.lua")
 for k, v in pairs(files) do

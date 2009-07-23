@@ -9,6 +9,7 @@ sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_ENTITYDAMAGE('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GLOBALSETTINGS('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
+	sql.Query("CREATE TABLE IF NOT EXISTS FPP_ANTISPAM('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	
 sql.Commit()
 
@@ -81,6 +82,12 @@ FPP.Settings = {}
 		cleanupdisconnected = 1,
 		cleanupdisconnectedtime = 120,
 		cleanupadmin = 1}
+	FPP.Settings.FPP_ANTISPAM = {
+		toggle = 1,
+		bigpropwait = 1.5,
+		smallpropdowngradecount = 3,
+		smallpropghostlimit = 2,
+		smallpropdenylimit = 6}
 
 function FPP.Notify(ply, text, bool)
 	umsg.Start("FPP_Notify", ply)
