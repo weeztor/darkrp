@@ -128,6 +128,7 @@ local function DrawNotice( self, k, v, i )
 
 end
 
+local comingAroundAgain = 0
 local function HUDPaint()
 	
 	--Show the owner:
@@ -151,11 +152,42 @@ local function HUDPaint()
 		local w,h = surface.GetTextSize(Why)
 		local col = Color(255,0,0,255)
 		if CanTouchLookingAt then col = Color(0,255,0,255) end
-		draw.RoundedBox(4, 0, ScrH()/2 - h, 28 + w, 16, Color(50,50,75,100))
-		draw.DrawText(Why, "Default", 24, ScrH()/2 - h, col, 0) 
+		if comingAroundAgain < (w + 28) then
+			comingAroundAgain = math.Min(comingAroundAgain + (FrameTime()*600), w + 28)
+		end
+		QuadTable.x = comingAroundAgain - (w + 28)
+		draw.RoundedBox(4, comingAroundAgain - (w + 28), ScrH()/2 - h, w + 28, 16, Color(50,50,75,100))
+		draw.DrawText(Why, "Default", 24 - (w+28) + comingAroundAgain, ScrH()/2 - h, col, 0) 
 		draw.TexturedQuad( QuadTable )
 	elseif CanTouchLookingAt ~= nil then
-		CanTouchLookingAt, Why, LookingatEntity = nil, nil, nil
+		//CanTouchLookingAt, Why, LookingatEntity = nil, nil, nil
+		//comingAroundAgain = 0--yeaaaaaah
+		if comingAroundAgain > 0 then
+			comingAroundAgain = math.Max(comingAroundAgain - (FrameTime()*600), 0)
+			surface.SetFont("Default")
+			local w,h = surface.GetTextSize(Why)
+			local col = Color(255,0,0,255)
+			local QuadTable = {}  
+			
+			if CanTouchLookingAt then
+				QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_on" ) 
+				col = Color(0,255,0,255)
+			else
+				QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_off" ) 
+			end
+			QuadTable.color = Color( 255, 255, 255, 255 )  
+			
+			QuadTable.x = 0
+			QuadTable.y = ScrH()/2 - 12
+			QuadTable.w = 16
+			QuadTable.x = comingAroundAgain - (w + 28)
+			draw.RoundedBox(4, comingAroundAgain - (w + 28), ScrH()/2 - h, w + 28, 16, Color(50,50,75,100))
+			draw.DrawText(Why, "Default", 24 - (w+28) + comingAroundAgain, ScrH()/2 - h, col, 0) 
+			draw.TexturedQuad( QuadTable )
+		else
+			comingAroundAgain = 0
+			CanTouchLookingAt, Why, LookingatEntity = nil, nil, nil
+		end
 	end
 	-- Messsage when you can't touch something
 	if TouchAlpha ~= 0 then
