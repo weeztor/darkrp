@@ -107,12 +107,14 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 		elseif ent == GetWorldEntity() or ent:GetClass() == "gmod_anchor" then
 			return true
 		elseif not ValidEntity(ent.Owner) then --If world prop or a prop belonging to someone who left
+			local world = "World prop"
+			if ent.Owner then world = "Disconnected player's prop" end
 			if ply:IsAdmin() and tobool(FPP.Settings[Type2].adminworldprops) then -- if admin and admin allowed
-				return true, "World prop"
+				return true, world
 			elseif tobool(FPP.Settings[Type2].worldprops) then -- if worldprop allowed
-				return true, "World prop"
+				return true, world
 			end -- if not allowed then
-			return false, "No owner!"
+			return false, world
 		else -- You don't own this, simple
 			return false, ent.Owner
 		end
