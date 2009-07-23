@@ -338,8 +338,12 @@ hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
 
 --EntityDamage
 function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
+	print(ent, inflictor, attacker, amount, dmginfo)
 	if ent:IsPlayer() then
-		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and not dmginfo:IsBulletDamage() and ((ValidEntity(attacker.Owner) and attacker.Owner != ent) or (ValidEntity(inflictor.Owner) and inflictor.Owner != ent)) then
+		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and not dmginfo:IsBulletDamage() and 
+		((ValidEntity(attacker.Owner) and attacker.Owner != ent) or 
+			(ValidEntity(inflictor.Owner) and inflictor.Owner != ent) or 
+			(attacker == GetWorldEntity() and amount == 200)) then -- Somehow when you prop kill someone while using world spawn(You push someone against the wall) The damage is ALWAYS 200.
 			dmginfo:SetDamage(0)
 		end
 		return 
