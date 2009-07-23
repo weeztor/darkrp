@@ -108,24 +108,23 @@ function FPP.AdminMenu(Panel)
 		pan:AddItem(AddManual)
 	end
 	
-	local GeneralCat, general = MakeOption("General options")
-	addchk("Cleanup disconnected players's entities", {"FPP_GLOBALSETTINGS", "cleanupdisconnected"}, general)
-	addchk("Cleanup admin's entities on disconnect", {"FPP_GLOBALSETTINGS", "cleanupadmin"}, general)
-		local deltime = vgui.Create("DNumSlider")
-		deltime:SetMinMax(0, 300)
-		deltime:SetDecimals(0)
-		deltime:SetText("Deletion time")
-		deltime:SetValue(GetGlobalInt("FPP_GLOBALSETTINGS_cleanupdisconnectedtime"))
-		function deltime.Slider:OnMouseReleased()
+	local function addsldr(max, command, text, plist)
+		local sldr = vgui.Create("DNumSlider")
+		sldr:SetMinMax(0, max)
+		sldr:SetDecimals(1)
+		sldr:SetText(text)
+		sldr:SetValue(GetGlobalInt(command[1].."_"..command[2]))
+		function sldr.Slider:OnMouseReleased()
 			self:SetDragging( false ) 
 			self:MouseCapture( false ) 
 			if not superadmin then
-				deltime:SetValue(GetGlobalInt("FPP_GLOBALSETTINGS_cleanupdisconnectedtime"))
+				sldr:SetValue(GetGlobalInt(command[1].."_"..command[2]))
 				return
 			end
-			RunConsoleCommand("FPP_Setting", "FPP_GLOBALSETTINGS", "cleanupdisconnectedtime", deltime:GetValue())
+			RunConsoleCommand("FPP_Setting", command[1], command[2], sldr:GetValue())
 		end
-		function deltime.Wang:EndWang()
+		
+		function sldr.Wang:EndWang()
 			self:MouseCapture( false ) 
 			self.Dragging = false 
 			self.HoldPos = nil 
@@ -133,47 +132,61 @@ function FPP.AdminMenu(Panel)
 			if ( ValidPanel( self.IndicatorT ) ) then self.IndicatorT:Remove() end 
 			if ( ValidPanel( self.IndicatorB ) ) then self.IndicatorB:Remove() end
 			if not superadmin then
-				deltime:SetValue(GetGlobalInt("FPP_GLOBALSETTINGS_cleanupdisconnectedtime"))
+				sldr:SetValue(GetGlobalInt(command[1].."_"..command[2]))
 				return
 			end			
-			RunConsoleCommand("FPP_Setting", "FPP_GLOBALSETTINGS", "cleanupdisconnectedtime", deltime:GetValue())
+			RunConsoleCommand("FPP_Setting", command[1], command[2], sldr:GetValue())
 		end
 		
-		function deltime.Wang.TextEntry:OnEnter()
+		function sldr.Wang.TextEntry:OnEnter()
 			if not superadmin then
-				deltime:SetValue(GetGlobalInt("FPP_GLOBALSETTINGS_cleanupdisconnectedtime"))
+				sldr:SetValue(GetGlobalInt(command[1].."_"..command[2]))
 				return
 			end
-			RunConsoleCommand("FPP_Setting", "FPP_GLOBALSETTINGS", "cleanupdisconnectedtime", deltime:GetValue())
+			RunConsoleCommand("FPP_Setting", command[1], command[2], sldr:GetValue())
 		end
-		general:AddItem(deltime)
-		
-		local delnow = vgui.Create("DButton")
-		delnow:SetText("Delete disconnected players' entities")
-		delnow:SetConsoleCommand("FPP_cleanup", "disconnected")
-		delnow:SetDisabled(not superadmin)
-		general:AddItem(delnow)
-		
-		local other = Label("\nDelete other player's entities:")
-		other:SizeToContents()
-		general:AddItem(other)
-		
-		local areplayers = false
-		for k,v in pairs(player.GetAll()) do
-			if v ~= LocalPlayer() then
-				areplayers = true
-				local rm = vgui.Create("DButton")
-				rm:SetText(v:Nick())
-				rm:SetConsoleCommand("FPP_Cleanup", v:UserID())
-				rm:SetDisabled(not superadmin)
-				general:AddItem(rm)
-			end
+		plist:AddItem(sldr)
+	end
+	
+	local GeneralCat, general = MakeOption("General options")
+	addchk("Cleanup disconnected players's entities", {"FPP_GLOBALSETTINGS", "cleanupdisconnected"}, general)
+	addchk("Cleanup admin's entities on disconnect", {"FPP_GLOBALSETTINGS", "cleanupadmin"}, general)
+	addsldr(300, {"FPP_GLOBALSETTINGS", "cleanupdisconnectedtime"}, "Deletion time", general)
+	
+	local delnow = vgui.Create("DButton")
+	delnow:SetText("Delete disconnected players' entities")
+	delnow:SetConsoleCommand("FPP_cleanup", "disconnected")
+	delnow:SetDisabled(not superadmin)
+	general:AddItem(delnow)
+	
+	local other = Label("\nDelete other player's entities:")
+	other:SizeToContents()
+	general:AddItem(other)
+	
+	local areplayers = false
+	for k,v in pairs(player.GetAll()) do
+		if v ~= LocalPlayer() then
+			areplayers = true
+			local rm = vgui.Create("DButton")
+			rm:SetText(v:Nick())
+			rm:SetConsoleCommand("FPP_Cleanup", v:UserID())
+			rm:SetDisabled(not superadmin)
+			general:AddItem(rm)
 		end
-		if not areplayers then
-			local nope = Label("<No players available>")
-			nope:SizeToContents()
-			general:AddItem(nope)
-		end
+	end
+	if not areplayers then
+		local nope = Label("<No players available>")
+		nope:SizeToContents()
+		general:AddItem(nope)
+	end
+	
+	local Antispamcat, antispam = MakeOption("Antispam options")
+	addchk("Spam protection enabled on/off", {"FPP_ANTISPAM", "toggle"}, antispam)
+	addsldr(10, {"FPP_ANTISPAM", "bigpropwait"}, "Time between spawning two big props", antispam)
+	addsldr(10, {"FPP_ANTISPAM", "smallpropdowngradecount"}, "Speed spamming meter decreases", antispam)
+	addsldr(10, {"FPP_ANTISPAM", "smallpropghostlimit"}, "When to start ghosting props", antispam)
+	addsldr(20, {"FPP_ANTISPAM", "smallpropdenylimit"}, "When to start denying prop spawn", antispam)
+	
 	
 	local physcat, physgun = MakeOption("Physgun options")
 	addchk("Physgun protection enabled", {"FPP_PHYSGUN", "toggle"}, physgun)
