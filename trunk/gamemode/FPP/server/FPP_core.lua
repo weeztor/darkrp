@@ -338,7 +338,6 @@ hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
 
 --EntityDamage
 function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
-	print(ent, inflictor, attacker, amount, dmginfo)
 	if ent:IsPlayer() then
 		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and not dmginfo:IsBulletDamage() and 
 		((ValidEntity(attacker.Owner) and attacker.Owner != ent) or 
