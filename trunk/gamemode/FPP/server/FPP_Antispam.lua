@@ -54,6 +54,10 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 	if phys:GetVolume() and phys:GetVolume() > 700000 then
 		ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
 		ply.FPPAntispamBigProp = ply.FPPAntispamBigProp + 1
+		timer.Simple(10*FPP.Settings.FPP_ANTISPAM.bigpropwait, function(ply)
+			ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
+			ply.FPPAntispamBigProp = math.Max(ply.FPPAntispamBigProp - 1, 0)
+		end, ply)
 		
 		if ply.FPPAntiSpamLastBigProp and ply.FPPAntiSpamLastBigProp > (CurTime() - (FPP.Settings.FPP_ANTISPAM.bigpropwait * ply.FPPAntispamBigProp)) then
 			FPP.Notify(ply, "Please wait " .. FPP.Settings.FPP_ANTISPAM.bigpropwait * ply.FPPAntispamBigProp ../*string.sub(tostring(2 - (CurTime() - ply.FPPAntiSpamLastBigProp)), 1, 3) ..*/ " Seconds before spawning a big prop again", false)
@@ -83,7 +87,18 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 			FPP.Notify(ply, "Prop removed due to spam", false)
 			return
 		end
-		ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
-		ply.FPPAntispamBigProp = math.Max(ply.FPPAntispamBigProp - 1, 0)
 	end
+end
+
+function FPP.AntiSpam.DuplicatorSpam(ply)
+	ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate or 0
+	ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate + 1
+	
+	timer.Simple(ply.FPPAntiSpamLastDuplicate / FPP.Settings.FPP_ANTISPAM.duplicatorlimit, function(ply) if ValidEntity(ply) then ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate - 1 end end, ply)
+	
+	if ply.FPPAntiSpamLastDuplicate >= FPP.Settings.FPP_ANTISPAM.duplicatorlimit then
+		FPP.Notify(ply, "Can't duplicate due to spam", false)
+		return false
+	end
+	return true
 end

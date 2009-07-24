@@ -87,7 +87,8 @@ FPP.Settings = {}
 		bigpropwait = 1.5,
 		smallpropdowngradecount = 3,
 		smallpropghostlimit = 2,
-		smallpropdenylimit = 6}
+		smallpropdenylimit = 6,
+		duplicatorlimit = 3}
 
 function FPP.Notify(ply, text, bool)
 	umsg.Start("FPP_Notify", ply)
