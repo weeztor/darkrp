@@ -51,7 +51,10 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 	local phys = ent:GetPhysicsObject()
 	if not phys:IsValid() then return end
 	
-	if phys:GetVolume() and phys:GetVolume() > 700000 then
+	print("volume: ",phys:GetVolume())
+	print("ENT ",ent, phys)
+	local class = ent:GetClass()
+	if phys:GetVolume() and phys:GetVolume() > 700000 and not string.find(class, "constraint") and not string.find(class, "hinge") then
 		ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
 		ply.FPPAntispamBigProp = ply.FPPAntispamBigProp + 1
 		timer.Simple(10*FPP.Settings.FPP_ANTISPAM.bigpropwait, function(ply)

@@ -29,8 +29,7 @@ if cleanup then
 			--Set the owner of the entity
 			ent.Owner = ply
 			ent.OwnerID = ply:SteamID()
-			
-			if FPP.AntiSpam and Type ~= "constraints" then
+			if FPP.AntiSpam and Type ~= "constraints"  then
 				FPP.AntiSpam.CreateEntity(ply, ent, Type == "duplicates")
 			end
 		end
@@ -382,9 +381,9 @@ function FPP.Protect.CanTool(ply, trace, tool)
 	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetToolObject() and 
 	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ), "*")) then
 		FPP.Notify(ply, "The material/model of the tool is invalid!", false)
-		return FPP.CanTouch(ply, "FPP_TOOLGUN", "The material/model of the tool is invalid!", false)
-	end
-	
+		FPP.CanTouch(ply, "FPP_TOOLGUN", "The material/model of the tool is invalid!", false)
+		return false
+	end	
 	
 	local ent = trace.Entity
 	
