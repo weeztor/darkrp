@@ -398,6 +398,7 @@ function FPP.Protect.CanTool(ply, trace, tool)
 	end
 
 	if tool ~= "adv_duplicator" and tool ~= "duplicator" then return true end
+	if not FPP.AntiSpam.DuplicatorSpam(ply) then return false end
 	if tool == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 		for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) then

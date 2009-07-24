@@ -186,6 +186,7 @@ function FPP.AdminMenu(Panel)
 	addsldr(10, {"FPP_ANTISPAM", "smallpropdowngradecount"}, "Speed spamming meter decreases", antispam)
 	addsldr(10, {"FPP_ANTISPAM", "smallpropghostlimit"}, "When to start ghosting props", antispam)
 	addsldr(20, {"FPP_ANTISPAM", "smallpropdenylimit"}, "When to start denying prop spawn", antispam)
+	addsldr(10, {"FPP_ANTISPAM", "duplicatorlimit"}, "When to deny duplicate", antispam)
 	
 	
 	local physcat, physgun = MakeOption("Physgun options")
