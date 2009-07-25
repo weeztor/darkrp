@@ -182,11 +182,12 @@ function meta:ChangeTeam(t, force)
 			return
 		end
 	end
-
+	
 	self:SetNWBool("helpBoss",false)
 	self:SetNWBool("helpCop",false)
 	self:SetNWBool("helpMayor",false)
 
+	
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) then
 		Notify(self, 1, 4, "You were either banned from this team or you were demoted.)")
 		return
@@ -225,7 +226,7 @@ function meta:ChangeTeam(t, force)
 			end
 		end
 	end
-	
+
 	if t == TEAM_POLICE then	
 		self:SetNWBool("helpCop", true)
 	elseif t == TEAM_GANG then
@@ -235,7 +236,7 @@ function meta:ChangeTeam(t, force)
 	elseif t == TEAM_MAYOR then
 		self:SetNWBool("helpMayor", true)
 	end
-
+	
 	if CfgVars["removeclassitems"] == 1 then
 		for k, v in pairs(ents.FindByClass("microwave")) do
 			if v.SID == self.SID then v:Remove() end
@@ -260,7 +261,7 @@ function meta:ChangeTeam(t, force)
 			end
 		end
 	end
-
+	
 	self:SetTeam(t)
 	DB.Log(self:SteamName().." ("..self:SteamID()..") changed to "..team.GetName(t))
 	if self:InVehicle() then self:ExitVehicle() end

@@ -14,7 +14,7 @@ The Battering Ram can break down the door of a criminal with a warrant
 for his/her arrest.
 The Battering Ram can also unfreeze frozen props(if enabled).
 Type /wanted <name> to alert the public to this criminal
-OR go to tab and warrant someone by clicking the warrant button]], {"arrest_stick", "unarrest_stick", "weapon_glock2", "stunstick", "door_ram", "weaponchecker", "item_ammo_pistol"}, "cp", 4, 65, 0, true, true)
+OR go to tab and warrant someone by clicking the warrant button]], {"arrest_stick", "unarrest_stick", "weapon_glock2", "stunstick", "door_ram", "weaponchecker"}, "cp", 4, 65, 0, true, true)
 
 TEAM_GANG = AddExtraTeam("Gangster", Color(75, 75, 75, 255), "models/player/group03/male_01.mdl", [[The lowest person of crime. 
 A gangster generally works for the Mobboss who runs the crime family. 
@@ -52,7 +52,7 @@ disobey the law.
 The Battering Ram can break down the door of a criminal with a 
 warrant for his/her arrest.
 Type /wanted <name> to alert the public to this criminal
-Type /jailpos to set the Jail Position]], {"arrest_stick", "unarrest_stick", "weapon_deagle2", "stunstick", "door_ram", "weaponchecker", "item_ammo_pistol"}, "chief", 1, 75, 0, false, true, TEAM_POLICE)
+Type /jailpos to set the Jail Position]], {"arrest_stick", "unarrest_stick", "weapon_deagle2", "stunstick", "door_ram", "weaponchecker"}, "chief", 1, 75, 0, false, true, TEAM_POLICE)
 
 TEAM_MAYOR = AddExtraTeam("Mayor", Color(150, 20, 20, 255), "models/player/breen.mdl", [[The Mayor of the city creates laws to serve the greater good 
 of the people.
@@ -62,7 +62,7 @@ Type /jailpos to set the Jail Position
 Type /lockdown initiate a lockdown of the city. 
 Everyone must be inside during a lockdown. 
 The cops patrol the area
-/unlockdown to end a lockdown]], {"item_ammo_pistol"}, "mayor", 1, 85, 0, true, false/*, {TEAM_CHIEF, TEAM_POLICE}*/)
+/unlockdown to end a lockdown]], {}, "mayor", 1, 85, 0, true, false/*, {TEAM_CHIEF, TEAM_POLICE}*/)
 /*
 --------------------------------------------------------
 HOW TO MAKE AN EXTRA CLASS!!!!

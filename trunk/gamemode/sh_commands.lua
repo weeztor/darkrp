@@ -397,7 +397,6 @@ function AddTeamCommands(CTeam)
 			return ""
 		end)
 		AddChatCommand("/"..CTeam.command, function(ply)
-			
 			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
 				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." as it is disabled!")
 				return ""

@@ -544,13 +544,13 @@ function GM:PlayerLoadout(ply)
 	
 	ply:GetTable().RPLicenseSpawn = true
 	timer.Simple(1, removelicense, ply)
-
-	local team = ply:Team()
-
+	
+	local Team = ply:Team()
+	
 	ply:Give("keys")
 	ply:Give("weapon_physcannon")
 	ply:Give("gmod_camera")
-
+	
 	if CfgVars["toolgun"] == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PTOOL) then
 		ply:Give("gmod_tool")
 	end
@@ -558,7 +558,7 @@ function GM:PlayerLoadout(ply)
 	if CfgVars["pocket"] == 1 then
 		ply:Give("pocket")
 	end
-
+	
 	if CfgVars["physgun"] == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PHYS) then
 		ply:Give("weapon_physgun")
 	end
@@ -571,10 +571,8 @@ function GM:PlayerLoadout(ply)
 		ply:Give("weaponchecker") 
 	end
 
-	for k,v in pairs(RPExtraTeams) do
-		if team == k then
-			for _,b in pairs(v.Weapons) do ply:Give(b) end
-		end
+	for k,v in pairs(RPExtraTeams[Team].Weapons) do
+		ply:Give(v)
 	end
 	
 	-- Switch to prefered weapon if they have it
