@@ -88,7 +88,7 @@ function AddEntity(name, entity, model, price, max, command, classes)
 		classes = {classes}
 	end
 	table.insert(DarkRPEntities, {name = name, ent = entity, model = model, price = price, max = max, cmd = command, allowed = classes})
-	AddEntityCommands(name, command)
+	AddEntityCommands(name, entity)
 end
 
 hook.Add("InitPostEntity", "AddShipments", function()
