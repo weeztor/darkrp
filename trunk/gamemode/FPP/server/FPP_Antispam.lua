@@ -103,3 +103,28 @@ function FPP.AntiSpam.DuplicatorSpam(ply)
 	end
 	return true
 end
+
+
+local function IsEmpty(ent)
+	local mins, maxs = ent:LocalToWorld(ent:OBBMins( )), ent:LocalToWorld(ent:OBBMaxs( ))
+	local tr = {}
+	tr.start = mins
+	tr.endpos = maxs
+	tr.filter = ent
+	local trace = util.TraceLine(tr)
+	print(trace.Entity)
+	return trace.Entity
+end
+
+function FPP.AntiSpam.PreventPropInProp(ply, model, ent)
+	if not tobool(FPP.Settings.FPP_ANTISPAM.antispawninprop) then return end
+	//local lowerpos = ent:NearestPoint(Vector(0,0,-10000))
+	//local higherpos = ent:NearestPoint(Vector(0,0,10000))
+	
+	local PropInProp = IsEmpty(ent)
+	if not PropInProp:IsValid() then return end
+	local pos = PropInProp:NearestPoint(ply:EyePos()) + ply:GetAimVector() * -1 * ent:BoundingRadius()
+	ent:SetPos(pos)
+	
+end
+hook.Add("PlayerSpawnedProp", "FPP.AntiSpam.PreventPropInProp", FPP.AntiSpam.PreventPropInProp)

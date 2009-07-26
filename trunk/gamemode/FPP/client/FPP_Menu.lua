@@ -182,6 +182,7 @@ function FPP.AdminMenu(Panel)
 	
 	local Antispamcat, antispam = MakeOption("Antispam options")
 	addchk("Spam protection enabled on/off", {"FPP_ANTISPAM", "toggle"}, antispam)
+	addchk("Prevent spawning a prop in a prop", {"FPP_ANTISPAM", "antispawninprop"}, antispam)
 	addsldr(10, {"FPP_ANTISPAM", "bigpropwait"}, "Time between spawning two big props", antispam)
 	addsldr(10, {"FPP_ANTISPAM", "smallpropdowngradecount"}, "Speed spamming meter decreases", antispam)
 	addsldr(10, {"FPP_ANTISPAM", "smallpropghostlimit"}, "When to start ghosting props", antispam)
