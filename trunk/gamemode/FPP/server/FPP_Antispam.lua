@@ -91,7 +91,7 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 end
 
 function FPP.AntiSpam.DuplicatorSpam(ply)
-	if not tobool(FPP.Settings.FPP_ANTISPAM.toggle) then return end
+	if not tobool(FPP.Settings.FPP_ANTISPAM.toggle) then return true end
 	ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate or 0
 	ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate + 1
 	
