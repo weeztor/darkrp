@@ -1025,7 +1025,7 @@ for k,v in pairs(DarkRPEntities) do
 		end
 		
 		if not ply:CanAfford(price) then
-			Notify(ply, 1, 4, "You You can not afford this!")
+			Notify(ply, 1, 4, "You can not afford this!")
 			return ""
 		end
 		ply:AddMoney(-price)
