@@ -521,7 +521,7 @@ function EntitiesTab()
 					
 					for k,v in pairs(DarkRPEntities) do
 						if not v.allowed or (type(v.allowed) == "table" and table.HasValue(v.allowed, LocalPlayer():Team())) then
-							local cmdname = string.gsub(v.cmd, " ", "_")
+							local cmdname = string.gsub(v.ent, " ", "_")
 							
 							if tobool(GetGlobalInt("disable"..cmdname)) then return end
 							

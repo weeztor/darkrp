@@ -84,6 +84,7 @@ FPP.Settings = {}
 		cleanupadmin = 1}
 	FPP.Settings.FPP_ANTISPAM = {
 		toggle = 1,
+		antispawninprop = 1,
 		bigpropwait = 1.5,
 		smallpropdowngradecount = 3,
 		smallpropghostlimit = 2,
