@@ -112,15 +112,12 @@ local function IsEmpty(ent)
 	tr.endpos = maxs
 	tr.filter = ent
 	local trace = util.TraceLine(tr)
-	print(trace.Entity)
 	return trace.Entity
 end
 
 function FPP.AntiSpam.PreventPropInProp(ply, model, ent)
 	if not tobool(FPP.Settings.FPP_ANTISPAM.antispawninprop) then return end
-	//local lowerpos = ent:NearestPoint(Vector(0,0,-10000))
-	//local higherpos = ent:NearestPoint(Vector(0,0,10000))
-	
+
 	local PropInProp = IsEmpty(ent)
 	if not PropInProp:IsValid() then return end
 	local pos = PropInProp:NearestPoint(ply:EyePos()) + ply:GetAimVector() * -1 * ent:BoundingRadius()
