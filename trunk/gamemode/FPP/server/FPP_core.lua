@@ -183,12 +183,11 @@ end
 hook.Add("Think", "FPP_ShowOwner", FPP.ShowOwner)
 
 local function AntiNoob(ply, ent)
-	if FPP.Protect.PhysgunPickup(ply, ent) == false then return false end
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end 
 	local Ents = constraint.GetAllConstrainedEntities(ent)
 	
 	for k,v in pairs(Ents) do
-		v:SetRenderMode(RENDERMODE_TRANSALPHA)
+		//v:SetRenderMode(RENDERMODE_TRANSALPHA)
 		v:DrawShadow(false)
 		v.OldColor = v.OldColor or {v:GetColor()}
 		v.StartPos = v:GetPos()
@@ -205,16 +204,19 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.toggle) then return true end
 	if not ent:IsValid() then return FPP.CanTouch(ply, "FPP_PHYSGUN", "Not valid!", false) end
 	
-	if ent:IsPlayer() then return false end
+	if ent:IsPlayer() then return end
 	
 	local cantouch, why = FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN")
 	if why then
 		FPP.CanTouch(ply, "FPP_PHYSGUN", why, cantouch)
 	end
 	
+	if cantouch then
+		AntiNoob(ply, ent)
+	end
 	return cantouch
 end
-hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", AntiNoob)
+hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup)
 
 function FPP.Protect.PhysgunDrop(ply, DropEnt)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end --Antinoob only code in the physgundrop
