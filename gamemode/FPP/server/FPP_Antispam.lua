@@ -127,3 +127,15 @@ function FPP.AntiSpam.PreventPropInProp(ply, model, ent)
 	
 end
 hook.Add("PlayerSpawnedProp", "FPP.AntiSpam.PreventPropInProp", FPP.AntiSpam.PreventPropInProp)
+
+--More crash preventing:
+local function antiragdollcrash(ply)
+	local pos = ply:GetEyeTrace().HitPos
+	for k,v in pairs(ents.FindInSphere(pos, 30)) do 
+		if v:GetClass() == "func_door" then
+			FPP.Notify(ply, "Can't spawn a ragdoll near doors", false)
+			return false
+		end
+	end
+end
+hook.Add("PlayerSpawnRagdoll", "FPP.AntiSpam.AntiCrash", antiragdollcrash)
