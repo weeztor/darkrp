@@ -53,6 +53,13 @@ function KnockoutToggle(player, command, args, caller)
 				player:SetNWInt("Energy", player.OldHunger)
 				player.OldHunger = nil
 			else
+				for k,v in pairs(ents.FindInSphere(player:GetPos(), 30)) do 
+					if v:GetClass() == "func_door" then
+						Notify(player, 1, 4, "Can't sleep near doors")
+						return ""
+					end
+				end
+
 				player.WeaponsForSleep = {}
 				for k,v in pairs(player:GetWeapons( )) do
 					player.WeaponsForSleep[k] = v:GetClass()
