@@ -187,7 +187,7 @@ local function AntiNoob(ply, ent)
 	local Ents = constraint.GetAllConstrainedEntities(ent)
 	
 	for k,v in pairs(Ents) do
-		//v:SetRenderMode(RENDERMODE_TRANSALPHA)
+		v:SetRenderMode(RENDERMODE_TRANSALPHA)
 		v:DrawShadow(false)
 		v.OldColor = v.OldColor or {v:GetColor()}
 		v.StartPos = v:GetPos()
@@ -234,7 +234,7 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 		
 		ent:SetCollisionGroup( COLLISION_GROUP_NONE )
 		ent.CollisionGroup = COLLISION_GROUP_NONE
-		
+		if ent:IsPlayer() then return end -- stop here if it's a player
 		--Make a traceline from where you started picking it up to where you ended picking it up
 		local tr = {}
 		tr.start = ent.StartPos
