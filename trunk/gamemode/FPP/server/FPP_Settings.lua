@@ -85,6 +85,7 @@ FPP.Settings = {}
 	FPP.Settings.FPP_ANTISPAM = {
 		toggle = 1,
 		antispawninprop = 1,
+		bigpropsize = 5.85,
 		bigpropwait = 1.5,
 		smallpropdowngradecount = 3,
 		smallpropghostlimit = 2,
