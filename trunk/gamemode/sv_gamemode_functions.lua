@@ -636,14 +636,13 @@ function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's 
 	local text2 = text
 	local callback
 	text2, callback = RP_PlayerChat(ply, text2)
-	if tostring(callback) ~= "" then return "" end
+	if tostring(text2) == " " then text2, callback = callback, text2 end
 	for k,v in SortedPairs(otherhooks, false) do
 		if type(v) == "function" then
 			text2 = v(ply, text2) or text2
 		end
 	end
 	text2 = RP_ActualDoSay(ply, text2, callback) 
-	print(ply:Nick().. ": "..text2)
 	return ""
 end
 
