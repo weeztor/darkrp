@@ -184,6 +184,7 @@ hook.Add("Think", "FPP_ShowOwner", FPP.ShowOwner)
 
 local function AntiNoob(ply, ent)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end 
+	if ent:GetClass() == "func_breakable_surf" then return end
 	local Ents = constraint.GetAllConstrainedEntities(ent)
 	
 	for k,v in pairs(Ents) do
