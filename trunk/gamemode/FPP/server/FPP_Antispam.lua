@@ -112,16 +112,19 @@ local function IsEmpty(ent)
 	return trace.Entity
 end
 
-function FPP.AntiSpam.PreventPropInProp(ply, model, ent)
-	if not tobool(FPP.Settings.FPP_ANTISPAM.antispawninprop) then return end
-
-	local PropInProp = IsEmpty(ent)
-	if not PropInProp:IsValid() then return end
-	local pos = PropInProp:NearestPoint(ply:EyePos()) + ply:GetAimVector() * -1 * ent:BoundingRadius()
-	ent:SetPos(pos)
-	
-end
-hook.Add("PlayerSpawnedProp", "FPP.AntiSpam.PreventPropInProp", FPP.AntiSpam.PreventPropInProp)
+hook.Add("InitPostEntity", "FPP.InitializePreventSpawnInProp", function()
+	local backupPropSpawn = DoPlayerEntitySpawn
+	function DoPlayerEntitySpawn(ply, ...)
+		local ent = backupPropSpawn(ply, ...)
+		if not tobool(FPP.Settings.FPP_ANTISPAM.antispawninprop) then return ent end
+		
+		local PropInProp = IsEmpty(ent)
+		if not PropInProp:IsValid() then return ent end
+		local pos = PropInProp:NearestPoint(ply:EyePos()) + ply:GetAimVector() * -1 * ent:BoundingRadius()
+		ent:SetPos(pos)
+		return ent
+	end
+end)
 
 --More crash preventing:
 local function antiragdollcrash(ply)
