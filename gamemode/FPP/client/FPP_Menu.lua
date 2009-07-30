@@ -153,6 +153,7 @@ function FPP.AdminMenu(Panel)
 	addchk("Cleanup disconnected players's entities", {"FPP_GLOBALSETTINGS", "cleanupdisconnected"}, general)
 	addchk("Cleanup admin's entities on disconnect", {"FPP_GLOBALSETTINGS", "cleanupadmin"}, general)
 	addsldr(300, {"FPP_GLOBALSETTINGS", "cleanupdisconnectedtime"}, "Deletion time", general, 0)
+	addchk("Anti speedhack(requires changelevel)", {"FPP_GLOBALSETTINGS", "antispeedhack"}, general)
 	
 	local delnow = vgui.Create("DButton")
 	delnow:SetText("Delete disconnected players' entities")

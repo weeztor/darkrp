@@ -513,3 +513,21 @@ function FPP.PlayerInitialSpawn(ply)
 	end
 end
 hook.Add("PlayerInitialSpawn", "FPP.PlayerInitialSpawn", FPP.PlayerInitialSpawn)
+
+----------------------------------------------------------------
+-- AntiSpeedHack, Thanks Eusion(bloodychef) for the idea.
+---------------------------------------------------------------
+function FPP.AntiSpeedHack(ply) --I know Lua scripters can get around this, but at least this protects from the noobs with speedhacks ^^
+	if not tobool(FPP.Settings.FPP_GLOBALSETTINGS.antispeedhack) then return end
+	ply:SendLua([[local function a()
+		if GetConVarNumber("host_timescale") ~= 1 then
+			LocalPlayer():Remove()
+		end
+	end
+	function b()
+		a()
+		timer.Simple(0.1, b)
+	end
+	timer.Simple(0.1, b)]])
+end
+hook.Add("PlayerInitialSpawn", "FPP.Think.AntiSpeedHack", FPP.AntiSpeedHack)
