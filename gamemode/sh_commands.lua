@@ -200,7 +200,7 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_telefromjail - Enable/disable te
 AddToggleCommand("rp_logging", "logging", false, true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_logging - Enable/disable logging everything that happens.")
 
-AddToggleCommand("rp_RestrictDrop", "RestrictDrop", false)
+AddToggleCommand("rp_restrictdrop", "RestrictDrop", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_RestrictDrop - Enable/disable restricting which weapons players can drop.")
 
 AddToggleCommand("rp_ironshoot", "ironshoot", false)
