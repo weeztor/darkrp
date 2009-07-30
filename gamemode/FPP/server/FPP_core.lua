@@ -524,7 +524,7 @@ function FPP.AntiSpeedHack(ply) --I know Lua scripters can get around this, but 
 			LocalPlayer():Remove()
 		end
 	end
-	function b()
+	local function b()
 		a()
 		timer.Simple(0.1, b)
 	end
