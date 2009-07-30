@@ -107,7 +107,9 @@ local function IsEmpty(ent)
 	local tr = {}
 	tr.start = mins
 	tr.endpos = maxs
-	tr.filter = ent
+	local ignore = player.GetAll()
+	table.insert(ignore, ent)
+	tr.filter = ignore
 	local trace = util.TraceLine(tr)
 	return trace.Entity
 end
