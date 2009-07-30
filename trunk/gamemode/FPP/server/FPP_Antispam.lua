@@ -18,7 +18,7 @@ local function GhostFreeze(ent, phys)
 	ent.FPPAntiSpamIsGhosted = true
 end
 
-local function UnGhost(ply, ent)
+function FPP.UnGhost(ply, ent)
 	if ent.FPPAntiSpamIsGhosted then
 		ent.FPPAntiSpamIsGhosted = nil
 		ent:DrawShadow(true)
@@ -39,11 +39,6 @@ local function UnGhost(ply, ent)
 		end
 	end
 end
-hook.Add("PhysgunPickup", "FPP.AntiSpam.Unghost", UnGhost)
-hook.Add("GravGunPickupAllowed", "FPP.AntiSpam.Unghost", UnGhost)
-hook.Add("PlayerUse", "FPP.AntiSpam.Unghost", UnGhost)
-hook.Add("GravGunPunt", "FPP.AntiSpam.Unghost", UnGhost)
-
 
 function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 	if not tobool(FPP.Settings.FPP_ANTISPAM.toggle) then return end

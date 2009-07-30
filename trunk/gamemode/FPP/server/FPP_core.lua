@@ -202,7 +202,7 @@ end
 
 --Physgun Pickup
 function FPP.Protect.PhysgunPickup(ply, ent)
-	if not tobool(FPP.Settings.FPP_PHYSGUN.toggle) then return true end
+	if not tobool(FPP.Settings.FPP_PHYSGUN.toggle) then if FPP.UnGhost then FPP.UnGhost(ply, ent) end return true end
 	if not ent:IsValid() then return FPP.CanTouch(ply, "FPP_PHYSGUN", "Not valid!", false) end
 	
 	if ent:IsPlayer() then return end
@@ -215,6 +215,7 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 	if cantouch then
 		AntiNoob(ply, ent)
 	end
+	if FPP.UnGhost and cantouch then FPP.UnGhost(ply, ent) end
 	return cantouch
 end
 hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup)
@@ -308,6 +309,7 @@ function FPP.Protect.GravGunPickup(ply, ent)
 		FPP.CanTouch(ply, "FPP_GRAVGUN", why, cantouch)
 	end
 	
+	if FPP.UnGhost and cantouch then FPP.UnGhost(ply, ent) end
 	return cantouch
 end
 hook.Add("GravGunPickupAllowed", "FPP.Protect.GravGunPickup", FPP.Protect.GravGunPickup)
@@ -323,6 +325,7 @@ function FPP.Protect.GravGunPunt(ply, ent)
 		FPP.CanTouch(ply, "FPP_GRAVGUN", why, cantouch)
 	end
 	
+	if FPP.UnGhost and cantouch then FPP.UnGhost(ply, ent) end
 	return cantouch
 end
 hook.Add("GravGunPunt", "FPP.Protect.GravGunPunt", FPP.Protect.GravGunPunt)
@@ -338,6 +341,7 @@ function FPP.Protect.PlayerUse(ply, ent)
 		FPP.CanTouch(ply, "FPP_PLAYERUSE", why, cantouch)
 	end
 	
+	if FPP.UnGhost and cantouch then FPP.UnGhost(ply, ent) end
 	return cantouch
 end
 hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
