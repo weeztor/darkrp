@@ -1011,7 +1011,6 @@ for k,v in pairs(DarkRPEntities) do
 			return "" 
 		end
 		
-		//TODO
 		local max = GetGlobalInt("max"..cmdname)
 		if max == 0 then max = v.max end
 		if ply["max"..cmdname] and ply["max"..cmdname] >= max then

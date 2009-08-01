@@ -58,8 +58,8 @@ function ENT:Use( activator, caller )
 		
 		activator:SetNWEntity("phone", self) -- This object is the phone you're holding
 		
-		activator:ConCommand("+voicerecord")
-		ply:ConCommand("+voicerecord")
+		activator:SendLua([[RunConsoleCommand("+voicerecord")]])
+		ply:SendLua([[RunConsoleCommand("+voicerecord")]])
 		timer.Create("PhoneCallCosts"..ply:EntIndex(), 20, 0, function(ply, ent) -- Make the caller pay!
 			if ValidEntity(ply) and ply:CanAfford(1) then
 				ply:AddMoney(-1)
@@ -91,11 +91,11 @@ function ENT:HangUp(force)
 	if ValidEntity(him) then
 		HisPhone = him:GetNWEntity("phone")
 		timer.Remove("PhoneCallCosts"..him:EntIndex())
-		him:ConCommand("-voicerecord")
+		him:SendLua([[RunConsoleCommand("-voicerecord")]])
 	end
 	
 	if ValidEntity(ply) and ply:IsPlayer() then
-		ply:ConCommand("-voicerecord")
+		ply:SendLua([[RunConsoleCommand("-voicerecord")]])
 	end
 	
 	if ValidEntity(HisPhone) then 
