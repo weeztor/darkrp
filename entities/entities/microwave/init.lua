@@ -19,10 +19,6 @@ function ENT:Initialize()
 	self.damage = 100
 	self.Entity:SetNWInt("price", 30)
 	local ply = self.Entity:GetNWEntity("owning_ent")
-	if not ply.maxMicrowaves then
-		ply.maxMicrowaves = 0
-	end
-	ply.maxMicrowaves = ply.maxMicrowaves + 1
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -135,6 +131,4 @@ function ENT:OnRemove()
 	timer.Destroy(self.Entity:EntIndex())
 	local ply = self.Entity:GetNWEntity("owning_ent")
 	if not ValidEntity(ply) then return end
-	if not ply.maxMicrowaves then ply.maxMicrowaves = 0 return end
-	ply.maxMicrowaves = ply.maxMicrowaves - 1
 end

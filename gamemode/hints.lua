@@ -36,6 +36,7 @@ table.insert(hints, "Type /cook - to become a Cook.")
 table.insert(hints, "Type /cophelp to see what you need to do as a cop.")
 table.insert(hints, "Type /buyfood <Type> (e.g: /buyfood melon)")
 table.insert(hints, "Type /rpname <Name> to choose your roleplay name.")
+table.insert(hints, "Type /call <Name> to call someone!")
 
 local function GiveHint()
 	if CfgVars["advertisements"] ~= 1 then return end
