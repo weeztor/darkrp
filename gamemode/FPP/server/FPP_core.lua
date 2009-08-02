@@ -131,16 +131,19 @@ function FPP.PlayerCanTouchEnt(ply, ent, Type1, Type2, TryingToShare, antiloop)
 	if not CanTouchSingleEnt then return CanTouchSingleEnt, WHY end
 	
 	if tobool(FPP.Settings[Type2].checkconstrained) then-- if we're ought to check the constraints, check every entity at once.
-		for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
-			if v ~= ent then
-				local cantouch, why = cantouchsingleEnt(ply, v, Type1, Type2, false)
-				why = why or "I don't know"
-				if not cantouch then
-					if type(why) == "Player" then why = why:Nick() end
-					return false, "Constrained entity: "..why
-				end 
-			end
-		end 
+		local constrainted = constraint.GetAllConstrainedEntities(ent)
+		if constrainted then
+			for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
+				if v ~= ent then
+					local cantouch, why = cantouchsingleEnt(ply, v, Type1, Type2, false)
+					why = why or "I don't know"
+					if not cantouch then
+						if type(why) == "Player" then why = why:Nick() end
+						return false, "Constrained entity: "..why
+					end 
+				end
+			end 
+		end
 	end
 	return CanTouchSingleEnt, WHY
 end
@@ -173,7 +176,7 @@ function FPP.ShowOwner()
 				cantouch, why = FPP.PlayerCanTouchEnt(ply, trace.Entity, "EntityDamage", "FPP_ENTITYDAMAGE")
 				why = why or trace.Entity.Owner or "I don't know, lol"
 			end
-			if type(why) == "Player" then why = why:Nick() end
+			if type(why) == "Player" and why:IsValid() then why = why:Nick() end
 			DoShowOwner(ply, trace.Entity, cantouch, why)
 		elseif ply.FPP_LOOKINGAT ~= trace.Entity then
 			ply.FPP_LOOKINGAT = nil
@@ -184,6 +187,7 @@ hook.Add("Think", "FPP_ShowOwner", FPP.ShowOwner)
 
 local function AntiNoob(ply, ent)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end 
+	ent.IsBeingHeld = true
 	if ent:GetClass() == "func_breakable_surf" then return end
 	local Ents = constraint.GetAllConstrainedEntities(ent)
 	
@@ -194,11 +198,21 @@ local function AntiNoob(ply, ent)
 		v.StartPos = v:GetPos()
 		v:SetColor(v.OldColor[1], v.OldColor[2], v.OldColor[3], v.OldColor[4] - 155)
 
-		v:SetCollisionGroup( COLLISION_GROUP_WORLD )
-		v.CollisionGroup = COLLISION_GROUP_WORLD
+		//v:SetCollisionGroup( COLLISION_GROUP_WORLD )
+		//v.CollisionGroup = COLLISION_GROUP_WORLD
 	end
 	return
 end
+
+function FPP.Protect.ShouldCollide(ent1, ent2)
+	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end
+	if not ent1.IsBeingHeld then return end
+	if ent2:IsPlayer() and not ent1:IsPlayer() then return false end
+	if ent2 == GetWorldEntity() or not ValidEntity(ent1.Owner)/* or ent2 == ent1.Owner*/ then return true end
+	local cantouch, why = FPP.PlayerCanTouchEnt(ent1.Owner, ent2, "Physgun", "FPP_PHYSGUN")
+	if not cantouch then return false end
+end
+hook.Add("ShouldCollide", "FPP.Protect.ShouldCollide", FPP.Protect.ShouldCollide)
 
 --Physgun Pickup
 function FPP.Protect.PhysgunPickup(ply, ent)
@@ -222,6 +236,8 @@ hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup
 
 function FPP.Protect.PhysgunDrop(ply, DropEnt)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end --Antinoob only code in the physgundrop
+	if DropEnt:GetClass() == "func_breakable_surf" then return end
+	DropEnt.IsBeingHeld = false
 	local Ents = constraint.GetAllConstrainedEntities(DropEnt)
 	
 	for k,ent in pairs(Ents) do
@@ -234,17 +250,28 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 		ent.OldColor = nil
 		
 		
-		ent:SetCollisionGroup( COLLISION_GROUP_NONE )
-		ent.CollisionGroup = COLLISION_GROUP_NONE
+		//ent:SetCollisionGroup( COLLISION_GROUP_NONE )
+		//ent.CollisionGroup = COLLISION_GROUP_NONE
 		if ent:IsPlayer() then return end -- stop here if it's a player
 		--Make a traceline from where you started picking it up to where you ended picking it up
 		local tr = {}
 		tr.start = ent.StartPos
 		tr.endpos = ent:GetPos()
 		tr.filter = Ents
+		
+		local ignore = Ents
+		table.insert(ignore, ply)
+		//table.insert(ignore, GetWorldEntity())
+		for _,v in pairs(ents.GetAll()) do
+			if v ~= GetWorldEntity() then
+				local cantouchv = FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN")
+				if cantouchv or v:IsWeapon() or v:IsPlayer() then table.insert(ignore, v) end
+			end
+		end
+		
 		local trace = util.TraceLine(tr)
 		tr.start = ply:GetShootPos() -- Also make a line between your head and the prop, to see if you can still see the prop
-		tr.filter = ply
+		tr.filter = cantouchv
 		local trace2 = util.TraceLine(tr) 
 		
 		--Prop in player prevention(This is better than removing all players from the trace filter)
@@ -267,7 +294,7 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 		end
 		
 		--teleport it where it belongs if it's not where it's supposed to be
-		if trace2.Entity ~= ent then
+		if (ValidEntity(trace2.Entity) or trace2.Entity == GetWorldEntity()) and trace2.Entity ~= ent then
 			local vFlushPoint = trace.HitPos - ( trace.HitNormal * 512 ) -- Find a point that is definitely out of the object in the direction of the floor
 			vFlushPoint = ent:NearestPoint( vFlushPoint ) -- Find the nearest point inside the object to that point
 			vFlushPoint = ent:GetPos() - vFlushPoint -- Get the difference
@@ -511,13 +538,10 @@ function FPP.PlayerInitialSpawn(ply)
 			v.Owner = ply
 		end
 	end
-end
-hook.Add("PlayerInitialSpawn", "FPP.PlayerInitialSpawn", FPP.PlayerInitialSpawn)
-
-----------------------------------------------------------------
--- AntiSpeedHack, Thanks Eusion(bloodychef) for the idea.
----------------------------------------------------------------
-function FPP.AntiSpeedHack(ply) --I know Lua scripters can get around this, but at least this protects from the noobs with speedhacks ^^
+	
+	----------------------------------------------------------------
+	-- AntiSpeedHack, Thanks Eusion(bloodychef) for the idea.
+	---------------------------------------------------------------
 	if not tobool(FPP.Settings.FPP_GLOBALSETTINGS.antispeedhack) then return end
 	ply:SendLua([[local function a()
 		if GetConVarNumber("host_timescale") ~= 1 then
@@ -528,6 +552,6 @@ function FPP.AntiSpeedHack(ply) --I know Lua scripters can get around this, but 
 		a()
 		timer.Simple(0.1, b)
 	end
-	timer.Simple(0.1, b)]])
+	timer.Simple(0.1, b)]])--I know Lua scripters can get around this, but at least this protects from the noobs with speedhacks ^^
 end
-hook.Add("PlayerInitialSpawn", "FPP.Think.AntiSpeedHack", FPP.AntiSpeedHack)
+hook.Add("PlayerInitialSpawn", "FPP.PlayerInitialSpawn", FPP.PlayerInitialSpawn)

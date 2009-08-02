@@ -82,7 +82,7 @@ FPP.Settings = {}
 		cleanupdisconnected = 1,
 		cleanupdisconnectedtime = 120,
 		cleanupadmin = 1,
-		antispeedhack = 1}
+		antispeedhack = 0}
 	FPP.Settings.FPP_ANTISPAM = {
 		toggle = 1,
 		antispawninprop = 1,
@@ -247,6 +247,8 @@ function FRetrieveBlocked()
 		FPP.Blocked.Physgun = {
 			"func_breakable_surf",
 			"func_brush",
+			"func_door",
+			"prop_door_rotating",
 			"drug", 
 			"drug_lab", 
 			"food", 
@@ -257,12 +259,13 @@ function FRetrieveBlocked()
 			"money_printer", 
 			"spawned_shipment", 
 			"spawned_weapon",  
-			"spawned_food"}
+			"spawned_food",}
 		FPP.Blocked.Spawning = {}
 		FPP.Blocked.Gravgun = {"func_breakable_surf", "vehicle_"}
 		FPP.Blocked.Toolgun = {"func_breakable_surf",
 			"player",
 			"func_door",
+			"prop_door_rotating",
 			"drug", 
 			"drug_lab", 
 			"food", 
