@@ -1004,7 +1004,7 @@ for k,v in pairs(DarkRPEntities) do
 			Notify(ply, 1, 4, "You do not have the right job to buy this entity!")
 			return "" 
 		end
-		local cmdname = string.gsub(v.cmd, " ", "_")
+		local cmdname = string.gsub(v.ent, " ", "_")
 		local disabled = tobool(GetGlobalInt("disable"..cmdname))
 		if disabled then
 			Notify(ply, 1, 4, "Can not buy this entity as it is disabled!")
@@ -1012,8 +1012,9 @@ for k,v in pairs(DarkRPEntities) do
 		end
 		
 		local max = GetGlobalInt("max"..cmdname)
-		if max == 0 then max = v.max end
-		if ply["max"..cmdname] and ply["max"..cmdname] >= max then
+
+		if not max or max == 0 then max = tonumber(v.max) end
+		if ply["max"..cmdname] and tonumber(ply["max"..cmdname]) >= tonumber(max) then
 			Notify(ply, 1, 4, "Could not buy this entity as you have reached the limit!")
 			return ""
 		end
@@ -1147,7 +1148,7 @@ local function MakeACall(ply,args)
 	ownphone.onlyremover = true
 	ownphone.SID = ply.SID
 	ownphone:Spawn()
-	ownphone:Use(ply,ply)--Put it on the ear already, since you're the one who'se calling...
+	ownphone:Use(ply,ply)--Put it on the ear already, since you're the one who's calling...
 	timer.Simple(20, function(ply, OtherPhone)
 		local MyPhone = ply:GetNWEntity("phone")
 		local WhoPickedItUp = MyPhone.Caller

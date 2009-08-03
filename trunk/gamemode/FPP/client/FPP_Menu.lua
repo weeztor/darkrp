@@ -425,8 +425,10 @@ function FPP.SharedMenu(um)
 		local box = vgui.Create("DCheckBoxLabel", frame)
 		if type(name) == "string" then
 			box:SetText(name .." share this entity")
-		elseif name:IsPlayer() then
+		elseif name:IsPlayer() and name:IsValid() then
 			box:SetText(name:Nick() .." can touch this")
+		else
+			return
 		end
 		
 		if count * 20 - (row-1)*ScrH() > ScrH() - 30 - (row - 1)*50 then
@@ -468,7 +470,7 @@ function FPP.SharedMenu(um)
 		count = count + 1
 	end
 	for k,v in pairs(player.GetAll()) do
-		if v ~= LocalPlayer() then
+		if v ~= LocalPlayer() and v:IsValid() then
 			local IsShared = false
 			if table.HasValue(SharedWith, v) then
 				IsShared = true
