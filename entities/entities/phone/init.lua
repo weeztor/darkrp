@@ -37,18 +37,19 @@ function ENT:Use( activator, caller )
 	if self.sound then
 		self.sound:Stop()
 	end
-	local VEC = activator:GetAimVector() 
-	VEC:Rotate(Angle(0,90,0)) -- To the right
-	local VEC2 = Angle(90, activator:GetAimVector().y, 0)
-	local POS = activator:GetAttachment(activator:LookupAttachment("eyes") or 1)
-	if POS then POS = activator:GetShootPos() + ((POS.Pos - activator:GetShootPos())/2) + (VEC * -5)
-	POS.z = activator:GetShootPos().z - 5 else return end
 	
 	timer.Remove("PhoneRinging"..tostring(self:EntIndex()))
+	
+	local head = activator:LookupBone("ValveBiped.Bip01_Head1")
+	local headPos, headAng = activator:GetBonePosition(head)
 	self.Entity:SetSolid(SOLID_NONE)
-	self:SetPos(POS)
-	self:SetAngles(activator:EyeAngles() + Angle(180,90,180))
+	self:SetPos(headPos)
+	
+	headAng:RotateAroundAxis(headAng:Right(), 270)
+	headAng:RotateAroundAxis(headAng:Up(), 180)
+	self:SetAngles(headAng)
 	self:SetParent(activator)
+	
 	self:SetNWBool("IsBeingHeld", true)
 	
 	if ValidEntity(self.Caller) then -- if you're BEING called and pick up the phone...
@@ -78,6 +79,20 @@ function ENT:Think()
 	end
 	if self.HePickedUp and not ValidEntity(self.Caller) then
 		self:HangUp(true)
+	end
+	
+	if ValidEntity(self.LastUser) then
+		self:SetParent()
+		local head = self.LastUser:LookupBone("ValveBiped.Bip01_Head1")
+		local headPos, headAng = self.LastUser:GetBonePosition(head)
+		self.Entity:SetSolid(SOLID_NONE)
+		self:SetPos(headPos)
+		
+		headAng:RotateAroundAxis(headAng:Right(), 270)
+		headAng:RotateAroundAxis(headAng:Up(), 180)
+		self:SetAngles(headAng)
+		//self:GetPhysicsObject():EnableMotion(false)
+		self:SetParent(self.LastUser)
 	end
 end
 
