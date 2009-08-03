@@ -276,6 +276,23 @@ function GM:PlayerDeath(ply, weapon, killer)
 		ply.NextSpawnTime = CurTime() + CfgVars["respawntime"]
 	end
 	ply:GetTable().DeathPos = ply:GetPos()
+	
+	if tobool(CfgVars["dropmoneyondeath"]) and tonumber(CfgVars["deathfee"]) then
+		local amount = CfgVars["deathfee"]
+		if not ply:CanAfford(CfgVars["deathfee"]) then
+			amount = ply:GetNWInt("Money")
+		end
+		
+		ply:AddMoney(-amount)
+		local moneybag = ents.Create("prop_physics")
+		moneybag:SetModel("models/props/cs_assault/money.mdl")
+		moneybag.ShareGravgun = true
+		moneybag:SetPos(ply:GetPos())
+		moneybag.nodupe = true
+		moneybag:Spawn()
+		moneybag:GetTable().MoneyBag = true
+		moneybag:GetTable().Amount = amount
+	end
 
 	if CfgVars["dmautokick"] == 1 and killer:IsPlayer() and killer ~= ply then
 		if not killer.kills or killer.kills == 0 then

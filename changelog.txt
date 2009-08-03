@@ -5,6 +5,7 @@ DarkRP 2.3.7 SVN
 [ADD] Anti tool model crash(FPP feature)
 [ADD] An easy way to make normal entities
 [ADD] CPPI for FPP
+[ADD] rp_dropmoneyondeath and rp_deathfee, drop money when you die. Off by default
 [FIX] Unable to remove door tool doors
 [FIX] People with the admin privilege can now see the admin menu
 [FIX] Hunger resetting after sleep

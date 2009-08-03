@@ -182,6 +182,7 @@ function RefreshRPSettings(RESET)
 	CfgVars["pocket"] = 1
 	CfgVars["logging"] = 1
 	CfgVars["ironshoot"] = 1
+	CfgVars["dropmoneyondeath"] = 0
 
 	-- You can set the exact value of the below items:
 
@@ -214,6 +215,7 @@ function RefreshRPSettings(RESET)
 	CfgVars["babygodtime"] = 5
 	CfgVars["pocketitems"] = 10
 	CfgVars["maxvehicles"] = 5
+	CfgVars["deathfee"] = 30
 	CfgVars["mobagenda"] = ""
 
 	if RESET then

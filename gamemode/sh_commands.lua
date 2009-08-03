@@ -206,6 +206,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_RestrictDrop - Enable/disable re
 AddToggleCommand("rp_ironshoot", "ironshoot", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_ironshoot - Enable/disable whether people need iron sights to shoot.")
 
+AddToggleCommand("rp_dropmoneyondeath", "dropmoneyondeath", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_dropmoneyondeath - Enable/disable whether people drop money on death.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
@@ -308,6 +311,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_paydelay <Number> - Sets how long i
 
 AddValueCommand("rp_maxvehicles", "maxvehicles", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxvehicles <Number> - Sets how many vehicles one can buy.")
+
+AddValueCommand("rp_deathfee", "deathfee", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_deathfee <Number> - the amount of money someone drops when dead.")
 
 
 function AddEntityCommands(name, command)
