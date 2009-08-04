@@ -79,15 +79,16 @@ function FindPlayer(info)
 	end
 
 	-- Find by RP Name
+	print(info, type(info), string.lower(info))
 	for k, v in pairs(pls) do
-		if string.find(string.lower(v:GetNWString("rpname")), string.lower(tostring(info))) ~= nil then
+		if string.find(string.lower(v:SteamName()), string.lower(tostring(info)), 1, true) ~= nil then
 			return v
 		end
 	end
 
 	-- Find by Partial Nick
 	for k, v in pairs(pls) do
-		if string.find(string.lower(v:Name()), string.lower(tostring(info))) ~= nil then
+		if string.find(string.lower(v:Name()), string.lower(tostring(info)), 1, true) ~= nil then
 			return v
 		end
 	end
