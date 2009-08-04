@@ -49,12 +49,14 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 	-- I power by ten because the volume of a prop can vary between 65 and like a few billion
 	if phys:GetVolume() and phys:GetVolume() > math.pow(10, FPP.Settings.FPP_ANTISPAM.bigpropsize) and not string.find(class, "constraint") and not string.find(class, "hinge") 
 	and not string.find(class, "magnet") and not string.find(class, "collision") then
-		ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
-		ply.FPPAntispamBigProp = ply.FPPAntispamBigProp + 1
-		timer.Simple(10*FPP.Settings.FPP_ANTISPAM.bigpropwait, function(ply)
+		if not IsDuplicate then
 			ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
-			ply.FPPAntispamBigProp = math.Max(ply.FPPAntispamBigProp - 1, 0)
-		end, ply)
+			ply.FPPAntispamBigProp = ply.FPPAntispamBigProp + 1
+			timer.Simple(10*FPP.Settings.FPP_ANTISPAM.bigpropwait, function(ply)
+				ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
+				ply.FPPAntispamBigProp = math.Max(ply.FPPAntispamBigProp - 1, 0)
+			end, ply)
+		end
 		
 		if ply.FPPAntiSpamLastBigProp and ply.FPPAntiSpamLastBigProp > (CurTime() - (FPP.Settings.FPP_ANTISPAM.bigpropwait * ply.FPPAntispamBigProp)) then
 			FPP.Notify(ply, "Please wait " .. FPP.Settings.FPP_ANTISPAM.bigpropwait * ply.FPPAntispamBigProp ../*string.sub(tostring(2 - (CurTime() - ply.FPPAntiSpamLastBigProp)), 1, 3) ..*/ " Seconds before spawning a big prop again", false)

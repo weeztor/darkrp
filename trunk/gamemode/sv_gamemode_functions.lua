@@ -118,7 +118,7 @@ function GM:EntityRemoved(ent)
 	for k,v in pairs(DarkRPEntities) do
 		if ent:IsValid() and ent:GetClass() == v.ent and ValidEntity(ent:GetNWEntity("owning_ent")) and not ent.IsRemoved then
 			local ply = ent:GetNWEntity("owning_ent")
-			local cmdname = string.gsub(v.cmd, " ", "_")
+			local cmdname = string.gsub(v.ent, " ", "_")
 			if not ply["max"..cmdname] then
 				ply["max"..cmdname] = 1
 			end
@@ -315,6 +315,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		ply:GetTable().DeathPos = nil
 		ply:GetTable().Slayed = false
 	end
+	
 	ply:GetTable().ConfisquatedWeapons = nil
 	if weapon:IsPlayer() then weapon = weapon:GetActiveWeapon() killer = killer:SteamName() if ( !weapon || weapon == NULL ) then weapon = killer else weapon = weapon:GetClass() end end
 	if killer == ply then killer = "Himself" weapon = "suicide trick" end

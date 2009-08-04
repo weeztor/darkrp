@@ -1091,6 +1091,10 @@ AddChatCommand("/buyammo", BuyAmmo)
 
 function BuyHealth(ply)
 	local cost = GetGlobalInt("healthcost")
+	if not ply:Alive() then
+		Notify(ply, 1, 4, "Zombies don't exist. You can't revive yourself with /buyhealth. Go respawn!")
+		return ""
+	end
 	if not ply:CanAfford(cost) then
 		Notify(ply, 1, 4, "You can not afford this!")
 		return ""

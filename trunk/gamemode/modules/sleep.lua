@@ -52,6 +52,10 @@ function KnockoutToggle(player, command, args, caller)
 				player.Sleeping = false
 				player:SetNWInt("Energy", player.OldHunger)
 				player.OldHunger = nil
+				
+				if player:GetNWBool("Arrested") then
+					GAMEMODE:SetPlayerSpeed(player, CfgVars["aspd"], CfgVars["aspd"] )
+				end
 			else
 				for k,v in pairs(ents.FindInSphere(player:GetPos(), 30)) do 
 					if v:GetClass() == "func_door" then

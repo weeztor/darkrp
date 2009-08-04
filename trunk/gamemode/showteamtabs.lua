@@ -255,7 +255,7 @@ function MoneyTab()
 			Commands:SetLabel("Actions")
 				local ActionsPanel = vgui.Create("DPanelList")
 				ActionsPanel:SetSpacing(5)
-				ActionsPanel:SetSize(740,160)
+				ActionsPanel:SetSize(740,190)
 				ActionsPanel:EnableHorizontal( false )
 				ActionsPanel:EnableVerticalScrollbar(true)
 					local rpnamelabel = vgui.Create("DLabel")
@@ -288,6 +288,27 @@ function MoneyTab()
 					RequestLicense:SetText("Request gunlicense")
 					RequestLicense.DoClick = function() LocalPlayer():ConCommand("say /requestlicense") end
 				ActionsPanel:AddItem(RequestLicense)
+				
+				local Demote = vgui.Create("DButton") 
+				Demote:SetText("Demote a player")
+				Demote.DoClick = function()
+					local menu = DermaMenu()
+					for _,ply in pairs(player.GetAll()) do
+						if ply ~= LocalPlayer() then
+							menu:AddOption(ply:Nick(), function()
+								Derma_StringRequest("Demote reason", "Why would you demote "..ply:Nick().."?", nil, 
+									function(a) 
+									LocalPlayer():ConCommand("say /demote ".. tostring(ply:UserID()).." ".. a)
+									end, function() end )
+							end)
+						end
+					end
+					if #menu.Panels == 0 then
+						menu:AddOption("Noone available", function() end)
+					end
+					menu:Open()
+				end
+				ActionsPanel:AddItem(Demote)
 			Commands:SetContents(ActionsPanel)
 		FirstTabPanel:AddItem(MoneyCat)
 		FirstTabPanel:AddItem(Commands)
