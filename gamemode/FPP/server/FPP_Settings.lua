@@ -70,6 +70,7 @@ FPP.Settings = {}
 		iswhitelist = 0}
 	FPP.Settings.FPP_ENTITYDAMAGE = {
 		toggle = 1,
+		protectpropdamage = 1,
 		adminall = 1,
 		worldprops = 1, 
 		adminworldprops = 1,
