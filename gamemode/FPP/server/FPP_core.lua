@@ -187,19 +187,16 @@ hook.Add("Think", "FPP_ShowOwner", FPP.ShowOwner)
 
 local function AntiNoob(ply, ent)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end 
-	ent.IsBeingHeld = true
 	if ent:GetClass() == "func_breakable_surf" then return end
 	local Ents = constraint.GetAllConstrainedEntities(ent)
 	
 	for k,v in pairs(Ents) do
+		v.IsBeingHeld = true
 		v:SetRenderMode(RENDERMODE_TRANSALPHA)
 		v:DrawShadow(false)
 		v.OldColor = v.OldColor or {v:GetColor()}
 		v.StartPos = v:GetPos()
 		v:SetColor(v.OldColor[1], v.OldColor[2], v.OldColor[3], v.OldColor[4] - 155)
-
-		//v:SetCollisionGroup( COLLISION_GROUP_WORLD )
-		//v.CollisionGroup = COLLISION_GROUP_WORLD
 	end
 	return
 end
@@ -241,17 +238,14 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 	local Ents = constraint.GetAllConstrainedEntities(DropEnt)
 	
 	for k,ent in pairs(Ents) do
+		ent.IsBeingHeld = true
 		ent:DrawShadow(true)
-		if ent.OldCollisionGroup then ent:SetCollisionGroup(ent.OldCollisionGroup) ent.OldCollisionGroup = nil end
 		
 		if ent.OldColor then
 			ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
 		end
 		ent.OldColor = nil
 		
-		
-		//ent:SetCollisionGroup( COLLISION_GROUP_NONE )
-		//ent.CollisionGroup = COLLISION_GROUP_NONE
 		if ent:IsPlayer() then return end -- stop here if it's a player
 		--Make a traceline from where you started picking it up to where you ended picking it up
 		local tr = {}
@@ -261,7 +255,6 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 		
 		local ignore = Ents
 		table.insert(ignore, ply)
-		//table.insert(ignore, GetWorldEntity())
 		for _,v in pairs(ents.GetAll()) do
 			if v ~= GetWorldEntity() then
 				local cantouchv = FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN")

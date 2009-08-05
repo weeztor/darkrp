@@ -39,10 +39,10 @@ if SERVER then
 	function ENTITY:CPPISetOwnerUID(UID)
 		local ply = player.GetByUniqueID(tostring(UID))
 		if self.Owner and ply:IsValid() then
-			if self.Owner.Buddies then
-				table.insert(self.Owner.Buddies, ply)
+			if self.AllowedPlayers then
+				table.insert(self.AllowedPlayers, ply)
 			else
-				self.Owner.Buddies = {ply}
+				self.AllowedPlayers = {ply}
 			end
 			return true
 		elseif ply:IsValid() then
