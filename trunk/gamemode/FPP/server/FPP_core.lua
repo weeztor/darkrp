@@ -387,17 +387,43 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 	
 	if not tobool(FPP.Settings.FPP_ENTITYDAMAGE.toggle) then return end
 	
-	if not attacker:IsPlayer() then return end
+	if not attacker:IsPlayer() then 
+		if ValidEntity(attacker.Owner) and ValidEntity(ent.Owner) then
+			local cantouch, why = FPP.PlayerCanTouchEnt(attacker.Owner, ent, "EntityDamage", "FPP_ENTITYDAMAGE")
+			if why then
+				FPP.CanTouch(attacker.Owner, "FPP_ENTITYDAMAGE", why, cantouch)
+			end
+			if not cantouch then 
+				dmginfo:SetDamage(0)
+				ent.FPPAntiDamageWorld = ent.FPPAntiDamageWorld or 0
+				ent.FPPAntiDamageWorld = ent.FPPAntiDamageWorld + 1
+				timer.Simple(1, function(ent) 
+					if not ent.FPPAntiDamageWorld then return end
+					ent.FPPAntiDamageWorld = ent.FPPAntiDamageWorld - 1 
+					if ent.FPPAntiDamageWorld == 0 then 
+						ent.FPPAntiDamageWorld = nil 
+					end 
+					print(ent.FPPAntiDamageWorld)
+				end, ent)
+			end
+			return
+		end
+		
+		if attacker == GetWorldEntity() and ent.FPPAntiDamageWorld then
+			dmginfo:SetDamage(0)
+		end
+		return
+	end
 	
 	if not ValidEntity(ent) then return FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", "Not valid!", false) end
 	
 	local cantouch, why = FPP.PlayerCanTouchEnt(attacker, ent, "EntityDamage", "FPP_ENTITYDAMAGE")
-	if why and (not ValidEntity(attacker:GetActiveWeapon()) or (ValidEntity(attacker:GetActiveWeapon()) and attacker:GetActiveWeapon():GetClass() == "weapon_physcannon")) then
+	if why /*and (not ValidEntity(attacker:GetActiveWeapon()) or (ValidEntity(attacker:GetActiveWeapon()) and attacker:GetActiveWeapon():GetClass() == "weapon_physcannon")) */then
 		FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", why, cantouch)
 	end
 	
 	if not cantouch then dmginfo:SetDamage(0) end
-	return cantouch
+	return
 end
 hook.Add("EntityTakeDamage", "FPP.Protect.EntityTakeDamage", FPP.Protect.EntityDamage)
 
