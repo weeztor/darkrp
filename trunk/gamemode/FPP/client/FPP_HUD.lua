@@ -47,9 +47,9 @@ function FPP.AddNotify( str, type )
 	tab.a		= 255
 	
 	if type then
-		tab.type = true//surface.GetTextureID( "gui/silkicons/check_on" )
+		tab.type = true
 	else
-		tab.type = false//surface.GetTextureID( "gui/silkicons/check_off" )
+		tab.type = false
 	end
 	
 	table.insert( HUDNotes, tab )
@@ -160,8 +160,6 @@ local function HUDPaint()
 		draw.DrawText(Why, "Default", 24 - (w+28) + comingAroundAgain, ScrH()/2 - h, col, 0) 
 		draw.TexturedQuad( QuadTable )
 	elseif CanTouchLookingAt ~= nil then
-		//CanTouchLookingAt, Why, LookingatEntity = nil, nil, nil
-		//comingAroundAgain = 0--yeaaaaaah
 		if comingAroundAgain > 0 then
 			comingAroundAgain = math.Max(comingAroundAgain - (FrameTime()*600), 0)
 			surface.SetFont("Default")
