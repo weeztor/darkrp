@@ -813,7 +813,7 @@ function BuyPistol(ply, args)
 	local custom = false
 	local price = 0
 	for k,v in pairs(CustomShipments) do
-		if v.seperate and v.name == args then
+		if v.seperate and string.lower(v.name) == string.lower(args) then
 			custom = v
 			class = v.entity
 			model = v.model
@@ -1202,6 +1202,11 @@ AddChatCommand("/help", GetHelp)
 
 function ChangeJob(ply, args)
 	if args == "" then return "" end
+	
+	if RPArrestedPlayers[ply:SteamID()] then
+		Notify(ply, 1, 5, "You can not change job while arrested!")
+		return ""
+	end
 	
 	if ply.LastJob and 60 - (CurTime() - ply.LastJob) >= 0 then
 		Notify(ply, 1, 4, "Please wait ".. math.ceil(60 - (CurTime() - ply.LastJob)).." seconds before changing your job")
