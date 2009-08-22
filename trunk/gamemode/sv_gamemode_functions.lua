@@ -311,7 +311,6 @@ function GM:PlayerDeath(ply, weapon, killer)
 
 	if ply ~= killer or ply:GetTable().Slayed then
 		ply:SetNWBool("wanted", false)
-		RPArrestedPlayers[ply:SteamID()] = false
 		ply:GetTable().DeathPos = nil
 		ply:GetTable().Slayed = false
 	end

@@ -7,6 +7,7 @@ DarkRP 2.3.7 SVN
 [ADD] CPPI for FPP
 [ADD] rp_dropmoneyondeath and rp_deathfee, drop money when you die. Off by default
 [ADD] Demote option in F4
+[ADD] People now walk slow while in ironsight mode of weapon
 [FIX] Unable to remove door tool doors
 [FIX] People with the admin privilege can now see the admin menu
 [FIX] Hunger resetting after sleep

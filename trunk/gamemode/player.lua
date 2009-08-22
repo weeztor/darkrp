@@ -173,7 +173,7 @@ end
  Teams/jobs
  ---------------------------------------------------------*/
 function meta:ChangeTeam(t, force)
-	if RPArrestedPlayers[self:SteamID()] then
+	if RPArrestedPlayers[self:SteamID()] and not force then
 		if not self:Alive() then
 			Notify(self, 1, 4, "You can not change your job whilst being dead in jail.")
 			return

@@ -216,8 +216,10 @@ SetIronsights
 function SWEP:SetIronsights(b)
 	if b and SERVER then 
 		self:SetWeaponHoldType(self.HoldType)
+		GAMEMODE:SetPlayerSpeed(self.Owner, CfgVars["wspd"] / 3, CfgVars["rspd"] / 3)
 	elseif SERVER then
 		self:SetWeaponHoldType("normal")
+		GAMEMODE:SetPlayerSpeed(self.Owner, CfgVars["wspd"], CfgVars["rspd"])
 	end
 	self.Ironsights = b
 end

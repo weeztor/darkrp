@@ -469,6 +469,8 @@ function AddTeamCommands(CTeam)
 				return
 			end
 		end
+		
+		if not args[1] then return end
 		local target = FindPlayer(args[1])
 		
         if (target) then
