@@ -65,6 +65,13 @@ function SWEP:Deploy()
 	return true
 end
 
+function SWEP:Holster()
+	if self:GetIronsights() then
+		GAMEMODE:SetPlayerSpeed(self.Owner, CfgVars["wspd"], CfgVars["rspd"])
+	end
+	return true
+end
+
 /*---------------------------------------------------------
 Reload does nothing
 ---------------------------------------------------------*/

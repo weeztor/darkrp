@@ -40,7 +40,7 @@ function vote:Create(question, voteid, ent, delay, callback, special)
 		Notify(ent, 1, 4, "You have won the vote since you are alone in the server.")
 		callback(1, ent)
 		return
-	end
+	end 
 	
 	-- If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
 	if not ent:GetTable().VotesVoted then
