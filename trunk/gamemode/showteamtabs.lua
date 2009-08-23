@@ -86,6 +86,7 @@ local function MayorOptns()
 			end
 			maypanel:AddItem(GiveLicense)
 	MayCat:SetContents(maypanel)
+	MayCat:SetSkin("DarkRP")
 	return MayCat
 end
 
@@ -160,6 +161,7 @@ local function CPOptns()
 				CPpanel:AddItem(AddJailPos)
 			end
 	CPCat:SetContents(CPpanel)
+	CPCat:SetSkin("DarkRP")
 	return CPCat
 end
 
@@ -189,6 +191,7 @@ local function CitOptns()
 		Citpanel:AddItem(jobentry)
 		
 	CitCat:SetContents(Citpanel)
+	CitCat:SetSkin("DarkRP")
 	return CitCat
 end
 
@@ -218,6 +221,7 @@ local function MobOptns()
 		Mobpanel:AddItem(agendaentry)
 		
 	MobCat:SetContents(Mobpanel)
+	MobCat:SetSkin("DarkRP")
 	return MobCat
 end
 
@@ -240,7 +244,6 @@ function MoneyTab()
 					Derma_StringRequest("Amount of money", "How much money do you want to give?", "", function(a) LocalPlayer():ConCommand("say /give " .. tostring(a)) end)
 				end
 				MoneyPanel:AddItem(GiveMoneyButton)
-				
 				local SpawnMoneyButton = vgui.Create("DButton")
 				SpawnMoneyButton:SetText("Drop money")
 				SpawnMoneyButton.DoClick = function()
@@ -249,6 +252,7 @@ function MoneyTab()
 
 				MoneyPanel:AddItem(SpawnMoneyButton)
 			MoneyCat:SetContents(MoneyPanel)
+			MoneyCat:SetSkin("DarkRP")
 		
 		
 			local Commands = vgui.Create("DCollapsibleCategory")
@@ -311,6 +315,7 @@ function MoneyTab()
 				ActionsPanel:AddItem(Demote)
 			Commands:SetContents(ActionsPanel)
 		FirstTabPanel:AddItem(MoneyCat)
+		Commands:SetSkin("DarkRP")
 		FirstTabPanel:AddItem(Commands)
 		
 		if LocalPlayer():Team() == TEAM_MAYOR then
@@ -343,6 +348,7 @@ function JobsTab()
 		Panel:SetSpacing(1)
 		Panel:EnableHorizontal( true )
 		Panel:EnableVerticalScrollbar( true )
+		Panel:SetSkin("DarkRP")
 		
 		
 		local Info = {}
@@ -358,6 +364,7 @@ function JobsTab()
 			Information:SetSpacing(10)
 			Information:EnableHorizontal( false )
 			Information:EnableVerticalScrollbar( true )
+			Information:SetSkin("DarkRP")
 			function Information:Rebuild() -- YES IM OVERRIDING IT AND CHANGE ONLY ONE LINE BUT I HAVE A FUCKING GOOD REASON TO DO IT!
 				local Offset = 0
 				if ( self.Horizontal ) then
@@ -520,6 +527,7 @@ function EntitiesTab()
 					AddIcon("models/Items/BoxMRounds.mdl", "Buy rifle ammo: " .. CUR .. tostring(GetGlobalInt("ammoriflecost")), "/buyammo rifle")
 					AddIcon("models/Items/BoxBuckshot.mdl", "Buy shotgun ammo: " .. CUR .. tostring(GetGlobalInt("ammoshotguncost")), "/buyammo shotgun")
 			WepCat:SetContents(WepPanel)
+			WepCat:SetSkin("DarkRP")
 			self:AddItem(WepCat)
 			
 			local EntCat = vgui.Create("DCollapsibleCategory")
@@ -565,6 +573,7 @@ function EntitiesTab()
 						end
 					end
 			EntCat:SetContents(EntPanel)
+			EntCat:SetSkin("DarkRP")
 			self:AddItem(EntCat)
 			
 			
@@ -598,12 +607,14 @@ function EntitiesTab()
 				end
 			if founds ~= 0 then
 				VehicleCat:SetContents(VehiclePanel)
+				VehicleCat:SetSkin("DarkRP")
 				self:AddItem(VehicleCat)
 			else
 				VehiclePanel:Remove()
 				VehicleCat:Remove()
 			end
 		end
+	EntitiesPanel:SetSkin("DarkRP")
 	EntitiesPanel:Update()	
 	return EntitiesPanel
 end
@@ -641,6 +652,7 @@ function RPHUDTab()
 			end
 			backgrndpanel:AddItem(resetbackgrnd)
 		backgrndcat:SetContents(backgrndpanel)
+		backgrndcat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(backgrndcat)
 		
 		hforegrndcat = vgui.Create("DCollapsibleCategory")
@@ -667,6 +679,7 @@ function RPHUDTab()
 			end
 			hforegrndpanel:AddItem(resethforegrnd)
 		hforegrndcat:SetContents(hforegrndpanel)
+		hforegrndcat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(hforegrndcat)
 		
 		
@@ -694,6 +707,7 @@ function RPHUDTab()
 			end
 			hbackgrndpanel:AddItem(resethbackgrnd)
 		hbackgrndcat:SetContents(hbackgrndpanel)
+		hbackgrndcat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(hbackgrndcat)
 		
 		hTextcat = vgui.Create("DCollapsibleCategory")
@@ -720,6 +734,7 @@ function RPHUDTab()
 			end
 			hTextpanel:AddItem(resethText)
 		hTextcat:SetContents(hTextpanel)
+		hTextcat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(hTextcat)
 		
 		jobs1cat = vgui.Create("DCollapsibleCategory")
@@ -746,6 +761,7 @@ function RPHUDTab()
 			end
 			jobs1panel:AddItem(resetjobs1)
 		jobs1cat:SetContents(jobs1panel)
+		jobs1cat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(jobs1cat)
 		
 		jobs2cat = vgui.Create("DCollapsibleCategory")
@@ -772,6 +788,7 @@ function RPHUDTab()
 			end
 			jobs2panel:AddItem(resetjobs2) 
 		jobs2cat:SetContents(jobs2panel)
+		jobs2cat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(jobs2cat)
 		
 		salary1cat = vgui.Create("DCollapsibleCategory")
@@ -798,6 +815,7 @@ function RPHUDTab()
 			end
 			salary1panel:AddItem(resetsalary1)
 		salary1cat:SetContents(salary1panel)
+		salary1cat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(salary1cat)
 		
 		salary2cat = vgui.Create("DCollapsibleCategory")
@@ -824,6 +842,7 @@ function RPHUDTab()
 			end
 			salary2panel:AddItem(resetsalary2)
 		salary2cat:SetContents(salary2panel)
+		salary2cat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(salary2cat)
 		
 		local HudWidthCat = vgui.Create("DCollapsibleCategory")
@@ -846,6 +865,7 @@ function RPHUDTab()
 			end
 			HudWidthpanel:AddItem(resetHudWidth)
 		HudWidthCat:SetContents(HudWidthpanel)
+		HudWidthCat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(HudWidthCat)
 		
 		local HudHeightCat = vgui.Create("DCollapsibleCategory")
@@ -868,8 +888,10 @@ function RPHUDTab()
 			end
 			HudHeightpanel:AddItem(resetHudHeight)
 		HudHeightCat:SetContents(HudHeightpanel)
+		HudHeightCat:SetSkin("DarkRP")
 		HUDTABpanel:AddItem(HudHeightCat)
 	end
+	HUDTABpanel:SetSkin("DarkRP")
 	return HUDTABpanel
 end
 
@@ -923,6 +945,7 @@ function RPAdminTab()
 					end
 				end
 			ToggleCat:SetContents(TogglePanel)
+			ToggleCat:SetSkin("DarkRP")
 			self:AddItem(ToggleCat)
 			function ToggleCat:Toggle()
 				self:SetExpanded( !self:GetExpanded() ) 
@@ -999,9 +1022,11 @@ function RPAdminTab()
 					end
 				end
 			ValueCat:SetContents(ValuePanel)
+			ValueCat:SetSkin("DarkRP")
 			self:AddItem(ValueCat)
 		end
 		AdminPanel:Update()
+	AdminPanel:SetSkin("DarkRP")
 	return AdminPanel
 end
 

@@ -84,6 +84,7 @@ AddCSLuaFile("scoreboard/vote_button.lua")
 AddCSLuaFile("cl_helpvgui.lua")
 AddCSLuaFile("showteamtabs.lua")
 AddCSLuaFile("sh_commands.lua")
+AddCSLuaFile("DRPDermaSkin.lua")
 
 -- Earthquake Mod addon
 resource.AddFile("sound/earthquake.mp3")

@@ -16,7 +16,6 @@ function MsgDoVote(msg)
 	LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
 	local panel = vgui.Create("DFrame")
 	panel:SetPos(3, ScrH() / 2 - 50)
-	panel:SetName("Panel")
 	panel:SetTitle("Vote")
 	panel:SetSize(140, 140)
 	panel:SetSizable(false)
@@ -78,6 +77,7 @@ function MsgDoVote(msg)
 
 	PanelNum = PanelNum + 1
 	VoteVGUI[voteid .. "vote"] = panel
+	panel:SetSkin("DarkRP")
 end
 usermessage.Hook("DoVote", MsgDoVote)
 
@@ -159,6 +159,8 @@ function MsgDoQuestion(msg)
 
 	PanelNum = PanelNum + 1
 	QuestionVGUI[quesid .. "ques"] = panel
+	
+	panel:SetSkin("DarkRP")
 end
 usermessage.Hook("DoQuestion", MsgDoQuestion)
 
@@ -200,12 +202,15 @@ function ChangeJobVGUI()
 		if LocalPlayer():IsSuperAdmin() then
 			table.insert(F4Tabs, RPLicenseWeaponsTab())
 		end
+		F4Menu:SetSkin("DarkRP")
 	else
 		F4Menu:SetVisible(true)
+		F4Menu:SetSkin("DarkRP")
 	end
 	NoCloseF4 = CurTime() + 0.6
 	
 	function F4Menu:Think()
+		
 		if input.IsKeyDown(KEY_F4) and NoCloseF4 < CurTime() then
 			self:Close()
 		end
@@ -214,7 +219,7 @@ function ChangeJobVGUI()
 		local y = gui.MouseY() - self.Dragging[2] 
 		x = math.Clamp( x, 0, ScrW() - self:GetWide() ) 
 		y = math.Clamp( y, 0, ScrH() - self:GetTall() ) 
-		self:SetPos( x, y ) 		
+		self:SetPos( x, y )
 	end
 	
 	if not F4MenuTabs or not F4MenuTabs:IsValid() then
@@ -233,11 +238,15 @@ function ChangeJobVGUI()
 			F4MenuTabs:AddSheet("License weapons", F4Tabs[6], "gui/silkicons/wrench", false, false)
 		end
 	end
-	for _, panel in pairs(F4Tabs) do panel:Update() end
+
+	for _, panel in pairs(F4Tabs) do panel:Update() panel:SetSkin("DarkRP") end
 
  	function F4Menu:Close()
 		F4Menu:SetVisible(false)
+		F4Menu:SetSkin("DarkRP")
 	end 
+
+	F4Menu:SetSkin("DarkRP")
 end
 
 local KeyFrameVisible = false
@@ -430,5 +439,7 @@ function KeysMenu(Vehicle)
 	else
 		Frame:Close()
 	end
+	
+	Frame:SetSkin("DarkRP")
 end
 
