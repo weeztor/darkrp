@@ -53,6 +53,7 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 			ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
 			ply.FPPAntispamBigProp = ply.FPPAntispamBigProp + 1
 			timer.Simple(10*FPP.Settings.FPP_ANTISPAM.bigpropwait, function(ply)
+				if not ply:IsValid() then return end
 				ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
 				ply.FPPAntispamBigProp = math.Max(ply.FPPAntispamBigProp - 1, 0)
 			end, ply)

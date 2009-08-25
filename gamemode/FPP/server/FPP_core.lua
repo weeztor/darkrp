@@ -238,7 +238,7 @@ function FPP.Protect.PhysgunDrop(ply, DropEnt)
 	local Ents = constraint.GetAllConstrainedEntities(DropEnt)
 	
 	for k,ent in pairs(Ents) do
-		ent.IsBeingHeld = true
+		ent.IsBeingHeld = false
 		ent:DrawShadow(true)
 		
 		if ent.OldColor then
@@ -396,7 +396,6 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 					if ent.FPPAntiDamageWorld == 0 then 
 						ent.FPPAntiDamageWorld = nil 
 					end 
-					print(ent.FPPAntiDamageWorld)
 				end, ent)
 			end
 			return
