@@ -7,7 +7,7 @@ local meta = FindMetaTable("Player")
  ---------------------------------------------------------*/
 function RPName(ply, args)
 	if CfgVars["allowrpnames"] ~= 1 then
-		Notify(ply, 1, 6, "You can not change your RP name as it is disabled.")
+		Notify(ply, 1, 6,  string.format(LANGUAGE.disabled, "RPname", "")) 
 		return ""
 	end
 
@@ -15,25 +15,25 @@ function RPName(ply, args)
 	local low = string.lower(args)
 
 	if len > 30 then
-		Notify(ply, 1, 4, "Please choose a name of 30 characters or less!")
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", "<=30"))
 		return ""
 	elseif len < 3 then
-		Notify(ply, 1, 4, "Please choose a name of 3 characters or more!")
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ">2"))
 		return ""
 	end
 	
 	if string.find(args, " ") == 1 or string.find(args, " ") == 1 then--The first space is a normal space and the second one is a system space!
-		Notify(ply, 1, 4, "Your name can not start with a space")
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end
 	
 	if low == "ooc" or low == "shared" or low == "world" or low == "n/a" then
-		Notify(ply, 1, 4, "That's not funny. Choose a proper RP name please.")
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end
 
 	ply:SetRPName(args)
-	NotifyAll(2, 6, "Steam player: " .. ply:SteamName() .. " changed his/her RP name to: " .. args)
+	NotifyAll(2, 6, string.format(LANGUAGE.rpname_changed, ply:SteamName(), args))
 	return ""
 end
 AddChatCommand("/rpname", RPName)
@@ -59,9 +59,9 @@ function meta:SetRPName(name, firstRun)
 			-- If we just connected and another player happens to be using our steam name as their RP name
 			-- Put a 1 after our steam name
 			DB.StoreRPName(self, name .. " 1")
-			Notify(self, 1, 12, "Someone is already using your Steam name as their RP name so we gave you a '1' after your name.")
+			Notify(self, 1, 12, "Someone is already using your Steam name as their RP name so we gave you a '1' after your name.") 
 		else
-			Notify(self, 1, 5, "This RP name in already use by another player on this server!")
+			Notify(self, 1, 5, string.format(LANGUAGE.unable, "RPname", ""))
 		end
 	else
 		DB.StoreRPName(self, name)
@@ -114,7 +114,7 @@ function meta:CompleteSentence()
 	if ValidEntity(self) and ID ~= nil and RPArrestedPlayers[ID] then
 		local time = GetGlobalInt("jailtimer")
 		self:Arrest(time, true)
-		Notify(self, 0, 5, "Punishment for disconnecting! Jailed for: " .. time .. " seconds.")
+		Notify(self, 0, 5, string.format(LANGUAGE.jail_punishment, time))
 	end
 end
 
@@ -175,10 +175,10 @@ end
 function meta:ChangeTeam(t, force)
 	if RPArrestedPlayers[self:SteamID()] and not force then
 		if not self:Alive() then
-			Notify(self, 1, 4, "You can not change your job whilst being dead in jail.")
+			Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
 			return
 		else
-			Notify(self, 1, 4, "You are in Jail. Get a new job when you have been released.")
+			Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
 			return
 		end
 	end
@@ -189,35 +189,35 @@ function meta:ChangeTeam(t, force)
 
 	
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) then
-		Notify(self, 1, 4, "You were either banned from this team or you were demoted.)")
+		Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), "banned/demoted"))
 		return
 	end
 	
 	for k,v in pairs(RPExtraTeams) do
 		if t == k then
 			if self:Team() == t then
-				Notify(self, 1, 4, "You already are a " .. v.name .. "!")	
+				Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
 				return
 			end
 			
 			if not self:GetNWBool("Priv"..v.command) then
 				if type(v.NeedToChangeFrom) == "number" and self:Team() ~= v.NeedToChangeFrom and not force then
-					Notify(self, 1,4, "You need to be "..team.GetName(v.NeedToChangeFrom).." first in order to become " .. v.name)
+					Notify(self, 1,4, string.format(LANGUAGE.need_to_be_before, team.GetName(v.NeedToChangeFrom), v.name))
 					return
 				elseif type(v.NeedToChangeFrom) == "table" and not table.HasValue(v.NeedToChangeFrom, self:Team()) and not force then
 					local teamnames = ""
 					for a,b in pairs(v.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
-					Notify(self, 1,4, "You need to be "..string.sub(teamnames, 5).." first in order to become " .. v.name)
+					Notify(self, 1,4, string.format(string.sub(teamnames, 5), team.GetName(v.NeedToChangeFrom), v.name))
 					return
 				end
 				if CfgVars["max"..v.command.."s"] and CfgVars["max"..v.command.."s"] ~= 0 and team.NumPlayers(t) >= CfgVars["max"..v.command.."s"] and not force then
-					Notify(self, 1, 4,  "You can not become "..v.name.." since the limit of "..v.name.." is reached.")
+					Notify(self, 1, 4, string.format(LANGUAGE.team_limit_reached, v.name))
 					return
 				end
 			end
 			self:UpdateJob(v.name)
 			DB.StoreSalary(self, v.salary)
-			NotifyAll(1, 4, self:Name() .. " has been made a " .. v.name .. "!")
+			NotifyAll(1, 4, string.format(LANGUAGE.job_has_become, self:Nick(), v.name))
 			if self:GetNWBool("HasGunlicense") then
 				self:SetNWBool("HasGunlicense", false)
 			end
@@ -307,13 +307,13 @@ function meta:PayDay()
 		if not RPArrestedPlayers[self:SteamID()] then
 			local amount = math.floor(DB.RetrieveSalary(self))
 			if amount == 0 then
-				Notify(self, 4, 4, "You received no salary because you are unemployed!")
+				Notify(self, 4, 4, LANGUAGE.payday_unemployed)
 			else
 				self:AddMoney(amount)
-				Notify(self, 4, 4, "Payday! You received " .. CUR .. amount .. "!")
+				Notify(self, 4, 4, string.format(LANGUAGE.payday_message, CUR .. amount))
 			end
 		else
-			Notify(self, 4, 4, "Pay day missed! (arrested)")
+			Notify(self, 4, 4, LANGUAGE.payday_missed)
 		end
 	end
 end
@@ -342,12 +342,12 @@ function AddJailPos(ply)
 	if (ply:Team() == TEAM_CHIEF and CfgVars["chiefjailpos"] == 1) or ply:HasPriv(ADMIN) then
 		DB.StoreJailPos(ply, true)
 	else
-		local str = "Admin only!"
+		local str = LANGUAGE.admin_only
 		if CfgVars["chiefjailpos"] == 1 then
-			str = "Chief or " .. str
+			str = LANGUAGE.chief_or .. str
 		end
 
-		Notify(ply, 1, 4, str)
+		Notify(ply, 1, 4, str) 
 	end
 	return ""
 end
@@ -376,10 +376,10 @@ function meta:Arrest(time, rejoin)
 			time = GetGlobalInt("jailtimer")
 		end
 		DB.StoreJailStatus(self, time)
-		self:PrintMessage(HUD_PRINTCENTER, "You have been arrested for " .. time .. " seconds!")
+		self:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.youre_arrested, time))
 		for k, v in pairs(player.GetAll()) do
 			if v ~= self then
-				v:PrintMessage(HUD_PRINTCENTER, self:Name() .. " has been arrested for " .. time .. " seconds!")
+				v:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.hes_arrested, self:Name(), time))
 			end
 		end
 		
@@ -407,7 +407,7 @@ function meta:Unarrest(ID)
 			DB.StoreJailStatus(self, 0)
 			timer.Stop(self .. "jailtimer")
 			timer.Destroy(self .. "jailtimer")
-			NotifyAll(1, 4, self:Name() .. " has been released from jail!")
+			NotifyAll(1, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
 		end
 	else
 		if self and RPArrestedPlayers[self:SteamID()] then
@@ -419,7 +419,7 @@ function meta:Unarrest(ID)
 			DB.StoreJailStatus(self, 0)
 			timer.Stop(self:SteamID() .. "jailtimer")
 			timer.Destroy(self:SteamID() .. "jailtimer")
-			NotifyAll(1, 4, self:Name() .. " has been released from jail!")
+			NotifyAll(1, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
 		elseif not self and RPArrestedPlayers[self:SteamID()] then
 			RPArrestedPlayers[self:SteamID()] = nil
 			DB.StoreJailStatus(self, 0)
@@ -469,14 +469,12 @@ function meta:DoPropertyTax()
 	local tax = price * numowned + math.random(-5, 5)
 
 	if self:CanAfford(tax) then
-		if tax == 0 then
-			Notify(self, 1, 5, "You have received no property taxes since you don't own a door or a vehicle.")
-		else
+		if tax ~= 0 then
 			self:AddMoney(-tax)
-			Notify(self, 1, 5, "Property tax! " .. CUR .. tax)
+			Notify(self, 1, 5, string.format(LANGUAGE.property_tax, CUR .. tax))
 		end
 	else
-		Notify(self, 1, 8, "You couldn't pay the taxes! Your property has been taken away from you!")
+		Notify(self, 1, 8, LANGUAGE.property_tax_cant_afford)
 		self:UnownAll()
 	end
 end

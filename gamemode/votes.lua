@@ -31,13 +31,13 @@ end
 
 function vote:Create(question, voteid, ent, delay, callback, special)
 	if #player.GetAll() == 1 then
-		Notify(ent, 1, 4, "You have won the vote since you are alone in the server.")
+		Notify(ent, 1, 4, LANGUAGE.vote_alone)
 		callback(1, ent)
 		return
 	end
 	
 	if special and #player.GetAll() <= 2 then
-		Notify(ent, 1, 4, "You have won the vote since you are alone in the server.")
+		Notify(ent, 1, 4, LANGUAGE.vote_alone)
 		callback(1, ent)
 		return
 	end 
@@ -62,7 +62,7 @@ function vote:Create(question, voteid, ent, delay, callback, special)
 
 	Votes[voteid] = newvote
 	if ent:IsPlayer() then
-		Notify(ent,1,4, "The vote is created")
+		Notify(ent,1,4, LANGUAGE.vote_started)
 	end
 	umsg.Start("DoVote")
 		umsg.String(question)

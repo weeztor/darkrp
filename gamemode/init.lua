@@ -68,6 +68,7 @@ meta.GetName = meta.Name
 RPArrestedPlayers = {}
 
 DeriveGamemode("sandbox")
+AddCSLuaFile("language_sh.lua")
 AddCSLuaFile("MakeThings.lua")
 AddCSLuaFile("addentities.lua")
 AddCSLuaFile("cl_init.lua")
@@ -98,6 +99,7 @@ DB = {}
 -- This will fix the rp_voiceradius not working
 game.ConsoleCommand("sv_alltalk 0\n")
 
+include("language_sh.lua")
 include("MakeThings.lua")
 include("shared.lua")
 include("help.lua")

@@ -150,7 +150,7 @@ function GM:OnNPCKilled(victim, ent, weapon)
 		-- if we know by now who killed the NPC, pay them.
 		if ent and CfgVars["npckillpay"] > 0 then
 			ent:AddMoney(CfgVars["npckillpay"])
-			Notify(ent, 1, 4, CUR .. CfgVars["npckillpay"] .. " For killing an NPC!")
+			Notify(ent, 1, 4, string.format(LANGUAGE.npc_killpay, CUR .. CfgVars["npckillpay"]))
 		end
 	end
 end
@@ -232,11 +232,11 @@ end
 
 function GM:CanPlayerSuicide(ply)
 	if ply.IsSleeping then
-		Notify(ply, 4, 4, "You can't suicide whilst sleeping.")
+		Notify(ply, 4, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
 	if RPArrestedPlayers[ply:SteamID()] then
-		Notify(ply, 4, 4, "You can't suicide whilst in jail.")
+		Notify(ply, 4, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
 	return true
@@ -268,9 +268,9 @@ function GM:PlayerDeath(ply, weapon, killer)
 		-- If the player died in jail, make sure they can't respawn until their jail sentance is over
 		ply.NextSpawnTime = CurTime() + math.ceil(GetGlobalInt("jailtimer") - (CurTime() - ply.LastJailed)) + 1
 		for a, b in pairs(player.GetAll()) do
-			b:PrintMessage(HUD_PRINTCENTER, ply:Nick() .. " has died in jail!")
-		end
-		Notify(ply, 4, 4, "You now are dead until your jail time is up!")
+			b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.died_in_jail, ply:Nick()))
+		end 
+		Notify(ply, 4, 4, LANGUAGE.dead_in_jail)
 	else
 		-- Normal death, respawning.
 		ply.NextSpawnTime = CurTime() + CfgVars["respawntime"]
@@ -461,7 +461,7 @@ function GM:PlayerSpawn(ply)
 		if DB.RetrieveJailPos() then
 			ply:Arrest()
 		else
-			Notify(ply, 1, 4, "You're no longer under arrest since no jail positions are set!")
+			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "arrest"))
 		end
 	end
 	

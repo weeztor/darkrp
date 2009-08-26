@@ -13,8 +13,8 @@ if not CfgVars["starverate"] then
 end
 
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
-	if not ply:IsAdmin() then Notify(ply, 1, 4, "You need admin privileges in order to be able to set the hungerspeed.") return end
-	if not args[1] then Notify(ply, 1, 4, "No arguments were specified!") return end
+	if not ply:IsAdmin() then Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "rp_hungerspeed")) return end
+	if not tonumber(args[1]) then Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "")) return end
 	DB.SaveSetting("hungerspeed", tonumber(args[1]) / 10)
 end)
 
@@ -95,29 +95,25 @@ function BuyFood(ply, args)
 	local tr = util.TraceLine(trace)
 
 	if GetGlobalInt("hungermod") == 0 and ply:Team() ~= TEAM_COOK then
-		Notify(ply, 1, 4, "/buyfood is disabled unless you're a cook or hunger mod is enabled.")
+		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "hungermod", ""))
 		return ""
 	end
 
 	if ply:Team() ~= TEAM_COOK and team.NumPlayers(TEAM_COOK) > 0 then
-		Notify(ply, 1, 4, "/buyfood is disabled since there are Cooks.")
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyfood", "cooks"))
 		return ""
 	end
 
 	for k,v in pairs(FoodItems) do
 		if string.lower(args) == k then
-			if not ply:CanAfford(CfgVars["foodcost"]) then
-				Notify(ply, 1, 4, "You can not afford this!")
-				return ""
-			end
 			local cost = CfgVars["foodcost"]		
 			if ply:CanAfford(cost) then
 				ply:AddMoney(-cost)
 			else
-				Notify(ply, 1, 4, "You need " .. CUR.. math.floor(cost) .. " to purchase this!")
-				return
+				Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
+				return ""
 			end
-			Notify(ply, 1, 4, "You have bought a "..k)
+			Notify(ply, 1, 4, string.format(LANGUAGE.you_bought_x, k, tostring(cost)))
 			local SpawnedFood = ents.Create("spawned_food")
 			SpawnedFood:SetNWEntity("owning_ent", ply)
 			SpawnedFood.ShareGravgun = true
@@ -127,6 +123,7 @@ function BuyFood(ply, args)
 			SpawnedFood:SetModel(v.model)
 			SpawnedFood.FoodEnergy = v.amount
 			SpawnedFood:Spawn()
+			return ""
 		end
 	end
 	return ""

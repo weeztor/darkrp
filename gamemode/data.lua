@@ -294,17 +294,17 @@ function DB.StoreJailPos(ply, addingPos)
 	local already = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";"))
 	if not already or already == 0 then
 		sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
-		Notify(ply, 1, 4,  "You have created the first jail position!")
+		Notify(ply, 1, 4,  LANGUAGE.created_first_jailpos)
 	else
 		if addingPos then
 			sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
-			Notify(ply, 1, 4,  "You have added one extra jail position!")
+			Notify(ply, 1, 4,  LANGUAGE.added_jailpos)
 		else
 			sql.Begin()
 			sql.Query("DELETE FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";")
 			sql.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");")
 			sql.Commit()
-			Notify(ply, 1, 5,  "You have removed all jail positions and you have added a new one here.")
+			Notify(ply, 1, 5,  LANGUAGE.reset_add_jailpos)
 		end
 	end
 end
@@ -362,10 +362,10 @@ function DB.StoreTeamSpawnPos(t, pos)
 	local already = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_tspawns WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";"))
 	if not already or already == 0 then
 		sql.Query("INSERT INTO darkrp_tspawns VALUES(" .. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
-		print(team.GetName(t).."'s spawn position created.")
+		print(string.format(LANGUAGE.created_spawnpos, team.GetName(t)))
 	else
 		sql.Query("UPDATE darkrp_tspawns SET x = " .. pos[1] .. ", y = " .. pos[2] .. ", z = " .. pos[3] .. " WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";")
-		print(team.GetName(t).."'s spawn position updated.")
+		print(string.format(LANGUAGE.updated_spawnpos, team.GetName(t)))
 	end
 end
 
@@ -459,9 +459,9 @@ function DB.ResetAllMoney(ply,cmd,args)
 		DB.StoreMoney(v, 500)
 	end
 	if ply:IsPlayer() then
-		NotifyAll(1,4, ply:Nick() .. " has reset all player's money!")
+		NotifyAll(1,4, string.format(LANGUAGE.reset_money, ply:Nick()))
 	else
-		NotifyAll(1,4, "Console has reset all player's money!")
+		NotifyAll(1,4, string.format(LANGUAGE.reset_money, "Console"))
 	end
 end
 concommand.Add("rp_resetallmoney", DB.ResetAllMoney)
@@ -628,10 +628,10 @@ end
 
 function ResetAllRPSettings(ply,cmd,args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		Notify(ply, 1, 5, "You need to be superadmin in order to be able to reset all RP settings.")
+		Notify(ply, 1, 5, string.format(LANGUAGE.need_sadmin, "rp_resetallsettings"))
 		return
 	end
-	Notify(ply, 1, 4, "You have reset all settings!")
+	Notify(ply, 1, 4, LANGUAGE.reset_settings)
 	RefreshRPSettings(true)
 	RefreshGlobals()
 end
