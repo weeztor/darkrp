@@ -10,7 +10,7 @@ local function MayorOptns()
 		maypanel:EnableHorizontal(false)
 		maypanel:EnableVerticalScrollbar(true)
 			local SearchWarrant = vgui.Create("DButton") 
-			SearchWarrant:SetText("Get a search warrant for a player")
+			SearchWarrant:SetText(LANGUAGE.give_money)
 			SearchWarrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
@@ -19,14 +19,14 @@ local function MayorOptns()
 					end
 				end
 				if #menu.Panels == 0 then
-					menu:AddOption("Noone available", function() end)
+					menu:AddOption(LANGUAGE.noone_available, function() end)
 				end
 				menu:Open()
 			end
 			maypanel:AddItem(SearchWarrant)
 			
 			local Warrant = vgui.Create("DButton") 
-			Warrant:SetText("Make someone wanted")
+			Warrant:SetText(LANGUAGE.make_wanted)
 			Warrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
@@ -42,7 +42,7 @@ local function MayorOptns()
 			maypanel:AddItem(Warrant)
 			
 			local UnWarrant = vgui.Create("DButton") 
-			UnWarrant:SetText("Make someone unwanted")
+			UnWarrant:SetText(LANGUAGE.make_unwanted)
 			UnWarrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
@@ -51,14 +51,14 @@ local function MayorOptns()
 					end
 				end
 				if #menu.Panels == 0 then
-					menu:AddOption("Noone available", function() end)
+					menu:AddOption(LANGUAGE.noone_available, function() end)
 				end
 				menu:Open()
 			end
 			maypanel:AddItem(UnWarrant)
 			
 			local Lockdown = vgui.Create("DButton") 
-			Lockdown:SetText("Initiate a lockdown")
+			Lockdown:SetText(LANGUAGE.initiate_lockdown)
 			Lockdown.DoClick = function()
 				LocalPlayer():ConCommand("say /lockdown")
 			end
@@ -66,21 +66,21 @@ local function MayorOptns()
 			
 			
 			local UnLockdown = vgui.Create("DButton") 
-			UnLockdown:SetText("Stop the lockdown")
+			UnLockdown:SetText(LANGUAGE.stop_lockdown)
 			UnLockdown.DoClick = function()
 				LocalPlayer():ConCommand("say /unlockdown")
 			end
 			maypanel:AddItem(UnLockdown)
 			
 			local Lottery = vgui.Create("DButton") 
-			Lottery:SetText("Start a lottery")
+			Lottery:SetText(LANGUAGE.start_lottery)
 			Lottery.DoClick = function()
 				LocalPlayer():ConCommand("say /lottery")
 			end
 			maypanel:AddItem(Lottery)
 			
 			local GiveLicense = vgui.Create("DButton") 
-			GiveLicense:SetText("Give <lookingat> a gun license")
+			GiveLicense:SetText(LANGUAGE.give_license_lookingat)
 			GiveLicense.DoClick = function()
 				LocalPlayer():ConCommand("say /givelicense")
 			end
@@ -102,7 +102,7 @@ local function CPOptns()
 		CPpanel:EnableHorizontal(false)
 		CPpanel:EnableVerticalScrollbar(true)
 			local SearchWarrant = vgui.Create("DButton") 
-			SearchWarrant:SetText("Request a search warrant for a player")
+			SearchWarrant:SetText(LANGUAGE.request_warrant)
 			SearchWarrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
@@ -111,14 +111,14 @@ local function CPOptns()
 					end
 				end
 				if #menu.Panels == 0 then
-					menu:AddOption("Noone available", function() end)
+					menu:AddOption(LANGUAGE.noone_available, function() end) 
 				end
 				menu:Open()
 			end
 			CPpanel:AddItem(SearchWarrant)
 			
 			local Warrant = vgui.Create("DButton") 
-			Warrant:SetText("Warrant a player")
+			Warrant:SetText(LANGUAGE.searchwarrantbutton)
 			Warrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
@@ -127,14 +127,14 @@ local function CPOptns()
 					end
 				end
 				if #menu.Panels == 0 then
-					menu:AddOption("Noone available", function() end)
+					menu:AddOption(LANGUAGE.noone_available, function() end)
 				end
 				menu:Open()
 			end
 			CPpanel:AddItem(Warrant)
 			
 			local UnWarrant = vgui.Create("DButton") 
-			UnWarrant:SetText("Unwarrant a player")
+			UnWarrant:SetText(LANGUAGE.unwarrantbutton)
 			UnWarrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
@@ -143,7 +143,7 @@ local function CPOptns()
 					end
 				end
 				if #menu.Panels == 0 then
-					menu:AddOption("Noone available", function() end)
+					menu:AddOption(LANGUAGE.noone_available, function() end)
 				end
 				menu:Open()
 			end
@@ -151,12 +151,12 @@ local function CPOptns()
 			
 			if LocalPlayer():Team() == TEAM_CHIEF or LocalPlayer():IsAdmin() then
 				local SetJailPos = vgui.Create("DButton") 
-				SetJailPos:SetText("Set the jail position")
+				SetJailPos:SetText(LANGUAGE.set_jailpos)
 				SetJailPos.DoClick = function() LocalPlayer():ConCommand("say /jailpos") end
 				CPpanel:AddItem(SetJailPos)
 				
 				local AddJailPos = vgui.Create("DButton") 
-				AddJailPos:SetText("Add a jail position")
+				AddJailPos:SetText(LANGUAGE.add_jailpos)
 				AddJailPos.DoClick = function() LocalPlayer():ConCommand("say /addjailpos") end
 				CPpanel:AddItem(AddJailPos)
 			end
@@ -179,7 +179,7 @@ local function CitOptns()
 		Citpanel:EnableVerticalScrollbar(true)
 		
 		local joblabel = vgui.Create("DLabel")
-		joblabel:SetText("Set a custom job(press enter to activate)") 
+		joblabel:SetText(LANGUAGE.set_custom_job)
 		Citpanel:AddItem(joblabel)
 		
 		local jobentry = vgui.Create("DTextEntry")
@@ -209,7 +209,7 @@ local function MobOptns()
 		Mobpanel:EnableVerticalScrollbar(true)
 		
 		local agendalabel = vgui.Create("DLabel")
-		agendalabel:SetText("Set the agenda(press enter to activate)") 
+		agendalabel:SetText(LANGUAGE.set_agenda)
 		Mobpanel:AddItem(agendalabel)
 		
 		local agendaentry = vgui.Create("DTextEntry")
@@ -239,13 +239,13 @@ function MoneyTab()
 				MoneyPanel:EnableVerticalScrollbar(true)
 				
 				local GiveMoneyButton = vgui.Create("DButton")
-				GiveMoneyButton:SetText("Give money at the one you're looking at")
+				GiveMoneyButton:SetText(LANGUAGE.give_money)
 				GiveMoneyButton.DoClick = function()
 					Derma_StringRequest("Amount of money", "How much money do you want to give?", "", function(a) LocalPlayer():ConCommand("say /give " .. tostring(a)) end)
 				end
 				MoneyPanel:AddItem(GiveMoneyButton)
 				local SpawnMoneyButton = vgui.Create("DButton")
-				SpawnMoneyButton:SetText("Drop money")
+				SpawnMoneyButton:SetText(LANGUAGE.drop_money)
 				SpawnMoneyButton.DoClick = function()
 					Derma_StringRequest("Amount of money", "How much money do you want to drop?", "", function(a) LocalPlayer():ConCommand("say /dropmoney " .. tostring(a)) end)
 				end
@@ -263,7 +263,7 @@ function MoneyTab()
 				ActionsPanel:EnableHorizontal( false )
 				ActionsPanel:EnableVerticalScrollbar(true)
 					local rpnamelabel = vgui.Create("DLabel")
-					rpnamelabel:SetText("Change your DarkRP name(press Enter to change your name)")
+					rpnamelabel:SetText(LANGUAGE.change_name)
 				ActionsPanel:AddItem(rpnamelabel) 
 					
 					local rpnameTextbox = vgui.Create("DTextEntry")
@@ -274,27 +274,27 @@ function MoneyTab()
 					ActionsPanel:AddItem(rpnameTextbox)
 				
 					local sleep = vgui.Create("DButton")
-					sleep:SetText("Toggle sleep mode")
+					sleep:SetText(LANGUAGE.go_to_sleep)
 					sleep.DoClick = function()
 						LocalPlayer():ConCommand("say /sleep")
 					end	
 				ActionsPanel:AddItem(sleep)
 					local Drop = vgui.Create("DButton")
-					Drop:SetText("Drop current weapon")
+					Drop:SetText(LANGUAGE.drop_weapon)
 					Drop.DoClick = function() LocalPlayer():ConCommand("say /drop") end
 				ActionsPanel:AddItem(Drop)
 					local health = vgui.Create("DButton")
-					health:SetText("Buy health(".. CUR .. tostring(GetGlobalInt("healthcost")) .. ")")
+					health:SetText(string.format(LANGUAGE.buy_health, tostring(GetGlobalInt("healthcost"))))
 					health.DoClick = function() LocalPlayer():ConCommand("say /Buyhealth") end
 				ActionsPanel:AddItem(health)
 				
 				local RequestLicense = vgui.Create("DButton")
-					RequestLicense:SetText("Request gunlicense")
+					RequestLicense:SetText(LANGUAGE.request_gunlicense)
 					RequestLicense.DoClick = function() LocalPlayer():ConCommand("say /requestlicense") end
 				ActionsPanel:AddItem(RequestLicense)
 				
 				local Demote = vgui.Create("DButton") 
-				Demote:SetText("Demote a player")
+				Demote:SetText(LANGUAGE.demote_player_menu)
 				Demote.DoClick = function()
 					local menu = DermaMenu()
 					for _,ply in pairs(player.GetAll()) do
@@ -308,7 +308,7 @@ function MoneyTab()
 						end
 					end
 					if #menu.Panels == 0 then
-						menu:AddOption("Noone available", function() end)
+						menu:AddOption(LANGUAGE.noone_available, function() end) 
 					end
 					menu:Open()
 				end
@@ -428,9 +428,9 @@ function JobsTab()
 			icon.OnCursorEntered = function()
 				icon.PaintOverOld = icon.PaintOver 
 				icon.PaintOver = icon.PaintOverHovered
-				Info[1] = "Name: " .. name
-				Info[2] = "Description: " .. description
-				Info[3] = "Weapons: " .. Weapons
+				Info[1] = LANGUAGE.job_name .. name 
+				Info[2] = LANGUAGE.job_description .. description
+				Info[3] = LANGUAGE.job_weapons .. Weapons
 				model = Model
 				UpdateInfo()
 			end
@@ -519,13 +519,13 @@ function EntitiesTab()
 					
 					for k,v in pairs(CustomShipments) do
 						if v.seperate and (table.HasValue(v.allowed, LocalPlayer():Team()) or #v.allowed == 0 or (v.allowed[1] == TEAM_GUN and not v.allowed[2] and LocalPlayer():Team() ~= TEAM_GUN and GetGlobalInt("restrictbuypistol") == 0)) then
-							AddIcon(v.model, "Buy a "..v.name..": "..CUR..v.pricesep, "/buy "..v.name)
+							AddIcon(v.model, string.format(LANGUAGE.buy_a, "a "..v.name, CUR..v.pricesep), "/buy "..v.name)
 						end
 					end
 					
-					AddIcon("models/Items/BoxSRounds.mdl", "Buy pistol ammo: " .. CUR .. tostring(GetGlobalInt("ammopistolcost")), "/buyammo pistol")
-					AddIcon("models/Items/BoxMRounds.mdl", "Buy rifle ammo: " .. CUR .. tostring(GetGlobalInt("ammoriflecost")), "/buyammo rifle")
-					AddIcon("models/Items/BoxBuckshot.mdl", "Buy shotgun ammo: " .. CUR .. tostring(GetGlobalInt("ammoshotguncost")), "/buyammo shotgun")
+					AddIcon("models/Items/BoxSRounds.mdl", string.format(LANGUAGE.buy_a, "Pistol ammo", CUR .. tostring(GetGlobalInt("ammopistolcost"))), "/buyammo pistol")
+					AddIcon("models/Items/BoxMRounds.mdl", string.format(LANGUAGE.buy_a, "Rifle ammo", CUR .. tostring(GetGlobalInt("ammoriflecost"))), "/buyammo rifle")
+					AddIcon("models/Items/BoxBuckshot.mdl", string.format(LANGUAGE.buy_a, "shotgun ammo", CUR .. tostring(GetGlobalInt("ammoshotguncost"))), "/buyammo shotgun")
 			WepCat:SetContents(WepPanel)
 			WepCat:SetSkin("DarkRP")
 			self:AddItem(WepCat)
@@ -564,12 +564,12 @@ function EntitiesTab()
 					
 					if FoodItems and (GetGlobalInt("foodspawn") ~= 0 or LocalPlayer():Team() == TEAM_COOK) and (GetGlobalInt("hungermod") == 1 or LocalPlayer():Team() == TEAM_COOK) then
 						for k,v in pairs(FoodItems) do
-							AddEntIcon(v.model, "Buy a(n) ".. k .. " for a few bucks", "/buyfood "..k)
+							AddEntIcon(v.model, string.format(LANGUAGE.buy_a, "a "..k, "a few bucks"), "/buyfood "..k)
 						end
 					end
 					for k,v in pairs(CustomShipments) do
 						if not v.noship and table.HasValue(v.allowed, LocalPlayer():Team()) then
-							AddEntIcon(v.model, "Buy a "..v.name.." shipment " .. CUR .. tostring(v.price), "/buyshipment "..v.name)
+							AddEntIcon(v.model, string.format(LANGUAGE.buy_a, "a "..v.name .." shipment", CUR .. tostring(v.price)), "/buyshipment "..v.name)
 						end
 					end
 			EntCat:SetContents(EntPanel)
@@ -1053,7 +1053,7 @@ function RPLicenseWeaponsTab()
 		function weaponspanel:Update()
 			self:Clear(true)
 			local Explanation = vgui.Create("DLabel")
-			Explanation:SetText("License weapons\n\nTick the weapons people should be able to get WITHOUT a license!\n") 
+			Explanation:SetText(LANGUAGE.license_tab)
 			Explanation:SizeToContents()
 			self:AddItem(Explanation)
 			
@@ -1078,7 +1078,7 @@ function RPLicenseWeaponsTab()
 			end
 			
 			local OtherWeps = vgui.Create("DLabel")
-			OtherWeps:SetText("\nOther weapons:\n") 
+			OtherWeps:SetText(LANGUAGE.license_tab_other_weapons)
 			OtherWeps:SizeToContents()
 			self:AddItem(OtherWeps)
 			for k,v in pairs(weapons.GetList()) do

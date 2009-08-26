@@ -53,6 +53,7 @@ function LoadModules(msg)
 end
 usermessage.Hook("LoadModules", LoadModules)
 
+include("language_sh.lua")
 include("MakeThings.lua")
 include("cl_vgui.lua")
 include("entity.lua")
@@ -71,6 +72,14 @@ include("FPP/client/FPP_Menu.lua")
 include("FPP/client/FPP_HUD.lua")
 include("FPP/client/FPP_Buddies.lua")
 include("FPP/sh_CPPI.lua")
+
+if not ConVarExists("rp_language") then
+	CreateConVar("rp_language", "english", {FCVAR_ARCHIVE, FCVAR_REPLICATED})	
+end
+LANGUAGE = rp_languages[GetConVarString("rp_language")]
+if not LANGUAGE then
+	LANGUAGE = rp_languages["english"]--now hope people don't remove the english language ._.
+end
 
 surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
 
@@ -91,8 +100,8 @@ function DrawPlayerInfo(ply)
 	if GetGlobalInt("nametag") == 1 then
 		draw.DrawText(ply:Nick(), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply:Nick(), "TargetID", pos.x, pos.y, team.GetColor(ply:Team()), 1)
-		draw.DrawText("Health: "..ply:Health(), "TargetID", pos.x + 1, pos.y + 21, Color(0, 0, 0, 255), 1)
-		draw.DrawText("Health: "..ply:Health(), "TargetID", pos.x, pos.y + 20, Color(255,255,255,200), 1)
+		draw.DrawText(LANGUAGE.health ..ply:Health(), "TargetID", pos.x + 1, pos.y + 21, Color(0, 0, 0, 255), 1)
+		draw.DrawText(LANGUAGE.health..ply:Health(), "TargetID", pos.x, pos.y + 20, Color(255,255,255,200), 1)
 	end
 
 	if GetGlobalInt("jobtag") == 1 then
@@ -109,8 +118,8 @@ function DrawPriceInfo(ent)
 
 	local price = ent:GetNWInt("price")
 
-	draw.DrawText("Customer Price:\n" .. CUR .. tostring(price), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
-	draw.DrawText("Customer Price:\n" .. CUR .. tostring(price), "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
+	draw.DrawText(LANGUAGE.customer_price .. CUR .. tostring(price), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
+	draw.DrawText(LANGUAGE.customer_price .. CUR .. tostring(price), "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
 end
 
 function DrawShipmentInfo(ent)
@@ -153,7 +162,7 @@ function DrawDrugLabInfo(ent)
 	end
 	
 	local price = tostring(ent:GetNWInt("price"))
-	local text = owner.. "'s\ndruglab\nCustomer price: ".. price
+	local text = owner.. "'s\ndruglab\n"..LANGUAGE.customer_price.. price
 
 	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
 	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
@@ -170,7 +179,7 @@ function DrawDrugsInfo(ent)
 		owner = ent:GetNWEntity("owning_ent"):Nick()
 	end
 	local price = tostring(ent:GetNWInt("price"))
-	local text = owner .. "'s\ndrugs\nCustomer price: ".. price
+	local text = owner .. "'s\ndrugs\n"..LANGUAGE.customer_price.. price
 
 	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
 	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(150, 20, 20, 200), 1)
@@ -189,8 +198,8 @@ function DrawWantedInfo(ply)
 		draw.DrawText(ply:Nick(), "TargetID", pos.x, pos.y, team.GetColor(ply:Team()), 1)
 	end
 
-	draw.DrawText("Wanted by Police!", "TargetID", pos.x, pos.y - 20, Color(255, 255, 255, 200), 1)
-	draw.DrawText("Wanted by Police!", "TargetID", pos.x + 1, pos.y - 21, Color(255, 0, 0, 255), 1)
+	draw.DrawText(LANGUAGE.wanted, "TargetID", pos.x, pos.y - 20, Color(255, 255, 255, 200), 1)
+	draw.DrawText(LANGUAGE.wanted, "TargetID", pos.x + 1, pos.y - 21, Color(255, 0, 0, 255), 1)
 end
 
 function DrawZombieInfo(ply)
@@ -318,10 +327,10 @@ local function DrawDisplay()
 
 			for n = 1, num do
 				if ent:GetNWInt("Allowed" .. n) == LocalPlayer():EntIndex() then
-					ownerstr = ownerstr .. "You are allowed to co-own this\n(Press Reload with keys or F2 to co-own)\n"
+					ownerstr = ownerstr .. LANGUAGE.keys_allowed_to_coown
 				elseif ent:GetNWInt("Allowed" .. n) > -1 then
 					if ValidEntity(player.GetByID(ent:GetNWInt("Allowed" .. n))) then
-						ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick() .. " is allowed to co-own this\n"
+						ownerstr = ownerstr .. string.format(LANGUAGE.keys_other_allowed, player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick())
 					end
 				end
 			end
@@ -336,23 +345,23 @@ local function DrawDisplay()
 					whiteText = true
 					if superAdmin then
 						if blocked then
-							st = ent:GetNWString("title") .. "\n(Press Reload with keys or F2 to allow ownership)"
+							st = ent:GetNWString("title") .. "\n"..LANGUAGE.keys_allow_ownership
 						else
 							if ownerstr == "" then
-								st = ent:GetNWString("title") .. "\n(Press Reload with keys or F2 to disallow ownership)"
+								st = ent:GetNWString("title") .. "\n"..LANGUAGE.keys_disallow_ownership
 							else
 								if ent:OwnedBy(LocalPlayer()) and not CPOnly then
-									st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
+									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
 								elseif not CPOnly then
-									st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr .. "(Press Reload with keys or F2 to disallow ownership)\n"
+									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr .. LANGUAGE.keys_disallow_ownership
 								elseif not ent:IsVehicle() then
-									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor\n" .. "(Press Reload with keys or F2 to disallow ownership)\n"
+									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. LANGUAGE.keys_cops_and_mayor .. "\n" .. LANGUAGE.keys_disallow_ownership .. "\n"
 								end
 							end
 							if CPOnly and not ent:IsVehicle() then
-								st = st .. "(Press Reload with keys or F2 to enable for everyone(not only cops))"
+								st = st .. LANGUAGE.keys_everyone
 							elseif not ent:IsVehicle() then
-								st = st .. "(Press Reload with keys or F2 to set to cops and mayor only)"
+								st = st .. LANGUAGE.keys_cops
 							end
 						end
 					else
@@ -364,9 +373,9 @@ local function DrawDisplay()
 							else
 								if CPOnly then
 									whiteText = true
-									st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
+									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. LANGUAGE.keys_cops_and_mayor
 								else
-									st = ent:GetNWString("title") .. "\nOwned by:\n" .. ownerstr
+									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
 								end
 							end
 						end
@@ -375,18 +384,18 @@ local function DrawDisplay()
 					if superAdmin then
 						if blocked then
 							whiteText = true
-							st = ent:GetNWString("title") .. "\n(Press Reload with keys or F2 to allow ownership)"
+							st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_allow_ownership
 						else
 							if CPOnly then
 								whiteText = true
-								st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
+								st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. LANGUAGE.keys_cops_and_mayor
 								if not ent:IsVehicle() then
-									st = st .. "\n(Press Reload with keys or F2 to enable for everyone(not only cops))"
+									st = st .. "\n".. LANGUAGE.keys_everyone
 								end
 							else
-								st = "Unowned\n(Press Reload with keys or F2 to own)\n(Press Reload with keys or F2 to disallow ownership)"
+								st = LANGUAGE.keys_unowned.."\n".. LANGUAGE.keys_disallow_ownership
 								if not ent:IsVehicle() then
-									st = st .. "\n(Press Reload with keys or F2 to set to cops and mayor only)"
+									st = st .. "\n"..LANGUAGE.keys_cops
 								end
 							end
 						end
@@ -397,9 +406,9 @@ local function DrawDisplay()
 						else
 							if CPOnly then
 								whiteText = true
-								st = ent:GetNWString("title") .. "\nOwned by:\n" .. "All cops and the mayor"
+								st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. LANGUAGE.keys_cops_and_mayor
 							else
-								st = "Unowned\n(Press Reload with keys or F2 to own)"
+								st = LANGUAGE.keys_unowned
 							end
 						end
 					end
@@ -418,7 +427,7 @@ local function DrawDisplay()
 
 	if PanelNum and PanelNum > 0 then
 		draw.RoundedBox(2, 0, 0, 150, 30, Color(0, 0, 0, 128))
-		draw.DrawText("Hit F3 to vote", "ChatFont", 2, 2, Color(255, 255, 255, 200), 0)
+		draw.DrawText(LANGUAGE.f3tovote, "ChatFont", 2, 2, Color(255, 255, 255, 200), 0)
 	end
 end
 
@@ -467,7 +476,7 @@ function GM:HUDPaint()
 	local CurrentTime = CurTime()
 	
 	if arresttime ~= 0 and CurrentTime - arresttime <= arresteduntil and LocalPlayer():GetNWBool("Arrested") then
-		draw.DrawText("You are arrested for "..tostring(math.ceil(arresteduntil - (CurrentTime - arresttime))).." seconds!","ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
+		draw.DrawText(string.format(youre_arrested, math.ceil(arresteduntil - (CurrentTime - arresttime))),"ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
 	elseif arresttime ~= 0 or not LocalPlayer():GetNWBool("Arrested") then arresttime = 0
 	end
 	self.BaseClass:HUDPaint()
@@ -505,11 +514,11 @@ function GM:HUDPaint()
 	local Salary1color = Color(salary1r:GetInt(), salary1g:GetInt(), salary1b:GetInt(), salary1a:GetInt())
 	local Salary2color = Color(salary2r:GetInt(), salary2g:GetInt(), salary2b:GetInt(), salary2a:GetInt())
 	draw.DrawText(math.Max(0, math.Round(ShowHealth)), "TargetID", hx + hw / 2, hy - 6, HealthTextColor, 1)
-	draw.DrawText("Job: " .. job .. "\nWallet: " .. CUR .. money .. "", "TargetID", hx + 1, hy - 49, job1color, 0)
-	draw.DrawText("Job: " .. job .. "\nWallet: " .. CUR .. money .. "", "TargetID", hx, hy - 50, job2color, 0)
-	draw.DrawText("\nWallet: " .. CUR .. money .. "", "TargetID", hx, hy - 50, Color(255,255,255,MoneyChangeAlpha), 0)
-	draw.DrawText("Salary: " .. CUR .. salary, "TargetID", hx + 1, hy - 70, Salary1color, 0)
-	draw.DrawText("Salary: " .. CUR .. salary, "TargetID", hx, hy - 71, Salary2color, 0)
+	draw.DrawText(LANGUAGE.job .. job .. "\n"..LANGUAGE.wallet .. CUR .. money .. "", "TargetID", hx + 1, hy - 49, job1color, 0)
+	draw.DrawText(LANGUAGE.job .. job .. "\n"..LANGUAGE.wallet .. CUR .. money .. "", "TargetID", hx, hy - 50, job2color, 0)
+	draw.DrawText("\n"..LANGUAGE.wallet .. CUR .. money .. "", "TargetID", hx, hy - 50, Color(255,255,255,MoneyChangeAlpha), 0)
+	draw.DrawText(LANGUAGE.salary .. CUR .. salary, "TargetID", hx + 1, hy - 70, Salary1color, 0)
+	draw.DrawText(LANGUAGE.salary .. CUR .. salary, "TargetID", hx, hy - 71, Salary2color, 0)
 
 	if LetterAlpha > -1 then
 		if LetterY > ScrH() * .25 then
@@ -554,13 +563,13 @@ function GM:HUDPaint()
 		if AdminTellAlpha > -1 then
 			AdminTellAlpha = math.Clamp(AdminTellAlpha + FrameTime() * dir * 300, 0, 190)
 			draw.RoundedBox(4, 10, 10, ScrW() - 20, 100, Color(0, 0, 0, AdminTellAlpha))
-			draw.DrawText("Listen up:", "GModToolName", ScrW() / 2 + 10, 10, Color(255, 255, 255, AdminTellAlpha), 1)
+			draw.DrawText(LANGUAGE.listen_up, "GModToolName", ScrW() / 2 + 10, 10, Color(255, 255, 255, AdminTellAlpha), 1)
 			draw.DrawText(AdminTellMsg, "ChatFont", ScrW() / 2 + 10, 65, Color(200, 30, 30, AdminTellAlpha), 1)
 		end
 
 		if not LocalPlayer():Alive() then
 			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0,0,0,255))
-			draw.SimpleText("New Life Rule: Do Not Revenge Arrest/Kill.", "ChatFont", ScrW() / 2 +10, ScrH() / 2 - 5, Color(200,0,0,255),1)
+			draw.SimpleText(LANGUAGE.nlr, "ChatFont", ScrW() / 2 +10, ScrH() / 2 - 5, Color(200,0,0,255),1)
 		end
 	end
 
@@ -569,7 +578,7 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 12, 12, 586, 190, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
 		draw.DrawText("Cop Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText("Things Cops need to know-\n-Please don't abuse your job\n-When you arrest someone they are auto transported to jail.\n-They are auto let out of jail after " .. GetGlobalInt("jailtimer") .. " seconds\n-Type /warrant [Nick|SteamID|Status ID] to set a search warrant for a player.\n-Type /wanted [Nick|SteamID|Status ID] to alert everyone to a wanted suspect\n-Type /unwanted [Nick|SteamID|Status ID] to clear the suspect\n-Type /jailpos to set the jail position\n-Type /cophelp to toggle this menu, /x to close it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(LANGUAGE.cophelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
 	if LocalPlayer():GetNWBool("helpMayor") then
@@ -577,7 +586,7 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 12, 12, 586, 154, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
 		draw.DrawText("Mayor Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText("Type /warrant [Nick|SteamID|Status ID] to set a search warrant for a player.\nType /wanted [Nick|SteamID|Status ID] to alert everyone to a wanted suspect.\nType /unwanted [Nick|SteamID|Status ID] to clear the suspect.\nType /lockdown to initiate a lockdown\nType /unlockdown to end a lockdown\nType /mayorhelp toggles this menu, /x closes it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(LANGUAGE.mayorhelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
 	if LocalPlayer():GetNWBool("helpAdmin") then
@@ -585,14 +594,14 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 12, 12, 556, 256, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 556, 20, Color(0, 0, 70, 200))
 		draw.DrawText("Admin Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText("/enablestorm enables meteor storms\n/disablestorm Disables meteor storms\n\nYou can change the price of weapons, jailtimer, max gangsters, ect.\nTo do this press F1 then scroll down and you will see all of the console commands\nIf you edit the init.lua file you can save the vars.\n/jailpos sets the jailposition!\n/setspawn <team> - Enter teamname Ex. police, mayor, gangster\n/adminhelp toggles this menu, /x closes it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(LANGUAGE.adminhelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
 	if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB and not LocalPlayer():GetNWBool("helpBoss") then
 		draw.RoundedBox(10, 10, 10, 460, 110, Color(0, 0, 0, 155))
 		draw.RoundedBox(10, 12, 12, 456, 106, Color(51, 58, 51,100))
 		draw.RoundedBox(10, 12, 12, 456, 20, Color(0, 0, 70, 100))
-		draw.DrawText("Gangster's Agenda", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
+		draw.DrawText(LANGUAGE.gangster_agenda, "ScoreboardText", 30, 12, Color(255,0,0,255),0)
 		draw.DrawText(LocalPlayer():GetNWString("agenda"), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
@@ -601,7 +610,7 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 12, 12, 556, 126, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 556, 20, Color(0, 0, 70, 200))
 		draw.DrawText("mob boss Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText("As the mob boss, you decide what you want the other Gangsters to do\nYou get an Unarrest Stick which you can use to break people out of jail\n/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line\nType /mobbosshelp toggles this menu, /x closes it", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(LANGUAGE.mobhelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 	
 	if LocalPlayer():GetNWBool("HasGunlicense") then
@@ -931,11 +940,11 @@ function RPSelectwhohearit()
 		local h = l - (#playercolors * 20) - 20
 		local AllTalk = GetGlobalInt("alltalk") == 1
 		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" ) or HearMode == "speak" ) then
-			draw.WordBox(2, w, h, "Noone can hear you "..HearMode.."!", "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
+			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_noone, HearMode), "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
 		elseif HearMode == "talk through OOC" or HearMode == "advert" then
-			draw.WordBox(2, w, h, "Everyone can hear you!", "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
+			draw.WordBox(2, w, h, LANGUAGE.hear_everyone, "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
 		elseif not AllTalk or (AllTalk and HearMode ~= "talk" ) then
-			draw.WordBox(2, w, h, "Players who can hear you "..HearMode..": ", "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
+			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_certain_persons, HearMode), "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
 		end
 		
 		for k,v in pairs(playercolors) do

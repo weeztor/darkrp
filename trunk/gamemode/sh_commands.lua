@@ -353,49 +353,49 @@ function AddTeamCommands(CTeam)
 	if CTeam.Vote then
 		AddChatCommand("/vote"..CTeam.command, function(ply)
 			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
-				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." since they are disabled!")
+				Notify(ply, 1, 4, string.format(LANGUAGE.disabled, CTeam.name, ""))
 				return ""
 			end
 			if type(CTeam.NeedToChangeFrom) == "number" and ply:Team() ~= CTeam.NeedToChangeFrom then
-				Notify(ply, 1,4, "You need to be "..team.GetName(CTeam.NeedToChangeFrom).." first in order to become " .. CTeam.name)
+				Notify(ply, 1,4, string.format(LANGUAGE.need_to_be_before, team.GetName(CTeam.NeedToChangeFrom), CTeam.name))
 				return "" 
 			elseif type(CTeam.NeedToChangeFrom) == "table" and not table.HasValue(CTeam.NeedToChangeFrom, ply:Team()) then
 				local teamnames = ""
 				for a,b in pairs(CTeam.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
-				Notify(ply, 1,4, "You need to be "..string.sub(teamnames, 5).." first in order to become " .. CTeam.name)
+				Notify(ply, 1,4, string.format(LANGUAGE.need_to_be_before, string.sub(teamnames, 5), CTeam.name))
 				return ""
 			end
 			if #player.GetAll() == 1 then
-				Notify(ply, 1, 4, "You've won the vote since you're alone in the server.")
+				Notify(ply, 1, 4, LANGUAGE.vote_alone)
 				ply:ChangeTeam(k)
 				return ""
 			end
 			if not ply:ChangeAllowed(k) then
-				Notify(ply, 1, 4, "You were either banned from this team or you were demoted.")
+				Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/vote"..CTeam.command, "banned/demoted"))
 				return ""
 			end
 			if CurTime() - ply:GetTable().LastVoteCop < 80 then
-				Notify(ply, 1, 4, "You need to wait another " .. math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)) .. " seconds before using /vote"..CTeam.command.."!")
+				Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait, math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)), CTeam.command))
 				return ""
 			end
 			if VoteCopOn then
-				Notify(ply, 1, 4,  "There already is a vote!")
+				Notify(ply, 1, 4,  LANGUAGE.vote_already_exists)
 				return ""
 			end
 			if ply:Team() == k then
-				Notify(ply, 1, 4,  "You already are "..CTeam.name.."!")
+				Notify(ply, 1, 4,  string.format(LANGUAGE.unable, CTeam.command, ""))
 				return ""
 			end
 			if team.NumPlayers(k) >= CfgVars["max"..CTeam.command.."s"] then
-				Notify(ply, 1, 4,  "There can only be "..tostring(CTeam.max).." "..CTeam.name.."'s at a time!")
+				Notify(ply, 1, 4,  string.format(LANGUAGE.team_limit_reached,CTeam.name))
 				return ""
 			end
-			vote:Create(ply:Nick() .. ":\nwants to be "..CTeam.name, ply:EntIndex() .. "votecop", ply, 20, function(choice, ply)
+			vote:Create(string.format(LANGUAGE.wants_to_be, ply:Nick(), CTeam.name), ply:EntIndex() .. "votecop", ply, 20, function(choice, ply)
 				VoteCopOn = false
 				if choice == 1 then
 					ply:ChangeTeam(k)
 				else
-					NotifyAll(1, 4, ply:Nick() .. " has not been made "..CTeam.name.."!")
+					NotifyAll(1, 4, string.format(LANGUAGE.has_not_been_made_team, ply:Nick(), CTeam.name))
 				end
 			end)
 			ply:GetTable().LastVoteCop = CurTime()
@@ -404,7 +404,7 @@ function AddTeamCommands(CTeam)
 		end)
 		AddChatCommand("/"..CTeam.command, function(ply)
 			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
-				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." as it is disabled!")
+				Notify(ply, 1, 4, string.format(LANGUAGE.disabled, CTeam.name, ""))
 				return ""
 			end
 			
@@ -417,14 +417,14 @@ function AddTeamCommands(CTeam)
 			if a > 0 and not ply:IsAdmin()
 			or a > 1 and not ply:IsSuperAdmin()
 			then
-				Notify(ply, 1, 4, "You do not have the required access to become a "..CTeam.name.."!")
+				Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, CTeam.name))
 				return ""
 			end
 			if a == 0 and not ply:IsAdmin()
 			or a == 1 and not ply:IsSuperAdmin()
 			or a == 2
 			then
-				Notify(ply, 1, 4, "You need to make a vote to become a "..CTeam.name.."!")
+				Notify(ply, 1, 4, string.format(LANGUAGE.need_to_make_vote, CTeam.name))
 				return ""
 			end
 			ply:ChangeTeam(k, true)
@@ -433,15 +433,15 @@ function AddTeamCommands(CTeam)
 	else
 		AddChatCommand("/"..CTeam.command, function(ply)
 			if CfgVars["allow"..CTeam.command] and CfgVars["allow"..CTeam.command] ~= 1 then
-				Notify(ply, 1, 4, "You can not become ".. CTeam.name.." as it is disabled!")
+				Notify(ply, 1, 4, string.format(LANGUAGE.disabled, CTeam.name, ""))
 				return ""
 			end
 			if CTeam.admin == 1 and not ply:IsAdmin() then
-				Notify(ply, 1, 4, "You need to be an admin to become "..CTeam.name.."!")
+				Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "/"..CTeam.command))
 				return ""
 			end
 			if CTeam.admin > 1 and not ply:IsSuperAdmin() then
-				Notify(ply, 1, 4, "You need to be a superadmin to become "..CTeam.name.."!")
+				Notify(ply, 1, 4, string.format(LANGUAGE.need_sadmin, "/"..CTeam.command))
 				return ""
 			end
 			ply:ChangeTeam(k)
@@ -451,21 +451,21 @@ function AddTeamCommands(CTeam)
 	
 	concommand.Add("rp_"..CTeam.command, function(ply, cmd, args)
 		if (ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN)) then
-			ply:PrintMessage(2, "You need admin privileges in order to be able to set someone's team")
+			ply:PrintMessage(2, string.format(LANGUAGE.need_admin, cmd))
 			return
         end
 		
 		if CTeam.admin > 1 and not ply:IsSuperAdmin() then
-			ply:PrintMessage(2, "You need to be superadmin in order to be able to give someone this job.")
+			ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, cmd))
 			return
 		end
 		
 		if CTeam.Vote then
 			if CTeam.admin == 1 and ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-				ply:PrintMessage(2, "You need admin privileges in order to be able to give someone this job")
+				ply:PrintMessage(2, string.format(LANGUAGE.need_admin, cmd))
 				return
 			elseif CTeam.admin > 1 and ply:IsSuperAdmin() and ply:EntIndex() ~= 0 then
-				ply:PrintMessage(2, "You can not make anyone "..CTeam.name.." because voting is on and admin is set to superadmin. Make a vote...")
+				ply:PrintMessage(2, string.format(LANGUAGE.need_to_make_vote, CTeam.name))
 				return
 			end
 		end
@@ -483,9 +483,9 @@ function AddTeamCommands(CTeam)
 			target:PrintMessage(2, nick .. " has made you a " .. CTeam.name .. "!")
         else
 			if (ply:EntIndex() == 0) then
-				print("Could not find player: " .. args[1])
+				print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 			else
-				ply:PrintMessage(2, "Could not find player: " .. args[1])
+				ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 			end
 			return
         end

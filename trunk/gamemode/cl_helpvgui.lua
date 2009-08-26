@@ -9,10 +9,10 @@ function HelpPanel:Init()
 	self.title:SetText("DarkRP 2.3.7")
 
 	self.modinfo = vgui.Create("Label", self)
-	self.modinfo:SetText("Get the mod at garrysmod.org!")
+	self.modinfo:SetText(LANGUAGE.get_mod)
 
 	self.scrolltext = vgui.Create("Label", self)
-	self.scrolltext:SetText("Use mousewheel to scroll")
+	self.scrolltext:SetText(LANGUAGE.mouse_wheel_to_scroll)
 
 	self.HelpInfo = vgui.Create("Panel", self)
 

@@ -29,7 +29,7 @@ function ccValueCommand(ply, cmd, args)
 	end
 
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You need admin privileges in order to be able to set this command.")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, cmd))
 		return
 	end
 
@@ -80,7 +80,7 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	if (ply:EntIndex() ~= 0 and not DB.HasPriv(ply, ADMIN)) or (togglecmd.superadmin and not ply:IsSuperAdmin()) then
-		ply:PrintMessage(2, "(Super)Admin only!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, cmd))
 		return
 	end
 
@@ -89,9 +89,9 @@ function ccToggleCommand(ply, cmd, args)
 
 	if not toggle or (toggle ~= 1 and toggle ~= 0) then
 		if ply:EntIndex() == 0 then
-			print("Invalid number; must be 1 or 0.")
+			print(string.format(LANGUAGE.invalid_x, "argument", "1/0"))
 		else
-			ply:PrintMessage(2, "Invalid number; must be 1 or 0.")
+			ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "argument", "1/0"))
 		end
 		return
 	end
@@ -118,13 +118,24 @@ function ccToggleCommand(ply, cmd, args)
 	end
 end
 
+if not ConVarExists("rp_language") then
+	CreateConVar("rp_language", "english", {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY})	
+end
+
+LANGUAGE = rp_languages[GetConVarString("rp_language")]
+if not LANGUAGE then
+	LANGUAGE = rp_languages["english"]--now hope people don't remove the english language ._.
+end
+
+
+
 function ccDoorOwn(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		return
 	end
 
 	if not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You need admin privileges in order to be able to own a door.")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_own"))
 		return
 	end
 
@@ -147,7 +158,7 @@ function ccDoorUnOwn(ply, cmd, args)
 	end
 
 	if not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_unown"))
 		return
 	end
 
@@ -169,7 +180,7 @@ function ccAddOwner(ply, cmd, args)
 	end
 
 	if not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_addowner"))
 		return
 	end
 
@@ -186,13 +197,13 @@ function ccAddOwner(ply, cmd, args)
 			if not trace.Entity:OwnedBy(target) and not trace.Entity:AllowedToOwn(target) then
 				trace.Entity:AddAllowed(target)
 			else
-				ply:PrintMessage(2, "Player already owns (or is already allowed to own) this door!")
+				ply:PrintMessage(2, string.format(LANGUAGE.rp_addowner_already_owns_door))
 			end
 		else
 			trace.Entity:Own(target)
 		end
 	else
-		ply:PrintMessage(2, "Could not find player: " .. tostring(args))
+		ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
 	end
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-added a door owner with rp_addowner" )
 end
@@ -204,7 +215,7 @@ function ccRemoveOwner(ply, cmd, args)
 	end
 
 	if not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2,  string.format(LANGUAGE.need_admin, "rp_removeowner"))
 		return
 	end
 
@@ -225,7 +236,7 @@ function ccRemoveOwner(ply, cmd, args)
 			trace.Entity:RemoveOwner(target)
 		end
 	else
-		ply:PrintMessage(2, "Could not find player: " .. tostring(args))
+		ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
 	end
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed a door owner with rp_removeowner" )
 end
@@ -237,7 +248,7 @@ function ccLock(ply, cmd, args)
 	end
 
 	if not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2,  string.format(LANGUAGE.need_admin, "rp_lock"))
 		return
 	end
 
@@ -260,7 +271,7 @@ function ccUnLock(ply, cmd, args)
 	end
 
 	if not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2,  string.format(LANGUAGE.need_admin, "rp_unlock"))
 		return
 	end
 
@@ -279,7 +290,7 @@ concommand.Add("rp_unlock", ccUnLock)
 function ccTell(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2,  string.format(LANGUAGE.need_admin, "rp_tell"))
 		return
 	end
 
@@ -303,9 +314,9 @@ function ccTell(ply, cmd, args)
 		end
 	else
 		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[1])
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		else
-			ply:PrintMessage(2, "Could not find player: " .. args[1])
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 	end
 end
@@ -314,7 +325,7 @@ concommand.Add("rp_tell", ccTell)
 function ccTellAll(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_tellall"))
 		return
 	end
 
@@ -340,7 +351,7 @@ concommand.Add("rp_tellall", ccTellAll)
 
 function ccRemoveLetters(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_removeletters"))
 		return
 	end
 
@@ -368,7 +379,7 @@ concommand.Add("rp_removeletters", ccRemoveLetters)
 function ccPayDayTime(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:IsAdmin() and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a server admin")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_paydaytime"))
 		return
 	end
 
@@ -401,15 +412,15 @@ concommand.Add("rp_paydaytime", ccPayDayTime)
 function ccArrest(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You need admin privileges in order to be able to arrest someone through rp_arrest.")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_arrest"))
 		return
 	end
 
 	if DB.CountJailPos() == 0 then
 		if ply:EntIndex() == 0 then
-			print("No jail positions yet!\n")
+			print(LANGUAGE.no_jail_pos)
 		else
-			ply:PrintMessage(2, "No jail positions yet!")
+			ply:PrintMessage(2, LANGUAGE.no_jail_pos)
 		end
 		return
 	end
@@ -430,9 +441,9 @@ function ccArrest(ply, cmd, args)
 		end
 	else
 		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[1])
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		else
-			ply:PrintMessage(2, "Could not find player: " .. args[1])
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 	end
 	
@@ -442,7 +453,7 @@ concommand.Add("rp_arrest", ccArrest)
 function ccUnarrest(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_unarrest"))
 		return
 	end
 
@@ -458,9 +469,9 @@ function ccUnarrest(ply, cmd, args)
 		end
 	else
 		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[1])
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		else
-			ply:PrintMessage(2, "Could not find player: " .. args[1])
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 		return
 	end
@@ -471,7 +482,7 @@ concommand.Add("rp_unarrest", ccUnarrest)
 function ccKickBan(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_kickban"))
 		return
 	end
 
@@ -483,7 +494,7 @@ function ccKickBan(ply, cmd, args)
 		end
 
 		if (target:HasPriv(ADMIN) or target:IsAdmin() or target:IsSuperAdmin()) and (not ply:IsAdmin() or not ply:IsSuperAdmin()) then
-			ply:PrintMessage(2, "Normal RP admins can not kick or ban another admin!")
+			ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_kickban admin"))
 			return
 		end
 
@@ -495,10 +506,10 @@ function ccKickBan(ply, cmd, args)
 			DB.Log(ply:SteamName().." ("..ply:SteamID()..") kicked and banned "..target:SteamName() )
 		end
 	else
-		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[1])
+		if ply:EntIndex() == 0 then 
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		else
-			ply:PrintMessage(2, "Could not find player: " .. args[1])
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 		return
 	end
@@ -508,7 +519,7 @@ concommand.Add("rp_kickban", ccKickBan)
 function ccKick(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-		ply:PrintMessage(2, "You're not an admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_kick"))
 		return
 	end
 
@@ -516,7 +527,7 @@ function ccKick(ply, cmd, args)
 
 	if target then
 		if (target:HasPriv(ADMIN) or target:IsAdmin() or target:IsSuperAdmin()) and (not ply:IsAdmin() or not ply:IsSuperAdmin()) then
-			ply:PrintMessage(2, "Normal RP admins can not kick or ban another admin!")
+			ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "kick admin"))
 			return
 		end
 
@@ -537,9 +548,9 @@ function ccKick(ply, cmd, args)
 		end
 	else
 		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[1])
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		else
-			ply:PrintMessage(2, "Could not find player: " .. args[1])
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 		return
 	end
@@ -549,7 +560,7 @@ concommand.Add("rp_kick", ccKick)
 function ccSetMoney(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a super admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_setmoney"))
 		return
 	end
 
@@ -557,10 +568,10 @@ function ccSetMoney(ply, cmd, args)
 
 	if not amount then
 		if ply:EntIndex() == 0 then
-			print("Invalid amount of money: " .. args[2])
+			print(string.format(LANGUAGE.invalid_x, "argument", args[2]))
 		else
-			ply:PrintMessage(2, "Invalid amount of money: " .. args[2])
-		end
+			ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "argument", args[2]))
+		end 
 		return
 	end
 
@@ -598,7 +609,7 @@ concommand.Add("rp_setmoney", ccSetMoney)
 function ccSetSalary(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a super admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_setsalary"))
 		return
 	end
 
@@ -606,18 +617,18 @@ function ccSetSalary(ply, cmd, args)
 
 	if not amount or amount < 0 then
 		if ply:EntIndex() == 0 then
-			print("Invalid Salary: " .. args[2])
-		else
-			ply:PrintMessage(2, "Invalid Salary: " .. args[2])
+			print(string.format(LANGUAGE.invalid_x, "argument", args[2]))
+		else 
+			ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "argument", args[2]))
 		end
 		return
 	end
 
 	if amount > 150 then
 		if ply:EntIndex() == 0 then
-			print("Salary must be below " .. CUR .. "150")
+			print(string.format(LANGUAGE.invalid_x, "argument", args[2].." (<150)"))
 		else
-			ply:PrintMessage(2, "Salary must be less than or equal to " .. CUR .. "150")
+			ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "argument", args[2].." (<150)"))
 		end
 		return
 	end
@@ -643,9 +654,9 @@ function ccSetSalary(ply, cmd, args)
 		end
 	else
 		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[1])
-		else
-			ply:PrintMessage(2, "Could not find player: " .. args[1])
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
+		else 
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 		return
 	end
@@ -654,7 +665,7 @@ concommand.Add("rp_setsalary", ccSetSalary)
 
 function ccGrantPriv(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a super admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_grantpriv"))
 		return
 	end
 	local PLAYER = ""
@@ -672,9 +683,9 @@ function ccGrantPriv(ply, cmd, args)
 	local target = FindPlayer(args[1])
 	if not target then
 		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[1])
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		else
-			ply:PrintMessage(2, "Could not find player: " .. args[1])
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 		return
 	end
@@ -747,7 +758,7 @@ concommand.Add("rp_grant", ccGrantPriv)
 
 function ccRevokePriv(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, "You're not a super admin!")
+		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_revokepriv"))
 		return
 	end
 	
@@ -766,9 +777,9 @@ function ccRevokePriv(ply, cmd, args)
 	local target = FindPlayer(args[1])
 	if not target then
 		if ply:EntIndex() == 0 then
-			print("Could not find player: " .. args[1])
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		else
-			ply:PrintMessage(2, "Could not find player: " .. args[1])
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 		return
 	end
@@ -841,7 +852,7 @@ concommand.Add("rp_revoke", ccRevokePriv)
 function ccSWEPSpawn(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-			Notify(ply, 1, 5, "You need admin privileges in order to be able to spawn a SWEP.")
+			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_giveswep"))
 			return
 		end
 	end
@@ -853,7 +864,7 @@ concommand.Add("gm_giveswep", ccSWEPSpawn)
 function ccSWEPGive(ply, cmd, args)
 	if CfgVars["adminsweps"] == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-			Notify(ply, 1, 5, "You need admin privileges in order to be able to spawn a SWEP.")
+			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_spawnswep"))
 			return
 		end
 	end
@@ -865,7 +876,7 @@ concommand.Add("gm_spawnswep", ccSWEPGive)
 function ccSENTSPawn(ply, cmd, args)
 	if CfgVars["adminsents"] == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
-			Notify(ply, 1, 2, "You need admin privileges in order to be able to spawn a SENT.")
+			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnsent"))
 			return
 		end
 	end
