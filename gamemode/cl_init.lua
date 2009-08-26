@@ -476,7 +476,7 @@ function GM:HUDPaint()
 	local CurrentTime = CurTime()
 	
 	if arresttime ~= 0 and CurrentTime - arresttime <= arresteduntil and LocalPlayer():GetNWBool("Arrested") then
-		draw.DrawText(string.format(youre_arrested, math.ceil(arresteduntil - (CurrentTime - arresttime))),"ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
+		draw.DrawText(string.format(youre_arrested, math.ceil(arresteduntil - (CurrentTime - arresttime))), "ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
 	elseif arresttime ~= 0 or not LocalPlayer():GetNWBool("Arrested") then arresttime = 0
 	end
 	self.BaseClass:HUDPaint()
