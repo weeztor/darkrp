@@ -9,7 +9,7 @@ DarkRP 2.3.7 SVN
 [ADD] Demote option in F4
 [ADD] People now walk slow while in ironsight mode of weapon
 [ADD] DarkRP skin for the VGUI's
-[ADD] Language system, it's really easy to add languages to your DarkRP now!
+[ADD] Language system, it's really easy to add languages to your DarkRP now! Thanks WoRmS for the danish translation
 [FIX] Unable to remove door tool doors
 [FIX] People with the admin privilege can now see the admin menu
 [FIX] Hunger resetting after sleep
