@@ -663,20 +663,20 @@ rp_languages.danish = {
 	door_unown_arrested = "Du kan ikke eje eller ueje ting, mens du er anholdt!",
 	door_unownable = "Denne dør kan ikke ejes eller Uejes!",
 	door_sold = "Du har solgt denne dør for %s",
-	door_already_owned = "Denne dør er allerede ejet af en person!"
-	door_cannot_afford = "Du har ikke råd til denne dør!"
+	door_already_owned = "Denne dør er allerede ejet af en person!",
+	door_cannot_afford = "Du har ikke råd til denne dør!",
 	vehicle_cannot_afford = "Du har ikke råd til denne bil!",
 	door_bought = "Du har købt denne dør for %s",
 	vehicle_bought = "Du har købt dette køretøj for %s",
 	door_need_to_own = "Du er nødt til at eje denne dør for at være i stand til at %s",
 	door_rem_owners_unownable = "Du kan ikke fjerne ejerne, mens Door er ikke-ownable!",
 	door_add_owners_unownable = "Du kan ikke tilføje ejere, mens Door er ikke-ownable!",
-	rp_addowner_already_owns_door = " %s allerede ejer (eller allerede er tilladt at eje) denne dør!"
+	rp_addowner_already_owns_door = " %s allerede ejer (eller allerede er tilladt at eje) denne dør!",
 
 	-- talking
 	hear_noone = "Ingen kan høre dig %s!",
-	hear_everyone = "Alle kan høre dig!"
-	hear_certain_persons = "Spillere, der kan høre dig %s:"
+	hear_everyone = "Alle kan høre dig!",
+	hear_certain_persons = "Spillere, der kan høre dig %s:",
 	whisper = "hviske",
 	yell = "råbe",
 	advert = "[Annonce]",
@@ -837,36 +837,36 @@ rp_languages.danish = {
 	"Alle våben kan ikke skyde medmindre du se gennem synet post",
 	"Hvis du er en Politi betjent, gør dit arbejde ordentligt, eller du kunne blive degraderet.",
 	"Skriv /buyshipment <Våben navn> for at købe en Pakke af våben (f.eks: /buyshipment AK47).",
-	"Skriv /buy <Pistol navn/ting's navn> for at købe en pistol, fx: /buy glock." ",
-	"Skriv /buyammo <Ammunitions type> for at købe ammunition. Ammo typer er: [riffel | shotgun | pistol]", ",
+	"Skriv /buy <Pistol navn/ting's navn> for at købe en pistol, fx: /buy glock.",
+	"Skriv /buyammo <Ammunitions type> for at købe ammunition. Ammo typer er: [riffel | shotgun | pistol]", 
 	"Hvis du ønsker at Betale en ven ud af fængslet, skal du gå til din udpeget Politi Station og forhandle!",
-	"Tryk på F1 for at se RP hjælpe."
-	"Hvis du bliver arresteret, så fortvivl ikke - du vil blive automatisk unarrested i" .. GetGlobalInt ( "jailtimer") .. "Sekunder."
-	"Hvis du er chef eller admin, skrive /jailpos eller /addjail for at indstille Position af den første (og ekstra) fængsler."
+	"Tryk på F1 for at se RP hjælpe.",
+	"Hvis du bliver arresteret, så fortvivl ikke - du vil blive automatisk unarrested i" .. GetGlobalInt ( "jailtimer") .. "Sekunder.",
+	"Hvis du er chef eller admin, skrive /jailpos eller /addjail for at indstille Position af den første (og ekstra) fængsler.",
 	"Du vil blive teleporteret til fængsel, hvis man bliver arresteret!",
-	"Hvis du er en Politi betjent og se en person med et ulovligt våben, arrestere ham og konfiskere den."
-	"Type /sleep for at falde i søvn."
-	"Dine penge og RP navn er gemt af serveren."
+	"Hvis du er en Politi betjent og se en person med et ulovligt våben, arrestere ham og konfiskere den.",
+	"Type /sleep for at falde i søvn.",
+	"Dine penge og RP navn er gemt af serveren.",
 	"Type /buyhealth til at får upfyldt dit helbred til 100%",
-	"Type /buydruglab at købe en druglab. Være sikker på at du sælger din Stuffer!"
+	"Type /buydruglab at købe en druglab. Være sikker på at du sælger din Stuffer!",
 	"Tryk F2 eller Genlad med nøgler for at åbne nøgle menuen",
 	"Du vil blive teleporteret til et fængsel, hvis man bliver arresteret!",
-	"Type /Price <Price> mens du ser på en druglab, Gun Lab eller en mikroovn for at sætte kunden købsprisen."
-	"Type /warrant [Nick | SteamID | UserID] for at lave en ransagningskendelse for en spiller."
-	"Type /wanted eller /unwanted [Nick | SteamID | UserID] for at gør en spiller ønsket/uønsket af politiet."
-	"Type /drop For at smide det våben du har."
-	"Type /gangster For at blive en gangster."
-	"Type /mobboss For at blive en mafiaboss."
-	"Type /buymicrowave For at købe en mikrobølgeovn, der varmer mad."
-	"Type /dropmoney <Amount> at smide et bestemt penge-beløb."
+	"Type /Price <Price> mens du ser på en druglab, Gun Lab eller en mikroovn for at sætte kunden købsprisen.",
+	"Type /warrant [Nick | SteamID | UserID] for at lave en ransagningskendelse for en spiller.",
+	"Type /wanted eller /unwanted [Nick | SteamID | UserID] for at gør en spiller ønsket/uønsket af politiet.",
+	"Type /drop For at smide det våben du har.",
+	"Type /gangster For at blive en gangster.",
+	"Type /mobboss For at blive en mafiaboss.",
+	"Type /buymicrowave For at købe en mikrobølgeovn, der varmer mad.",
+	"Type /dropmoney <Amount> at smide et bestemt penge-beløb.",
 	"Type /buymoneyprinter at købe en Penge printer. Omkostninger" .. CUR .. GetGlobalInt ( "money_printercost"),
-	"Type /medic - For at  blive en læge."
-	"Type /gundealer - For at blive en Våben sælger."
-	"Type /buygunlab - For at købe et Gun Lab."
-	"Type /cook - For at blive en Cook."
-	"Type /cophelp at se, hvad du skal gøre som en betjent."
+	"Type /medic - For at  blive en læge.",
+	"Type /gundealer - For at blive en Våben sælger.",
+	"Type /buygunlab - For at købe et Gun Lab.",
+	"Type /cook - For at blive en Cook.",
+	"Type /cophelp at se, hvad du skal gøre som en betjent.",
 	"Type /buyfood <type> (e.g: / buyfood melon)",
-	"Type /rpname <navn> for at vælge dit rollespil navn."
-	"Type /call <navn> for at ringe til nogen!"
+	"Type /rpname <navn> for at vælge dit rollespil navn.",
+	"Type /call <navn> for at ringe til nogen!",
 	}
 }
