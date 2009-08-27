@@ -580,3 +580,293 @@ rp_languages.dutch = {
 	"Typ /call <Naam> om iemand te bellen!"
 	}
 }
+
+	-- Danish Language by  WoRmS
+rp_languages.danish = {
+	-- admin things
+	need_admin = "Du har brug for admin rettigheder for at kunne være i stand til at %s",
+	need_sadmin = "Du har brug for super admin rettigheder for at kunne være i stand til at %s",
+	no_jail_pos = "Ingen fængsel position",
+	invalid_x = "Ugyldig %s! %s",
+
+	-- F1 menu
+	get_mod = "Få denne mod på garrysmod.org!",
+	mouse_wheel_to_scroll = "Brug musehjulet til at pladra",
+
+	--money things:
+	customer_price = "Kunde pris: ",
+	reset_money = "%s har nulstille alle spillerens penge!",
+	has_given = "%s har givet dig %s",
+	you_gave = "Du gav %s %s",
+	npc_killpay = "%s For a dræbe en NPC!",
+
+	payday_message = "Betalings dag! Du har modtaget %s!",
+	payday_unemployed = "Du har ikke modtaget løn, fordi du er arbejdsløs!",
+	payday_missed = "Du er gået glip af Betalings dag (du er arresteret)",
+
+	property_tax = "Ejendomsskat! %s",
+	property_tax_cant_afford = "Du kunne ikke betale skat! Din ejendom er blevet taget fra dig!",
+
+	--Players
+	wanted = "Eftersøgt af politiet!",
+	youre_arrested = "%s er blevet arresteret for %d sekunder!",
+	hes_arrested = "%s er blevet arresteret for %d sekunder!",
+	hes_unarrested = "%s er blevet løsladt fra fængslet!",
+	health = "Helbred: ",
+	job = "Job: ",
+	salary = "Løn: ",
+	wallet = "Pung: ",
+	warrant_request = "%s anmoder om en ransagningskendelse til %s",
+	warrant_request2 = "ransagningskendelse anmodning sendt til borgmester %s!",
+	warrant_approved = "Search warrant approved for %s!",
+	warrant_approved2 = "Du er nu i stand til at søge hans hus.",
+	warrant_denied = "Borgmester %s har nægtet din ransagningskendelse anmodning.",
+	warrant_expired = "Den ransagningskendelse for %s er udløbet!",
+	wanted_by_police = "%s er eftersøgt af politiet!",
+	wanted_expired = "%s er ikke længere eftersøgt af politiet.",
+	rpname_changed = "%s har ændret hans RPnavn til: %s",
+
+	--teams
+	need_to_be_before = "Du skal være %s første med henblik på at kunne blive %s",
+	need_to_make_vote = "Du er nødt til at foretage en afstemning om at blive en %s!",
+	team_limit_reached = "Kan ikke blive %s efter som grænsen er nået",
+	wants_to_be = "%s ønsker at være %s",
+	has_not_been_made_team = "%s er ikke blevet gjort %s!",
+	job_has_become = "%s blevet gjort til en %s!",
+
+	--disasters
+	zombie_approaching = "ADVARSEL: Zombierne nærmer sig!",
+	zombie_leaving = "Zombierne forlader.",
+	zombie_spawn_not_exist = "Zombie Spawn %s eksisterer ikke.",
+	zombie_spawn_removed = "Du har fjernet denne zombie Spawn.",
+	zombie_spawn_added = "Du har Tilføjet en zombie spawn.",
+	zombie_maxset = "Maksimale Antal af zombier er nu sat til %s",
+	zombie_enabled = "Zombier er nu aktiveret.",
+	zombie_disabled = "Zombier er nu deaktiveret.",
+	meteor_approaching = "ADVARSEL: Meteor storm nærmer sig!",
+	meteor_passing = "Meteor stormen er over",
+	meteor_enabled = "Meteor storm er nu aktiveret.",
+	meteor_disabled = "Meteor storm er nu aktiveret.",
+	earthquake_report = "Jordskælv rapporteret størrelsesorden %SMW",
+	earthtremor_report = "Jordskælv rapporteret størrelsesorden %SMW",
+
+	--keys, vehicles and doors
+	keys_allowed_to_coown = "Du har lov til at co-ejer denne \n (Tryk på Genlad med nøgler eller trykke på F2 for at co-eget) \n",
+	keys_other_allowed = "%s får lov til at co-ejer dette \n",
+	keys_allow_ownership = "(Tryk på Genlad med nøgler eller trykke på F2 for at give ejerskab)",
+	keys_disallow_ownership = "(Tryk på Genlad med nøgler eller trykke på F2 for at tag ejerskab)",
+	keys_owned_by = "Ejet af: ",
+	keys_cops_and_mayor = "Alle Politi betjente og borgmesteren",
+	keys_unowned = "Uejet \n (Tryk på Opdater med nøgler eller trykke på F2 for at eje)",
+	keys_everyone = "(Tryk på Genlad med nøgler eller trykke på F2 for at gøre det muligt for alle (ikke kun panserne))",
+	keys_cops = "(Tryk på Genlad med nøgler eller trykke på F2 for at indstille til politiet, og borgmester kun)",
+	door_unown_arrested = "Du kan ikke eje eller ueje ting, mens du er anholdt!",
+	door_unownable = "Denne dør kan ikke ejes eller Uejes!",
+	door_sold = "Du har solgt denne dør for %s",
+	door_already_owned = "Denne dør er allerede ejet af en person!"
+	door_cannot_afford = "Du har ikke råd til denne dør!"
+	vehicle_cannot_afford = "Du har ikke råd til denne bil!",
+	door_bought = "Du har købt denne dør for %s",
+	vehicle_bought = "Du har købt dette køretøj for %s",
+	door_need_to_own = "Du er nødt til at eje denne dør for at være i stand til at %s",
+	door_rem_owners_unownable = "Du kan ikke fjerne ejerne, mens Door er ikke-ownable!",
+	door_add_owners_unownable = "Du kan ikke tilføje ejere, mens Door er ikke-ownable!",
+	rp_addowner_already_owns_door = " %s allerede ejer (eller allerede er tilladt at eje) denne dør!"
+
+	-- talking
+	hear_noone = "Ingen kan høre dig %s!",
+	hear_everyone = "Alle kan høre dig!"
+	hear_certain_persons = "Spillere, der kan høre dig %s:"
+	whisper = "hviske",
+	yell = "råbe",
+	advert = "[Annonce]",
+	radio = "radio",
+	request = "(Anmod!)",
+	group = "(gruppe)",
+
+	--Notifies
+	disabled = "%s er slået fra !%s",
+	limit = "Du har nået %s grænse!",
+	have_to_wait = "Du er nødt til at vente endnu %d sekunder, før du kan bruger %s!",
+	must_be_looking_at = "Du skal se på en %s!",
+	incorrect_job = "Du har ikke det rigtige job til %s",
+	unavailable = "Denne %s er ikke tilgængelig",
+	unable = "Du er ude af stand til %s.%s",
+	cant_afford = "Du har ikke råd til den %s",
+	created_x = "%s Skabte en %s",
+	cleaned_up = "Din %s er blevet renset.",
+	you_bought_x = "Du har købt en %s for %s",
+
+	created_first_jailpos = "Du har skabt den første fængsel position!",
+	added_jailpos = "Du har tilføjet en ekstra fængsel position!",
+	reset_add_jailpos = "Du har fjernet alle fængsel positioner og du har tilføjet en ny her.",
+	created_spawnpos = "%s's spawn position Skabt.",
+	updated_spawnpos = "%s's spawn position updatered.",
+	do_not_own_ent = "Du ejer ikke denne enhed!",
+	cannot_drop_weapon = "Kan ikke smide dette våben!!",
+
+	--misc
+	could_not_find = "Kunne ikke finde %s",
+	f3tovote = "Tryk på F3 for at stemme",
+	listen_up = "Hør her:", --In rp_tell
+	nlr = "Nyt Liv Regel: ikke hævn ved at anholdele/Dræbe.",
+	reset_settings = "Du har nulstille alle indstillinger!",
+	must_be_x = "You must be a %s in order to be able to %s.",
+	agenda_updated = "mafiabossen har opdateret dagsordenen",
+	job_set = "%s har sat sit job til '%s'",
+	demoted = "%s er blevet degraderet",
+	demoted_not = "%s er ikke blevet degraderet",
+	demote_vote_started = "%s har startet en afstemning for degraderingen af %s",
+	demote_vote_text = "Degradering kandidat:\n%s", --s is the reason here
+	lockdown_started = "Borgmesteren har indledt en nedlåsning, du bedes du vende tilbage til dit hjem!!",
+	lockdown_ended = "nedlåsning er overstået",
+	gunlicense_requested = "%s har anmodet %s en pistol licens",
+	gunlicense_granted = "%s har modtaget %s en pistol licens",
+	gunlicense_denied = "%s har nægtet %s en pistol licens",
+	gunlicense_question_text = "Giv %s en pistol licens?",
+	gunlicense_remove_vote_text = "%s har startet en afstemning for pistol licens fjernelse af %s",
+	gunlicense_remove_vote_text2 = "Tilbagekald våben licens:\n%s", --where %s is the reason
+	gunlicense_removed = "%s's licens er blivet fjernet!",
+	gunlicense_not_removed = "%s's licens er ikke blevet fjernet!!",
+	vote_specify_reason = "Du skal angive en grund!",
+	vote_already_exists = "Der er allerede en afstemning!",
+	vote_started = "Afstemningen er skabt",
+	vote_alone = "Du har vundet afstemningen, da du er alene i serveren.",
+	jail_punishment = "straf for at forlade serveren! fængslet for:%d sekunder.",
+	admin_only = "admin kun!!", -- when doing /addjailpos
+	chief_or = "Chief eller",-- when doing /addjailpos
+
+	dead_in_jail = "Du nu er døde, indtil din fængsel tid er forbi!",
+	died_in_jail = "%s er døde i fængsel!!",
+
+	--lottery
+	lottery_started = "Der er et lotteri! Deltage for %s",
+	lottery_entered = "Du har indtastet i lotteriet for %s",
+	lottery_not_entered = "%s deltog ikke i lotteriet",
+	lottery_noone_entered = "Ingen har deltaget i lotteriet",
+	lottery_won = "%s har vundet i lotteriet! Han har vundet %s",
+
+	--hungermod
+	starving = "Sulter!",
+
+	--F4menu
+	--Tab 1
+	give_money = "Giv penge på den du kigger på",
+	drop_money = "Smid penge",
+	change_name = "Skift dit DarkRP navn",
+	go_to_sleep = "fald i søvn / vågne op",
+	drop_weapon = "Smid nuværende våben",
+	buy_health = "Køb Helbred (% s)",
+	request_gunlicense = "Anmodning gunlicense",
+	demote_player_menu = "degradering af en spiller",
+
+
+	searchwarrantbutton = "Få en ransagningskendelse for en spiller",
+	unwarrantbutton = "Fjern ransagningskendelse for en spiller",
+	noone_available = "Ingen tilgængelige",
+	request_warrant = "Anmod om en ransagningskendelse for en spiller",
+	make_wanted = "gør nogen eftersøgt",
+	make_unwanted = "gør nogen ueftersøgt",
+	set_jailpos = "set fængsel position",
+	add_jailpos = "Tilføj et fængsel position",
+	set_custom_job = "Sæt en brugerdefineret job (tryk enter for at aktivere)",
+
+	set_agenda = "Sæt dagsordenen (tryk enter for at aktivere)",
+
+	initiate_lockdown = "start en nedlåsning",
+	stop_lockdown = "Stop en nedlåsning",
+	start_lottery = "Start et lotteri",
+	give_license_lookingat = "Giv <Kiggerpå> en pistol licens",
+
+	--second tab
+	job_name = "Navn: ",
+	job_description = "Beskrivelse: " ,
+	job_weapons = "våben: ",
+
+	--entities tab
+	buy_a = "Køb %s: %s",
+
+	--licenseweaponstab
+	license_tab = [[License våben
+
+	Sæt kryds ud for våben folk bør være i stand til at komme uden en licens!
+	]],
+	license_tab_other_weapons = "Andre våben:",
+
+
+	--Help!
+	cophelp = [[Ting, Betjente skal vide
+	Vær venlig ikke at misbruge dit job
+	Når du anholde en person, de er automatisk transporteret til fængsel.
+	De er automatisk læsladt fra fængslet efter %d sekunder
+	Skriv /warrant [Nick|SteamID|Status ID] for at lave en ransagningskendelse for en spiller.
+	Skriv /wanted [Nick|SteamID|Status ID] til at advare alle om en eftersøgt mistænkt
+	Skriv /unwanted [Nick|SteamID|Status ID] for at Rense en mistænkte.
+	Skriv /jailpos For at sætte Fængsels Position
+	Skriv /cophelp åbner/lukker denne menu, /x lukker den]],
+
+	mayorhelp = [[Type /warrant [Nick|SteamID|Status ID] for at lave en ransagningskendelse for en spiller.
+	Skriv /wanted [Nick|SteamID|Status ID] til at advare alle om en eftersøgt mistænkt
+	Skriv /unwanted [Nick|SteamID|Status ID] for at Rense en mistænkte.
+	Skriv /lockdown for at indlede en Nedlåsning
+	Skriv /unlockdown for at afslutte en Nedlåsning
+	Skriv /mayorhelp åbner/lukker denne menu, /x lukker den]],
+
+	adminhelp = [[/enablestorm Aktiver meteor storm
+	/disablestorm Deaktiver meteor storm
+	Du kan ændre prisen for våben, fængslestid, max gangstere, ect.
+	For at gøre dette skal du trykke på F1 rul derefter ned og du vil se alle de konsol kommandoer
+	Hvis du redigerer init.lua fil, du kan gemme vars.
+	Skriv /jailpos sætter Fængsels Position
+	Skriv /setspawn <team> - Indtast Hold navn Ex. politi, borgmester, gangster
+	Skriv /adminhelp åbner/lukker denne menu, /x lukker den]],
+
+	mobhelp = [[Som mafiabossen, beslutter du, hvad du ønsker, at andre gangstere skal gøre.
+	Du får en Unarrest Stick, som du kan bruge til at bryde folk ud af fængsel
+	/agenda <Besked> (Sætter Gangsters 'dagsorden. Brug / / for at gå til den næste linje
+	Type /mobbosshelp toggles this menu, /x closes it]],
+
+	gangster_agenda = "Gangster's dagsorden",
+
+	hints =
+	--English hints:
+	{"Rolespil ifølge Servern's Regler!",
+	"du kan blive anholdt for at købe eller eje en ulovlig våben!",
+	"Type /sleep for at falde i søvn.",
+	"Du kan eje en pistol, men brug det kun i selvforsvar.",
+	"Alle våben kan ikke skyde medmindre du se gennem synet post",
+	"Hvis du er en Politi betjent, gør dit arbejde ordentligt, eller du kunne blive degraderet.",
+	"Skriv /buyshipment <Våben navn> for at købe en Pakke af våben (f.eks: /buyshipment AK47).",
+	"Skriv /buy <Pistol navn/ting's navn> for at købe en pistol, fx: /buy glock." ",
+	"Skriv /buyammo <Ammunitions type> for at købe ammunition. Ammo typer er: [riffel | shotgun | pistol]", ",
+	"Hvis du ønsker at Betale en ven ud af fængslet, skal du gå til din udpeget Politi Station og forhandle!",
+	"Tryk på F1 for at se RP hjælpe."
+	"Hvis du bliver arresteret, så fortvivl ikke - du vil blive automatisk unarrested i" .. GetGlobalInt ( "jailtimer") .. "Sekunder."
+	"Hvis du er chef eller admin, skrive /jailpos eller /addjail for at indstille Position af den første (og ekstra) fængsler."
+	"Du vil blive teleporteret til fængsel, hvis man bliver arresteret!",
+	"Hvis du er en Politi betjent og se en person med et ulovligt våben, arrestere ham og konfiskere den."
+	"Type /sleep for at falde i søvn."
+	"Dine penge og RP navn er gemt af serveren."
+	"Type /buyhealth til at får upfyldt dit helbred til 100%",
+	"Type /buydruglab at købe en druglab. Være sikker på at du sælger din Stuffer!"
+	"Tryk F2 eller Genlad med nøgler for at åbne nøgle menuen",
+	"Du vil blive teleporteret til et fængsel, hvis man bliver arresteret!",
+	"Type /Price <Price> mens du ser på en druglab, Gun Lab eller en mikroovn for at sætte kunden købsprisen."
+	"Type /warrant [Nick | SteamID | UserID] for at lave en ransagningskendelse for en spiller."
+	"Type /wanted eller /unwanted [Nick | SteamID | UserID] for at gør en spiller ønsket/uønsket af politiet."
+	"Type /drop For at smide det våben du har."
+	"Type /gangster For at blive en gangster."
+	"Type /mobboss For at blive en mafiaboss."
+	"Type /buymicrowave For at købe en mikrobølgeovn, der varmer mad."
+	"Type /dropmoney <Amount> at smide et bestemt penge-beløb."
+	"Type /buymoneyprinter at købe en Penge printer. Omkostninger" .. CUR .. GetGlobalInt ( "money_printercost"),
+	"Type /medic - For at  blive en læge."
+	"Type /gundealer - For at blive en Våben sælger."
+	"Type /buygunlab - For at købe et Gun Lab."
+	"Type /cook - For at blive en Cook."
+	"Type /cophelp at se, hvad du skal gøre som en betjent."
+	"Type /buyfood <type> (e.g: / buyfood melon)",
+	"Type /rpname <navn> for at vælge dit rollespil navn."
+	"Type /call <navn> for at ringe til nogen!"
+	}
+}
