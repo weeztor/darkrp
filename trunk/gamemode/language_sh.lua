@@ -48,7 +48,7 @@ rp_languages.english = {
 	need_to_be_before = "You need to be %s first in order to be able to become %s",
 	need_to_make_vote = "You need to make a vote to become a %s!",
 	team_limit_reached = "Can not become %s as the limit is reached",
-	wants_to_be = "%s wants to be %s", 
+	wants_to_be = "%s\nwants to be\n%s", 
 	has_not_been_made_team = "%s has not been made %s!",
 	job_has_become = "%s has been made a %s!",
 	
@@ -340,7 +340,7 @@ rp_languages.dutch = {
 	need_to_be_before = "Je moet eerst een %s zijn voordat je een %s kan worden!",
 	need_to_make_vote = "Je moet eerst een vote maken om %s te kunnen worden!",
 	team_limit_reached = "Je kan geen %s worden omdat het limiet bereikt is.",
-	wants_to_be = "%s wil een\n%s zijn", 
+	wants_to_be = "%s\nwil een\n%s zijn", 
 	has_not_been_made_team = "%s is geen %s geworden!",
 	job_has_become = "%s is een %s geworden!",
 	
@@ -630,7 +630,7 @@ rp_languages.danish = {
 	need_to_be_before = "Du skal være %s første med henblik på at kunne blive %s",
 	need_to_make_vote = "Du er nødt til at foretage en afstemning om at blive en %s!",
 	team_limit_reached = "Kan ikke blive %s efter som grænsen er nået",
-	wants_to_be = "%s ønsker at være %s",
+	wants_to_be = "%s\nønsker at være\n%s",
 	has_not_been_made_team = "%s er ikke blevet gjort %s!",
 	job_has_become = "%s blevet gjort til en %s!",
 
