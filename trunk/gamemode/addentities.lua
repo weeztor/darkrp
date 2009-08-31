@@ -22,9 +22,9 @@ go ingame, type rp_getvehicles for available vehicles!
 then:
 AddCustomVehicle(<One of the vehicles from the rp_getvehicles list>, <Price of the vehicle>, <OPTIONAL jobs that can buy the vehicle>)
 Examples:
-AddCustomVehicle("Jeep", 100)
-AddCustomVehicle("Airboat", 600, {TEAM_GUN})
-AddCustomVehicle("Airboat", 600, {TEAM_GUN, TEAM_MEDIC})
+AddCustomVehicle("Jeep", "models/buggy.mdl", 100 )
+AddCustomVehicle("Airboat", "models/airboat.mdl" 600, {TEAM_GUN})
+AddCustomVehicle("Airboat", "models/airboat.mdl", 600, {TEAM_GUN, TEAM_MEDIC})
 
 Add those lines under your custom shipments. At the bottom of this file or in data/CustomShipments.txt
 
@@ -71,4 +71,3 @@ EXAMPLES OF CUSTOM SHIPMENTS(remove the // to activate it): */
 --EXAMPLE OF A BOUNCY BALL:   		NOTE THAT YOU HAVE TO PRESS E REALLY QUICKLY ON THE BOMB OR YOU'LL EAT THE BALL LOL
 --AddCustomShipment("bball", "models/Combine_Helicopter/helicopter_bomb01.mdl", "sent_ball", 100, 10, true, 10, true)
 -- ADD CUSTOM SHIPMENTS HERE(next line):
-

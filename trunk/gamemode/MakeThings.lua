@@ -53,7 +53,7 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
 end
 
-function AddCustomVehicle(Name_of_vehicle, price, Jobs_that_can_buy_it)
+function AddCustomVehicle(Name_of_vehicle, model, price, Jobs_that_can_buy_it)
 	local function warn(add)
 		local text
 		if Name_of_vehicle then text = Name_of_vehicle end
@@ -62,19 +62,19 @@ function AddCustomVehicle(Name_of_vehicle, price, Jobs_that_can_buy_it)
 		hook.Add("PlayerSpawn", "VehicleError", function(ply)
 			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text.." "..add) end end)		
 	end
-	if not Name_of_vehicle or not price then
-		warn("The name or the price is invalid/missing")
+	if not Name_of_vehicle or not price or not model then
+		warn("The name, model or the price is invalid/missing")
 		return
 	end
 	local found = false
 	for k,v in pairs(list.Get("Vehicles")) do
 		if string.lower(k) == string.lower(Name_of_vehicle) then found = true break end
 	end
-	if not found then
+	if not found and SERVER then
 		warn("vehicle not found!")
 		return
 	end
-	table.insert(CustomVehicles, {name = Name_of_vehicle, price = price, allowed = Jobs_that_can_buy_it})
+	table.insert(CustomVehicles, {name = Name_of_vehicle, model = model, price = price, allowed = Jobs_that_can_buy_it})
 end
 
 DarkRPEntities = {}
