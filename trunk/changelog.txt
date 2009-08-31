@@ -22,6 +22,7 @@ DarkRP 2.3.7 SVN
 [FIX] Crash sometimes when changing team.
 [FIX] Able to sprint after Arrest>sleep>wake up
 [FIX] Tool restriction mods not working(Thanks Gorgorp!)
+[FIX] Name exploit, names can now only contain letters and numbers.
 [CHANGE] Default shipments are now in addshipments.lua
 [CHANGE] Moved complicated code in shared.lua and addshipments.lua to MakeThings.lua
 [CHANGE] Changed filename of addshipments.lua to addentities.lua

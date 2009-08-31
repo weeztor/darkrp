@@ -31,6 +31,19 @@ function RPName(ply, args)
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end
+	
+	local allowed = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+	'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 
+	'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 
+	'z', 'x', 'c', 'v', 'b', 'n', 'm'}
+	
+	//print(low, string.Explode(low, ""))
+	for k in string.gmatch(args, ".") do
+		if not table.HasValue(allowed, string.lower(k)) then
+			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", k))
+			return "" 
+		end
+	end 
 
 	ply:SetRPName(args)
 	NotifyAll(2, 6, string.format(LANGUAGE.rpname_changed, ply:SteamName(), args))

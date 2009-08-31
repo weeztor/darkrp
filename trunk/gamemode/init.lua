@@ -117,7 +117,6 @@ include("entity.lua")
 include("addentities.lua")
 include("main.lua")
 include("bannedprops.lua")
-include("hints.lua")
 include("rating.lua")
 
 
