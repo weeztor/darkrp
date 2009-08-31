@@ -79,7 +79,6 @@ end
 FPP.Protect = {}
 
 local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
-	if ent["Share"..Type1] then return true, ent.Owner end
 	local Returnal 
 	for k,v in pairs(FPP.Blocked[Type1]) do
 		if tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), string.lower(v)) then --If it's a whitelist and the entity is found in the whitelist
@@ -97,6 +96,8 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 	end
 	
 	if Returnal ~= nil and (not ent.Owner or ent.Owner == ply) then return Returnal, "Blocked!" end
+	
+	if ent["Share"..Type1] then return true, ent.Owner end
 	
 	if not TryingToShare and ent.AllowedPlayers and table.HasValue(ent.AllowedPlayers, ply) then 
 		return true, ent.Owner
