@@ -109,7 +109,7 @@ function GM:EntityRemoved(ent)
 	self.BaseClass:EntityRemoved(ent)
 	if ent:IsVehicle() then
 		local found = ent.Owner
-		if found then
+		if ValidEntity(found) then
 			found.Vehicles = found.Vehicles or 1
 			found.Vehicles = found.Vehicles - 1
 		end
