@@ -535,7 +535,7 @@ function SearchWarrant(ply, args)
 				if m ~= nil then
 					-- request a search warrent for player "p"
 					ques:Create(string.format(LANGUAGE.warrant_request, p:Nick(), p:EntIndex() .. "warrant", m, 40, FinishWarrant, ply, p))
-					Notify(ply, 1, 4, string.format(LANGUAGE.warrant_request2m:Nick()))
+					Notify(ply, 1, 4, string.format(LANGUAGE.warrant_request2, m:Nick()))
 				else
 					-- there is no mayor, CPs can set warrants.
 					SetWarrant(ply, p)
