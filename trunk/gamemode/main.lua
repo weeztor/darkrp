@@ -1031,6 +1031,7 @@ function BuyVehicle(ply, args)
 	ent.SID = ply.SID
 	ent.ClassOverride = Vehicle.Class
 	ent:Own(ply)
+	
 	return ""
 end
 AddChatCommand("/buyvehicle", BuyVehicle)
