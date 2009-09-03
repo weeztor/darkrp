@@ -637,8 +637,10 @@ function GM:PlayerDisconnected(ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") disconnected")
 end
 
+local next_update_time
 function GM:Think()
 	FlammablePropThink()
+	if EarthQuakeTest then EarthQuakeTest() end
 end
 
 function GM:GetFallDamage( ply, flFallSpeed )
