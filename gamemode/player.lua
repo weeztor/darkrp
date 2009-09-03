@@ -389,7 +389,7 @@ function meta:Arrest(time, rejoin)
 			time = GetGlobalInt("jailtimer")
 		end
 		DB.StoreJailStatus(self, time)
-		self:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.youre_arrested, time))
+		self:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.youre_arrested, self:Nick(), time))
 		for k, v in pairs(player.GetAll()) do
 			if v ~= self then
 				v:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.hes_arrested, self:Name(), time))
