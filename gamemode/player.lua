@@ -206,6 +206,12 @@ function meta:ChangeTeam(t, force)
 		return
 	end
 	
+	if self.LastJob and 120 - (CurTime() - self.LastJob) >= 0 then
+		Notify(self, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(120 - (CurTime() - self.LastJob)), "/job"))
+		return 
+	end
+	
+	
 	for k,v in pairs(RPExtraTeams) do
 		if t == k then
 			if self:Team() == t then
@@ -240,6 +246,10 @@ function meta:ChangeTeam(t, force)
 		end
 	end
 
+	
+	self.LastJob = CurTime()
+	
+	
 	if t == TEAM_POLICE then	
 		self:SetNWBool("helpCop", true)
 	elseif t == TEAM_GANG then
