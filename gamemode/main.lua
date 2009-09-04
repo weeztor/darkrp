@@ -583,7 +583,7 @@ function PlayerUnWanted(ply, args)
 				timer.Destroy(p:Nick() .. " wantedtimer")
 			end
 		else
-			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
+			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "Player: "..tostring(args)))
 		end
 	end
 	return ""

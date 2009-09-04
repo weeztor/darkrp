@@ -27,7 +27,7 @@ rp_languages.english = {
 	
 	--Players
 	wanted = "Wanted by Police!",
-	youre_arrested = "%s has been arrested for %d seconds!",
+	youre_arrested = "You have been arrested for %d seconds!",
 	hes_arrested = "%s has been arrested for %d seconds!",
 	hes_unarrested = "%s has been released from jail!",
 	health = "Health: ",
@@ -609,7 +609,7 @@ rp_languages.danish = {
 
 	--Players
 	wanted = "Eftersøgt af politiet!",
-	youre_arrested = "%s er blevet arresteret for %d sekunder!",
+	youre_arrested = "Du er blevet arresteret for %d sekunder!",
 	hes_arrested = "%s er blevet arresteret for %d sekunder!",
 	hes_unarrested = "%s er blevet løsladt fra fængslet!",
 	health = "Helbred: ",
