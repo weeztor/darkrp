@@ -50,6 +50,25 @@ end
 hook.Add("PlayerInitialSpawn", "SendGlobalIntsOnSpawn", SendGlobalIntsOnSpawn)
 -- end of overriding SetGlobalInt...
 
+--Checking if counterstrike is installed correctly
+local foundCSS = false
+for k,v in pairs(GetMountedContent()) do
+	if v == "cstrike" then
+		foundCSS = true
+		break
+	end
+end
+
+if not foundCSS then
+	timer.Create("TheresNoCSS", 10, 0, function()
+		for k,v in pairs(player.GetAll()) do
+			v:ChatPrint("Counter:Strike Source is incorrectly installed!")
+			v:ChatPrint("You need it for DarkRP to work!")
+			print("Counter:Strike Source is incorrectly installed!\nYou need it for DarkRP to work!")
+		end
+	end)
+end
+
 -- RP Name Overrides
 
 local meta = FindMetaTable("Player")
