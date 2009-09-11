@@ -544,9 +544,9 @@ function FPP.PlayerInitialSpawn(ply)
 	ply:SetNWString("SteamID", ply:SteamID())--Hacky way to get the steam ID clientside, just because Garry refuses to make it shared
 	local RP = RecipientFilter()
 	
-	timer.Simple(1, function(ply)
+	timer.Simple(5, function(ply)
 		RP:AddAllPlayers()
-		if ply:IsValid() then RP:RemovePlayer(ply) end
+		RP:RemovePlayer(ply)
 		umsg.Start("FPP_CheckBuddy", RP)--Message everyone that a new player has joined
 			umsg.Entity(ply)
 		umsg.End()
