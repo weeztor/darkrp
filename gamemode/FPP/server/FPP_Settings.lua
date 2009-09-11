@@ -261,7 +261,21 @@ function FRetrieveBlocked()
 			"spawned_shipment", 
 			"spawned_weapon",  
 			"spawned_food",}
-		FPP.Blocked.Spawning = {}
+		FPP.Blocked.Spawning = {"func_breakable_surf",
+			"player",
+			"func_door",
+			"prop_door_rotating",
+			"drug", 
+			"drug_lab", 
+			"food", 
+			"gunlab", 
+			"letter", 
+			"meteor", 
+			"microwave", 
+			"money_printer", 
+			"spawned_shipment", 
+			"spawned_weapon",  
+			"spawned_food"}
 		FPP.Blocked.Gravgun = {"func_breakable_surf", "vehicle_"}
 		FPP.Blocked.Toolgun = {"func_breakable_surf",
 			"player",
