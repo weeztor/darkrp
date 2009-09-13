@@ -102,7 +102,7 @@ function MsgDoQuestion(msg)
 	LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
 	local panel = vgui.Create("DFrame")
 	panel:SetPos(3 + PanelNum * 140, ScrH() / 2 - 50)--Times 140 because if the quesion is the second screen, the first screen is always a vote screen.
-	panel:SetSize(380, 140)
+	panel:SetSize(300, 140)
 	panel:SetSizable(false)
 	panel.btnClose:SetVisible(false)
 	panel:SetKeyboardInputEnabled(false)

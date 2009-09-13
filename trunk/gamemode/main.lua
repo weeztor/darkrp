@@ -309,6 +309,9 @@ timer.Stop("stormControl")
 /*---------------------------------------------------------
  Earthquake
  ---------------------------------------------------------*/
+local lastmagnitudes = {} -- The magnitudes of the last tremors
+
+local next_update_time
 local tremor = ents.Create("env_physexplosion")
 tremor:SetPos(Vector(0,0,0))
 tremor:SetKeyValue("radius",9999999999)
@@ -317,6 +320,7 @@ tremor.nodupe = true
 tremor:Spawn()
 
 function TremorReport(mag)
+	local mag = table.remove(lastmagnitudes, 1)
 	if mag then
 		if mag < 6.5 then
 			NotifyAll(1, 3, string.format(LANGUAGE.earthtremor_report, tostring(mag)))
@@ -329,31 +333,32 @@ end
 function EarthQuakeTest()
 	if (CfgVars["earthquakes"] ~= 1) then return end
 
-	if (CurTime() > (next_update_time or 0)) then
+	if CurTime() > (next_update_time or 0) then
 		local en = ents.FindByClass("prop_physics")
 		local plys = ents.FindByClass("player")
-		if (math.random(0, CfgVars["quakechance"]) < 1) then
+		if math.random(0, CfgVars["quakechance"]) < 1 then
 			local force = math.random(10,1000)
 			tremor:SetKeyValue("magnitude",force/6)
-			TremorReport(force/6)
 			for k,v in pairs(plys) do
 				v:EmitSound("earthquake.mp3", force/6, 100)
 			end
 			tremor:Fire("explode","",0.5)
 			util.ScreenShake(Vector(0,0,0), force, math.random(25,50), math.random(5,12), 9999999999)
+			table.insert(lastmagnitudes, math.floor((force / 10) + .5) / 10)
+			timer.Simple(10, TremorReport, alert)
 			for k,e in pairs(en) do
 				local rand = math.random(650,1000)
-				if (rand < force and rand % 2 == 0) then
+				if rand < force and rand % 2 == 0 then
 					e:Fire("enablemotion","",0)
 					constraint.RemoveAll(e)
 				end
-				if (e:IsOnGround()) then
+				if e:IsOnGround() then
 					e:TakeDamage((force / 100) + 15, GetWorldEntity())
 				end
 			end
 		end
-		next_update_time = CurTime() + .1
-	end 
+		next_update_time = CurTime() + 1
+	end
 end
 
 /*---------------------------------------------------------
@@ -534,7 +539,7 @@ function SearchWarrant(ply, args)
 				-- If we found the mayor
 				if m ~= nil then
 					-- request a search warrent for player "p"
-					ques:Create(string.format(LANGUAGE.warrant_request, p:Nick(), p:EntIndex() .. "warrant", m, 40, FinishWarrant, ply, p))
+					ques:Create(string.format(LANGUAGE.warrant_request, ply:Nick(), p:Nick()), p:EntIndex() .. "warrant", m, 40, FinishWarrant, ply, p)
 					Notify(ply, 1, 4, string.format(LANGUAGE.warrant_request2, m:Nick()))
 				else
 					-- there is no mayor, CPs can set warrants.

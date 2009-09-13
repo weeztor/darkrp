@@ -870,3 +870,295 @@ rp_languages.danish = {
 	"Type /call <navn> for at ringe til nogen!",
 	}
 }
+
+// Swedish language, by Donkie
+rp_languages.swedish = {
+	-- admin things
+	need_admin = "Du måste vara admin för att göra %s",
+	need_sadmin = "Du måste vara superadmin för att göra %s",
+	no_jail_pos = "Finns ingen jail position",
+	invalid_x = "Inte godkänd %s! %s", 
+	
+	-- F1 menu
+	get_mod = "Hämta modden på garrysmod.org!",
+	mouse_wheel_to_scroll = "Använd mushjulet för att skrolla",
+	
+	--money things:
+	customer_price = "Kundens pris: ",
+	reset_money = "%s har resetat alla spelares pengar!",
+	has_given = "%s har gett dig %s",
+	you_gave = "Du har gett %s %s",
+	npc_killpay = "%s för att du dödade en NPC!",
+	
+	payday_message = "Löndag! Du har fått %s!",
+	payday_unemployed = "Du har inte fått någon lön för du har inget jobb!",
+	payday_missed = "Löndag missad! (Du är arresterad)",
+	
+	property_tax = "Hus/Lägenhet räkning! %s",
+	property_tax_cant_afford = "Du kunde inte betala räkningarna! Ditt hus/lägenhet har blivit tagen!",
+	
+	--Players
+	wanted = "Efterlyst av polisen!",
+	youre_arrested = "%s har blivit arresterad i %d sekunder!",
+	hes_arrested = "%s har blivit arresterad i %d sekunder!",
+	hes_unarrested = "%s har blivit frisläppt från fängelset",
+	health = "Liv: ",
+	job = "Jobb: ",
+	salary = "Lön: ",
+	wallet = "Plånbok: ",
+	warrant_request = "%s begär en husrannsakan för %s",
+	warrant_request2 = "Husrannsakan befrågan sänd till borgmästaren %s!",
+	warrant_approved = "Husrannsakan godkänd för %s!",
+	warrant_approved2 = "Du kan nu söka igenom hans hus/lägenhet",
+	warrant_denied = "Borgmästar %s har ej beviljat din husrannsakan befrågan.",
+	warrant_expired = "Husrannsakan för %s har gått ut!",
+	wanted_by_police = "%s är efterlyst av polisen!",
+	wanted_expired = "%s är inte längre efterlyst av polisen.",
+	rpname_changed = "%s har ändrat sitt RPNamn till: %s",
+	
+	--teams
+	need_to_be_before = "Du måste vara %s först för att kunna bli %s",
+	need_to_make_vote = "Du måste rösta för att kunna bli en %s!",
+	team_limit_reached = "Du kan inte bli %s för gränsen är redan nådd.",
+	wants_to_be = "%s vill vara %s", 
+	has_not_been_made_team = "%s har inte blivit %s!",
+	job_has_become = "%s har blivit %s!",
+	
+	--disasters
+	zombie_approaching = "Varning: Zombies har kommit!",
+	zombie_leaving = "Zombies börjar lämna.",
+	zombie_spawn_not_exist = "Zombie spawnen %s finns inte.",
+	zombie_spawn_removed = "Du har tagit bort den här zombie spawnen.",
+	zombie_spawn_added = "Du har lagt dit en ny zombie spawn.",
+	zombie_maxset = "Max antalet zombiesar har nu ändrats till %s",
+	zombie_enabled = "Zombies är nu aktiverade.",
+	zombie_disabled = "Zombies är nu deaktiverade.",
+	meteor_approaching = "Varning: Meteor storm har börjat komma!",
+	meteor_passing = "Meteor stormen börjar försvinna.",
+	meteor_enabled = "Meteor Stormar är nu aktiverat.",
+	meteor_disabled = "Meteor Storms är nu deaktiverade.",
+	earthquake_report = "Jordbävningen blev en jordbävning på skala %sMw",
+	earthtremor_report = "Jordbävningen blev en jordbävning på skala %sMw",
+	
+	--keys, vehicles and doors
+	keys_allowed_to_coown = "Du är tillåten att co-äga den här dörren.\n(Tryck reload/ladda knappen eller F2 för att öppna menyn)\n",
+	keys_other_allowed = "%s är tillåten att co-äga den här.\n",
+	keys_allow_ownership = "(Tryck reload/ladda knappen eller F2 för att godkänna co-ägande)",
+	keys_disallow_ownership = "(Tryck reload/ladda knappen eller F2 för att inte godkänna co-ägande)",
+	keys_owned_by = "Ägd av: ",
+	keys_cops_and_mayor = "Alla poliser och borgmästaren",
+	keys_unowned = "Inte ägd\n(Tryck reload/ladda knappen eller F2 för att äga den).",
+	keys_everyone = "(Tryck reload/ladda knappen eller F2 för att tillåta dörren till alla (inte bara poliser))",
+	keys_cops = "(Tryck reload/ladda knappen eller F2 för att sätta på poliser och borgmästare endast.)",
+	door_unown_arrested = "Du kan inte äga eller o-äga saker när du är arresterad!",
+	door_unownable = "Den här dörren kan inte bli ägd eller o-ägd!",
+	door_sold = "Du har sålt den här dörren för %s",
+	door_already_owned = "Den här dörren är redan ägd av någon!",
+	door_cannot_afford = "Du är för fattig för att betala för den här dörren!",
+	vehicle_cannot_afford = "Du är för fattig för att betala för det här fordonet!",
+	door_bought = "Du har köpt den här dörren för %s",
+	vehicle_bought = "Du har köpt det här fordonet för %s",
+	door_need_to_own = "Du måste äga den här dörren för att kunna göra %s",
+	door_rem_owners_unownable = "Du kan inte tabort ägare om dörren är tillåten för alla!",
+	door_add_owners_unownable = "Du kan inte lägga till ägare om dörren är tillåten för alla!",
+	rp_addowner_already_owns_door = "%s äger redan (eller är redan tillåten att äga) den här dörren!",
+	
+	-- talking
+	hear_noone = "Ingen kan höra dig %s!",
+	hear_everyone = "Alla kan höra dig!",
+	hear_certain_persons = "Spelare som kan höra dig %s: ",
+	
+	whisper = "viska",
+	yell = "skrika",
+	advert = "[Annons]",
+	radio = "radio",
+	request = "(Begäran!)",
+	group = "(grupp)",
+	
+	--Notifies
+	disabled = "%s är avaktiverad! %s", 
+	limit = "Du har nått %s gräns!", 
+	have_to_wait = "Du måste vänta yttligare %d sekunder innan du kan använda %s!", 
+	must_be_looking_at = "Du måste titta på en %s!", 
+	incorrect_job = "Du har inte det rätta jobbet för att %s", 
+	unavailable = "%s är inte tillgänglig", 
+	unable = "Du kan inte göra %s. %s", 
+	cant_afford = "Du har inte råd att köpa %s",
+	created_x = "%s har gjort en %s", 
+	cleaned_up = "Dina %s har blivit raderade.",
+	you_bought_x = "Du har köpt en %s för %s", 
+	
+	created_first_jailpos = "Du har gjort första fängelse positionen!",
+	added_jailpos = "Du har lagt till en till fängelse position!",
+	reset_add_jailpos = "Du har tagit bort all fängelse positioner och lagt till en ny här.",
+	created_spawnpos = "%s's spawn position gjort.",
+	updated_spawnpos = "%s's spawn position updaterad.",
+	do_not_own_ent = "Du äger inte den här entityn!",
+	cannot_drop_weapon = "Du kan inte släppa det här vapnet!",
+	
+	--misc
+	could_not_find = "Kunde inte hitta %s",
+	f3tovote = "Tryck F3 för att rösta",
+	listen_up = "Lyssna:", --In rp_tell
+	nlr = "New Life Rule: Gör inte ett hämnings mord.",
+	reset_settings = "Du har resettat alla ändringar!",
+	must_be_x = "Du måste vara en %s för att kunna göra %s.",
+	agenda_updated = "Gangster bossen har uppdaterat agendan",
+	job_set = "%s har sätt hans/hennes jobb till '%s'",
+	demoted = "%s har blivit degraderad.",
+	demoted_not = "%s har inte blivit degraderad.",
+	demote_vote_started = "%s har gjort en röst för at degradera %s",
+	demote_vote_text = "Degraderings röst:\n%s", --s is the reason here
+	lockdown_started = "Borgmästaren har startat en lockdown, gå tillbaka till ditt hem.",
+	lockdown_ended = "Lockdownen har upphört.",
+	gunlicense_requested = "%s har begärt %s en vapen license",
+	gunlicense_granted = "%s har beviljat %s en vapen license",
+	gunlicense_denied = "%s har inte beviljat %s en vapen license",
+	gunlicense_question_text = "Bevilja %s en vapen license?",
+	gunlicense_remove_vote_text = "%s har startat en röstning för att ta bort %s vapen license",
+	gunlicense_remove_vote_text2 = "Tabort vapen license:\n%s", --where %s is the reason
+	gunlicense_removed = "%s's license har blivit borttagen!",
+	gunlicense_not_removed = "%s's license har inte blivit borttagen!",
+	vote_specify_reason = "Du måste ge en anledning!",
+	vote_already_exists = "Det är redan en röst!",
+	vote_started = "Rösten är skapad.",
+	vote_alone = "Du har vunnit rösten för du är ensam på servern.",
+	jail_punishment = "Bestraffning för att du har lämnat servern! Fängslad för: %d seconds.",
+	admin_only = "admin endast!", -- when doing /addjailpos
+	chief_or = "Chief eller",-- when doing /addjailpos
+	
+	dead_in_jail = "Du är nu död i fängelse tills din tid är uppe!",
+	died_in_jail = "%s har dött i fängelset!",
+	
+	--lottery
+	lottery_started = "Lottning! Följ med för bara %s",
+	lottery_entered = "Du har gått med i en lottning för %s",
+	lottery_not_entered = "%s har inte gått med i lottningen",
+	lottery_noone_entered = "Ingen har gått med i lottningen",
+	lottery_won = "%s har vunnit lottningen! Han vann %s",
+	
+	--hungermod 
+	starving = "Svälter!",
+	
+	--F4menu 
+	--Tab 1
+	give_money = "Ge pengar till den du tittar på.",
+	drop_money = "Släpp pengar.",
+	change_name = "Ändra ditt DarkRP namn.",
+	go_to_sleep = "Sov/Vakna",
+	drop_weapon = "Släpp ditt vapen",
+	buy_health = "Köp liv(%s)",
+	request_gunlicense = "Begär vapen license",
+	demote_player_menu = "Degradera en spelare",
+	
+	
+	searchwarrantbutton = "Få en husrannsakan för en spelare",
+	unwarrantbutton = "Tabort husrannsakan för en spelare",
+	noone_available = "Ingen tillgänglig.",
+	request_warrant = "begär en husrannsakan för en spelare",
+	make_wanted = "Gör någon efterlyst",
+	make_unwanted = "Tabort någons efterlysning",
+	set_jailpos = "Sätt fängelse positionen",
+	add_jailpos = "Lägg till en  fängelse position",
+	
+	set_custom_job = "Gör ett eget jobb (Tryck enter för att aktivera)",
+	
+	set_agenda = "Ändra agendan (Tryck enter för att aktivera)",
+	
+	initiate_lockdown = "Starta en lockdown",
+	stop_lockdown = "Stoppa en lockdown",
+	start_lottery = "Starta en lottning",
+	give_license_lookingat = "Ge <Tittar på> en vapen license",
+	
+	--second tab
+	job_name = "Namn: ",
+	job_description = "Description: " ,
+	job_weapons = "Vapen: ",
+	
+	--entities tab
+	buy_a = "Köp %s: %s",
+	
+	--licenseweaponstab
+	license_tab = [[License vapen
+	
+	"Checka" vapnen som man kan plocka upp UTAN att ha en license!
+	]],
+	license_tab_other_weapons = "Andra vapen:",
+	
+	
+	--Help!
+	cophelp = [[Saker polisen borde veta:
+	"Abusa" inte ditt jobb.
+	När du arresterar någon är dom automatiskt teleporterade till fängelset.
+	Dom är automatiskt utsläppta efter %d sekunder
+	Skriv /warrant [Namn|SteamID|Status ID] för att göra en husrannsakan mot en spelare.
+	Skriv /wanted [Namn|SteamID|Status ID] för att göra en spelare efterlyst.
+	Skriv /unwanted [Namn|SteamID|Status ID] för att tabort efterlysningen på en spelare.
+	Skriv /jailpos för att ändra fängelse positionen
+	Skriv /cophelp för att "toggla" denna meny, /x för att stänga den.]],
+	
+	mayorhelp = [[Skriv /warrant [Nick|SteamID|Status ID] för att göra en husrannsakan mot en spelare.
+	Skriv /wanted [Nick|SteamID|Status ID] för att göra en spelare efterlyst.
+	Skriv /unwanted [Nick|SteamID|Status ID] för att tabort efterlysningen på en spelare.
+	Skriv /lockdown för att starta en "lockdown"
+	Skriv /unlockdown för att tabort en "lockdown"
+	Skriv /mayorhelp för att "toggla" denna meny, /x för att stänga den.]],
+	
+	adminhelp = [[/enablestorm Aktiverar meteor stormar
+	/disablestorm Deaktiverar meteor stormar
+	Du kan ändra priset på vapen, jailtiden, max gangstrars, etc..
+	För att göra det tryck F1 och sen skrolla ner för att se dina krafter.
+	Om du ändrar init.lua kan du spara "vars"
+	/jailpos ändrar jailpositionen!
+	/setspawn <team> - Lägg till ett teamnamn, tex Police, Gangster...
+	/adminhelp för att "toggla" denna meny, /x för att stänga den.]],
+	
+	mobhelp = [[Som mob boss, bestämmer du vad alla gangstrar ska göra.
+	Du får en "unarrest stick" som du använder för att bryta andra ur fängelset.
+	/agenda <Message> Ändrar gangstrars agenda. Använd // för att gå till en ny rad.
+	Skriv /mobbosshelp för att "toggla" denna meny, /x för att stänga den.]],
+	
+	gangster_agenda = "Gangstrar's agenda",
+	
+	hints = 
+	--English hints:
+	{"Rollspel enligt servern's regler.",
+	"Du kan bli arresterad för att ha köpt/köper ett olagligt vapen!",
+	"Skriv /sleep för att somna.",
+	"Du får ha en pistol, men använd den bara i själv försvar.",
+	"Alla vapen kan INTE skjuta om du inte tittar genom siktet!",
+	"Om du är en polis, gör ditt jobb på rätt sätt annars kan du bli degraderad.",
+	"Skriv /buyshipment <Vapen namn> för att köpa en låda med vapen (e.g: /buyshipment ak47).",
+	"Skriv /buy <Pistol namn/Sak namn> för att köpa en pistol, e.g: /buy glock.",
+	"Skriv /buyammo <Ammo typ> för att köpa ammo. Ammo typer är: [rifle | shotgun | pistol]",
+	"Om du vill få ut din kompis ur fängelse, gå till din närmsta polisstation och förhandla!",
+	"Tryck F1 för att se RP hjälp.",
+	"Om du blir arresterad, lugn, du kommer ut inom " .. GetGlobalInt("jailtimer") .. " sekunder.",
+	"Om du är chief eller admin, skriv /jailpos eller /addjail för att sätta positionen för första (och extra) fängelse positioner.",
+	"Du blir teleporterad till fängelset om du blir arresterad!",
+	"Om du är en polis och ser någon med ett olagligt vapen, arrestera dom och konfistikera vapnet.",
+	"Skriv /sleep för att somna.",
+	"Dina pengar och RP namn är sparade av servern.",
+	"Skriv /buyhealth för att öka ditt liv till 100%",
+	"Skriv /buydruglab för att köpa ett dråglab. Se upp så du säljer alla dråger!",
+	"Tryck F2 eller Reload med dina keys för att öppna keys menyn",
+	"Du blir teleporterad till fängelset om du blir arresterad!",
+	"Skriv /price <Pris> medans du tittar på ett dråglab,  Vapenlabb eller en mikrovågsugn för att ändra priset för köpare.",
+	"Skriv /warrant [Namn|SteamID|UserID] för att få en husrannsakan mot en spelare.",
+	"Skriv /wanted or /unwanted [Nick|SteamID|UserID] för att få en spelare efterlyst/inte efterlyst.",
+	"Skriv /drop för att släppa vapnet du håller.",
+	"Skriv /gangster för att bli en gangster.",
+	"Skriv /mobboss för att bli en mobboss.",
+	"Skriv /buymicrowave för att köpa en mikrovågsugn som kan göra mat (nudlar <3).",
+	"Skriv /dropmoney <Hur mycket> för att släppa pengar.",
+	"Skriv /buymoneyprinter för att köpa en pengargörare/moneyprinter. Kostar " .. CUR .. GetGlobalInt("money_printercost"),
+	"Skriv /medic - för att bli en medic/sjukvårdare.",
+	"Skriv /gundealer - för att bli en gundealer/vapen handlare.",
+	"Skriv /buygunlab - för att köpa ett vapenlabb.",
+	"Skriv /cook - för att bli en Cook.",
+	"Skriv /cophelp för o se polisers hjälp.",
+	"Skriv /buyfood <Typ> (e.g: /buyfood melon)",
+	"Skriv /rpname <Namn> för att ändra ditt rollspel namn.",
+	"Skriv /call <Namn> för att ringa någon!"
+	}
+}
