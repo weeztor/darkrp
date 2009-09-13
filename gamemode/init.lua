@@ -109,7 +109,7 @@ AddCSLuaFile("DRPDermaSkin.lua")
 -- Earthquake Mod addon
 resource.AddFile("sound/earthquake.mp3")
 util.PrecacheSound("earthquake.mp3")
-lastmagnitudes = {} -- The magnitudes of the last tremors
+
 
 DB = {}
 

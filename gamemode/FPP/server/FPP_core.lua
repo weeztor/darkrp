@@ -545,6 +545,7 @@ function FPP.PlayerInitialSpawn(ply)
 	local RP = RecipientFilter()
 	
 	timer.Simple(5, function(ply)
+		if not ValidEntity(ply) then return end
 		RP:AddAllPlayers()
 		RP:RemovePlayer(ply)
 		umsg.Start("FPP_CheckBuddy", RP)--Message everyone that a new player has joined

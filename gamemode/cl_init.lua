@@ -348,12 +348,12 @@ local function DrawDisplay()
 							st = ent:GetNWString("title") .. "\n"..LANGUAGE.keys_allow_ownership
 						else
 							if ownerstr == "" then
-								st = ent:GetNWString("title") .. "\n"..LANGUAGE.keys_disallow_ownership
+								st = ent:GetNWString("title") .. "\n"..LANGUAGE.keys_disallow_ownership .. "\n"
 							else
 								if ent:OwnedBy(LocalPlayer()) and not CPOnly then
 									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
 								elseif not CPOnly then
-									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr .. LANGUAGE.keys_disallow_ownership
+									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr .. LANGUAGE.keys_disallow_ownership .. "\n"
 								elseif not ent:IsVehicle() then
 									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. LANGUAGE.keys_cops_and_mayor .. "\n" .. LANGUAGE.keys_disallow_ownership .. "\n"
 								end
