@@ -80,6 +80,7 @@ end
 
 function FPP.NewBuddy(um)
 	local ply = um:ReadEntity()
+	if not ply:IsValid() then return end
 	local SteamID = ply:SteamID()
 	local data = sql.Query("SELECT * FROM FPP_Buddies")
 	if data then

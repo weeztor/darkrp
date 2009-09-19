@@ -7,9 +7,10 @@ sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLGUN('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_PLAYERUSE('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_ENTITYDAMAGE('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
-	
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GLOBALSETTINGS('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
+	
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_ANTISPAM('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
+	sql.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICT('toolname' TEXT NOT NULL, 'adminonly' INTEGER NOT NULL, 'teamrestrict' TEXT NOT NULL, PRIMARY KEY('toolname'));")
 	
 sql.Commit()
 
@@ -20,6 +21,8 @@ FPP.Blocked = {}
 	FPP.Blocked.Toolgun = {}
 	FPP.Blocked.PlayerUse = {}
 	FPP.Blocked.EntityDamage = {}
+	
+FPP.RestrictedTools = {}
 
 FPP.Settings = {}
 	FPP.Settings.FPP_PHYSGUN = {
@@ -237,7 +240,7 @@ local function RetrieveSettings()
 end
 RetrieveSettings()
 
-function FRetrieveBlocked()
+local function RetrieveBlocked()
 	local data = sql.Query("SELECT * FROM FPP_BLOCKED;")
 	if type(data) == "table" then
 		for k,v in pairs(data) do
@@ -306,7 +309,29 @@ function FRetrieveBlocked()
 		sql.Commit()
 	end
 end
-FRetrieveBlocked()
+RetrieveBlocked()
+
+local function RetrieveRestrictedTools()
+	local data = sql.Query("SELECT * FROM FPP_TOOLRESTRICT;")
+	
+	if type(data) == "table" then
+		for k,v in pairs(data) do
+			FPP.RestrictedTools[v.toolname] = {}
+			FPP.RestrictedTools[v.toolname]["admin"] = tonumber(v.adminonly)
+			
+			FPP.RestrictedTools[v.toolname]["team"] = FPP.RestrictedTools[v.toolname]["team"] or {}
+			
+			if v.teamrestrict ~= "nil" then
+				local teamrestrict = string.Explode(";", v.teamrestrict)
+				for a, b in pairs(teamrestrict) do
+					table.insert(FPP.RestrictedTools[v.toolname]["team"], tonumber(b))
+				end
+			end
+			
+		end
+	end
+end
+RetrieveRestrictedTools()
 
 local function SendBlocked(ply, cmd, args)
 	--I don't need an admin check here since people should be able to find out without having admin
@@ -319,6 +344,27 @@ local function SendBlocked(ply, cmd, args)
 	end
 end
 concommand.Add("FPP_sendblocked", SendBlocked)
+
+local function SendRestrictedTools(ply, cmd, args)
+	if not args[1] then return end
+	umsg.Start("FPP_RestrictedToolList", ply)
+		umsg.String(args[1])
+		if FPP.RestrictedTools[args[1]] and FPP.RestrictedTools[args[1]].admin then
+			umsg.Long(FPP.RestrictedTools[args[1]].admin)
+		else
+			umsg.Long(0)
+		end
+		
+		local teamrestrict = "nil"
+		if FPP.RestrictedTools[args[1]] and FPP.RestrictedTools[args[1]].team then
+			teamrestrict = table.concat(FPP.RestrictedTools[args[1]]["team"], ";")
+		end
+		if teamrestrict == "" then teamrestrict = "nil" end
+		umsg.String(teamrestrict)
+		
+	umsg.End()
+end
+concommand.Add("FPP_SendRestrictTool", SendRestrictedTools)
 
 --Buddies!
 local function SetBuddy(ply, cmd, args)
@@ -354,3 +400,50 @@ local function CleanupDisconnected(ply, cmd, args)
 	FPP.NotifyAll(ply:Nick() .. " removed "..Player(args[1]):Nick().. "'s entities", true)
 end
 concommand.Add("FPP_Cleanup", CleanupDisconnected)
+
+local function SetToolRestrict(ply, cmd, args)
+	if ply:EntIndex() == 0 or not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You can't set tool restrictions") return end
+	if not args[3] then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument(s)") return end--FPP_restricttool <toolname> <type(admin/team)> <toggle(1/0)>
+	local toolname = args[1]
+	local RestrictWho = tonumber(args[2]) or args[2]-- "team" or "admin"
+	local teamtoggle = tonumber(args[4]) --this argument only exists when restricting a tool for a team
+	
+	FPP.RestrictedTools[toolname] = FPP.RestrictedTools[toolname] or {}
+	
+	if RestrictWho == "admin" then
+		FPP.RestrictedTools[toolname].admin = args[3] --weapons.Get("gmod_tool").Tool
+		
+		--Save to database!
+		local data = sql.Query("SELECT * FROM FPP_TOOLRESTRICT WHERE toolname = "..sql.SQLStr(toolname)..";")
+		if data then
+			sql.Query("UPDATE FPP_TOOLRESTRICT SET adminonly = ".. sql.SQLStr(args[3]) .. " WHERE toolname = "..sql.SQLStr(toolname)..";")
+		else
+			sql.Query("INSERT INTO FPP_TOOLRESTRICT VALUES("..sql.SQLStr(toolname)..", "..sql.SQLStr(args[3])..", "..sql.SQLStr("nil")..");")
+		end
+	elseif RestrictWho == "team" then
+		FPP.RestrictedTools[toolname]["team"] = FPP.RestrictedTools[toolname]["team"] or {}
+		if teamtoggle == 0 then
+			for k,v in pairs(FPP.RestrictedTools[toolname]["team"]) do
+				if v == tonumber(args[3]) then
+					table.remove(FPP.RestrictedTools[toolname]["team"], k)
+					break
+				end
+			end
+		elseif not table.HasValue(FPP.RestrictedTools[toolname]["team"], tonumber(args[3])) and teamtoggle == 1 then
+			table.insert(FPP.RestrictedTools[toolname]["team"], tonumber(args[3]))
+		end--Remove from the table if it's in there AND it's 0 otherwise do nothing
+		
+		local teamrestrict = table.concat(FPP.RestrictedTools[toolname]["team"], ";")
+		if teamrestrict == "" then teamrestrict = "nil" end
+		local adminonly = FPP.RestrictedTools[toolname].admin or 0
+		
+		local data = sql.Query("SELECT * FROM FPP_TOOLRESTRICT WHERE toolname = "..sql.SQLStr(toolname)..";")
+		if data then
+			sql.Query("UPDATE FPP_TOOLRESTRICT SET teamrestrict = " .. sql.SQLStr(teamrestrict).." WHERE toolname = "..sql.SQLStr(toolname)..";")
+		else
+			sql.Query("INSERT INTO FPP_TOOLRESTRICT VALUES("..sql.SQLStr(toolname)..", "..sql.SQLStr(adminonly)..", "..sql.SQLStr(teamrestrict)..");")
+		end
+		data = sql.Query("SELECT * FROM FPP_TOOLRESTRICT WHERE toolname = "..sql.SQLStr(toolname)..";")
+	end
+end
+concommand.Add("FPP_restricttool", SetToolRestrict)

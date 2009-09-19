@@ -331,7 +331,7 @@ function TremorReport(mag)
 end
 
 function EarthQuakeTest()
-	if (CfgVars["earthquakes"] ~= 1) then return end
+	if CfgVars["earthquakes"] ~= 1 or not CfgVars["quakechance"] then return end
 
 	if CurTime() > (next_update_time or 0) then
 		local en = ents.FindByClass("prop_physics")

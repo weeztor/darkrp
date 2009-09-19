@@ -1,5 +1,6 @@
 local AdminPanel
 local BuddiesPanel
+local RetrieveRestrictedTool
 local BlockedLists = {}
 local CatsOpened = {}
 FPP = FPP or {}
@@ -259,8 +260,272 @@ function FPP.AdminMenu(Panel)
 	addchk("Check constrained entities", {"FPP_ENTITYDAMAGE", "checkconstrained"}, damage)
 	addchk("The blocked list is a white list", {"FPP_ENTITYDAMAGE", "iswhitelist"}, damage)
 	addblock(damage, "EntityDamage")
+	
+	
+	local ToolRestrictCat, ToolRestrict = MakeOption("Tool restriction") --spawnmenu.GetTools()
+	
+	FPP.DtreeToolRestrict = FPP.DtreeToolRestrict or vgui.Create("DTree")
+	FPP.multirestricttoollist = FPP.multirestricttoollist or vgui.Create("DListView")
+	FPP.DtreeToolRestrict:SetVisible(true)
+	FPP.DtreeToolRestrict:SetSize(0, 300)
+	
+	local NodesTable = {}
+	FPP.SELECTEDRESTRICTNODE = FPP.SELECTEDRESTRICTNODE or "weld"
+	
+	if not FPP.DtreeToolRestrict:GetItems() or #FPP.DtreeToolRestrict:GetItems() == 0 then
+		for a,b in pairs(spawnmenu.GetTools()) do 
+			for c,d in pairs(spawnmenu.GetTools()[a].Items) do 
+				local addnodes = {}
+				for e,f in pairs(spawnmenu.GetTools()[a].Items[c]) do 
+					if type(f) == "table" and string.find(f.Command, "gmod_tool") then 
+						table.insert(addnodes, f.Text)
+					end 
+				end 
+				if #addnodes ~= 0 then
+					local node1 = FPP.DtreeToolRestrict:AddNode(d.ItemName)
+					for e,f in pairs(addnodes) do
+						local node2 = node1:AddNode(f) 
+						node2.Icon:SetImage("gui/silkicons/wrench")
+						function node2:DoClick()
+							FPP.SELECTEDRESTRICTNODE = self.Label:GetValue()
+							
+							for k,v in pairs(weapons.Get("gmod_tool").Tool) do
+								if v.Name and string.sub(v.Name, 2) == FPP.SELECTEDRESTRICTNODE then
+									--Add to DListView
+									for a,b in pairs(FPP.multirestricttoollist:GetLines()) do
+										if b.Columns[1].Value == k then
+											return
+										end
+									end
+									FPP.multirestricttoollist:AddLine(k)
+									return
+								end
+							end
+						end
+					end
+				end
+			end 
+		end 
+	end
+	
+	
+	
+	ToolRestrict:AddItem(FPP.DtreeToolRestrict)
+	
+	local SingleEditTool = vgui.Create("DButton")
+	SingleEditTool:SetText("Edit/view selected tool restrictions")
+	SingleEditTool:SetToolTip("Edit or view the restrictions of the selected tool!")
+	SingleEditTool.DoClick = function()
+		for k,v in pairs(weapons.Get("gmod_tool").Tool) do
+			if v.Name and string.sub(v.Name, 2) == FPP.SELECTEDRESTRICTNODE then
+				RunConsoleCommand("FPP_SendRestrictTool", k)
+				return
+			end
+		end
+		SingleEditTool:SetText("No tool selected!")
+		
+		timer.Simple(1, function(SEditTool)
+			if ValidPanel(SEditTool) then
+				SEditTool:SetText("Edit/view selected tool's restrictions")
+			end
+		end, SingleEditTool)
+	end
+	ToolRestrict:AddItem(SingleEditTool)
+	
+	--[[ local AddToMultiEditTool = vgui.Create("DButton")
+	AddToMultiEditTool:SetText("Add tool to multi tool edit")
+	AddToMultiEditTool:SetToolTip("Add this tool to a list so you can edit multiple tools at a time!")
+	AddToMultiEditTool:SetDisabled(not superadmin)
+	AddToMultiEditTool.DoClick = function()
+		for k,v in pairs(weapons.Get("gmod_tool").Tool) do
+			if v.Name and string.sub(v.Name, 2) == FPP.SELECTEDRESTRICTNODE then
+				--Add to DListView
+				for a,b in pairs(FPP.multirestricttoollist:GetLines()) do
+					if b.Columns[1].Value == k then
+						return
+					end
+				end
+				FPP.multirestricttoollist:AddLine(k)
+				return
+			end
+		end
+		AddToMultiEditTool:SetText("No tool selected!")
+		
+		
+		timer.Simple(1, function(AddToMultiEditTool)
+			if ValidPanel(AddToMultiEditTool) then
+				AddToMultiEditTool:SetText("Add tool to multi tool edit")
+			end
+		end, AddToMultiEditTool)
+	end
+	ToolRestrict:AddItem(AddToMultiEditTool) ]]
+	
+	local EditToolListLabel = Label("\nMultiple tool editor.\nAdd tools in this list by clicking on them,\nthen click \"Edit multiple tools\"\nto edit multiple tools at once!")
+	EditToolListLabel:SizeToContents()
+	ToolRestrict:AddItem(EditToolListLabel)
+	
+	if #FPP.multirestricttoollist.Columns ~= 1 then
+		FPP.multirestricttoollist:AddColumn("Tool names")
+	end
+	
+	FPP.multirestricttoollist:SetTall(150)
+	function FPP.multirestricttoollist:OnClickLine(line)
+		line:SetSelected(true)
+		FPP.multirestricttoollist:RemoveLine(FPP.multirestricttoollist:GetSelectedLine())
+	end
+	ToolRestrict:AddItem(FPP.multirestricttoollist)
+	
+	local StartEditMultiTool = vgui.Create("DButton")
+	StartEditMultiTool:SetText("Edit multiple tools")
+	StartEditMultiTool:SetToolTip("Start editing the tools in above list!")
+	StartEditMultiTool:SetDisabled(not superadmin)
+	StartEditMultiTool.DoClick = function()
+		local lines = FPP.multirestricttoollist:GetLines()
+		local EditTable = {}
+		if #lines > 0 then
+			for k,v in pairs(lines) do
+				table.insert(EditTable, v.Columns[1].Value)
+			end
+			RetrieveRestrictedTool(EditTable)
+			
+			return
+		end
+		
+		StartEditMultiTool:SetText("List is empty!")
+		
+		
+		timer.Simple(1, function(StartEditMultiTool)
+			if ValidPanel(StartEditMultiTool) then
+				StartEditMultiTool:SetText("Edit multiple tools")
+			end
+		end, StartEditMultiTool)
+	end
+	ToolRestrict:AddItem(StartEditMultiTool)
+	
 	Panel:AddControl("Label", {Text = "\nFalco's Prop Protection\nMade by Falco A.K.A. FPtje"})
 end
+
+RetrieveRestrictedTool = function(um)
+	local tool, admin, Teams = um, 0, {}--Settings when it's not a usermessage
+	if type(um) ~= "table" then
+		tool = um:ReadString()
+		admin = um:ReadLong()
+		Teams = um:ReadString()
+		if Teams ~= "nil" then
+			Teams = string.Explode(";", Teams)
+		else
+			Teams = {}
+		end
+	end
+	
+	local frame = vgui.Create("DFrame")
+	if type(tool) == "table" then
+		frame:SetTitle("Edit multiple tools' restrictions")
+	else
+		frame:SetTitle("Edit/view "..tool.." restrictions")
+	end
+	frame:MakePopup()
+	frame:SetVisible( true )
+	frame:SetSize(250, 400)
+	frame:Center()
+	
+	local pan = vgui.Create("DPanelList", frame)
+	pan:SetPos(10, 30)
+	pan:SetSize(230, 1)
+	pan:SetSpacing(5)
+	pan:EnableHorizontal(false)
+	pan:EnableVerticalScrollbar(true)
+	pan:SetAutoSize(true)
+	
+	local adminsCHKboxes = {}
+	
+	adminsCHKboxes[1] = vgui.Create("DCheckBoxLabel")
+	adminsCHKboxes[1]:SetText("for everyone")
+	adminsCHKboxes[1].GoodValue = 0
+	if admin == 0 then
+		adminsCHKboxes[1].Button:SetValue(1)
+	end
+	pan:AddItem(adminsCHKboxes[1])
+	
+	adminsCHKboxes[2] = vgui.Create("DCheckBoxLabel")
+	adminsCHKboxes[2]:SetText("Admin only")
+	adminsCHKboxes[2].GoodValue = 1
+	if admin == 1 then
+		adminsCHKboxes[2].Button:SetValue(1)
+	end
+	pan:AddItem(adminsCHKboxes[2])
+	
+	adminsCHKboxes[3] = vgui.Create("DCheckBoxLabel")
+	adminsCHKboxes[3]:SetText("Superadmin only")
+	adminsCHKboxes[3].GoodValue = 2
+	if admin == 2 then
+		adminsCHKboxes[3].Button:SetValue(1)
+	end
+	pan:AddItem(adminsCHKboxes[3])
+	
+	for k,v in pairs(adminsCHKboxes) do
+		adminsCHKboxes[k].Button.Toggle = function()
+			if adminsCHKboxes[k].Button:GetChecked() == nil or not adminsCHKboxes[k].Button:GetChecked() then 
+				for a,b in pairs(adminsCHKboxes) do
+					adminsCHKboxes[a].Button:SetValue(false)
+				end
+				adminsCHKboxes[k].Button:SetValue( true ) 
+				if type(tool) ~= "table" then
+					RunConsoleCommand("FPP_restricttool", tool, "admin", adminsCHKboxes[k].GoodValue)
+				else
+					for a,b in pairs(tool) do
+						timer.Simple(a/10, function(b, GoodValue) -- Timer to prevent lag of executing multiple commands at the same time.
+							RunConsoleCommand("FPP_restricttool", b, "admin", GoodValue)
+						end, b, adminsCHKboxes[k].GoodValue)
+					end
+				end
+			else 
+				return false -- You can't turn a checkbox off 
+			end
+		end
+	end
+	
+	local Tpan = vgui.Create("DPanelList", frame)
+	Tpan:SetPos(10, #adminsCHKboxes*20 + 40 )
+	Tpan:SetSize(230, 350-#adminsCHKboxes*20  )
+	Tpan:SetSpacing(5)
+	Tpan:EnableHorizontal(false)
+	Tpan:EnableVerticalScrollbar(true)
+	
+	for k,v in pairs(team.GetAllTeams()) do
+		local chkbx = vgui.Create("DCheckBoxLabel")
+		chkbx:SetText(v.Name)
+		chkbx.Team = k
+		if table.HasValue(Teams, tostring(k)) then
+			chkbx.Button:SetValue(true)
+		end
+		
+		chkbx.Button.Toggle = function()
+			if chkbx.Button:GetChecked() == nil or not chkbx.Button:GetChecked() then 
+				chkbx.Button:SetValue( true ) 
+			else 
+				chkbx.Button:SetValue( false ) 
+			end 
+			
+			local tonum = {}
+			tonum[false] = "0"
+			tonum[true] = "1"
+			if type(tool) ~= "table" then
+				RunConsoleCommand("FPP_restricttool", tool, "team", chkbx.Team, tonum[chkbx.Button:GetChecked()] )
+			else
+				for a,b in pairs(tool) do
+					timer.Simple(a/10, function(b, Team, checked)
+						RunConsoleCommand("FPP_restricttool", b, "team", Team, checked)
+					end, b, chkbx.Team, tonum[chkbx.Button:GetChecked()])
+				end
+			end
+		end
+		
+		Tpan:AddItem(chkbx)
+	end
+	
+end
+usermessage.Hook("FPP_RestrictedToolList", RetrieveRestrictedTool)
 
 local function retrieveblocked(um)
 	local Type = string.lower(um:ReadString())
