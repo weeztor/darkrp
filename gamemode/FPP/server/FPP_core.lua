@@ -430,6 +430,22 @@ timer.Simple(5, function()
 end)
 
 function FPP.Protect.CanTool(ply, trace, tool)
+	-- Toolgun restrict
+	if FPP.RestrictedTools[tool] then
+		if tonumber(FPP.RestrictedTools[tool].admin) == 1 and not ply:IsAdmin() then
+			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Admin only!", false)
+			return false
+		elseif tonumber(FPP.RestrictedTools[tool].admin) == 2 and not ply:IsSuperAdmin() then
+			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Superadmin only!", false)
+			return false
+		end
+		
+		if FPP.RestrictedTools[tool]["team"] and #FPP.RestrictedTools[tool]["team"] > 0 and not table.HasValue(FPP.RestrictedTools[tool]["team"], ply:Team()) then
+			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! incorrect team!", false)
+			return false
+		end
+	end
+	
 	-- Anti model server crash
 	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetToolObject() and 
 	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ), "*")) then
