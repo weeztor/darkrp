@@ -278,19 +278,20 @@ function FPP.AdminMenu(Panel)
 				local addnodes = {}
 				for e,f in pairs(spawnmenu.GetTools()[a].Items[c]) do 
 					if type(f) == "table" and string.find(f.Command, "gmod_tool") then 
-						table.insert(addnodes, f.Text)
+						table.insert(addnodes, {f.Text, f.ItemName})
 					end 
 				end 
 				if #addnodes ~= 0 then
 					local node1 = FPP.DtreeToolRestrict:AddNode(d.ItemName)
 					for e,f in pairs(addnodes) do
-						local node2 = node1:AddNode(f) 
+						local node2 = node1:AddNode(f[1]) 
 						node2.Icon:SetImage("gui/silkicons/wrench")
+						node2.Tool = f[2]
 						function node2:DoClick()
-							FPP.SELECTEDRESTRICTNODE = self.Label:GetValue()
+							FPP.SELECTEDRESTRICTNODE = self.Tool
 							
 							for k,v in pairs(weapons.Get("gmod_tool").Tool) do
-								if v.Name and string.sub(v.Name, 2) == FPP.SELECTEDRESTRICTNODE then
+								if v.Mode and v.Mode == FPP.SELECTEDRESTRICTNODE then
 									--Add to DListView
 									for a,b in pairs(FPP.multirestricttoollist:GetLines()) do
 										if b.Columns[1].Value == k then
@@ -317,7 +318,7 @@ function FPP.AdminMenu(Panel)
 	SingleEditTool:SetToolTip("Edit or view the restrictions of the selected tool!")
 	SingleEditTool.DoClick = function()
 		for k,v in pairs(weapons.Get("gmod_tool").Tool) do
-			if v.Name and string.sub(v.Name, 2) == FPP.SELECTEDRESTRICTNODE then
+			if v.Mode and v.Mode == FPP.SELECTEDRESTRICTNODE then
 				RunConsoleCommand("FPP_SendRestrictTool", k)
 				return
 			end
@@ -331,34 +332,6 @@ function FPP.AdminMenu(Panel)
 		end, SingleEditTool)
 	end
 	ToolRestrict:AddItem(SingleEditTool)
-	
-	--[[ local AddToMultiEditTool = vgui.Create("DButton")
-	AddToMultiEditTool:SetText("Add tool to multi tool edit")
-	AddToMultiEditTool:SetToolTip("Add this tool to a list so you can edit multiple tools at a time!")
-	AddToMultiEditTool:SetDisabled(not superadmin)
-	AddToMultiEditTool.DoClick = function()
-		for k,v in pairs(weapons.Get("gmod_tool").Tool) do
-			if v.Name and string.sub(v.Name, 2) == FPP.SELECTEDRESTRICTNODE then
-				--Add to DListView
-				for a,b in pairs(FPP.multirestricttoollist:GetLines()) do
-					if b.Columns[1].Value == k then
-						return
-					end
-				end
-				FPP.multirestricttoollist:AddLine(k)
-				return
-			end
-		end
-		AddToMultiEditTool:SetText("No tool selected!")
-		
-		
-		timer.Simple(1, function(AddToMultiEditTool)
-			if ValidPanel(AddToMultiEditTool) then
-				AddToMultiEditTool:SetText("Add tool to multi tool edit")
-			end
-		end, AddToMultiEditTool)
-	end
-	ToolRestrict:AddItem(AddToMultiEditTool) ]]
 	
 	local EditToolListLabel = Label("\nMultiple tool editor.\nAdd tools in this list by clicking on them,\nthen click \"Edit multiple tools\"\nto edit multiple tools at once!")
 	EditToolListLabel:SizeToContents()
