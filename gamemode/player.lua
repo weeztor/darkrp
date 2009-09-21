@@ -407,7 +407,7 @@ function meta:Arrest(time, rejoin)
 		end
 		
 		timer.Create(ID .. "jailtimer", time, 1, function() self:Unarrest(ID) end)
-		umsg.Start("GotArrested", ply)
+		umsg.Start("GotArrested", self)
 			umsg.Float(time)
 		umsg.End()
 	end

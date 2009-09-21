@@ -537,7 +537,7 @@ hook.Add("CanTool", "FPP.Protect.CanTool", FPP.Protect.CanTool)
 
 --Player disconnect, not part of the Protect table.
 function FPP.PlayerDisconnect(ply)
-	if tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnected) and FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime then
+	if ValidEntity(ply) and tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnected) and FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime then
 		if ply:IsAdmin() and not tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupadmin) then return end
 		timer.Simple(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime, function(SteamID)
 			for k,v in pairs(player.GetAll()) do
