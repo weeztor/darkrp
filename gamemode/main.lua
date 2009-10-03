@@ -1494,6 +1494,7 @@ function OOC(ply, args)
 		return ""
 	end
 
+	if args == "" then return "" end
 	local col = team.GetColor(ply:Team())
 	local col2 = Color(255,255,255,255)
 	if not ply:Alive() then
@@ -1510,6 +1511,7 @@ AddChatCommand("/a", OOC, true)
 AddChatCommand("/ooc", OOC, true)
 
 function PlayerAdvertise(ply, args)
+	if args == "" then return "" end
 	for k,v in pairs(player.GetAll()) do
 		local col = team.GetColor(ply:Team())
 		TalkToPerson(v, col, LANGUAGE.advert ..ply:Nick(), Color(255,255,0,255), args, ply)
@@ -1545,6 +1547,7 @@ end
 AddChatCommand("/radio", SayThroughRadio)
 
 function CombineRequest(ply, args)
+	if args == "" then return "" end
 	local t = ply:Team()
 	for k, v in pairs(player.GetAll()) do
 		if v:Team() == TEAM_POLICE or v:Team() == TEAM_CHIEF or v == ply then
@@ -1557,6 +1560,7 @@ end
 AddChatCommand("/cr", CombineRequest)
 
 function GroupMsg(ply, args)
+	if args == "" then return "" end
 	local t = ply:Team()
 	local audience = {}
 
@@ -1756,13 +1760,15 @@ function DoLottery(ply)
 end
 AddChatCommand("/lottery", DoLottery)
 
+local lstat = false
+local wait_lockdown = false
 function Lockdown(ply)
-	if GetGlobalInt("lstat") ~= 1 then
+	if not lstat then
 		if ply:Team() == TEAM_MAYOR or ply:HasPriv(ADMIN) then
 			for k,v in pairs(player.GetAll()) do
 				v:ConCommand("play npc/overwatch/cityvoice/f_confirmcivilstatus_1_spkr.wav\n")
 			end
-			DB.SaveGlobal("lstat", 1)
+			lstat = true
 			PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_started)
 			NotifyAll(4, 3, LANGUAGE.lockdown_started)
 		end
@@ -1773,11 +1779,11 @@ concommand.Add("rp_lockdown", Lockdown)
 AddChatCommand("/lockdown", Lockdown)
 
 function UnLockdown(ply)
-	if GetGlobalInt("lstat") == 1 and GetGlobalInt("ulstat") == 0 then
+	if lstat and not wait_lockdown then
 		if ply:Team() == TEAM_MAYOR or ply:HasPriv(ADMIN) then
 			PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_ended)
 			NotifyAll(4, 3, LANGUAGE.lockdown_ended)
-			DB.SaveGlobal("ulstat", 1)
+			wait_lockdown = true
 			timer.Create("spamlock", 20, 1, WaitLock, "")
 		end
 	end
@@ -1787,8 +1793,8 @@ concommand.Add("rp_unlockdown", UnLockdown)
 AddChatCommand("/unlockdown", UnLockdown)
 
 function WaitLock()
-	DB.SaveGlobal("ulstat", 0)
-	DB.SaveGlobal("lstat", 0)
+	wait_lockdown = false
+	lstat = false
 	timer.Destroy("spamlock")
 end
 
