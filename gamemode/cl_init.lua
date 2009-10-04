@@ -185,10 +185,30 @@ function DrawDrugsInfo(ent)
 	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(150, 20, 20, 200), 1)
 end
 
+
+--Copy from FESP(made by FPtje Falco)
+-- This is no stealing since I made FESP myself.
+local vector = FindMetaTable("Vector")
+function vector:RPIsInSight(v, ply)
+	ply = ply or LocalPlayer()
+	local trace = {}
+	trace.start = ply:EyePos()
+	trace.endpos = self	
+	trace.filter = v
+	trace.mask = -1
+	local TheTrace = util.TraceLine(trace)
+	if TheTrace.Hit then
+		return false, TheTrace.HitPos
+	else
+		return true, TheTrace.HitPos
+	end
+end 
+
 function DrawWantedInfo(ply)
 	if not ply:Alive() then return end
 
 	local pos = ply:EyePos()
+	if not pos:IsInSight({LocalPlayer(), ply}) then return end
 
 	pos.z = pos.z + 14
 	pos = pos:ToScreen()
