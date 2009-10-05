@@ -11,7 +11,7 @@ if CLIENT then
 	SWEP.DrawCrosshair = false
 end
 
-SWEP.Author = "FPtje"
+SWEP.Author = "FPtje and everyone who gave FPtje the idea"
 SWEP.Instructions = "Left click to pick up, right click to drop, reload for menu"
 SWEP.Contact = ""
 SWEP.Purpose = ""

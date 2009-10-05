@@ -208,7 +208,7 @@ function DrawWantedInfo(ply)
 	if not ply:Alive() then return end
 
 	local pos = ply:EyePos()
-	if not pos:IsInSight({LocalPlayer(), ply}) then return end
+	if not pos:RPIsInSight({LocalPlayer(), ply}) then return end
 
 	pos.z = pos.z + 14
 	pos = pos:ToScreen()
