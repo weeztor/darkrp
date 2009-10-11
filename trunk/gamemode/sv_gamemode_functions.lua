@@ -12,7 +12,6 @@ end
 -- Grammar corrections by Eusion
 function GM:Initialize()
 	self.BaseClass:Initialize()
-	DB.Init()
 end
 
 function GM:PlayerSpawnProp(ply, model)
@@ -668,8 +667,9 @@ function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's 
 	return ""
 end
 
-function GM:InitPostEntity() -- Remove all PlayerSay hooks, they all interfere with DarkRP's PlayerSay
-	for k,v in pairs(hook.GetTable().PlayerSay) do
+function GM:InitPostEntity() 
+	DB.Init()
+	for k,v in pairs(hook.GetTable().PlayerSay) do -- Remove all PlayerSay hooks, they all interfere with DarkRP's PlayerSay
 		otherhooks[k] = v
 		hook.Remove("PlayerSay", k)
 	end

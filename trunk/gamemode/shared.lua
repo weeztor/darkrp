@@ -88,3 +88,4 @@ outside someone else's door]], {"weapon_bugbait"}, "hobo", 5, 0, 0, false)
 // TEAM_/DUDE IS WROOOOOONG !!!!!!
 // HAVING "/dude" IN THE COMMAND FIELD IS WROOOOOOOONG!!!!
 //ADD TEAMS UNDER THIS LINE:
+
