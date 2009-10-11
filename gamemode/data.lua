@@ -24,6 +24,10 @@ function DB.Init()
 	DB.CreateSpawnPos()
 	DB.CreateZombiePos()
 	DB.SetUpNonOwnableDoors()
+	DB.SetUpCPOwnableDoors()
+	
+	RefreshRPSettings(true)
+	RefreshGlobals()
 end
 
 /*---------------------------------------------------------
@@ -557,6 +561,9 @@ end
 
 function DB.SetUpCPOwnableDoors()
 	local r = sql.Query("SELECT idx, title FROM darkrp_cpdoors WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";")
+	print("\n\n\n\n\n")
+	print(r)
+	if type(r) == "table" then PrintTable(r) end
 	if not r then return end
 
 	for _, row in pairs(r) do

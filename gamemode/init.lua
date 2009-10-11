@@ -122,6 +122,7 @@ include("language_sh.lua")
 include("MakeThings.lua")
 include("shared.lua")
 include("help.lua")
+include("admins.lua")
 include("data.lua")
 include("admincc.lua")
 include("sh_commands.lua")
@@ -131,7 +132,6 @@ include("sv_gamemode_functions.lua")
 include("util.lua")
 include("votes.lua")
 include("questions.lua")
-include("admins.lua")
 include("entity.lua")
 include("addentities.lua")
 include("main.lua")
@@ -249,16 +249,3 @@ function RefreshRPSettings(RESET)
 end
 RefreshRPSettings()
 
-if not DB.RetrieveSettings() then
-	RefreshRPSettings(true)
-end
-
-if not DB.RetrieveGlobals() then
-	RefreshGlobals()
-end
-timer.Simple(10.5, DB.RetrieveGlobals) -- for some reason I don't know about the vars reset after 10 seconds...
-
-timer.Simple(5, function()
-	DB.SetUpNonOwnableDoors()
-	DB.SetUpCPOwnableDoors() 
-end)
