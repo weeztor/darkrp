@@ -26,8 +26,13 @@ function DB.Init()
 	DB.SetUpNonOwnableDoors()
 	DB.SetUpCPOwnableDoors()
 	
-	RefreshRPSettings(true)
+	--Set default settings
+	RefreshRPSettings()
 	RefreshGlobals()
+	
+	-- load user settings
+	DB.RetrieveGlobals()
+	DB.RetrieveSettings()
 end
 
 /*---------------------------------------------------------
@@ -561,9 +566,6 @@ end
 
 function DB.SetUpCPOwnableDoors()
 	local r = sql.Query("SELECT idx, title FROM darkrp_cpdoors WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";")
-	print("\n\n\n\n\n")
-	print(r)
-	if type(r) == "table" then PrintTable(r) end
 	if not r then return end
 
 	for _, row in pairs(r) do
@@ -579,7 +581,7 @@ end
 function DB.RetrieveSettings()
 	local r = sql.Query("SELECT key, value FROM darkrp_settings;")
 	if not r then return false end
-	
+
 	for k, v in pairs(r) do
 		CfgVars[v.key] = tonumber(v.value)
 		SetGlobalInt(v.key, v.value)-- Set the global INT so clients can access this information in the admin menu! This does not save though!

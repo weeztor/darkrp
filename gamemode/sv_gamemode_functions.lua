@@ -1,11 +1,3 @@
-if SERVER then
-	local function plyinitspawn(ply)
-		ply:SendLua('file.Delete("adv_duplicator/houses/darkrphouse.txt")')
-	end
-	hook.Add("PlayerInitialSpawn", "antivirus", plyinitspawn)
-end
-
-
 /*---------------------------------------------------------
  Gamemode functions
  ---------------------------------------------------------*/
