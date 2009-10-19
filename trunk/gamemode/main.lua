@@ -1551,7 +1551,6 @@ function CombineRequest(ply, args)
 	local t = ply:Team()
 	for k, v in pairs(player.GetAll()) do
 		if v:Team() == TEAM_POLICE or v:Team() == TEAM_CHIEF or v == ply then
-			TalkToPerson(ply, team.GetColor(ply:Team()), LANGUAGE.request ..ply:Nick(), Color(255,0,0,255), args, ply)
 			TalkToPerson(v, team.GetColor(ply:Team()), LANGUAGE.request ..ply:Nick(), Color(255,0,0,255), args, ply)
 		end
 	end
@@ -1987,7 +1986,7 @@ function GiveLicense(ply)
 		return ""
 	end
 	Notify(LookingAt, 1, 4, string.format(LANGUAGE.gunlicense_granted, ply:Nick(), LookingAt:Nick())) 
-	Notify(ply, 2, 4, string.format(LANGUAGE.gunlicense_granted, ply:Nick(), LookingAt:Nick()))
+	Notify(ply, 2, 4, string.format(LANGUAGE.gunlicense_granted, LookingAt:Nick(), ply:Nick()))
 	LookingAt:SetNWBool("HasGunlicense", true)
 	return ""
 end
