@@ -653,7 +653,7 @@ function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's 
 		end
 	end
 	if isDedicatedServer() then
-		ServerLog(ply:Nick()..": "..text.. "\n")
+		ServerLog("\""..ply:Nick().."<"..ply:UserID()..">" .."<"..ply:SteamID()..">".."<"..team.GetName( ply:Team() )..">\" say \""..text.. "\"\n")
 	end
 	text2 = RP_ActualDoSay(ply, text2, callback) 
 	return ""
