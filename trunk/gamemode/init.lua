@@ -237,6 +237,7 @@ function RefreshRPSettings(RESET)
 	CfgVars["pocketitems"] = 10
 	CfgVars["maxvehicles"] = 5
 	CfgVars["deathfee"] = 30
+	CfgVars["startinghealth"] = 100
 	CfgVars["mobagenda"] = ""
 
 	if RESET then

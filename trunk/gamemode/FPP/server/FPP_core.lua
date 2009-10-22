@@ -186,31 +186,6 @@ function FPP.ShowOwner()
 end
 hook.Add("Think", "FPP_ShowOwner", FPP.ShowOwner)
 
-local function AntiNoob(ply, ent)
-	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end 
-	if ent:GetClass() == "func_breakable_surf" then return end
-	local Ents = constraint.GetAllConstrainedEntities(ent)
-	
-	for k,v in pairs(Ents) do
-		v.IsBeingHeld = true
-		v:SetRenderMode(RENDERMODE_TRANSALPHA)
-		v:DrawShadow(false)
-		v.OldColor = v.OldColor or {v:GetColor()}
-		v.StartPos = v:GetPos()
-		v:SetColor(v.OldColor[1], v.OldColor[2], v.OldColor[3], v.OldColor[4] - 155)
-	end
-	return
-end
-
-function FPP.Protect.ShouldCollide(ent1, ent2)
-	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end
-	if not ent1.IsBeingHeld then return end
-	if ent2:IsPlayer() and not ent1:IsPlayer() then return false end
-	if ent2 == GetWorldEntity() or not ValidEntity(ent1.Owner)/* or ent2 == ent1.Owner*/ then return true end
-	local cantouch, why = FPP.PlayerCanTouchEnt(ent1.Owner, ent2, "Physgun", "FPP_PHYSGUN")
-	if not cantouch then return false end
-end
-hook.Add("ShouldCollide", "FPP.Protect.ShouldCollide", FPP.Protect.ShouldCollide)
 
 --Physgun Pickup
 function FPP.Protect.PhysgunPickup(ply, ent)
@@ -223,81 +198,17 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 	if why then
 		FPP.CanTouch(ply, "FPP_PHYSGUN", why, cantouch)
 	end
-	
-	if cantouch then
-		AntiNoob(ply, ent)
-	end
-	if FPP.UnGhost and cantouch then FPP.UnGhost(ply, ent) end
+
 	return cantouch
 end
 hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup)
 
+/*
 function FPP.Protect.PhysgunDrop(ply, DropEnt)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end --Antinoob only code in the physgundrop
 	if DropEnt:GetClass() == "func_breakable_surf" then return end
-	DropEnt.IsBeingHeld = false
-	local Ents = constraint.GetAllConstrainedEntities(DropEnt)
-	
-	for k,ent in pairs(Ents) do
-		ent.IsBeingHeld = false
-		ent:DrawShadow(true)
-		
-		if ent.OldColor then
-			ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
-		end
-		ent.OldColor = nil
-		
-		if ent:IsPlayer() then return end -- stop here if it's a player
-		--Make a traceline from where you started picking it up to where you ended picking it up
-		local tr = {}
-		tr.start = ent.StartPos
-		tr.endpos = ent:GetPos()
-		tr.filter = Ents
-		
-		local ignore = Ents
-		table.insert(ignore, ply)
-		for _,v in pairs(ents.GetAll()) do
-			if v ~= GetWorldEntity() then
-				local cantouchv = FPP.PlayerCanTouchEnt(ply, v, "Physgun", "FPP_PHYSGUN")
-				if cantouchv or v:IsWeapon() or v:IsPlayer() then table.insert(ignore, v) end
-			end
-		end
-		
-		local trace = util.TraceLine(tr)
-		tr.start = ply:GetShootPos() -- Also make a line between your head and the prop, to see if you can still see the prop
-		tr.filter = cantouchv
-		local trace2 = util.TraceLine(tr) 
-		
-		--Prop in player prevention(This is better than removing all players from the trace filter)
-		for k,v in pairs(player.GetAll()) do
-			local intr = {}
-			intr.start = v:EyePos()--Eyes
-			intr.endpos = v:GetPos()--Returns their feet
-			intr.filter = v -- Don't hit the player himself
-			intr.mins = v:OBBMins()
-			intr.maxs = v:OBBMaxs()
-			local trace3 = util.TraceHull(intr)
-			if trace3.Entity == ent then -- If the entity you're dropping is between the eyes and the feet 
-				local phys = ent:GetPhysicsObject()
-				if phys:IsValid() then
-					phys:EnableMotion(true)
-					ent.OldCollisionGroup = ent:GetCollisionGroup()
-					ent:SetCollisionGroup(COLLISION_GROUP_WEAPON) -- make it go through players kthxbai
-				end
-			end 
-		end
-		
-		--teleport it where it belongs if it's not where it's supposed to be
-		if (ValidEntity(trace2.Entity) or trace2.Entity == GetWorldEntity()) and trace2.Entity ~= ent then
-			local vFlushPoint = trace.HitPos - ( trace.HitNormal * 512 ) -- Find a point that is definitely out of the object in the direction of the floor
-			vFlushPoint = ent:NearestPoint( vFlushPoint ) -- Find the nearest point inside the object to that point
-			vFlushPoint = ent:GetPos() - vFlushPoint -- Get the difference
-			vFlushPoint = trace.HitPos + vFlushPoint -- Add it to our target pos
-			ent:SetPos(vFlushPoint)
-		end
-	end
 end
-hook.Add("PhysgunDrop", "FPP.Protect.PhysgunDrop", FPP.Protect.PhysgunDrop)
+hook.Add("PhysgunDrop", "FPP.Protect.PhysgunDrop", FPP.Protect.PhysgunDrop)*/
 
 --Physgun reload
 function FPP.Protect.PhysgunReload(weapon, ply)
@@ -413,6 +324,10 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 	local cantouch, why = FPP.PlayerCanTouchEnt(attacker, ent, "EntityDamage", "FPP_ENTITYDAMAGE")
 	if why /*and (not ValidEntity(attacker:GetActiveWeapon()) or (ValidEntity(attacker:GetActiveWeapon()) and attacker:GetActiveWeapon():GetClass() == "weapon_physcannon")) */then
 		FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", why, cantouch)
+	end
+	
+	if FPP.Settings.FPP_PHYSGUN.antinoob and ValidEntity(attacker.Owner) and attacker.Owner ~= ent and ent:IsPlayer() then
+		cantouch = false
 	end
 	
 	if not cantouch then dmginfo:SetDamage(0) end
