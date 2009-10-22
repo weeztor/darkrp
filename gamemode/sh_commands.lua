@@ -315,6 +315,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxvehicles <Number> - Sets how man
 AddValueCommand("rp_deathfee", "deathfee", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_deathfee <Number> - the amount of money someone drops when dead.")
 
+AddValueCommand("rp_startinghealth", "startinghealth", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_startinghealth <Number> - the health when you spawn.")
+
 
 function AddEntityCommands(name, command)
 	local cmdname = string.gsub(command, " ", "_")

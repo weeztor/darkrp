@@ -86,11 +86,6 @@ function GM:PlayerSpawnedProp(ply, model, ent)
 	ent.Owner = ply
 end
 
-function GM:PlayerSpawnedSWEP(ply, model, ent)
-	self.BaseClass:PlayerSpawnedSWEP(ply, model, ent)
-	ent.SID = ply.SID
-end
-
 function GM:PlayerSpawnedRagdoll(ply, model, ent)
 	self.BaseClass:PlayerSpawnedRagdoll(ply, model, ent)
 	ent.SID = ply.SID
@@ -423,6 +418,7 @@ end
 
 function GM:PlayerSpawn(ply)
 	ply:CrosshairEnable()
+	ply:SetHealth(tonumber(CfgVars["startinghealth"]) or 100)
 
 	if CfgVars["crosshair"] == 0 then
 		ply:CrosshairDisable()

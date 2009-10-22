@@ -521,7 +521,9 @@ function GM:HUDPaint()
 	end
 	
 	if ShowHealth > 0 then
-		draw.RoundedBox(4, hx, hy, math.Clamp(hw * (ShowHealth / 100), 0, hw), hh, Healthforegroundcolor)
+		local max = GetGlobalInt("startinghealth")
+		if max == 0 then max = 100 end
+		draw.RoundedBox(4, hx, hy, math.Clamp(hw * (ShowHealth / max), 0, hw), hh, Healthforegroundcolor)
 	end
 	
 	if oldmoney ~= money then
