@@ -28,7 +28,6 @@ function DB.Init()
 	
 	--Set default settings
 	RefreshRPSettings()
-	RefreshGlobals()
 	
 	-- load user settings
 	DB.RetrieveGlobals()
@@ -647,11 +646,7 @@ end
 concommand.Add("rp_ResetAllSettings", ResetAllRPSettings)
 
 function RefreshGlobals()
-	DB.SaveGlobal("druglabcost", 400)
-	DB.SaveGlobal("gunlabcost", 500)
-	DB.SaveGlobal("mprintercost", 1000)
 	DB.SaveGlobal("mprintamount", 250)
-	DB.SaveGlobal("microwavecost", 400)
 	DB.SaveGlobal("drugpayamount", 15)
 	DB.SaveGlobal("ammopistolcost", 30)
 	DB.SaveGlobal("ammoriflecost", 60)
