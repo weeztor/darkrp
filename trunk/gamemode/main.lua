@@ -861,16 +861,9 @@ function BuyPistol(ply, args)
 			class = v.entity
 			model = v.model
 			price = v.pricesep
-			local canbuy = false
-			if #v.allowed == 0 then canbuy = true end
-			for a,b in pairs(v.allowed) do
-				if ply:Team() == b then
-					canbuy = true
-				end
-			end
+			local canbuy = false			
 			
-			
-			if v.allowed[1] == TEAM_GUN and not v.allowed[2] and ply:Team() ~= TEAM_GUN and CfgVars["restrictbuypistol"] == 0 then
+			if (GetGlobalInt("restrictbuypistol") == 1 and ply:Team() == TEAM_GUN) or (GetGlobalInt("restrictbuypistol") == 0 and (not v.allowed[1] or table.HasValue(v.allowed, ply:Team()))) then
 				canbuy = true
 			end
 			
