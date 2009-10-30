@@ -1245,8 +1245,8 @@ function ChangeJob(ply, args)
 		return ""
 	end
 	
-	if ply.LastJob and 120 - (CurTime() - ply.LastJob) >= 0 then
-		Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(120 - (CurTime() - ply.LastJob)), "/job"))
+	if ply.LastJob and 10 - (CurTime() - ply.LastJob) >= 0 then
+		Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(10 - (CurTime() - ply.LastJob)), "/job"))
 		return ""
 	end
 	ply.LastJob = CurTime()

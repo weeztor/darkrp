@@ -206,8 +206,8 @@ function meta:ChangeTeam(t, force)
 		return
 	end
 	
-	if self.LastJob and 120 - (CurTime() - self.LastJob) >= 0 then
-		Notify(self, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(120 - (CurTime() - self.LastJob)), "/job"))
+	if self.LastJob and 10 - (CurTime() - self.LastJob) >= 0 then
+		Notify(self, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(10 - (CurTime() - self.LastJob)), "/job"))
 		return 
 	end
 	
