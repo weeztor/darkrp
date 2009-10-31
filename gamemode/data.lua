@@ -7,7 +7,7 @@ function DB.Init()
 	sql.Begin()
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_settings('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_globals('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
-		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_tspawns('map' TEXT NOT NULL, 'team' INTEGER NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL, PRIMARY KEY('map', 'team'));")
+		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_tspawns('id' INTEGER NOT NULL, 'map' TEXT NOT NULL, 'team' INTEGER NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL, PRIMARY KEY('id'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_privs('steam' TEXT NOT NULL, 'admin' INTEGER NOT NULL, 'mayor' INTEGER NOT NULL, 'cp' INTEGER NOT NULL, 'tool' INTEGER NOT NULL, 'phys' INTEGER NOT NULL, 'prop' INTEGER NOT NULL, PRIMARY KEY('steam'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_salaries('steam' TEXT NOT NULL, 'salary' INTEGER NOT NULL, PRIMARY KEY('steam'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_wallets('steam' TEXT NOT NULL, 'amount' INTEGER NOT NULL, PRIMARY KEY('steam'));")
@@ -365,30 +365,58 @@ function DB.StoreJailStatus(ply, time)
 	end
 end
 
+local function FixDarkRPTspawnsTable()
+	local FixTable = sql.Query("SELECT * FROM darkrp_tspawns;")
+	if not FixTable or (FixTable and FixTable[1] and not FixTable[1].id) then -- The old tspawns table didn't have an 'id' column, this checks if the table is out of date
+		sql.Query("DROP TABLE IF EXISTS darkrp_tspawns;") -- remove the table and remake it
+		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_tspawns('id' INTEGER NOT NULL, 'map' TEXT NOT NULL, 'team' INTEGER NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL, PRIMARY KEY('id'));")
+		for k,v in pairs(FixTable or {}) do -- Put back the old data in the new format so the end user will not notice any changes, if there was nothing in the old table then loop through nothing
+			sql.Query("INSERT INTO darkrp_tspawns VALUES(NULL, "..sql.SQLStr(v.map)..", "..v.team..", "..v.x..", "..v.y..", "..v.z..");")
+		end
+	end
+end
+
 function DB.StoreTeamSpawnPos(t, pos)
+	FixDarkRPTspawnsTable() --Check if the server doesn't use an out of date version of this table
+	
 	local map = string.lower(game.GetMap())
 	local already = tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_tspawns WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";"))
 	if not already or already == 0 then
-		sql.Query("INSERT INTO darkrp_tspawns VALUES(" .. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
+		-- id == NULL so it will increment automatically
+		sql.Query("INSERT INTO darkrp_tspawns VALUES(NULL, ".. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
 		print(string.format(LANGUAGE.created_spawnpos, team.GetName(t)))
 	else
-		sql.Query("UPDATE darkrp_tspawns SET x = " .. pos[1] .. ", y = " .. pos[2] .. ", z = " .. pos[3] .. " WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";")
+		DB.RemoveTeamSpawnPos(t) -- remove everything and create new
+		sql.Query("INSERT INTO darkrp_tspawns VALUES(NULL, ".. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
 		print(string.format(LANGUAGE.updated_spawnpos, team.GetName(t)))
 	end
 end
 
+function DB.AddTeamSpawnPos(t, pos)
+	FixDarkRPTspawnsTable() --Check if the server doesn't use an out of date version of this table
+	local map = string.lower(game.GetMap())
+	sql.Query("INSERT INTO darkrp_tspawns VALUES(NULL, " .. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
+end
+
+function DB.RemoveTeamSpawnPos(t)
+	local map = string.lower(game.GetMap())
+	sql.Query("DELETE FROM darkrp_tspawns WHERE team = "..t..";")
+end
+	
 function DB.RetrieveTeamSpawnPos(ply)
 	local map = string.lower(game.GetMap())
 	local t = ply:Team()
 	
 	-- this should return a map name.
-	local r = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
-	if not r then return nil end
+	local r = sql.Query("SELECT * FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
+	if not r or #r < 1 then return nil end
+
+	local returnal = {}
 	
-	local x = sql.QueryValue("SELECT x FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
-	local y = sql.QueryValue("SELECT y FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
-	local z = sql.QueryValue("SELECT z FROM darkrp_tspawns WHERE team = " .. t .. " AND map = ".. sql.SQLStr(map)..";")
-	return Vector(x,y,z)
+	for k,v in pairs(r) do
+		table.insert(returnal, Vector(v.x, v.y, v.z))
+	end
+	return returnal 
 end
 
 /*---------------------------------------------------------

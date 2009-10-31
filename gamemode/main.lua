@@ -635,6 +635,56 @@ function SetSpawnPos(ply, args)
 end
 AddChatCommand("/setspawn", SetSpawnPos)
 
+function AddSpawnPos(ply, args)
+	if not ply:HasPriv(ADMIN) and not ply:IsAdmin() and not ply:IsSuperAdmin() then return "" end
+
+	local pos = string.Explode(" ", tostring(ply:GetPos()))
+	local selection = "citizen"
+	local t
+	
+	for k,v in pairs(RPExtraTeams) do
+		if args == v.command then
+			t = k
+			Notify(ply, 1, 4, string.format(LANGUAGE.updated_spawnpos, v.name))
+		end
+	end
+
+	if t then
+		DB.AddTeamSpawnPos(t, pos)
+	else
+		Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "team: "..tostring(args)))
+	end
+
+	return ""
+end
+AddChatCommand("/addspawn", AddSpawnPos)
+
+function RemoveSpawnPos(ply, args)
+	if not ply:HasPriv(ADMIN) and not ply:IsAdmin() and not ply:IsSuperAdmin() then return "" end
+
+	local pos = string.Explode(" ", tostring(ply:GetPos()))
+	local selection = "citizen"
+	local t
+	
+	for k,v in pairs(RPExtraTeams) do
+		if args == v.command then
+			t = k
+			Notify(ply, 1, 4, string.format(LANGUAGE.updated_spawnpos, v.name))
+		end
+	end
+
+	if t then
+		DB.RemoveTeamSpawnPos(t, pos)
+	else
+		Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "team: "..tostring(args)))
+	end
+
+	return ""
+end
+AddChatCommand("/removespawn", RemoveSpawnPos)
+
+
+
 /*---------------------------------------------------------
  Helps
  ---------------------------------------------------------*/
@@ -1762,6 +1812,7 @@ function Lockdown(ply)
 			end
 			lstat = true
 			PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_started)
+			SetGlobalInt("DarkRP_LockDown", 1)
 			NotifyAll(4, 3, LANGUAGE.lockdown_started)
 		end
 	end
@@ -1776,6 +1827,7 @@ function UnLockdown(ply)
 			PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_ended)
 			NotifyAll(4, 3, LANGUAGE.lockdown_ended)
 			wait_lockdown = true
+			SetGlobalInt("DarkRP_LockDown", 0)
 			timer.Create("spamlock", 20, 1, WaitLock, "")
 		end
 	end
