@@ -647,6 +647,12 @@ function GM:HUDPaint()
 		QuadTable.h = 32
 		draw.TexturedQuad( QuadTable )
 	end
+	
+	local chbxX, chboxY = chat.GetChatBoxPos()
+	if util.tobool(GetGlobalInt("DarkRP_LockDown")) then
+		local cin = (math.sin(CurTime()) + 1) / 2
+		draw.DrawText(LANGUAGE.lockdown_started, "ScoreboardSubtitle", chbxX, chboxY + 260, Color(cin * 255, 0, 255 - (cin * 255), 255), TEXT_ALIGN_LEFT)
+	end
 end
 
 function GM:HUDShouldDraw(name)

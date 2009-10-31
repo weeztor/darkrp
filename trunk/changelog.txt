@@ -12,6 +12,8 @@ DarkRP 2.3.7 SVN
 [ADD] Language system, it's really easy to add languages to your DarkRP now! Thanks WoRmS for the danish translation, Donkie for Swedish!
 [ADD] Signature to the letters/mails
 [ADD] rp_startinghealth: Set the default health
+[ADD] /addspawn and /removespawn: You can now add multiple team spawns and you can remove all the teamspawns from one team.
+[ADD] Visible message when a lockdown is going on
 [FIX] Unable to remove door tool doors
 [FIX] People with the admin privilege can now see the admin menu
 [FIX] Hunger resetting after sleep

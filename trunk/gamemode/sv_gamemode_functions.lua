@@ -456,7 +456,7 @@ function GM:PlayerSpawn(ply)
 		if not RPArrestedPlayers[ply:SteamID()] then
 			local pos = DB.RetrieveTeamSpawnPos(ply)
 			if pos then
-				ply:SetPos(pos)
+				ply:SetPos(pos[math.random(1, #pos)])
 			end
 		end
 	end
