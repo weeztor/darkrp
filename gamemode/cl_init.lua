@@ -751,21 +751,6 @@ end
 function KillLetter(msg) LetterAlpha = -1 end
 usermessage.Hook("KillLetter", KillLetter)
 
-function UpdateHelp()
-	function tDelayHelp()
-		if HelpVGUI then
-			HelpVGUI:Remove()
-
-			if HelpToggled then
-				HelpVGUI = vgui.Create("HelpVGUI")
-			end
-		end
-	end
-
-	timer.Simple(.5, tDelayHelp)
-end
-usermessage.Hook("UpdateHelp", UpdateHelp)
-
 function ToggleClicker()
 	GUIToggled = not GUIToggled
 	gui.EnableScreenClicker(GUIToggled)
