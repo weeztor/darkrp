@@ -6,26 +6,6 @@ if cleanup then
 	FPP.oldcleanup = FPP.oldcleanup or cleanup.Add
 	function cleanup.Add(ply, Type, ent)
 		if ValidEntity(ply) and ValidEntity(ent) then
-			--Make sure people can't get stuck in it
-			if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then
-				for k,v in pairs(player.GetAll()) do
-					local intr = {}
-					intr.start = v:EyePos()--Eyes
-					intr.endpos = v:GetPos()--Returns their feet
-					intr.filter = v -- Don't hit the player himself
-					intr.mins = v:OBBMins()
-					intr.maxs = v:OBBMaxs()
-					local trace3 = util.TraceHull(intr)
-					if trace3.Entity == ent then -- If the entity you're dropping is between the eyes and the feet 
-						local phys = ent:GetPhysicsObject()
-						if phys:IsValid() then
-							phys:EnableMotion(true)
-							ent.OldCollisionGroup = ent:GetCollisionGroup()
-							ent:SetCollisionGroup(COLLISION_GROUP_WEAPON) -- make it go through players kthxbai
-						end
-					end 
-				end
-			end
 			--Set the owner of the entity
 			ent.Owner = ply
 			ent.OwnerID = ply:SteamID()
