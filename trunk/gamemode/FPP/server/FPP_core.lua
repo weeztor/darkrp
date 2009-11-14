@@ -329,7 +329,17 @@ end)
 
 function FPP.Protect.CanTool(ply, trace, tool)
 	-- Toolgun restrict
-	if FPP.RestrictedTools[tool] then
+	local ignoreGeneralRestrictTool = false
+	if FPP.RestrictedToolsPlayers[tool] and FPP.RestrictedToolsPlayers[tool][ply:SteamID()] ~= nil then--Player specific
+		if FPP.RestrictedToolsPlayers[tool][ply:SteamID()] == false then
+			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted for you!", false)
+			return false
+		elseif FPP.RestrictedToolsPlayers[tool][ply:SteamID()] == true then
+			ignoreGeneralRestrictTool = true --If someone is allowed, then he's allowed even though he's not admin, so don't check for further restrictions
+		end
+	end
+	
+	if FPP.RestrictedTools[tool] and not ignoreGeneralRestrictTool then
 		if tonumber(FPP.RestrictedTools[tool].admin) == 1 and not ply:IsAdmin() then
 			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Admin only!", false)
 			return false
