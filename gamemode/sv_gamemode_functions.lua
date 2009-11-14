@@ -657,6 +657,7 @@ end
 
 function GM:InitPostEntity() 
 	DB.Init()
+	if not hook.GetTable().PlayerSay then return end
 	for k,v in pairs(hook.GetTable().PlayerSay) do -- Remove all PlayerSay hooks, they all interfere with DarkRP's PlayerSay
 		otherhooks[k] = v
 		hook.Remove("PlayerSay", k)
@@ -666,4 +667,9 @@ function GM:InitPostEntity()
 			otherhooks[a] = nil
 		end
 	end
+end
+
+function GM:ShouldCollide(ent1, ent2)
+	if ent1.MoneyBag and ent2.MoneyBag then return false end
+	return self.BaseClass.ShouldCollide(ent1, ent2)
 end
