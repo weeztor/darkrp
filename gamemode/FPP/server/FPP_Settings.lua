@@ -12,6 +12,7 @@ sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_ANTISPAM('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICT('toolname' TEXT NOT NULL, 'adminonly' INTEGER NOT NULL, 'teamrestrict' TEXT NOT NULL, PRIMARY KEY('toolname'));")
 	
+	sql.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICTPERSON('toolname' TEXT NOT NULL, 'steamid' TEXT NOT NULL, 'allow' INTEGER NOT NULL, PRIMARY KEY('steamid', 'toolname'));")
 sql.Commit()
 
 FPP.Blocked = {}
@@ -23,6 +24,7 @@ FPP.Blocked = {}
 	FPP.Blocked.EntityDamage = {}
 	
 FPP.RestrictedTools = {}
+FPP.RestrictedToolsPlayers = {}
 
 FPP.Settings = {}
 	FPP.Settings.FPP_PHYSGUN = {
@@ -112,7 +114,7 @@ function FPP.NotifyAll(text, bool)
 end
 
 local function FPP_SetSetting(ply, cmd, args)
-	if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
+	//if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
 	if not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You need superadmin privileges in order to be able to use this command") return end
 	if not args[1] or not args[3] or not FPP.Settings[args[1]] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument(s) invalid") return end
 	if not FPP.Settings[args[1]][args[2]] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument invalid") return end
@@ -132,7 +134,7 @@ end
 concommand.Add("FPP_setting", FPP_SetSetting)
 
 local function AddBlocked(ply, cmd, args)
-	if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
+	//if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
 	if not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You need superadmin privileges in order to be able to use this command") return end
 	if not args[1] or not args[2] or not FPP.Blocked[args[1]] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument(s) invalid") return end
 	if table.HasValue(FPP.Blocked[args[1]], string.lower(args[2])) then return end
@@ -160,7 +162,7 @@ concommand.Add("FPP_AddBlocked", AddBlocked)
 
 local function RemoveBlocked(ply, cmd, args)
 	if ply:IsPlayer() then
-		if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
+		//if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
 		if not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You need superadmin privileges in order to be able to use this command") return end
 		if not args[1] or not args[2] or not FPP.Blocked[args[1]] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument(s) invalid") return end
 	end
@@ -330,6 +332,17 @@ local function RetrieveRestrictedTools()
 			
 		end
 	end
+	
+	local perplayerData = sql.Query("SELECT * FROM FPP_TOOLRESTRICTPERSON;")
+	if type(perplayerData) == "table" then
+		for k,v in pairs(perplayerData) do
+			FPP.RestrictedToolsPlayers[v.toolname] = FPP.RestrictedToolsPlayers[v.toolname] or {}
+			local convert = {}
+			convert["1"] = true
+			convert["0"] = false
+			FPP.RestrictedToolsPlayers[v.toolname][v.steamid] = convert[v.allow]
+		end
+	end
 end
 RetrieveRestrictedTools()
 
@@ -379,7 +392,7 @@ end
 concommand.Add("FPP_SetBuddy", SetBuddy)
 
 local function CleanupDisconnected(ply, cmd, args)
-	if ply:EntIndex() == 0 or not ply:IsAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You can't clean up") return end
+	if ply:EntIndex() ~= 0 and not ply:IsAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You can't clean up") return end
 	if not args[1] then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument") return end
 	if args[1] == "disconnected" then
 		for k,v in pairs(ents.GetAll()) do
@@ -402,7 +415,7 @@ end
 concommand.Add("FPP_Cleanup", CleanupDisconnected)
 
 local function SetToolRestrict(ply, cmd, args)
-	if ply:EntIndex() == 0 or not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You can't set tool restrictions") return end
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You can't set tool restrictions") return end
 	if not args[3] then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument(s)") return end--FPP_restricttool <toolname> <type(admin/team)> <toggle(1/0)>
 	local toolname = args[1]
 	local RestrictWho = tonumber(args[2]) or args[2]-- "team" or "admin"
@@ -447,3 +460,38 @@ local function SetToolRestrict(ply, cmd, args)
 	end
 end
 concommand.Add("FPP_restricttool", SetToolRestrict)
+
+local function RestrictToolPerson(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then return end
+	if not args[3] then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument(s)") return end--FPP_restricttoolperson <toolname> <userid> <disallow, allow, remove(0,1,2)>
+	local toolname = args[1] 
+	local target = Player(tonumber(args[2]))
+	local access = tonumber(args[3])
+	if not target:IsValid() then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument(s)") return end
+	if access < 0 or access > 2 then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument(s)") return end
+	
+	FPP.RestrictedToolsPlayers[toolname] = FPP.RestrictedToolsPlayers[toolname] or {}
+	
+	local data = sql.Query("SELECT * FROM FPP_TOOLRESTRICTPERSON WHERE toolname = "..sql.SQLStr(toolname).." AND steamid = "..sql.SQLStr(target:SteamID()) ..";")
+	if access == 0 then -- Disallow, even if other people can use it
+		FPP.RestrictedToolsPlayers[toolname][target:SteamID()] = false
+		if not data then
+			sql.Query("INSERT INTO FPP_TOOLRESTRICTPERSON VALUES("..sql.SQLStr(toolname)..", "..sql.SQLStr(target:SteamID())..", 0);")
+		else
+			sql.Query("UPDATE FPP_TOOLRESTRICTPERSON SET allow = 0 WHERE toolname = "..sql.SQLStr(toolname).." AND steamid = "..sql.SQLStr(target:SteamID())..";")
+		end
+	elseif access == 1 then -- allow, even if other people can't use it
+		FPP.RestrictedToolsPlayers[toolname][target:SteamID()] = true
+		if not data then
+			sql.Query("INSERT INTO FPP_TOOLRESTRICTPERSON VALUES("..sql.SQLStr(toolname)..", "..sql.SQLStr(target:SteamID())..", 1);")
+		else
+			sql.Query("UPDATE FPP_TOOLRESTRICTPERSON SET allow = 1 WHERE toolname = "..sql.SQLStr(toolname).." AND steamid = "..sql.SQLStr(target:SteamID())..";")
+		end
+	elseif access == 2 then -- reset tool status(make him like everyone else)
+		FPP.RestrictedToolsPlayers[toolname][target:SteamID()] = nil
+		if data then
+			sql.Query("DELETE FROM FPP_TOOLRESTRICTPERSON WHERE toolname = "..sql.SQLStr(toolname).." AND steamid = "..sql.SQLStr(target:SteamID())..";")
+		end
+	end	
+end
+concommand.Add("FPP_restricttoolplayer", RestrictToolPerson)

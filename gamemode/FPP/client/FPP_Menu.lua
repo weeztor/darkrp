@@ -458,9 +458,66 @@ RetrieveRestrictedTool = function(um)
 		end
 	end
 	
+	local RestrictPlayerButton = vgui.Create("DButton", frame)
+	RestrictPlayerButton:SetPos(10, #adminsCHKboxes*20 + 35)
+	RestrictPlayerButton:SetSize(230, 20)
+	RestrictPlayerButton:SetText("Restrict per player")
+	RestrictPlayerButton:SetToolTip[[Default: reset their privileges and let them use this/these tool(s) like anyone else
+	Allow: Allow them to use this tool no matter what team/admin access the tool is restricted to
+	Disallow: Disallow them to use this tool no matter what team/admin access the tool is restricted to]]
+	
+	RestrictPlayerButton.DoClick = function(self)
+		local menu = DermaMenu(self)
+		local x,y = frame:GetPos();
+		menu:SetPos(x + 250, gui.MouseY())
+		
+		for k, v in pairs(player.GetAll()) do
+			local submenu = menu:AddSubMenu(v:Nick())
+			
+			
+			submenu:AddOption( "Default", function() 
+				if type(tool) ~= "table" then
+					RunConsoleCommand("FPP_restricttoolplayer", "tool", v:UserID(), 2)
+				else
+					for a,b in pairs(tool) do
+						timer.Simple(a/10, function(b, userid, allow)
+							RunConsoleCommand("FPP_restricttoolplayer", b, userid, allow)
+						end, b, v:UserID(), 2)
+					end
+				end
+			end)
+			
+			
+			submenu:AddOption( "Allow", function() 
+				if type(tool) ~= "table" then
+					RunConsoleCommand("FPP_restricttoolplayer", "tool", v:UserID(), 1)
+				else
+					for a,b in pairs(tool) do
+						timer.Simple(a/10, function(b, userid, allow)
+							RunConsoleCommand("FPP_restricttoolplayer", b, userid, allow)
+						end, b, v:UserID(), 1)
+					end
+				end
+			end)
+			
+			
+			submenu:AddOption( "Disallow", function()
+				if type(tool) ~= "table" then
+					RunConsoleCommand("FPP_restricttoolplayer", "tool", v:UserID(), 0)
+				else
+					for a,b in pairs(tool) do
+						timer.Simple(a/10, function(b, userid, allow)
+							RunConsoleCommand("FPP_restricttoolplayer", b, userid, allow)
+						end, b, v:UserID(), 0)
+					end
+				end
+			end)
+		end
+	end
+	
 	local Tpan = vgui.Create("DPanelList", frame)
-	Tpan:SetPos(10, #adminsCHKboxes*20 + 40 )
-	Tpan:SetSize(230, 350-#adminsCHKboxes*20  )
+	Tpan:SetPos(10, #adminsCHKboxes*20 + 65 )
+	Tpan:SetSize(230, 325-#adminsCHKboxes*20  )
 	Tpan:SetSpacing(5)
 	Tpan:EnableHorizontal(false)
 	Tpan:EnableVerticalScrollbar(true)
