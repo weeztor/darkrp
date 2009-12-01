@@ -430,6 +430,73 @@ function GM:PlayerInitialSpawn(ply)
 	timer.Simple(10, ply.CompleteSentence, ply)
 end
 
+function GM:PlayerSelectSpawn(ply)
+	local POS = self.BaseClass:PlayerSelectSpawn(ply)
+	if POS.GetPos then 
+		POS = POS:GetPos()
+	else
+		POS = ply:GetPos()
+	end 
+	
+	
+	local CustomSpawnPos = DB.RetrieveTeamSpawnPos(ply)
+	if CfgVars["customspawns"] == 1 and not RPArrestedPlayers[ply:SteamID()] and CustomSpawnPos then
+		POS = CustomSpawnPos[math.random(1, #CustomSpawnPos)]
+	end
+	
+	-- Spawn where died in certain cases
+	if (CfgVars["strictsuicide"] == 1 or RPArrestedPlayers[ply:SteamID()]) and ply:GetTable().DeathPos then
+		if not (RPArrestedPlayers[ply:SteamID()]) then
+			POS = ply:GetTable().DeathPos
+		end
+	end
+	
+	if not IsEmpty(POS) then
+		local found = false
+		for i = 40, 300, 15 do
+			if IsEmpty(POS + Vector(i, 0, 0)) then
+				POS = POS + Vector(i, 0, 0)
+				--Yeah I found a nice position to put the player in!
+				found = true
+				break
+			end
+		end
+		if not found then
+			for i = 40, 300, 15 do
+				if IsEmpty(POS + Vector(0, i, 0)) then
+					POS = POS + Vector(0, i, 0)
+					found = true
+					break
+				end
+			end
+		end
+		if not found then
+			for i = 40, 300, 15 do
+				if IsEmpty(POS + Vector(0, -i, 0)) then
+					POS = POS + Vector(0, -i, 0)
+					found = true
+					break
+				end
+			end
+		end
+		if not found then
+			for i = 40, 300, 15 do
+				if IsEmpty(POS + Vector(-i, 0, 0)) then
+					POS = POS + Vector(-i, 0, 0)
+					--Yeah I found a nice position to put the player in!
+					found = true
+					break
+				end
+			end
+		end
+		-- If you STILL can't find it, you'll just put him on top of the other player lol
+		if not found then
+			POS = POS + Vector(0,0,70)
+		end
+	end
+	return self.BaseClass:PlayerSelectSpawn(ply), POS
+end
+
 function GM:PlayerSpawn(ply)
 	ply:CrosshairEnable()
 	ply:SetHealth(tonumber(CfgVars["startinghealth"]) or 100)
@@ -447,78 +514,17 @@ function GM:PlayerSpawn(ply)
 		umsg.String("0")
 	umsg.End()
 	RP:AddAllPlayers()
-
-	if CfgVars["strictsuicide"] == 1 and ply:GetTable().DeathPos then
-		if not (RPArrestedPlayers[ply:SteamID()]) then
-			ply:SetPos(ply:GetTable().DeathPos)
-		end
-	end
 	
 	-- If the player for some magical reason managed to respawn while jailed then re-jail the bastard.
 	if RPArrestedPlayers[ply:SteamID()] and ply:GetTable().DeathPos then
-		-- For when CfgVars["teletojail"] == 0
-		ply:SetPos(ply:GetTable().DeathPos)
-		-- Not getting away that easily, Sonny Jim.
+		-- Not getting away that easily, Sonny Jim. -- Who the hell is Sonny Jim?
 		if DB.RetrieveJailPos() then
 			ply:Arrest()
 		else
 			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "arrest"))
 		end
-	end
+	end	
 	
-	if CfgVars["customspawns"] == 1 then
-		if not RPArrestedPlayers[ply:SteamID()] then
-			local pos = DB.RetrieveTeamSpawnPos(ply)
-			if pos then
-				ply:SetPos(pos[math.random(1, #pos)])
-			end
-		end
-	end
-	
-	local STARTPOS = ply:GetPos()
-	if not IsEmpty(STARTPOS) then
-		local found = false
-		for i = 40, 300, 15 do
-			if IsEmpty(STARTPOS + Vector(i, 0, 0)) then
-				ply:SetPos(STARTPOS + Vector(i, 0, 0))
-				--Yeah I found a nice position to put the player in!
-				found = true
-				break
-			end
-		end
-		if not found then
-			for i = 40, 300, 15 do
-				if IsEmpty(STARTPOS + Vector(0, i, 0)) then
-					ply:SetPos(STARTPOS + Vector(0, i, 0))
-					found = true
-					break
-				end
-			end
-		end
-		if not found then
-			for i = 40, 300, 15 do
-				if IsEmpty(STARTPOS + Vector(0, -i, 0)) then
-					ply:SetPos(STARTPOS + Vector(0, -i, 0))
-					found = true
-					break
-				end
-			end
-		end
-		if not found then
-			for i = 40, 300, 15 do
-				if IsEmpty(STARTPOS + Vector(-i, 0, 0)) then
-					ply:SetPos(STARTPOS + Vector(-i, 0, 0))
-					--Yeah I found a nice position to put the player in!
-					found = true
-					break
-				end
-			end
-		end
-		-- If you STILL can't find it, you'll just put him on top of the other player lol
-		if not found then
-			ply:SetPos(ply:GetPos() + Vector(0,0,70))
-		end
-	end
 
 	if CfgVars["babygod"] == 1 and not ply.IsSleeping then
 		ply.Babygod = true
@@ -555,6 +561,9 @@ function GM:PlayerSpawn(ply)
 	gamemode.Call("PlayerSetModel", ply)
 	gamemode.Call("PlayerLoadout", ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned")
+	
+	local _, pos = self:PlayerSelectSpawn(ply)
+	ply:SetPos(pos)
 end
 
 function GM:PlayerLoadout(ply)
