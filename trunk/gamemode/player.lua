@@ -424,7 +424,8 @@ function meta:Unarrest(ID)
 		if RPArrestedPlayers[ID] then
 			RPArrestedPlayers[ID] = nil
 			if CfgVars["telefromjail"] == 1 then
-				self:SetPos(GAMEMODE:PlayerSelectSpawn(self):GetPos())
+				local _, pos = GAMEMODE:PlayerSelectSpawn(self)
+				self:SetPos(pos)
 			end
 			GAMEMODE:PlayerLoadout(self)
 			DB.StoreJailStatus(self, 0)
@@ -436,7 +437,8 @@ function meta:Unarrest(ID)
 		if self and RPArrestedPlayers[self:SteamID()] then
 			RPArrestedPlayers[self:SteamID()] = nil
 			if CfgVars["telefromjail"] == 1 then
-				self:SetPos(GAMEMODE:PlayerSelectSpawn(self):GetPos())
+				local _, pos = GAMEMODE:PlayerSelectSpawn(self)
+				self:SetPos(pos)
 			end
 			GAMEMODE:PlayerLoadout(self)
 			DB.StoreJailStatus(self, 0)

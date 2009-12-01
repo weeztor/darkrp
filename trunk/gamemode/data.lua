@@ -333,7 +333,7 @@ function DB.RetrieveJailPos()
 			ret = row
 		end
 	end
-
+	if not ret then return end
 	-- Mark that position as having been used just now
 	sql.Query("UPDATE darkrp_jailpositions SET lastused = " .. CurTime() .. " WHERE map = " .. sql.SQLStr(map) .. " AND x = " .. ret.x .. " AND y = " .. ret.y .. " AND z = " .. ret.z .. ";")
 
