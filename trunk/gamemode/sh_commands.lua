@@ -209,6 +209,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_ironshoot - Enable/disable wheth
 AddToggleCommand("rp_dropmoneyondeath", "dropmoneyondeath", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_dropmoneyondeath - Enable/disable whether people drop money on death.")
 
+AddToggleCommand("rp_allowswitchjob", "allowjobswitch", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowswitchjob - Enable/disable whether people can switch eachother's jobs.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
