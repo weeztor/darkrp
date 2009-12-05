@@ -204,6 +204,7 @@ function RefreshRPSettings(RESET)
 	CfgVars["logging"] = 1
 	CfgVars["ironshoot"] = 1
 	CfgVars["dropmoneyondeath"] = 0
+	CfgVars["allowjobswitch"] = 1
 
 	-- You can set the exact value of the below items:
 

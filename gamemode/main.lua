@@ -1391,6 +1391,28 @@ local function Demote(ply, args)
 end
 AddChatCommand("/demote", Demote)
 
+local function ExecSwitchJob(answer, ent, ply, target)
+	if answer ~= 1 then return end
+	local Pteam = ply:Team()
+	local Tteam = target:Team()
+	ply:ChangeTeam(Tteam)
+	target:ChangeTeam(Pteam)
+	Notify(ply, 1, 4, LANGUAGE.team_switch)
+	Notify(target, 1, 4, LANGUAGE.team_switch)
+end
+
+function SwitchJob(ply) --Idea by Godness.
+	if CfgVars["allowjobswitch"] ~= 1 then return "" end
+	local eyetrace = ply:GetEyeTrace()
+	if not eyetrace or not eyetrace.Entity or not eyetrace.Entity:IsPlayer() then return "" end
+	ques:Create("Switch job with "..ply:Nick().."?", "switchjob"..tostring(ply:EntIndex()), eyetrace.Entity, 30, ExecSwitchJob, ply, eyetrace.Entity)
+	return ""
+end
+AddChatCommand("/switchjob", SwitchJob)
+AddChatCommand("/switchjobs", SwitchJob)
+AddChatCommand("/jobswitch", SwitchJob)
+	
+
 function DoTeamBan(ply, args, cmdargs)
 	if not ply:IsAdmin() then 
 		Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "/teamban"))
@@ -1495,6 +1517,8 @@ function DoTeamUnBan(ply, args, cmdargs)
 end
 AddChatCommand("/teamunban", DoTeamUnBan)
 concommand.Add("rp_teamunban", DoTeamUnBan)
+
+
 /*---------------------------------------------------------
 Talking 
  ---------------------------------------------------------*/

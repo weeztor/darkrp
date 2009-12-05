@@ -123,6 +123,7 @@ rp_languages.english = {
 	updated_spawnpos = "%s's spawn position updated.",
 	do_not_own_ent = "You do not own this entity!",
 	cannot_drop_weapon = "Can't drop this weapon!",
+	team_switch = "Jobs switched successfully!",
 	
 	--misc
 	could_not_find = "Could not find %s",
@@ -415,6 +416,7 @@ rp_languages.dutch = {
 	updated_spawnpos = "Spawn positie van %s is geüpdate!",
 	do_not_own_ent = "Je bent niet de eigenaar van dit object!",
 	cannot_drop_weapon = "Kan dit wapen niet laten vallen!",
+	team_switch = "Banen succesvol gewisseld!",
 	
 	--misc
 	could_not_find = "Kan %s niet vinden",
@@ -704,6 +706,7 @@ rp_languages.danish = {
 	updated_spawnpos = "%s's spawn position updatered.",
 	do_not_own_ent = "Du ejer ikke denne enhed!",
 	cannot_drop_weapon = "Kan ikke smide dette våben!!",
+	team_switch = "Jobskift fuldført!",
 
 	--misc
 	could_not_find = "Kunne ikke finde %s",
@@ -995,6 +998,7 @@ rp_languages.swedish = {
 	updated_spawnpos = "%s's spawn position updaterad.",
 	do_not_own_ent = "Du äger inte den här entityn!",
 	cannot_drop_weapon = "Du kan inte släppa det här vapnet!",
+	team_switch = "Jobbbyte utfört!",
 	
 	--misc
 	could_not_find = "Kunde inte hitta %s",
