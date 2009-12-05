@@ -41,7 +41,8 @@ AddBannedProp("models/props_phx/torpedo.mdl")
 AddBannedProp("models/props/de_train/biohazardtank.mdl")
 AddBannedProp("models/props_buildings/project_building01.mdl")
 AddBannedProp("models/props_combine/prison01c.mdl")
-
+AddBannedProp("models/props/cs_militia/silo_01.mdl")
+AddBannedProp("models/props_phx/huge/evildisc_corp.mdl")
 
 -- HOW TO ADD ALLOWEDP PROPS (toggled with rp_allowedprops)
 -- AddAllowedProp("MODEL NAME OF PROP")

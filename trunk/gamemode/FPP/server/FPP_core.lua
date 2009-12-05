@@ -330,6 +330,7 @@ end)
 function FPP.Protect.CanTool(ply, trace, tool)
 	-- Toolgun restrict
 	local ignoreGeneralRestrictTool = false
+	if not FPP.RestrictedToolsPlayers then FPP.RestrictedToolsPlayers = {} end
 	if FPP.RestrictedToolsPlayers[tool] and FPP.RestrictedToolsPlayers[tool][ply:SteamID()] ~= nil then--Player specific
 		if FPP.RestrictedToolsPlayers[tool][ply:SteamID()] == false then
 			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted for you!", false)

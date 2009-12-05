@@ -116,6 +116,7 @@ Updated by: FPtje Falco
 [FIX] Weapon predictions
 [FIX] Meteor erroring etc.
 [FIX] Message about someone being unwanted when he already wasn't wanted anymore.
+[FIX] Spawning on non-custom spawn pos when custom spawn pos was enabled and guy was unarrested
 [CHANGE] /buypistol to /buy because of the custom items
 [CHANGE] rp_max<customteam> to rp_max<customteam>s
 [CHANGE] Made admins.lua a bit more idiot proof
