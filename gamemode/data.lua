@@ -326,7 +326,7 @@ function DB.RetrieveJailPos()
 	local now = CurTime()
 	local oldest = 0
 	local ret = nil
-
+	
 	for _, row in pairs(r) do
 		if (now - tonumber(row.lastused)) > oldest then
 			oldest = (now - tonumber(row.lastused))
