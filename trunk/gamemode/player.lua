@@ -46,7 +46,6 @@ function RPName(ply, args)
 	end 
 
 	ply:SetRPName(args)
-	NotifyAll(2, 6, string.format(LANGUAGE.rpname_changed, ply:SteamName(), args))
 	return ""
 end
 AddChatCommand("/rpname", RPName)
@@ -75,8 +74,10 @@ function meta:SetRPName(name, firstRun)
 			Notify(self, 1, 12, "Someone is already using your Steam name as their RP name so we gave you a '1' after your name.") 
 		else
 			Notify(self, 1, 5, string.format(LANGUAGE.unable, "RPname", ""))
+			return ""
 		end
 	else
+		if not firstRun then NotifyAll(2, 6, string.format(LANGUAGE.rpname_changed, self:SteamName(), name)) end
 		DB.StoreRPName(self, name)
 	end
 end
