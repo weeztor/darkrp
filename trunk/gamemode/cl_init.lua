@@ -902,6 +902,8 @@ function GM:ChatTextChanged(text)
 		HearMode = "whisper"
 	elseif string.sub(string.lower(text), 1, 2) == "/y" then
 		HearMode = "yell"
+	elseif string.sub(string.lower(text), 1, 3) == "/me" then
+		HearMode = "me"
 	end
 	if old ~= HearMode then
 		playercolors = {}
@@ -969,7 +971,7 @@ function RPSelectwhohearit()
 	
 	hook.Add("Think", "RPGetRecipients", function() 
 		if not Messagemode then RPStopMessageMode() hook.Remove("Think", "RPGetRecipients") return end 
-		if HearMode ~= "whisper" and HearMode ~= "yell" and HearMode ~= "talk" and HearMode ~= "speak" then return end
+		if HearMode ~= "whisper" and HearMode ~= "yell" and HearMode ~= "talk" and HearMode ~= "speak" and HearMode ~= "me" then return end
 		playercolors = {}
 		for k,v in pairs(player.GetAll()) do
 			if v ~= LocalPlayer() then
@@ -979,6 +981,8 @@ function RPSelectwhohearit()
 				elseif (HearMode == "yell" or HearMode == "speak") and distance < 550 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
 				elseif HearMode == "talk" and GetGlobalInt("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
+					table.insert(playercolors, v)
+				elseif HearMode == "me" and GetGlobalInt("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
 				end
 			end
