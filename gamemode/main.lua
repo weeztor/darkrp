@@ -1555,6 +1555,18 @@ function Yell(ply, args)
 end
 AddChatCommand("/y", Yell)
 
+local function Me(ply, args)
+	if GetGlobalInt("alltalk") == 1 then
+		for _, target in pairs(player.GetAll()) do
+			TalkToPerson(target, team.GetColor(ply:Team()), ply:Nick() .. " " .. args)
+		end
+	else
+		TalkToRange(ply, ply:Nick() .. " " .. args, "", 250)
+	end
+	return ""
+end
+AddChatCommand("/me", Me)
+
 function OOC(ply, args)
 	if CfgVars["ooc"] == 0 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "OOC", ""))
