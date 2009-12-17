@@ -489,7 +489,7 @@ function FPP.PlayerInitialSpawn(ply)
 	---------------------------------------------------------------
 	if not tobool(FPP.Settings.FPP_GLOBALSETTINGS.antispeedhack) then return end
 	ply:SendLua([[local function a()
-		if GetConVarNumber("host_timescale") ~= 1 then
+		if GetConVarNumber("host_timescale") ~= 1 or GetConVarNumber("host_framerate") ~= 0 then
 			LocalPlayer():Remove()
 		end
 	end

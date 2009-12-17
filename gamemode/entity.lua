@@ -130,7 +130,7 @@ local function OwnDoor(ply)
 			return ""
 		end
 
-		if trace.Entity:GetNWBool("nonOwnable") then
+		if trace.Entity:GetNWBool("nonOwnable") or trace.Entity:GetNWBool("CPOwnable") then
 			Notify(ply, 1, 5, LANGUAGE.door_unownable)
 			return ""
 		end
