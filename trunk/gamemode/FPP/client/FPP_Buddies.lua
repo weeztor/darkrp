@@ -1,10 +1,4 @@
 FPP = FPP or {}
---Because Garry refuses to make ply:SteamID() shared I'll do it myself
-local PLAYER = FindMetaTable("Player")
-
-function PLAYER:SteamID()
-	return self:GetNWString("SteamID")
-end
 
 --Make buddies if not there
 sql.Query("CREATE TABLE IF NOT EXISTS FPP_Buddies('steamid' TEXT NOT NULL, 'name' TEXT NOT NULL, 'physgun' INTEGER NOT NULL, 'gravgun' INTEGER NOT NULL, 'toolgun' INTEGER NOT NULL, 'playeruse' INTEGER NOT NULL, 'entitydamage' INTEGER NOT NULL, PRIMARY KEY('steamid'));")
