@@ -357,7 +357,9 @@ function FPP.Protect.CanTool(ply, trace, tool)
 	
 	-- Anti model server crash
 	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetToolObject() and 
-	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ), "*")) then
+	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") or 
+	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ), "*")
+	/*or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "tool" ), "/")*/) then
 		FPP.Notify(ply, "The material/model of the tool is invalid!", false)
 		FPP.CanTouch(ply, "FPP_TOOLGUN", "The material/model of the tool is invalid!", false)
 		return false
@@ -466,7 +468,6 @@ hook.Add("PlayerDisconnected", "FPP.PlayerDisconnect", FPP.PlayerDisconnect)
 
 --PlayerInitialspawn, the props he had left before will now be his again
 function FPP.PlayerInitialSpawn(ply)
-	ply:SetNWString("SteamID", ply:SteamID())--Hacky way to get the steam ID clientside, just because Garry refuses to make it shared
 	local RP = RecipientFilter()
 	
 	timer.Simple(5, function(ply)
