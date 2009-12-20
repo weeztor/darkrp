@@ -1813,15 +1813,11 @@ function DoLottery(ply)
 		return ""
 	end
 	
-	if #player.GetAll() <= 2 then
+	if #player.GetAll() <= 2 or LotteryON then
 		Notify(ply, 1, 6, string.format(LANGUAGE.unable, "/lottery", ""))
 		return "" 
 	end 
-	
-	if LotteryON then
-		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/lottery", ""))
-		return "" 
-	end
+
 	if CanLottery > CurTime() then
 		Notify(ply, 1, 5, string.format(LANGUAGE.have_to_wait,  tostring(CanLottery - CurTime()), "/lottery"))
 		return "" 
