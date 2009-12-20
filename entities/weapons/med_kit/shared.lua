@@ -15,7 +15,7 @@ SWEP.Spawnable = true       -- Change to false to make Admin only.
 SWEP.AdminSpawnable = true
 
 SWEP.ViewModel = "models/weapons/v_c4.mdl"
-SWEP.WorldModel = "models/weapons/w_c4.mdl"
+SWEP.WorldModel = "models/weapons/w_package.mdl"
 
 SWEP.Primary.Recoil = 0
 SWEP.Primary.ClipSize  = -1
@@ -48,6 +48,7 @@ function SWEP:PrimaryAttack()
 		end
 	end
 end
+
 function SWEP:SecondaryAttack()
 	self.Weapon:SetNextSecondaryFire(CurTime() + self.Secondary.Delay)
 	local maxhealth = self.Owner.StartHealth or 100

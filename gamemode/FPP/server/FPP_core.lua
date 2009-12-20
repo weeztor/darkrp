@@ -356,7 +356,7 @@ function FPP.Protect.CanTool(ply, trace, tool)
 	end
 	
 	-- Anti model server crash
-	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetToolObject() and 
+	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon().GetToolObject and ply:GetActiveWeapon():GetToolObject() and 
 	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") or 
 	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ), "*")
 	/*or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "tool" ), "/")*/) then

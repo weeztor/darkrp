@@ -94,6 +94,7 @@ local function SetDoorOwnable(ply)
 		-- Save it for future map loads
 		DB.StoreDoorOwnability(ent)
 	end
+	ent:UnOwn()
 	return ""
 end
 AddChatCommand("/toggleownable", SetDoorOwnable)
@@ -112,6 +113,7 @@ local function SetDoorCPOwnable(ply)
 		-- Save it for future map loads
 		DB.StoreCPDoorOwnability(ent)
 	end
+	ent:UnOwn()
 	return ""
 end
 AddChatCommand("/togglecpownable", SetDoorCPOwnable)

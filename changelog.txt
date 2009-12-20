@@ -34,11 +34,13 @@ DarkRP 2.3.7 SVN
 [FIX] Ooc and advert bug where you could say nothing in OOC or advert.
 [FIX] Timers for database stuff
 [FIX] CPOwnable doors ownable by normal players
+[FIX] Unownable doors having an owner
 [CHANGE] Default shipments are now in addshipments.lua
 [CHANGE] Moved complicated code in shared.lua and addshipments.lua to MakeThings.lua
 [CHANGE] Changed filename of addshipments.lua to addentities.lua
 [CHANGE] People now can't use wanted as an ESP, you will only see someone is wanted if he is in your sight. This way it won't be abused to find players.
 [CHANGE] People now drop everything in pocket when they die.
+[CHANGE] Medic gun world model to package, so it doesn't look like he's about to blow you up
 [REMOVE] Simple Prop protection. You have served us well, goodbye.
 [REMOVE] RunConsoleCommand override
 
@@ -902,4 +904,3 @@ January 29, 2007
 ------------
 -- DarkRP 2.2.10
 -- philxyz: For these and future changes, please refer to changelog.txt
-
