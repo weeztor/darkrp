@@ -1,9 +1,16 @@
+require("datastream")
+
 local AdminPanel
 local BuddiesPanel
+local EditGroupTools
 local RetrieveRestrictedTool
 local BlockedLists = {}
 local CatsOpened = {}
 FPP = FPP or {}
+
+FPP.Groups = {}
+FPP.GroupMembers = {}
+
 function FPP.AdminMenu(Panel)
 	AdminPanel = AdminPanel or Panel
 	Panel:ClearControls()
@@ -308,9 +315,6 @@ function FPP.AdminMenu(Panel)
 			end 
 		end 
 	end
-	
-	
-	
 	ToolRestrict:AddItem(FPP.DtreeToolRestrict)
 	
 	local SingleEditTool = vgui.Create("DButton")
@@ -374,6 +378,163 @@ function FPP.AdminMenu(Panel)
 		end, StartEditMultiTool)
 	end
 	ToolRestrict:AddItem(StartEditMultiTool)
+	
+	local GroupRestrictCat, GroupRestrict = MakeOption("Group tool restriction")
+	
+	local PressLoadFirst = Label("Press \"Load groups and members\" first!")
+	GroupRestrict:AddItem(PressLoadFirst)
+	local LoadGroups = vgui.Create("DButton")
+	LoadGroups:SetText("Load groups and members")
+	LoadGroups.DoClick = function() 
+		RunConsoleCommand("FPP_SendGroups")
+		RunConsoleCommand("FPP_SendGroupMembers")
+		PressLoadFirst:SetText("Groups loaded!")
+	end
+	GroupRestrict:AddItem(LoadGroups)
+	
+	local ChkAllowDefault
+	local GroupList = vgui.Create("DListView")
+	GroupList:AddColumn("Group names")
+	GroupList:SetSize(0, 100)
+	function GroupList:OnClickLine(line)
+		self:ClearSelection()
+		line:SetSelected(true)
+		ChkAllowDefault:SetValue(FPP.Groups[GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue()].allowdefault)
+	end
+	GroupRestrict:AddItem(GroupList)
+	
+	
+	ChkAllowDefault = vgui.Create("DCheckBoxLabel")
+	ChkAllowDefault:SetText("Allow all tools by default")
+	ChkAllowDefault:SetTooltip([[Ticked: All tools are allowed, EXCEPT for the tools in the tool list
+	Unticked: NO tools will be allowed, EXCEPT for the tools in the tool list]])
+	if GroupList:GetSelectedLine() and FPP.Groups[GroupList:GetSelectedLine().Columns[1]:GetValue()] then
+		ChkAllowDefault:SetValue(FPP.Groups[GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue()].allowdefault)
+	end
+	ChkAllowDefault.Button.Toggle = function()
+		local line = GroupList:GetSelectedLine()
+		if not line then return end
+		local value = 0
+		if not ChkAllowDefault.Button:GetChecked() then value = 1 end
+		local lineObj = GroupList:GetLine(line)
+		RunConsoleCommand("FPP_ChangeGroupStatus", lineObj.Columns[1]:GetValue(), value)
+		ChkAllowDefault.Button:SetValue(not ChkAllowDefault.Button:GetChecked())
+	end
+	GroupRestrict:AddItem(ChkAllowDefault)
+	
+	local AddGroupBtn = vgui.Create("DButton")
+	AddGroupBtn:SetText("Add a group")
+	AddGroupBtn.DoClick = function() 
+		Derma_StringRequest("Name of the group", "What will be the name of the group?\nNOTE: YOU WILL NOT BE ABLE TO CHANGE THIS AFTERWARDS", "", function(text)
+			RunConsoleCommand("FPP_AddGroup", text) 
+		end)
+	end
+	GroupRestrict:AddItem(AddGroupBtn)
+	
+	local RemGroupBtn = vgui.Create("DButton")
+	RemGroupBtn:SetText("Remove selected group")
+	RemGroupBtn.DoClick = function()
+		if not GroupList:GetLine(GroupList:GetSelectedLine()) or not GroupList:GetLine(GroupList:GetSelectedLine()).Columns 
+		or not GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue() then
+			LocalPlayer():ChatPrint("No item selected!")
+			return
+		end
+		RunConsoleCommand("FPP_RemoveGroup", GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue())
+		GroupList:RemoveLine(GroupList:GetSelectedLine())
+		PressLoadFirst:SetText("List might be corrupted, reload is recommended")
+	end
+	GroupRestrict:AddItem(RemGroupBtn)
+	
+	local EditGroupBtn = vgui.Create("DButton")
+	EditGroupBtn:SetText("Edit selected group's tools")
+	EditGroupBtn.DoClick = function() 
+		if not GroupList:GetLine(GroupList:GetSelectedLine()) or not GroupList:GetLine(GroupList:GetSelectedLine()).Columns 
+		or not GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue() then
+			LocalPlayer():ChatPrint("No item selected!")
+			return
+		end
+		EditGroupTools(GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue())
+	end
+	GroupRestrict:AddItem(EditGroupBtn)
+	
+	GroupRestrict:AddItem(Label("Group Members:"))
+	local GroupMembers = vgui.Create("DListView")
+	GroupMembers:AddColumn("SteamID")
+	GroupMembers:AddColumn("Name")
+	GroupMembers:AddColumn("Member of")
+	GroupMembers:SetSize(0, 150)
+	GroupRestrict:AddItem(GroupMembers)
+	
+	local AddPerson = vgui.Create("DButton")
+	AddPerson:SetText("Change group of this person to selected")
+	AddPerson.DoClick = function()
+		if not GroupList:GetLine(GroupList:GetSelectedLine()) or not GroupList:GetLine(GroupList:GetSelectedLine()).Columns 
+		or not GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue() then
+			LocalPlayer():ChatPrint("No item selected!")
+			return
+		end
+
+		for k,v in pairs(GroupMembers:GetSelected()) do
+			timer.Simple(k/10, RunConsoleCommand, "FPP_SetPlayerGroup", v.Columns[1]:GetValue(), GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue())
+		end
+	end
+	GroupRestrict:AddItem(AddPerson)
+	
+	local AddPersonManual = vgui.Create("DButton")
+	AddPersonManual:SetText("Add person/SteamID to selected group")
+	AddPersonManual.DoClick = function() 
+		if not GroupList:GetLine(GroupList:GetSelectedLine()) or not GroupList:GetLine(GroupList:GetSelectedLine()).Columns 
+		or not GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue() then
+			LocalPlayer():ChatPrint("No item selected!")
+			return
+		end
+		
+		local menu = DermaMenu()
+		menu:SetPos(gui.MouseX(), gui.MouseY())
+
+		for a,b in pairs(player.GetAll()) do
+			local submenu = menu:AddOption(b:Nick(), function()
+				RunConsoleCommand("FPP_SetPlayerGroup", b:UserID(), GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue())
+				PressLoadFirst:SetText("List might be corrupted, reload is recommended")
+			end)
+		end
+
+		local other = menu:AddOption("other...", function()
+			Derma_StringRequest("Enter steam ID", "Enter the Steam ID of the person you would like to add to this group.", "", function(text)
+				RunConsoleCommand("FPP_SetPlayerGroup", text, GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue()) 
+			end)
+		end)
+		menu:Open()
+	end
+	GroupRestrict:AddItem(AddPersonManual)
+	
+	local function RetrieveGroups(handler, id, encoded, decoded)
+		FPP.Groups = decoded
+		GroupList:Clear()
+		for k,v in pairs(decoded) do
+			GroupList:AddLine(k)
+		end
+		GroupList:SelectFirstItem()
+		ChkAllowDefault:SetValue(FPP.Groups[GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue()].allowdefault)
+	end
+	datastream.Hook("FPP_Groups", RetrieveGroups)
+	
+	local function RetrieveGroupMembers(handler, id, encoded, decoded)
+		FPP.GroupMembers = decoded
+		GroupMembers:Clear()
+		for k,v in pairs(decoded) do
+			local name = "Unknown"
+			for _, ply in pairs(player.GetAll()) do
+				if ply:SteamID() == k then
+					name = ply:Nick()
+					break
+				end
+			end
+			GroupMembers:AddLine(k, name, v)
+		end
+		GroupMembers:SelectFirstItem()
+	end
+	datastream.Hook("FPP_GroupMembers", RetrieveGroupMembers)
 	
 	Panel:AddControl("Label", {Text = "\nFalco's Prop Protection\nMade by Falco A.K.A. FPtje"})
 end
@@ -468,8 +629,7 @@ RetrieveRestrictedTool = function(um)
 	
 	RestrictPlayerButton.DoClick = function(self)
 		local menu = DermaMenu(self)
-		local x,y = frame:GetPos();
-		menu:SetPos(x + 250, gui.MouseY())
+		menu:SetPos(gui.MouseX(), gui.MouseY())
 		
 		for k, v in pairs(player.GetAll()) do
 			local submenu = menu:AddSubMenu(v:Nick())
@@ -513,6 +673,7 @@ RetrieveRestrictedTool = function(um)
 				end
 			end)
 		end
+		menu:Open()
 	end
 	
 	local Tpan = vgui.Create("DPanelList", frame)
@@ -556,6 +717,101 @@ RetrieveRestrictedTool = function(um)
 	
 end
 usermessage.Hook("FPP_RestrictedToolList", RetrieveRestrictedTool)
+
+EditGroupTools = function(groupname)
+	if not FPP.Groups[groupname] then return end
+	local tools = FPP.Groups[groupname].tools
+	local frame = vgui.Create("DFrame")
+	frame:SetTitle("Edit tools of "..groupname)
+	frame:MakePopup()
+	frame:SetVisible( true )
+	frame:SetSize(640, 480)
+	frame:Center()
+	
+	local GroupTools = vgui.Create("DListView", frame)
+	GroupTools:SetPos(340, 25)
+	GroupTools:SetSize(295, 450)
+	GroupTools:AddColumn("Tools currently in "..groupname)
+	
+	for k,v in pairs(tools) do
+		GroupTools:AddLine(v)
+	end
+	
+	local SelectTool = Label("Select a tool or a folder", frame)
+	SelectTool:SetPos(5, 25)
+	SelectTool:SizeToContents()
+	
+	local ToolList = vgui.Create("DTree", frame)
+	ToolList:SetPos(5, 45)
+	ToolList:SetSize(300, 430)
+	
+	for a,b in pairs(spawnmenu.GetTools()) do 
+		for c,d in pairs(spawnmenu.GetTools()[a].Items) do 
+			local addnodes = {}
+			for g,h in pairs(weapons.Get("gmod_tool").Tool) do
+				if h.Category and h.Category == d.ItemName then
+					table.insert(addnodes, {h.Name, g})
+				end
+			end 
+			
+			if #addnodes ~= 0 then
+				local node1 = ToolList:AddNode(d.ItemName)
+				node1.Tool = d.ItemName
+				for e,f in pairs(addnodes) do
+					local node2 = node1:AddNode(f[1]) 
+					node2.Icon:SetImage("gui/silkicons/wrench")
+					node2.Tool = f[2]
+				end
+			end
+		end
+	end
+	
+	local AddTool = vgui.Create("DButton", frame)
+	AddTool:SetPos(310, 45)
+	AddTool:SetSize(25, 25)
+	AddTool:SetText(">")
+	AddTool.DoClick = function()
+		
+		if not ToolList.m_pSelectedItem then return end
+		local SelectedTool = string.lower(ToolList.m_pSelectedItem.Tool)
+		
+		if not ToolList.m_pSelectedItem.ChildNodes then -- if it's not a folder
+			for k,v in pairs(GroupTools:GetLines()) do
+				if v.Columns[1]:GetValue() == SelectedTool then
+					return
+				end
+			end
+			RunConsoleCommand("FPP_AddGroupTool", groupname, SelectedTool)
+			GroupTools:AddLine(SelectedTool)
+		else--if it's a folder:
+			for k,v in pairs(ToolList.m_pSelectedItem.ChildNodes:GetItems()) do
+				local found = false
+				for a,b in pairs(GroupTools:GetLines()) do
+					if b.Columns[1]:GetValue() == string.lower(v.Tool) then
+						found = true
+						break
+					end
+				end
+				if not found then
+					GroupTools:AddLine(string.lower(v.Tool))
+					timer.Simple(k/10, RunConsoleCommand, "FPP_AddGroupTool", groupname, v.Tool)
+				end
+			end
+		end
+	end
+	
+	local RemTool = vgui.Create("DButton", frame)
+	RemTool:SetPos(310, 75)
+	RemTool:SetSize(25, 25)
+	RemTool:SetText("<")
+	RemTool.DoClick = function()
+		for k,v in pairs(GroupTools:GetSelected()) do
+			timer.Simple(k/10, RunConsoleCommand, "FPP_RemoveGroupTool", groupname, v.Columns[1]:GetValue())
+			GroupTools:RemoveLine(v.m_iID)
+		end
+	end
+end
+	
 
 local function retrieveblocked(um)
 	local Type = string.lower(um:ReadString())
