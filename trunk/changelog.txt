@@ -35,6 +35,7 @@ DarkRP 2.3.7 SVN
 [FIX] Timers for database stuff
 [FIX] CPOwnable doors ownable by normal players
 [FIX] Unownable doors having an owner
+[FIX] ASS antispam and prop protection
 [CHANGE] Default shipments are now in addshipments.lua
 [CHANGE] Moved complicated code in shared.lua and addshipments.lua to MakeThings.lua
 [CHANGE] Changed filename of addshipments.lua to addentities.lua
@@ -904,3 +905,4 @@ January 29, 2007
 ------------
 -- DarkRP 2.2.10
 -- philxyz: For these and future changes, please refer to changelog.txt
+

@@ -20,6 +20,15 @@ function AddToggleCommand(cmd, cfgvar, global, superadmin)
 	end
 end
 
+concommand.Add("rp_commands", function()
+	for k, v in SortedPairs(ToggleCmds) do
+		print(k) 
+	end 
+	for k,v in SortedPairs(ValueCmds) do 
+		print(k) 
+	end
+end)
+
 AddHelpCategory(HELP_CATEGORY_CHATCMD, "Chat Commands")
 AddHelpCategory(HELP_CATEGORY_CONCMD, "Console Commands")
 AddHelpCategory(HELP_CATEGORY_ADMINTOGGLE, "Admin Toggle Commands (1 or 0!)")

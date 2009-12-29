@@ -280,7 +280,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		moneybag:GetTable().Amount = amount
 	end
 
-	if CfgVars["dmautokick"] == 1 and killer:IsPlayer() and killer ~= ply then
+	if CfgVars["dmautokick"] == 1 and killer and killer:IsPlayer() and killer ~= ply then
 		if not killer.kills or killer.kills == 0 then
 			killer.kills = 1
 			timer.Simple(CfgVars["dmgracetime"], killer.ResetDMCounter, killer)

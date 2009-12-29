@@ -327,30 +327,41 @@ timer.Simple(5, function()
 	end
 end)
 
-function FPP.Protect.CanTool(ply, trace, tool)
+function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	-- Toolgun restrict
 	local ignoreGeneralRestrictTool = false
+	local SteamID = ply:SteamID()
+	
 	if not FPP.RestrictedToolsPlayers then FPP.RestrictedToolsPlayers = {} end
-	if FPP.RestrictedToolsPlayers[tool] and FPP.RestrictedToolsPlayers[tool][ply:SteamID()] ~= nil then--Player specific
-		if FPP.RestrictedToolsPlayers[tool][ply:SteamID()] == false then
+	if FPP.RestrictedToolsPlayers[tool] and FPP.RestrictedToolsPlayers[tool][SteamID] ~= nil then--Player specific
+		if FPP.RestrictedToolsPlayers[tool][SteamID] == false then
 			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted for you!", false)
 			return false
-		elseif FPP.RestrictedToolsPlayers[tool][ply:SteamID()] == true then
+		elseif FPP.RestrictedToolsPlayers[tool][SteamID] == true then
 			ignoreGeneralRestrictTool = true --If someone is allowed, then he's allowed even though he's not admin, so don't check for further restrictions
 		end
 	end
 	
-	if FPP.RestrictedTools[tool] and not ignoreGeneralRestrictTool then
-		if tonumber(FPP.RestrictedTools[tool].admin) == 1 and not ply:IsAdmin() then
-			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Admin only!", false)
-			return false
-		elseif tonumber(FPP.RestrictedTools[tool].admin) == 2 and not ply:IsSuperAdmin() then
-			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Superadmin only!", false)
-			return false
+	if not ignoreGeneralRestrictTool then
+		if FPP.RestrictedTools[tool] then
+			if tonumber(FPP.RestrictedTools[tool].admin) == 1 and not ply:IsAdmin() then
+				FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Admin only!", false)
+				return false
+			elseif tonumber(FPP.RestrictedTools[tool].admin) == 2 and not ply:IsSuperAdmin() then
+				FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Superadmin only!", false)
+				return false
+			end
+			
+			if FPP.RestrictedTools[tool]["team"] and #FPP.RestrictedTools[tool]["team"] > 0 and not table.HasValue(FPP.RestrictedTools[tool]["team"], ply:Team()) then
+				FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! incorrect team!", false)
+				return false
+			end
 		end
 		
-		if FPP.RestrictedTools[tool]["team"] and #FPP.RestrictedTools[tool]["team"] > 0 and not table.HasValue(FPP.RestrictedTools[tool]["team"], ply:Team()) then
-			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! incorrect team!", false)
+		local Group = FPP.Groups[FPP.GroupMembers[SteamID] or "default"] -- What group is the player in. If not in a special group, then he's in default group
+		if Group and ((Group.allowdefault and table.HasValue(Group.tools, tool)) or -- If the tool is on the BLACKLIST or
+			(not Group.allowdefault and not table.HasValue(Group.tools, tool))) then -- If the tool is NOT on the WHITELIST
+			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! incorrect group!", false)
 			return false
 		end
 	end
@@ -365,7 +376,7 @@ function FPP.Protect.CanTool(ply, trace, tool)
 		return false
 	end	
 	
-	local ent = trace.Entity
+	local ent = ENT or trace.Entity
 	
 	if tobool(FPP.Settings.FPP_TOOLGUN.toggle) and ValidEntity(ent) then
 		
@@ -501,3 +512,14 @@ function FPP.PlayerInitialSpawn(ply)
 	timer.Simple(0.1, b)]])--I know Lua scripters can get around this, but at least this protects from the noobs with speedhacks ^^
 end
 hook.Add("PlayerInitialSpawn", "FPP.PlayerInitialSpawn", FPP.PlayerInitialSpawn)
+
+local ENTITY = FindMetaTable("Entity")
+local backup = ENTITY.FireBullets
+local blockedEffects = {"ParticleEffect", "Smoke", "VortDispel", "HelicopterMegaBomb"}
+
+function ENTITY:FireBullets(bullet, ...)
+	if table.HasValue(blockedEffects, bullet.TracerName) then
+		bullet.TracerName = ""
+	end
+	return backup(self, bullet, ...)
+end

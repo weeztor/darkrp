@@ -1,5 +1,7 @@
 FPP = FPP or {}
 
+require("datastream")
+
 sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKED('id' INTEGER NOT NULL, 'key' TEXT NOT NULL, 'value' TEXT NOT NULL, PRIMARY KEY('id'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_PHYSGUN('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
@@ -13,6 +15,8 @@ sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICT('toolname' TEXT NOT NULL, 'adminonly' INTEGER NOT NULL, 'teamrestrict' TEXT NOT NULL, PRIMARY KEY('toolname'));")
 	
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICTPERSON('toolname' TEXT NOT NULL, 'steamid' TEXT NOT NULL, 'allow' INTEGER NOT NULL, PRIMARY KEY('steamid', 'toolname'));")
+	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPS('groupname' TEXT NOT NULL, 'allowdefault' INTEGER NOT NULL, 'tools' TEXT NOT NULL, PRIMARY KEY('groupname'));")
+	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPMEMBERS('steamid' TEXT NOT NULL, 'groupname' TEXT NOT NULL, PRIMARY KEY('steamid'));")
 sql.Commit()
 
 FPP.Blocked = {}
@@ -25,6 +29,9 @@ FPP.Blocked = {}
 	
 FPP.RestrictedTools = {}
 FPP.RestrictedToolsPlayers = {}
+
+FPP.Groups = {}
+FPP.GroupMembers = {}
 
 FPP.Settings = {}
 	FPP.Settings.FPP_PHYSGUN = {
@@ -100,10 +107,15 @@ FPP.Settings = {}
 		duplicatorlimit = 3}
 
 function FPP.Notify(ply, text, bool)
+	if ply:EntIndex() == 0 then
+		ServerLog(text)
+		return
+	end
 	umsg.Start("FPP_Notify", ply)
 		umsg.String(text)
 		umsg.Bool(bool)
 	umsg.End()
+	ply:PrintMessage(HUD_PRINTCONSOLE, text)
 end
 
 function FPP.NotifyAll(text, bool)
@@ -111,13 +123,15 @@ function FPP.NotifyAll(text, bool)
 		umsg.String(text)
 		umsg.Bool(bool)
 	umsg.End()
+	for _,ply in pairs(player.GetAll()) do 
+		ply:PrintMessage(HUD_PRINTCONSOLE, text)
+	end
 end
 
 local function FPP_SetSetting(ply, cmd, args)
-	//if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
-	if not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You need superadmin privileges in order to be able to use this command") return end
-	if not args[1] or not args[3] or not FPP.Settings[args[1]] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument(s) invalid") return end
-	if not FPP.Settings[args[1]][args[2]] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument invalid") return end
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[1] or not args[3] or not FPP.Settings[args[1]] then FPP.Notify(ply, "Argument(s) invalid", false) return end
+	if not FPP.Settings[args[1]][args[2]] then FPP.Notify(ply, "Argument invalid",false) return end
 	
 	FPP.Settings[args[1]][args[2]] = tonumber(args[3])
 	SetGlobalInt(args[1].."_"..args[2], tonumber(args[3]))
@@ -134,9 +148,8 @@ end
 concommand.Add("FPP_setting", FPP_SetSetting)
 
 local function AddBlocked(ply, cmd, args)
-	//if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
-	if not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You need superadmin privileges in order to be able to use this command") return end
-	if not args[1] or not args[2] or not FPP.Blocked[args[1]] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument(s) invalid") return end
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[1] or not args[2] or not FPP.Blocked[args[1]] then FPP.Notify(ply, "Argument(s) invalid", false) return end
 	if table.HasValue(FPP.Blocked[args[1]], string.lower(args[2])) then return end
 	table.insert(FPP.Blocked[args[1]], string.lower(args[2]))
 	
@@ -161,11 +174,8 @@ end
 concommand.Add("FPP_AddBlocked", AddBlocked)
 
 local function RemoveBlocked(ply, cmd, args)
-	if ply:IsPlayer() then
-		//if ply:EntIndex() == 0 then print("Please set the settings ingame in the menu") return end
-		if not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You need superadmin privileges in order to be able to use this command") return end
-		if not args[1] or not args[2] or not FPP.Blocked[args[1]] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument(s) invalid") return end
-	end
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[1] or not args[2] or not FPP.Blocked[args[1]] then FPP.Notify(ply, "Argument(s) invalid", false) return end
 	
 	for k,v in pairs(FPP.Blocked[args[1]]) do
 		if v == args[2] then
@@ -195,11 +205,11 @@ end
 concommand.Add("FPP_RemoveBlocked", RemoveBlocked)
 
 local function ShareProp(ply, cmd, args)
-	if not args[1] or not ValidEntity(Entity(args[1])) or not args[2] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument(s) invalid") return end
+	if not args[1] or not ValidEntity(Entity(args[1])) or not args[2] then FPP.Notify(ply, "Argument(s) invalid", false) return end
 	local ent = Entity(args[1])
 	
 	if not FPP.PlayerCanTouchEnt(ply, ent, "Toolgun", "FPP_TOOLGUN", true) then --Note: This returns false when it's someone elses shared entity, so that's not a glitch
-		ply:PrintMessage(HUD_PRINTCONSOLE, "You do not have the right to share this entity.")
+		FPP.Notify(ply, "You do not have the right to share this entity.", false)
 		return
 	end
 	
@@ -346,6 +356,198 @@ local function RetrieveRestrictedTools()
 end
 RetrieveRestrictedTools()
 
+local function RetrieveGroups()
+	local data = sql.Query("SELECT * FROM FPP_GROUPS;")
+	if type(data) ~= "table" then 
+		sql.Query("INSERT INTO FPP_GROUPS VALUES('default', 1, '');")
+		return 
+	end -- if there are no groups then there isn't much to load
+	for k,v in pairs(data) do
+		FPP.Groups[v.groupname] = {}
+		FPP.Groups[v.groupname].tools = string.Explode(";", v.tools)
+		FPP.Groups[v.groupname].allowdefault = util.tobool(v.allowdefault)
+		for num,tool in pairs(FPP.Groups[v.groupname].tools) do
+			if tool == "" then
+				table.remove(FPP.Groups[v.groupname].tools, num)
+			end
+		end
+	end
+	
+	local members = sql.Query("SELECT * FROM FPP_GROUPMEMBERS;")
+	if type(members) ~= "table" then return end
+	for _,v in pairs(members) do
+		FPP.GroupMembers[v.steamid] = v.groupname
+		if not FPP.Groups[v.groupname] then -- if group does not exist then set to default
+			FPP.GroupMembers[v.steamid] = nil
+			sql.Query("DELETE FROM FPP_GROUPMEMBERS WHERE steamid = "..sql.SQLStr(v.steamid)..";")
+		end
+	end
+end
+RetrieveGroups()
+
+local function AddGroup(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[1] then FPP.Notify(ply, "Invalid argument(s)", false) return end-- Args: 1 = name, optional: 2 = allowdefault
+	local name = string.lower(args[1])
+	local allowdefault = tonumber(args[2]) or 1
+	
+	if FPP.Groups[name] then 
+		FPP.Notify(ply, "Group already exists", false)
+		return
+	end
+	
+	FPP.Groups[name] = {}
+	FPP.Groups[name].allowdefault = util.tobool(allowdefault)
+	FPP.Groups[name].tools = {}
+	
+	sql.Query("INSERT INTO FPP_GROUPS VALUES("..sql.SQLStr(name)..", "..sql.SQLStr(allowdefault)..", \"\");")
+	FPP.Notify(ply, "Group added succesfully", true)
+end
+concommand.Add("FPP_AddGroup", AddGroup)
+
+local function RemoveGroup(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[1] then FPP.Notify(ply, "Invalid argument(s)", false) return end-- Args: 1 = name
+	local name = string.lower(args[1])
+	
+	if not FPP.Groups[name] then 
+		FPP.Notify(ply, "Group does not exists", false)
+		return
+	end
+	
+	if name == "default" then
+	FPP.Notify(ply, "Can not remove default group", false)
+		return
+	end
+	
+	FPP.Groups[name] = nil
+	sql.Query("DELETE FROM FPP_GROUPS WHERE groupname = "..sql.SQLStr(name)..";")
+	
+	for k,v in pairs(FPP.GroupMembers) do
+		if v == name then
+			FPP.GroupMembers[k] = nil -- Set group to standard if group is removed
+		end
+	end
+	FPP.Notify(ply, "Group removed succesfully", true)
+end
+concommand.Add("FPP_RemoveGroup", RemoveGroup)
+
+local function GroupChangeAllowDefault(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[2] then FPP.Notify(ply, "Invalid argument(s)", false) return end-- Args: 1 = groupname, 2 = new value 1/0
+	
+	local name = string.lower(args[1])
+	local newval = tonumber(args[2])
+	
+	if not FPP.Groups[name] then 
+		FPP.Notify(ply, "Group does not exists", false)
+		return
+	end
+	
+	FPP.Groups[name].allowdefault = util.tobool(newval)
+	sql.Query("UPDATE FPP_GROUPS SET allowdefault = "..sql.SQLStr(newval).." WHERE groupname = "..sql.SQLStr(name)..";")
+	FPP.Notify(ply, "Group status changed succesfully", true)
+end
+concommand.Add("FPP_ChangeGroupStatus", GroupChangeAllowDefault)
+
+local function GroupAddTool(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[2] then FPP.Notify(ply, "Invalid argument(s)", false) return end-- Args: 1 = groupname, 2 = tool
+	
+	local name = args[1]
+	local tool = string.lower(args[2])
+	
+	if not FPP.Groups[name] then 
+		FPP.Notify(ply, "Group does not exists", false)
+		return
+	end
+	
+	if table.HasValue(FPP.Groups[name].tools, tool) then
+		FPP.Notify(ply, "Tool is already in group!", false)
+		return
+	end
+	
+	table.insert(FPP.Groups[name].tools, tool)
+	local tools = table.concat(FPP.Groups[name].tools, ";")
+	sql.Query("UPDATE FPP_GROUPS SET tools = "..sql.SQLStr(tools).." WHERE groupname = "..sql.SQLStr(name)..";")
+	FPP.Notify(ply, "Tool added succesfully", true)
+end
+concommand.Add("FPP_AddGroupTool", GroupAddTool)
+
+local function GroupRemoveTool(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[2] then FPP.Notify(ply, "Invalid argument(s)", false) return end-- Args: 1 = groupname, 2 = tool
+	
+	local name = args[1]
+	local tool = string.lower(args[2])
+	
+	if not FPP.Groups[name] then 
+		FPP.Notify(ply, "Group does not exists", false)
+		return
+	end
+	
+	if not table.HasValue(FPP.Groups[name].tools, tool) then
+		FPP.Notify(ply, "Tool does not exist in group!", false)
+		return
+	end
+	
+	for k,v in pairs(FPP.Groups[name].tools) do
+		if v == tool then
+			table.remove(FPP.Groups[name].tools, k)
+		end
+	end
+	
+	local tools = table.concat(FPP.Groups[name].tools, ";")
+	sql.Query("UPDATE FPP_GROUPS SET tools = "..sql.SQLStr(tools).." WHERE groupname = "..sql.SQLStr(name)..";")
+	FPP.Notify(ply, "Tool removed succesfully", true)
+end
+concommand.Add("FPP_RemoveGroupTool", GroupRemoveTool)
+
+local function PlayerSetGroup(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[2] then FPP.Notify(ply, "Invalid argument(s)", false) return end-- Args: 1 = player, 2 = group
+	
+	local name = args[1]
+	local group = string.lower(args[2])
+	if ValidEntity(Player(name)) then name = Player(name):SteamID()
+	elseif not string.find(name, "STEAM") and name ~= "UNKNOWN" then FPP.Notify(ply, "Invalid argument(s)", false) return end
+	
+	if not FPP.Groups[group] then 
+		FPP.Notify(ply, "Group does not exists", false)
+		return
+	end
+	
+	if group ~= "default" then
+		local member = sql.Query("SELECT * FROM FPP_GROUPMEMBERS WHERE steamid = ".. sql.SQLStr(name) ..";")
+		if member then
+			sql.Query("UPDATE FPP_GROUPMEMBERS SET groupname = "..sql.SQLStr(group) .. " WHERE steamid = "..sql.SQLStr(name)..";")
+		elseif not member then
+			sql.Query("INSERT INTO FPP_GROUPMEMBERS VALUES(".. sql.SQLStr(name)..", " .. sql.SQLStr(group) ..");")
+		end
+		FPP.GroupMembers[name] = group
+	else
+		FPP.GroupMembers[name] = nil
+		sql.Query("DELETE FROM FPP_GROUPMEMBERS WHERE steamid = "..sql.SQLStr(name)..";")
+	end
+	
+	FPP.Notify(ply, "Player group succesfully set", true)
+end
+concommand.Add("FPP_SetPlayerGroup", PlayerSetGroup)
+
+local function SendGroupData(ply, cmd, args)
+	-- Need superadmin so clients can't spam this on server
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	datastream.StreamToClients(ply, "FPP_Groups", FPP.Groups)
+end
+concommand.Add("FPP_SendGroups", SendGroupData)
+
+local function SendGroupMemberData(ply, cmd, args)
+	-- Need superadmin so clients can't spam this on server
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	datastream.StreamToClients(ply, "FPP_GroupMembers", FPP.GroupMembers)
+end
+concommand.Add("FPP_SendGroupMembers", SendGroupMemberData)
+
 local function SendBlocked(ply, cmd, args)
 	--I don't need an admin check here since people should be able to find out without having admin
 	if not args[1] or not FPP.Blocked[args[1]] then return end
@@ -381,9 +583,9 @@ concommand.Add("FPP_SendRestrictTool", SendRestrictedTools)
 
 --Buddies!
 local function SetBuddy(ply, cmd, args)
-	if not args[6] then ply:PrintMessage(HUD_PRINTCONSOLE, "Argument(s) invalid") return end
+	if not args[6] then FPP.Notify(ply, "Argument(s) invalid", false) return end
 	local buddy = Player(args[1])
-	if not ValidEntity(buddy) then ply:PrintMessage(HUD_PRINTCONSOLE, "Player invalid") return end
+	if not ValidEntity(buddy) then FPP.Notify(ply, "Player invalid", false) return end
 	
 	ply.Buddies = ply.Buddies or {}
 	for k,v in pairs(args) do args[k] = tonumber(v) end
@@ -392,8 +594,8 @@ end
 concommand.Add("FPP_SetBuddy", SetBuddy)
 
 local function CleanupDisconnected(ply, cmd, args)
-	if ply:EntIndex() ~= 0 and not ply:IsAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You can't clean up") return end
-	if not args[1] then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument") return end
+	if ply:EntIndex() ~= 0 and not ply:IsAdmin() then FPP.Notify(ply, "You can't clean up", false) return end
+	if not args[1] then FPP.Notify(ply, "Invalid argument", false) return end
 	if args[1] == "disconnected" then
 		for k,v in pairs(ents.GetAll()) do
 			if v.Owner and not ValidEntity(v.Owner) then
@@ -402,7 +604,7 @@ local function CleanupDisconnected(ply, cmd, args)
 		end
 		FPP.NotifyAll(ply:Nick() .. " removed all disconnected players' props", true)
 		return
-	elseif not ValidEntity(Player(args[1])) then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid player") return 
+	elseif not ValidEntity(Player(args[1])) then FPP.Notify(ply, "Invalid player", false) return 
 	end
 	
 	for k,v in pairs(ents.GetAll()) do
@@ -415,8 +617,8 @@ end
 concommand.Add("FPP_Cleanup", CleanupDisconnected)
 
 local function SetToolRestrict(ply, cmd, args)
-	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then ply:PrintMessage(HUD_PRINTCONSOLE, "You can't set tool restrictions") return end
-	if not args[3] then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument(s)") return end--FPP_restricttool <toolname> <type(admin/team)> <toggle(1/0)>
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You can't set tool restrictions", false) return end
+	if not args[3] then FPP.Notify(ply, "Invalid argument(s)", false) return end--FPP_restricttool <toolname> <type(admin/team)> <toggle(1/0)>
 	local toolname = args[1]
 	local RestrictWho = tonumber(args[2]) or args[2]-- "team" or "admin"
 	local teamtoggle = tonumber(args[4]) --this argument only exists when restricting a tool for a team
@@ -463,12 +665,12 @@ concommand.Add("FPP_restricttool", SetToolRestrict)
 
 local function RestrictToolPerson(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then return end
-	if not args[3] then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument(s)") return end--FPP_restricttoolperson <toolname> <userid> <disallow, allow, remove(0,1,2)>
+	if not args[3] then FPP.Notify(ply, "Invalid argument(s)", false) return end--FPP_restricttoolperson <toolname> <userid> <disallow, allow, remove(0,1,2)>
 	local toolname = args[1] 
 	local target = Player(tonumber(args[2]))
 	local access = tonumber(args[3])
-	if not target:IsValid() then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument(s)") return end
-	if access < 0 or access > 2 then ply:PrintMessage(HUD_PRINTCONSOLE, "Invalid argument(s)") return end
+	if not target:IsValid() then FPP.Notify(ply, "Invalid argument(s)", false) return end
+	if access < 0 or access > 2 then FPP.Notify(ply, "Invalid argument(s)", false) return end
 	
 	FPP.RestrictedToolsPlayers[toolname] = FPP.RestrictedToolsPlayers[toolname] or {}
 	
@@ -495,3 +697,11 @@ local function RestrictToolPerson(ply, cmd, args)
 	end	
 end
 concommand.Add("FPP_restricttoolplayer", RestrictToolPerson)
+
+local assbackup = ASS_RegisterPlugin or function() end-- Suddenly after witing this code, ASS spamprotection and propprotection broke. I have no clue why. I guess you should use FPP then
+function ASS_RegisterPlugin(plugin, ...)
+	if plugin.Name == "Sandbox Spam Protection" or plugin.Name == "Sandbox Prop Protection" then
+		return
+	end
+	return assbackup(plugin, ...)
+end
