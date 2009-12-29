@@ -8,7 +8,7 @@ function CPPI:GetName()
 end
 
 function CPPI:GetVersion()
-	return "DarkRP.1"
+	return "darkrp.1"
 end
 
 function CPPI:GetInterfaceVersion()
@@ -54,11 +54,10 @@ if SERVER then
 	
 	function ENTITY:CPPICanTool(ply, tool)
 		local trace = ply:GetEyeTrace()
-		trace.Entity = self
-		return FPP.Protect.CanTool(ply, trace, tool)
+		return FPP.Protect.CanTool(ply, trace, tool, self) -- fourth argument is entity, to avoid traces.
 	end
 	
-	function ENTITY:CCPPICanPhysgun(ply)
+	function ENTITY:CPPICanPhysgun(ply)
 		return FPP.Protect.PhysgunPickup(ply, self)
 	end
 	
