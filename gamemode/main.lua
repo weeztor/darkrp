@@ -912,8 +912,8 @@ function BuyPistol(ply, args)
 			model = v.model
 			price = v.pricesep
 			local canbuy = false			
-			
-			if (GetGlobalInt("restrictbuypistol") == 1 and ply:Team() == TEAM_GUN) or (GetGlobalInt("restrictbuypistol") == 0 and (not v.allowed[1] or table.HasValue(v.allowed, ply:Team()))) then
+			local RestrictBuyPistol = tonumber(GetGlobalInt("restrictbuypistol"))
+			if (RestrictBuyPistol == 1 and ply:Team() == TEAM_GUN) or (RestrictBuyPistol == 0 and (not v.allowed[1] or table.HasValue(v.allowed, ply:Team()))) then
 				canbuy = true
 			end
 			

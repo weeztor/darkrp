@@ -304,14 +304,16 @@ function GM:PlayerDeath(ply, weapon, killer)
 	ply:GetTable().ConfisquatedWeapons = nil
 	if ply.Pocket then 
 		for k, v in pairs(ply.Pocket) do
-			v:SetMoveType(MOVETYPE_VPHYSICS)
-			v:SetNoDraw(false)
-			v:SetCollisionGroup(4)
-			v:SetPos(ply:GetPos() + Vector(0,0,10))
-			local phys = v:GetPhysicsObject()
-			if phys:IsValid() then
-				phys:EnableCollisions(true)
-				phys:Wake()
+			if ValidEntity(v) then
+				v:SetMoveType(MOVETYPE_VPHYSICS)
+				v:SetNoDraw(false)
+				v:SetCollisionGroup(4)
+				v:SetPos(ply:GetPos() + Vector(0,0,10))
+				local phys = v:GetPhysicsObject()
+				if phys:IsValid() then
+					phys:EnableCollisions(true)
+					phys:Wake()
+				end
 			end
 		end
 	end
