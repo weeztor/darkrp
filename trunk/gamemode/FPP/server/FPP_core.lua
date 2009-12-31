@@ -515,10 +515,10 @@ hook.Add("PlayerInitialSpawn", "FPP.PlayerInitialSpawn", FPP.PlayerInitialSpawn)
 
 local ENTITY = FindMetaTable("Entity")
 local backup = ENTITY.FireBullets
-local blockedEffects = {"ParticleEffect", "Smoke", "VortDispel", "HelicopterMegaBomb"}
+local blockedEffects = {"particleeffect", "smoke", "vortdispel", "helicoptermegabomb"}
 
 function ENTITY:FireBullets(bullet, ...)
-	if table.HasValue(blockedEffects, bullet.TracerName) then
+	if table.HasValue(blockedEffects, string.lower(bullet.TracerName)) then
 		bullet.TracerName = ""
 	end
 	return backup(self, bullet, ...)
