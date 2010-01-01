@@ -518,6 +518,7 @@ local backup = ENTITY.FireBullets
 local blockedEffects = {"particleeffect", "smoke", "vortdispel", "helicoptermegabomb"}
 
 function ENTITY:FireBullets(bullet, ...)
+	if not bullet.TracerName then return backup(self, bullet, ...) end
 	if table.HasValue(blockedEffects, string.lower(bullet.TracerName)) then
 		bullet.TracerName = ""
 	end
