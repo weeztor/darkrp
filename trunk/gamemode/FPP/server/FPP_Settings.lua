@@ -1,3 +1,18 @@
+--ULX fuckup fix
+local meta = FindMetaTable("Player")
+function meta:CheckGroup( group_check )
+	if not ULib.ucl then return false end
+	if not ULib.ucl.groups[ group_check ] then return false end
+	local group = self:GetUserGroup()
+	if not ULib.ucl.groups[ group ] then return false end
+	while group do
+		if group == group_check then return true end
+		group = ULib.ucl.groupInheritsFrom( group )
+	end
+	
+	return false
+end
+
 FPP = FPP or {}
 
 require("datastream")
@@ -156,13 +171,18 @@ local function AddBlocked(ply, cmd, args)
 	local data = sql.Query("SELECT * FROM FPP_BLOCKED;")
 	if type(data) == "table" then
 		local found = false
+		local highest = 0
 		for k,v in pairs(data) do
+			if tonumber(v.id) > highest then
+				highest = tonumber(v.id)
+				print(highest)
+			end
 			if v.key == args[1] and v.value == args[2] then
 				found = true
 			end
 		end
 		if not found then
-			sql.Query("INSERT INTO FPP_BLOCKED VALUES("..#data + 1 ..", " .. sql.SQLStr(args[1]) .. ", " .. sql.SQLStr(args[2]) .. ");")
+			sql.Query("INSERT INTO FPP_BLOCKED VALUES("..highest + 1 ..", " .. sql.SQLStr(args[1]) .. ", " .. sql.SQLStr(args[2]) .. ");")
 		end
 	else
 		--insert
@@ -193,13 +213,6 @@ local function RemoveBlocked(ply, cmd, args)
 		end
 	end
 	
-	data = sql.Query("SELECT * FROM FPP_BLOCKED;")
-	if type(data) == "table" then
-	--I know I'm doing a loop twice, but I can't do this in the other loop since this effects the changed database
-		for k,v in ipairs(data) do
-			sql.Query("UPDATE FPP_BLOCKED SET id = "..sql.SQLStr(k).." WHERE key = "..sql.SQLStr(v.key).. " AND value = "..sql.SQLStr(v.value)..";")
-		end
-	end
 	FPP.NotifyAll(ply:Nick().. " removed ".. args[2] .. " from the "..args[1] .. " black/whitelist", false)
 end
 concommand.Add("FPP_RemoveBlocked", RemoveBlocked)
