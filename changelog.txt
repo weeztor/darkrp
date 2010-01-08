@@ -15,6 +15,7 @@ DarkRP 2.3.7 SVN
 [ADD] /addspawn and /removespawn: You can now add multiple team spawns and you can remove all the teamspawns from one team.
 [ADD] Visible message when a lockdown is going on
 [ADD] /me command
+[ADD] rp_dropweaponondeath - Enable/disable whether people drop their current weapon when they die.
 [FIX] Unable to remove door tool doors
 [FIX] People with the admin privilege can now see the admin menu
 [FIX] Hunger resetting after sleep
@@ -36,6 +37,13 @@ DarkRP 2.3.7 SVN
 [FIX] CPOwnable doors ownable by normal players
 [FIX] Unownable doors having an owner
 [FIX] ASS antispam and prop protection
+[FIX] Lottery saying noone entered even though someone has won
+[FIX] Hints about jailtime and money printer saying 0 every time.
+[FIX] ULX fuckups: Error and pocket jail
+[FIX] Scoreboard kick and ban not working
+[FIX] Gunlab exploit to get free guns
+[FIX] Sleep and get unarrested bug
+[FIX] Being able to set name to world prop
 [CHANGE] Default shipments are now in addshipments.lua
 [CHANGE] Moved complicated code in shared.lua and addshipments.lua to MakeThings.lua
 [CHANGE] Changed filename of addshipments.lua to addentities.lua
@@ -905,4 +913,3 @@ January 29, 2007
 ------------
 -- DarkRP 2.2.10
 -- philxyz: For these and future changes, please refer to changelog.txt
-

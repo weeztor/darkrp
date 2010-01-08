@@ -14,7 +14,7 @@ function ENT:Initialize()
 	self.Entity:SetSolid(SOLID_VPHYSICS)
 	local phys = self.Entity:GetPhysicsObject()
 
-	self.Entity:SetNWInt("price", 30)
+	self.Entity:SetNWInt("price", 200)
 	if phys and phys:IsValid() then phys:Wake() end
 
 	self.sparking = false
@@ -40,13 +40,13 @@ end
 
 function ENT:SalePrice(activator)
 	local owner = self.Entity:GetNWEntity("owning_ent")
-	local discounted = math.ceil(GetGlobalInt("p228cost") * 0.88)
+	local discounted = math.ceil(185 * 0.88)
 
 	if activator == owner then
 		if activator:Team() == TEAM_GUN then
 			return discounted
 		else
-			return math.floor(GetGlobalInt("p228cost"))
+			return 185
 		end
 	else
 		return self:GetNWInt("price")
@@ -56,7 +56,7 @@ end
 ENT.Once = false
 function ENT:Use(activator)
 	local owner = self.Entity:GetNWEntity("owning_ent")
-	local discounted = math.ceil(GetGlobalInt("p228cost") * 0.88)
+	local discounted = math.ceil(185 * 0.88)
 	local cash = self:SalePrice(activator)
 	
 	if not activator:CanAfford(self:SalePrice(activator)) then
@@ -80,7 +80,7 @@ function ENT:Use(activator)
 			if owner:Team() == TEAM_GUN then
 				gain = math.floor(self:GetNWInt("price") - discounted)
 			else
-				gain = math.floor(self:GetNWInt("price") - GetGlobalInt("p228cost"))
+				gain = math.floor(self:GetNWInt("price") - 185)
 			end
 			if gain == 0 then
 				Notify(owner, 1, 3, "You sold a P228 but made no profit!")

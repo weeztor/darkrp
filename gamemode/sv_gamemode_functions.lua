@@ -228,6 +228,21 @@ function GM:CanPlayerSuicide(ply)
 	return true
 end
 
+function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
+	if tobool(CfgVars["dropweapondeath"]) and ValidEntity(ply:GetActiveWeapon()) then
+		ply:DropWeapon(ply:GetActiveWeapon())
+	end
+	ply:CreateRagdoll()
+	ply:AddDeaths( 1 )
+	if ValidEntity(attacker) and attacker:IsPlayer() then
+		if attacker == ply then
+			attacker:AddFrags( -1 )
+		else
+			attacker:AddFrags( 1 )
+		end
+	end
+end
+
 function GM:PlayerDeath(ply, weapon, killer)
 	if GetGlobalInt("deathblack") == 1 then
 		local RP = RecipientFilter()
@@ -295,7 +310,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		end
 	end
 
-	if ply ~= killer or ply:GetTable().Slayed then
+	if ValidEntity(ply) and ply ~= killer or ply:GetTable().Slayed then
 		ply:SetNWBool("wanted", false)
 		ply:GetTable().DeathPos = nil
 		ply:GetTable().Slayed = false

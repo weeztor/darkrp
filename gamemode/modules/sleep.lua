@@ -12,8 +12,8 @@ function KnockoutToggle(player, command, args, caller)
 		player.SleepSound = CreateSound(player, "npc/ichthyosaur/water_breath.wav")
 	end
 	if player:Alive() then
-		if player.KnockoutTimer and player.KnockoutTimer + KnockoutTime < CurTime() then
-			if player.Sleeping and ValidEntity(player.SleepRagdoll) then
+		if (player.KnockoutTimer and player.KnockoutTimer + KnockoutTime < CurTime()) or command == "force" then
+			if (player.Sleeping and ValidEntity(player.SleepRagdoll)) then
 				player.OldHunger = player:GetNWInt("Energy")
 				player.SleepSound:Stop()
 				local ragdoll = player.SleepRagdoll

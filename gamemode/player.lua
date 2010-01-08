@@ -27,7 +27,7 @@ function RPName(ply, args)
 		return ""
 	end
 	
-	if low == "ooc" or low == "shared" or low == "world" or low == "n/a" then
+	if low == "ooc" or low == "shared" or low == "world" or low == "n/a" or low == "world prop" then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end
@@ -423,6 +423,9 @@ function meta:Unarrest(ID)
 		return
 	end
 	GAMEMODE:SetPlayerSpeed(self, CfgVars["wspd"], CfgVars["rspd"] )
+	if self.Sleeping then
+		KnockoutToggle(self, "force")
+	end
 	if type(self) == "string" then
 		if RPArrestedPlayers[ID] then
 			RPArrestedPlayers[ID] = nil
@@ -453,6 +456,8 @@ function meta:Unarrest(ID)
 			DB.StoreJailStatus(self, 0)
 		end
 	end
+	
+	
 end
 
 /*---------------------------------------------------------
