@@ -221,6 +221,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_dropmoneyondeath - Enable/disabl
 AddToggleCommand("rp_allowswitchjob", "allowjobswitch", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowswitchjob - Enable/disable whether people can switch eachother's jobs.")
 
+AddToggleCommand("rp_dropweaponondeath", "dropweapondeath", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_dropweaponondeath - Enable/disable whether people drop their current weapon when they die.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------

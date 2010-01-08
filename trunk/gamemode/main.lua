@@ -1792,13 +1792,13 @@ function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	if TimeIsUp then
 		LotteryON = false
 		CanLottery = CurTime() + 60
-		if #LotteryPeople == 0 then
-			NotifyAll(1,4, LANGUAGE.lottery_noone_entered)
+		if table.Count(LotteryPeople) == 0 then
+			NotifyAll(1, 4, LANGUAGE.lottery_noone_entered)
 			return
 		end
 		local chosen = LotteryPeople[math.random(1, #LotteryPeople)]
 		chosen:AddMoney(#LotteryPeople * CfgVars["lotterycommitcost"])
-		NotifyAll(1,10, string.format(LANGUAGE.lottery_noone_entered, chosen:Nick(), CUR .. tostring(#LotteryPeople * CfgVars["lotterycommitcost"]) ))
+		NotifyAll(1,10, string.format(LANGUAGE.lottery_won, chosen:Nick(), CUR .. tostring(#LotteryPeople * CfgVars["lotterycommitcost"]) ))
 	end
 end
 

@@ -39,7 +39,7 @@ PANEL.Text = "Kick"
 Name: DoCommand
 ---------------------------------------------------------*/
 function PANEL:DoCommand(ply)
-	LocalPlayer():ConCommand("kickid ".. ply:UserID().. " Kicked By "..LocalPlayer():Nick().."\n")
+	RunConsoleCommand("kickid", ply:UserID(), "Kicked By "..LocalPlayer():Nick().."\n")
 end
 
 vgui.Register("PlayerKickButton", PANEL, "SpawnMenuAdminButton")
@@ -53,8 +53,8 @@ PANEL.Text = "PermBan"
 Name: DoCommand
 ---------------------------------------------------------*/
 function PANEL:DoCommand(ply)
-	LocalPlayer():ConCommand("banid 0 ".. self:GetParent().Player:UserID().. "\n")
-	LocalPlayer():ConCommand("kickid ".. ply:UserID().. " Permabanned By "..LocalPlayer():Nick().."\n")
+	RunConsoleCommand("banid", 0, self:GetParent().Player:UserID().. "\n")
+	RunConsoleCommand("kickid", ply:UserID(), "Permabanned By "..LocalPlayer():Nick().."\n")
 end
 
 vgui.Register("PlayerPermBanButton", PANEL, "SpawnMenuAdminButton")
@@ -68,8 +68,8 @@ PANEL.Text = "1HRBan"
 Name: DoCommand
 ---------------------------------------------------------*/
 function PANEL:DoCommand(ply)
-	LocalPlayer():ConCommand("banid 60 ".. self:GetParent().Player:UserID().. "\n")
-	LocalPlayer():ConCommand("kickid ".. ply:UserID().. " Banned for 1 hour By "..LocalPlayer():Nick().."\n")
+	RunConsoleCommand("banid", 0, self:GetParent().Player:UserID().. "\n")
+	RunConsoleCommand("kickid", ply:UserID(), "Banned for 1 hour By "..LocalPlayer():Nick().."\n")
 end
 
 vgui.Register("PlayerBanButton", PANEL, "SpawnMenuAdminButton")
@@ -82,9 +82,9 @@ Name: DoCommand
 ---------------------------------------------------------*/
 function PANEL:DoCommand(ply)
 	if ply:GetNWBool("wanted") then
-		LocalPlayer():ConCommand("say /unwanted " .. tostring( ply:UserID()))
+		RunConsoleCommand("say", "/unwanted " .. tostring( ply:UserID()))
 	else
-		LocalPlayer():ConCommand("say /wanted " .. tostring( ply:UserID()))
+		RunConsoleCommand("say", "/wanted " .. tostring( ply:UserID()))
 	end
 end
 
