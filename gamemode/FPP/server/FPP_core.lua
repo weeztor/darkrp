@@ -48,6 +48,7 @@ function FPP.CanTouch(ply, Type, Owner, Toggle)
 		end
 		umsg.Bool(Toggle)
 	umsg.End()
+	
 	return Toggle, Owner
 end
 
@@ -343,6 +344,14 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	end
 	
 	if not ignoreGeneralRestrictTool then
+		local Group = FPP.Groups[FPP.GroupMembers[SteamID] or "default"] -- What group is the player in. If not in a special group, then he's in default group
+		
+		local CanGroup = true
+		if Group and ((Group.allowdefault and table.HasValue(Group.tools, tool)) or -- If the tool is on the BLACKLIST or
+			(not Group.allowdefault and not table.HasValue(Group.tools, tool))) then -- If the tool is NOT on the WHITELIST
+			CanGroup = false
+		end
+		
 		if FPP.RestrictedTools[tool] then
 			if tonumber(FPP.RestrictedTools[tool].admin) == 1 and not ply:IsAdmin() then
 				FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Admin only!", false)
@@ -350,17 +359,18 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 			elseif tonumber(FPP.RestrictedTools[tool].admin) == 2 and not ply:IsSuperAdmin() then
 				FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Superadmin only!", false)
 				return false
+			elseif (tonumber(FPP.RestrictedTools[tool].admin) == 1 and ply:IsAdmin()) or (tonumber(FPP.RestrictedTools[tool].admin) == 2 and ply:IsSuperAdmin()) then
+				CanGroup = true -- If the person is not in the group BUT has admin access, he should be able to use the tool
 			end
 			
-			if FPP.RestrictedTools[tool]["team"] and #FPP.RestrictedTools[tool]["team"] > 0 and not table.HasValue(FPP.RestrictedTools[tool]["team"], ply:Team()) then
+			if FPP.RestrictedTools[tool]["team"] and #FPP.RestrictedTools[tool]["team"] > 0 and not table.HasValue(FPP.RestrictedTools[tool]["team"], ply:Team())
+			and not FPP.GroupMembers[SteamID]/*Is in default group*/ and CanGroup/*Has group access*/ then
 				FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! incorrect team!", false)
 				return false
 			end
 		end
 		
-		local Group = FPP.Groups[FPP.GroupMembers[SteamID] or "default"] -- What group is the player in. If not in a special group, then he's in default group
-		if Group and ((Group.allowdefault and table.HasValue(Group.tools, tool)) or -- If the tool is on the BLACKLIST or
-			(not Group.allowdefault and not table.HasValue(Group.tools, tool))) then -- If the tool is NOT on the WHITELIST
+		if not CanGroup then 
 			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! incorrect group!", false)
 			return false
 		end
