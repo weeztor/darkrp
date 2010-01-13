@@ -23,7 +23,7 @@ then:
 AddCustomVehicle(<One of the vehicles from the rp_getvehicles list>, <Price of the vehicle>, <OPTIONAL jobs that can buy the vehicle>)
 Examples:
 AddCustomVehicle("Jeep", "models/buggy.mdl", 100 )
-AddCustomVehicle("Airboat", "models/airboat.mdl" 600, {TEAM_GUN})
+AddCustomVehicle("Airboat", "models/airboat.mdl", 600, {TEAM_GUN})
 AddCustomVehicle("Airboat", "models/airboat.mdl", 600, {TEAM_GUN, TEAM_MEDIC})
 
 Add those lines under your custom shipments. At the bottom of this file or in data/CustomShipments.txt
