@@ -534,3 +534,32 @@ function ENTITY:FireBullets(bullet, ...)
 	end
 	return backup(self, bullet, ...)
 end
+
+function FPP.Protect.LeaveVehicle(ply, vehicle)
+	timer.Simple(0.1, function()
+		local PlyPos = ply:GetPos()
+		local diff = vehicle:GetPos() - PlyPos
+		
+		local trace = {}
+		trace.start = vehicle:GetPos()	
+		trace.endpos = PlyPos
+		trace.filter = {ply,vehicle}
+		trace.mask = -1
+		local TraceResult = util.TraceLine(trace)
+		
+		if not TraceResult.Hit then
+			return
+		end
+		
+
+		trace.endpos = vehicle:GetPos() + diff
+		TraceResult = util.TraceLine(trace)
+		if not TraceResult.Hit then
+			ply:SetPos(vehicle:GetPos() + diff)
+			return
+		end
+
+		ply:SetPos(vehicle:GetPos() + Vector(0,0,50) + 0.1 * diff)
+	end)
+end
+hook.Add("PlayerLeaveVehicle", "FPP.PlayerLeaveVehicle", FPP.Protect.LeaveVehicle)

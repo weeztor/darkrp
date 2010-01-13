@@ -22,7 +22,7 @@ function RPName(ply, args)
 		return ""
 	end
 	
-	if string.find(args, " ") == 1 or string.find(args, " ") == 1 then--The first space is a normal space and the second one is a system space!
+	if string.find(args, "\160") or string.find(args, " ") == 1 then --No system spaces in your name bro!
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end
