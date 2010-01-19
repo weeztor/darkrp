@@ -161,12 +161,6 @@ function GM:KeyPress(ply, code)
 					for a,b in pairs(tr.Entity.Parts) do umsg.String(b) end
 				umsg.End()
 			end
-
-			if tr.Entity:GetTable().MoneyBag then
-				Notify(ply, 0, 4, "You have found " .. CUR .. tr.Entity:GetTable().Amount .. "!")
-				ply:AddMoney(tr.Entity:GetTable().Amount)
-				tr.Entity:Remove()
-			end
 		else
 			umsg.Start("KillLetter", ply)
 			umsg.End()
@@ -285,14 +279,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		end
 		
 		ply:AddMoney(-amount)
-		local moneybag = ents.Create("prop_physics")
-		moneybag:SetModel("models/props/cs_assault/money.mdl")
-		moneybag.ShareGravgun = true
-		moneybag:SetPos(ply:GetPos())
-		moneybag.nodupe = true
-		moneybag:Spawn()
-		moneybag:GetTable().MoneyBag = true
-		moneybag:GetTable().Amount = amount
+		DarkRPCreateMoneyBag(ply:GetPos(), amount)
 	end
 
 	if CfgVars["dmautokick"] == 1 and killer and killer:IsPlayer() and killer ~= ply then
@@ -706,14 +693,5 @@ function GM:InitPostEntity()
 		if type(b) ~= "function" then
 			otherhooks[a] = nil
 		end
-	end
-end
-
-function GM:ShouldCollide(ent1, ent2)
-	if ent1.MoneyBag and ent2.MoneyBag then return false end
-	if self.BaseClass and self.BaseClass.ShouldCollide then
-		return self.BaseClass.ShouldCollide(ent1, ent2)
-	else 
-		return true
 	end
 end

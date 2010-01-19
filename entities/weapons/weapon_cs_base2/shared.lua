@@ -62,10 +62,13 @@ function SWEP:Deploy()
 	if SERVER then
 		self:SetWeaponHoldType("normal")
 	end
+	
+	self:SetIronsights(self:GetIronsights())
 	return true
 end
 
 function SWEP:Holster()
+	if CLIENT then return end
 	if self:GetIronsights() then
 		GAMEMODE:SetPlayerSpeed(self.Owner, CfgVars["wspd"], CfgVars["rspd"])
 	end
@@ -77,7 +80,7 @@ Reload does nothing
 ---------------------------------------------------------*/
 function SWEP:Reload()
 	self.Weapon:DefaultReload(ACT_VM_RELOAD)
-	self.Ironsights = false
+	self:SetIronsights(false)
 end
 
 /*---------------------------------------------------------
@@ -87,7 +90,7 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
-	if not self:CanPrimaryAttack() then return end
+	if not self:CanPrimaryAttack() then self:SetIronsights(false) return end
 	if not self.Ironsights and GetGlobalInt("ironshoot") ~= 0 then return end
 	-- Play shoot sound
 	self.Weapon:EmitSound(self.Primary.Sound)
@@ -103,6 +106,7 @@ function SWEP:PrimaryAttack()
 	-- Punch the player's view
 	self.Owner:ViewPunch(Angle(math.Rand(-0.2,-0.1) * self.Primary.Recoil, math.Rand(-0.1,0.1) *self.Primary.Recoil, 0))
 end
+
 /*---------------------------------------------------------
 Name: SWEP:PrimaryAttack()
 Desc: +attack1 has been pressed
@@ -251,7 +255,7 @@ end
 
 /*---------------------------------------------------------
 onRestore
-	Loaded a saved game (or changelevel)
+	Loaded a saved game
 ---------------------------------------------------------*/
 function SWEP:OnRestore()
 	self.NextSecondaryAttack = 0

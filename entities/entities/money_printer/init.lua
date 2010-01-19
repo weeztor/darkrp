@@ -71,18 +71,13 @@ function ENT:CreateMoneybag()
 	local MoneyPos = self:GetPos()
 
 	if math.random(1, 22) == 3 then self:BurstIntoFlames() end
-	local moneybag = ents.Create("prop_physics")
-	moneybag:SetModel("models/props/cs_assault/money.mdl")
-	moneybag.ShareGravgun = true
-	moneybag:SetPos(Vector(MoneyPos.x + 15, MoneyPos.y, MoneyPos.z + 15))
-	moneybag.nodupe = true
-	moneybag:Spawn()
-	moneybag:GetTable().MoneyBag = true
+	
 	local amount = GetGlobalInt("mprintamount")
 	if amount == 0 then
 		amount = 250
 	end
-	moneybag:GetTable().Amount = amount
+
+	DarkRPCreateMoneyBag(Vector(MoneyPos.x + 15, MoneyPos.y, MoneyPos.z + 15), amount)
 	self.sparking = false
 	timer.Simple(math.random(100, 350), PrintMore, self)
 end
