@@ -954,11 +954,11 @@ function RPSelectwhohearit()
 		local w, l = chat.GetChatBoxPos()
 		local h = l - (#playercolors * 20) - 20
 		local AllTalk = GetGlobalInt("alltalk") == 1
-		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" ) or HearMode == "speak" ) then
+		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") or HearMode == "speak" ) then
 			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_noone, HearMode), "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
 		elseif HearMode == "talk through OOC" or HearMode == "advert" then
 			draw.WordBox(2, w, h, LANGUAGE.hear_everyone, "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
-		elseif not AllTalk or (AllTalk and HearMode ~= "talk" ) then
+		elseif not AllTalk or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") then
 			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_certain_persons, HearMode), "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
 		end
 		
