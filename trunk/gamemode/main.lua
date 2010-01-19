@@ -366,7 +366,7 @@ end
  ---------------------------------------------------------*/
 local FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle", "prop_physics"}
 
-function IsFlammable(ent)
+local function IsFlammable(ent)
 	local class = ent:GetClass()
 	for k, v in pairs(FlammableProps) do
 		if class == v then return true end
@@ -375,9 +375,9 @@ function IsFlammable(ent)
 end
 
 -- FireSpread from SeriousRP
-function FireSpread(e)
+local function FireSpread(e)
 	if e:IsOnFire() then
-		if e:GetTable().MoneyBag then
+		if e:IsMoneyBag() then
 			e:Remove()
 		end
 		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
@@ -1679,7 +1679,7 @@ AddChatCommand("/credits", GetDarkRPAuthors)
 /*---------------------------------------------------------
  Money
  ---------------------------------------------------------*/
-function GiveMoney(ply, args)
+local function GiveMoney(ply, args)
 	if args == "" then return "" end
 
 	if not tonumber(args) then
@@ -1711,7 +1711,7 @@ function GiveMoney(ply, args)
 end
 AddChatCommand("/give", GiveMoney)
 
-function DropMoney(ply, args)
+local function DropMoney(ply, args)
 	if args == "" then return "" end
 	
 	if not tonumber(args) then
@@ -1737,14 +1737,7 @@ function DropMoney(ply, args)
 	trace.filter = ply
 
 	local tr = util.TraceLine(trace)
-	local moneybag = ents.Create("prop_physics")
-	moneybag:SetModel("models/props/cs_assault/money.mdl")
-	moneybag.ShareGravgun = true
-	moneybag:SetPos(tr.HitPos)
-	moneybag.nodupe = true
-	moneybag:Spawn()
-	moneybag:GetTable().MoneyBag = true
-	moneybag:GetTable().Amount = amount
+	DarkRPCreateMoneyBag(tr.HitPos, amount)
 
 	return ""
 end

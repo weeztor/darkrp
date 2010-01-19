@@ -11,6 +11,7 @@ function KnockoutToggle(player, command, args, caller)
 	if not player.SleepSound then
 		player.SleepSound = CreateSound(player, "npc/ichthyosaur/water_breath.wav")
 	end
+	
 	if player:Alive() then
 		if (player.KnockoutTimer and player.KnockoutTimer + KnockoutTime < CurTime()) or command == "force" then
 			if (player.Sleeping and ValidEntity(player.SleepRagdoll)) then
@@ -27,7 +28,14 @@ function KnockoutToggle(player, command, args, caller)
 				ragdoll:Remove()
 				if player.WeaponsForSleep and player:GetTable().BeforeSleepTeam == player:Team() then
 					for k,v in pairs(player.WeaponsForSleep) do
-						player:Give(v)
+						local wep = player:Give(v[1])
+						player:RemoveAllAmmo()
+						player:SetAmmo(v[2], v[3], false)
+						player:SetAmmo(v[4], v[5], false)
+						
+						wep:SetClip1(v[6])
+						wep:SetClip2(v[7])
+						
 					end
 					local cl_defaultweapon = player:GetInfo( "cl_defaultweapon" )
 					if ( player:HasWeapon( cl_defaultweapon )  ) then
@@ -66,7 +74,10 @@ function KnockoutToggle(player, command, args, caller)
 
 				player.WeaponsForSleep = {}
 				for k,v in pairs(player:GetWeapons( )) do
-					player.WeaponsForSleep[k] = v:GetClass()
+					player.WeaponsForSleep[k] = {v:GetClass(), player:GetAmmoCount(v:GetPrimaryAmmoType()), 
+					v:GetPrimaryAmmoType(), player:GetAmmoCount(v:GetSecondaryAmmoType()), v:GetSecondaryAmmoType(),
+					v:Clip1(), v:Clip2()}
+					/*{class, ammocount primary, type primary, ammo count secondary, type secondary, clip primary, clip secondary*/
 				end
 				local ragdoll = ents.Create("prop_ragdoll")
 				ragdoll:SetPos(player:GetPos())
