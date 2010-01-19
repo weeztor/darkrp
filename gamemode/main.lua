@@ -1556,6 +1556,7 @@ end
 AddChatCommand("/y", Yell)
 
 local function Me(ply, args)
+	if args == "" then return "" end
 	if GetGlobalInt("alltalk") == 1 then
 		for _, target in pairs(player.GetAll()) do
 			TalkToPerson(target, team.GetColor(ply:Team()), ply:Nick() .. " " .. args)
