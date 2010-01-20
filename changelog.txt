@@ -1,4 +1,4 @@
-DarkRP 2.3.7 SVN 
+DarkRP 2.4.1
 
 [ADD] rp_ironshoot, set if people have to see through the ironsights to shoot
 [ADD] Falco's Prop protection (FPP), reporting for duty to replace Simple Prop Protection!

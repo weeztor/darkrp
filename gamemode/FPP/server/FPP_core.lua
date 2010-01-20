@@ -118,7 +118,7 @@ function FPP.PlayerCanTouchEnt(ply, ent, Type1, Type2, TryingToShare, antiloop)
 			for k,v in pairs(constraint.GetAllConstrainedEntities(ent)) do
 				if v ~= ent then
 					local cantouch, why = cantouchsingleEnt(ply, v, Type1, Type2, false)
-					why = why or "I don't know"
+					why = why or "World prop"
 					if not cantouch then
 						if type(why) == "Player" then why = why:Nick() end
 						return false, "Constrained entity: "..why
@@ -147,16 +147,16 @@ function FPP.ShowOwner()
 			local class, cantouch, why = wep:GetClass()
 			if class == "weapon_physgun" then
 				cantouch, why = FPP.PlayerCanTouchEnt(ply, trace.Entity, "Physgun", "FPP_PHYSGUN")
-				why = why or trace.Entity.Owner or "I don't know, lol"
+				why = why or trace.Entity.Owner or "World prop"
 			elseif class == "weapon_physcannon" then
 				cantouch, why = FPP.PlayerCanTouchEnt(ply, trace.Entity, "Gravgun", "FPP_GRAVGUN")
-				why = why or trace.Entity.Owner or "I don't know, lol"
+				why = why or trace.Entity.Owner or "World prop"
 			elseif class == "gmod_tool" then
 				cantouch, why = FPP.PlayerCanTouchEnt(ply, trace.Entity, "Toolgun", "FPP_TOOLGUN")
-				why = why or trace.Entity.Owner or "I don't know, lol"
+				why = why or trace.Entity.Owner or "World prop"
 			else
 				cantouch, why = FPP.PlayerCanTouchEnt(ply, trace.Entity, "EntityDamage", "FPP_ENTITYDAMAGE")
-				why = why or trace.Entity.Owner or "I don't know, lol"
+				why = why or trace.Entity.Owner or "World prop"
 			end
 			if type(why) == "Player" and why:IsValid() then why = why:Nick() end
 			DoShowOwner(ply, trace.Entity, cantouch, why)

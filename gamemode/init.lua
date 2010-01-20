@@ -1,4 +1,4 @@
-GM.Name = "DarkRP 2.3.7"
+GM.Name = "DarkRP 2.4.1"
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
 
 CUR = "$"
@@ -250,4 +250,27 @@ function RefreshRPSettings(RESET)
 	end
 end
 RefreshRPSettings()
+
+local function RPVersion(ply)
+	local FindGameModes = file.FindDir("../gamemodes/*")
+	for _, folder in pairs(FindGameModes) do
+		local info_txt = file.Read("../gamemodes/"..folder.."/info.txt")
+		if not info_txt then info_txt = "" end
+		
+		local Gamemode = util.KeyValuesToTable(info_txt)
+		if Gamemode.name and string.lower(Gamemode.name) == "darkrp" then 
+			local version = Gamemode.version
+			local SVN = " non-SVN version"
+			
+			local entries = file.Read("../gamemodes/"..folder.."/.svn/entries")
+			if entries then
+				local _, dirFind = string.find(entries, "dir")
+				SVN = " revision " .. string.sub(entries, dirFind + 2, dirFind + 4)
+			end
+			TalkToPerson(ply, Color(0,0,255,255), "This server is running "..folder, Color(1,255, 1), version .. SVN, ply)
+			break
+		end
+	end
+end
+concommand.Add("rp_version", RPVersion)
 
