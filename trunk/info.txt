@@ -1,7 +1,7 @@
 "Gamemode"
 {
     "name"  "DarkRP"
-    "version"   "2.3.7"
+    "version"   "2.4.1"
 
     "author_name"   "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
     "author_email"  ""

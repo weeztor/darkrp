@@ -175,7 +175,6 @@ local function AddBlocked(ply, cmd, args)
 		for k,v in pairs(data) do
 			if tonumber(v.id) > highest then
 				highest = tonumber(v.id)
-				print(highest)
 			end
 			if v.key == args[1] and v.value == args[2] then
 				found = true

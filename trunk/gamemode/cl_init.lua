@@ -1025,9 +1025,11 @@ end
 
 local function AddToChat(msg)
 	local col1 = Color(msg:ReadShort(), msg:ReadShort(), msg:ReadShort())
+
 	local name = msg:ReadString()
 	local ply = msg:ReadEntity()
 	local col2 = Color(msg:ReadShort(), msg:ReadShort(), msg:ReadShort())
+
 	local text = msg:ReadString()
 	if text and text ~= "" then
 		chat.AddText(col1, name, col2, ": "..text)

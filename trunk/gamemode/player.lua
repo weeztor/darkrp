@@ -37,7 +37,6 @@ function RPName(ply, args)
 	'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 
 	'z', 'x', 'c', 'v', 'b', 'n', 'm', ' '}
 	
-	//print(low, string.Explode(low, ""))
 	for k in string.gmatch(args, ".") do
 		if not table.HasValue(allowed, string.lower(k)) then
 			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", k))
