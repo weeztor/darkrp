@@ -17,6 +17,16 @@ function FPP.AdminMenu(Panel)
 	local superadmin = LocalPlayer():IsSuperAdmin()
 	if not superadmin then
 		Panel:AddControl("Label", {Text = "You are not a superadmin\nThe changes you make will not have any effect."})
+		local AmAdmin = vgui.Create("DButton")
+		AmAdmin:SetText("Unlock buttons anyway")
+		AmAdmin:SetToolTip("If you're REALLY not an admin it won't work")
+		
+		function AmAdmin:DoClick()
+			AmAdmin:SetText("Buttons unlocked")
+			AmAdmin:SetToolTip("The changes you make now DO have effect unless you're really not an admin")
+			superadmin = true
+		end
+		AdminPanel:AddPanel(AmAdmin)
 	end
 	
 	local function MakeOption(Name)
