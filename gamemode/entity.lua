@@ -26,20 +26,16 @@ function meta:IsDoor()
 end
 
 function meta:IsOwned()
-	local num = 0
-	for n = 1, self:GetNWInt("OwnerCount") do
-		if self:GetNWInt("Ownersz" .. n) > -1 then
-			num = num + 1
-		end
-	end
+	self.DoorData = self.DoorData or {}
 
-	if ValidEntity(self:GetNWEntity("TheOwner")) or num > 0 then return true end
+	if ValidEntity(self.DoorData.Owner) then return true end
 
 	return false
 end
 
 function meta:GetDoorOwner()
-	return self:GetNWEntity("TheOwner")
+	self.DoorData = self.DoorData or {}
+	return self.DoorData.Owner
 end
 
 function meta:IsMasterOwner(ply)
@@ -52,27 +48,20 @@ end
 
 function meta:OwnedBy(ply)
 	if ply == self:GetDoorOwner() then return true end
-
-	local num = self:GetNWInt("OwnerCount")
-
-	for n = 1, num do
-		if ply:EntIndex() == self:GetNWInt("Ownersz" .. n) then
-			return true
-		end
+	self.DoorData = self.DoorData or {}
+	
+	if self.DoorData.ExtraOwners and table.HasValue(self.DoorData.ExtraOwners, ply) then
+		return true
 	end
 
 	return false
 end
 
 function meta:AllowedToOwn(ply)
-	local num = self:GetNWInt("AllowedNum")
-
-	for n = 1, num do
-		if self:GetNWInt("Allowed" .. n) == ply:EntIndex() then
-			return true
-		end
+	self.DoorData = self.DoorData or {}
+	if self.DoorData.AllowedToOwn and table.HasValue(self.DoorData.AllowedToOwn, ply) then
+		return true
 	end
-
 	return false
 end
 
@@ -90,33 +79,40 @@ local function SetDoorOwnable(ply)
 	if not ValidEntity(trace.Entity) then return "" end
 	local ent = trace.Entity
 	if ply:IsSuperAdmin() and ent:IsDoor() and ply:GetPos():Distance(ent:GetPos()) < 115 then
-		ent:SetNWBool("nonOwnable", not ent:GetNWBool("nonOwnable"))
+		ent.DoorData = ent.DoorData or {}
+		ent.DoorData.NonOwnable = not ent.DoorData.NonOwnable 
 		-- Save it for future map loads
 		DB.StoreDoorOwnability(ent)
 	end
 	ent:UnOwn()
+	ply.LookingAtDoor = nil -- Send the new data to the client who is looking at the door :D
 	return ""
 end
 AddChatCommand("/toggleownable", SetDoorOwnable)
 
 local time3 = false
-local function SetDoorCPOwnable(ply)
+local function SetDoorGroupOwnable(ply, arg)
 	if time3 then return "" end
 	time3 = true
 	timer.Simple(0.1, function()  time3 = false end)
 	local trace = ply:GetEyeTrace()
 	if not ValidEntity(trace.Entity) then return "" end
+	if not RPExtraTeamDoors[arg] and arg ~= "" then Notify(ply, 1, 10, "Door group does not exist!") return "" end
+	
 	local ent = trace.Entity
 	if ply:IsSuperAdmin() and ent:IsDoor() and ply:GetPos():Distance(ent:GetPos()) < 115 then
-		for k,v in pairs(player.GetAll()) do ent:UnOwn(v) end
-		ent:SetNWBool("CPOwnable", not ent:GetNWBool("CPOwnable"))
+		ent.DoorData = ent.DoorData or {}
+		ent.DoorData.GroupOwn = arg
+		if arg == "" then ent.DoorData.GroupOwn = nil end
+		Notify(ply, 1, 8, "Door group set succesfully")
 		-- Save it for future map loads
-		DB.StoreCPDoorOwnability(ent)
+		DB.StoreGroupDoorOwnability(ent)
 	end
 	ent:UnOwn()
+	ply.LookingAtDoor = nil
 	return ""
 end
-AddChatCommand("/togglecpownable", SetDoorCPOwnable)
+AddChatCommand("/togglegroupownable", SetDoorGroupOwnable)
 
 local time2 = false
 local function OwnDoor(ply)
@@ -127,12 +123,13 @@ local function OwnDoor(ply)
 	local trace = ply:GetEyeTrace()
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 200 then
+		trace.Entity.DoorData = trace.Entity.DoorData or {}
 		if RPArrestedPlayers[ply:SteamID()] then
 			Notify(ply, 1, 5, LANGUAGE.door_unown_arrested)
 			return ""
 		end
 
-		if trace.Entity:GetNWBool("nonOwnable") or trace.Entity:GetNWBool("CPOwnable") then
+		if trace.Entity.DoorData.NonOwnable or (trace.Entity.DoorData.GroupOwn and not table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], ply:Team())) then
 			Notify(ply, 1, 5, LANGUAGE.door_unownable)
 			return ""
 		end
@@ -144,6 +141,7 @@ local function OwnDoor(ply)
 			ply:GetTable().Ownedz[trace.Entity:EntIndex()] = nil
 			ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz - 1
 			ply:AddMoney(math.floor(((CfgVars["doorcost"] * 0.66666666666666)+0.5)))
+			ply.LookingAtDoor = nil
 		else
 			if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
 				Notify(ply, 1, 4, LANGUAGE.door_already_owned)
@@ -178,6 +176,7 @@ local function OwnDoor(ply)
 
 			ply:GetTable().Ownedz[trace.Entity:EntIndex()] = trace.Entity
 		end
+		ply.LookingAtDoor = nil
 		return ""
 	end
 	Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "vehicle/door"))
@@ -186,7 +185,7 @@ end
 AddChatCommand("/toggleown", OwnDoor)
 
 function meta:UnOwn(ply)
-
+	self.DoorData = self.DoorData or {}
 	if not ply then
 		ply = self:GetDoorOwner()
 
@@ -194,99 +193,96 @@ function meta:UnOwn(ply)
 	end
 
 	if self:IsMasterOwner(ply) then
-		self:SetNWEntity("TheOwner", NULL)
+		self.DoorData.Owner = nil
 	else
 		self:RemoveOwner(ply)
 	end
 
 	local num = 0
 
-	for n = 1, self:GetNWInt("OwnerCount") do
-		if self:GetNWInt("Ownersz" .. n) > -1 then
-			num = num + 1
+	if self.DoorData.ExtraOwners and table.HasValue(self.DoorData.ExtraOwners, ply) then
+		for k,v in pairs(self.DoorData.ExtraOwners) do
+			if v == ply then
+				table.remove(self.DoorData.ExtraOwners, k)
+				break
+			end
 		end
 	end
-
-	if not self:GetDoorOwner():IsValid() and num == 0 then
-		num = self:GetNWInt("AllowedNum")
-		for n = 1, num do
-			self:SetNWInt("Allowed" .. n, -1)
-		end
-	end
+	ply.LookingAtDoor = nil
 end
 
 function meta:AddAllowed(ply)
-	local num = self:GetNWInt("AllowedNum")
-	num = num + 1
-
-	self:SetNWInt("AllowedNum", num)
-	self:SetNWInt("Allowed" .. num, ply:EntIndex())
+	self.DoorData = self.DoorData or {}
+	self.DoorData.AllowedToOwn = self.DoorData.AllowedToOwn or {}
+	table.insert(self.DoorData.AllowedToOwn, ply)
 end
 
 function meta:RemoveAllowed(ply)
-	local num = self:GetNWInt("AllowedNum")
-
-	for n = 1, num do
-		if self:GetNWInt("Allowed" .. n) == ply:EntIndex() then
-			self:SetNWInt("Allowed" .. n, -1)
+	self.DoorData = self.DoorData or {}
+	self.DoorData.AllowedToOwn = self.DoorData.AllowedToOwn or {}
+	for k,v in pairs(self.DoorData.AllowedToOwn) do
+		if v == ply then
+			table.remove(self.DoorData.AllowedToOwn, k)
 			break
 		end
 	end
 end
 
 function meta:AddOwner(ply)
-	local num = self:GetNWInt("OwnerCount")
-	num = num + 1
-
-	self:SetNWInt("OwnerCount", num)
-	self:SetNWInt("Ownersz" .. num, ply:EntIndex())
+	self.DoorData = self.DoorData or {}
+	self.DoorData.ExtraOwners = self.DoorData.ExtraOwners or {}
+	table.insert(self.DoorData.ExtraOwners, ply)
 	self:RemoveAllowed(ply)
 end
 
 function meta:RemoveOwner(ply)
-	local num = self:GetNWInt("OwnerCount")
-	for n = 1, num do
-		if ply:EntIndex() == self:GetNWInt("Ownersz" .. n) then
-			self:SetNWInt("Ownersz" .. n, -1)
+	self.DoorData = self.DoorData or {}
+	self.DoorData.ExtraOwners = self.DoorData.ExtraOwners or {}
+	
+	for k,v in pairs(self.DoorData.ExtraOwners) do
+		if v == ply then
+			table.remove(self.DoorData.ExtraOwners, k)
 			break
 		end
 	end
 end
 
 function meta:Own(ply)
-
+	self.DoorData = self.DoorData or {}
 	if self:AllowedToOwn(ply) then
 		self:AddOwner(ply)
 		return
 	end
 
 	if not self:IsOwned() and not self:OwnedBy(ply) then
-		self:SetNWEntity("TheOwner", ply)
+		self.DoorData.Owner = ply
 	end
 end
 
 function SetDoorTitle(ply, args)
 	local trace = ply:GetEyeTrace()
-
+	
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
+		trace.Entity.DoorData = trace.Entity.DoorData or {}
 		if ply:IsSuperAdmin() then
-			if trace.Entity:GetNWBool("nonOwnable") then
+			if trace.Entity.DoorData.NonOwnable then
 				DB.StoreNonOwnableDoorTitle(trace.Entity, args)
 				return ""
 			end
 		else
-			if trace.Entity:GetNWBool("nonOwnable") then
+			if trace.Entity.DoorData.NonOwnable then
 				Notify(ply, 1, 6, string.format(LANGUAGE.need_admin, "/title"))
 			end
 		end
 
 		if trace.Entity:OwnedBy(ply) then
-			trace.Entity:SetNWString("title", args)
+			trace.Entity.DoorData.title = args
 		else
 			Notify(ply, 1, 6, string.format(LANGUAGE.door_need_to_own, "/title"))
 		end
 	end
-
+	
+	ply.LookingAtDoor = nil
 	return ""
 end
 AddChatCommand("/title", SetDoorTitle)
@@ -295,9 +291,10 @@ function RemoveDoorOwner(ply, args)
 	local trace = ply:GetEyeTrace()
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
+		trace.Entity.DoorData = trace.Entity.DoorData or {}
 		target = FindPlayer(args)
 
-		if trace.Entity:GetNWBool("nonOwnable") then
+		if trace.Entity.DoorData.NonOwnable then
 			Notify(ply, 1, 4, LANGUAGE.door_rem_owners_unownable)
 		end
 
@@ -317,6 +314,8 @@ function RemoveDoorOwner(ply, args)
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
 		end
 	end
+	
+	ply.LookingAtDoor = nil
 	return ""
 end
 AddChatCommand("/removeowner", RemoveDoorOwner)
@@ -326,9 +325,10 @@ local function AddDoorOwner(ply, args)
 	local trace = ply:GetEyeTrace()
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
+		trace.Entity.DoorData = trace.Entity.DoorData or {}
 		target = FindPlayer(args)
 		if target then
-			if trace.Entity:GetNWBool("nonOwnable") then
+			if trace.Entity.DoorData.NonOwnable then
 				Notify(ply, 1, 4, LANGUAGE.door_add_owners_unownable)
 				return ""
 			end
@@ -346,6 +346,8 @@ local function AddDoorOwner(ply, args)
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
 		end
 	end
+	
+	ply.LookingAtDoor = nil
 	return ""
 end
 AddChatCommand("/addowner", AddDoorOwner)

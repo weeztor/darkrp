@@ -1,3 +1,6 @@
+DarkRP 2.4.1 SVN
+[ADD] Group ownable doors 
+
 DarkRP 2.4.1
 
 [ADD] rp_ironshoot, set if people have to see through the ironsights to shoot

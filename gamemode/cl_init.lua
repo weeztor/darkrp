@@ -1,5 +1,5 @@
 GlobalInts = {}
-
+require("datastream")
 
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
@@ -329,73 +329,66 @@ local function DrawDisplay()
 			local ownerstr = ""
 			local ent = tr.Entity
 
-			if ValidEntity(ent:GetNWEntity("TheOwner")) then
+			if ValidEntity(ent:GetDoorOwner()) then
 				ownerstr = ent:GetDoorOwner():Nick() .. "\n"
 			end
 
-			local num = ent:GetNWInt("OwnerCount")
-
-			for n = 1, num do
-				if (ent:GetNWInt("Ownersz" .. n) or -1) > -1 then
-					if ValidEntity(player.GetByID(ent:GetNWInt("Ownersz" .. n))) then
-						ownerstr = ownerstr .. player.GetByID(ent:GetNWInt("Ownersz" .. n)):Nick() .. "\n"
-					end
+			for k,v in pairs(player.GetAll()) do
+				if ent:OwnedBy(v) and v ~= ent:GetDoorOwner() then
+					ownerstr = ownerstr .. v:Nick() .. "\n"
 				end
 			end
-
-			num = ent:GetNWInt("AllowedNum")
-
-			for n = 1, num do
-				if ent:GetNWInt("Allowed" .. n) == LocalPlayer():EntIndex() then
-					ownerstr = ownerstr .. LANGUAGE.keys_allowed_to_coown
-				elseif ent:GetNWInt("Allowed" .. n) > -1 then
-					if ValidEntity(player.GetByID(ent:GetNWInt("Allowed" .. n))) then
-						ownerstr = ownerstr .. string.format(LANGUAGE.keys_other_allowed, player.GetByID(ent:GetNWInt("Allowed" .. n)):Nick())
-					end
+			
+			if ent.DoorData.AllowedToOwn and table.Count(ent.DoorData.AllowedToOwn) > 0 then
+				local names = {}
+				for a,b in pairs(ent.DoorData.AllowedToOwn) do
+					table.insert(names, b:Nick())
 				end
+				ownerstr = ownerstr .. string.format(LANGUAGE.keys_other_allowed).. table.concat(names, "\n").."\n"
 			end
 
 			if not LocalPlayer():InVehicle() then
-				local blocked = ent:GetNWBool("nonOwnable")
-				local CPOnly = ent:GetNWBool("CPOwnable")
+				local blocked = ent.DoorData.NonOwnable
 				local st = nil
 				local whiteText = false -- false for red, true for white text
-
+				
+				ent.DoorData.title = ent.DoorData.title or ""
+				
 				if ent:IsOwned() then
 					whiteText = true
 					if superAdmin then
 						if blocked then
-							st = ent:GetNWString("title") .. "\n"..LANGUAGE.keys_allow_ownership
+							st = ent.DoorData.title .. "\n"..LANGUAGE.keys_allow_ownership
 						else
 							if ownerstr == "" then
-								st = ent:GetNWString("title") .. "\n"..LANGUAGE.keys_disallow_ownership .. "\n"
+								st = ent.DoorData.title .. "\n"..LANGUAGE.keys_disallow_ownership .. "\n"
 							else
-								if ent:OwnedBy(LocalPlayer()) and not CPOnly then
-									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
-								elseif not CPOnly then
-									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr .. LANGUAGE.keys_disallow_ownership .. "\n"
+								if ent:OwnedBy(LocalPlayer()) and not ent.DoorData.GroupOwn then
+									st = ent.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
+								elseif not ent.DoorData.GroupOwn then
+									st = ent.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr .. LANGUAGE.keys_disallow_ownership .. "\n"
 								elseif not ent:IsVehicle() then
-									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. LANGUAGE.keys_cops_and_mayor .. "\n" .. LANGUAGE.keys_disallow_ownership .. "\n"
+									st = ent.DoorData.title .. "\n" .. ent.DoorData.GroupOwn .. "\n" .. LANGUAGE.keys_disallow_ownership .. "\n"
 								end
 							end
-							if CPOnly and not ent:IsVehicle() then
+							if ent.DoorData.GroupOwn and not ent:IsVehicle() then
 								st = st .. LANGUAGE.keys_everyone
-							elseif not ent:IsVehicle() then
-								st = st .. LANGUAGE.keys_cops
+							elseif not ent:IsVehicle() and ent.DoorData.GroupOwn then
+								st = st .. ent.DoorData.GroupOwn
 							end
 						end
 					else
 						if blocked then
-							st = ent:GetNWString("title")
+							st = ent.DoorData.title
 						else
 							if ownerstr == "" then
-								st = ent:GetNWString("title")
+								st = ent.DoorData.title
 							else
-								if CPOnly then
+								if ent.DoorData.GroupOwn then
 									whiteText = true
-									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. LANGUAGE.keys_cops_and_mayor
+									st = ent.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ent.DoorData.GroupOwn
 								else
-									st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
+									st = ent.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
 								end
 							end
 						end
@@ -404,11 +397,11 @@ local function DrawDisplay()
 					if superAdmin then
 						if blocked then
 							whiteText = true
-							st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_allow_ownership
+							st = ent.DoorData.title .. "\n".. LANGUAGE.keys_allow_ownership
 						else
-							if CPOnly then
+							if ent.DoorData.GroupOwn then
 								whiteText = true
-								st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. LANGUAGE.keys_cops_and_mayor
+								st = ent.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ent.DoorData.GroupOwn
 								if not ent:IsVehicle() then
 									st = st .. "\n".. LANGUAGE.keys_everyone
 								end
@@ -422,11 +415,11 @@ local function DrawDisplay()
 					else
 						if blocked then
 							whiteText = true
-							st = ent:GetNWString("title")
+							st = ent.DoorData.title
 						else
-							if CPOnly then
+							if ent.DoorData.GroupOwn then
 								whiteText = true
-								st = ent:GetNWString("title") .. "\n".. LANGUAGE.keys_owned_by .."\n" .. LANGUAGE.keys_cops_and_mayor
+								st = ent.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ent.DoorData.GroupOwn
 							else
 								st = LANGUAGE.keys_unowned
 							end
@@ -1044,10 +1037,18 @@ local function AddToChat(msg)
 end
 usermessage.Hook("DarkRP_Chat", AddToChat)
 
-function GetAvailableVehicles()
+local function GetAvailableVehicles()
 	print("Available vehicles for custom vehicles:")
 	for k,v in pairs(list.Get("Vehicles")) do
 		print("\""..k.."\"")
 	end
 end
 concommand.Add("rp_getvehicles", GetAvailableVehicles)
+
+local function RetrieveDoorData(handler, id, encoded, decoded)
+	-- decoded[1] = Entity you were looking at
+	-- Decoded[2] = table of that door
+	if not ValidEntity(decoded[1]) then print("NOES") return end
+	decoded[1].DoorData = decoded[2]
+end
+datastream.Hook("DarkRP_DoorData", RetrieveDoorData)
