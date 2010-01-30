@@ -26,9 +26,9 @@ function ENT:Use(activator,caller)
 	self:Remove()
 end
 
-function ENT:PhysicsCollide( data, physobj )
+/*function ENT:PhysicsCollide( data, physobj )
 	if physobj and physobj:IsValid() then physobj:Sleep() end
-end
+end*/
 
 function DarkRPCreateMoneyBag(pos, amount)
 	local moneybag = ents.Create("spawned_money")
