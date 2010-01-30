@@ -19,3 +19,8 @@ function ENT:SetLabel(  )
 	self:SetOverlayText( text )
 end
 
+function ENT:SetupDataTables()
+	self:DTVar("Bool",0,"IsBeingHeld")
+	self:DTVar("Entity",1,"phone")
+	self:DTVar("Entity", 2, "owning_ent")
+end

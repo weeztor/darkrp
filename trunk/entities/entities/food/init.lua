@@ -36,6 +36,6 @@ function ENT:Use(activator,caller)
 end
 
 function ENT:OnRemove()
-	local ply = self.Entity:GetNWEntity("owning_ent")
+	local ply = self.Entity.dt.owning_ent
 	ply.maxFoods = ply.maxFoods - 1
 end

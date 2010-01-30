@@ -28,8 +28,8 @@ function ENT:OnTakeDamage(dmg)
 end
 
 function ENT:SetContents(s, c, w)
-	self.Entity:SetNWString("contents", s)
-	self.Entity:SetNWInt("count", c)
+	self.Entity.dt.contents = s
+	self.Entity.dt.count = c
 end
 
 function ENT:Use()
@@ -44,10 +44,10 @@ function ENT:SpawnItem()
 	if not ValidEntity(self.Entity) then return end
 	timer.Destroy(self.Entity:EntIndex() .. "crate")
 	self.sparking = false
-	local count = self.Entity:GetNWInt("count")
+	local count = self.Entity.dt.count
 	local pos = self:GetPos()
 	if count <= 1 then self.Entity:Remove() end
-	local contents = self.Entity:GetNWString("contents")
+	local contents = self.Entity.dt.contents
 	local weapon = ents.Create("spawned_weapon")
 	
 	local found = false
@@ -66,7 +66,7 @@ function ENT:SpawnItem()
 	weapon.nodupe = true
 	weapon:Spawn()
 	count = count - 1
-	self.Entity:SetNWInt("count", count)
+	self.Entity.dt.count = count
 	self.locked = false
 end
 
@@ -86,8 +86,8 @@ function ENT:Destruct()
 	if self.Entity.Destructed then return end
 	self.Entity.Destructed = true
 	local vPoint = self.Entity:GetPos()
-	local contents = self.Entity:GetNWString("contents")
-	local count = self.Entity:GetNWInt("count")
+	local contents = self.Entity.dt.contents
+	local count = self.Entity.dt.count
 	local class = nil
 	local model = nil
 	

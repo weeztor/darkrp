@@ -11,11 +11,11 @@ function ENT:Initialize()
 	local phys = self.Entity:GetPhysicsObject()
 
 	if phys and phys:IsValid() then phys:Wake() end
-	local ply = self.Entity:GetNWEntity("owning_ent")
+	local ply = self.Entity.dt.owning_ent
 end
 
 function ENT:OnRemove()
-	local ply = self.Entity:GetNWEntity("owning_ent")
+	local ply = self.Entity.dt.owning_ent
 	if not ValidEntity(ply) then return end
 	if not ply.maxletters then
 		ply.maxletters = 0

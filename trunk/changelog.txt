@@ -1,5 +1,6 @@
 DarkRP 2.4.1 SVN
-[ADD] Group ownable doors 
+[ADD] Group ownable doors
+[REMOVE] NWVars in doors and custom entities (shipments, druglabs etc.)
 
 DarkRP 2.4.1
 
