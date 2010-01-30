@@ -4,3 +4,8 @@ ENT.PrintName = "Shipment"
 ENT.Author = "philxyz"
 ENT.Spawnable = false
 ENT.AdminSpawnable = false
+
+function ENT:SetupDataTables()
+	self:DTVar("String",0,"contents")
+	self:DTVar("Int",1,"count")
+end

@@ -93,9 +93,9 @@ function PANEL:UpdatePlayerData()
 	self.lblJob:SizeToContents()
 	self.lblPing:SetText(self.Player:Ping())
 	self.lblWarranted:SetImage("gui/silkicons/exclamation")
-	if self.Player:GetNetworkedBool("wanted") then
+	if self.Player:GetNWBool("wanted") then
 		self.lblWarranted:SetVisible(true)
-	elseif not self.Player:GetNetworkedBool("wanted") then
+	elseif not self.Player:GetNWBool("wanted") then
 		self.lblWarranted:SetVisible(false)
 	end
 

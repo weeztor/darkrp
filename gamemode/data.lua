@@ -594,7 +594,6 @@ end
 
 function DB.StoreGroupOwnableDoorTitle(ent, text)
 	sql.Query("UPDATE darkrp_groupdoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
-	//ent:SetNWString("title", text)
 	e.DoorData = e.DoorData or {}
 	ent.DoorData.title = text
 end

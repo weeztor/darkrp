@@ -130,7 +130,6 @@ function SWEP:Reload()
 		if trace.Entity:IsVehicle() then
 			self.Owner:SendLua("KeysMenu(true)")
 		else
-			print("sending")
 			self.Owner:SendLua("KeysMenu(false)")
 		end
 	end

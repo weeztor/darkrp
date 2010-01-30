@@ -16,10 +16,10 @@ function ENT:Initialize()
 	if phys and phys:IsValid() then phys:Wake() end
 	self.sparking = false
 	self.damage = 100
-	local ply = self:GetNWEntity("owning_ent")
+	local ply = self.dt.owning_ent
 	self.Entity.SID = ply.SID
 	self.SID = ply.SID
-	self.Entity:SetNWInt("price", 100)
+	self.Entity.dt.price = 100
 	self.Entity.CanUse = true
 	self.ShareGravgun = true
 end
@@ -49,7 +49,7 @@ function ENT:Use(activator,caller)
 		timer.Simple(0.5, function() self.Entity.CanUse = true end)
 	else
 		
-		local productioncost = math.random(self.Entity:GetNWInt("price") / 8, self.Entity:GetNWInt("price") / 4)
+		local productioncost = math.random(self.Entity.dt.price / 8, self.Entity.dt.price / 4)
 		if not activator:CanAfford(productioncost) then
 			Notify(activator, 1, 4, "You do not have enough money to produce drugs.")
 			return false
@@ -67,11 +67,11 @@ function ENT:createDrug()
 	local drugPos = self:GetPos()
 	drug = ents.Create("drug")
 	drug:SetPos(Vector(drugPos.x,drugPos.y,drugPos.z + 35))
-	drug:SetNWEntity("owning_ent", userb)
+	drug.dt.owning_ent = userb
 	drug.SID = userb.SID
 	drug.ShareGravgun = true
 	drug.nodupe = true
-	drug:SetNWInt("price", self.Entity:GetNWInt("price"))
+	drug.dt.price = self.Entity.dt.price
 	drug:Spawn()
 	if not userb.maxDrugs then
 		userb.maxDrugs = 0
@@ -82,7 +82,7 @@ end
 
 function ENT:Think()
 	if not self.SID then 
-		self.SID = self:GetNWEntity("owning_ent")
+		self.SID = self.dt.price
 	end
 	if self.sparking then
 		local effectdata = EffectData()

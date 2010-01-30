@@ -116,7 +116,7 @@ function DrawPriceInfo(ent)
 	pos.z = pos.z + 8
 	pos = pos:ToScreen()
 
-	local price = ent:GetNWInt("price")
+	local price = ent.dt.price
 
 	draw.DrawText(LANGUAGE.customer_price .. CUR .. tostring(price), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
 	draw.DrawText(LANGUAGE.customer_price .. CUR .. tostring(price), "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
@@ -128,8 +128,8 @@ function DrawShipmentInfo(ent)
 	pos.z = pos.z + 8
 	pos = pos:ToScreen()
 
-	local contents = ent:GetNWString("contents")
-	local count = ent:GetNWInt("count")
+	local contents = ent.dt.contents
+	local count = ent.dt.count
 
 	draw.DrawText(tostring(count) .. " x " .. contents, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
 	draw.DrawText(tostring(count) .. " x " .. contents, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
@@ -142,8 +142,8 @@ function DrawMoneyPrinterInfo(ent)
 	pos = pos:ToScreen()
 
 	local owner = "N/A!"
-	if ValidEntity(ent:GetNWEntity("owning_ent")) then
-		owner = ent:GetNWEntity("owning_ent"):Nick()
+	if ValidEntity(ent.dt.owning_ent) then
+		owner = ent.dt.owning_ent:Nick()
 	end
 	local text = owner .. "'s\nMoney Printer"
 
@@ -157,11 +157,11 @@ function DrawDrugLabInfo(ent)
 	pos.z = pos.z + 20
 	pos = pos:ToScreen()
 	local owner = "N/A!"
-	if ValidEntity(ent:GetNWEntity("owning_ent")) then
-		owner = tostring(ent:GetNWEntity("owning_ent"):Nick())
+	if ValidEntity(ent.dt.owning_ent) then
+		owner = tostring(ent.dt.owning_ent:Nick())
 	end
 	
-	local price = tostring(ent:GetNWInt("price"))
+	local price = tostring(ent.dt.price)
 	local text = owner.. "'s\ndruglab\n"..LANGUAGE.customer_price.. price
 
 	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
@@ -175,10 +175,10 @@ function DrawDrugsInfo(ent)
 	pos = pos:ToScreen()
 
 	local owner = "N/A!"
-	if ValidEntity(ent:GetNWEntity("owning_ent")) then
-		owner = ent:GetNWEntity("owning_ent"):Nick()
+	if ValidEntity(ent.dt.owning_ent) then
+		owner = entdt.owning_ent:Nick()
 	end
-	local price = tostring(ent:GetNWInt("price"))
+	local price = tostring(ent.dtprice)
 	local text = owner .. "'s\ndrugs\n"..LANGUAGE.customer_price.. price
 
 	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)

@@ -37,7 +37,7 @@
  	 
  	for id, row in pairs( result ) do 
  	 
- 		ply:SetNetworkedInt( "Rating."..ValidRatings[ tonumber( row['rating'] ) ], tonumber( row['cnt'] ) ) 
+ 		ply:SetNWInt( "Rating."..ValidRatings[ tonumber( row['rating'] ) ], tonumber( row['cnt'] ) ) 
  	 
  	end 
    

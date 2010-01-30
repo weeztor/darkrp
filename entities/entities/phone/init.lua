@@ -12,7 +12,7 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then phys:Wake() end
 	
-	if self:GetNWBool("IsBeingHeld") then return end--Don't make noise when already picked up
+	if self.dt.IsBeingHeld then return end--Don't make noise when already picked up
 	
 	self.sound = CreateSound(self, "ambient/alarms/city_firebell_loop1.wav")
 	self.sound:PlayEx(0.6, 60)
@@ -50,7 +50,7 @@ function ENT:Use( activator, caller )
 	self:SetAngles(headAng)
 	self:SetParent(activator)
 	
-	self:SetNWBool("IsBeingHeld", true)
+	self.dt.IsBeingHeld = true
 	
 	if ValidEntity(self.Caller) then -- if you're BEING called and pick up the phone...
 		local ply = self.Caller -- the one who called you
@@ -74,7 +74,7 @@ function ENT:Use( activator, caller )
 end
 
 function ENT:Think()
-	if not self:GetNWEntity("owning_ent"):Alive() then
+	if not self.dt.owning_ent:Alive() then
 		self:HangUp()
 	end
 	if self.HePickedUp and not ValidEntity(self.Caller) then
@@ -97,7 +97,7 @@ function ENT:Think()
 end
 
 function ENT:HangUp(force)
-	local ply = self:GetNWEntity("owning_ent")
+	local ply = self.dt.owning_ent
 	local him = self.Caller
 	local HisPhone
 

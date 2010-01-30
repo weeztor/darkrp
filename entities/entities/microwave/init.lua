@@ -17,8 +17,7 @@ function ENT:Initialize()
 	if phys and phys:IsValid() then phys:Wake() end
 	self.sparking = false
 	self.damage = 100
-	self.Entity:SetNWInt("price", 30)
-	local ply = self.Entity:GetNWEntity("owning_ent")
+	self.Entity.dt.price = 30
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -39,7 +38,7 @@ function ENT:Destruct()
 end
 
 function ENT:SalePrice(activator)
-	local owner = self.Entity:GetNWEntity("owning_ent")
+	local owner = self.Entity.dt.owning_ent
 	local discounted = math.ceil(GetGlobalInt("microwavefoodcost") * 0.82)
 
 	if activator == owner then
@@ -50,13 +49,13 @@ function ENT:SalePrice(activator)
 			return math.floor(GetGlobalInt("microwavefoodcost"))
 		end
 	else
-		return self:GetNWInt("price")
+		return self.dt.price
 	end
 end
 
 ENT.Once = false
 function ENT:Use(activator,caller)
-	local owner = self.Entity:GetNWEntity("owning_ent")
+	local owner = self.Entity.dt.owning_ent
 	self.user = activator
 	if not activator:CanAfford(self:SalePrice(activator)) then
 		Notify(activator, 1, 3, "You do not have enough money to purchase food!")
@@ -82,9 +81,9 @@ function ENT:Use(activator,caller)
 		if activator ~= owner then
 			local gain = 0
 			if owner:Team() == TEAM_COOK then
-				gain = math.floor(self:GetNWInt("price") - discounted)
+				gain = math.floor(self.dt.price - discounted)
 			else
-				gain = math.floor(self:GetNWInt("price") - GetGlobalInt("microwavefoodcost"))
+				gain = math.floor(self.dt.price - GetGlobalInt("microwavefoodcost"))
 			end
 			if gain == 0 then
 				Notify(owner, 1, 3, "You sold some food but made no profit!")
@@ -105,7 +104,7 @@ function ENT:createFood()
 	local foodPos = self.Entity:GetPos()
 	food = ents.Create("food")
 	food:SetPos(Vector(foodPos.x,foodPos.y,foodPos.z + 23))
-	food:SetNWEntity("owning_ent", activator)
+	food.dt.owning_ent = activator
 	food.ShareGravgun = true
 	food.nodupe = true
 	food:Spawn()
@@ -129,6 +128,6 @@ end
 
 function ENT:OnRemove()
 	timer.Destroy(self.Entity:EntIndex())
-	local ply = self.Entity:GetNWEntity("owning_ent")
+	local ply = self.Entity.dt.owning_ent
 	if not ValidEntity(ply) then return end
 end

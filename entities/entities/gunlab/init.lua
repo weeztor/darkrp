@@ -1,7 +1,3 @@
--- =======================
--- =          Crate SENT by Mahalis
--- =======================
-
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
@@ -14,7 +10,7 @@ function ENT:Initialize()
 	self.Entity:SetSolid(SOLID_VPHYSICS)
 	local phys = self.Entity:GetPhysicsObject()
 
-	self.Entity:SetNWInt("price", 200)
+	self.Entity.dt.price = 200
 	if phys and phys:IsValid() then phys:Wake() end
 
 	self.sparking = false
@@ -39,7 +35,7 @@ function ENT:Destruct()
 end
 
 function ENT:SalePrice(activator)
-	local owner = self.Entity:GetNWEntity("owning_ent")
+	local owner = self.Entity.dt.owning_ent
 	local discounted = math.ceil(185 * 0.88)
 
 	if activator == owner then
@@ -49,13 +45,13 @@ function ENT:SalePrice(activator)
 			return 185
 		end
 	else
-		return self:GetNWInt("price")
+		return self.dt.price
 	end
 end
 
 ENT.Once = false
 function ENT:Use(activator)
-	local owner = self.Entity:GetNWEntity("owning_ent")
+	local owner = self.Entity.dt.owning_ent
 	local discounted = math.ceil(185 * 0.88)
 	local cash = self:SalePrice(activator)
 	
@@ -78,9 +74,9 @@ function ENT:Use(activator)
 		if activator ~= owner then
 			local gain = 0
 			if owner:Team() == TEAM_GUN then
-				gain = math.floor(self:GetNWInt("price") - discounted)
+				gain = math.floor(self.dt.price - discounted)
 			else
-				gain = math.floor(self:GetNWInt("price") - 185)
+				gain = math.floor(self.dt.price - 185)
 			end
 			if gain == 0 then
 				Notify(owner, 1, 3, "You sold a P228 but made no profit!")

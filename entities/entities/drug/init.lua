@@ -15,6 +15,8 @@ function ENT:Initialize()
 	self.damage = 10
 end
 
+
+
 function ENT:OnTakeDamage(dmg)
 	self.damage = self.damage - dmg:GetDamage()
 
@@ -31,14 +33,14 @@ end
 
 function ENT:Use(activator,caller)
 	if not self.CanUse then return false end
-	local Owner = self:GetNWEntity("owning_ent")
+	local Owner = self.dt.price
 	if activator ~= Owner then
-		if not activator:CanAfford(self:GetNWInt("price")) then
+		if not activator:CanAfford(self.dt.price/**/) then
 			return false
 		end
-		DB.PayPlayer(activator, Owner, self:GetNWInt("price"))
-		Notify(activator, 1, 4, "You have paid " .. CUR .. self:GetNWInt("price") .. " for using drugs.")
-		Notify(Owner, 1, 4, "You have received " .. CUR .. self:GetNWInt("price") .. " for selling drugs.")
+		DB.PayPlayer(activator, Owner, self.dt.price/**/)
+		Notify(activator, 1, 4, "You have paid " .. CUR .. self.dt.price .. " for using drugs.")
+		Notify(Owner, 1, 4, "You have received " .. CUR .. self.dt.price .. " for selling drugs.")
 	end
 	DrugPlayer(caller)
 	self.CanUse = false
@@ -46,7 +48,7 @@ function ENT:Use(activator,caller)
 end
 
 function ENT:OnRemove()
-	local ply = self.Entity:GetNWEntity("owning_ent")
+	local ply = self.dt.owning_ent
 	if not ValidEntity(ply) then return end
 	ply.maxDrugs = ply.maxDrugs - 1
 end

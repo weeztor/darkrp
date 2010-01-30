@@ -803,7 +803,7 @@ local function MakeLetter(ply, args, type)
 
 	local letter = ents.Create("letter")
 	letter:SetModel("models/props_c17/paper01.mdl")
-	letter:SetNWEntity("owning_ent", ply)
+	letter.dt.owning_ent = ply
 	letter.ShareGravgun = true
 	letter:SetPos(trace.HitPos)
 	letter.nodupe = true
@@ -871,7 +871,7 @@ function SetPrice(ply, args)
 
 	local class = tr.Entity:GetClass()
 	if ValidEntity(tr.Entity) and (class == "gunlab" or class == "microwave" or class == "drug_lab") and tr.Entity.SID == ply.SID then
-		tr.Entity:SetNWInt("price", b)
+		tr.Entity.dt.price = b
 	else
 		Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "gunlab / druglab / microwave"))
 	end
@@ -1125,7 +1125,8 @@ for k,v in pairs(DarkRPEntities) do
 		local tr = util.TraceLine(trace)
 		
 		local item = ents.Create(v.ent)
-		item:SetNWEntity("owning_ent", ply)
+		item.dt = item.dt or {}
+		item.dt.owning_ent = ply
 		item:SetPos(tr.HitPos)
 		item.SID = ply.SID
 		item.onlyremover = true
@@ -1218,7 +1219,7 @@ local function MakeACall(ply,args)
 	
 	local banana = ents.Create("phone")
 	
-	banana:SetNWEntity("owning_ent", p)
+	banana.dt.owning_ent = p
 	banana.ShareGravgun = true
 	banana.Caller = ply
 	
@@ -1230,9 +1231,9 @@ local function MakeACall(ply,args)
 	
 	local ownphone = ents.Create("phone")
 	
-	ownphone:SetNWEntity("owning_ent", ply)
+	ownphone.dt.owning_ent = ply
 	ownphone.ShareGravgun = true
-	ownphone:SetNWBool("IsBeingHeld", true)
+	ownphone.dt.IsBeingHeld = true
 	ply:SetNWEntity("phone", ownphone)
 	
 	ownphone:SetPos(ply:GetShootPos())

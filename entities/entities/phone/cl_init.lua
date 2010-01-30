@@ -11,7 +11,7 @@ function ENT:DrawTranslucent()
 end
 
 function ENT:Draw()
-	if not self:GetNWBool("IsBeingHeld") and LocalPlayer():GetPos():Distance(self:GetPos()) < 200 then
+	if not self.dt.IsBeingHeld and LocalPlayer():GetPos():Distance(self:GetPos()) < 200 then
 		self:DrawEntityOutline( 1.2 + math.sin( CurTime() * 60 ) * 0.1 )
 		AddWorldTip( self.Entity:EntIndex(), "YOU ARE BEING CALLED!\nUSE ME TO PICK UP THE PHONE!", 0.5, self.Entity:GetPos(), self.Entity  )
 	end
