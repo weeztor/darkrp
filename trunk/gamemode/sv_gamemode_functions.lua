@@ -1,3 +1,4 @@
+require("datastream")
 /*---------------------------------------------------------
  Gamemode functions
  ---------------------------------------------------------*/
@@ -653,6 +654,18 @@ end
 
 local next_update_time
 function GM:Think()
+	-- Doors
+	for k,ply in pairs(player.GetAll()) do
+		local trace = ply:GetEyeTrace()
+		if ValidEntity(trace.Entity) and trace.Entity:IsDoor() and ply.LookingAtDoor ~= trace.Entity and trace.HitPos:Distance(ply:GetShootPos()) < 410 then
+			ply.LookingAtDoor = trace.Entity
+			
+			trace.Entity.DoorData = trace.Entity.DoorData or {}
+			datastream.StreamToClients(ply, "DarkRP_DoorData", {trace.Entity, trace.Entity.DoorData})
+		elseif ply.LookingAtDoor ~= trace.Entity then
+			ply.LookingAtDoor = nil
+		end
+	end
 	FlammablePropThink()
 	if EarthQuakeTest then EarthQuakeTest() end
 end

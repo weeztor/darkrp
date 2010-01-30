@@ -76,6 +76,17 @@ AddExtraTeam( "<NAME OF THE CLASS>", Color(<red>, <Green>, <blue>, 255), "<Playe
 
 The real example is here: it's the Hobo:		*/
 
+/*
+--------------------------------------------------------
+HOW TO MAKE A DOOR GROUP
+--------------------------------------------------------
+AddDoorGroup("NAME OF THE GROUP HERE, you see this when looking at a door", Team1, Team2, team3, team4, etc.)
+
+The default door groups, can also be used as examples:
+*/
+AddDoorGroup("cops and mayor only", TEAM_CHIEF, TEAM_POLICE, TEAM_MAYOR)
+AddDoorGroup("gundealer only", TEAM_GUN)
+
 --VAR without /!!!			The name    the color(what you see in tab)                   the player model					The description
 TEAM_HOBO = AddExtraTeam("Hobo", Color(80, 45, 0, 255), "models/player/corpse1.mdl", [[The lowest member of society. All people see you laugh. 
 You have no home.

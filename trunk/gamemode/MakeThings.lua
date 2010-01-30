@@ -17,6 +17,12 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 	return Team
 end
 
+RPExtraTeamDoors = {}
+
+function AddDoorGroup(name, ...)
+	RPExtraTeamDoors[name] = {...}
+end
+
 hook.Add("InitPostEntity", "AddTeams", function()
 	if file.Exists("CustomTeams.txt") then
 		RunString(file.Read("CustomTeams.txt"))

@@ -51,10 +51,12 @@ function SWEP:PrimaryAttack()
 	if CLIENT then return end
 
 	local trace = self.Owner:GetEyeTrace()
-
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or trace.Entity:GetNWBool("nonOwnable") then
+	
+	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or (trace.Entity.DoorData and trace.Entity.DoorData.NonOwnable) then
 		return
 	end
+	
+	trace.Entity.DoorData = trace.Entity.DoorData or {}
 	
 	if trace.Entity:IsDoor() and self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 65 then
 		return
@@ -65,7 +67,8 @@ function SWEP:PrimaryAttack()
 	end
 	
 	local Team = self.Owner:Team()
-	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity:GetNWBool("CPOwnable") and (Team == TEAM_CHIEF or Team == TEAM_POLICE or Team == TEAM_MAYOR)) then
+	
+	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity.DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], Team))  then
 		trace.Entity:Fire("lock", "", 0)
 		self.Owner:EmitSound(self.Sound)
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.3)
@@ -84,7 +87,7 @@ function SWEP:SecondaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or trace.Entity:GetNWBool("nonOwnable") then
+	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or trace.Entity.DoorData.NonOwnable then
 		return
 	end
 
@@ -97,7 +100,7 @@ function SWEP:SecondaryAttack()
 	end
 
 	local Team = self.Owner:Team()
-	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity:GetNWBool("CPOwnable") and (Team == TEAM_CHIEF or Team == TEAM_POLICE or Team == TEAM_MAYOR)) then
+	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity.DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], Team)) then
 		trace.Entity:Fire("unlock", "", 0)
 
 		self.Owner:EmitSound(self.Sound)
@@ -127,6 +130,7 @@ function SWEP:Reload()
 		if trace.Entity:IsVehicle() then
 			self.Owner:SendLua("KeysMenu(true)")
 		else
+			print("sending")
 			self.Owner:SendLua("KeysMenu(false)")
 		end
 	end

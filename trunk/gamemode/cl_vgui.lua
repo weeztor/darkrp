@@ -254,7 +254,6 @@ function KeysMenu(Vehicle)
 	if KeyFrameVisible then return end
 	local trace = LocalPlayer():GetEyeTrace()
 	local Frame = vgui.Create("DFrame")
-	local CPOnly = trace.Entity:GetNWBool("CPOwnable")
 	KeyFrameVisible = true
 	Frame:SetSize(200, 470)
 	Frame:Center()
@@ -286,6 +285,7 @@ function KeysMenu(Vehicle)
 	end
 	
 	if trace.Entity:OwnedBy(LocalPlayer()) then
+		if not trace.Entity.DoorData then return end -- Don't open the menu when the door settings are not loaded yet
 		local Owndoor = vgui.Create("DButton", Frame)
 		Owndoor:SetPos(10, 30)
 		Owndoor:SetSize(180, 100)
@@ -342,15 +342,18 @@ function KeysMenu(Vehicle)
 			local SetCopsOnly = vgui.Create("DButton", Frame)
 			SetCopsOnly:SetPos(10, Frame:GetTall() - 110)
 			SetCopsOnly:SetSize(180, 100)
-			if CPOnly then
-				SetCopsOnly:SetText("Available for everyone")
-			else
-				SetCopsOnly:SetText("Set cops and mayor only")
+			SetCopsOnly:SetText("(Re)set door group")
+			SetCopsOnly.DoClick = function() 
+				local menu = DermaMenu()
+				menu:AddOption("No group", function() RunConsoleCommand("say", "/togglegroupownable") Frame:Close() end)
+				for k,v in pairs(RPExtraTeamDoors) do
+					menu:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) Frame:Close() end)
+				end
+				menu:Open()
 			end
-			SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
 		end	
-	elseif not trace.Entity:OwnedBy(LocalPlayer()) and trace.Entity:IsOwnable() and not trace.Entity:IsOwned() and not trace.Entity:GetNWBool("nonOwnable") then
-		if not CPOnly then
+	elseif not trace.Entity:OwnedBy(LocalPlayer()) and trace.Entity:IsOwnable() and not trace.Entity:IsOwned() and not trace.Entity.DoorData.NonOwnable then
+		if not trace.Entity.DoorData.GroupOwn then
 			Frame:SetSize(200, 140)
 			local Owndoor = vgui.Create("DButton", Frame)
 			Owndoor:SetPos(10, 30)
@@ -361,7 +364,7 @@ function KeysMenu(Vehicle)
 			Frame:Close()
 		end
 		if LocalPlayer():IsSuperAdmin() then
-			if CPOnly then
+			if trace.Entity.DoorData.GroupOwn then
 				Frame:SetSize(200, 250)
 			else
 				Frame:SetSize(200, 360)
@@ -375,13 +378,16 @@ function KeysMenu(Vehicle)
 			local SetCopsOnly = vgui.Create("DButton", Frame)
 			SetCopsOnly:SetPos(10, Frame:GetTall() - 110)
 			SetCopsOnly:SetSize(180, 100)
-			if CPOnly then
-				SetCopsOnly:SetText("Set available for everyone")
-			else
-				SetCopsOnly:SetText("Set cops and mayor only")
+			SetCopsOnly:SetText("(Re)set door group")
+			SetCopsOnly.DoClick = function() 
+				local menu = DermaMenu()
+				menu:AddOption("No group", function() RunConsoleCommand("say", "/togglegroupownable") Frame:Close() end)
+				for k,v in pairs(RPExtraTeamDoors) do
+					menu:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) Frame:Close() end)
+				end
+				menu:Open()
 			end
-			SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
-		elseif not CPOnly then
+		elseif not trace.Entity.DoorData.GroupOwn then
 			RunConsoleCommand("say", "/toggleown")
 			Frame:Close()
 			KeyFrameVisible = true
@@ -400,19 +406,22 @@ function KeysMenu(Vehicle)
 			local SetCopsOnly = vgui.Create("DButton", Frame)
 			SetCopsOnly:SetPos(10, Frame:GetTall() - 110)
 			SetCopsOnly:SetSize(180, 100)
-			if CPOnly then
-				SetCopsOnly:SetText("Set available for everyone")
-			else
-				SetCopsOnly:SetText("Set cops and mayor only")
+			SetCopsOnly:SetText("(Re)set door group")
+			SetCopsOnly.DoClick = function() 
+				local menu = DermaMenu()
+				menu:AddOption("No group", function() RunConsoleCommand("say", "/togglegroupownable") Frame:Close() end)
+				for k,v in pairs(RPExtraTeamDoors) do
+					menu:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) Frame:Close() end)
+				end
+				menu:Open() 
 			end
-			SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
 		else
 			RunConsoleCommand("say", "/toggleown")
 			Frame:Close()
 			KeyFrameVisible = true
 			timer.Simple(0.3, function() KeyFrameVisible = false end)
 		end	
-	elseif LocalPlayer():IsSuperAdmin() and trace.Entity:GetNWBool("nonOwnable") then
+	elseif LocalPlayer():IsSuperAdmin() and trace.Entity.DoorData.NonOwnable then
 		Frame:SetSize(200, 140)
 		local EnableOwnage = vgui.Create("DButton", Frame)
 		EnableOwnage:SetPos(10, 30)
@@ -430,16 +439,18 @@ function KeysMenu(Vehicle)
 		local SetCopsOnly = vgui.Create("DButton", Frame)
 		SetCopsOnly:SetPos(10, Frame:GetTall() - 110)
 		SetCopsOnly:SetSize(180, 100)
-		if CPOnly then
-			SetCopsOnly:SetText("Set available for everyone")
-		else
-			SetCopsOnly:SetText("Set cops and mayor only")
-		end
-		SetCopsOnly.DoClick = function() RunConsoleCommand("say", "/togglecpownable") Frame:Close() end
+		SetCopsOnly:SetText("(Re)set door group")
+			SetCopsOnly.DoClick = function() 
+				local menu = DermaMenu()
+				menu:AddOption("No group", function() RunConsoleCommand("say", "/togglegroupownable") end)
+				for k,v in pairs(RPExtraTeamDoors) do
+					menu:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) end)
+				end
+				Frame:Close()  
+			end
 	else
 		Frame:Close()
 	end
 	
 	Frame:SetSkin("DarkRP")
 end
-
