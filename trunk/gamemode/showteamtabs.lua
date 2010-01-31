@@ -183,7 +183,7 @@ local function CitOptns()
 		Citpanel:AddItem(joblabel)
 		
 		local jobentry = vgui.Create("DTextEntry")
-		jobentry:SetValue(LocalPlayer().DarkRPVars.job)
+		jobentry:SetValue(LocalPlayer().DarkRPVars.job or "")
 		jobentry.OnEnter = function()
 			LocalPlayer():ConCommand("say /job " .. tostring(jobentry:GetValue()))
 		end
@@ -213,7 +213,7 @@ local function MobOptns()
 		Mobpanel:AddItem(agendalabel)
 		
 		local agendaentry = vgui.Create("DTextEntry")
-		agendaentry:SetValue(LocalPlayer().DarkRPVars.agenda)
+		agendaentry:SetValue(LocalPlayer().DarkRPVars.agenda or "")
 		agendaentry.OnEnter = function()
 			LocalPlayer():ConCommand("say /agenda " .. tostring(agendaentry:GetValue()))
 		end

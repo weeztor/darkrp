@@ -112,8 +112,8 @@ function DrawPlayerInfo(ply)
 	end
 
 	if GetGlobalInt("jobtag") == 1 then
-		draw.DrawText(ply.DarkRPVars.job, "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
-		draw.DrawText(ply.DarkRPVars.job, "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
+		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
+		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
 end
 
@@ -626,7 +626,7 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 12, 12, 456, 106, Color(51, 58, 51,100))
 		draw.RoundedBox(10, 12, 12, 456, 20, Color(0, 0, 70, 100))
 		draw.DrawText(LANGUAGE.gangster_agenda, "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText(LocalPlayer().DarkRPVars.agenda, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(LocalPlayer().DarkRPVars.agenda or "", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
 	if LocalPlayer().DarkRPVars.helpBoss then
