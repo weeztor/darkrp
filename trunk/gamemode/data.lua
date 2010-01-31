@@ -135,7 +135,7 @@ function DB.GrantPriv(ply, priv)
 	if DB.privcache[steamID] == nil then
 		DB.privcache[steamID] = {}
 	end
-	ply:SetNWBool("Priv"..p, true)
+	ply:SetDarkRPVar("Priv"..p, true)
 	DB.privcache[steamID][p] = 1
 	return true
 end
@@ -152,8 +152,8 @@ function DB.RevokePriv(ply, priv)
 		DB.privcache[steamID] = {}
 	end
 	DB.privcache[steamID][p] = 0
-	if ply:GetNWBool("Priv"..p) then
-		ply:SetNWBool("Priv"..p, false)
+	if ply.DarkRPVars["Priv"..p] then
+		ply:SetDarkRPVar("Priv"..p, false)
 	end
 	return true
 end
@@ -441,7 +441,7 @@ function DB.StoreRPName(ply, name)
 		sql.Query("INSERT INTO darkrp_rpnames VALUES(" .. sql.SQLStr(ply:SteamID()) .. ", " .. sql.SQLStr(name) .. ");")
 	end
 
-	ply:SetNWString("rpname", name)
+	ply:SetDarkRPVar("rpname", name)
 end
 
 local rpnameslist --Make sure the DB doesn't get checked for ALL RPnames when someone InitialSpawns
@@ -469,7 +469,7 @@ function DB.StoreMoney(ply, amount)
 	else
 		sql.Query("INSERT INTO darkrp_wallets VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
 	end
-	ply:SetNWInt("money", math.floor(amount))
+	ply:SetDarkRPVar("money", math.floor(amount))
 end
 
 function DB.RetrieveMoney(ply)
@@ -479,7 +479,7 @@ function DB.RetrieveMoney(ply)
 		
 	local r = sql.QueryValue("SELECT amount FROM darkrp_wallets WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
 	if r then
-		ply:SetNWInt("money", math.floor(r))
+		ply:SetDarkRPVar("money", math.floor(r))
 		return r
 	else
 		-- No record yet, setting starting cash to 500
@@ -522,7 +522,7 @@ function DB.StoreSalary(ply, amount)
 	else
 		sql.Query("UPDATE darkrp_salaries SET salary = " .. math.floor(amount) .. " WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 	end
-	ply:SetNWInt("salary", math.floor(amount))
+	ply:SetDarkRPVar("salary", math.floor(amount))
 	return amount
 end
 

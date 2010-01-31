@@ -15,7 +15,7 @@ function KnockoutToggle(player, command, args, caller)
 	if player:Alive() then
 		if (player.KnockoutTimer and player.KnockoutTimer + KnockoutTime < CurTime()) or command == "force" then
 			if (player.Sleeping and ValidEntity(player.SleepRagdoll)) then
-				player.OldHunger = player:GetNWInt("Energy")
+				player.OldHunger = player.DarkRPVars.Energy
 				player.SleepSound:Stop()
 				local ragdoll = player.SleepRagdoll
 				local health = player:Health()
@@ -58,10 +58,10 @@ function KnockoutToggle(player, command, args, caller)
 					player:Arrest()
 				end
 				player.Sleeping = false
-				player:SetNWInt("Energy", player.OldHunger)
+				player:SetDarkRPVar("Energy", player.OldHunger)
 				player.OldHunger = nil
 				
-				if player:GetNWBool("Arrested") then
+				if player.DarkRPVars.Arrested then
 					GAMEMODE:SetPlayerSpeed(player, CfgVars["aspd"], CfgVars["aspd"] )
 				end
 			else

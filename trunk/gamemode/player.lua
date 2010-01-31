@@ -83,7 +83,7 @@ end
 
 function meta:RestoreRPName()
 	local name = DB.RetrieveRPName(self)
-	if not name or name == "" then name = self:SteamName() end
+	if not name or name == "" then name = string.gsub(self:SteamName(), "\\\"", "\"") end
 
 	self:SetRPName(name, true)
 end
@@ -167,7 +167,7 @@ function meta:NewData()
 	for i=0,5 do
 		if DB.HasPriv(self, i) then
 			local p = DB.Priv2Text(i)
-			self:SetNWBool("Priv"..p, true)
+			self:SetDarkRPVar("Priv"..p, true)
 		end
 	end
 
@@ -196,9 +196,9 @@ function meta:ChangeTeam(t, force)
 		end
 	end
 	
-	self:SetNWBool("helpBoss",false)
-	self:SetNWBool("helpCop",false)
-	self:SetNWBool("helpMayor",false)
+	self:SetDarkRPVar("helpBoss",false)
+	self:SetDarkRPVar("helpCop",false)
+	self:SetDarkRPVar("helpMayor",false)
 
 	
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) then
@@ -219,7 +219,7 @@ function meta:ChangeTeam(t, force)
 				return
 			end
 			
-			if not self:GetNWBool("Priv"..v.command) then
+			if not self.DarkRPVars["Priv"..v.command] then
 				if type(v.NeedToChangeFrom) == "number" and self:Team() ~= v.NeedToChangeFrom and not force then
 					Notify(self, 1,4, string.format(LANGUAGE.need_to_be_before, team.GetName(v.NeedToChangeFrom), v.name))
 					return
@@ -237,11 +237,11 @@ function meta:ChangeTeam(t, force)
 			self:UpdateJob(v.name)
 			DB.StoreSalary(self, v.salary)
 			NotifyAll(1, 4, string.format(LANGUAGE.job_has_become, self:Nick(), v.name))
-			if self:GetNWBool("HasGunlicense") then
-				self:SetNWBool("HasGunlicense", false)
+			if self.DarkRPVars.HasGunlicense then
+				self:SetDarkRPVar("HasGunlicense", false)
 			end
 			if v.Haslicense and CfgVars["license"] ~= 0 then
-				self:SetNWBool("HasGunlicense", true)
+				self:SetDarkRPVar("HasGunlicense", true)
 			end
 		end
 	end
@@ -251,13 +251,13 @@ function meta:ChangeTeam(t, force)
 	
 	
 	if t == TEAM_POLICE then	
-		self:SetNWBool("helpCop", true)
+		self:SetDarkRPVar("helpCop", true)
 	elseif t == TEAM_GANG then
-		self:SetNWString("agenda", CfgVars["mobagenda"])
+		self:SetDarkRPVar("agenda", CfgVars["mobagenda"])
 	elseif t == TEAM_MOB then
-		self:SetNWBool("helpBoss", true)
+		self:SetDarkRPVar("helpBoss", true)
 	elseif t == TEAM_MAYOR then
-		self:SetNWBool("helpMayor", true)
+		self:SetDarkRPVar("helpMayor", true)
 	end
 	
 	if CfgVars["removeclassitems"] == 1 then
@@ -305,7 +305,7 @@ function meta:ChangeTeam(t, force)
 end
 
 function meta:UpdateJob(job)
-	self:SetNWString("job", job)
+	self:SetDarkRPVar("job", job)
 	self:GetTable().Pay = 1
 	self:GetTable().LastPayDay = CurTime()
 
@@ -377,10 +377,10 @@ end
 AddChatCommand("/addjailpos", AddJailPos)
 
 function meta:Arrest(time, rejoin)
-	self:SetNWBool("wanted", false)
+	self:SetDarkRPVar("wanted", false)
 	self.warranted = false
-	self:SetNWBool("HasGunlicense", false)
-	self:SetNWBool("Arrested", true)
+	self:SetDarkRPVar("HasGunlicense", false)
+	self:SetDarkRPVar("Arrested", true)
 	GAMEMODE:SetPlayerSpeed(self, CfgVars["aspd"], CfgVars["aspd"] )
 	
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
@@ -416,7 +416,7 @@ function meta:Arrest(time, rejoin)
 end
 
 function meta:Unarrest(ID)
-	self:SetNWBool("Arrested", false)
+	self:SetDarkRPVar("Arrested", false)
 	if not ValidEntity(self) then
 		RPArrestedPlayers[ID] = nil
 		return

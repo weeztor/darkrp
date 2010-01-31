@@ -21,8 +21,10 @@ local StunStickFlashAlpha = -1
 -- Make sure the client sees the RP name where they expect to see the name
 local pmeta = FindMetaTable("Player")
 
-pmeta.Name = function(self)
-	return self:GetNWString("rpname")
+pmeta.SteamName = pmeta.Name
+function pmeta:Name()
+	self.DarkRPVars = self.DarkRPVars or {}
+	return self.DarkRPVars.rpname or self:SteamName()
 end
 
 pmeta.GetName = pmeta.Name
@@ -52,6 +54,11 @@ function LoadModules(msg)
 	end
 end
 usermessage.Hook("LoadModules", LoadModules)
+
+LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
+for k,v in pairs(player.GetAll()) do
+	v.DarkRPVars = v.DarkRPVars or {}
+end
 
 include("language_sh.lua")
 include("MakeThings.lua")
@@ -105,8 +112,8 @@ function DrawPlayerInfo(ply)
 	end
 
 	if GetGlobalInt("jobtag") == 1 then
-		draw.DrawText(ply:GetNWString("job"), "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
-		draw.DrawText(ply:GetNWString("job"), "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
+		draw.DrawText(ply.DarkRPVars.job, "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
+		draw.DrawText(ply.DarkRPVars.job, "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
 end
 
@@ -223,8 +230,8 @@ function DrawWantedInfo(ply)
 end
 
 function DrawZombieInfo(ply)
-	for x=1, LocalPlayer():GetNWInt("numPoints"), 1 do
-		local zPoint = LocalPlayer():GetNWVector("zPoints" .. x)
+	for x=1, LocalPlayer().DarkRPVars.numPoints, 1 do
+		local zPoint = LocalPlayer().DarkRPVars["zPoints".. x]
 		zPoint = zPoint:ToScreen()
 		draw.DrawText("Zombie Spawn (" .. x .. ")", "TargetID", zPoint.x, zPoint.y - 20, Color(255, 255, 255, 200), 1)
 		draw.DrawText("Zombie Spawn (" .. x .. ")", "TargetID", zPoint.x + 1, zPoint.y - 21, Color(255, 0, 0, 255), 1)
@@ -285,8 +292,9 @@ usermessage.Hook("GotArrested", GetArrested)
 
 local function DrawDisplay()
 	for k, v in pairs(player.GetAll()) do
-		if v:GetNWBool("zombieToggle") == true then DrawZombieInfo(v) end
-		if v:GetNWBool("wanted") == true then DrawWantedInfo(v) end
+		v.DarkRPVars = v.DarkRPVars or {}
+		if v.DarkRPVars.zombieToggle == true then DrawZombieInfo(v) end
+		if v.DarkRPVars.wanted == true then DrawWantedInfo(v) end
 	end
 
 	local tr = LocalPlayer():GetEyeTrace()
@@ -480,17 +488,18 @@ local function ChangeHealth(old, new)
 	end)
 end
 
-local oldmoney = LocalPlayer():GetNWInt("Money")
+local oldmoney = 0
 function GM:HUDPaint()
+	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 	local health = LocalPlayer():Health()
-	local money = LocalPlayer():GetNWInt("Money")
-	local job = LocalPlayer():GetNWString("job")
-	local salary = LocalPlayer():GetNWInt("salary")
+	local money = LocalPlayer().DarkRPVars.money or 0
+	local job = LocalPlayer().DarkRPVars.job or "" 
+	local salary = LocalPlayer().DarkRPVars.salary or 0
 	local CurrentTime = CurTime()
 	
-	if arresttime ~= 0 and CurrentTime - arresttime <= arresteduntil and LocalPlayer():GetNWBool("Arrested") then
+	if arresttime ~= 0 and CurrentTime - arresttime <= arresteduntil and LocalPlayer().DarkRPVars.Arrested then
 		draw.DrawText(string.format(LANGUAGE.youre_arrested, math.ceil(arresteduntil - (CurrentTime - arresttime))), "ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
-	elseif arresttime ~= 0 or not LocalPlayer():GetNWBool("Arrested") then arresttime = 0
+	elseif arresttime ~= 0 or not LocalPlayer().DarkRPVars.Arrested then arresttime = 0
 	end
 	self.BaseClass:HUDPaint()
 
@@ -588,7 +597,7 @@ function GM:HUDPaint()
 		end
 	end
 
-	if LocalPlayer():GetNWBool("helpCop") then
+	if LocalPlayer().DarkRPVars.helpCop then
 		draw.RoundedBox(10, 10, 10, 590, 194, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 586, 190, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
@@ -596,7 +605,7 @@ function GM:HUDPaint()
 		draw.DrawText(LANGUAGE.cophelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
-	if LocalPlayer():GetNWBool("helpMayor") then
+	if LocalPlayer().DarkRPVars.helpMayor then
 		draw.RoundedBox(10, 10, 10, 590, 158, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 586, 154, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
@@ -604,7 +613,7 @@ function GM:HUDPaint()
 		draw.DrawText(LANGUAGE.mayorhelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
-	if LocalPlayer():GetNWBool("helpAdmin") then
+	if LocalPlayer().DarkRPVars.helpAdmin then
 		draw.RoundedBox(10, 10, 10, 560, 260, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 556, 256, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 556, 20, Color(0, 0, 70, 200))
@@ -612,15 +621,15 @@ function GM:HUDPaint()
 		draw.DrawText(LANGUAGE.adminhelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
-	if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB and not LocalPlayer():GetNWBool("helpBoss") then
+	if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB and not LocalPlayer().DarkRPVars.helpBoss then
 		draw.RoundedBox(10, 10, 10, 460, 110, Color(0, 0, 0, 155))
 		draw.RoundedBox(10, 12, 12, 456, 106, Color(51, 58, 51,100))
 		draw.RoundedBox(10, 12, 12, 456, 20, Color(0, 0, 70, 100))
 		draw.DrawText(LANGUAGE.gangster_agenda, "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText(LocalPlayer():GetNWString("agenda"), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(LocalPlayer().DarkRPVars.agenda, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
-	if LocalPlayer():GetNWBool("helpBoss") then
+	if LocalPlayer().DarkRPVars.helpBoss then
 		draw.RoundedBox(10, 10, 10, 560, 130, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 556, 126, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 556, 20, Color(0, 0, 70, 200))
@@ -628,7 +637,7 @@ function GM:HUDPaint()
 		draw.DrawText(LANGUAGE.mobhelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 	
-	if LocalPlayer():GetNWBool("HasGunlicense") then
+	if LocalPlayer().DarkRPVars.HasGunlicense then
 		local QuadTable = {}  
 		
 		QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/page" ) 
@@ -675,7 +684,7 @@ function FindPlayer(info)
 
 	-- Find by RP Name
 	for k, v in pairs(pls) do
-		if string.find(string.lower(v:GetNWString("rpname")), string.lower(tostring(info))) ~= nil then
+		if string.find(string.lower(v.DarkRPVars.rpname), string.lower(tostring(info))) ~= nil then
 			return v
 		end
 	end
@@ -904,12 +913,12 @@ function GM:ChatTextChanged(text)
 end
 
 function SelfStartVoice(ply)
-	if ply == LocalPlayer() and ValidEntity(LocalPlayer():GetNWEntity("phone")) then
+	if ply == LocalPlayer() and ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		hook.Remove("PlayerStartVoice", "ShowWhoHearsMe")
 		hook.Add("PlayerEndVoice", "ShowWhoHearsMe", SelfStopVoice)
 		return
 	end
-	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 and not ValidEntity(LocalPlayer():GetNWEntity("phone")) then
+	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 and not ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		HearMode = "speak"
 		hook.Remove("PlayerStartVoice", "ShowWhoHearsMe")
 		hook.Add("PlayerEndVoice", "ShowWhoHearsMe", SelfStopVoice)
@@ -919,9 +928,9 @@ end
 hook.Add("PlayerStartVoice", "ShowWhoHearsMe", SelfStartVoice)
 
 function SelfStopVoice(ply)
-	if ValidEntity(LocalPlayer():GetNWEntity("phone")) then
+	if ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		timer.Simple(0.2, function() 
-			if ValidEntity(LocalPlayer():GetNWEntity("phone")) then
+			if ValidEntity(LocalPlayer().DarkRPVars.phone) then
 				LocalPlayer():ConCommand("+voicerecord") 
 			end
 		end)
@@ -1048,7 +1057,26 @@ concommand.Add("rp_getvehicles", GetAvailableVehicles)
 local function RetrieveDoorData(handler, id, encoded, decoded)
 	-- decoded[1] = Entity you were looking at
 	-- Decoded[2] = table of that door
-	if not ValidEntity(decoded[1]) then print("NOES") return end
+	if not ValidEntity(decoded[1]) then return end
 	decoded[1].DoorData = decoded[2]
 end
 datastream.Hook("DarkRP_DoorData", RetrieveDoorData)
+
+local function RetrievePlayerVar(handler, id, encoded, decoded)
+	if not ValidEntity(decoded[1]) then return end
+	decoded[1].DarkRPVars = decoded[1].DarkRPVars or {}
+	decoded[1].DarkRPVars[decoded[2]] = decoded[3]
+end
+datastream.Hook("DarkRP_PlayerVar", RetrievePlayerVar)
+
+local function InitializeDarkRPVars(handler, id, encoded, decoded)
+	if not decoded then return end
+	for ply,vars in pairs(decoded) do
+		ply.DarkRPVars = vars
+	end
+end
+datastream.Hook("DarkRP_InitializeVars", InitializeDarkRPVars)
+
+function GM:InitPostEntity()
+	RunConsoleCommand("_sendDarkRPvars")
+end

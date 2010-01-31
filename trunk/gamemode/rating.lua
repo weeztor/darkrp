@@ -37,7 +37,7 @@
  	 
  	for id, row in pairs( result ) do 
  	 
- 		ply:SetNWInt( "Rating."..ValidRatings[ tonumber( row['rating'] ) ], tonumber( row['cnt'] ) ) 
+ 		ply:SetDarkRPVar( "Rating."..ValidRatings[ tonumber( row['rating'] ) ], tonumber( row['cnt'] ) ) 
  	 
  	end 
    

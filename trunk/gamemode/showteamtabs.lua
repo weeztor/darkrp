@@ -14,7 +14,7 @@ local function MayorOptns()
 			SearchWarrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
-					if not ply:GetNWBool("warrant") and ply ~= LocalPlayer() then
+					if not ply.DarkRPVars.warrant and ply ~= LocalPlayer() then
 						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
 					end
 				end
@@ -30,7 +30,7 @@ local function MayorOptns()
 			Warrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
-					if not ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
+					if not ply.DarkRPVars.wanted and ply ~= LocalPlayer() then
 						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /wanted " .. tostring(ply:UserID())) end)
 					end
 				end
@@ -46,7 +46,7 @@ local function MayorOptns()
 			UnWarrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
-					if ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
+					if ply.DarkRPVars.wanted and ply ~= LocalPlayer() then
 						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /unwanted " .. tostring(ply:UserID())) end)
 					end
 				end
@@ -106,7 +106,7 @@ local function CPOptns()
 			SearchWarrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
-					if not ply:GetNWBool("warrant") and ply ~= LocalPlayer() then
+					if not ply.DarkRPVars.warrant and ply ~= LocalPlayer() then
 						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
 					end
 				end
@@ -122,7 +122,7 @@ local function CPOptns()
 			Warrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
-					if not ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
+					if not ply.DarkRPVars.wanted and ply ~= LocalPlayer() then
 						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /wanted " .. tostring(ply:UserID())) end)
 					end
 				end
@@ -138,7 +138,7 @@ local function CPOptns()
 			UnWarrant.DoClick = function()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
-					if ply:GetNWBool("wanted") and ply ~= LocalPlayer() then
+					if ply.DarkRPVars.wanted and ply ~= LocalPlayer() then
 						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /unwanted " .. tostring(ply:UserID())) end)
 					end
 				end
@@ -183,7 +183,7 @@ local function CitOptns()
 		Citpanel:AddItem(joblabel)
 		
 		local jobentry = vgui.Create("DTextEntry")
-		jobentry:SetValue(LocalPlayer():GetNWString("job"))
+		jobentry:SetValue(LocalPlayer().DarkRPVars.job)
 		jobentry.OnEnter = function()
 			LocalPlayer():ConCommand("say /job " .. tostring(jobentry:GetValue()))
 		end
@@ -213,7 +213,7 @@ local function MobOptns()
 		Mobpanel:AddItem(agendalabel)
 		
 		local agendaentry = vgui.Create("DTextEntry")
-		agendaentry:SetValue(LocalPlayer():GetNWString("agenda"))
+		agendaentry:SetValue(LocalPlayer().DarkRPVars.agenda)
 		agendaentry.OnEnter = function()
 			LocalPlayer():ConCommand("say /agenda " .. tostring(agendaentry:GetValue()))
 		end
@@ -481,7 +481,7 @@ function JobsTab()
 						weps = table.concat(v.Weapons, "\n")
 					end
 					if v.Vote then
-						local condition = ((v.admin == 0 and LocalPlayer():IsAdmin()) or (v.admin == 1 and LocalPlayer():IsSuperAdmin()) or LocalPlayer():GetNWBool("Priv"..v.command))
+						local condition = ((v.admin == 0 and LocalPlayer():IsAdmin()) or (v.admin == 1 and LocalPlayer():IsSuperAdmin()) or LocalPlayer().DarkRPVars["Priv"..v.command])
 						AddIcon(v.model, v.name, v.Des, weps, "/vote"..v.command, condition, "/"..v.command)
 					else
 						AddIcon(v.model, v.name, v.Des, weps, "/"..v.command)

@@ -73,8 +73,8 @@ end
 function PANEL:CheckRating(name, count)
 	if not ValidEntity(self.Player) then return end
 
-	if self.Player:GetNWInt("Rating."..name, 0) > count then
-		count = self.Player:GetNWInt("Rating."..name, 0)
+	if (self.Player.DarkRPVars["Rating."..name] or 0) > count then
+		count = self.Player.DarkRPVars["Rating."..name] or 0
 		self.texRating = texRatings[ name ]
 	end
 
@@ -89,13 +89,13 @@ function PANEL:UpdatePlayerData()
 	local Team = LocalPlayer():Team()
 	self.lblName:SetText(self.Player:Name())
 	self.lblName:SizeToContents()
-	self.lblJob:SetText(self.Player:GetNWString("job"))
+	self.lblJob:SetText(self.Player.DarkRPVars.job or "")
 	self.lblJob:SizeToContents()
 	self.lblPing:SetText(self.Player:Ping())
 	self.lblWarranted:SetImage("gui/silkicons/exclamation")
-	if self.Player:GetNWBool("wanted") then
+	if self.Player.DarkRPVars.wanted then
 		self.lblWarranted:SetVisible(true)
-	elseif not self.Player:GetNWBool("wanted") then
+	elseif not self.Player.DarkRPVars.wanted then
 		self.lblWarranted:SetVisible(false)
 	end
 

@@ -17,7 +17,7 @@ function ENT:OnTakeDamage(dmg)
 end
 
 function ENT:Use(activator,caller)
-	activator:SetNWInt("Energy", math.Clamp(activator:GetNWInt("Energy") + self.Entity:GetTable().FoodEnergy, 0, 100))
+	activator:SetDarkRPVar("Energy", math.Clamp(activator.DarkRPVars.Energy + self.Entity:GetTable().FoodEnergy, 0, 100))
 	umsg.Start("AteFoodIcon", activator)
 	umsg.End()
 	if PooPee then PooPee.AteFood(activator, self.Entity:GetModel()) end

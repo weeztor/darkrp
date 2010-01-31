@@ -170,9 +170,9 @@ function GM:KeyPress(ply, code)
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, talker)
-	if ValidEntity(listener:GetNWEntity("phone")) and ValidEntity(talker:GetNWEntity("phone")) and listener == talker:GetNWEntity("phone").Caller then 
+	if ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then 
 		return true
-	elseif ValidEntity(talker:GetNWEntity("phone")) then
+	elseif ValidEntity(talker.DarkRPVars.phone) then
 		return false
 	end
 	
@@ -276,7 +276,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if tobool(CfgVars["dropmoneyondeath"]) and tonumber(CfgVars["deathfee"]) then
 		local amount = CfgVars["deathfee"]
 		if not ply:CanAfford(CfgVars["deathfee"]) then
-			amount = ply:GetNWInt("Money")
+			amount = ply.DarkRPVars.Money
 		end
 		
 		ply:AddMoney(-amount)
@@ -299,7 +299,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	end
 
 	if ValidEntity(ply) and ply ~= killer or ply:GetTable().Slayed then
-		ply:SetNWBool("wanted", false)
+		ply:SetDarkRPVar("wanted", false)
 		ply:GetTable().DeathPos = nil
 		ply:GetTable().Slayed = false
 	end
@@ -329,7 +329,7 @@ end
 function GM:PlayerCanPickupWeapon(ply, weapon)
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	if ply:IsAdmin() and CfgVars["AdminsSpawnWithCopWeapons"] == 1 then return true end
-	if CfgVars["license"] == 1 and not ply:GetNWBool("HasGunlicense") and not ply:GetTable().RPLicenseSpawn then
+	if CfgVars["license"] == 1 and not ply.DarkRPVars.HasGunlicense and not ply:GetTable().RPLicenseSpawn then
 		if GetGlobalInt("licenseweapon_"..string.lower(weapon:GetClass())) == 1 then
 			return true
 		end
@@ -428,12 +428,32 @@ function GM:PlayerInitialSpawn(ply)
 	self.BaseClass:PlayerInitialSpawn(ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") has joined the game")
 	ply.bannedfrom = {}
+	ply.DarkRPVars = {}
 	ply:NewData()
 	ply.SID = ply:UserID()
 	DB.RetrieveSalary(ply)
 	DB.RetrieveMoney(ply)
 	timer.Simple(10, ply.CompleteSentence, ply)
 end
+
+local meta = FindMetaTable("Player")
+function meta:SetDarkRPVar(var, value)
+	self.DarkRPVars = self.DarkRPVars or {}
+	self.DarkRPVars[var] = value
+	datastream.StreamToClients(player.GetAll(), "DarkRP_PlayerVar", {self, var, value})
+end
+
+local function SendDarkRPVars(ply)
+	if ply.DarkRPVarsSent then return end --prevent spammers
+	ply.DarkRPVarsSent = true
+	
+	local sendtable = {}
+	for k,v in pairs(player.GetAll()) do
+		sendtable[v] = v.DarkRPVars
+	end
+	datastream.StreamToClients(ply, "DarkRP_InitializeVars", sendtable)
+end
+concommand.Add("_sendDarkRPvars", SendDarkRPVars)
 
 function GM:PlayerSelectSpawn(ply)
 	local POS = self.BaseClass:PlayerSelectSpawn(ply)
@@ -577,7 +597,7 @@ function GM:PlayerLoadout(ply)
 	ply:GetTable().RPLicenseSpawn = true
 	timer.Simple(1, removelicense, ply)
 	
-	local Team = ply:Team()
+	local Team = ply:Team() or 1
 	
 	ply:Give("keys")
 	ply:Give("weapon_physcannon")

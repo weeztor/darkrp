@@ -426,7 +426,7 @@ function AddTeamCommands(CTeam)
 				return ""
 			end
 			
-			if ply:GetNWBool("Priv"..CTeam.command) then
+			if ply.DarkRPVars["Priv"..CTeam.command] then
 				ply:ChangeTeam(k, true)
 				return ""
 			end

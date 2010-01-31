@@ -47,15 +47,16 @@ FoodAteY = 0
 surface.CreateFont("ChatFont", 70, 500, true, false, "HungerPlus")
 
 function HM.HUDPaint()
-	if GetGlobalInt("hungermod") == 1 or LocalPlayer():GetNWInt("LocalHungerMod") == 1 then
+	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
+	if GetGlobalInt("hungermod") == 1 or LocalPlayer().DarkRPVars.LocalHungerMod == 1 then
 		local x = 7
 		local y = ScrH() - 9
 
 		draw.RoundedBox(4, x - 1, y - 1, GetConVarNumber("HudWidth") , 9, Color(0, 0, 0, 255))
 
-		if LocalPlayer():GetNWInt("Energy") > 0 then
-			draw.RoundedBox(4, x, y, GetConVarNumber("HudWidth") * (math.Clamp(LocalPlayer():GetNWInt("Energy"), 0, 100) / 100), 7, Color(30, 30, 120, 255))
-			draw.DrawText(math.ceil(LocalPlayer():GetNWInt("Energy")) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y - 2, Color(255, 255, 255, 255), 1)
+		if LocalPlayer().DarkRPVars.Energy > 0 then
+			draw.RoundedBox(4, x, y, GetConVarNumber("HudWidth") * (math.Clamp(LocalPlayer().DarkRPVars.Energy, 0, 100) / 100), 7, Color(30, 30, 120, 255))
+			draw.DrawText(math.ceil(LocalPlayer().DarkRPVars.Energy) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y - 2, Color(255, 255, 255, 255), 1)
 		else
 			draw.DrawText(LANGUAGE.starving, "ChatFont", GetConVarNumber("HudWidth") / 2, y - 4, Color(200, 0, 0, 255), 1)
 		end
