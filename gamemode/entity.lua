@@ -78,7 +78,7 @@ local function SetDoorOwnable(ply)
 	local trace = ply:GetEyeTrace()
 	if not ValidEntity(trace.Entity) then return "" end
 	local ent = trace.Entity
-	if ply:IsSuperAdmin() and ent:IsDoor() and ply:GetPos():Distance(ent:GetPos()) < 115 then
+	if ply:IsSuperAdmin() and (ent:IsDoor() or ent:IsVehicle()) and ply:GetPos():Distance(ent:GetPos()) < 115 then
 		ent.DoorData = ent.DoorData or {}
 		ent.DoorData.NonOwnable = not ent.DoorData.NonOwnable 
 		-- Save it for future map loads
@@ -100,7 +100,7 @@ local function SetDoorGroupOwnable(ply, arg)
 	if not RPExtraTeamDoors[arg] and arg ~= "" then Notify(ply, 1, 10, "Door group does not exist!") return "" end
 	
 	local ent = trace.Entity
-	if ply:IsSuperAdmin() and ent:IsDoor() and ply:GetPos():Distance(ent:GetPos()) < 115 then
+	if ply:IsSuperAdmin() and (ent:IsDoor() or ent:IsVehicle()) and ply:GetPos():Distance(ent:GetPos()) < 115 then
 		ent.DoorData = ent.DoorData or {}
 		ent.DoorData.GroupOwn = arg
 		if arg == "" then ent.DoorData.GroupOwn = nil end
