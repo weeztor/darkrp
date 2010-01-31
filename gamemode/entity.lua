@@ -7,7 +7,7 @@ function meta:IsOwnable()
 	local class = self:GetClass()
 
 	if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") or
-		class == "prop_vehicle_jeep" or class == "prop_vehicle_airboat" then
+		self:IsVehicle() then
 			return true
 		end
 	return false
@@ -147,7 +147,7 @@ local function OwnDoor(ply)
 				Notify(ply, 1, 4, LANGUAGE.door_already_owned)
 				return ""
 			end
-			if trace.Entity:GetClass() == "prop_vehicle_jeep" or trace.Entity:GetClass() == "prop_vehicle_airboat" then
+			if trace.Entity:IsVehicle() then
 				if not ply:CanAfford(CfgVars["vehiclecost"]) then
 					Notify(ply, 1, 4, LANGUAGE.vehicle_cannot_afford)
 					return ""
@@ -159,7 +159,7 @@ local function OwnDoor(ply)
 				end
 			end
 
-			if trace.Entity:GetClass() == "prop_vehicle_jeep" or trace.Entity:GetClass() == "prop_vehicle_airboat" then
+			if trace.Entity:IsVehicle() then
 				ply:AddMoney(-CfgVars["vehiclecost"])
 				Notify(ply, 1, 4, string.format(LANGUAGE.vehicle_bought, CUR .. math.floor(CfgVars["vehiclecost"])))
 			else
