@@ -75,7 +75,8 @@ local meta = FindMetaTable("Player")
 meta.SteamName = meta.Name
 meta.Name = function(self)
 	if CfgVars and CfgVars["allowrpnames"] == 1 then
-		return self.DarkRPVars.rpname
+		self.DarkRPVars = self.DarkRPVars or {}
+		return self.DarkRPVars.rpname or self:SteamName()
 	else
 		return self:SteamName()
 	end
