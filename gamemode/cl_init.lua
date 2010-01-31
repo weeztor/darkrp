@@ -128,7 +128,7 @@ function DrawShipmentInfo(ent)
 	pos.z = pos.z + 8
 	pos = pos:ToScreen()
 
-	local contents = ent.dt.contents
+	local contents = CustomShipments[ent.dt.contents].name
 	local count = ent.dt.count
 
 	draw.DrawText(tostring(count) .. " x " .. contents, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)

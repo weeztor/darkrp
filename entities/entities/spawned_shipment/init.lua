@@ -52,7 +52,7 @@ function ENT:SpawnItem()
 	
 	local found = false
 	for k,v in pairs(CustomShipments) do
-		if v.name == contents then
+		if k == contents then
 			found = true
 			weapon.weaponclass = v.entity
 			weapon:SetModel(v.model)
@@ -93,7 +93,7 @@ function ENT:Destruct()
 	
 	local found = false
 	for k, v in pairs(CustomShipments) do
-		if v.name == contents then
+		if k == contents then
 			found = true
 			class = v.entity
 			model = v.model
