@@ -677,7 +677,7 @@ function GM:Think()
 	-- Doors
 	for k,ply in pairs(player.GetAll()) do
 		local trace = ply:GetEyeTrace()
-		if ValidEntity(trace.Entity) and trace.Entity:IsDoor() and ply.LookingAtDoor ~= trace.Entity and trace.HitPos:Distance(ply:GetShootPos()) < 410 then
+		if ValidEntity(trace.Entity) and (trace.Entity:IsDoor() or trace.Entity:IsVehicle()) and ply.LookingAtDoor ~= trace.Entity and trace.HitPos:Distance(ply:GetShootPos()) < 410 then
 			ply.LookingAtDoor = trace.Entity
 			
 			trace.Entity.DoorData = trace.Entity.DoorData or {}
