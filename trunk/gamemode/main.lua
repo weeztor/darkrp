@@ -971,9 +971,11 @@ function BuyShipment(ply, args)
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
 	
 	local found = false
+	local foundKey
 	for k,v in pairs(CustomShipments) do
 		if string.lower(args) == string.lower(v.name) and not v.noship then
 			found = v
+			foundKey = k
 			local canbecome = false
 			for a,b in pairs(v.allowed) do
 				if ply:Team() == b then
@@ -992,10 +994,7 @@ function BuyShipment(ply, args)
 		return ""
 	end
 	
-	local cost
-	if found then
-		cost = found.price
-	end
+	local cost = found.price
 	
 	if not ply:CanAfford(cost) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "shipment"))
@@ -1006,11 +1005,8 @@ function BuyShipment(ply, args)
 	Notify(ply, 1, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
 	local crate = ents.Create("spawned_shipment")
 	crate.SID = ply.SID
-	if found == true then
-		crate:SetContents(args, 10, rifleWeights[args])
-	else
-		crate:SetContents(found.name, found.amount, found.weight)
-	end
+	crate:SetContents(foundKey, found.amount, found.weight)
+	
 	crate:SetPos(Vector(tr.HitPos.x, tr.HitPos.y, tr.HitPos.z))
 	crate.nodupe = true
 	crate:Spawn()
