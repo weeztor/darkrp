@@ -70,11 +70,11 @@ function PlayerDist(npcPos)
 end
 
 function LoadTable(ply)
-	ply:SetNWInt("numPoints", table.getn(zombieSpawns))
+	ply:SetDarkRPVar("numPoints", table.getn(zombieSpawns))
 
 	for k, v in pairs(zombieSpawns) do
 		local Sep = (string.Explode(" " ,v))
-		ply:SetNWVector("zPoints" .. k, Vector(tonumber(Sep[1]),tonumber(Sep[2]),tonumber(Sep[3])))
+		ply:SetDarkRPVar("zPoints" .. k, Vector(tonumber(Sep[1]),tonumber(Sep[2]),tonumber(Sep[3])))
 	end
 end
 
@@ -87,7 +87,7 @@ function ReMoveZombie(ply, index)
 			Notify(ply, 1, 4, LANGUAGE.zombie_spawn_removed)
 			table.remove(zombieSpawns,index)
 			DB.StoreZombies()
-			if ply:GetNWBool("zombieToggle") then
+			if ply.DarkRPVars.zombieToggle then
 				LoadTable(ply)
 			end
 		end
@@ -103,7 +103,7 @@ function AddZombie(ply)
 		DB.RetrieveZombies()
 		table.insert(zombieSpawns, tostring(ply:GetPos()))
 		DB.StoreZombies()
-		if ply:GetNWBool("zombieToggle") then LoadTable(ply) end
+		if ply.DarkRPVars.zombieToggle then LoadTable(ply) end
 		Notify(ply, 1, 4, LANGUAGE.zombie_spawn_added)
 	else
 		Notify(ply, 1, 6, string.format(LANGUAGE.need_admin, "/addzombie"))
@@ -114,12 +114,12 @@ AddChatCommand("/addzombie", AddZombie)
 
 function ToggleZombie(ply)
 	if ply:HasPriv(ADMIN) then
-		if not ply:GetNWBool("zombieToggle") then
+		if not ply.DarkRPVars.zombieToggle then
 			DB.RetrieveZombies()
-			ply:SetNWBool("zombieToggle", true)
+			ply:SetDarkRPVar("zombieToggle", true)
 			LoadTable(ply)
 		else
-			ply:SetNWBool("zombieToggle", false)
+			ply:SetDarkRPVar("zombieToggle", false)
 		end
 	else
 		Notify(ply, 1, 6, LANGUAGE.string.format(LANGUAGE.need_admin, "/showzombie"))
@@ -562,7 +562,7 @@ function PlayerWanted(ply, args)
 	else
 		local p = FindPlayer(args)
 		if p and p:Alive() then
-			p:SetNWBool("wanted", true)
+			p:SetDarkRPVar("wanted", true)
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_by_police, p:Nick()))
 				timer.Create(p:Nick() .. " wantedtimer", CfgVars["wantedtime"], 1, TimerUnwanted, ply, args)
@@ -581,8 +581,8 @@ function PlayerUnWanted(ply, args)
 		Notify(ply, 1, 6, string.format(LANGUAGE.must_be_x, "cop/mayor", "/unwanted"))
 	else
 		local p = FindPlayer(args)
-		if p and p:Alive() and p:GetNWBool("wanted") then
-			p:SetNWBool("wanted", false)
+		if p and p:Alive() and p.DarkRPVars.wanted then
+			p:SetDarkRPVar("wanted", false)
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_expired, p:Nick()))
 				timer.Destroy(p:Nick() .. " wantedtimer")
@@ -597,8 +597,8 @@ AddChatCommand("/unwanted", PlayerUnWanted)
 
 function TimerUnwanted(ply, args)
 	local p = FindPlayer(args)
-	if p and p:Alive() and p:GetNWBool("wanted") then
-		p:SetNWBool("wanted", false)
+	if p and p:Alive() and p.DarkRPVars.wanted then
+		p:SetDarkRPVar("wanted", false)
 		for a, b in pairs(player.GetAll()) do
 			b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_expired, p:Nick()))
 			timer.Destroy(p:Nick() .. " wantedtimer")
@@ -689,34 +689,34 @@ AddChatCommand("/removespawn", RemoveSpawnPos)
  Helps
  ---------------------------------------------------------*/
 function HelpCop(ply)
-	ply:SetNWBool("helpCop", not ply:GetNWBool("helpCop"))
+	ply:SetDarkRPVar("helpCop", not ply.DarkRPVars.helpCop)
 	return ""
 end
 AddChatCommand("/cophelp", HelpCop)
 
 function HelpMayor(ply)
-	ply:SetNWBool("helpMayor", not ply:GetNWBool("helpMayor"))
+	ply:SetDarkRPVar("helpMayor", not ply.DarkRPVars.helpMayor)
 	return ""
 end
 AddChatCommand("/mayorhelp", HelpMayor)
 
 function HelpBoss(ply)
-	ply:SetNWBool("helpBoss", not ply:GetNWBool("helpBoss"))
+	ply:SetDarkRPVar("helpBoss", not ply.DarkRPVars.helpBoss)
 	return ""
 end
 AddChatCommand("/mobbosshelp", HelpBoss)
 
 function HelpAdmin(ply)
-	ply:SetNWBool("helpAdmin", not ply:GetNWBool("helpAdmin"))
+	ply:SetDarkRPVar("helpAdmin", not ply.DarkRPVars.helpAdmin)
 	return ""
 end
 AddChatCommand("/adminhelp", HelpAdmin)
 
 function closeHelp(ply)
-	ply:SetNWBool("helpCop", false)
-	ply:SetNWBool("helpBoss", false)
-	ply:SetNWBool("helpMayor", false)
-	ply:SetNWBool("helpAdmin", false)
+	ply:SetDarkRPVar("helpCop", false)
+	ply:SetDarkRPVar("helpBoss", false)
+	ply:SetDarkRPVar("helpMayor", false)
+	ply:SetDarkRPVar("helpAdmin", false)
 	return ""
 end
 AddChatCommand("/x", closeHelp)
@@ -1202,7 +1202,7 @@ AddChatCommand("/buyhealth", BuyHealth)
 local function MakeACall(ply,args)
 	local p = FindPlayer(args)
 	if not ValidEntity(p) then return "" end
-	if ValidEntity(ply:GetNWEntity("phone")) or ValidEntity(p:GetNWEntity("phone")) then
+	if ValidEntity(ply.DarkRPVars.phone) or ValidEntity(p.DarkRPVars.phone) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/call", "busy"))
 		return "" 
 	end
@@ -1230,7 +1230,7 @@ local function MakeACall(ply,args)
 	ownphone.dt.owning_ent = ply
 	ownphone.ShareGravgun = true
 	ownphone.dt.IsBeingHeld = true
-	ply:SetNWEntity("phone", ownphone)
+	ply:SetDarkRPVar("phone", ownphone)
 	
 	ownphone:SetPos(ply:GetShootPos())
 	ownphone.onlyremover = true
@@ -1238,7 +1238,7 @@ local function MakeACall(ply,args)
 	ownphone:Spawn()
 	ownphone:Use(ply,ply)--Put it on the ear already, since you're the one who's calling...
 	timer.Simple(20, function(ply, OtherPhone)
-		local MyPhone = ply:GetNWEntity("phone")
+		local MyPhone = ply.DarkRPVars.phone
 		local WhoPickedItUp = MyPhone.Caller
 		if ValidEntity(MyPhone) and ValidEntity(OtherPhone) and not ValidEntity(WhoPickedItUp) then -- if noone picked up the phone then hang up :)
 			MyPhone:Remove()
@@ -1250,8 +1250,8 @@ end
 AddChatCommand("/call", MakeACall)
 
 local function HangUp(ply, code)
-	if code == IN_USE and ValidEntity(ply:GetNWEntity("phone")) then
-		ply:GetNWEntity("phone"):HangUp()
+	if code == IN_USE and ValidEntity(ply.DarkRPVars.phone) then
+		ply.DarkRPVars.phone:HangUp()
 	end
 end
 hook.Add("KeyPress", "HangUpPhone", HangUp)
@@ -1267,7 +1267,7 @@ function CreateAgenda(ply, args)
 			local t = v:Team()
 			if t == TEAM_GANG or t == TEAM_MOB then
 				Notify(v, 1, 4, LANGUAGE.agenda_updated)
-				v:SetNWString("agenda", CfgVars["mobagenda"])
+				v:SetDarkRPVar("agenda", CfgVars["mobagenda"])
 			end
 		end
 	else
@@ -1940,14 +1940,14 @@ function GrantLicense(answer, Ent, Initiator, Target)
 	if answer == 1 then
 		Notify(Initiator, 1, 4, string.format(LANGUAGE.gunlicense_granted, Initiator:Nick(), Target:Nick()))
 		Notify(Target, 1, 4, string.format(LANGUAGE.gunlicense_granted, Initiator:Nick(), Target:Nick()))
-		Initiator:SetNWBool("HasGunlicense", true)
+		Initiator:SetDarkRPVar("HasGunlicense", true)
 	else
 		Notify(Initiator, 1, 4, string.format(LANGUAGE.gunlicense_denied, Initiator:Nick(), Target:Nick()))
 	end
 end
 
 function RequestLicense(ply)
-	if ply:GetNWBool("HasGunlicense") then
+	if ply.DarkRPVars.HasGunlicense then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/requestlicense", ""))
 		return ""
 	end
@@ -2055,7 +2055,7 @@ function GiveLicense(ply)
 	end
 	Notify(LookingAt, 1, 4, string.format(LANGUAGE.gunlicense_granted, ply:Nick(), LookingAt:Nick())) 
 	Notify(ply, 2, 4, string.format(LANGUAGE.gunlicense_granted, LookingAt:Nick(), ply:Nick()))
-	LookingAt:SetNWBool("HasGunlicense", true)
+	LookingAt:SetDarkRPVar("HasGunlicense", true)
 	return ""
 end
 AddChatCommand("/givelicense", GiveLicense)
@@ -2069,7 +2069,7 @@ function rp_GiveLicense(ply, cmd, args)
 	local target = FindPlayer(args[1])
 
 	if target then
-		target:SetNWBool("HasGunlicense", true)
+		target:SetDarkRPVar("HasGunlicense", true)
 
 		if ply:EntIndex() ~= 0 then
 			nick = ply:Nick()
@@ -2105,7 +2105,7 @@ function rp_RevokeLicense(ply, cmd, args)
 	local target = FindPlayer(args[1])
 
 	if target then
-		target:SetNWBool("HasGunlicense", false)
+		target:SetDarkRPVar("HasGunlicense", false)
 
 		if ply:EntIndex() ~= 0 then
 			nick = ply:Nick()
@@ -2135,7 +2135,7 @@ concommand.Add("rp_revokelicense", rp_RevokeLicense)
 function FinishRevokeLicense(choice, v)
 	VoteCopOn = false
 	if choice == 1 then
-		v:SetNWBool("HasGunlicense", false)
+		v:SetDarkRPVar("HasGunlicense", false)
 		v:StripWeapons()
 		GAMEMODE:PlayerLoadout(v)
 		NotifyAll(1, 4, string.format(LANGUAGE.gunlicense_removed, v:Nick()))
@@ -2165,7 +2165,7 @@ function VoteRemoveLicense(ply, args)
 			Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait, math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)), "/demotelicense"))
 			return ""
 		end
-		if ply:GetNWBool("HasGunlicense") then
+		if ply.DarkRPVars.HasGunlicense then
 			Notify(ply, 1, 4,  string.format(LANGUAGE.unable, "/demotelicense", ""))
 		else
 			NotifyAll(1, 4, string.format(LANGUAGE.gunlicense_remove_vote_text, ply:Nick(), p:Nick()))

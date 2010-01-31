@@ -54,10 +54,10 @@ function ENT:Use( activator, caller )
 	
 	if ValidEntity(self.Caller) then -- if you're BEING called and pick up the phone...
 		local ply = self.Caller -- the one who called you
-		ply:GetNWEntity("phone").Caller = activator -- Make sure he knows YOU picked up the phone
-		ply:GetNWEntity("phone").HePickedUp = true
+		ply.DarkRPVars.phone.Caller = activator -- Make sure he knows YOU picked up the phone
+		ply.DarkRPVars.phone.HePickedUp = true
 		
-		activator:SetNWEntity("phone", self) -- This object is the phone you're holding
+		activator:SetDarkRPVar("phone", self) -- This object is the phone you're holding
 		
 		activator:SendLua([[RunConsoleCommand("+voicerecord")]])
 		ply:SendLua([[RunConsoleCommand("+voicerecord")]])
@@ -104,7 +104,7 @@ function ENT:HangUp(force)
 	timer.Remove("PhoneCallCosts"..ply:EntIndex())
 	
 	if ValidEntity(him) then
-		HisPhone = him:GetNWEntity("phone")
+		HisPhone = him.DarkRPVars.phone
 		timer.Remove("PhoneCallCosts"..him:EntIndex())
 		him:SendLua([[RunConsoleCommand("-voicerecord")]])
 	end

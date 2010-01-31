@@ -382,7 +382,7 @@ function ccPayDayTime(ply, cmd, args)
 	DB.SaveSetting("paydelay", amount)
 
 	for k, v in pairs(player.GetAll()) do
-		v:UpdateJob(v:GetNWString("job"))
+		v:UpdateJob(v.DarkRPVars.job)
 	end
 
 	if ply:EntIndex() == 0 then
@@ -571,7 +571,7 @@ function ccSetMoney(ply, cmd, args)
 
 	if target then
 		local nick = ""
-		target:SetNWInt("money", amount)
+		target:SetDarkRPVar("money", amount)
 		DB.StoreMoney(target, amount)
 
 		if ply:EntIndex() == 0 then
@@ -630,7 +630,7 @@ function ccSetSalary(ply, cmd, args)
 	if target then
 		local nick = ""
 		DB.StoreSalary(target, amount)
-		target:SetNWInt("salary", amount)
+		target:SetDarkRPVar("salary", amount)
 		if ply:EntIndex() == 0 then
 			print("Set " .. target:Nick() .. "'s Salary to: " .. CUR .. amount)
 			nick = "Console"

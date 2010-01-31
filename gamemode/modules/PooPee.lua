@@ -7,16 +7,16 @@ AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_poopeemod <1 or 0> - Enable/disabl
 if SERVER then
 	function PooPee.UpdatePoop(ply)
 		if not ValidEntity(ply) then return end
-		ply:SetNWInt("Poop", math.Clamp(ply:GetNWInt("Poop") + 1, 0, 100))
-		if ply:GetNWInt("Poop") >= 100 then
+		ply:SetDarkRPVar("Poop", math.Clamp(ply.DarkRPVars.Poop + 1, 0, 100))
+		if ply.DarkRPVars.Poop >= 100 then
 			GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"] * 0.5, CfgVars["rspd"] * 0.5)
 		end
 	end
 
 	function PooPee.UpdatePee(ply)
 		if not ValidEntity(ply) or GetGlobalInt("poopeemod") ~= 1 then return end
-		ply:SetNWInt("Pee", math.Clamp(ply:GetNWInt("Pee") + 1, 0, 100) )
-		if ply:GetNWInt("Pee") >= 100 then
+		ply:SetDarkRPVar("Pee", math.Clamp(ply.DarkRPVars.Pee + 1, 0, 100) )
+		if ply.DarkRPVars.Pee >= 100 then
 			PooPee.DoPee(ply)
 		end
 	end
@@ -31,10 +31,10 @@ if SERVER then
 		if GetGlobalInt("poopeemod") ~= 1 then return end
 		local food2 = string.lower(food)
 		if string.find(food2, "milk") or string.find(food2, "bottle") or string.find(food2, "popcan") then
-			ply:SetNWInt("Pee", math.Clamp(ply:GetNWInt("Pee") + 9, 0, 100))
+			ply:SetDarkRPVar("Pee", math.Clamp(ply.DarkRPVars.Pee + 9, 0, 100))
 			PooPee.UpdatePee(ply)
 		else
-			ply:SetNWInt("Poop", math.Clamp(ply:GetNWInt("Poop") + 9, 0, 100))
+			ply:SetDarkRPVar("Poop", math.Clamp(ply.DarkRPVars.Poop + 9, 0, 100))
 			PooPee.UpdatePoop(ply)
 		end
 	end
@@ -66,7 +66,7 @@ if SERVER then
 
 
 	function PooPee.DoPoo(ply)
-		if GetGlobalInt("poopeemod") ~= 1 or not ply:Alive() or ply:GetNWInt("Poop") < 30 then
+		if GetGlobalInt("poopeemod") ~= 1 or not ply:Alive() or ply.DarkRPVars.Poop < 30 then
 			Notify(ply,1,6, string.format(LANGUAGE.unable, "/poo", ""))
 			return ""
 		end
@@ -77,7 +77,7 @@ if SERVER then
 		turd:Spawn()
 		turd:SetColor(80, 45, 0, 255)
 		turd:SetMaterial("models/props_pipes/pipeset_metal") 
-		ply:SetNWInt("Poop", 0)
+		ply:SetDarkRPVar("Poop", 0)
 		ply:EmitSound("ambient/levels/canals/swamp_bird2.wav", 50, 80)
 		GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"] , CfgVars["rspd"] )
 		timer.Simple(30, function() if turd:IsValid() then turd:Remove() end end)
@@ -95,12 +95,12 @@ if SERVER then
 		
 		umsg.Start("PlayerPeeParticles") -- usermessage to everyone
 			umsg.Entity(ply)
-			umsg.Long(ply:GetNWInt("Pee"))
+			umsg.Long(ply.DarkRPVars.Pee)
 		umsg.End()
 		
 		local sound = CreateSound(ply, "ambient/water/leak_1.wav")
 		sound:Play()
-		timer.Simple(ply:GetNWInt("Pee")/10, function() sound:Stop() ply:SetNWInt("Pee", 0) end)
+		timer.Simple(ply.DarkRPVars.Pee/10, function() sound:Stop() ply:SetDarkRPVar("Pee", 0) end)
 		return "" 
 	end
 	AddChatCommand("/pee", PooPee.DoPee)
@@ -115,12 +115,12 @@ function PooPee.HUDPaint()
 		local y2 = y + 10
 		
 		draw.RoundedBox(4, x - 1, y - 1, GetConVarNumber("HudWidth") , 9, Color(0, 0, 0, 255))
-		draw.RoundedBox(4, x, y, GetConVarNumber("HudWidth") * (math.Clamp(LocalPlayer():GetNWInt("Poop"), 0, 100) / 100), 7, Color(80, 45, 0, 255))
-		draw.DrawText("poop: "..math.ceil(LocalPlayer():GetNWInt("Poop")) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y - 2, Color(255, 255, 255, 255), 1)
+		draw.RoundedBox(4, x, y, GetConVarNumber("HudWidth") * (math.Clamp(LocalPlayer().DarkRPVars.Poop, 0, 100) / 100), 7, Color(80, 45, 0, 255))
+		draw.DrawText("poop: "..math.ceil(LocalPlayer().DarkRPVars.Poop) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y - 2, Color(255, 255, 255, 255), 1)
 		
 		draw.RoundedBox(4, x - 1, y2 - 1, GetConVarNumber("HudWidth") , 9, Color(0, 0, 0, 255))
-		draw.RoundedBox(4, x, y2, GetConVarNumber("HudWidth") * (math.Clamp(LocalPlayer():GetNWInt("Pee"), 0, 100) / 100), 7, Color(215, 255, 0, 255))
-		draw.DrawText("pee: "..math.ceil(LocalPlayer():GetNWInt("Pee")) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y2 - 2, Color(255, 255, 255, 255), 1)
+		draw.RoundedBox(4, x, y2, GetConVarNumber("HudWidth") * (math.Clamp(LocalPlayer().DarkRPVars.Pee, 0, 100) / 100), 7, Color(215, 255, 0, 255))
+		draw.DrawText("pee: "..math.ceil(LocalPlayer().DarkRPVars.Pee) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y2 - 2, Color(255, 255, 255, 255), 1)
 	end
 end
 hook.Add("HUDPaint", "PooPee.HUDPaint", PooPee.HUDPaint)

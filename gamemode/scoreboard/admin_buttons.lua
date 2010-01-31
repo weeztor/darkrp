@@ -81,7 +81,7 @@ PANEL.Text = "(un)Wanted"
 Name: DoCommand
 ---------------------------------------------------------*/
 function PANEL:DoCommand(ply)
-	if ply:GetNWBool("wanted") then
+	if ply.DarkRPVars.wanted then
 		RunConsoleCommand("say", "/unwanted " .. tostring( ply:UserID()))
 	else
 		RunConsoleCommand("say", "/wanted " .. tostring( ply:UserID()))

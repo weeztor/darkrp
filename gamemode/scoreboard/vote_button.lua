@@ -35,7 +35,7 @@ Name: PerformLayout
 ---------------------------------------------------------*/
 function PANEL:PerformLayout()
 	if self:GetParent().Player and ValidEntity(self:GetParent().Player) then
-		self.Label:SetText(self:GetParent().Player:GetNWInt("Rating."..self.VoteName, 0))
+		self.Label:SetText(self:GetParent().Player.DarkRPVars["Rating."..self.VoteName] or 0)
 	end
 
 	self.Label:SizeToContents()

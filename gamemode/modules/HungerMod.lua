@@ -23,7 +23,7 @@ function AddFoodItem(name, mdl, amount)
 end
 
 function HM.PlayerSpawn(ply)
-	ply:SetNWInt("Energy", 100)
+	ply:SetDarkRPVar("Energy", 100)
 end
 hook.Add("PlayerSpawn", "HM.PlayerSpawn", HM.PlayerSpawn)
 
@@ -134,7 +134,7 @@ function FoodHeal(ply)
 	if GetGlobalInt("hungermod") == 0 then
 		ply:SetHealth(ply:Health() + (100 - ply:Health()))
 	else
-		ply:SetNWInt("Energy", math.Clamp(ply:GetNWInt("Energy") + 100, 0, 100))
+		ply:SetDarkRPVar("Energy", math.Clamp(ply.DarkRPVars.Energy + 100, 0, 100))
 		umsg.Start("AteFoodIcon", ply)
 		umsg.End()
 	end
