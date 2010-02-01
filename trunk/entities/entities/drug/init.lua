@@ -13,6 +13,7 @@ function ENT:Initialize()
 	if phys and phys:IsValid() then phys:Wake() end
 
 	self.damage = 10
+	self.dt.price = self.dt.price or 100
 end
 
 
@@ -33,12 +34,12 @@ end
 
 function ENT:Use(activator,caller)
 	if not self.CanUse then return false end
-	local Owner = self.dt.price
+	local Owner = self.dt.owning_ent
 	if activator ~= Owner then
-		if not activator:CanAfford(self.dt.price/**/) then
+		if not activator:CanAfford(self.dt.price) then
 			return false
 		end
-		DB.PayPlayer(activator, Owner, self.dt.price/**/)
+		DB.PayPlayer(activator, Owner, self.dt.price)
 		Notify(activator, 1, 4, "You have paid " .. CUR .. self.dt.price .. " for using drugs.")
 		Notify(Owner, 1, 4, "You have received " .. CUR .. self.dt.price .. " for selling drugs.")
 	end

@@ -183,9 +183,9 @@ function DrawDrugsInfo(ent)
 
 	local owner = "N/A!"
 	if ValidEntity(ent.dt.owning_ent) then
-		owner = entdt.owning_ent:Nick()
+		owner = ent.dt.owning_ent:Nick()
 	end
-	local price = tostring(ent.dtprice)
+	local price = tostring(ent.dt.price)
 	local text = owner .. "'s\ndrugs\n"..LANGUAGE.customer_price.. price
 
 	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
@@ -684,7 +684,7 @@ function FindPlayer(info)
 
 	-- Find by RP Name
 	for k, v in pairs(pls) do
-		if string.find(string.lower(v.DarkRPVars.rpname), string.lower(tostring(info))) ~= nil then
+		if string.find(string.lower(v.DarkRPVars.rpname or ""), string.lower(tostring(info))) ~= nil then
 			return v
 		end
 	end

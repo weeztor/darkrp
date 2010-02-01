@@ -1,7 +1,3 @@
--- =======================
--- =Crate SENT by Mahalis
--- =======================
-
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
@@ -71,7 +67,7 @@ function ENT:createDrug()
 	drug.SID = userb.SID
 	drug.ShareGravgun = true
 	drug.nodupe = true
-	drug.dt.price = self.Entity.dt.price
+	drug.dt.price = self.Entity.dt.price or 100
 	drug:Spawn()
 	if not userb.maxDrugs then
 		userb.maxDrugs = 0
