@@ -602,7 +602,7 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 12, 12, 586, 190, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
 		draw.DrawText("Cop Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText(LANGUAGE.cophelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(string.format(LANGUAGE.cophelp, GetGlobalInt("jailtimer")), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
 	if LocalPlayer().DarkRPVars.helpMayor then
