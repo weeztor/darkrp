@@ -14,7 +14,6 @@ function DB.Init()
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_jailpositions('map' TEXT NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL, 'lastused' NUMERIC NOT NULL, PRIMARY KEY('map', 'x', 'y', 'z'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_rpnames('steam' TEXT NOT NULL, 'name' TEXT NOT NULL, PRIMARY KEY('steam'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_zspawns('map' TEXT NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL);")
-		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_wiseguys('steam' TEXT NOT NULL, 'time' NUMERIC NOT NULL, PRIMARY KEY('steam'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_disableddoors('map' TEXT NOT NULL, 'idx' INTEGER NOT NULL, 'title' TEXT NOT NULL, PRIMARY KEY('map', 'idx'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_groupdoors('map' TEXT NOT NULL, 'idx' INTEGER NOT NULL, 'teams' TEXT NOT NULL, 'title' TEXT NOT NULL, PRIMARY KEY('map', 'idx'));")
 	sql.Commit()
@@ -559,7 +558,7 @@ end
 
 function DB.StoreNonOwnableDoorTitle(ent, text)
 	sql.Query("UPDATE darkrp_disableddoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
-	ent.DoorData = e.DoorData or {}
+	ent.DoorData = ent.DoorData or {}
 	ent.DoorData.title = text
 end
 
