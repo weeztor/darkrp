@@ -7,7 +7,7 @@ AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_poopeemod <1 or 0> - Enable/disabl
 if SERVER then
 	function PooPee.UpdatePoop(ply)
 		if not ValidEntity(ply) then return end
-		ply:SetDarkRPVar("Poop", math.Clamp(ply.DarkRPVars.Poop + 1, 0, 100))
+		ply:SetDarkRPVar("Poop", math.Clamp((ply.DarkRPVars.Poop or 0) + 1, 0, 100))
 		if ply.DarkRPVars.Poop >= 100 then
 			GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"] * 0.5, CfgVars["rspd"] * 0.5)
 		end
@@ -15,7 +15,7 @@ if SERVER then
 
 	function PooPee.UpdatePee(ply)
 		if not ValidEntity(ply) or GetGlobalInt("poopeemod") ~= 1 then return end
-		ply:SetDarkRPVar("Pee", math.Clamp(ply.DarkRPVars.Pee + 1, 0, 100) )
+		ply:SetDarkRPVar("Pee", math.Clamp((ply.DarkRPVars.Pee or 0) + 1, 0, 100) )
 		if ply.DarkRPVars.Pee >= 100 then
 			PooPee.DoPee(ply)
 		end
@@ -109,18 +109,21 @@ if SERVER then
 end
 
 function PooPee.HUDPaint()
-	if GetGlobalInt("poopeemod") == 1 then 
+	if (GetGlobalInt("poopeemod") or 0) == 1 then 
+		LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 		local x = 7
 		local y = ScrH() - 110 - GetConVarNumber("HudHeight")
 		local y2 = y + 10
+		local poop = LocalPlayer().DarkRPVars.Poop or 0
+		local pee = LocalPlayer().DarkRPVars.Pee or 0
 		
 		draw.RoundedBox(4, x - 1, y - 1, GetConVarNumber("HudWidth") , 9, Color(0, 0, 0, 255))
-		draw.RoundedBox(4, x, y, GetConVarNumber("HudWidth") * (math.Clamp(LocalPlayer().DarkRPVars.Poop, 0, 100) / 100), 7, Color(80, 45, 0, 255))
-		draw.DrawText("poop: "..math.ceil(LocalPlayer().DarkRPVars.Poop) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y - 2, Color(255, 255, 255, 255), 1)
+		draw.RoundedBox(4, x, y, GetConVarNumber("HudWidth") * (math.Clamp(poop, 0, 100) / 100), 7, Color(80, 45, 0, 255))
+		draw.DrawText("poop: "..math.ceil(poop) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y - 2, Color(255, 255, 255, 255), 1)
 		
 		draw.RoundedBox(4, x - 1, y2 - 1, GetConVarNumber("HudWidth") , 9, Color(0, 0, 0, 255))
-		draw.RoundedBox(4, x, y2, GetConVarNumber("HudWidth") * (math.Clamp(LocalPlayer().DarkRPVars.Pee, 0, 100) / 100), 7, Color(215, 255, 0, 255))
-		draw.DrawText("pee: "..math.ceil(LocalPlayer().DarkRPVars.Pee) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y2 - 2, Color(255, 255, 255, 255), 1)
+		draw.RoundedBox(4, x, y2, GetConVarNumber("HudWidth") * (math.Clamp(pee, 0, 100) / 100), 7, Color(215, 255, 0, 255))
+		draw.DrawText("pee: "..math.ceil(pee) .. "%", "DefaultSmall", GetConVarNumber("HudWidth") / 2, y2 - 2, Color(255, 255, 255, 255), 1)
 	end
 end
 hook.Add("HUDPaint", "PooPee.HUDPaint", PooPee.HUDPaint)
