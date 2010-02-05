@@ -568,9 +568,11 @@ function DB.SetUpNonOwnableDoors()
 
 	for _, row in pairs(r) do
 		local e = ents.GetByIndex(tonumber(row.idx))
-		e.DoorData = e.DoorData or {}
-		e.DoorData.NonOwnable = true
-		e.DoorData.title = row.title
+		if ValidEntity(e) then
+			e.DoorData = e.DoorData or {}
+			e.DoorData.NonOwnable = true
+			e.DoorData.title = row.title
+		end
 	end
 end
 
