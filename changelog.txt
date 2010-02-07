@@ -1,6 +1,7 @@
 DarkRP 2.4.1 SVN
 [ADD] Group ownable doors
 [FIX] // not working in letters
+[FIX] Disabling RP names not working clientside
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
 
 DarkRP 2.4.1

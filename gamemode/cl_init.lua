@@ -24,12 +24,30 @@ local pmeta = FindMetaTable("Player")
 pmeta.SteamName = pmeta.Name
 function pmeta:Name()
 	self.DarkRPVars = self.DarkRPVars or {}
+	if GetGlobalInt("allowrpnames") == 0 then
+		return self:SteamName()
+	end
 	return self.DarkRPVars.rpname or self:SteamName()
 end
 
 pmeta.GetName = pmeta.Name
 pmeta.Nick = pmeta.Name
 -- End
+
+local ENT = FindMetaTable("Entity")
+ENT.OldIsVehicle = ENT.IsVehicle
+
+function ENT:IsVehicle()
+	local class = string.lower(self:GetClass())
+	return ENT.OldIsVehicle or string.find(class, "vehicle") 
+	-- Ent:IsVehicle() doesn't work correctly clientside:
+	/*	
+		] lua_run_cl print(LocalPlayer():GetEyeTrace().Entity)
+		> 		Entity [128][prop_vehicle_jeep_old]
+		] lua_run_cl print(LocalPlayer():GetEyeTrace().Entity:IsVehicle())
+		> 		false
+	*/
+end
 
 function GM:DrawDeathNotice(x, y)
 	if GetGlobalInt("deathnotice") ~= 1 then return end
