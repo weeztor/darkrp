@@ -39,7 +39,7 @@ ENT.OldIsVehicle = ENT.IsVehicle
 
 function ENT:IsVehicle()
 	local class = string.lower(self:GetClass())
-	return ENT.OldIsVehicle or string.find(class, "vehicle") 
+	return ENT:OldIsVehicle() or string.find(class, "vehicle") 
 	-- Ent:IsVehicle() doesn't work correctly clientside:
 	/*	
 		] lua_run_cl print(LocalPlayer():GetEyeTrace().Entity)
@@ -368,7 +368,9 @@ local function DrawDisplay()
 			if ent.DoorData.AllowedToOwn and table.Count(ent.DoorData.AllowedToOwn) > 0 then
 				local names = {}
 				for a,b in pairs(ent.DoorData.AllowedToOwn) do
-					table.insert(names, b:Nick())
+					if ValidEntity(b) then
+						table.insert(names, b:Nick())
+					end
 				end
 				ownerstr = ownerstr .. string.format(LANGUAGE.keys_other_allowed).. table.concat(names, "\n").."\n"
 			end
