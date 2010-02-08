@@ -48,6 +48,8 @@ surface.CreateFont("ChatFont", 70, 500, true, false, "HungerPlus")
 
 function HM.HUDPaint()
 	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
+	LocalPlayer().DarkRPVars.Energy = LocalPlayer().DarkRPVars.Energy or 0
+	
 	if GetGlobalInt("hungermod") == 1 or LocalPlayer().DarkRPVars.LocalHungerMod == 1 then
 		local x = 7
 		local y = ScrH() - 9

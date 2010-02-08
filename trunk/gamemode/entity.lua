@@ -59,6 +59,7 @@ end
 
 function meta:AllowedToOwn(ply)
 	self.DoorData = self.DoorData or {}
+	if not self.DoorData then return false end
 	if self.DoorData.AllowedToOwn and table.HasValue(self.DoorData.AllowedToOwn, ply) then
 		return true
 	end

@@ -6,10 +6,13 @@ local cantouch = false
 
 -- Can/can not touch sir!
 local function CanTouch(um)
-	if TouchAlpha ~= 0 then return end
+	if TouchAlpha > 0 then return end
 	CantTouchOwner = um:ReadString()
 	cantouch = um:ReadBool()
-	for i = 1, 510, 1 do
+	timer.Simple(1, function()
+		TouchAlpha = 0 
+	end)
+	for i = 1, 511, 1 do
 		timer.Simple(i/510, function(i)
 			if i <= 255 then
 				TouchAlpha = i
@@ -125,7 +128,6 @@ local function DrawNotice( self, k, v, i )
 	// Friction.. kind of FPS independant.
 	v.velx = v.velx * (0.95 - RealFrameTime() * 8 )
 	v.vely = v.vely * (0.95 - RealFrameTime() * 8 )
-
 end
 
 local comingAroundAgain = 0
@@ -133,7 +135,7 @@ local function HUDPaint()
 	
 	--Show the owner:
 	local LAEnt = LocalPlayer():GetEyeTrace().Entity
-	if CanTouchLookingAt ~= nil and (LAEnt == LookingatEntity or (LookingatEntity == NULL and LAEnt:EntIndex() ~= 0)) then--LookingatEntity is null when you look at a prop you just spawned(haven't spawned on client yet)
+	if CanTouchLookingAt ~= nil and ValidEntity(LAEnt) and (LAEnt == LookingatEntity or (LookingatEntity == NULL and LAEnt:EntIndex() ~= 0)) then--LookingatEntity is null when you look at a prop you just spawned(haven't spawned on client yet)
 		local QuadTable = {}  
 		
 		if CanTouchLookingAt then
@@ -156,7 +158,7 @@ local function HUDPaint()
 			comingAroundAgain = math.Min(comingAroundAgain + (FrameTime()*600), w + 28)
 		end
 		QuadTable.x = comingAroundAgain - (w + 28)
-		draw.RoundedBox(4, comingAroundAgain - (w + 28), ScrH()/2 - h, w + 28, 16, Color(50,50,75,100))
+		draw.RoundedBox(4, comingAroundAgain - (w + 28), ScrH()/2 - h, w + 28, 16, Color(50,50,50,100))
 		draw.DrawText(Why, "Default", 24 - (w+28) + comingAroundAgain, ScrH()/2 - h, col, 0) 
 		draw.TexturedQuad( QuadTable )
 	elseif CanTouchLookingAt ~= nil then
@@ -179,7 +181,7 @@ local function HUDPaint()
 			QuadTable.y = ScrH()/2 - 12
 			QuadTable.w = 16
 			QuadTable.x = comingAroundAgain - (w + 28)
-			draw.RoundedBox(4, comingAroundAgain - (w + 28), ScrH()/2 - h, w + 28, 16, Color(50,50,75,100))
+			draw.RoundedBox(4, comingAroundAgain - (w + 28), ScrH()/2 - h, w + 28, 16, Color(50,50,50,100))
 			draw.DrawText(Why, "Default", 24 - (w+28) + comingAroundAgain, ScrH()/2 - h, col, 0) 
 			draw.TexturedQuad( QuadTable )
 		else
@@ -188,7 +190,7 @@ local function HUDPaint()
 		end
 	end
 	-- Messsage when you can't touch something
-	if TouchAlpha ~= 0 then
+	if TouchAlpha > 0 then
 		local QuadTable = {}  
 		
 		if cantouch then
@@ -202,14 +204,14 @@ local function HUDPaint()
 		QuadTable.y = ScrH()/2 - 8
 		QuadTable.w = 16
 		QuadTable.h = 16
-		draw.TexturedQuad( QuadTable )
+		draw.TexturedQuad(QuadTable)
 		
-		if CantTouchOwner ~= "" then
+		if CantTouchOwner and CantTouchOwner ~= "" then
 			surface.SetFont("Default")
 			local w,h = surface.GetTextSize(CantTouchOwner)
 			local col = Color(255,0,0,255)
 			if cantouch then col = Color(0,255,0,255) end
-			draw.WordBox(4, ScrW()/2 - 0.51*w, ScrH()/2 + h, CantTouchOwner, "Default", Color(50,50,75,100), col) 
+			draw.WordBox(4, ScrW()/2 - 0.51*w, ScrH()/2 + h, CantTouchOwner, "Default", Color(50,50,50,100), col) 
 		end
 	end
 	
