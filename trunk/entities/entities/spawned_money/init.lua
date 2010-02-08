@@ -15,6 +15,7 @@ function ENT:Initialize()
 	self.ShareGravgun = true
 
 	if phys and phys:IsValid() then phys:Wake() end
+	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS) 
 end
 
 
