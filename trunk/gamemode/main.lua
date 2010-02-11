@@ -1411,6 +1411,7 @@ AddChatCommand("/jobswitch", SwitchJob)
 	
 
 function DoTeamBan(ply, args, cmdargs)
+	if not args or args == "" then return "" end
 	if not ply:IsAdmin() then 
 		Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "/teamban"))
 		return ""

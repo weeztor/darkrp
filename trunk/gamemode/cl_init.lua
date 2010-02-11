@@ -40,6 +40,7 @@ local ENT = FindMetaTable("Entity")
 ENT.OldIsVehicle = ENT.IsVehicle
 
 function ENT:IsVehicle()
+	if type(self) ~= "Entity" then return false end
 	local class = string.lower(self:GetClass())
 	return ENT:OldIsVehicle() or string.find(class, "vehicle") 
 	-- Ent:IsVehicle() doesn't work correctly clientside:
