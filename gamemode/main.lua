@@ -1777,7 +1777,7 @@ function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 		target:AddMoney(-CfgVars["lotterycommitcost"])
 		Notify(target, 1,4, string.format(LANGUAGE.lottery_entered, CUR..tostring(CfgVars["lotterycommitcost"])))
 	elseif answer and not table.HasValue(LotteryPeople, target) then
-		Notify(target, 1,4, LANGUAGE.lottery_not_entered)
+		Notify(target, 1,4, string.format(LANGUAGE.lottery_not_entered, target:Nick()))
 	end
 	
 	if TimeIsUp then
