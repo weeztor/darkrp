@@ -360,7 +360,7 @@ local function DrawDisplay()
 			local ownerstr = ""
 			local ent = tr.Entity
 
-			if ValidEntity(ent:GetDoorOwner()) then
+			if ValidEntity(ent:GetDoorOwner()) and ent:GetDoorOwner().Nick then
 				ownerstr = ent:GetDoorOwner():Nick() .. "\n"
 			end
 

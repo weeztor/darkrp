@@ -524,6 +524,7 @@ end
 
 function GM:PlayerSpawn(ply)
 	ply:CrosshairEnable()
+	ply:UnSpectate()
 	ply:SetHealth(tonumber(CfgVars["startinghealth"]) or 100)
 
 	if CfgVars["crosshair"] == 0 then
