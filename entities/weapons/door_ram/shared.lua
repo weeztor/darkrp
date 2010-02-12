@@ -82,10 +82,11 @@ function SWEP:PrimaryAttack()
 	
 	
 	local a = CfgVars["copscanunfreeze"] == 1
+	local d = CfgVars["copscanunweld"] == 1
 	local b = trace.Entity:GetClass() == "prop_physics"
 	local c = true
 	if trace.Entity.Owner then
-		c = trace.Entity.Owner.warranted
+		c = trace.Entity.Owner.warranted or trace.Entity.Owner.DarkRPVars.wanted
 	end
 	if (trace.Entity:IsDoor()) then
 		local allowed = false
@@ -123,6 +124,13 @@ function SWEP:PrimaryAttack()
 			trace.Entity:GetPhysicsObject( ):EnableMotion( true ) 
 		else
 			Notify(self.Owner, 1, 5,"You need a warrant in order to be able to unfreeze this prop.")
+		end
+	end
+	if d and b and self.Owner:EyePos():Distance(trace.HitPos) < 100 then
+		if c then
+			constraint.RemoveConstraints( trace.Entity, "Weld" )
+		else 
+			Notify(self.Owner, 1, 5,"You need a warrant in order to be able to unweld this prop.")
 		end
 	end
 	self.Owner:ViewPunch(Angle(-10, math.random(-5, 5), 0))

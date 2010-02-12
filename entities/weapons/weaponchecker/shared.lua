@@ -93,13 +93,30 @@ function SWEP:SecondaryAttack()
 		if not table.HasValue(NoStripWeapons, string.lower(v:GetClass())) then
 			trace.Entity:StripWeapon(v:GetClass())
 			result = result..", "..v:GetClass()
-			table.insert(stripped, v:GetClass())
+			table.insert(stripped, {v:GetClass(), trace.Entity:GetAmmoCount(v:GetPrimaryAmmoType()), 
+			v:GetPrimaryAmmoType(), trace.Entity:GetAmmoCount(v:GetSecondaryAmmoType()), v:GetSecondaryAmmoType(),
+			v:Clip1(), v:Clip2()})
 		end
 	end
+	
 	if not trace.Entity:GetTable().ConfisquatedWeapons then
 		trace.Entity:GetTable().ConfisquatedWeapons = stripped
 	else
-		for k,v in pairs(stripped) do if not table.HasValue(trace.Entity:GetTable().ConfisquatedWeapons, v) then table.insert(trace.Entity:GetTable().ConfisquatedWeapons, v) end end
+		for k,v in pairs(stripped) do 
+			local found = false
+			for a,b in pairs(trace.Entity:GetTable().ConfisquatedWeapons) do
+				if b[1] == v[1] then
+					found = true
+					break
+				end
+			end
+			if not found then 
+				table.insert(trace.Entity:GetTable().ConfisquatedWeapons, v) 
+			end
+			--[[ if not table.HasValue(trace.Entity:GetTable().ConfisquatedWeapons, v) then 
+				table.insert(trace.Entity:GetTable().ConfisquatedWeapons, v) 
+			end ]]
+		end
 	end
 	
 	if result == "" then
@@ -136,8 +153,18 @@ function SWEP:Reload()
 		Notify(self.Owner, 1, 4, trace.Entity:Nick() .. " had no weapons confisquated!")
 		return
 	else
-		for k,v in pairs(trace.Entity:GetTable().ConfisquatedWeapons) do
+		--[[ for k,v in pairs(trace.Entity:GetTable().ConfisquatedWeapons) do
 			trace.Entity:Give(v)
+		end ]]
+		for k,v in pairs(trace.Entity.ConfisquatedWeapons) do
+			local wep = trace.Entity:Give(v[1])
+			trace.Entity:RemoveAllAmmo()
+			trace.Entity:SetAmmo(v[2], v[3], false)
+			trace.Entity:SetAmmo(v[4], v[5], false)
+			
+			wep:SetClip1(v[6])
+			wep:SetClip2(v[7])
+			
 		end
 		Notify(self.Owner, 1, 4, "Returned "..trace.Entity:Nick() .. "'s confisquated weapons!")
 		trace.Entity:GetTable().ConfisquatedWeapons = nil

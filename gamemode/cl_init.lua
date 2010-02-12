@@ -152,7 +152,7 @@ end
 
 function DrawShipmentInfo(ent)
 	local pos = ent:GetPos()
-
+	if not pos then return end
 	pos.z = pos.z + 8
 	pos = pos:ToScreen()
 

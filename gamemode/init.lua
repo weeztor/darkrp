@@ -191,6 +191,7 @@ function RefreshRPSettings(RESET)
 	CfgVars["norespawn"] = 1 -- Whether people have to respawn when they change job or not
 	CfgVars["advertisements"] = 1--chatprint advertisements
 	CfgVars["copscanunfreeze"] = 1  -- Cops can unfreeze props with the battering ram
+	CfgVars["copscanunweld"] = 0  -- Cops can unweld props with the battering ram
 	CfgVars["removeclassitems"] = 1 -- Remove(example) every gun shipment when the gundealer changes to a medic or something
 	CfgVars["enablebuypistol"] = 1 -- People can do /buy
 	CfgVars["enableshipments"] = 1 --Enable gun shipments
@@ -240,6 +241,7 @@ function RefreshRPSettings(RESET)
 	CfgVars["maxvehicles"] = 5
 	CfgVars["deathfee"] = 30
 	CfgVars["startinghealth"] = 100
+	CfgVars["startingmoney"] = 500
 	CfgVars["mobagenda"] = ""
 
 	if RESET then
