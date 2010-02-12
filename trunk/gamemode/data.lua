@@ -474,7 +474,7 @@ end
 function DB.RetrieveMoney(ply)
 	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
-	local startingAmount = 500
+	local startingAmount = CfgVars["startingmoney"] or 500
 		
 	local r = sql.QueryValue("SELECT amount FROM darkrp_wallets WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
 	if r then
@@ -491,7 +491,7 @@ function DB.ResetAllMoney(ply,cmd,args)
 	if not ply:IsSuperAdmin() then return end
 	sql.Query("DELETE FROM darkrp_wallets;")
 	for k,v in pairs(player.GetAll()) do
-		DB.StoreMoney(v, 500)
+		DB.StoreMoney(v, CfgVars["startingmoney"] or 500)
 	end
 	if ply:IsPlayer() then
 		NotifyAll(1,4, string.format(LANGUAGE.reset_money, ply:Nick()))

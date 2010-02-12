@@ -132,7 +132,10 @@ AddToggleCommand("rp_customjobs", "customjobs", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_customjobs - Enable/disable the /job command (personalized job names).")
 
 AddToggleCommand("rp_copscanunfreeze", "copscanunfreeze", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_copscanunfreeze - Enable/disable the ability of cops to freeze other people's props")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_copscanunfreeze - Enable/disable the ability of cops to unfreeze other people's props")
+
+AddToggleCommand("rp_copscanunweld", "copscanunweld", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_copscanunweld - Enable/disable the ability of cops to unweld other people's props")
 
 AddToggleCommand("rp_removeclassitems",  "removeclassitems", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_removeclassitems - Enable/disable shipments/microwaves/etc. removal when someone changes team.")
@@ -332,6 +335,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_deathfee <Number> - the amount of m
 
 AddValueCommand("rp_startinghealth", "startinghealth", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_startinghealth <Number> - the health when you spawn.")
+
+AddValueCommand("rp_startingmoney", "startingmoney", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_startingmoney <Number> - your wallet when you join for the first time.")
 
 
 function AddEntityCommands(name, command)
