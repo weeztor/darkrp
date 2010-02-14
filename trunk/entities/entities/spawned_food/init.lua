@@ -7,7 +7,6 @@ function ENT:Initialize()
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	self.Entity:SetSolid(SOLID_VPHYSICS)
-	self:SetModel("models/props_junk/garbage_takeoutcarton001a.mdl")
 	local phys = self.Entity:GetPhysicsObject()
 
 	if phys and phys:IsValid() then phys:Wake() end
