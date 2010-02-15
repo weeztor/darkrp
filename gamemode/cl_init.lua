@@ -1105,4 +1105,18 @@ datastream.Hook("DarkRP_InitializeVars", InitializeDarkRPVars)
 
 function GM:InitPostEntity()
 	RunConsoleCommand("_sendDarkRPvars")
+	timer.Create("DarkRPCheckifitcamethrough", 2, 0, function()
+		local StopTimer = true
+		for k,v in pairs(player.GetAll()) do
+			v.DarkRPVars = v.DarkRPVars or {}
+			if not v.DarkRPVars.job or not v.DarkRPVars.salary or not v.DarkRPVars.money then
+				StopTimer = false
+				RunConsoleCommand("_sendDarkRPvars")
+			end
+		end
+		
+		if StopTimer then 
+			timer.Destroy("DarkRPCheckifitcamethrough")
+		end
+	end)
 end
