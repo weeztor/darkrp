@@ -444,8 +444,8 @@ function meta:SetDarkRPVar(var, value)
 end
 
 local function SendDarkRPVars(ply)
-	if ply.DarkRPVarsSent then return end --prevent spammers
-	ply.DarkRPVarsSent = true
+	if ply.DarkRPVarsSent and ply.DarkRPVarsSent > (CurTime() - 1) then return end --prevent spammers
+	ply.DarkRPVarsSent = CurTime()
 	
 	local sendtable = {}
 	for k,v in pairs(player.GetAll()) do
