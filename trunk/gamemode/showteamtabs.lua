@@ -160,6 +160,34 @@ local function CPOptns()
 				AddJailPos.DoClick = function() LocalPlayer():ConCommand("say /addjailpos") end
 				CPpanel:AddItem(AddJailPos)
 			end
+			
+			local ismayor--first look if there's a mayor
+			local ischief-- then if there's a chief
+			for k,v in pairs(player.GetAll()) do
+				if v:Team() == TEAM_MAYOR then
+					ismayor = true
+					break
+				end
+			end
+			
+			if not ismayor then
+				for k,v in pairs(player.GetAll()) do
+					if v:Team() == TEAM_CHIEF then
+						ischief = true
+						break
+					end
+				end
+			end
+			
+			local Team = LocalPlayer():Team()
+			if not ismayor and (Team == TEAM_CHIEF or (not ischief and Team == TEAM_POLICE)) then
+				local GiveLicense = vgui.Create("DButton") 
+				GiveLicense:SetText(LANGUAGE.give_license_lookingat)
+				GiveLicense.DoClick = function()
+					LocalPlayer():ConCommand("say /givelicense")
+				end
+				CPpanel:AddItem(GiveLicense)
+			end
 	CPCat:SetContents(CPpanel)
 	CPCat:SetSkin("DarkRP")
 	return CPCat
@@ -288,10 +316,12 @@ function MoneyTab()
 					health.DoClick = function() LocalPlayer():ConCommand("say /Buyhealth") end
 				ActionsPanel:AddItem(health)
 				
-				local RequestLicense = vgui.Create("DButton")
-					RequestLicense:SetText(LANGUAGE.request_gunlicense)
-					RequestLicense.DoClick = function() LocalPlayer():ConCommand("say /requestlicense") end
-				ActionsPanel:AddItem(RequestLicense)
+				if LocalPlayer():Team() ~= TEAM_MAYOR then
+					local RequestLicense = vgui.Create("DButton")
+						RequestLicense:SetText(LANGUAGE.request_gunlicense)
+						RequestLicense.DoClick = function() LocalPlayer():ConCommand("say /requestlicense") end
+					ActionsPanel:AddItem(RequestLicense)
+				end
 				
 				local Demote = vgui.Create("DButton") 
 				Demote:SetText(LANGUAGE.demote_player_menu)

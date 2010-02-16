@@ -1112,6 +1112,7 @@ function GM:InitPostEntity()
 			if not v.DarkRPVars.job or not v.DarkRPVars.salary or not v.DarkRPVars.money then
 				StopTimer = false
 				RunConsoleCommand("_sendDarkRPvars")
+				break
 			end
 		end
 		
