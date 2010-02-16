@@ -2055,7 +2055,7 @@ function GiveLicense(ply)
 		return ""
 	end
 	Notify(LookingAt, 1, 4, string.format(LANGUAGE.gunlicense_granted, ply:Nick(), LookingAt:Nick())) 
-	Notify(ply, 2, 4, string.format(LANGUAGE.gunlicense_granted, LookingAt:Nick(), ply:Nick()))
+	Notify(ply, 2, 4, string.format(LANGUAGE.gunlicense_granted, ply:Nick(), LookingAt:Nick()))
 	LookingAt:SetDarkRPVar("HasGunlicense", true)
 	return ""
 end
