@@ -8,6 +8,7 @@ DarkRP 2.4.1 SVN
 [FIX] Gunlicense buttons in F4
 [FIX] Shipment issues
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
+[REMOVE] VoteCopOn. It's bullshit
 
 DarkRP 2.4.1
 

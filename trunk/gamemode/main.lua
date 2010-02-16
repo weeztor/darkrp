@@ -7,7 +7,6 @@ local stormOn = false
 local zombieOn = false
 local maxZombie = 10
 RPArrestedPlayersPositions = {}
-VoteCopOn = false
 
 /*---------------------------------------------------------
  Zombie
@@ -1335,8 +1334,6 @@ end
 AddChatCommand("/job", ChangeJob)
 
 local function FinishDemote(choice, v)
-	VoteCopOn = false
-
 	if choice == 1 then
 		v:TeamBan()
 		if v:Alive() then
@@ -1378,7 +1375,6 @@ local function Demote(ply, args)
 			NotifyAll(1, 4, string.format(LANGUAGE.demote_vote_started, ply:Nick(), p:Nick()))
 			vote:Create(p:Nick() .. ":\n"..string.format(LANGUAGE.demote_vote_text, reason), p:EntIndex() .. "votecop"..ply:EntIndex(), p, 20, FinishDemote, true)
 			ply:GetTable().LastVoteCop = CurTime()
-			VoteCopOn = true
 		end
 		return ""
 	else
@@ -2134,7 +2130,6 @@ end
 concommand.Add("rp_revokelicense", rp_RevokeLicense)
 
 function FinishRevokeLicense(choice, v)
-	VoteCopOn = false
 	if choice == 1 then
 		v:SetDarkRPVar("HasGunlicense", false)
 		v:StripWeapons()
@@ -2172,7 +2167,6 @@ function VoteRemoveLicense(ply, args)
 			NotifyAll(1, 4, string.format(LANGUAGE.gunlicense_remove_vote_text, ply:Nick(), p:Nick()))
 			vote:Create(p:Nick() .. ":\n"..string.format(LANGUAGE.gunlicense_remove_vote_text2, reason), p:EntIndex() .. "votecop"..ply:EntIndex(), p, 20, FinishRevokeLicense, true)
 			ply:GetTable().LastVoteCop = CurTime()
-			VoteCopOn = true
 			Notify(ply, 1, 4, LANGUAGE.vote_started)
 		end
 		return ""

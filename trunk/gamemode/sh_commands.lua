@@ -402,10 +402,6 @@ function AddTeamCommands(CTeam)
 				Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait, math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)), CTeam.command))
 				return ""
 			end
-			if VoteCopOn then
-				Notify(ply, 1, 4,  LANGUAGE.vote_already_exists)
-				return ""
-			end
 			if ply:Team() == k then
 				Notify(ply, 1, 4,  string.format(LANGUAGE.unable, CTeam.command, ""))
 				return ""
@@ -415,7 +411,6 @@ function AddTeamCommands(CTeam)
 				return ""
 			end
 			vote:Create(string.format(LANGUAGE.wants_to_be, ply:Nick(), CTeam.name), ply:EntIndex() .. "votecop", ply, 20, function(choice, ply)
-				VoteCopOn = false
 				if choice == 1 then
 					ply:ChangeTeam(k)
 				else
@@ -423,7 +418,6 @@ function AddTeamCommands(CTeam)
 				end
 			end)
 			ply:GetTable().LastVoteCop = CurTime()
-			VoteCopOn = true
 			return ""
 		end)
 		AddChatCommand("/"..CTeam.command, function(ply)
