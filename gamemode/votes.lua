@@ -84,7 +84,6 @@ function vote.DestroyVotesWithEnt(ent)
 			end
 
 			Votes[k] = nil
-			VoteCopOn = false
 		end
 	end
 end
