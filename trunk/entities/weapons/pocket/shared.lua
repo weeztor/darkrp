@@ -71,7 +71,7 @@ function SWEP:PrimaryAttack()
 		timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	end
 	
-	if not self.Owner:GetTable().Pocket then self.Owner:GetTable().Pocket = {} end
+	self.Owner:GetTable().Pocket = self.Owner:GetTable().Pocket or {} 
 	if not FPP.PlayerCanTouchEnt(self.Owner, trace.Entity, "Gravgun", "FPP_GRAVGUN") or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) or trace.Entity.jailWall then
 		Notify(self.Owner, 1, 4, "You can not put this object in your pocket!")
 		return
@@ -173,9 +173,8 @@ end
 
 if CLIENT then
 	local function StorePocketItem(um)
-		if not LocalPlayer():GetTable().Pocket then
-			LocalPlayer():GetTable().Pocket = {}
-		end
+		LocalPlayer():GetTable().Pocket = LocalPlayer():GetTable().Pocket or {}
+
 		local ent = Entity(um:ReadShort())
 		if ValidEntity(ent) and not table.HasValue(LocalPlayer():GetTable().Pocket, ent) then
 			table.insert(LocalPlayer():GetTable().Pocket, ent)
@@ -184,9 +183,8 @@ if CLIENT then
 	usermessage.Hook("Pocket_AddItem", StorePocketItem)
 	
 	local function RemovePocketItem(um)
-		if not LocalPlayer():GetTable().Pocket then
-			LocalPlayer():GetTable().Pocket = {}
-		end
+		LocalPlayer():GetTable().Pocket = LocalPlayer():GetTable().Pocket or {}
+		
 		local ent = Entity(um:ReadShort())
 		for k,v in pairs(LocalPlayer():GetTable().Pocket) do
 			if v == ent then LocalPlayer():GetTable().Pocket[k] = nil end
@@ -214,6 +212,11 @@ if CLIENT then
 			for k,v in pairs(items) do
 				if not ValidEntity(v) then 
 					items[k] = nil
+					for a,b in pairs(LocalPlayer().Pocket) do
+						if b == v or not ValidEntity(b) then
+							LocalPlayer():GetTable().Pocket[a] = nil
+						end
+					end
 					items = table.ClearKeys(items)
 					frame:Close()
 					PocketMenu()
@@ -228,6 +231,11 @@ if CLIENT then
 					icon:SetToolTip()
 					RunConsoleCommand("_RPSpawnPocketItem", v:EntIndex())
 					items[k] = nil
+					for a,b in pairs(LocalPlayer().Pocket) do
+						if b == v then
+							LocalPlayer():GetTable().Pocket[a] = nil
+						end
+					end
 					if #items == 0 then
 						frame:Close()
 						return
@@ -246,8 +254,9 @@ elseif SERVER then
 		if ply:GetActiveWeapon():GetClass() ~= "pocket" then
 			return
 		end
-		if ply:GetTable().Pocket and Entity(tonumber(args[1])) then
+		if ply:GetTable().Pocket and ValidEntity(Entity(tonumber(args[1]))) then
 			local ent = Entity(tonumber(args[1]))
+			if not table.HasValue(ply.Pocket, ent) then return end
 			
 			for k,v in pairs(ply:GetTable().Pocket) do 
 				if v == ent then
@@ -256,7 +265,6 @@ elseif SERVER then
 			end
 			ply:GetTable().Pocket = table.ClearKeys(ply:GetTable().Pocket)
 			
-			if not ValidEntity(ent) then return end
 			if SERVER then
 				ply:GetActiveWeapon():SetWeaponHoldType("pistol")
 				timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, ply:GetActiveWeapon())
