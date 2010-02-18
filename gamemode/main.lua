@@ -912,8 +912,7 @@ function BuyPistol(ply, args)
 			price = v.pricesep
 			local canbuy = false			
 			local RestrictBuyPistol = tonumber(GetGlobalInt("restrictbuypistol"))
-			if (RestrictBuyPistol == 1) or 
-			RestrictBuyPistol == 0 or 
+			if RestrictBuyPistol == 0 or 
 			(RestrictBuyPistol == 1 and (not v.allowed[1] or table.HasValue(v.allowed, ply:Team()))) then
 				canbuy = true
 			end
