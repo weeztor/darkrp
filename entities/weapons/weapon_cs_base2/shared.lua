@@ -63,6 +63,8 @@ function SWEP:Deploy()
 		self:SetWeaponHoldType("normal")
 	end
 	
+	self.LASTOWNER = self.Owner
+	
 	self:SetIronsights(self:GetIronsights())
 	return true
 end
@@ -260,4 +262,22 @@ onRestore
 function SWEP:OnRestore()
 	self.NextSecondaryAttack = 0
 	self.Ironsights = false
+end
+
+function SWEP:OnDrop()
+	self.PrimaryClipLeft = self:Clip1()
+	self.SecondaryClipLeft = self:Clip2()
+	
+	self.PrimaryAmmoLeft = self.LASTOWNER:GetAmmoCount(self:GetPrimaryAmmoType())
+	self.SecondaryAmmoLeft = self.LASTOWNER:GetAmmoCount(self:GetSecondaryAmmoType())
+end
+
+function SWEP:Equip(NewOwner)
+	if self.PrimaryClipLeft and self.SecondaryClipLeft and self.PrimaryAmmoLeft and self.SecondaryAmmoLeft then
+		NewOwner:SetAmmo(self.PrimaryAmmoLeft, self:GetPrimaryAmmoType())
+		NewOwner:SetAmmo(self.SecondaryAmmoLeft, self:GetSecondaryAmmoType())
+		
+		self:SetClip1(self.PrimaryClipLeft)
+		self:SetClip2(self.SecondaryClipLeft)
+	end
 end
