@@ -647,6 +647,7 @@ function DB.RetrieveGlobals()
 	if not r then return false end
 	
 	for k, v in pairs(r) do
+		CfgVars[v.key] = tonumber(v.value)
 		SetGlobalInt(v.key, tonumber(v.value))
 	end
 	if #r < 30 then
@@ -664,6 +665,7 @@ function DB.SaveGlobal(key, value)
 		sql.Query("UPDATE darkrp_globals SET value = " .. value .. " WHERE key = " .. sql.SQLStr(key) .. ";")
 		print("updated", key, "to", value)
 	end
+	CfgVars[key] = tonumber(value)
 	SetGlobalInt(key, value)
 end
 

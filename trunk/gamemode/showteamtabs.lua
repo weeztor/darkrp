@@ -1,3 +1,5 @@
+CreateClientConVar("rp_playermodel", "", true, true)
+
 local function MayorOptns()
 	local MayCat = vgui.Create("DCollapsibleCategory")
 	function MayCat:Paint()
@@ -452,7 +454,12 @@ function JobsTab()
 		
 		local function AddIcon(Model, name, description, Weapons, command, special, specialcommand)
 			local icon = vgui.Create("SpawnIcon")
-			icon:SetModel(Model)
+			local IconModel = Model
+			if type(Model) == "table" then
+				IconModel = Model[math.random(#Model)]
+			end
+			icon:SetModel(IconModel)
+			
 			icon:SetIconSize(120)
 			icon:SetToolTip()
 			icon.OnCursorEntered = function()
@@ -461,7 +468,7 @@ function JobsTab()
 				Info[1] = LANGUAGE.job_name .. name 
 				Info[2] = LANGUAGE.job_description .. description
 				Info[3] = LANGUAGE.job_weapons .. Weapons
-				model = Model
+				model = IconModel
 				UpdateInfo()
 			end
 			icon.OnCursorExited = function()
@@ -476,14 +483,52 @@ function JobsTab()
 			end
 			
 			icon.DoClick = function()
-				if special then
-					local menu = DermaMenu()
-					menu:AddOption("Vote", function() LocalPlayer():ConCommand("say "..command) hordiv:GetParent():GetParent():Close() end)
-					menu:AddOption("Do not vote", function() LocalPlayer():ConCommand("say " .. specialcommand) hordiv:GetParent():GetParent():Close() end)
-					menu:Open()
-				else
-					LocalPlayer():ConCommand("say " .. command)
+				local function DoChatCommand(frame)
+					if special then
+						local menu = DermaMenu()
+						menu:AddOption("Vote", function() LocalPlayer():ConCommand("say "..command) frame:Close() end)
+						menu:AddOption("Do not vote", function() LocalPlayer():ConCommand("say " .. specialcommand) frame:Close() end)
+						menu:Open()
+					else
+						LocalPlayer():ConCommand("say " .. command)
+						frame:Close()
+					end
+				end
+				
+				if type(Model) == "table" and #Model > 0 then
 					hordiv:GetParent():GetParent():Close()
+					local frame = vgui.Create( "DFrame" )
+					frame:SetTitle( "Choose model" )
+					frame:SetVisible(true)
+					frame:MakePopup()
+					
+					local levels = 1
+					local IconsPerLevel = math.floor(ScrW()/64)
+					
+					while #Model * (64/levels) > ScrW() do
+						levels = levels + 1
+					end
+					frame:SetSize(math.Min(#Model * 64, IconsPerLevel*64), math.Min(90+(64*(levels-1)), ScrH()))
+					frame:Center()
+					
+					local CurLevel = 1
+					for k,v in pairs(Model) do
+						local icon = vgui.Create("SpawnIcon", frame)
+						if (k-IconsPerLevel*(CurLevel-1)) > IconsPerLevel then
+							CurLevel = CurLevel + 1
+						end
+						icon:SetPos((k-1-(CurLevel-1)*IconsPerLevel) * 64, 25+(64*(CurLevel-1)))
+						icon:SetModel(v)
+						icon:SetIconSize(64)
+						icon:SetToolTip()
+						icon.DoClick = function()
+							RunConsoleCommand("rp_playermodel", v)
+							RunConsoleCommand("_rp_ChosenModel", v)
+							DoChatCommand(frame)
+						end
+					end
+				else
+					DoChatCommand(hordiv:GetParent():GetParent())
 				end
 			end
 			

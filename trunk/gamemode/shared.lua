@@ -1,7 +1,23 @@
 /*--------------------------------------------------------
 Default teams. If you make a team above the citizen team, people will spawn with that team!
 --------------------------------------------------------*/
-TEAM_CITIZEN = AddExtraTeam("Citizen", Color(20, 150, 20, 255), "models/player/group01/male_01.mdl", [[The Citizen is the most basic level of society you can hold
+TEAM_CITIZEN = AddExtraTeam("Citizen", Color(20, 150, 20, 255), {
+	"models/player/Group01/Female_01.mdl",
+	"models/player/Group01/Female_02.mdl",
+	"models/player/Group01/Female_03.mdl",
+	"models/player/Group01/Female_04.mdl",
+	"models/player/Group01/Female_06.mdl",
+	"models/player/Group01/Female_07.mdl",
+	"models/player/group01/male_01.mdl",
+	"models/player/Group01/Male_02.mdl",
+	"models/player/Group01/male_03.mdl",
+	"models/player/Group01/Male_04.mdl",
+	"models/player/Group01/Male_05.mdl",
+	"models/player/Group01/Male_06.mdl",
+	"models/player/Group01/Male_07.mdl",
+	"models/player/Group01/Male_08.mdl",
+	"models/player/Group01/Male_09.mdl"},
+[[The Citizen is the most basic level of society you can hold
 besides being a hobo. 
 You have no specific role in city life.]], {}, "citizen", 0, 45, 0, false, false)
 
@@ -16,7 +32,22 @@ The Battering Ram can also unfreeze frozen props(if enabled).
 Type /wanted <name> to alert the public to this criminal
 OR go to tab and warrant someone by clicking the warrant button]], {"arrest_stick", "unarrest_stick", "weapon_glock2", "stunstick", "door_ram", "weaponchecker"}, "cp", 4, 65, 0, true, true)
 
-TEAM_GANG = AddExtraTeam("Gangster", Color(75, 75, 75, 255), "models/player/group03/male_01.mdl", [[The lowest person of crime. 
+TEAM_GANG = AddExtraTeam("Gangster", Color(75, 75, 75, 255), {
+	"models/player/Group03/Female_01.mdl",
+	"models/player/Group03/Female_02.mdl",
+	"models/player/Group03/Female_03.mdl",
+	"models/player/Group03/Female_04.mdl",
+	"models/player/Group03/Female_06.mdl",
+	"models/player/Group03/Female_07.mdl",
+	"models/player/group03/male_01.mdl",
+	"models/player/Group03/Male_02.mdl",
+	"models/player/Group03/male_03.mdl",
+	"models/player/Group03/Male_04.mdl",
+	"models/player/Group03/Male_05.mdl",
+	"models/player/Group03/Male_06.mdl",
+	"models/player/Group03/Male_07.mdl",
+	"models/player/Group03/Male_08.mdl",
+	"models/player/Group03/Male_09.mdl"}, [[The lowest person of crime. 
 A gangster generally works for the Mobboss who runs the crime family. 
 The Mobboss sets your agenda and you follow it or you might be punished.]], {}, "gangster", 3, 45, 0, false, false)
 
@@ -76,17 +107,6 @@ AddExtraTeam( "<NAME OF THE CLASS>", Color(<red>, <Green>, <blue>, 255), "<Playe
 
 The real example is here: it's the Hobo:		*/
 
-/*
---------------------------------------------------------
-HOW TO MAKE A DOOR GROUP
---------------------------------------------------------
-AddDoorGroup("NAME OF THE GROUP HERE, you see this when looking at a door", Team1, Team2, team3, team4, etc.)
-
-The default door groups, can also be used as examples:
-*/
-AddDoorGroup("cops and mayor only", TEAM_CHIEF, TEAM_POLICE, TEAM_MAYOR)
-AddDoorGroup("gundealer only", TEAM_GUN)
-
 --VAR without /!!!			The name    the color(what you see in tab)                   the player model					The description
 TEAM_HOBO = AddExtraTeam("Hobo", Color(80, 45, 0, 255), "models/player/corpse1.mdl", [[The lowest member of society. All people see you laugh. 
 You have no home.
@@ -100,3 +120,24 @@ outside someone else's door]], {"weapon_bugbait"}, "hobo", 5, 0, 0, false)
 // HAVING "/dude" IN THE COMMAND FIELD IS WROOOOOOOONG!!!!
 //ADD TEAMS UNDER THIS LINE:
 
+
+
+
+
+
+
+
+
+/*
+--------------------------------------------------------
+HOW TO MAKE A DOOR GROUP
+--------------------------------------------------------
+AddDoorGroup("NAME OF THE GROUP HERE, you see this when looking at a door", Team1, Team2, team3, team4, etc.)
+
+WARNING: THE DOOR GROUPS HAVE TO BE AT THE _BOTTOM_ OF SHARED.LUA. IF THEY ARE NOT, IT MIGHT MUCK UP!
+
+
+The default door groups, can also be used as examples:
+*/
+AddDoorGroup("cops and mayor only", TEAM_CHIEF, TEAM_POLICE, TEAM_MAYOR)
+AddDoorGroup("gundealer only", TEAM_GUN)
