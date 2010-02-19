@@ -207,6 +207,8 @@ function RefreshRPSettings(RESET)
 	CfgVars["ironshoot"] = 1
 	CfgVars["dropmoneyondeath"] = 0
 	CfgVars["allowjobswitch"] = 1
+	CfgVars["droppocketdeath"] = 1
+	CfgVars["allowvehicleowning"] = 1
 
 	-- You can set the exact value of the below items:
 
@@ -250,6 +252,10 @@ function RefreshRPSettings(RESET)
 				DB.SaveSetting(k, v)
 			end
 		end
+	end
+	
+	for k,v in pairs(CfgVars) do 
+		SetGlobalInt(k, v)
 	end
 end
 RefreshRPSettings()

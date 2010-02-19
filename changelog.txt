@@ -2,6 +2,8 @@ DarkRP 2.4.1 SVN
 [ADD] Group ownable doors
 [ADD] rp_startingmoney
 [ADD] rp_copscanunweld
+[ADD] rp_droppocketondeath toggle dropping items in pocket
+[ADD] rp_allowvehicleowning Allow vehicles to be owned
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo

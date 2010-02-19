@@ -227,6 +227,12 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowswitchjob - Enable/disable 
 AddToggleCommand("rp_dropweaponondeath", "dropweapondeath", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_dropweaponondeath - Enable/disable whether people drop their current weapon when they die.")
 
+AddToggleCommand("rp_droppocketondeath", "droppocketdeath", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_droppocketondeath - Enable/disable whether people drop the stuff in their pockets when they die.")
+
+AddToggleCommand("rp_allowvehicleowning", "allowvehicleowning", false)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowvehicleowning - Enable/disable whether people can own vehicles.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------

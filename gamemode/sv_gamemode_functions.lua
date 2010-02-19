@@ -305,22 +305,24 @@ function GM:PlayerDeath(ply, weapon, killer)
 	end
 	
 	ply:GetTable().ConfisquatedWeapons = nil
-	if ply.Pocket then 
-		for k, v in pairs(ply.Pocket) do
-			if ValidEntity(v) then
-				v:SetMoveType(MOVETYPE_VPHYSICS)
-				v:SetNoDraw(false)
-				v:SetCollisionGroup(4)
-				v:SetPos(ply:GetPos() + Vector(0,0,10))
-				local phys = v:GetPhysicsObject()
-				if phys:IsValid() then
-					phys:EnableCollisions(true)
-					phys:Wake()
+	if tobool(CfgVars["droppocketdeath"]) then
+		if ply.Pocket then 
+			for k, v in pairs(ply.Pocket) do
+				if ValidEntity(v) then
+					v:SetMoveType(MOVETYPE_VPHYSICS)
+					v:SetNoDraw(false)
+					v:SetCollisionGroup(4)
+					v:SetPos(ply:GetPos() + Vector(0,0,10))
+					local phys = v:GetPhysicsObject()
+					if phys:IsValid() then
+						phys:EnableCollisions(true)
+						phys:Wake()
+					end
 				end
 			end
 		end
+		ply.Pocket = nil
 	end
-	ply.Pocket = nil
 	if weapon:IsPlayer() then weapon = weapon:GetActiveWeapon() killer = killer:SteamName() if ( !weapon || weapon == NULL ) then weapon = killer else weapon = weapon:GetClass() end end
 	if killer == ply then killer = "Himself" weapon = "suicide trick" end
 	DB.Log(ply:Nick() .. " was killed by "..tostring(killer) .. " with a "..tostring(weapon))
