@@ -362,60 +362,40 @@ local function removelicense(ply)
 	ply:GetTable().RPLicenseSpawn = false 
 end
 
-local CivModels = {
-	"models/player/group01/male_01.mdl",
-	"models/player/Group01/Male_02.mdl",
-	"models/player/Group01/male_03.mdl",
-	"models/player/Group01/Male_04.mdl",
-	"models/player/Group01/Male_05.mdl",
-	"models/player/Group01/Male_06.mdl",
-	"models/player/Group01/Male_07.mdl",
-	"models/player/Group01/Male_08.mdl",
-	"models/player/Group01/Male_09.mdl"
-}
+local function SetPlayerModel(ply, cmd, args)
+	if not args[1] then return end
+	ply.rpChosenModel = args[1]
+end
+concommand.Add("_rp_ChosenModel", SetPlayerModel)
+
 function GM:PlayerSetModel(ply)
 	local EndModel = ""
 	if CfgVars["enforceplayermodel"] == 1 then
 		for k,v in pairs(RPExtraTeams) do
-			if ply:Team() == (k) then
-				EndModel = v.model
+			if ply:Team() == k then
+				if type(v.model) == "table" then
+					local ChosenModel = ply.rpChosenModel or ply:GetInfo("rp_playermodel")
+					ChosenModel = string.lower(ChosenModel)
+					
+					local found
+					for _,Models in pairs(v.model) do
+						if ChosenModel == string.lower(Models) then
+							EndModel = Models
+							found = true
+							break
+						end
+					end
+					
+					if not found then
+						EndModel = v.model[math.random(#v.model)]
+					end
+				else
+					EndModel = v.model
+				end
+				break
 			end
 		end
 		
-		if ply:Team() == TEAM_CITIZEN then
-			local validmodel = false
-			for k, v in pairs(CivModels) do
-				if ply:GetTable().PlayerModel == v then
-					validmodel = true
-					break
-				end
-			end
-			
-			if not validmodel then
-				ply:GetTable().PlayerModel = nil
-			end
-			
-			local model = ply:GetModel()
-			
-			if model ~= ply:GetTable().PlayerModel then
-				for k, v in pairs(CivModels) do
-					if v == model then
-						ply:GetTable().PlayerModel = model
-						validmodel = true
-						break
-					end
-				end
-				
-				if not validmodel and not ply:GetTable().PlayerModel then
-					ply:GetTable().PlayerModel = CivModels[math.random(1, #CivModels)]
-				end
-				
-				EndModel = ply:GetTable().PlayerModel
-			end
-		else
-			local cl_playermodel = ply:GetInfo( "cl_playermodel" )
-			local EndModel = player_manager.TranslatePlayerModel( cl_playermodel )
-		end
 		util.PrecacheModel(EndModel)
 		ply:SetModel(EndModel)
 	else
