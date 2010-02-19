@@ -7,7 +7,7 @@ function meta:IsOwnable()
 	local class = self:GetClass()
 
 	if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") or
-		self:IsVehicle() then
+		(tobool(GetGlobalInt("allowvehicleowning")) and self:IsVehicle()) then
 			return true
 		end
 	return false
