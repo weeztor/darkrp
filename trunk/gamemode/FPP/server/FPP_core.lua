@@ -9,7 +9,7 @@ if cleanup then
 			--Set the owner of the entity
 			ent.Owner = ply
 			ent.OwnerID = ply:SteamID()
-			if FPP.AntiSpam and Type ~= "constraints"  then
+			if FPP.AntiSpam and Type ~= "constraints" and Type ~= "stacks" then
 				FPP.AntiSpam.CreateEntity(ply, ent, Type == "duplicates")
 			end
 		end
