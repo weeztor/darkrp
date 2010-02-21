@@ -1162,3 +1162,15 @@ rp_languages.swedish = {
 	"Skriv /call <Namn> för att ringa någon!"
 	}
 }
+
+
+
+
+
+if not ConVarExists("rp_language") then
+	CreateConVar("rp_language", "english", {FCVAR_ARCHIVE, FCVAR_REPLICATED})	
+end
+LANGUAGE = rp_languages[GetConVarString("rp_language")]
+if not LANGUAGE then
+	LANGUAGE = rp_languages["english"]--now hope people don't remove the english language ._.
+end

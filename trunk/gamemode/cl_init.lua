@@ -101,14 +101,6 @@ include("FPP/client/FPP_HUD.lua")
 include("FPP/client/FPP_Buddies.lua")
 include("FPP/sh_CPPI.lua")
 
-if not ConVarExists("rp_language") then
-	CreateConVar("rp_language", "english", {FCVAR_ARCHIVE, FCVAR_REPLICATED})	
-end
-LANGUAGE = rp_languages[GetConVarString("rp_language")]
-if not LANGUAGE then
-	LANGUAGE = rp_languages["english"]--now hope people don't remove the english language ._.
-end
-
 surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
 
 function GetTextHeight(font, str)
@@ -681,6 +673,18 @@ function GM:HUDPaint()
 		local cin = (math.sin(CurTime()) + 1) / 2
 		draw.DrawText(LANGUAGE.lockdown_started, "ScoreboardSubtitle", chbxX, chboxY + 260, Color(cin * 255, 0, 255 - (cin * 255), 255), TEXT_ALIGN_LEFT)
 	end
+	
+	if LocalPlayer().DRPIsTalking then
+		local Rotating = math.sin(CurTime()*3)
+		local backwards = 0
+		if Rotating < 0 then
+			Rotating = 1-(1+Rotating)
+			backwards = 180
+		end
+		surface.SetTexture(surface.GetTextureID( "voice/icntlk_pl" ))
+		surface.SetDrawColor(Healthforegroundcolor.r, Healthforegroundcolor.g, Healthforegroundcolor.b, Healthforegroundcolor.a)
+		surface.DrawTexturedRectRotated(ScrW() - 100, chboxY, Rotating*96, 96, backwards)
+	end
 end
 
 function GM:HUDShouldDraw(name)
@@ -938,39 +942,49 @@ function GM:ChatTextChanged(text)
 	end
 end
 
-function SelfStartVoice(ply)
+function GM:PlayerStartVoice(ply)
 	if ply == LocalPlayer() and ValidEntity(LocalPlayer().DarkRPVars.phone) then
-		hook.Remove("PlayerStartVoice", "ShowWhoHearsMe")
-		hook.Add("PlayerEndVoice", "ShowWhoHearsMe", SelfStopVoice)
 		return
 	end
+	
+	if ply == LocalPlayer() then
+		ply.DRPIsTalking = true
+		return -- Not the original rectangle for yourself! ugh!
+	end
+	
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 and not ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		HearMode = "speak"
-		hook.Remove("PlayerStartVoice", "ShowWhoHearsMe")
-		hook.Add("PlayerEndVoice", "ShowWhoHearsMe", SelfStopVoice)
 		RPSelectwhohearit()
 	end
+	self.BaseClass:PlayerStartVoice(ply)
 end
-hook.Add("PlayerStartVoice", "ShowWhoHearsMe", SelfStartVoice)
 
-function SelfStopVoice(ply)
+function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
 	if ValidEntity(LocalPlayer().DarkRPVars.phone) then
+		ply.DRPIsTalking = false
 		timer.Simple(0.2, function() 
 			if ValidEntity(LocalPlayer().DarkRPVars.phone) then
 				LocalPlayer():ConCommand("+voicerecord") 
 			end
 		end)
+		self.BaseClass:PlayerEndVoice(ply)
 		return
 	end
+	
+	if ply == LocalPlayer() then
+		ply.DRPIsTalking = false
+		return
+	end
+	
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 then
 		HearMode = "talk"
-		hook.Add("PlayerStartVoice", "ShowWhoHearsMe", SelfStartVoice)
-		hook.Remove("PlayerEndVoice", "ShowWhoHearsMe")
 		hook.Remove("Think", "RPGetRecipients")
 		hook.Remove("HUDPaint", "RPinstructionsOnSayColors")
 		Messagemode = false
 		playercolors = {}
 	end
+	
+	self.BaseClass:PlayerEndVoice(ply)
 end
 
 
@@ -1104,6 +1118,22 @@ end
 datastream.Hook("DarkRP_InitializeVars", InitializeDarkRPVars)
 
 function GM:InitPostEntity()
+
+	function VoiceNotify:Init()
+		self.LabelName = vgui.Create( "DLabel", self )
+		self.Avatar = vgui.Create( "SpawnIcon", self )
+	end
+	
+	function VoiceNotify:Setup(ply)
+		self.LabelName:SetText( ply:Nick() )
+		self.Avatar:SetModel( ply:GetModel() )
+		self.Avatar:SetIconSize(32)
+		
+		self.Color = team.GetColor( ply:Team() )
+		
+		self:InvalidateLayout()
+	end
+	
 	RunConsoleCommand("_sendDarkRPvars")
 	timer.Create("DarkRPCheckifitcamethrough", 2, 0, function()
 		local StopTimer = true
