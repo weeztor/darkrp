@@ -947,14 +947,15 @@ function GM:PlayerStartVoice(ply)
 		return
 	end
 	
-	if ply == LocalPlayer() then
-		ply.DRPIsTalking = true
-		return -- Not the original rectangle for yourself! ugh!
-	end
 	
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 and not ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		HearMode = "speak"
 		RPSelectwhohearit()
+	end
+	
+	if ply == LocalPlayer() then
+		ply.DRPIsTalking = true
+		return -- Not the original rectangle for yourself! ugh!
 	end
 	self.BaseClass:PlayerStartVoice(ply)
 end
@@ -971,10 +972,6 @@ function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
 		return
 	end
 	
-	if ply == LocalPlayer() then
-		ply.DRPIsTalking = false
-		return
-	end
 	
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 then
 		HearMode = "talk"
@@ -984,6 +981,10 @@ function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
 		playercolors = {}
 	end
 	
+	if ply == LocalPlayer() then
+		ply.DRPIsTalking = false
+		return
+	end	
 	self.BaseClass:PlayerEndVoice(ply)
 end
 
