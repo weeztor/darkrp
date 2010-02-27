@@ -267,7 +267,7 @@ function FPP.AdminMenu(Panel)
 	
 	local damagecat, damage = MakeOption("Entity damage options")
 	addchk("Damage protection enabled", {"FPP_ENTITYDAMAGE", "toggle"}, damage)
-	addchk("Damage protection enabled", {"FPP_ENTITYDAMAGE", "protectpropdamage"}, damage)
+	addchk("Prop damage protection", {"FPP_ENTITYDAMAGE", "protectpropdamage"}, damage)
 	addchk("Admins can damage all entities", {"FPP_ENTITYDAMAGE", "adminall"}, damage)
 	addchk("People can damage world entities", {"FPP_ENTITYDAMAGE", "worldprops"}, damage)
 	addchk("Admins can damage world entities", {"FPP_ENTITYDAMAGE", "adminworldprops"}, damage)
