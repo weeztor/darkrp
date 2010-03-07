@@ -302,7 +302,8 @@ local function RetrieveBlocked()
 			"money_printer", 
 			"spawned_shipment", 
 			"spawned_weapon",  
-			"spawned_food"}
+			"spawned_food",
+			"spawned_money"}
 		FPP.Blocked.Gravgun = {"func_breakable_surf", "vehicle_"}
 		FPP.Blocked.Toolgun = {"func_breakable_surf",
 			"player",
@@ -318,7 +319,8 @@ local function RetrieveBlocked()
 			"money_printer", 
 			"spawned_shipment", 
 			"spawned_weapon",  
-			"spawned_food"}
+			"spawned_food",
+			"spawned_money"}
 		FPP.Blocked.PlayerUse = {}
 		FPP.Blocked.EntityDamage = {}
 		
