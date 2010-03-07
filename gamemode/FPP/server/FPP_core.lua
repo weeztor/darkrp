@@ -379,7 +379,8 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	-- Anti model server crash
 	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon().GetToolObject and ply:GetActiveWeapon():GetToolObject() and 
 	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") or 
-	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ), "*")
+	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ), "*") or
+	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "\\")
 	/*or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "tool" ), "/")*/) then
 		FPP.Notify(ply, "The material/model of the tool is invalid!", false)
 		FPP.CanTouch(ply, "FPP_TOOLGUN", "The material/model of the tool is invalid!", false)
@@ -562,7 +563,7 @@ function FPP.Protect.LeaveVehicle(ply, vehicle)
 			return
 		end
 
-		ply:SetPos(vehicle:GetPos() + Vector(0,0,50) + 0.1 * diff)
+		ply:SetPos(pos + Vector(0,0,50) + 0.1 * diff)
 	end, pos)
 end
 hook.Add("PlayerLeaveVehicle", "FPP.PlayerLeaveVehicle", FPP.Protect.LeaveVehicle)
