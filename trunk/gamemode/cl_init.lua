@@ -1,3 +1,6 @@
+GM.Name = "DarkRP 2.4.1"
+GM.Author = "Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco"
+
 GlobalInts = {}
 require("datastream")
 

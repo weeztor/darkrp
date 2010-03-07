@@ -75,7 +75,7 @@ AddToggleCommand("rp_allowedprops", "allowedprops", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowedprops - Whether or not the allowed props list is active.")
 
 AddToggleCommand("rp_strictsuicide", "strictsuicide", false)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_strictsuicide - Whether or not players should spawn where they suicided (regardless of whether or not they are arrested.")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_strictsuicide - Whether or not players should spawn where they suicided (regardless of whether or not they are arrested)")
 
 AddToggleCommand("rp_ooc", "ooc", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_ooc - Whether or not OOC tags are enabled.")
