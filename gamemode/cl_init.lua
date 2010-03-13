@@ -1103,6 +1103,12 @@ local function RetrieveDoorData(handler, id, encoded, decoded)
 	-- Decoded[2] = table of that door
 	if not ValidEntity(decoded[1]) then return end
 	decoded[1].DoorData = decoded[2]
+	
+	local DoorString = "Data:\n"
+	for k,v in pairs(decoded[2]) do
+		DoorString = DoorString .. k.."\t\t".. tostring(v) .. "\n"
+	end
+	filex.Append("darkrp/cldebug.txt", decoded[1]:EntIndex().." ".. decoded[1]:GetClass() .. " DATA!\n"..DoorString)
 end
 datastream.Hook("DarkRP_DoorData", RetrieveDoorData)
 

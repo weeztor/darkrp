@@ -452,10 +452,8 @@ function GM:PlayerSelectSpawn(ply)
 	end
 	
 	-- Spawn where died in certain cases
-	if (CfgVars["strictsuicide"] == 1 or RPArrestedPlayers[ply:SteamID()]) and ply:GetTable().DeathPos then
-		if not (RPArrestedPlayers[ply:SteamID()]) then
-			POS = ply:GetTable().DeathPos
-		end
+	if (CfgVars["strictsuicide"] == 1 or RPArrestedPlayers[ply:SteamID()]) and ply:GetTable().DeathPos and not (RPArrestedPlayers[ply:SteamID()]) then
+		POS = ply:GetTable().DeathPos
 	end
 	
 	if not IsEmpty(POS) then
@@ -655,15 +653,23 @@ function GM:PlayerDisconnected(ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") disconnected")
 end
 
-local next_update_time
 function GM:Think()
 	-- Doors
 	for k,ply in pairs(player.GetAll()) do
 		local trace = ply:GetEyeTrace()
 		if ValidEntity(trace.Entity) and (trace.Entity:IsDoor() or trace.Entity:IsVehicle()) and ply.LookingAtDoor ~= trace.Entity and trace.HitPos:Distance(ply:GetShootPos()) < 410 then
-			ply.LookingAtDoor = trace.Entity
+			ply.LookingAtDoor = trace.Entity -- Variable that prevents streaming to clients every frame
 			
 			trace.Entity.DoorData = trace.Entity.DoorData or {}
+			
+			
+			local DoorString = "Data:\n"
+			for k,v in pairs(trace.Entity.DoorData) do
+				DoorString = DoorString .. k.."\t\t".. tostring(v) .. "\n"
+			end
+			filex.Append("darkrp/svdebug.txt", trace.Entity:EntIndex().." DOOR DATA!\n"..DoorString)
+			
+			
 			datastream.StreamToClients(ply, "DarkRP_DoorData", {trace.Entity, trace.Entity.DoorData})
 		elseif ply.LookingAtDoor ~= trace.Entity then
 			ply.LookingAtDoor = nil
