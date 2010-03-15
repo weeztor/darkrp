@@ -1108,7 +1108,6 @@ local function RetrieveDoorData(handler, id, encoded, decoded)
 	for k,v in pairs(decoded[2]) do
 		DoorString = DoorString .. k.."\t\t".. tostring(v) .. "\n"
 	end
-	filex.Append("darkrp/cldebug.txt", decoded[1]:EntIndex().." ".. decoded[1]:GetClass() .. " DATA!\n"..DoorString)
 end
 datastream.Hook("DarkRP_DoorData", RetrieveDoorData)
 
