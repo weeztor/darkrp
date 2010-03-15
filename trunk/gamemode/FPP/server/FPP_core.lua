@@ -196,7 +196,7 @@ hook.Add("PhysgunDrop", "FPP.Protect.PhysgunDrop", FPP.Protect.PhysgunDrop)*/
 
 --Physgun reload
 function FPP.Protect.PhysgunReload(weapon, ply)
-	if not tobool(FPP.Settings.FPP_PHYSGUN.reloadprotection) then return true end
+	if not tobool(FPP.Settings.FPP_PHYSGUN.reloadprotection) then return end
 	
 	local ent = ply:GetEyeTrace().Entity
 	
