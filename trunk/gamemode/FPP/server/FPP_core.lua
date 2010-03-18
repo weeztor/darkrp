@@ -170,7 +170,7 @@ hook.Add("Think", "FPP_ShowOwner", FPP.ShowOwner)
 
 --Physgun Pickup
 function FPP.Protect.PhysgunPickup(ply, ent)
-	if not tobool(FPP.Settings.FPP_PHYSGUN.toggle) and FPP.UnGhost then FPP.UnGhost(ply, ent) return end
+	if not tobool(FPP.Settings.FPP_PHYSGUN.toggle) then if FPP.UnGhost then FPP.UnGhost(ply, ent) end return end
 	if not ent:IsValid() then return FPP.CanTouch(ply, "FPP_PHYSGUN", "Not valid!", false) end
 	
 	if ent:IsPlayer() then return end
@@ -183,7 +183,8 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 	if cantouch and FPP.UnGhost then 
 		FPP.UnGhost(ply, ent)
 	end
-	return cantouch
+	
+	if not cantouch then return false end
 end
 hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup)
 

@@ -26,10 +26,27 @@ usermessage.Hook("FPP_CanTouch", CanTouch)
 
 --Show the owner!
 local CanTouchLookingAt, Why, LookingatEntity
+FPP.CanTouchEntities = {}
 local function RetrieveOwner(um)
 	LookingatEntity, CanTouchLookingAt, Why = um:ReadEntity(), um:ReadBool(), um:ReadString()
+	FPP.CanTouchEntities[LookingatEntity] = CanTouchLookingAt
 end
 usermessage.Hook("FPP_Owner", RetrieveOwner)
+
+hook.Add("CanTool", "FPP_CL_CanTool", function(ply, trace, tool) -- Prevent client from SEEING his toolgun shoot while it doesn't shoot serverside.
+	fprint(FPP.CanTouchEntities[trace.Entity], trace.Entity:GetClass())
+	if ValidEntity(trace.Entity) and FPP.CanTouchEntities[trace.Entity] == false then
+		return false
+	end
+	
+	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon().GetToolObject and ply:GetActiveWeapon():GetToolObject() and 
+	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ) or "", "*") or 
+	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ) or "", "*") or
+	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ) or "", "\\")
+	/*or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "tool" ), "/")*/) then
+		return false
+	end	
+end)
 
 
 local HUDNote_c = 0
