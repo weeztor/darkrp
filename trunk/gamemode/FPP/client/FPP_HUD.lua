@@ -34,7 +34,6 @@ end
 usermessage.Hook("FPP_Owner", RetrieveOwner)
 
 hook.Add("CanTool", "FPP_CL_CanTool", function(ply, trace, tool) -- Prevent client from SEEING his toolgun shoot while it doesn't shoot serverside.
-	fprint(FPP.CanTouchEntities[trace.Entity], trace.Entity:GetClass())
 	if ValidEntity(trace.Entity) and FPP.CanTouchEntities[trace.Entity] == false then
 		return false
 	end
