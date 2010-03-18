@@ -399,7 +399,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 		if not cantouch then return false end	
 	end
 
-	if tool ~= "adv_duplicator" and tool ~= "duplicator" then return true end
+	if tool ~= "adv_duplicator" and tool ~= "duplicator" then return end
 	if not FPP.AntiSpam.DuplicatorSpam(ply) then return false end
 	if tool == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 		for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
@@ -430,7 +430,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 				end
 			end
 		end
-		return true--No further questions sir!
+		return --No further questions sir!
 	end
 	
 	if tool == "duplicator" and ply:UniqueIDTable( "Duplicator" ).Entities then
