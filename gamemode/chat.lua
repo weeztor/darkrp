@@ -10,17 +10,18 @@ end
 function RP_PlayerChat(ply, text)
 	DB.Log(ply:SteamName().." ("..ply:SteamID().."): "..text )
 	local callback = "" 
+	local DoSayFunc
 	for k, v in pairs(ChatCommands) do
 		if string.lower(v.cmd) == string.Explode(" ", string.lower(text))[1] then
-			callback = v.callback(ply, string.sub(text, string.len(v.cmd) + 2, string.len(text)))
+			callback, DoSayFunc = v.callback(ply, string.sub(text, string.len(v.cmd) + 2, string.len(text)))
 			if callback == "" then 
-				return "" 
+				return "", "" , DoSayFunc
 			end
 			text = string.sub(text, string.len(v.cmd) + 2, string.len(text)).. " "
 		end
 	end
 	if callback ~= "" then callback = callback.." " end
-	return text, callback
+	return text, callback, DoSayFunc
 end
 
 function RP_ActualDoSay(ply, text, callback)
