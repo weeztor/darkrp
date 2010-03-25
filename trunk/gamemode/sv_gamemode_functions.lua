@@ -689,7 +689,7 @@ local otherhooks = {}
 function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's playersay has been run.
 	local text2 = text
 	local callback
-	text2, callback = RP_PlayerChat(ply, text2)
+	text2, callback, DoSayFunc = RP_PlayerChat(ply, text2)
 	if tostring(text2) == " " then text2, callback = callback, text2 end
 	for k,v in SortedPairs(otherhooks, false) do
 		if type(v) == "function" then
@@ -699,6 +699,8 @@ function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's 
 	if isDedicatedServer() then
 		ServerLog("\""..ply:Nick().."<"..ply:UserID()..">" .."<"..ply:SteamID()..">".."<"..team.GetName( ply:Team() )..">\" say \""..text.. "\"\n")
 	end
+	
+	if DoSayFunc then DoSayFunc(text2) return "" end
 	text2 = RP_ActualDoSay(ply, text2, callback) 
 	return ""
 end

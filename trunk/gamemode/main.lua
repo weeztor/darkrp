@@ -1539,27 +1539,37 @@ end
 AddChatCommand("/pm", PM)
 
 function Whisper(ply, args)
-	TalkToRange(ply, "(".. LANGUAGE.whisper .. ") " .. ply:Nick(), args, 90)
-	return ""
+	local DoSay = function(text)
+		if text == "" then return "" end
+		TalkToRange(ply, "(".. LANGUAGE.whisper .. ") " .. ply:Nick(), text, 90) 
+	end
+	return args, DoSay
 end
 AddChatCommand("/w", Whisper)
 
 function Yell(ply, args)
-	TalkToRange(ply, "(".. LANGUAGE.yell .. ") " .. ply:Nick(), args, 550) 
-	return ""
+	local DoSay = function(text)
+		if text == "" then return "" end
+		TalkToRange(ply, "(".. LANGUAGE.yell .. ") " .. ply:Nick(), text, 550) 
+	end
+	return args, DoSay
 end
 AddChatCommand("/y", Yell)
 
 local function Me(ply, args)
 	if args == "" then return "" end
-	if GetGlobalInt("alltalk") == 1 then
-		for _, target in pairs(player.GetAll()) do
-			TalkToPerson(target, team.GetColor(ply:Team()), ply:Nick() .. " " .. args)
+	
+	local DoSay = function(text)
+		if text == "" then return "" end
+		if GetGlobalInt("alltalk") == 1 then
+			for _, target in pairs(player.GetAll()) do
+				TalkToPerson(target, team.GetColor(ply:Team()), ply:Nick() .. " " .. text)
+			end
+		else
+			TalkToRange(ply, ply:Nick() .. " " .. text, "", 250)
 		end
-	else
-		TalkToRange(ply, ply:Nick() .. " " .. args, "", 250)
 	end
-	return ""
+	return args, DoSay
 end
 AddChatCommand("/me", Me)
 
@@ -1569,17 +1579,19 @@ function OOC(ply, args)
 		return ""
 	end
 
-	if args == "" then return "" end
-	local col = team.GetColor(ply:Team())
-	local col2 = Color(255,255,255,255)
-	if not ply:Alive() then
-		col2 = Color(255,200,200,255)
-		col = col2
+	local DoSay = function(text)
+		if text == "" then return "" end
+		local col = team.GetColor(ply:Team())
+		local col2 = Color(255,255,255,255)
+		if not ply:Alive() then
+			col2 = Color(255,200,200,255)
+			col = col2
+		end
+		for k,v in pairs(player.GetAll()) do
+			TalkToPerson(v, col, "(OOC) "..ply:Name(), col2, text, ply)
+		end
 	end
-	for k,v in pairs(player.GetAll()) do
-		TalkToPerson(v, col, "(OOC) "..ply:Name(), col2, args, ply)
-	end
-	return ""
+	return args, DoSay
 end
 AddChatCommand("//", OOC, true)
 AddChatCommand("/a", OOC, true)
@@ -1587,11 +1599,14 @@ AddChatCommand("/ooc", OOC, true)
 
 function PlayerAdvertise(ply, args)
 	if args == "" then return "" end
-	for k,v in pairs(player.GetAll()) do
-		local col = team.GetColor(ply:Team())
-		TalkToPerson(v, col, LANGUAGE.advert ..ply:Nick(), Color(255,255,0,255), args, ply)
+	local DoSay = function(text)
+		if text == "" then return end
+		for k,v in pairs(player.GetAll()) do
+			local col = team.GetColor(ply:Team())
+			TalkToPerson(v, col, LANGUAGE.advert ..ply:Nick(), Color(255,255,0,255), text, ply)
+		end
 	end
-	return ""
+	return args, DoSay
 end
 AddChatCommand("/advert", PlayerAdvertise)
 
@@ -1612,49 +1627,59 @@ function SayThroughRadio(ply,args)
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/radio", ""))
 		return ""
 	end
-	for k,v in pairs(player.GetAll()) do
-		if v.RadioChannel == ply.RadioChannel then
-			TalkToPerson(v, Color(180,180,180,255), "Radio ".. tostring(ply.RadioChannel), Color(180,180,180,255), args, ply)
+	local DoSay = function(text)
+		if text == "" then return end
+		for k,v in pairs(player.GetAll()) do
+			if v.RadioChannel == ply.RadioChannel then
+				TalkToPerson(v, Color(180,180,180,255), "Radio ".. tostring(ply.RadioChannel), Color(180,180,180,255), text, ply)
+			end
 		end
 	end
-	return ""
+	return args, DoSay
 end
 AddChatCommand("/radio", SayThroughRadio)
 
 function CombineRequest(ply, args)
 	if args == "" then return "" end
 	local t = ply:Team()
-	for k, v in pairs(player.GetAll()) do
-		if v:Team() == TEAM_POLICE or v:Team() == TEAM_CHIEF or v == ply then
-			TalkToPerson(v, team.GetColor(ply:Team()), LANGUAGE.request ..ply:Nick(), Color(255,0,0,255), args, ply)
+	
+	local DoSay = function(text)
+		if text == "" then return end
+		for k, v in pairs(player.GetAll()) do
+			if v:Team() == TEAM_POLICE or v:Team() == TEAM_CHIEF or v == ply then
+				TalkToPerson(v, team.GetColor(ply:Team()), LANGUAGE.request ..ply:Nick(), Color(255,0,0,255), text, ply)
+			end
 		end
 	end
-	return ""
+	return args, DoSay
 end
 AddChatCommand("/cr", CombineRequest)
 
 function GroupMsg(ply, args)
 	if args == "" then return "" end
-	local t = ply:Team()
-	local audience = {}
+	local DoSay = function(text)
+		if text == "" then return end
+		local t = ply:Team()
+		local audience = {}
 
-	if t == TEAM_POLICE or t == TEAM_CHIEF or t == TEAM_MAYOR then
-		for k, v in pairs(player.GetAll()) do
-			local vt = v:Team()
-			if vt == TEAM_POLICE or vt == TEAM_CHIEF or vt == TEAM_MAYOR then table.insert(audience, v) end
+		if t == TEAM_POLICE or t == TEAM_CHIEF or t == TEAM_MAYOR then
+			for k, v in pairs(player.GetAll()) do
+				local vt = v:Team()
+				if vt == TEAM_POLICE or vt == TEAM_CHIEF or vt == TEAM_MAYOR then table.insert(audience, v) end
+			end
+		elseif t == TEAM_MOB or t == TEAM_GANG then
+			for k, v in pairs(player.GetAll()) do
+				local vt = v:Team()
+				if vt == TEAM_MOB or vt == TEAM_GANG then table.insert(audience, v) end
+			end
 		end
-	elseif t == TEAM_MOB or t == TEAM_GANG then
-		for k, v in pairs(player.GetAll()) do
-			local vt = v:Team()
-			if vt == TEAM_MOB or vt == TEAM_GANG then table.insert(audience, v) end
+
+		for k, v in pairs(audience) do
+			local col = team.GetColor(ply:Team())
+			TalkToPerson(v, col, LANGUAGE.group..ply:Nick(),Color(255,255,255,255), text, ply)
 		end
 	end
-
-	for k, v in pairs(audience) do
-		local col = team.GetColor(ply:Team())
-		TalkToPerson(v, col, LANGUAGE.group..ply:Nick(),Color(255,255,255,255), args, ply)
-	end
-	return ""
+	return args, DoSay
 end
 AddChatCommand("/g", GroupMsg)
 
