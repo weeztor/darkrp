@@ -244,8 +244,8 @@ function DrawWantedInfo(ply)
 		draw.DrawText(ply:Nick(), "TargetID", pos.x, pos.y, team.GetColor(ply:Team()), 1)
 	end
 
-	draw.DrawText(LANGUAGE.wanted, "TargetID", pos.x, pos.y - 20, Color(255, 255, 255, 200), 1)
-	draw.DrawText(LANGUAGE.wanted, "TargetID", pos.x + 1, pos.y - 21, Color(255, 0, 0, 255), 1)
+	draw.DrawText(LANGUAGE.wanted.."\nReason: "..tostring(ply.DarkRPVars["wantedReason"]), "TargetID", pos.x, pos.y - 40, Color(255, 255, 255, 200), 1)
+	draw.DrawText(LANGUAGE.wanted.."\nReason: "..tostring(ply.DarkRPVars["wantedReason"]), "TargetID", pos.x + 1, pos.y - 41, Color(255, 0, 0, 255), 1)
 end
 
 function DrawZombieInfo(ply)
