@@ -18,7 +18,7 @@ function Question:HandleNewQuestion(ply, response)
 	ques.HandleQuestionEnd(self.ID, false)
 end
 
-function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly)
+function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly, ...)
 	local newques = { }
 	for k, v in pairs(Question) do newques[k] = v end
 
@@ -27,6 +27,7 @@ function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly)
 	newques.Ent = ent
 	newques.Initiator = fromPly
 	newques.Target = toPly
+	newques.Args = {...}
 
 	newques.yn = 0
 
@@ -55,6 +56,6 @@ end
 function ques.HandleQuestionEnd(id, TimeIsUp)
 	if not Questions[id] then return end
 	local q = Questions[id]	
-	q.Callback(q.yn, q.Ent, q.Initiator, q.Target)
+	q.Callback(q.yn, q.Ent, q.Initiator, q.Target, unpack(q.Args))
 	Questions[id] = nil
 end

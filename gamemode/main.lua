@@ -498,18 +498,18 @@ function UnWarrant(ply, target)
 	Notify(ply, 1, 4, string.format(LANGUAGE.warrant_expired, target:Nick()))
 end 
 
-function SetWarrant(ply, target)
+function SetWarrant(ply, target, reason)
 	target.warranted = true
 	timer.Simple(CfgVars["searchtime"], UnWarrant, ply, target)
 	for a, b in pairs(player.GetAll()) do
-		b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.warrant_approved, target:Nick()))
+		b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.warrant_approved, target:Nick()).."\nReason: "..tostring(reason))
 	end
 	Notify(ply, 1, 4, LANGUAGE.warrant_approved2)
 end
 
-function FinishWarrant(choice, mayor, initiator, target)
+function FinishWarrant(choice, mayor, initiator, target, reason)
 	if choice == 1 then
-		SetWarrant(initiator, target)
+		SetWarrant(initiator, target, reason)
 	else
 		Notify(initiator, 1, 4, string.format(LANGUAGE.warrant_denied, mayor:Nick()))
 	end
@@ -521,7 +521,24 @@ function SearchWarrant(ply, args)
 	if not (t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.must_be_x, "cop/mayor", "/warrant"))
 	else
-		local p = FindPlayer(args)
+		local tableargs = string.Explode(" ", args)
+		local reason = ""
+		
+		if #tableargs == 1 then
+			Notify(ply, 1, 4, LANGUAGE.vote_specify_reason)
+			return ""
+		end
+		
+		for i = 2, #tableargs, 1 do
+			reason = reason .. " " .. tableargs[i]
+		end 
+		reason = string.sub(reason, 2)
+		if string.len(reason) > 22 then
+			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/warrant", "<23 chars"))
+			return "" 
+		end
+		local p = FindPlayer(tableargs[1])
+		
 		if p and p:Alive() then
 			-- If we're the Mayor, set the search warrant
 			if t == TEAM_MAYOR then
@@ -538,11 +555,11 @@ function SearchWarrant(ply, args)
 				-- If we found the mayor
 				if m ~= nil then
 					-- request a search warrent for player "p"
-					ques:Create(string.format(LANGUAGE.warrant_request, ply:Nick(), p:Nick()), p:EntIndex() .. "warrant", m, 40, FinishWarrant, ply, p)
+					ques:Create(string.format(LANGUAGE.warrant_request.."\nReason: "..reason, ply:Nick(), p:Nick()), p:EntIndex() .. "warrant", m, 40, FinishWarrant, ply, p, reason)
 					Notify(ply, 1, 4, string.format(LANGUAGE.warrant_request2, m:Nick()))
 				else
 					-- there is no mayor, CPs can set warrants.
-					SetWarrant(ply, p)
+					SetWarrant(ply, p, reason)
 				end
 			end
 		else
@@ -556,14 +573,32 @@ AddChatCommand("/warrent", SearchWarrant) -- Most players can't spell for some r
 
 function PlayerWanted(ply, args)
 	local t = ply:Team()
-	if not (t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF) then
+	if t ~= TEAM_POLICE and t ~= TEAM_MAYOR and t ~= TEAM_CHIEF then
 		Notify(ply, 1, 6, string.format(LANGUAGE.must_be_x, "cop/mayor", "/wanted"))
 	else
-		local p = FindPlayer(args)
+		local tableargs = string.Explode(" ", args)
+		local reason = ""
+		
+		if #tableargs == 1 then
+			Notify(ply, 1, 4, LANGUAGE.vote_specify_reason)
+			return ""
+		end
+		
+		for i = 2, #tableargs, 1 do
+			reason = reason .. " " .. tableargs[i]
+		end 
+		reason = string.sub(reason, 2)
+		if string.len(reason) > 22 then
+			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/wanted", "<23 chars"))
+			return "" 
+		end
+		local p = FindPlayer(tableargs[1])
+		
 		if p and p:Alive() then
 			p:SetDarkRPVar("wanted", true)
+			p:SetDarkRPVar("wantedReason", tostring(reason))
 			for a, b in pairs(player.GetAll()) do
-				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_by_police, p:Nick()))
+				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_by_police, p:Nick()).."\nReason: "..tostring(reason))
 				timer.Create(p:Nick() .. " wantedtimer", CfgVars["wantedtime"], 1, TimerUnwanted, ply, args)
 			end
 		else

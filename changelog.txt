@@ -5,6 +5,7 @@ DarkRP 2.4.1 SVN
 [ADD] rp_droppocketondeath toggle dropping items in pocket
 [ADD] rp_allowvehicleowning Allow vehicles to be owned
 [ADD] Support for multiple models. It still works the old way, don't worry
+[ADD] Reason for warrant and wanted
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo
