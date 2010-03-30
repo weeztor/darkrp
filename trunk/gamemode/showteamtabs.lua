@@ -17,7 +17,11 @@ local function MayorOptns()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
 					if not ply.DarkRPVars.warrant and ply ~= LocalPlayer() then
-						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
+						menu:AddOption(ply:Nick(), function() 
+							Derma_StringRequest("Warrant", "Why would you warrant "..ply:Nick().."?", nil, 
+								function(a) 
+								LocalPlayer():ConCommand("say /warrant ".. tostring(ply:UserID()).." ".. a)
+								end, function() end ) end)
 					end
 				end
 				if #menu.Panels == 0 then
@@ -33,7 +37,10 @@ local function MayorOptns()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
 					if not ply.DarkRPVars.wanted and ply ~= LocalPlayer() then
-						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /wanted " .. tostring(ply:UserID())) end)
+						menu:AddOption(ply:Nick(), Derma_StringRequest("wanted", "Why would you make "..ply:Nick().." wanted?", nil, 
+								function(a) 
+								LocalPlayer():ConCommand("say /wanted ".. tostring(ply:UserID()).." ".. a)
+								end, function() end ))
 					end
 				end
 				if #menu.Panels == 0 then
@@ -100,7 +107,7 @@ local function CPOptns()
 	CPCat:SetLabel("Police options")
 		local CPpanel = vgui.Create("DPanelList")
 		CPpanel:SetSpacing(5)
-		CPpanel:SetSize(740,140)
+		CPpanel:SetSize(740,170)
 		CPpanel:EnableHorizontal(false)
 		CPpanel:EnableVerticalScrollbar(true)
 			local SearchWarrant = vgui.Create("DButton") 
@@ -109,7 +116,11 @@ local function CPOptns()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
 					if not ply.DarkRPVars.warrant and ply ~= LocalPlayer() then
-						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /warrant " .. tostring(ply:UserID())) end)
+						menu:AddOption(ply:Nick(), function() 
+							Derma_StringRequest("Warrant", "Why would you warrant "..ply:Nick().."?", nil, 
+								function(a) 
+								LocalPlayer():ConCommand("say /warrant ".. tostring(ply:UserID()).." ".. a)
+								end, function() end ) end)
 					end
 				end
 				if #menu.Panels == 0 then
@@ -125,7 +136,10 @@ local function CPOptns()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
 					if not ply.DarkRPVars.wanted and ply ~= LocalPlayer() then
-						menu:AddOption(ply:Nick(), function() LocalPlayer():ConCommand("say /wanted " .. tostring(ply:UserID())) end)
+						menu:AddOption(ply:Nick(), Derma_StringRequest("wanted", "Why would you make "..ply:Nick().." wanted?", nil, 
+								function(a) 
+								LocalPlayer():ConCommand("say /wanted ".. tostring(ply:UserID()).." ".. a)
+								end, function() end ))
 					end
 				end
 				if #menu.Panels == 0 then
