@@ -180,7 +180,7 @@ rp_languages.english = {
 	demote_player_menu = "Demote a player",
 	
 	
-	searchwarrantbutton = "Get a search warrant for a player",
+	searchwarrantbutton = "Make a player wanted",
 	unwarrantbutton = "Remove the search warrant for a player",
 	noone_available = "Noone available",
 	request_warrant = "Request a search warrant for a player",
