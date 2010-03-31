@@ -1148,14 +1148,14 @@ function GM:InitPostEntity()
 		local StopTimer = true
 		for k,v in pairs(player.GetAll()) do
 			v.DarkRPVars = v.DarkRPVars or {}
-			if not v.DarkRPVars.job or not v.DarkRPVars.salary or not v.DarkRPVars.money then
+			if not v.DarkRPVars.job or not v.DarkRPVars.salary or not v.DarkRPVars.money or not v.DarkRPVars.rpname then
 				StopTimer = false
 				RunConsoleCommand("_sendDarkRPvars")
 				break
 			end
 		end
 		
-		if StopTimer then 
+		if not StopTimer then 
 			timer.Destroy("DarkRPCheckifitcamethrough")
 		end
 	end)
