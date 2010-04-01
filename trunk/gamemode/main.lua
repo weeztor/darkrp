@@ -1726,7 +1726,7 @@ function GetDarkRPAuthors(ply)
 	timer.Simple(60, function() CreditsWait = true end)--so people don't spam it
 	for k,v in pairs(player.GetAll()) do
 		TalkToPerson(v, Color(255,0,0,255), "CREDITS FOR DARKRP", Color(0,0,255,255),
-		"\nRickster\nPicwizdan\nSibre\nPhilXYZ\n[GNC] Matt\nChromebolt A.K.A. unib5 (STEAM_0:1:19045957)\n(FPtje) Falco A.K.A. FPtje (STEAM_0:0:8944068)", ply)
+		"\nLightRP: Rick darkalonio\n\nDarkRP:\nRickster\nPicwizdan\nSibre\nPhilXYZ\n[GNC] Matt\nChromebolt A.K.A. unib5 (STEAM_0:1:19045957)\nFalco A.K.A. FPtje (STEAM_0:0:8944068)", ply)
 	end
 	return ""
 end
