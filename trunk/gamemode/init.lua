@@ -283,3 +283,18 @@ local function RPVersion(ply)
 end
 concommand.Add("rp_version", RPVersion)
 
+-- Vehicle fix from tobba!
+function debug.getupvalues(f)
+	local t, i, k, v = {}, 1, debug.getupvalue(f, 1)
+	while k do
+		t[k] = v
+		i = i+1
+		k,v = debug.getupvalue(f, i)
+	end
+	return t
+end
+
+glon.encode_types = debug.getupvalues(glon.Write).encode_types
+glon.encode_types["Vehicle"] = glon.encode_types["Vehicle"] or {10, function(o)
+		return (ValidEntity(o) and o:EntIndex() or -1).."\1"
+	end}
