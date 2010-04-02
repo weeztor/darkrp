@@ -1126,8 +1126,23 @@ local function InitializeDarkRPVars(handler, id, encoded, decoded)
 end
 datastream.Hook("DarkRP_InitializeVars", InitializeDarkRPVars)
 
-function GM:InitPostEntity()
+-- Vehicle fix from tobba!
+function debug.getupvalues(f)
+	local t, i, k, v = {}, 1, debug.getupvalue(f, 1)
+	while k do
+		t[k] = v
+		i = i+1
+		k,v = debug.getupvalue(f, i)
+	end
+	return t
+end
 
+glon.encode_types = debug.getupvalues(glon.Write).encode_types
+glon.encode_types["Vehicle"] = glon.encode_types["Vehicle"] or {10, function(o)
+		return (ValidEntity(o) and o:EntIndex() or -1).."\1"
+	end}
+	
+function GM:InitPostEntity()
 	function VoiceNotify:Init()
 		self.LabelName = vgui.Create( "DLabel", self )
 		self.Avatar = vgui.Create( "SpawnIcon", self )
@@ -1145,18 +1160,12 @@ function GM:InitPostEntity()
 	
 	RunConsoleCommand("_sendDarkRPvars")
 	timer.Create("DarkRPCheckifitcamethrough", 2, 0, function()
-		local StopTimer = true
 		for k,v in pairs(player.GetAll()) do
 			v.DarkRPVars = v.DarkRPVars or {}
 			if not v.DarkRPVars.job or not v.DarkRPVars.salary or not v.DarkRPVars.money or not v.DarkRPVars.rpname then
-				StopTimer = false
 				RunConsoleCommand("_sendDarkRPvars")
 				break
 			end
-		end
-		
-		if not StopTimer then 
-			timer.Destroy("DarkRPCheckifitcamethrough")
 		end
 	end)
 end
