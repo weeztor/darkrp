@@ -1102,13 +1102,16 @@ function BuyVehicle(ply, args)
 	Angles.yaw = Angles.yaw + 180
 	ent:SetAngles(Angles)
 	ent:SetPos(tr.HitPos)
-	ent.VehicleName = found.Name
-	ent.VehicleTable = found
+	ent.VehicleName = found.name
+	ent.VehicleTable = Vehicle
 	ent.Owner = ply
 	ent:Spawn()
 	ent:Activate()
 	ent.SID = ply.SID
 	ent.ClassOverride = Vehicle.Class
+	if Vehicle.Members then
+		table.Merge( ent, Vehicle.Members )
+	end
 	ent:Own(ply)
 	
 	return ""
