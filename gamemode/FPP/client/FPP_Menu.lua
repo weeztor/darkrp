@@ -647,7 +647,7 @@ RetrieveRestrictedTool = function(um)
 			
 			submenu:AddOption( "Default", function() 
 				if type(tool) ~= "table" then
-					RunConsoleCommand("FPP_restricttoolplayer", "tool", v:UserID(), 2)
+					RunConsoleCommand("FPP_restricttoolplayer", tool, v:UserID(), 2)
 				else
 					for a,b in pairs(tool) do
 						timer.Simple(a/10, function(b, userid, allow)
@@ -660,7 +660,7 @@ RetrieveRestrictedTool = function(um)
 			
 			submenu:AddOption( "Allow", function() 
 				if type(tool) ~= "table" then
-					RunConsoleCommand("FPP_restricttoolplayer", "tool", v:UserID(), 1)
+					RunConsoleCommand("FPP_restricttoolplayer", tool, v:UserID(), 1)
 				else
 					for a,b in pairs(tool) do
 						timer.Simple(a/10, function(b, userid, allow)
@@ -673,7 +673,7 @@ RetrieveRestrictedTool = function(um)
 			
 			submenu:AddOption( "Disallow", function()
 				if type(tool) ~= "table" then
-					RunConsoleCommand("FPP_restricttoolplayer", "tool", v:UserID(), 0)
+					RunConsoleCommand("FPP_restricttoolplayer", tool, v:UserID(), 0)
 				else
 					for a,b in pairs(tool) do
 						timer.Simple(a/10, function(b, userid, allow)
