@@ -201,12 +201,12 @@ function meta:ChangeTeam(t, force)
 	self:SetDarkRPVar("helpMayor",false)
 
 	
-	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) then
+	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) and not force then
 		Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), "banned/demoted"))
 		return
 	end
 	
-	if self.LastJob and 10 - (CurTime() - self.LastJob) >= 0 then
+	if self.LastJob and 10 - (CurTime() - self.LastJob) >= 0 and not force then
 		Notify(self, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(10 - (CurTime() - self.LastJob)), "/job"))
 		return 
 	end
@@ -234,6 +234,9 @@ function meta:ChangeTeam(t, force)
 					return
 				end
 			end
+			if self:Team() == TEAM_MAYOR and tobool(GetGlobalInt("DarkRP_LockDown")) then
+				UnLockdown(self)
+			end
 			self:UpdateJob(v.name)
 			DB.StoreSalary(self, v.salary)
 			NotifyAll(1, 4, string.format(LANGUAGE.job_has_become, self:Nick(), v.name))
@@ -243,6 +246,8 @@ function meta:ChangeTeam(t, force)
 			if v.Haslicense and CfgVars["license"] ~= 0 then
 				self:SetDarkRPVar("HasGunlicense", true)
 			end
+			
+			break
 		end
 	end
 

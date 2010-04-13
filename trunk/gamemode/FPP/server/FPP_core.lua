@@ -540,7 +540,7 @@ end
 function FPP.Protect.LeaveVehicle(ply, vehicle)
 	local pos = vehicle:GetPos()
 	timer.Simple(0.1, function(pos)
-		if not ply:IsValid() then return end 
+		if not ValidEntity(ply) then return end 
 		
 		local PlyPos = ply:GetPos()
 		local diff = pos - PlyPos
@@ -555,16 +555,15 @@ function FPP.Protect.LeaveVehicle(ply, vehicle)
 		if not TraceResult.Hit then
 			return
 		end
-		
 
 		trace.endpos = pos + diff
 		TraceResult = util.TraceLine(trace)
 		if not TraceResult.Hit then
-			ply:SetPos(pos + diff)
+			ply:SetPos(pos + diff*1.1)
 			return
 		end
 
-		ply:SetPos(pos + Vector(0,0,50) + 0.1 * diff)
+		ply:SetPos(pos + Vector(0,0,70) + 0.1 * diff)
 	end, pos)
 end
 hook.Add("PlayerLeaveVehicle", "FPP.PlayerLeaveVehicle", FPP.Protect.LeaveVehicle)

@@ -7,6 +7,7 @@ DarkRP 2.4.1 SVN
 [ADD] Support for multiple models. It still works the old way, don't worry
 [ADD] Reason for warrant and wanted
 [ADD] Rp_vote, vote with a keybind! bind a key to rp_vote 1 and rp_vote 0 to vote yes or no without clicking!
+[ADD] Lockdown stops when mayor changes job or leaves server
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo
@@ -15,6 +16,7 @@ DarkRP 2.4.1 SVN
 [FIX] Pocket glitch
 [FIX] drop pickup get ammo glitch
 [FIX] Sitting incorrectly in vehicles
+[FIX] Switchjob not working when player can't change job for some reason
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
