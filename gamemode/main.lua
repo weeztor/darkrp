@@ -1427,8 +1427,8 @@ local function ExecSwitchJob(answer, ent, ply, target)
 	if answer ~= 1 then return end
 	local Pteam = ply:Team()
 	local Tteam = target:Team()
-	ply:ChangeTeam(Tteam)
-	target:ChangeTeam(Pteam)
+	ply:ChangeTeam(Tteam, true)
+	target:ChangeTeam(Pteam, true)
 	Notify(ply, 1, 4, LANGUAGE.team_switch)
 	Notify(target, 1, 4, LANGUAGE.team_switch)
 end

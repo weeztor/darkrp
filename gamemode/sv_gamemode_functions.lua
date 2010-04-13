@@ -649,6 +649,12 @@ function GM:PlayerDisconnected(ply)
 	if RPArrestedPlayers and RPArrestedPlayers[ply:SteamID()]then
 		DB.StoreJailStatus(ply, math.ceil(GetGlobalInt("jailtimer")))
 	end
+	
+	if ply:Team() == TEAM_MAYOR and tobool(GetGlobalInt("DarkRP_LockDown")) then -- Stop the lockdown
+		UnLockdown(ply)
+	end
+	
+	
 	ply:UnownAll()
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") disconnected")
 end
