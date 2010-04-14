@@ -66,7 +66,7 @@ if SERVER then
 
 
 	function PooPee.DoPoo(ply)
-		if GetGlobalInt("poopeemod") ~= 1 or not ply:Alive() or ply.DarkRPVars.Poop < 30 then
+		if not ply:Alive() or ply.DarkRPVars.Poop < 30 then
 			Notify(ply,1,6, string.format(LANGUAGE.unable, "/poo", ""))
 			return ""
 		end
