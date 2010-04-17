@@ -8,7 +8,7 @@ function CPPI:GetName()
 end
 
 function CPPI:GetVersion()
-	return "darkrp.1"
+	return "addon.1"
 end
 
 function CPPI:GetInterfaceVersion()
@@ -58,14 +58,14 @@ if SERVER then
 	end
 	
 	function ENTITY:CPPICanPhysgun(ply)
-		return FPP.Protect.PhysgunPickup(ply, self)
+		return FPP.PlayerCanTouchEnt(ply, self, "Physgun", "FPP_PHYSGUN")
 	end
 	
 	function ENTITY:CPPICanPickup(ply)
-		return FPP.Protect.GravGunPickup(ply, self)
+		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun", "FPP_GRAVGUN")
 	end
 	
 	function ENTITY:CPPICanPunt(ply)
-		return FPP.Protect.GravGunPunt(ply, self)
+		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun", "FPP_GRAVGUN")
 	end 
 end
