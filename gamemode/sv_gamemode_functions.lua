@@ -249,6 +249,9 @@ function GM:PlayerDeath(ply, weapon, killer)
 		umsg.End()
 		RP:AddAllPlayers()
 	end
+	if tobool(GetGlobalInt("deathpov")) then
+		SendUserMessage("DarkRPEffects", ply, "deathPOV", "1")
+	end
 	UnDrugPlayer(ply)
 
 	if weapon:IsVehicle() and weapon:GetDriver():IsPlayer() then killer = weapon:GetDriver() end
@@ -510,6 +513,8 @@ function GM:PlayerSpawn(ply)
 	if CfgVars["crosshair"] == 0 then
 		ply:CrosshairDisable()
 	end
+	
+	SendUserMessage("DarkRPEffects", ply, "deathPOV", "0") -- No checks to prevent bugs
 	
 	--Kill any colormod
 	local RP = RecipientFilter()
