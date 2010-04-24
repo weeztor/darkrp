@@ -209,6 +209,7 @@ function RefreshRPSettings(RESET)
 	CfgVars["allowjobswitch"] = 1
 	CfgVars["droppocketdeath"] = 1
 	CfgVars["allowvehicleowning"] = 1
+	CfgVars["deathpov"] = 0
 
 	-- You can set the exact value of the below items:
 

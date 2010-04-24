@@ -827,8 +827,9 @@ include("shared.lua")
 include("addentities.lua")
 
 local function DoSpecialEffects(Type)
-	local thetype = Type:ReadString()
+	local thetype = string.lower(Type:ReadString())
 	local toggle = tobool(Type:ReadString())
+
 	if toggle then
 		if thetype == "motionblur" then
 			hook.Add("RenderScreenspaceEffects", thetype, function()
@@ -852,16 +853,34 @@ local function DoSpecialEffects(Type)
 			 	settings[ "$pp_colour_mulb" ] = 0
 				DrawColorModify(settings)
 			end)
-		elseif thetype == "Drugged" then
+		elseif thetype == "drugged" then
 			hook.Add("RenderScreenspaceEffects", thetype, function()
 				DrawSharpen(-1, 2)
 				DrawMaterialOverlay("models/props_lab/Tank_Glass001", 0)
 				DrawMotionBlur(0.13, 1, 0.00)
 			end)
+		elseif thetype == "deathpov" then
+			hook.Add("CalcView", "rp_deathPOV", function(ply, origin, angles, fov)
+				local Ragdoll = ply:GetRagdollEntity()
+				if not ValidEntity(Ragdoll) then return end
+				
+				local head = Ragdoll:LookupAttachment("eyes")
+				head = Ragdoll:GetAttachment(head)
+				if not head.Pos then return end
+
+				local view = {}
+				view.origin = head.Pos
+				view.angles = head.Ang
+				view.fov = fov
+				return view
+			end)
 		end
 	elseif toggle == false then
 		if thetype == "dof" then
 			DOF_Kill()
+			return
+		elseif thetype == "deathpov" then
+			hook.Remove("CalcView", "rp_deathPOV")
 			return
 		end
 		hook.Remove("RenderScreenspaceEffects", thetype)

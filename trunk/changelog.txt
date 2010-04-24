@@ -8,6 +8,7 @@ DarkRP 2.4.1 SVN
 [ADD] Reason for warrant and wanted
 [ADD] Rp_vote, vote with a keybind! bind a key to rp_vote 1 and rp_vote 0 to vote yes or no without clicking!
 [ADD] Lockdown stops when mayor changes job or leaves server
+[ADD] rp_DeathPOV: Enable/disable whether people see their death in first person view
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo

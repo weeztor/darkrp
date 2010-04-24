@@ -233,6 +233,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_droppocketondeath - Enable/disab
 AddToggleCommand("rp_allowvehicleowning", "allowvehicleowning", false)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowvehicleowning - Enable/disable whether people can own vehicles.")
 
+AddToggleCommand("rp_deathpov", "deathpov", true)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_deathpov - Enable/disable whether people see their death in first person view")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
