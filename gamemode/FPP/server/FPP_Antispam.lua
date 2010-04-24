@@ -9,7 +9,7 @@ local function GhostFreeze(ent, phys)
 	ent.StartPos = ent:GetPos()
 	ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4] - 155)
 
-	ent:SetCollisionGroup( COLLISION_GROUP_WORLD )
+	ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
 	ent.CollisionGroup = COLLISION_GROUP_WORLD
 	
 	ent.FPPAntiSpamMotionEnabled = phys:IsMoveable()
@@ -30,7 +30,7 @@ function FPP.UnGhost(ply, ent)
 		ent.OldColor = nil
 		
 		
-		ent:SetCollisionGroup( COLLISION_GROUP_NONE )
+		ent:SetCollisionGroup(COLLISION_GROUP_NONE)
 		ent.CollisionGroup = COLLISION_GROUP_NONE
 		
 		local phys = ent:GetPhysicsObject()
