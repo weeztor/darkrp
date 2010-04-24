@@ -880,7 +880,9 @@ local function DoSpecialEffects(Type)
 			DOF_Kill()
 			return
 		elseif thetype == "deathpov" then
-			hook.Remove("CalcView", "rp_deathPOV")
+			if hook.GetTable().CalcView and hook.GetTable().CalcView.rp_deathPOV then 
+				hook.Remove("CalcView", "rp_deathPOV")
+			end
 			return
 		end
 		hook.Remove("RenderScreenspaceEffects", thetype)

@@ -149,7 +149,6 @@ local function FPP_SetSetting(ply, cmd, args)
 	if not FPP.Settings[args[1]][args[2]] then FPP.Notify(ply, "Argument invalid",false) return end
 	
 	FPP.Settings[args[1]][args[2]] = tonumber(args[3])
-	SetGlobalInt(args[1].."_"..args[2], tonumber(args[3]))
 	
 	local data = sql.QueryValue("SELECT value FROM ".. args[1] .. " WHERE key = "..sql.SQLStr(args[2])..";")
 	if not data then
@@ -257,12 +256,17 @@ local function RetrieveSettings()
 				FPP.Settings[k][value.key] = tonumber(value.value)
 			end
 		end
-		for a,b in pairs(v) do
-			SetGlobalInt(k.."_"..a, b)
-		end
 	end	
 end
 RetrieveSettings()
+
+local function SendSettings(ply, cmd, args)
+	if ply.FPPLastRetrieveSettings and ply.FPPLastRetrieveSettings > CurTime() then ply:PrintMessage(HUD_PRINTCONSOLE, "Don't spam, you double clicker!!") return end
+	ply.FPPLastRetrieveSettings = CurTime() + 2
+	
+	datastream.StreamToClients(ply, "FPP_Settings", FPP.Settings)
+end
+concommand.Add("_FPP_Retrievesettings", SendSettings)
 
 local function RetrieveBlocked()
 	local data = sql.Query("SELECT * FROM FPP_BLOCKED;")
