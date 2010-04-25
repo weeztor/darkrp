@@ -21,7 +21,7 @@ function AddToggleCommand(cmd, cfgvar, default, superadmin)
 		concommand.Add(cmd, ccToggleCommand)
 	end
 end
-CreateConVar("mobagenda", "Nothing to do at the moment", {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE})
+CreateConVar("mobagenda", "Nothing to do at the moment", {FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE})
 CreateConVar("DarkRP_LockDown", 0, {FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}) -- Don't save this one!
 
 concommand.Add("rp_commands", function()
