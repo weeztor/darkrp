@@ -647,7 +647,7 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 12, 12, 456, 106, Color(51, 58, 51,100))
 		draw.RoundedBox(10, 12, 12, 456, 20, Color(0, 0, 70, 100))
 		draw.DrawText(LANGUAGE.gangster_agenda, "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText(LocalPlayer().DarkRPVars.agenda or "", "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(string.gsub(string.gsub(GetConVarString("mobagenda"), "//", "\n"), "\\n", "\n"), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
 	if LocalPlayer().DarkRPVars.helpBoss then

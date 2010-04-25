@@ -258,8 +258,6 @@ function meta:ChangeTeam(t, force)
 	
 	if t == TEAM_POLICE then	
 		self:SetDarkRPVar("helpCop", true)
-	elseif t == TEAM_GANG then
-		self:SetDarkRPVar("agenda", GetConVarString("mobagenda"))
 	elseif t == TEAM_MOB then
 		self:SetDarkRPVar("helpBoss", true)
 	elseif t == TEAM_MAYOR then

@@ -1297,15 +1297,14 @@ hook.Add("KeyPress", "HangUpPhone", HangUp)
 /*---------------------------------------------------------
  Jobs
  ---------------------------------------------------------*/
-function CreateAgenda(ply, args)
+local function CreateAgenda(ply, args)
 	if ply:Team() == TEAM_MOB then
-		RunConsoleCommand("mobagenda", string.gsub(string.gsub(args, "//", "\n"), "\\n", "\n"))
+		RunConsoleCommand("mobagenda", args)
 
 		for k, v in pairs(player.GetAll()) do
 			local t = v:Team()
 			if t == TEAM_GANG or t == TEAM_MOB then
 				Notify(v, 1, 4, LANGUAGE.agenda_updated)
-				v:SetDarkRPVar("agenda", GetConVarNumber("mobagenda"))
 			end
 		end
 	else
@@ -1315,14 +1314,14 @@ function CreateAgenda(ply, args)
 end
 AddChatCommand("/agenda", CreateAgenda)
 
-function GetHelp(ply, args)
+local function GetHelp(ply, args)
 	umsg.Start("ToggleHelp", ply)
 	umsg.End()
 	return ""
 end
 AddChatCommand("/help", GetHelp)
 
-function ChangeJob(ply, args)
+local function ChangeJob(ply, args)
 	if args == "" then return "" end
 	
 	if RPArrestedPlayers[ply:SteamID()] then
