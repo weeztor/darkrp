@@ -7,8 +7,8 @@ HELP_CATEGORY_ZOMBIE = 5
 ValueCmds = {}
 function AddValueCommand(cmd, cfgvar, default)
 	ValueCmds[cmd] = {var = cfgvar, default = default}
+	CreateConVar(cfgvar, default, {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE})
 	if SERVER then
-		CreateConVar(cfgvar, default, {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE})
 		concommand.Add(cmd, ccValueCommand)
 	end
 end
@@ -16,8 +16,8 @@ end
 ToggleCmds = {}
 function AddToggleCommand(cmd, cfgvar, default, superadmin)
 	ToggleCmds[cmd] = {var = cfgvar, superadmin = superadmin, default = default}
+	CreateConVar(cfgvar, default, {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE})
 	if SERVER then
-		CreateConVar(cfgvar, default, {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE})
 		concommand.Add(cmd, ccToggleCommand)
 	end
 end
