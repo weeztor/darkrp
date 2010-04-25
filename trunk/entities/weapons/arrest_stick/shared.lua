@@ -70,7 +70,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 
-	if CfgVars["needwantedforarrest"] == 1 and not trace.Entity:IsNPC() and not trace.Entity.DarkRPVars.wanted then
+	if GetConVarNumber("needwantedforarrest") == 1 and not trace.Entity:IsNPC() and not trace.Entity.DarkRPVars.wanted then
 		Notify(self.Owner, 1, 5, "The player must be wanted in order to be able to arrest them.")
 		return
 	end

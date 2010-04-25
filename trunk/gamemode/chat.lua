@@ -34,7 +34,7 @@ function RP_ActualDoSay(ply, text, callback)
 		col = col2
 	end
 	
-	if GetGlobalInt("alltalk") == 1 then
+	if GetConVarNumber("alltalk") == 1 then
 		for k,v in pairs(player.GetAll()) do
 			TalkToPerson(v, col, callback..ply:Name(), col2, text, ply)
 		end

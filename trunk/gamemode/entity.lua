@@ -7,7 +7,7 @@ function meta:IsOwnable()
 	local class = self:GetClass()
 
 	if (class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") or
-		(tobool(GetGlobalInt("allowvehicleowning")) and self:IsVehicle()) then
+		(tobool(GetConVarNumber("allowvehicleowning")) and self:IsVehicle()) then
 			return true
 		end
 	return false
@@ -136,12 +136,12 @@ local function OwnDoor(ply)
 		end
 
 		if trace.Entity:OwnedBy(ply) then
-			Notify(ply, 1, 4, string.format(LANGUAGE.door_sold,  CUR .. math.floor(((CfgVars["doorcost"] * 0.66666666666666)+0.5))))
+			Notify(ply, 1, 4, string.format(LANGUAGE.door_sold,  CUR .. math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5))))
 			trace.Entity:Fire("unlock", "", 0)
 			trace.Entity:UnOwn(ply)
 			ply:GetTable().Ownedz[trace.Entity:EntIndex()] = nil
 			ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz - 1
-			ply:AddMoney(math.floor(((CfgVars["doorcost"] * 0.66666666666666)+0.5)))
+			ply:AddMoney(math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5)))
 			ply.LookingAtDoor = nil
 		else
 			if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
@@ -149,23 +149,23 @@ local function OwnDoor(ply)
 				return ""
 			end
 			if trace.Entity:IsVehicle() then
-				if not ply:CanAfford(CfgVars["vehiclecost"]) then
+				if not ply:CanAfford(GetConVarNumber("vehiclecost")) then
 					Notify(ply, 1, 4, LANGUAGE.vehicle_cannot_afford)
 					return ""
 				end
 			else
-				if not ply:CanAfford(CfgVars["doorcost"]) then
+				if not ply:CanAfford(GetConVarNumber("doorcost")) then
 					Notify(ply, 1, 4, LANGUAGE.door_cannot_afford)
 					return ""
 				end
 			end
 
 			if trace.Entity:IsVehicle() then
-				ply:AddMoney(-CfgVars["vehiclecost"])
-				Notify(ply, 1, 4, string.format(LANGUAGE.vehicle_bought, CUR .. math.floor(CfgVars["vehiclecost"])))
+				ply:AddMoney(-GetConVarNumber("vehiclecost"))
+				Notify(ply, 1, 4, string.format(LANGUAGE.vehicle_bought, CUR .. math.floor(GetConVarNumber("vehiclecost"))))
 			else
-				ply:AddMoney(-CfgVars["doorcost"])
-				Notify(ply, 1, 4, string.format(LANGUAGE.door_bought, CUR .. math.floor(CfgVars["doorcost"])))
+				ply:AddMoney(-GetConVarNumber("doorcost"))
+				Notify(ply, 1, 4, string.format(LANGUAGE.door_bought, CUR .. math.floor(GetConVarNumber("doorcost"))))
 			end
 			trace.Entity:Own(ply)
 

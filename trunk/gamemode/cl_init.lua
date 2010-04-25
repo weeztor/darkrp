@@ -29,7 +29,7 @@ function pmeta:Name()
 	if not ValidEntity(self) then return "" end
 	
 	self.DarkRPVars = self.DarkRPVars or {}
-	if GetGlobalInt("allowrpnames") == 0 then
+	if GetConVarNumber("allowrpnames") == 0 then
 		return self:SteamName()
 	end
 	return self.DarkRPVars.rpname or self:SteamName()
@@ -56,7 +56,7 @@ function ENT:IsVehicle()
 end
 
 function GM:DrawDeathNotice(x, y)
-	if GetGlobalInt("deathnotice") ~= 1 then return end
+	if GetConVarNumber("deathnotice") ~= 1 then return end
 	self.BaseClass:DrawDeathNotice(x, y)
 end
 
@@ -74,7 +74,7 @@ function LoadModules(msg)
 	local num = msg:ReadShort()
 
 	for n = 1, num do
-		include("DarkRP/gamemode/modules/" .. msg:ReadString())
+		include(GAMEMODE.FolderName.."/gamemode/modules/" .. msg:ReadString())
 	end
 end
 usermessage.Hook("LoadModules", LoadModules)
@@ -120,14 +120,14 @@ function DrawPlayerInfo(ply)
 	pos.z = pos.z + 34
 	pos = pos:ToScreen()
 
-	if GetGlobalInt("nametag") == 1 then
+	if GetConVarNumber("nametag") == 1 then
 		draw.DrawText(ply:Nick(), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply:Nick(), "TargetID", pos.x, pos.y, team.GetColor(ply:Team()), 1)
 		draw.DrawText(LANGUAGE.health ..ply:Health(), "TargetID", pos.x + 1, pos.y + 21, Color(0, 0, 0, 255), 1)
 		draw.DrawText(LANGUAGE.health..ply:Health(), "TargetID", pos.x, pos.y + 20, Color(255,255,255,200), 1)
 	end
 
-	if GetGlobalInt("jobtag") == 1 then
+	if GetConVarNumber("jobtag") == 1 then
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
@@ -239,7 +239,7 @@ function DrawWantedInfo(ply)
 	pos.z = pos.z + 14
 	pos = pos:ToScreen()
 
-	if GetGlobalInt("nametag") == 1 then
+	if GetConVarNumber("nametag") == 1 then
 		draw.DrawText(ply:Nick(), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply:Nick(), "TargetID", pos.x, pos.y, team.GetColor(ply:Team()), 1)
 	end
@@ -319,7 +319,7 @@ local function DrawDisplay()
 	local tr = LocalPlayer():GetEyeTrace()
 	local superAdmin = LocalPlayer():IsSuperAdmin()
 
-	if GetGlobalInt("globalshow") == 1 then
+	if GetConVarNumber("globalshow") == 1 then
 		for k, v in pairs(player.GetAll()) do
 			DrawPlayerInfo(v)
 		end
@@ -327,7 +327,7 @@ local function DrawDisplay()
 
 	if ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
 		local pos = {x = ScrW()/2, y = ScrH() / 2}
-		if GetGlobalInt("globalshow") == 0 then
+		if GetConVarNumber("globalshow") == 0 then
 			if tr.Entity:IsPlayer() then DrawPlayerInfo(tr.Entity) end
 		end
 
@@ -544,7 +544,7 @@ function GM:HUDPaint()
 	end
 	
 	if ShowHealth > 0 then
-		local max = GetGlobalInt("startinghealth")
+		local max = GetConVarNumber("startinghealth")
 		if max == 0 then max = 100 end
 		draw.RoundedBox(4, hx, hy, math.Clamp(hw * (ShowHealth / max), 0, hw), hh, Healthforegroundcolor)
 	end
@@ -623,7 +623,7 @@ function GM:HUDPaint()
 		draw.RoundedBox(10, 12, 12, 586, 190, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
 		draw.DrawText("Cop Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText(string.format(LANGUAGE.cophelp, GetGlobalInt("jailtimer")), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(string.format(LANGUAGE.cophelp, GetConVarNumber("jailtimer")), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
 	if LocalPlayer().DarkRPVars.helpMayor then
@@ -672,7 +672,7 @@ function GM:HUDPaint()
 	end
 	
 	local chbxX, chboxY = chat.GetChatBoxPos()
-	if util.tobool(GetGlobalInt("DarkRP_LockDown")) then
+	if util.tobool(GetConVarNumber("DarkRP_LockDown")) then
 		local cin = (math.sin(CurTime()) + 1) / 2
 		draw.DrawText(LANGUAGE.lockdown_started, "ScoreboardSubtitle", chbxX, chboxY + 260, Color(cin * 255, 0, 255 - (cin * 255), 255), TEXT_ALIGN_LEFT)
 	end
@@ -907,7 +907,7 @@ function GM:ChatTextChanged(text)
 	
 	local old = HearMode
 	HearMode = "talk"
-	if GetGlobalInt("alltalk") == 0 then
+	if GetConVarNumber("alltalk") == 0 then
 		if string.sub(text, 1, 2) == "//" or string.sub(string.lower(text), 1, 4) == "/ooc" or string.sub(string.lower(text), 1, 4) == "/a" then
 			HearMode = "talk through OOC"
 		elseif string.sub(string.lower(text), 1, 7) == "/advert" then
@@ -972,7 +972,7 @@ function GM:PlayerStartVoice(ply)
 	end
 	
 	
-	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 and not ValidEntity(LocalPlayer().DarkRPVars.phone) then
+	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 and not ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		HearMode = "speak"
 		RPSelectwhohearit()
 	end
@@ -997,7 +997,7 @@ function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
 	end
 	
 	
-	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetGlobalInt("voiceradius") == 1 then
+	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 then
 		HearMode = "talk"
 		hook.Remove("Think", "RPGetRecipients")
 		hook.Remove("HUDPaint", "RPinstructionsOnSayColors")
@@ -1020,7 +1020,7 @@ function RPSelectwhohearit()
 	hook.Add("HUDPaint", "RPinstructionsOnSayColors", function()
 		local w, l = chat.GetChatBoxPos()
 		local h = l - (#playercolors * 20) - 20
-		local AllTalk = GetGlobalInt("alltalk") == 1
+		local AllTalk = GetConVarNumber("alltalk") == 1
 		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") or HearMode == "speak" ) then
 			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_noone, HearMode), "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
 		elseif HearMode == "talk through OOC" or HearMode == "advert" then
@@ -1047,9 +1047,9 @@ function RPSelectwhohearit()
 					table.insert(playercolors, v)
 				elseif (HearMode == "yell" or HearMode == "speak") and distance < 550 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
-				elseif HearMode == "talk" and GetGlobalInt("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
+				elseif HearMode == "talk" and GetConVarNumber("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
-				elseif HearMode == "me" and GetGlobalInt("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
+				elseif HearMode == "me" and GetConVarNumber("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
 				end
 			end
@@ -1065,29 +1065,6 @@ function GM:PlayerBindPress(ply,bind,pressed)
 		LocalPlayer():ConCommand("_hobo_emitsound")
 	end
 	return
-end
-
-local OldSetGlobalInt = SetGlobalInt
-
-function SetGlobalInt(id, int)
-	GlobalInts[id] = int
-	OldSetGlobalInt(id, int)
-end
-
-local function ReceiveFGlobalInt(msg)
-	local int = msg:ReadLong()
-	local id = msg:ReadString()
-	SetGlobalInt(id, int)
-end
-usermessage.Hook("FRecieveGlobalInt", ReceiveFGlobalInt)
-
-local oldGetGlobalInt = GetGlobalInt
-function GetGlobalInt(id)
-	if GlobalInts[id] then
-		return GlobalInts[id]
-	else
-		return oldGetGlobalInt(id)
-	end
 end
 
 local function AddToChat(msg)

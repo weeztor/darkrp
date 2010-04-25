@@ -2,19 +2,19 @@ if SERVER then includeCS("PooPee.lua") end
 
 PooPee = {}
 
-AddToggleCommand("rp_poopeemod", "poopeemod", true)
+AddToggleCommand("rp_poopeemod", "poopeemod", 0)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_poopeemod <1 or 0> - Enable/disable poo pee mod")
 if SERVER then
 	function PooPee.UpdatePoop(ply)
 		if not ValidEntity(ply) then return end
 		ply:SetDarkRPVar("Poop", math.Clamp((ply.DarkRPVars.Poop or 0) + 1, 0, 100))
 		if ply.DarkRPVars.Poop >= 100 then
-			GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"] * 0.5, CfgVars["rspd"] * 0.5)
+			GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd") * 0.5, GetConVarNumber("rspd") * 0.5)
 		end
 	end
 
 	function PooPee.UpdatePee(ply)
-		if not ValidEntity(ply) or GetGlobalInt("poopeemod") ~= 1 then return end
+		if not ValidEntity(ply) or GetConVarNumber("poopeemod") ~= 1 then return end
 		ply:SetDarkRPVar("Pee", math.Clamp((ply.DarkRPVars.Pee or 0) + 1, 0, 100) )
 		if ply.DarkRPVars.Pee >= 100 then
 			PooPee.DoPee(ply)
@@ -28,7 +28,7 @@ if SERVER then
 	hook.Add("PlayerSpawn", "PooPee.PlayerSpawn", PooPee.PlayerSpawn)
 
 	function PooPee.AteFood(ply, food)
-		if GetGlobalInt("poopeemod") ~= 1 then return end
+		if GetConVarNumber("poopeemod") ~= 1 then return end
 		local food2 = string.lower(food)
 		if string.find(food2, "milk") or string.find(food2, "bottle") or string.find(food2, "popcan") then
 			ply:SetDarkRPVar("Pee", math.Clamp(ply.DarkRPVars.Pee + 9, 0, 100))
@@ -40,7 +40,7 @@ if SERVER then
 	end
 
 	function PooPee.Think()
-		if GetGlobalInt("poopeemod") ~= 1 then return end
+		if GetConVarNumber("poopeemod") ~= 1 then return end
 
 		for k, v in pairs(player.GetAll()) do
 			if not v:GetTable().LastPeeUpdate then
@@ -79,7 +79,7 @@ if SERVER then
 		turd:SetMaterial("models/props_pipes/pipeset_metal") 
 		ply:SetDarkRPVar("Poop", 0)
 		ply:EmitSound("ambient/levels/canals/swamp_bird2.wav", 50, 80)
-		GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"] , CfgVars["rspd"] )
+		GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd") , GetConVarNumber("rspd") )
 		timer.Simple(30, function() if turd:IsValid() then turd:Remove() end end)
 		return ""
 	end
@@ -87,7 +87,7 @@ if SERVER then
 	AddChatCommand("/poop", PooPee.DoPoo)
 
 	function PooPee.DoPee(ply)
-		if GetGlobalInt("poopeemod") ~= 1 then
+		if GetConVarNumber("poopeemod") ~= 1 then
 			Notify(ply,1,4, string.format(LANGUAGE.disabled, "/pee", ""))
 			return ""
 		end
@@ -109,7 +109,7 @@ if SERVER then
 end
 
 function PooPee.HUDPaint()
-	if (GetGlobalInt("poopeemod") or 0) == 1 then 
+	if (GetConVarNumber("poopeemod") or 0) == 1 then 
 		LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 		local x = 7
 		local y = ScrH() - 110 - GetConVarNumber("HudHeight")

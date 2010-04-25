@@ -40,7 +40,7 @@ function ENT:Use(activator,caller)
 	if not self.Entity.CanUse then return false end
 	self.Entity.CanUse = false
 	self.drug_user = activator
-	if (activator.maxDrugs and activator.maxDrugs >= CfgVars["maxdrugs"]) then
+	if activator.maxDrugs and activator.maxDrugs >= GetConVarNumber("maxdrugs") then
 		Notify(activator, 1, 3, "You can't make anymore drugs as the limit is reached.")
 		timer.Simple(0.5, function() self.Entity.CanUse = true end)
 	else

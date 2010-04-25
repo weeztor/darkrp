@@ -12,7 +12,7 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 	team.SetUp(#RPExtraTeams, Name, color)
 	local Team = #RPExtraTeams
 	if SERVER then
-		timer.Simple(0.1, function(CustomTeam) AddTeamCommands(CustomTeam) end, CustomTeam)
+		timer.Simple(0.1, function(CustomTeam, maximum_amount_of_this_class) AddTeamCommands(CustomTeam, maximum_amount_of_this_class) end, CustomTeam, maximum_amount_of_this_class)
 	end
 	return Team
 end
@@ -94,7 +94,7 @@ function AddEntity(name, entity, model, price, max, command, classes)
 		classes = {classes}
 	end
 	table.insert(DarkRPEntities, {name = name, ent = entity, model = model, price = price, max = max, cmd = command, allowed = classes})
-	AddEntityCommands(name, entity)
+	AddEntityCommands(name, entity, max, price)
 end
 
 hook.Add("InitPostEntity", "AddShipments", function()

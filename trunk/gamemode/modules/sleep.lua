@@ -62,7 +62,7 @@ function KnockoutToggle(player, command, args, caller)
 				player.OldHunger = nil
 				
 				if player.DarkRPVars.Arrested then
-					GAMEMODE:SetPlayerSpeed(player, CfgVars["aspd"], CfgVars["aspd"] )
+					GAMEMODE:SetPlayerSpeed(player, GetConVarNumber("aspd"), GetConVarNumber("aspd") )
 				end
 			else
 				for k,v in pairs(ents.FindInSphere(player:GetPos(), 30)) do 

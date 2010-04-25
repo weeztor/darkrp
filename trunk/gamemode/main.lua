@@ -330,12 +330,12 @@ function TremorReport(mag)
 end
 
 function EarthQuakeTest()
-	if CfgVars["earthquakes"] ~= 1 or not CfgVars["quakechance"] then return end
+	if GetConVarNumber("earthquakes") ~= 1 then return end
 
 	if CurTime() > (next_update_time or 0) then
 		local en = ents.FindByClass("prop_physics")
 		local plys = ents.FindByClass("player")
-		if math.random(0, CfgVars["quakechance"]) < 1 then
+		if math.random(0, GetConVarNumber("quakechance")) < 1 then
 			local force = math.random(10,1000)
 			tremor:SetKeyValue("magnitude",force/6)
 			for k,v in pairs(plys) do
@@ -421,7 +421,7 @@ end
 
 /*---------------------------------------------------------
  Drugs
- ---------------------------------------------------------*/
+ --------------------------------------a-------------------*/
 function DrugPlayer(ply)
 	if not ValidEntity(ply) then return end
 	local RP = RecipientFilter()
@@ -435,7 +435,7 @@ function DrugPlayer(ply)
 	RP:AddAllPlayers()
 	
 	ply:SetJumpPower(300)
-	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"] * 2, CfgVars["rspd"] * 2)
+	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd") * 2, CGetConVarNumber("rspd") * 2)
 	
 	local IDSteam = string.gsub(ply:SteamID(), ":", "")
 	if not timer.IsTimer(IDSteam.."DruggedHealth") and not timer.IsTimer(IDSteam) then
@@ -459,7 +459,7 @@ function UnDrugPlayer(ply)
 	umsg.End()
 	RP:AddAllPlayers()
 	ply:SetJumpPower(190)
-	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] )	
+	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") )	
 end
 
 /*---------------------------------------------------------
@@ -469,7 +469,7 @@ function DropWeapon(ply)
 	local ent = ply:GetActiveWeapon()
 	if not ValidEntity(ent) then return "" end
 	
-	if CfgVars["RestrictDrop"] == 1 then
+	if GetConVarNumber("RestrictDrop") == 1 then
 		local found = false
 		for k,v in pairs(CustomShipments) do
 			if v.entity == ent:GetClass() then
@@ -500,7 +500,7 @@ end
 
 function SetWarrant(ply, target, reason)
 	target.warranted = true
-	timer.Simple(CfgVars["searchtime"], UnWarrant, ply, target)
+	timer.Simple(GetConVarNumber("searchtime"), UnWarrant, ply, target)
 	for a, b in pairs(player.GetAll()) do
 		b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.warrant_approved, target:Nick()).."\nReason: "..tostring(reason))
 	end
@@ -599,7 +599,7 @@ function PlayerWanted(ply, args)
 			p:SetDarkRPVar("wantedReason", tostring(reason))
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_by_police, p:Nick()).."\nReason: "..tostring(reason))
-				timer.Create(p:Nick() .. " wantedtimer", CfgVars["wantedtime"], 1, TimerUnwanted, ply, args)
+				timer.Create(p:Nick() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, args)
 			end
 		else
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
@@ -790,7 +790,7 @@ end
 concommand.Add("rp_lookup", LookPersonUp)
 
 local function GiveHint()
-	if CfgVars["advertisements"] ~= 1 then return end
+	if GetConVarNumber("advertisements") ~= 1 then return end
 	local text = LANGUAGE.hints[math.random(1, #LANGUAGE.hints)]
 
 	for k,v in pairs(player.GetAll()) do
@@ -804,12 +804,12 @@ timer.Create("hints", 60, 0, GiveHint)
  Items
  ---------------------------------------------------------*/
 local function MakeLetter(ply, args, type)
-	if CfgVars["letters"] == 0 then
+	if GetConVarNumber("letters") == 0 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "/write / /type", ""))
 		return ""
 	end
 
-	if ply.maxletters and ply.maxletters >= CfgVars["maxletters"] then
+	if ply.maxletters and ply.maxletters >= GetConVarNumber("maxletters") then
 		Notify(ply, 1, 4, string.format(LANGUAGE.limit, "letter"))
 		return ""
 	end
@@ -918,11 +918,11 @@ function BuyPistol(ply, args)
 	if args == "" then return "" end
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
 
-	if CfgVars["enablebuypistol"] == 0 then
+	if GetConVarNumber("enablebuypistol") == 0 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "/buy", ""))
 		return ""
 	end
-	if CfgVars["noguns"] == 1 then
+	if GetConVarNumber("noguns") == 1 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "/buy", ""))
 		return ""
 	end
@@ -946,7 +946,7 @@ function BuyPistol(ply, args)
 			model = v.model
 			price = v.pricesep
 			local canbuy = false			
-			local RestrictBuyPistol = tonumber(GetGlobalInt("restrictbuypistol"))
+			local RestrictBuyPistol = tonumber(GetConVarNumber("restrictbuypistol"))
 			if RestrictBuyPistol == 0 or 
 			(RestrictBuyPistol == 1 and (not v.allowed[1] or table.HasValue(v.allowed, ply:Team()))) then
 				canbuy = true
@@ -966,9 +966,9 @@ function BuyPistol(ply, args)
 	
 	if not custom then
 		if ply:Team() == TEAM_GUN then
-			price = math.ceil(GetGlobalInt(args .. "cost") * 0.88)
+			price = math.ceil(GetConVarNumber(args .. "cost") * 0.88)
 		else
-			price = GetGlobalInt(args .. "cost")
+			price = GetConVarNumber(args .. "cost")
 		end
 	end
 	
@@ -1068,7 +1068,7 @@ function BuyVehicle(ply, args)
 	if found.allowed and not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buyvehicle")) return ""  end 
 	
 	if not ply.Vehicles then ply.Vehicles = 0 end
-	if CfgVars["maxvehicles"] ~= 0 and ply.Vehicles >= CfgVars["maxvehicles"] then
+	if GetConVarNumber("maxvehicles") ~= 0 and ply.Vehicles >= GetConVarNumber("maxvehicles") then
 		Notify(ply, 1, 4, string.format(LANGUAGE.limit, "vehicle"))
 		return ""
 	end
@@ -1126,13 +1126,13 @@ for k,v in pairs(DarkRPEntities) do
 			return "" 
 		end
 		local cmdname = string.gsub(v.ent, " ", "_")
-		local disabled = tobool(GetGlobalInt("disable"..cmdname))
+		local disabled = tobool(GetConVarNumber("disable"..cmdname))
 		if disabled then
 			Notify(ply, 1, 4, string.format(LANGUAGE.disabled, v.cmd, ""))
 			return "" 
 		end
 		
-		local max = GetGlobalInt("max"..cmdname)
+		local max = GetConVarNumber("max"..cmdname)
 
 		if not max or max == 0 then max = tonumber(v.max) end
 		if ply["max"..cmdname] and tonumber(ply["max"..cmdname]) >= tonumber(max) then
@@ -1140,7 +1140,7 @@ for k,v in pairs(DarkRPEntities) do
 			return ""
 		end
 		
-		local price = GetGlobalInt(cmdname.."_price")
+		local price = GetConVarNumber(cmdname.."_price")
 		if price == 0 then 
 			price = v.price
 		end
@@ -1180,7 +1180,7 @@ function BuyAmmo(ply, args)
 
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
 
-	if CfgVars["noguns"] == 1 then
+	if GetConVarNumber("noguns") == 1 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "ammo", ""))
 		return ""
 	end
@@ -1189,7 +1189,7 @@ function BuyAmmo(ply, args)
 		Notify(ply, 1, 4, string.format(LANGUAGE.unavailable, "ammo"))
 	end
 	
-	if not ply:CanAfford(GetGlobalInt("ammo" .. args .. "cost")) then
+	if not ply:CanAfford(GetConVarNumber("ammo" .. args .. "cost")) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "ammo"))
 		return ""
 	end
@@ -1202,7 +1202,7 @@ function BuyAmmo(ply, args)
 		ply:GiveAmmo(50, "pistol")
 	end
 
-	local cost = GetGlobalInt("ammo" .. args .. "cost")
+	local cost = GetConVarNumber("ammo" .. args .. "cost")
 
 	Notify(ply, 1, 4, string.format(LANGUAGE.you_bought_x, args, CUR..tostring(cost)))
 	ply:AddMoney(-cost)
@@ -1212,7 +1212,7 @@ end
 AddChatCommand("/buyammo", BuyAmmo)
 
 function BuyHealth(ply)
-	local cost = GetGlobalInt("healthcost")
+	local cost = GetConVarNumber("healthcost")
 	if not ply:Alive() then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyhealth", ""))
 		return ""
@@ -1299,13 +1299,13 @@ hook.Add("KeyPress", "HangUpPhone", HangUp)
  ---------------------------------------------------------*/
 function CreateAgenda(ply, args)
 	if ply:Team() == TEAM_MOB then
-		CfgVars["mobagenda"] = string.gsub(string.gsub(args, "//", "\n"), "\\n", "\n")
+		RunConsoleCommand("mobagenda", string.gsub(string.gsub(args, "//", "\n"), "\\n", "\n"))
 
 		for k, v in pairs(player.GetAll()) do
 			local t = v:Team()
 			if t == TEAM_GANG or t == TEAM_MOB then
 				Notify(v, 1, 4, LANGUAGE.agenda_updated)
-				v:SetDarkRPVar("agenda", CfgVars["mobagenda"])
+				v:SetDarkRPVar("agenda", GetConVarNumber("mobagenda"))
 			end
 		end
 	else
@@ -1341,7 +1341,7 @@ function ChangeJob(ply, args)
 		return ""
 	end
 
-	if CfgVars["customjobs"] ~= 1 then
+	if GetConVarNumber("customjobs") ~= 1 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "/job", ""))
 		return ""
 	end
@@ -1434,7 +1434,7 @@ local function ExecSwitchJob(answer, ent, ply, target)
 end
 
 function SwitchJob(ply) --Idea by Godness.
-	if CfgVars["allowjobswitch"] ~= 1 then return "" end
+	if GetConVarNumber("allowjobswitch") ~= 1 then return "" end
 	local eyetrace = ply:GetEyeTrace()
 	if not eyetrace or not eyetrace.Entity or not eyetrace.Entity:IsPlayer() then return "" end
 	ques:Create("Switch job with "..ply:Nick().."?", "switchjob"..tostring(ply:EntIndex()), eyetrace.Entity, 30, ExecSwitchJob, ply, eyetrace.Entity)
@@ -1599,7 +1599,7 @@ local function Me(ply, args)
 	
 	local DoSay = function(text)
 		if text == "" then return "" end
-		if GetGlobalInt("alltalk") == 1 then
+		if GetConVarNumber("alltalk") == 1 then
 			for _, target in pairs(player.GetAll()) do
 				TalkToPerson(target, team.GetColor(ply:Team()), ply:Nick() .. " " .. text)
 			end
@@ -1612,7 +1612,7 @@ end
 AddChatCommand("/me", Me)
 
 function OOC(ply, args)
-	if CfgVars["ooc"] == 0 then
+	if GetConVarNumber("ooc") == 0 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "OOC", ""))
 		return ""
 	end
@@ -1830,13 +1830,13 @@ local LotteryON = false
 local CanLottery = CurTime()
 function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	if answer == 1 and not table.HasValue(LotteryPeople, target) then
-		if not target:CanAfford(CfgVars["lotterycommitcost"]) then
+		if not target:CanAfford(GetConVarNumber("lotterycommitcost")) then
 			Notify(target, 1,4, string.format(LANGUAGE.cant_afford, "lottery"))
 			return
 		end
 		table.insert(LotteryPeople, target)
-		target:AddMoney(-CfgVars["lotterycommitcost"])
-		Notify(target, 1,4, string.format(LANGUAGE.lottery_entered, CUR..tostring(CfgVars["lotterycommitcost"])))
+		target:AddMoney(-GetConVarNumber("lotterycommitcost"))
+		Notify(target, 1,4, string.format(LANGUAGE.lottery_entered, CUR..tostring(GetConVarNumber("lotterycommitcost"))))
 	elseif answer and not table.HasValue(LotteryPeople, target) then
 		Notify(target, 1,4, string.format(LANGUAGE.lottery_not_entered, target:Nick()))
 	end
@@ -1849,8 +1849,8 @@ function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 			return
 		end
 		local chosen = LotteryPeople[math.random(1, #LotteryPeople)]
-		chosen:AddMoney(#LotteryPeople * CfgVars["lotterycommitcost"])
-		NotifyAll(1,10, string.format(LANGUAGE.lottery_won, chosen:Nick(), CUR .. tostring(#LotteryPeople * CfgVars["lotterycommitcost"]) ))
+		chosen:AddMoney(#LotteryPeople * GetConVarNumber("lotterycommitcost"))
+		NotifyAll(1,10, string.format(LANGUAGE.lottery_won, chosen:Nick(), CUR .. tostring(#LotteryPeople * GetConVarNumber("lotterycommitcost")) ))
 	end
 end
 
@@ -1860,7 +1860,7 @@ function DoLottery(ply)
 		return "" 
 	end
 	
-	if CfgVars["lottery"] ~= 1 then
+	if GetConVarNumber("lottery") ~= 1 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "/lottery", ""))
 		return ""
 	end
@@ -1878,7 +1878,7 @@ function DoLottery(ply)
 	LotteryPeople = {}
 	for k,v in pairs(player.GetAll()) do 
 		if v ~= ply then
-			ques:Create("There is a lottery! Participate for " ..CUR.. tostring(CfgVars["lotterycommitcost"]) .. "?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
+			ques:Create("There is a lottery! Participate for " ..CUR.. tostring(GetConVarNumber("lotterycommitcost")) .. "?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
 		end
 	end	
 	timer.Create("Lottery", 30, 1, EnterLottery, nil, nil, nil, nil, true)
@@ -1896,7 +1896,7 @@ function Lockdown(ply)
 			end
 			lstat = true
 			PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_started)
-			SetGlobalInt("DarkRP_LockDown", 1)
+			RunConsoleCommand("DarkRP_LockDown", 1)
 			NotifyAll(4, 3, LANGUAGE.lockdown_started)
 		end
 	end
@@ -1911,7 +1911,7 @@ function UnLockdown(ply)
 			PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_ended)
 			NotifyAll(4, 3, LANGUAGE.lockdown_ended)
 			wait_lockdown = true
-			SetGlobalInt("DarkRP_LockDown", 0)
+			RunConsoleCommand("DarkRP_LockDown", 0)
 			timer.Create("spamlock", 20, 1, WaitLock, "")
 		end
 	end
@@ -1932,7 +1932,7 @@ function MayorSetSalary(ply, cmd, args)
 		return
 	end
 
-	if CfgVars["enablemayorsetsalary"] == 0 then
+	if GetConVarNumber("enablemayorsetsalary") == 0 then
 		ply:PrintMessage(2, string.format(LANGUAGE.disabled, "rp_setsalary", ""))
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "rp_setsalary", ""))
 		return 
@@ -1950,8 +1950,8 @@ function MayorSetSalary(ply, cmd, args)
 		return
 	end
 
-	if amount > GetGlobalInt("maxmayorsetsalary") then
-		ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "salary", "< " .. GetGlobalInt("maxmayorsetsalary")))
+	if amount > GetConVarNumber("maxmayorsetsalary") then
+		ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "salary", "< " .. GetConVarNumber("maxmayorsetsalary")))
 		return
 	end
 
@@ -1966,8 +1966,8 @@ function MayorSetSalary(ply, cmd, args)
 			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "rp_setsalary", ""))
 			return
 		elseif targetteam == TEAM_POLICE or targetteam == TEAM_CHIEF then
-			if amount > GetGlobalInt("maxcopsalary") then
-				Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "salary", "< " .. GetGlobalInt("maxcopsalary")))
+			if amount > GetConVarNumber("maxcopsalary") then
+				Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "salary", "< " .. GetConVarNumber("maxcopsalary")))
 				return
 			else
 				DB.StoreSalary(target, amount)
@@ -1975,8 +1975,8 @@ function MayorSetSalary(ply, cmd, args)
 				target:PrintMessage(2, plynick .. " set your Salary to: " .. CUR .. amount)
 			end
 		elseif targetteam == TEAM_CITIZEN or targetteam == TEAM_GUN or targetteam == TEAM_MEDIC or targetteam == TEAM_COOK then
-			if amount > GetGlobalInt("maxnormalsalary") then
-				Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "salary", "< " .. GetGlobalInt("maxnormalsalary")))
+			if amount > GetConVarNumber("maxnormalsalary") then
+				Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "salary", "< " .. GetConVarNumber("maxnormalsalary")))
 				return
 			else
 				DB.StoreSalary(target, amount)
