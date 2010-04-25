@@ -88,8 +88,8 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	if not CfgVars["pocketitems"] then CfgVars["pocketitems"] = 10 end
-	if #self.Owner:GetTable().Pocket >= CfgVars["pocketitems"] then
+	if not GetConVarNumber("pocketitems") then RunConsoleCommand("pocketitems", 10) end
+	if #self.Owner:GetTable().Pocket >= GetConVarNumber("pocketitems") then
 		Notify(self.Owner, 1, 4, "Your pocket is full!")
 		return
 	end

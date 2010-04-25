@@ -81,8 +81,8 @@ function SWEP:PrimaryAttack()
 	self.Owner:EmitSound(self.Sound)
 	
 	
-	local a = CfgVars["copscanunfreeze"] == 1
-	local d = CfgVars["copscanunweld"] == 1
+	local a = GetConVarNumber("copscanunfreeze") == 1
+	local d = GetConVarNumber("copscanunweld") == 1
 	local b = trace.Entity:GetClass() == "prop_physics"
 	local c = true
 	if trace.Entity.Owner then
@@ -92,7 +92,7 @@ function SWEP:PrimaryAttack()
 		local allowed = false
 		local team = self.Owner:Team()
 		-- if we need a warrant to get in and we're not a gangster or the mob boss
-		if CfgVars["doorwarrants"] == 1 and trace.Entity:IsOwned() and not trace.Entity:OwnedBy(self.Owner) and team ~= 4 and team ~= 5 then
+		if GetConVarNumber("doorwarrants") == 1 and trace.Entity:IsOwned() and not trace.Entity:OwnedBy(self.Owner) and team ~= 4 and team ~= 5 then
 			-- if anyone who owns this door has a warrant for their arrest
 			-- allow the police to smash the door in
 			for k, v in pairs(player.GetAll()) do

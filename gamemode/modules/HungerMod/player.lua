@@ -6,12 +6,12 @@ function meta:NewHungerData()
 end
 
 function meta:HungerUpdate()
-	if not CfgVars["hungerspeed"] then return end
-	self:SetDarkRPVar("Energy", math.Clamp(self.DarkRPVars.Energy - CfgVars["hungerspeed"] / 10, 0, 100))
+	if not GetConVarNumber("hungerspeed") then return end
+	self:SetDarkRPVar("Energy", math.Clamp(self.DarkRPVars.Energy - GetConVarNumber("hungerspeed") / 10, 0, 100))
 	self:GetTable().LastHungerUpdate = CurTime()
 
 	if self.DarkRPVars.Energy == 0 then
-		self:SetHealth(self:Health() - CfgVars["starverate"])
+		self:SetHealth(self:Health() - GetConVarNumber("starverate"))
 		if self:Health() <= 0 then
 			self:GetTable().Slayed = true
 			self:Kill()

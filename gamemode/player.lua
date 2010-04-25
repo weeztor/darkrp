@@ -6,7 +6,7 @@ local meta = FindMetaTable("Player")
  RP names
  ---------------------------------------------------------*/
 function RPName(ply, args)
-	if CfgVars["allowrpnames"] ~= 1 then
+	if GetConVarNumber("allowrpnames") ~= 1 then
 		Notify(ply, 1, 6,  string.format(LANGUAGE.disabled, "RPname", "")) 
 		return ""
 	end
@@ -119,14 +119,14 @@ end
 function meta:TeamBan()
 	if not self.bannedfrom then self.bannedfrom = {} end
 	self.bannedfrom[self:Team()] = 1
-	timer.Simple(CfgVars["demotetime"], self.TeamUnBan, self, self:Team())
+	timer.Simple(GetConVarNumber("demotetime"), self.TeamUnBan, self, self:Team())
 end
 
 function meta:CompleteSentence()
 	if not ValidEntity(self) then return end
 	local ID = self:SteamID()
 	if ValidEntity(self) and ID ~= nil and RPArrestedPlayers[ID] then
-		local time = GetGlobalInt("jailtimer")
+		local time = GetConVarNumber("jailtimer")
 		self:Arrest(time, true)
 		Notify(self, 0, 5, string.format(LANGUAGE.jail_punishment, time))
 	end
@@ -152,7 +152,7 @@ function meta:NewData()
 
 	self:RestoreRPName()
 
-	DB.StoreSalary(self, GetGlobalInt("normalsalary"))
+	DB.StoreSalary(self, GetConVarNumber("normalsalary"))
 
 	self:UpdateJob(team.GetName(1))
 
@@ -175,7 +175,7 @@ function meta:NewData()
 	-- Whether or not a player is being prevented from joining
 	-- a specific team for a certain length of time
 	for i = 1, #RPExtraTeams do
-		if CfgVars["restrictallteams"] == 1 then
+		if GetConVarNumber("restrictallteams") == 1 then
 			self.bannedfrom[i] = 1
 		else
 			self.bannedfrom[i] = 0
@@ -230,12 +230,12 @@ function meta:ChangeTeam(t, force)
 					Notify(self, 1,4, string.format(string.sub(teamnames, 5), team.GetName(v.NeedToChangeFrom), v.name))
 					return
 				end
-				if CfgVars["max"..v.command.."s"] and CfgVars["max"..v.command.."s"] ~= 0 and team.NumPlayers(t) >= CfgVars["max"..v.command.."s"] and not force then
+				if GetConVarNumber("max"..v.command.."s") and GetConVarNumber("max"..v.command.."s") ~= 0 and team.NumPlayers(t) >= GetConVarNumber("max"..v.command.."s") and not force then
 					Notify(self, 1, 4, string.format(LANGUAGE.team_limit_reached, v.name))
 					return
 				end
 			end
-			if self:Team() == TEAM_MAYOR and tobool(GetGlobalInt("DarkRP_LockDown")) then
+			if self:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then
 				UnLockdown(self)
 			end
 			self:UpdateJob(v.name)
@@ -244,7 +244,7 @@ function meta:ChangeTeam(t, force)
 			if self.DarkRPVars.HasGunlicense then
 				self:SetDarkRPVar("HasGunlicense", false)
 			end
-			if v.Haslicense and CfgVars["license"] ~= 0 then
+			if v.Haslicense and GetConVarNumber("license") ~= 0 then
 				self:SetDarkRPVar("HasGunlicense", true)
 			end
 			
@@ -259,14 +259,14 @@ function meta:ChangeTeam(t, force)
 	if t == TEAM_POLICE then	
 		self:SetDarkRPVar("helpCop", true)
 	elseif t == TEAM_GANG then
-		self:SetDarkRPVar("agenda", CfgVars["mobagenda"])
+		self:SetDarkRPVar("agenda", GetConVarString("mobagenda"))
 	elseif t == TEAM_MOB then
 		self:SetDarkRPVar("helpBoss", true)
 	elseif t == TEAM_MAYOR then
 		self:SetDarkRPVar("helpMayor", true)
 	end
 	
-	if CfgVars["removeclassitems"] == 1 then
+	if GetConVarNumber("removeclassitems") == 1 then
 		for k, v in pairs(ents.FindByClass("microwave")) do
 			if v.SID == self.SID then v:Remove() end
 		end
@@ -294,7 +294,7 @@ function meta:ChangeTeam(t, force)
 	self:SetTeam(t)
 	DB.Log(self:SteamName().." ("..self:SteamID()..") changed to "..team.GetName(t))
 	if self:InVehicle() then self:ExitVehicle() end
-	if CfgVars["norespawn"] == 1 and self:Alive() then
+	if GetConVarNumber("norespawn") == 1 and self:Alive() then
 		self:StripWeapons()
 		local vPoint = self:GetShootPos() + Vector(0,0,50)
 		local effectdata = EffectData()
@@ -315,7 +315,7 @@ function meta:UpdateJob(job)
 	self:GetTable().Pay = 1
 	self:GetTable().LastPayDay = CurTime()
 
-	timer.Create(self:SteamID() .. "jobtimer", CfgVars["paydelay"], 0, self.PayDay, self)
+	timer.Create(self:SteamID() .. "jobtimer", GetConVarNumber("paydelay"), 0, self.PayDay, self)
 end
 
 /*---------------------------------------------------------
@@ -352,11 +352,11 @@ end
  ---------------------------------------------------------*/
 function JailPos(ply)
 	-- Admin or Chief can set the Jail Position
-	if (ply:Team() == TEAM_CHIEF and CfgVars["chiefjailpos"] == 1) or ply:HasPriv(ADMIN) then
+	if (ply:Team() == TEAM_CHIEF and GetConVarNumber("chiefjailpos") == 1) or ply:HasPriv(ADMIN) then
 		DB.StoreJailPos(ply)
 	else
 		local str = "Admin only!"
-		if CfgVars["chiefjailpos"] == 1 then
+		if GetConVarNumber("chiefjailpos") == 1 then
 			str = "Chief or " .. str
 		end
 
@@ -368,11 +368,11 @@ AddChatCommand("/jailpos", JailPos)
 
 function AddJailPos(ply)
 	-- Admin or Chief can add Jail Positions
-	if (ply:Team() == TEAM_CHIEF and CfgVars["chiefjailpos"] == 1) or ply:HasPriv(ADMIN) then
+	if (ply:Team() == TEAM_CHIEF and GetConVarNumber("chiefjailpos") == 1) or ply:HasPriv(ADMIN) then
 		DB.StoreJailPos(ply, true)
 	else
 		local str = LANGUAGE.admin_only
-		if CfgVars["chiefjailpos"] == 1 then
+		if GetConVarNumber("chiefjailpos") == 1 then
 			str = LANGUAGE.chief_or .. str
 		end
 
@@ -387,10 +387,10 @@ function meta:Arrest(time, rejoin)
 	self.warranted = false
 	self:SetDarkRPVar("HasGunlicense", false)
 	self:SetDarkRPVar("Arrested", true)
-	GAMEMODE:SetPlayerSpeed(self, CfgVars["aspd"], CfgVars["aspd"] )
+	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("aspd"), GetConVarNumber("aspd") )
 	
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
-	if CfgVars["teletojail"] == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
+	if GetConVarNumber("teletojail") == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
 		local jailpos = DB.RetrieveJailPos()
 		if not jailpos then return end
 		self:SetPos(jailpos)
@@ -404,7 +404,7 @@ function meta:Arrest(time, rejoin)
 		-- If the player has no remaining jail time,
 		-- set it back to the max for this new sentence
 		if not time or time == 0 then
-			time = GetGlobalInt("jailtimer")
+			time = GetConVarNumber("jailtimer")
 		end
 		DB.StoreJailStatus(self, time)
 		self:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.youre_arrested, time))
@@ -427,14 +427,14 @@ function meta:Unarrest(ID)
 		RPArrestedPlayers[ID] = nil
 		return
 	end
-	GAMEMODE:SetPlayerSpeed(self, CfgVars["wspd"], CfgVars["rspd"] )
+	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 	if self.Sleeping then
 		KnockoutToggle(self, "force")
 	end
 	if type(self) == "string" then
 		if RPArrestedPlayers[ID] then
 			RPArrestedPlayers[ID] = nil
-			if CfgVars["telefromjail"] == 1 then
+			if GetConVarNumber("telefromjail") == 1 then
 				local _, pos = GAMEMODE:PlayerSelectSpawn(self)
 				self:SetPos(pos)
 			end
@@ -447,7 +447,7 @@ function meta:Unarrest(ID)
 	else
 		if self and RPArrestedPlayers[self:SteamID()] then
 			RPArrestedPlayers[self:SteamID()] = nil
-			if CfgVars["telefromjail"] == 1 then
+			if GetConVarNumber("telefromjail") == 1 then
 				local _, pos = GAMEMODE:PlayerSelectSpawn(self)
 				self:SetPos(pos)
 			end
@@ -496,8 +496,8 @@ function meta:UnownAll()
 end
 
 function meta:DoPropertyTax()
-	if CfgVars["propertytax"] == 0 then return end
-	if self:Team() == TEAM_POLICE or self:Team() == TEAM_MAYOR or self:Team() == TEAM_CHIEF and CfgVars["cit_propertytax"] == 1 then return end
+	if GetConVarNumber("propertytax") == 0 then return end
+	if self:Team() == TEAM_POLICE or self:Team() == TEAM_MAYOR or self:Team() == TEAM_CHIEF and GetConVarNumber("cit_propertytax") == 1 then return end
 
 	local numowned = self:GetTable().OwnedNumz
 

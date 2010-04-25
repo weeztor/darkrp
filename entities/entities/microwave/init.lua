@@ -39,14 +39,14 @@ end
 
 function ENT:SalePrice(activator)
 	local owner = self.Entity.dt.owning_ent
-	local discounted = math.ceil(GetGlobalInt("microwavefoodcost") * 0.82)
+	local discounted = math.ceil(GetConVarNumber("microwavefoodcost") * 0.82)
 
 	if activator == owner then
 		-- If they are still a cook, sell them the food at the discounted rate
 		if activator:Team() == TEAM_COOK then
 			return discounted
 		else -- Otherwise, sell it to them at full price
-			return math.floor(GetGlobalInt("microwavefoodcost"))
+			return math.floor(GetConVarNumber("microwavefoodcost"))
 		end
 	else
 		return self.dt.price
@@ -66,13 +66,13 @@ function ENT:Use(activator,caller)
 		Notify(activator, 1, 3, "Microwave owner is too poor to subsidize this sale!")
 		return ""
 	end
-	if (activator.maxFoods and activator.maxFoods >= CfgVars["maxfoods"]) then
+	if activator.maxFoods and activator.maxFoods >= GetConVarNumber("maxfoods") then
 		Notify(activator, 1, 3, "You have reached the food limit.")
 	elseif not self.Once then
 		self.Once = true
 		self.sparking = true
 		
-		local discounted = math.ceil(GetGlobalInt("microwavefoodcost") * 0.82)
+		local discounted = math.ceil(GetConVarNumber("microwavefoodcost") * 0.82)
 		local cash = self:SalePrice(activator)
 
 		activator:AddMoney(cash * -1)
@@ -83,7 +83,7 @@ function ENT:Use(activator,caller)
 			if owner:Team() == TEAM_COOK then
 				gain = math.floor(self.dt.price - discounted)
 			else
-				gain = math.floor(self.dt.price - GetGlobalInt("microwavefoodcost"))
+				gain = math.floor(self.dt.price - GetConVarNumber("microwavefoodcost"))
 			end
 			if gain == 0 then
 				Notify(owner, 1, 3, "You sold some food but made no profit!")

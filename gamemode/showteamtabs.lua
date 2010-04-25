@@ -328,7 +328,7 @@ function MoneyTab()
 					Drop.DoClick = function() LocalPlayer():ConCommand("say /drop") end
 				ActionsPanel:AddItem(Drop)
 					local health = vgui.Create("DButton")
-					health:SetText(string.format(LANGUAGE.buy_health, tostring(GetGlobalInt("healthcost"))))
+					health:SetText(string.format(LANGUAGE.buy_health, tostring(GetConVarNumber("healthcost"))))
 					health.DoClick = function() LocalPlayer():ConCommand("say /Buyhealth") end
 				ActionsPanel:AddItem(health)
 				
@@ -607,15 +607,15 @@ function EntitiesTab()
 					end
 					
 					for k,v in pairs(CustomShipments) do
-						if v.seperate and (GetGlobalInt("restrictbuypistol") == 0 or 
-						(GetGlobalInt("restrictbuypistol") == 1 and (not v.allowed[1] or table.HasValue(v.allowed, LocalPlayer():Team())))) then
+						if v.seperate and (GetConVarNumber("restrictbuypistol") == 0 or 
+						(GetConVarNumber("restrictbuypistol") == 1 and (not v.allowed[1] or table.HasValue(v.allowed, LocalPlayer():Team())))) then
 							AddIcon(v.model, string.format(LANGUAGE.buy_a, "a "..v.name, CUR..v.pricesep), "/buy "..v.name)
 						end
 					end
 					
-					AddIcon("models/Items/BoxSRounds.mdl", string.format(LANGUAGE.buy_a, "Pistol ammo", CUR .. tostring(GetGlobalInt("ammopistolcost"))), "/buyammo pistol")
-					AddIcon("models/Items/BoxMRounds.mdl", string.format(LANGUAGE.buy_a, "Rifle ammo", CUR .. tostring(GetGlobalInt("ammoriflecost"))), "/buyammo rifle")
-					AddIcon("models/Items/BoxBuckshot.mdl", string.format(LANGUAGE.buy_a, "shotgun ammo", CUR .. tostring(GetGlobalInt("ammoshotguncost"))), "/buyammo shotgun")
+					AddIcon("models/Items/BoxSRounds.mdl", string.format(LANGUAGE.buy_a, "Pistol ammo", CUR .. tostring(GetConVarNumber("ammopistolcost"))), "/buyammo pistol")
+					AddIcon("models/Items/BoxMRounds.mdl", string.format(LANGUAGE.buy_a, "Rifle ammo", CUR .. tostring(GetConVarNumber("ammoriflecost"))), "/buyammo rifle")
+					AddIcon("models/Items/BoxBuckshot.mdl", string.format(LANGUAGE.buy_a, "shotgun ammo", CUR .. tostring(GetConVarNumber("ammoshotguncost"))), "/buyammo shotgun")
 			WepCat:SetContents(WepPanel)
 			WepCat:SetSkin("DarkRP")
 			self:AddItem(WepCat)
@@ -642,9 +642,9 @@ function EntitiesTab()
 						if not v.allowed or (type(v.allowed) == "table" and table.HasValue(v.allowed, LocalPlayer():Team())) then
 							local cmdname = string.gsub(v.ent, " ", "_")
 							
-							if tobool(GetGlobalInt("disable"..cmdname)) then return end
+							if tobool(GetConVarNumber("disable"..cmdname)) then return end
 							
-							local price = GetGlobalInt(cmdname.."_price")
+							local price = GetConVarNumber(cmdname.."_price")
 							if price == 0 then 
 								price = v.price
 							end
@@ -652,7 +652,7 @@ function EntitiesTab()
 						end
 					end
 					
-					if FoodItems and (GetGlobalInt("foodspawn") ~= 0 or LocalPlayer():Team() == TEAM_COOK) and (GetGlobalInt("hungermod") == 1 or LocalPlayer():Team() == TEAM_COOK) then
+					if FoodItems and (GetConVarNumber("foodspawn") ~= 0 or LocalPlayer():Team() == TEAM_COOK) and (GetConVarNumber("hungermod") == 1 or LocalPlayer():Team() == TEAM_COOK) then
 						for k,v in pairs(FoodItems) do
 							AddEntIcon(v.model, string.format(LANGUAGE.buy_a, "a "..k, "a few bucks"), "/buyfood "..k)
 						end
@@ -1016,7 +1016,7 @@ function RPAdminTab()
 					end
 					if found and type(v) == "table" then
 						local checkbox = vgui.Create("DCheckBoxLabel")
-						checkbox:SetValue(GetGlobalInt(v.var))
+						checkbox:SetValue(GetConVarNumber(v.var))
 						checkbox:SetText(found)
 						function checkbox.Button:Toggle()
 							if self:GetChecked() == nil or not self:GetChecked() then 
@@ -1087,7 +1087,7 @@ function RPAdminTab()
 						slider:SetMin(0)
 						slider:SetMax(3000)
 						slider:SetText(found)
-						slider:SetValue(GetGlobalInt(v.var))
+						slider:SetValue(GetConVarNumber(v.var))
 						
 						function slider.Slider:OnMouseReleased()
 							self:SetDragging( false ) 
@@ -1149,7 +1149,7 @@ function RPLicenseWeaponsTab()
 				if type(v) == "table" and v.name then
 					local checkbox = vgui.Create("DCheckBoxLabel")
 					checkbox:SetText(v.name)
-					checkbox:SetValue(GetGlobalInt("licenseweapon_"..v.class))
+					checkbox:SetValue(GetConVarNumber("licenseweapon_"..v.class))
 					function checkbox.Button:Toggle()
 						if ( self:GetChecked() == nil || !self:GetChecked() ) then 
 							self:SetValue( true ) 
@@ -1178,7 +1178,7 @@ function RPLicenseWeaponsTab()
 						else
 							checkbox:SetText(v.Classname)
 						end
-						checkbox:SetValue(GetGlobalInt("licenseweapon_"..v.Classname))
+						checkbox:SetValue(GetConVarNumber("licenseweapon_"..v.Classname))
 						function checkbox.Button:Toggle()
 							if ( self:GetChecked() == nil || !self:GetChecked() ) then 
 								self:SetValue( true ) 

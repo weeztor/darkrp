@@ -4,18 +4,10 @@ function ccValueCommand(ply, cmd, args)
 	if not valuecmd then return end
 
 	if #args < 1 or not tonumber(args[1]) then
-		if valuecmd.global then
-			if ply:EntIndex() == 0 then
-				print(cmd .. " = " .. tostring(GetGlobalInt(valuecmd.var)))
-			else
-				ply:PrintMessage(2, cmd .. " = " .. tostring(GetGlobalInt(valuecmd.var)))
-			end
+		if ply:EntIndex() == 0 then
+			print(cmd .. " = " .. tostring(GetConVarNumber(valuecmd.var)))
 		else
-			if ply:EntIndex() == 0 then
-				print(cmd .. " = " .. tostring(CfgVars[valuecmd.var]))
-			else
-				ply:PrintMessage(2, cmd .. " = " .. tostring(CfgVars[valuecmd.var]))
-			end
+			ply:PrintMessage(2, cmd .. " = " .. tostring(GetConVarNumber(valuecmd.var)))
 		end
 		return
 	end
@@ -26,12 +18,8 @@ function ccValueCommand(ply, cmd, args)
 	end
 
 	local amount = math.floor(tonumber(args[1]))
-	if amount == GetGlobalInt(valuecmd.var) and (not CfgVars[valuecmd.var] or (CfgVars[valuecmd.var] == amount)) then return end
-	if valuecmd.global then
-		DB.SaveGlobal(valuecmd.var, amount)
-	else
-		DB.SaveSetting(valuecmd.var, amount)
-	end
+	if amount == GetConVarNumber(valuecmd.var) then return end
+	RunConsoleCommand(valuecmd.var, amount)
 
 	local nick = ""
 
@@ -55,19 +43,12 @@ function ccToggleCommand(ply, cmd, args)
 	if not togglecmd then return end
 
 	if #args < 1 or not tonumber(args[1]) then
-		if togglecmd.global then
-			if ply:EntIndex() == 0 then
-				print(cmd .. " = " .. GetGlobalInt(togglecmd.var))
-			else
-				ply:PrintMessage(2, cmd .. " = " .. GetGlobalInt(togglecmd.var))
-			end
+		if ply:EntIndex() == 0 then
+			print(cmd .. " = " .. GetConVarNumber(togglecmd.var))
 		else
-			if ply:EntIndex() == 0 then
-				print(cmd .. " = " .. tostring(CfgVars[togglecmd.var]))
-			else
-				ply:PrintMessage(2, cmd .. " = " .. tostring(CfgVars[togglecmd.var]))
-			end
+			ply:PrintMessage(2, cmd .. " = " .. GetConVarNumber(togglecmd.var))
 		end
+
 		return
 	end
 
@@ -77,7 +58,7 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	local toggle = tonumber(args[1])
-	if toggle == GetGlobalInt(togglecmd.var) and (not CfgVars[togglecmd.var] or (CfgVars[togglecmd.var] == toggle)) then return end
+	if toggle == GetConVarNumber(togglecmd.var) then return end
 
 	if not toggle or (toggle ~= 1 and toggle ~= 0) then
 		if ply:EntIndex() == 0 then
@@ -88,11 +69,7 @@ function ccToggleCommand(ply, cmd, args)
 		return
 	end
 
-	if togglecmd.global then
-		DB.SaveGlobal(togglecmd.var, toggle)
-	else
-		DB.SaveSetting(togglecmd.var, toggle)
-	end
+	RunConsoleCommand(togglecmd.var, toggle)
 
 	local nick = ""
 
@@ -765,7 +742,7 @@ end
 concommand.Add("rp_revoke", ccRevokePriv)
 
 function ccSWEPSpawn(ply, cmd, args)
-	if CfgVars["adminsweps"] == 1 then
+	if GetConVarNumber("adminsweps") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_giveswep"))
 			return
@@ -777,7 +754,7 @@ end
 concommand.Add("gm_giveswep", ccSWEPSpawn)
 
 function ccSWEPGive(ply, cmd, args)
-	if CfgVars["adminsweps"] == 1 then
+	if GetConVarNumber("adminsweps") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_spawnswep"))
 			return
@@ -789,7 +766,7 @@ end
 concommand.Add("gm_spawnswep", ccSWEPGive)
 
 function ccSENTSPawn(ply, cmd, args)
-	if CfgVars["adminsents"] == 1 then
+	if GetConVarNumber("adminsents") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnsent"))
 			return

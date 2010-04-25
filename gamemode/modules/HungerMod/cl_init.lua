@@ -20,22 +20,22 @@ HELP_CATEGORY_HUNGERMOD = #HelpCategories + 1
 
 AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
 
-AddToggleCommand("rp_hungermod", "hungermod", true)
+AddToggleCommand("rp_hungermod", "hungermod", 1)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungermod <1 or 0> - Enable/disable hunger mod")
 
-AddToggleCommand("rp_foodspawn", "foodspawn", true)
+AddToggleCommand("rp_foodspawn", "foodspawn", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_foodspawn - Whether players(non-cooks) can spawn food props or not")
 
-AddToggleCommand("rp_foodspecialcost", "foodpay", false)
+AddToggleCommand("rp_foodspecialcost", "foodpay", 0)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodspecialcost <1 or 0> - Enable/disable whether spawning food props have a special cost")
 
-AddValueCommand("rp_foodcost", "foodcost", false)
+AddValueCommand("rp_foodcost", "foodcost", 15)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodcost <Amount> - Set food cost")
 
-AddValueCommand("rp_hungerspeed", "hungerspeed", false)
+AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungerspeed <Amount> - Set the rate at which players will become hungry (2 is the default)")
 
-AddValueCommand("rp_starverate", "starverate", false)
+AddValueCommand("rp_starverate", "starverate", 3)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_starverate <Amount> - How much health that is taken away every second the player is starving  (3 is the default)")
 
 
@@ -50,7 +50,7 @@ function HM.HUDPaint()
 	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 	LocalPlayer().DarkRPVars.Energy = LocalPlayer().DarkRPVars.Energy or 0
 	
-	if GetGlobalInt("hungermod") == 1 or LocalPlayer().DarkRPVars.LocalHungerMod == 1 then
+	if GetConVarNumber("hungermod") == 1 or LocalPlayer().DarkRPVars.LocalHungerMod == 1 then
 		local x = 7
 		local y = ScrH() - 9
 

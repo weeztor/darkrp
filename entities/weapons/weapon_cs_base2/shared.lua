@@ -72,7 +72,7 @@ end
 function SWEP:Holster()
 	if CLIENT then return end
 	if self:GetIronsights() then
-		GAMEMODE:SetPlayerSpeed(self.Owner, CfgVars["wspd"], CfgVars["rspd"])
+		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 	end
 	return true
 end
@@ -93,7 +93,7 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
 	if not self:CanPrimaryAttack() then self:SetIronsights(false) return end
-	if not self.Ironsights and GetGlobalInt("ironshoot") ~= 0 then return end
+	if not self.Ironsights and GetConVarNumber("ironshoot") ~= 0 then return end
 	-- Play shoot sound
 	self.Weapon:EmitSound(self.Primary.Sound)
 
@@ -180,7 +180,7 @@ function SWEP:GetViewModelPosition(pos, ang)
 
 	local fIronTime = self.fIronTime or 0
 	
-	if GetGlobalInt("ironshoot") ~= 0 then
+	if GetConVarNumber("ironshoot") ~= 0 then
 		ang:RotateAroundAxis(ang:Right(), -15)
 	end
 	
@@ -205,7 +205,7 @@ function SWEP:GetViewModelPosition(pos, ang)
 		ang:RotateAroundAxis(ang:Forward(), 	self.IronSightsAng.z * Mul)
 	end
 	
-	if GetGlobalInt("ironshoot") ~= 0 then
+	if GetConVarNumber("ironshoot") ~= 0 then
 		ang:RotateAroundAxis(ang:Right(), Mul * 15)
 	else
 		ang:RotateAroundAxis(ang:Right(), Mul)
@@ -229,10 +229,10 @@ SetIronsights
 function SWEP:SetIronsights(b)
 	if b and SERVER then 
 		self:SetWeaponHoldType(self.HoldType)
-		GAMEMODE:SetPlayerSpeed(self.Owner, CfgVars["wspd"] / 3, CfgVars["rspd"] / 3)
+		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3)
 	elseif SERVER then
 		self:SetWeaponHoldType("normal")
-		GAMEMODE:SetPlayerSpeed(self.Owner, CfgVars["wspd"], CfgVars["rspd"])
+		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 	end
 	self.Ironsights = b
 end

@@ -5,8 +5,8 @@ DB.privcache = {}
  ---------------------------------------------------------*/
 function DB.Init()
 	sql.Begin()
-		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_settings('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
-		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_globals('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
+		//sql.Query("CREATE TABLE IF NOT EXISTS darkrp_settings('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
+		//sql.Query("CREATE TABLE IF NOT EXISTS darkrp_globals('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_tspawns('id' INTEGER NOT NULL, 'map' TEXT NOT NULL, 'team' INTEGER NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL, PRIMARY KEY('id'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_privs('steam' TEXT NOT NULL, 'admin' INTEGER NOT NULL, 'mayor' INTEGER NOT NULL, 'cp' INTEGER NOT NULL, 'tool' INTEGER NOT NULL, 'phys' INTEGER NOT NULL, 'prop' INTEGER NOT NULL, PRIMARY KEY('steam'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_salaries('steam' TEXT NOT NULL, 'salary' INTEGER NOT NULL, PRIMARY KEY('steam'));")
@@ -24,13 +24,6 @@ function DB.Init()
 	DB.CreateZombiePos()
 	DB.SetUpNonOwnableDoors()
 	DB.SetUpGroupOwnableDoors()
-	
-	--Set default settings
-	RefreshRPSettings()
-	
-	-- load user settings
-	DB.RetrieveGlobals()
-	DB.RetrieveSettings()
 end
 
 /*---------------------------------------------------------
@@ -474,7 +467,7 @@ end
 function DB.RetrieveMoney(ply)
 	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
-	local startingAmount = CfgVars["startingmoney"] or 500
+	local startingAmount = GetConVarNumber("startingmoney") or 500
 		
 	local r = sql.QueryValue("SELECT amount FROM darkrp_wallets WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
 	if r then
@@ -491,7 +484,7 @@ function DB.ResetAllMoney(ply,cmd,args)
 	if not ply:IsSuperAdmin() then return end
 	sql.Query("DELETE FROM darkrp_wallets;")
 	for k,v in pairs(player.GetAll()) do
-		DB.StoreMoney(v, CfgVars["startingmoney"] or 500)
+		DB.StoreMoney(v, GetConVarNumber("startingmoney") or 500)
 	end
 	if ply:IsPlayer() then
 		NotifyAll(1,4, string.format(LANGUAGE.reset_money, ply:Nick()))
@@ -528,7 +521,7 @@ end
 function DB.RetrieveSalary(ply)
 	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
-	local normal = GetGlobalInt("normalsalary")
+	local normal = GetConVarNumber("normalsalary")
 
 	local r = sql.QueryValue("SELECT salary FROM darkrp_salaries WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 	if not r then
@@ -612,134 +605,10 @@ function DB.SetUpGroupOwnableDoors()
 end
 
 /*---------------------------------------------------------
- Settings and globals
- ---------------------------------------------------------*/
-function DB.RetrieveSettings()
-	local r = sql.Query("SELECT key, value FROM darkrp_settings;")
-	if not r then return false end
-
-	for k, v in pairs(r) do
-		CfgVars[v.key] = tonumber(v.value)
-		SetGlobalInt(v.key, v.value)-- Set the global INT so clients can access this information in the admin menu! This does not save though!
-	end
-	return true
-end
-
-function DB.SaveSetting(key, value)
-	local r = sql.QueryValue("SELECT value FROM darkrp_settings WHERE key = "..sql.SQLStr(key)..";")
-	if not r then
-		sql.Query("INSERT INTO darkrp_settings VALUES(" .. sql.SQLStr(key) .. ", " .. value .. ");")
-		print("Created", key, "=", value)
-	elseif tonumber(r) ~= value then
-		sql.Query("UPDATE darkrp_settings SET value = " .. value .. " WHERE key = " .. sql.SQLStr(key) .. ";")
-		print("updated", key, "to", value)
-	end
-	CfgVars[key] = value
-	SetGlobalInt(key, value)-- Set the global INT so clients can access this information in the admin menu! This does not save though!
-end
-
-function DB.RemoveSettings()
-	sql.Query("DELETE FROM darkrp_settings;")
-end
-
-function DB.RetrieveGlobals()
-	local r = sql.Query("SELECT key, value FROM darkrp_globals;")
-	if not r then return false end
-	
-	for k, v in pairs(r) do
-		CfgVars[v.key] = tonumber(v.value)
-		SetGlobalInt(v.key, tonumber(v.value))
-	end
-	if #r < 30 then
-		RefreshGlobals()
-	end
-	return r
-end
-
-function DB.SaveGlobal(key, value)
-	local r = sql.QueryValue("SELECT value FROM darkrp_globals WHERE key = "..sql.SQLStr(key)..";")
-	if not r then
-		sql.Query("INSERT INTO darkrp_globals VALUES(" .. sql.SQLStr(key) .. ", " .. value .. ");")
-		print("Created", key, "=", value)
-	elseif tonumber(r) ~= value then
-		sql.Query("UPDATE darkrp_globals SET value = " .. value .. " WHERE key = " .. sql.SQLStr(key) .. ";")
-		print("updated", key, "to", value)
-	end
-	CfgVars[key] = tonumber(value)
-	SetGlobalInt(key, value)
-end
-
-function DB.RemoveGlobals()
-	sql.Query("DELETE FROM darkrp_globals;")
-end
-
-function ResetAllRPSettings(ply,cmd,args)
-	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		Notify(ply, 1, 5, string.format(LANGUAGE.need_sadmin, "rp_resetallsettings"))
-		return
-	end
-	Notify(ply, 1, 4, LANGUAGE.reset_settings)
-	RefreshRPSettings(true)
-	RefreshGlobals()
-end
-concommand.Add("rp_ResetAllSettings", ResetAllRPSettings)
-
-function RefreshGlobals()
-	DB.SaveGlobal("mprintamount", 250)
-	DB.SaveGlobal("drugpayamount", 15)
-	DB.SaveGlobal("ammopistolcost", 30)
-	DB.SaveGlobal("ammoriflecost", 60)
-	DB.SaveGlobal("ammoshotguncost", 70)
-	DB.SaveGlobal("healthcost", 60)
-	DB.SaveGlobal("jailtimer", 120)
-	DB.SaveGlobal("microwavefoodcost", 30)
-	DB.SaveGlobal("maxcopsalary", 100)
-	DB.SaveGlobal("maxdrugfood", 2)
-	DB.SaveGlobal("npckillpay", 10)
-	DB.SaveGlobal("jobtag", 1)
-	DB.SaveGlobal("globalshow", 0)
-	DB.SaveGlobal("deathnotice", 1)
-	DB.SaveGlobal("normalsalary", 45)
-	DB.SaveGlobal("globaltags", 1)
-	DB.SaveGlobal("nametag", 1)
-	DB.SaveGlobal("deathblack", 0)
-	DB.SaveGlobal("maxnormalsalary", 90)
-	DB.SaveGlobal("maxmayorsetsalary", 90)
-	
-	DB.SaveGlobal("licenseweapon_weapon_physcannon", 1)
-	DB.SaveGlobal("licenseweapon_weapon_physgun", 1)
-	DB.SaveGlobal("licenseweapon_weapon_crowbar", 1)
-	DB.SaveGlobal("licenseweapon_weapon_stunstick", 1)
-	DB.SaveGlobal("licenseweapon_weapon_pistol", 0)
-	DB.SaveGlobal("licenseweapon_weapon_357",	0)
-	DB.SaveGlobal("licenseweapon_weapon_smg1", 0)
-	DB.SaveGlobal("licenseweapon_weapon_shotgun", 0)
-	DB.SaveGlobal("licenseweapon_weapon_crossbow", 0)
-	DB.SaveGlobal("licenseweapon_weapon_ar2", 0)
-	DB.SaveGlobal("licenseweapon_weapon_bugbait", 1)
-	DB.SaveGlobal("licenseweapon_weapon_rpg", 0)
-	DB.SaveGlobal("licenseweapon_gmod_camera", 1)
-	
-	local whitelist = {"keys", "gmod_camera", "weaponchecker", "med_kit", "arrest_stick", "unarrest_stick", "stunstick", "door_ram", "lockpick", "bite", "pcmod_", "gmod_tool", "pocket"}
-	for k,v in pairs(weapons.GetList()) do
-		local allowed = false
-		for a,b in pairs(whitelist) do
-			if string.find(string.lower(v.Classname), b) then
-				DB.SaveGlobal("licenseweapon_"..string.lower(v.Classname), 1)
-				allowed = true
-			end
-		end
-		if not allowed then
-			DB.SaveGlobal("licenseweapon_"..string.lower(v.Classname), 0)
-		end
-	end
-end
-
-/*---------------------------------------------------------
  Logging
  ---------------------------------------------------------*/
 function DB.Log(text)
-	if not util.tobool(CfgVars["logging"]) or not text then return end
+	if not util.tobool(GetConVarNumber("logging")) or not text then return end
 	if not DB.File then -- The log file of this session, if it's not there then make it!
 		if not file.IsDir("DarkRP_logs") then
 			file.CreateDir("DarkRP_logs")

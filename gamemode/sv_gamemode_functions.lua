@@ -17,7 +17,7 @@ function GM:PlayerSpawnProp(ply, model)
 	if string.find(model,  "//") then Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model) 
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with an invalid path "..model) return false end
 	-- Banned props take precedence over allowed props
-	if CfgVars["banprops"] == 1 then
+	if GetConVarNumber("banprops") == 1 then
 		for k, v in pairs(BannedProps) do
 			if string.lower(v) == string.lower(model) then 
 				Notify(ply, 1, 4, "You can't spawn this prop as it is banned. "..model) 
@@ -28,9 +28,9 @@ function GM:PlayerSpawnProp(ply, model)
 	end
 
 	-- If prop spawning is enabled or the user has admin or prop privileges
-	if CfgVars["propspawning"] == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PROP) then
+	if GetConVarNumber("propspawning") == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PROP) then
 		-- If we are specifically allowing certain props, if it's not in the list, allowed will remain false
-		if CfgVars["allowedprops"] == 1 then
+		if GetConVarNumber("allowedprops") == 1 then
 			for k, v in pairs(AllowedProps) do
 				if v == model then allowed = true end
 			end
@@ -41,13 +41,13 @@ function GM:PlayerSpawnProp(ply, model)
 	end
 
 	if allowed then
-		if CfgVars["proppaying"] == 1 then
-			if ply:CanAfford(CfgVars["propcost"]) then
-				Notify(ply, 1, 4, "Deducted " .. CUR .. CfgVars["propcost"])
-				ply:AddMoney(-CfgVars["propcost"])
+		if GetConVarNumber("proppaying") == 1 then
+			if ply:CanAfford(GetConVarNumber("propcost")) then
+				Notify(ply, 1, 4, "Deducted " .. CUR .. GetConVarNumber("propcost"))
+				ply:AddMoney(-GetConVarNumber("propcost"))
 				return true
 			else
-				Notify(ply, 1, 4, "Need " .. CUR .. CfgVars["propcost"])
+				Notify(ply, 1, 4, "Need " .. CUR .. GetConVarNumber("propcost"))
 				return false
 			end
 		else
@@ -135,9 +135,9 @@ function GM:OnNPCKilled(victim, ent, weapon)
 		end
 
 		-- if we know by now who killed the NPC, pay them.
-		if ent and CfgVars["npckillpay"] > 0 then
-			ent:AddMoney(CfgVars["npckillpay"])
-			Notify(ent, 1, 4, string.format(LANGUAGE.npc_killpay, CUR .. CfgVars["npckillpay"]))
+		if ent and GetConVarNumber("npckillpay") > 0 then
+			ent:AddMoney(GetConVarNumber("npckillpay"))
+			Notify(ent, 1, 4, string.format(LANGUAGE.npc_killpay, CUR .. GetConVarNumber("npckillpay")))
 		end
 	end
 end
@@ -176,9 +176,9 @@ function GM:PlayerCanHearPlayersVoice(listener, talker)
 		return false
 	end
 	
-	if CfgVars["voiceradius"] == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
+	if GetConVarNumber("voiceradius") == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
 		return true
-	elseif CfgVars["voiceradius"] == 1 then
+	elseif GetConVarNumber("voiceradius") == 1 then
 		return false
 	end
 	return true
@@ -204,7 +204,7 @@ function GM:CanTool(ply, trace, mode)
 			return false
 		end
 
-		if trace.Entity:IsVehicle() and mode == "nocollide" and CfgVars["allowvnocollide"] == 0 then
+		if trace.Entity:IsVehicle() and mode == "nocollide" and GetConVarNumber("allowvnocollide") == 0 then
 			return false
 		end
 	end
@@ -224,7 +224,7 @@ function GM:CanPlayerSuicide(ply)
 end
 
 function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
-	if tobool(CfgVars["dropweapondeath"]) and ValidEntity(ply:GetActiveWeapon()) then
+	if tobool(GetConVarNumber("dropweapondeath")) and ValidEntity(ply:GetActiveWeapon()) then
 		ply:DropWeapon(ply:GetActiveWeapon())
 	end
 	ply:CreateRagdoll()
@@ -239,7 +239,7 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
 end
 
 function GM:PlayerDeath(ply, weapon, killer)
-	if GetGlobalInt("deathblack") == 1 then
+	if GetConVarNumber("deathblack") == 1 then
 		local RP = RecipientFilter()
 		RP:RemoveAllPlayers()
 		RP:AddPlayer(ply)
@@ -249,13 +249,13 @@ function GM:PlayerDeath(ply, weapon, killer)
 		umsg.End()
 		RP:AddAllPlayers()
 	end
-	if tobool(GetGlobalInt("deathpov")) then
+	if tobool(GetConVarNumber("deathpov")) then
 		SendUserMessage("DarkRPEffects", ply, "deathPOV", "1")
 	end
 	UnDrugPlayer(ply)
 
 	if weapon:IsVehicle() and weapon:GetDriver():IsPlayer() then killer = weapon:GetDriver() end
-	if GetGlobalInt("deathnotice") == 1 then
+	if GetConVarNumber("deathnotice") == 1 then
 		self.BaseClass:PlayerDeath(ply, weapon, killer)
 	end
 
@@ -265,20 +265,20 @@ function GM:PlayerDeath(ply, weapon, killer)
 
 	if RPArrestedPlayers[ply:SteamID()] then
 		-- If the player died in jail, make sure they can't respawn until their jail sentance is over
-		ply.NextSpawnTime = CurTime() + math.ceil(GetGlobalInt("jailtimer") - (CurTime() - ply.LastJailed)) + 1
+		ply.NextSpawnTime = CurTime() + math.ceil(GetConVarNumber("jailtimer") - (CurTime() - ply.LastJailed)) + 1
 		for a, b in pairs(player.GetAll()) do
 			b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.died_in_jail, ply:Nick()))
 		end 
 		Notify(ply, 4, 4, LANGUAGE.dead_in_jail)
 	else
 		-- Normal death, respawning.
-		ply.NextSpawnTime = CurTime() + CfgVars["respawntime"]
+		ply.NextSpawnTime = CurTime() + GetConVarNumber("respawntime")
 	end
 	ply:GetTable().DeathPos = ply:GetPos()
 	
-	if tobool(CfgVars["dropmoneyondeath"]) and tonumber(CfgVars["deathfee"]) then
-		local amount = CfgVars["deathfee"]
-		if not ply:CanAfford(CfgVars["deathfee"]) then
+	if tobool(GetConVarNumber("dropmoneyondeath")) then
+		local amount = GetConVarNumber("deathfee")
+		if not ply:CanAfford(GetConVarNumber("deathfee")) then
 			amount = ply.DarkRPVars.Money
 		end
 		
@@ -286,13 +286,13 @@ function GM:PlayerDeath(ply, weapon, killer)
 		DarkRPCreateMoneyBag(ply:GetPos(), amount)
 	end
 
-	if CfgVars["dmautokick"] == 1 and killer and killer:IsPlayer() and killer ~= ply then
+	if GetConVarNumber("dmautokick") == 1 and killer and killer:IsPlayer() and killer ~= ply then
 		if not killer.kills or killer.kills == 0 then
 			killer.kills = 1
-			timer.Simple(CfgVars["dmgracetime"], killer.ResetDMCounter, killer)
+			timer.Simple(GetConVarNumber("dmgracetime"), killer.ResetDMCounter, killer)
 		else
 			-- if this player is going over their limit, kick their ass
-			if killer.kills + 1 > CfgVars["dmmaxkills"] then
+			if killer.kills + 1 > GetConVarNumber("dmmaxkills") then
 				game.ConsoleCommand("kickid " .. killer:UserID() .. " Auto-kicked. Excessive Deathmatching.\n")
 			else
 				-- killed another player
@@ -308,7 +308,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	end
 	
 	ply:GetTable().ConfisquatedWeapons = nil
-	if tobool(CfgVars["droppocketdeath"]) then
+	if tobool(GetConVarNumber("droppocketdeath")) then
 		if ply.Pocket then 
 			for k, v in pairs(ply.Pocket) do
 				if ValidEntity(v) then
@@ -333,9 +333,9 @@ end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
 	if RPArrestedPlayers[ply:SteamID()] then return false end
-	if ply:IsAdmin() and CfgVars["AdminsSpawnWithCopWeapons"] == 1 then return true end
-	if CfgVars["license"] == 1 and not ply.DarkRPVars.HasGunlicense and not ply:GetTable().RPLicenseSpawn then
-		if GetGlobalInt("licenseweapon_"..string.lower(weapon:GetClass())) == 1 then
+	if ply:IsAdmin() and GetConVarNumber("AdminsSpawnWithCopWeapons") == 1 then return true end
+	if GetConVarNumber("license") == 1 and not ply.DarkRPVars.HasGunlicense and not ply:GetTable().RPLicenseSpawn then
+		if GetConVarNumber("licenseweapon_"..string.lower(weapon:GetClass())) == 1 then
 			return true
 		end
 		return false
@@ -373,7 +373,7 @@ concommand.Add("_rp_ChosenModel", SetPlayerModel)
 
 function GM:PlayerSetModel(ply)
 	local EndModel = ""
-	if CfgVars["enforceplayermodel"] == 1 then
+	if GetConVarNumber("enforceplayermodel") == 1 then
 		for k,v in pairs(RPExtraTeams) do
 			if ply:Team() == k then
 				if type(v.model) == "table" then
@@ -450,12 +450,12 @@ function GM:PlayerSelectSpawn(ply)
 	
 	
 	local CustomSpawnPos = DB.RetrieveTeamSpawnPos(ply)
-	if CfgVars["customspawns"] == 1 and not RPArrestedPlayers[ply:SteamID()] and CustomSpawnPos then
+	if GetConVarNumber("customspawns") == 1 and not RPArrestedPlayers[ply:SteamID()] and CustomSpawnPos then
 		POS = CustomSpawnPos[math.random(1, #CustomSpawnPos)]
 	end
 	
 	-- Spawn where died in certain cases
-	if (CfgVars["strictsuicide"] == 1 or RPArrestedPlayers[ply:SteamID()]) and ply:GetTable().DeathPos and not (RPArrestedPlayers[ply:SteamID()]) then
+	if (GetConVarNumber("strictsuicide") == 1 or RPArrestedPlayers[ply:SteamID()]) and ply:GetTable().DeathPos and not (RPArrestedPlayers[ply:SteamID()]) then
 		POS = ply:GetTable().DeathPos
 	end
 	
@@ -508,9 +508,9 @@ end
 function GM:PlayerSpawn(ply)
 	ply:CrosshairEnable()
 	ply:UnSpectate()
-	ply:SetHealth(tonumber(CfgVars["startinghealth"]) or 100)
+	ply:SetHealth(tonumber(GetConVarNumber("startinghealth")) or 100)
 
-	if CfgVars["crosshair"] == 0 then
+	if GetConVarNumber("xhair") == 0 then
 		ply:CrosshairDisable()
 	end
 	
@@ -537,13 +537,13 @@ function GM:PlayerSpawn(ply)
 	end	
 	
 
-	if CfgVars["babygod"] == 1 and not ply.IsSleeping then
+	if GetConVarNumber("babygod") == 1 and not ply.IsSleeping then
 		ply.Babygod = true
 		ply:GodEnable()
 		local r,g,b,a = ply:GetColor()
 		ply:SetColor(r, g, b, 100)
 		ply:SetCollisionGroup(  COLLISION_GROUP_WORLD )
-		timer.Simple(CfgVars["babygodtime"] or 5, function()
+		timer.Simple(GetConVarNumber("babygodtime"), function()
 			if not ValidEntity(ply) then return end
 			ply.Babygod = false
 			ply:SetColor(r, g, b, a)
@@ -553,9 +553,9 @@ function GM:PlayerSpawn(ply)
 	end
 	ply.IsSleeping = false
 	
-	GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] )
+	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") )
 	if ply:Team() == TEAM_CHIEF or ply:Team() == TEAM_POLICE then
-		GAMEMODE:SetPlayerSpeed(ply, CfgVars["wspd"], CfgVars["rspd"] + 10 )
+		GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") + 10 )
 	end
 
 	ply:Extinguish()
@@ -589,19 +589,19 @@ function GM:PlayerLoadout(ply)
 	ply:Give("weapon_physcannon")
 	ply:Give("gmod_camera")
 	
-	if CfgVars["toolgun"] == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PTOOL) then
+	if GetConVarNumber("toolgun") == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PTOOL) then
 		ply:Give("gmod_tool")
 	end
 	
-	if CfgVars["pocket"] == 1 then
+	if GetConVarNumber("pocket") == 1 then
 		ply:Give("pocket")
 	end
 	
-	if CfgVars["physgun"] == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PHYS) then
+	if GetConVarNumber("physgun") == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PHYS) then
 		ply:Give("weapon_physgun")
 	end
 	
-	if ply:HasPriv(ADMIN) and CfgVars["AdminsSpawnWithCopWeapons"] == 1 then
+	if ply:HasPriv(ADMIN) and GetConVarNumber("AdminsSpawnWithCopWeapons") == 1 then
 		ply:Give("door_ram")
 		ply:Give("arrest_stick")
 		ply:Give("unarrest_stick")
@@ -652,10 +652,10 @@ function GM:PlayerDisconnected(ply)
 	vote.DestroyVotesWithEnt(ply)
 	-- If you're arrested when you disconnect, you will serve your time again when you reconnect!
 	if RPArrestedPlayers and RPArrestedPlayers[ply:SteamID()]then
-		DB.StoreJailStatus(ply, math.ceil(GetGlobalInt("jailtimer")))
+		DB.StoreJailStatus(ply, math.ceil(GetConVarNumber("jailtimer")))
 	end
 	
-	if ply:Team() == TEAM_MAYOR and tobool(GetGlobalInt("DarkRP_LockDown")) then -- Stop the lockdown
+	if ply:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then -- Stop the lockdown
 		UnLockdown(ply)
 	end
 	

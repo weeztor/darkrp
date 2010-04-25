@@ -18,10 +18,12 @@ DarkRP 2.4.1 SVN
 [FIX] drop pickup get ammo glitch
 [FIX] Sitting incorrectly in vehicles
 [FIX] Switchjob not working when player can't change job for some reason
+[FIX] Modules not working when folder name was changed
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
 [REMOVE] VoteCopOn. It's bullshit
+[REMOVE] All global integers. Result: Less server crashes, less buffer overflow in net message, faster spawning time
 
 DarkRP 2.4.1
 
