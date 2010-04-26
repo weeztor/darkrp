@@ -263,7 +263,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 
 	if ply:InVehicle() then ply:ExitVehicle() end
 
-	if RPArrestedPlayers[ply:SteamID()] then
+	if RPArrestedPlayers[ply:SteamID()] and not tobool(GetConVarNumber("respawninjail"))  then
 		-- If the player died in jail, make sure they can't respawn until their jail sentance is over
 		ply.NextSpawnTime = CurTime() + math.ceil(GetConVarNumber("jailtimer") - (CurTime() - ply.LastJailed)) + 1
 		for a, b in pairs(player.GetAll()) do
@@ -274,7 +274,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		-- Normal death, respawning.
 		ply.NextSpawnTime = CurTime() + GetConVarNumber("respawntime")
 	end
-	ply:GetTable().DeathPos = ply:GetPos()
+	ply.DeathPos = ply:GetPos()
 	
 	if tobool(GetConVarNumber("dropmoneyondeath")) then
 		local amount = GetConVarNumber("deathfee")
@@ -301,10 +301,10 @@ function GM:PlayerDeath(ply, weapon, killer)
 		end
 	end
 
-	if ValidEntity(ply) and ply ~= killer or ply:GetTable().Slayed then
+	if ValidEntity(ply) and (ply ~= killer or ply:GetTable().Slayed) and not RPArrestedPlayers[ply:SteamID()] then
 		ply:SetDarkRPVar("wanted", false)
-		ply:GetTable().DeathPos = nil
-		ply:GetTable().Slayed = false
+		ply.DeathPos = nil
+		ply.Slayed = false
 	end
 	
 	ply:GetTable().ConfisquatedWeapons = nil
@@ -455,7 +455,7 @@ function GM:PlayerSelectSpawn(ply)
 	end
 	
 	-- Spawn where died in certain cases
-	if (GetConVarNumber("strictsuicide") == 1 or RPArrestedPlayers[ply:SteamID()]) and ply:GetTable().DeathPos and not (RPArrestedPlayers[ply:SteamID()]) then
+	if (GetConVarNumber("strictsuicide") == 1 or RPArrestedPlayers[ply:SteamID()]) and ply:GetTable().DeathPos then
 		POS = ply:GetTable().DeathPos
 	end
 	
@@ -525,17 +525,6 @@ function GM:PlayerSpawn(ply)
 		umsg.String("0")
 	umsg.End()
 	RP:AddAllPlayers()
-	
-	-- If the player for some magical reason managed to respawn while jailed then re-jail the bastard.
-	if RPArrestedPlayers[ply:SteamID()] and ply:GetTable().DeathPos then
-		-- Not getting away that easily, Sonny Jim. -- Who the hell is Sonny Jim?
-		if DB.RetrieveJailPos() then
-			ply:Arrest()
-		else
-			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "arrest"))
-		end
-	end	
-	
 
 	if GetConVarNumber("babygod") == 1 and not ply.IsSleeping then
 		ply.Babygod = true
@@ -650,10 +639,6 @@ function GM:PlayerDisconnected(ply)
 		end
 	end
 	vote.DestroyVotesWithEnt(ply)
-	-- If you're arrested when you disconnect, you will serve your time again when you reconnect!
-	if RPArrestedPlayers and RPArrestedPlayers[ply:SteamID()]then
-		DB.StoreJailStatus(ply, math.ceil(GetConVarNumber("jailtimer")))
-	end
 	
 	if ply:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then -- Stop the lockdown
 		UnLockdown(ply)
