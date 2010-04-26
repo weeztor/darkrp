@@ -404,7 +404,7 @@ function meta:Arrest(time, rejoin)
 		if not time or time == 0 then
 			time = GetConVarNumber("jailtimer")
 		end
-		DB.StoreJailStatus(self, time)
+
 		self:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.youre_arrested, time))
 		for k, v in pairs(player.GetAll()) do
 			if v ~= self then
@@ -437,7 +437,6 @@ function meta:Unarrest(ID)
 				self:SetPos(pos)
 			end
 			GAMEMODE:PlayerLoadout(self)
-			DB.StoreJailStatus(self, 0)
 			timer.Stop(self .. "jailtimer")
 			timer.Destroy(self .. "jailtimer")
 			NotifyAll(1, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
@@ -450,13 +449,11 @@ function meta:Unarrest(ID)
 				self:SetPos(pos)
 			end
 			GAMEMODE:PlayerLoadout(self)
-			DB.StoreJailStatus(self, 0)
 			timer.Stop(self:SteamID() .. "jailtimer")
 			timer.Destroy(self:SteamID() .. "jailtimer")
 			NotifyAll(1, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
 		elseif not self and RPArrestedPlayers[self:SteamID()] then
 			RPArrestedPlayers[self:SteamID()] = nil
-			DB.StoreJailStatus(self, 0)
 		end
 	end
 	

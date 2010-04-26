@@ -317,7 +317,7 @@ function DB.RetrieveJailPos()
 	-- Retrieve the least recently used jail position
 	local now = CurTime()
 	local oldest = 0
-	local ret = nil
+	local ret = r[1] -- Select the first one if there's only one
 	
 	for _, row in pairs(r) do
 		if (now - tonumber(row.lastused)) > oldest then
@@ -325,36 +325,16 @@ function DB.RetrieveJailPos()
 			ret = row
 		end
 	end
-	if not ret then return end
 	-- Mark that position as having been used just now
 	sql.Query("UPDATE darkrp_jailpositions SET lastused = " .. CurTime() .. " WHERE map = " .. sql.SQLStr(map) .. " AND x = " .. ret.x .. " AND y = " .. ret.y .. " AND z = " .. ret.z .. ";")
 
 	return Vector(ret.x, ret.y, ret.z)
 end
+-- Set the lastused of all jailpositions to 0 because the server just started
+sql.Query("UPDATE darkrp_jailpositions SET lastused = 0;")
 
 function DB.CountJailPos()
 	return tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";"))
-end
-
-function DB.StoreJailStatus(ply, time)
-	local steamID = ply:SteamID()
-	-- Is there an existing outstanding jail sentence for this player?
-	local r = tonumber(sql.QueryValue("SELECT time FROM darkrp_wiseguys WHERE steam = " .. sql.SQLStr(steamID) .. ";"))
-
-	
-	if not r and time ~= 0 then
-		-- If there is no jail record for this player and we're not trying to clear an existing one
-		sql.Query("INSERT INTO darkrp_wiseguys VALUES(" .. sql.SQLStr(steamID) .. ", " .. time .. ");")
-	else
-		-- There is a jail record for this player
-		if time == 0 then
-			-- If we are reducing their jail time to zero, delete their record
-			sql.Query("DELETE FROM darkrp_wiseguys WHERE steam = " .. sql.SQLStr(steamID) .. ";")
-		else
-			-- Increase this player's sentence by the amount specified
-			sql.Query("UPDATE darkrp_wiseguys SET time = " .. r + time .. " WHERE steam = " .. sql.SQLStr(steamID) .. ");")
-		end
-	end
 end
 
 local function FixDarkRPTspawnsTable()
@@ -414,16 +394,6 @@ end
 /*---------------------------------------------------------
 Players 
  ---------------------------------------------------------*/
-function DB.RetrieveJailStatus(ply)
-	-- How much time does this player owe in jail?
-	local r = tonumber(sql.QueryValue("SELECT time FROM darkrp_wiseguys WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";"))
-	if r then
-		return r
-	else
-		return 0
-	end
-end
-
 function DB.StoreRPName(ply, name)
 	if not name or string.len(name) < 2 then return end
 	local r = sql.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")

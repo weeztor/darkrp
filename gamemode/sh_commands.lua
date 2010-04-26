@@ -261,6 +261,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowvehicleowning - Enable/disa
 AddToggleCommand("rp_deathpov", "deathpov", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_deathpov - Enable/disable whether people see their death in first person view")
 
+AddToggleCommand("rp_respawninjail", "respawninjail", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_respawninjail - Enable/disable whether people can respawn in jail when they die")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------

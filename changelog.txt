@@ -9,6 +9,7 @@ DarkRP 2.4.1 SVN
 [ADD] Rp_vote, vote with a keybind! bind a key to rp_vote 1 and rp_vote 0 to vote yes or no without clicking!
 [ADD] Lockdown stops when mayor changes job or leaves server
 [ADD] rp_DeathPOV: Enable/disable whether people see their death in first person view
+[ADD] rp_respawninjail - Enable/disable whether people can respawn in jail when they die (default on)
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo
@@ -19,6 +20,7 @@ DarkRP 2.4.1 SVN
 [FIX] Sitting incorrectly in vehicles
 [FIX] Switchjob not working when player can't change job for some reason
 [FIX] Modules not working when folder name was changed
+[FIX] Jail positions not saving
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
