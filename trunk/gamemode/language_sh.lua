@@ -288,17 +288,6 @@ rp_languages.english = {
 	"Type /buyfood <Type> (e.g: /buyfood melon)",
 	"Type /rpname <Name> to choose your roleplay name.",
 	"Type /call <Name> to call someone!",
-	"Prop boosting is allowed",
-	"Prop surfing is allowed",
-	"Prop lifting is allowed",
-	"Prop wall cling is allowed",
-	"Prop climbing is allowed",
-	"Prop jumping is allowed",
-	"Prop descending is allowed",
-	"Prop godding is allowed",
-	"Prop shielding is allowed in cases of RDM",
-	"Prop killing is allowed when killing spammers or RDM'ers",
-	"Prop clipping is not allowed"
 	}
 }
 
