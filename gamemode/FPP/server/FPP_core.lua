@@ -465,7 +465,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 			end
 		end
 	end
-	return GAMEMODE:CanTool(ply, trace, tool)
+	return
 end
 hook.Add("CanTool", "FPP.Protect.CanTool", FPP.Protect.CanTool)
 
