@@ -542,9 +542,13 @@ function GM:PlayerSpawn(ply)
 	end
 	ply.IsSleeping = false
 	
-	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") )
+	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 	if ply:Team() == TEAM_CHIEF or ply:Team() == TEAM_POLICE then
-		GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") + 10 )
+		GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") + 10)
+	end
+	
+	if RPArrestedPlayers[ply:SteamID()] then
+		GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("aspd"), GetConVarNumber("aspd"))
 	end
 
 	ply:Extinguish()
