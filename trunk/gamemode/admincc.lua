@@ -20,6 +20,7 @@ function ccValueCommand(ply, cmd, args)
 	local amount = math.floor(tonumber(args[1]))
 	if amount == GetConVarNumber(valuecmd.var) then return end
 	RunConsoleCommand(valuecmd.var, amount)
+	DB.SaveSetting(valuecmd.var, amount)
 
 	local nick = ""
 
@@ -70,6 +71,7 @@ function ccToggleCommand(ply, cmd, args)
 	end
 
 	RunConsoleCommand(togglecmd.var, toggle)
+	DB.SaveSetting(togglecmd.var, toggle)
 
 	local nick = ""
 
