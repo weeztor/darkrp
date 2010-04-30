@@ -5,8 +5,7 @@ DB.privcache = {}
  ---------------------------------------------------------*/
 function DB.Init()
 	sql.Begin()
-		//sql.Query("CREATE TABLE IF NOT EXISTS darkrp_settings('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
-		//sql.Query("CREATE TABLE IF NOT EXISTS darkrp_globals('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
+		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_cvars('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_tspawns('id' INTEGER NOT NULL, 'map' TEXT NOT NULL, 'team' INTEGER NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL, PRIMARY KEY('id'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_privs('steam' TEXT NOT NULL, 'admin' INTEGER NOT NULL, 'mayor' INTEGER NOT NULL, 'cp' INTEGER NOT NULL, 'tool' INTEGER NOT NULL, 'phys' INTEGER NOT NULL, 'prop' INTEGER NOT NULL, PRIMARY KEY('steam'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_salaries('steam' TEXT NOT NULL, 'salary' INTEGER NOT NULL, PRIMARY KEY('steam'));")
@@ -24,6 +23,12 @@ function DB.Init()
 	DB.CreateZombiePos()
 	DB.SetUpNonOwnableDoors()
 	DB.SetUpGroupOwnableDoors()
+	
+	local settings = sql.Query("SELECT * FROM darkrp_cvars")
+	for k,v in pairs(settings) do
+		print(k, v, v.key, v.value)
+		RunConsoleCommand(v.key, v.value)
+	end
 end
 
 /*---------------------------------------------------------
@@ -332,6 +337,15 @@ function DB.RetrieveJailPos()
 end
 -- Set the lastused of all jailpositions to 0 because the server just started
 sql.Query("UPDATE darkrp_jailpositions SET lastused = 0;")
+
+function DB.SaveSetting(setting, value)
+	local Data = sql.Query("SELECT value FROM darkrp_cvars WHERE key = "..sql.SQLStr(setting)..";")
+	if Data then
+		sql.Query("UPDATE darkrp_cvars set value = " .. sql.SQLStr(value) .." WHERE key = " .. sql.SQLStr(setting)..";")
+	else
+		sql.Query("INSERT INTO darkrp_cvars VALUES("..sql.SQLStr(setting)..","..sql.SQLStr(value)..");")
+	end
+end
 
 function DB.CountJailPos()
 	return tonumber(sql.QueryValue("SELECT COUNT(*) FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";"))
