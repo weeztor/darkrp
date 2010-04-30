@@ -25,9 +25,10 @@ function DB.Init()
 	DB.SetUpGroupOwnableDoors()
 	
 	local settings = sql.Query("SELECT * FROM darkrp_cvars")
-	for k,v in pairs(settings) do
-		print(k, v, v.key, v.value)
-		RunConsoleCommand(v.key, v.value)
+	if settings then
+		for k,v in pairs(settings) do
+			RunConsoleCommand(v.key, v.value)
+		end
 	end
 end
 
