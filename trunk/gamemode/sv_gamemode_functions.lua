@@ -172,7 +172,7 @@ end
 function GM:PlayerCanHearPlayersVoice(listener, talker)
 	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then 
 		return true
-	elseif ValidEntity(talker.DarkRPVars.phone) then
+	elseif talker.DarkRPVars and ValidEntity(talker.DarkRPVars.phone) then
 		return false
 	end
 	
