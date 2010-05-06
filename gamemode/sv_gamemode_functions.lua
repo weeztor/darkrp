@@ -706,7 +706,7 @@ function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's 
 end
 
 function GM:InitPostEntity() 
-	DB.Init()
+	timer.Simple(2, DB.Init)
 	if not hook.GetTable().PlayerSay then return end
 	for k,v in pairs(hook.GetTable().PlayerSay) do -- Remove all PlayerSay hooks, they all interfere with DarkRP's PlayerSay
 		otherhooks[k] = v
