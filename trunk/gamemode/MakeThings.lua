@@ -12,7 +12,7 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 	team.SetUp(#RPExtraTeams, Name, color)
 	local Team = #RPExtraTeams
 	if SERVER then
-		timer.Simple(0.1, function(CustomTeam, maximum_amount_of_this_class) AddTeamCommands(CustomTeam, maximum_amount_of_this_class) end, CustomTeam, maximum_amount_of_this_class)
+		timer.Simple(0, function(CustomTeam, maximum_amount_of_this_class) AddTeamCommands(CustomTeam, maximum_amount_of_this_class) end, CustomTeam, maximum_amount_of_this_class)
 	end
 	return Team
 end

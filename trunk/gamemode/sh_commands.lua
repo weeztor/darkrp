@@ -393,6 +393,7 @@ function AddEntityCommands(name, command, max, price)
 end
 
 function AddTeamCommands(CTeam, max)
+	print("ADDING TEAM COMMAND", CTeam.command)
 	local k = 0
 	for num,v in pairs(RPExtraTeams) do
 		if v.command == CTeam.command then
@@ -405,14 +406,7 @@ function AddTeamCommands(CTeam, max)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allow"..CTeam.command.." - Enable/disable "..CTeam.name)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..CTeam.command.."s".." <Number> - Sets max "..CTeam.name.."s.")
 	if CLIENT then return end
-	if not GetConVarNumber("max"..CTeam.command.."s") then
-		RunConsoleCommand("max"..CTeam.command.."s", CTeam.max)
-		//CreateConVar("max"..CTeam.command.."s", CTeam.max, {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE})
-	end
-	if not GetConVarNumber("allow"..CTeam.command) then
-		RunConsoleCommand("allow"..CTeam.command, 1)
-		//CreateConVar("allow"..CTeam.command, 1, {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE})
-	end
+	
 	if CTeam.Vote then
 		AddChatCommand("/vote"..CTeam.command, function(ply)
 			if GetConVarNumber("allow"..CTeam.command) and GetConVarNumber("allow"..CTeam.command) ~= 1 then
