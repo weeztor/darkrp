@@ -1,48 +1,95 @@
+-- RRPX Money Printer reworked for DarkRP by philxyz
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self:SetModel("models/props_wasteland/controlroom_monitor001b.mdl")
+	self:SetModel("models/props_c17/consolebox01a.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
-	
-	self:SetUseType(SIMPLE_USE)
-	
 	local phys = self:GetPhysicsObject()
-	if phys:IsValid() then 
-		phys:Wake() 
-		phys:EnableMotion(false) 
-	end
+	if phys:IsValid() then phys:Wake() end
+	self.sparking = false
+	self.damage = 100
+	self.IsMoneyPrinter = true
+	timer.Simple(30, self.CreateMoneybag, self)
 end
 
 function ENT:OnTakeDamage(dmg)
-	--Entity can't be damaged.
-	return false
-end
+	if self.burningup then return end
 
-function ENT:Use(activator, caller)
-	if activator:IsCP() and ValidEntity(self.dt.reporter) then
-		local memory = math.random(60, 125)
-		umsg.Start("darkrp_memory", activator)
-			umsg.Entity(self)
-			umsg.Bool(true)
-			umsg.Short(memory)
-		umsg.End()
-	elseif not activator:IsCP() then
-		Notify(ply, 1, 4, "You're not a cop")
+	self.damage = self.damage - dmg:GetDamage()
+	if self.damage <= 0 then
+		local rnd = math.random(1, 10)
+		if rnd < 3 then
+			self:BurstIntoFlames()
+		else
+			self:Destruct()
+			self:Remove()
+		end
 	end
 end
 
-function ENT:Alarm()
-	self.Sound = CreateSound(self, "ambient/alarms/alarm_citizen_loop1.wav")
-	self.Sound:Play()
+function ENT:Destruct()
+	local vPoint = self:GetPos()
+	local effectdata = EffectData()
+	effectdata:SetStart(vPoint)
+	effectdata:SetOrigin(vPoint)
+	effectdata:SetScale(1)
+	util.Effect("Explosion", effectdata)
+	Notify(self.dt.owning_ent, 1, 4, "Your money printer has exploded!")
+end
+
+function ENT:BurstIntoFlames()
+	Notify(self.dt.owning_ent, 1, 4, "Your money printer is overheating!")
+	self.burningup = true
+	local burntime = math.random(8, 18)
+	self:Ignite(burntime, 0)
+	timer.Simple(burntime, self.Fireball, self)
+end
+
+function ENT:Fireball()
+	if not self:IsOnFire() then return end
+	local dist = math.random(20, 280) -- Explosion radius
+	self:Destruct()
+	for k, v in pairs(ents.FindInSphere(self:GetPos(), dist)) do
+		if not v:IsPlayer() and not v.IsMoneyPrinter then v:Ignite(math.random(5, 22), 0) end
+	end
+	self:Remove()
+end
+
+local function PrintMore(ent)
+	if ValidEntity(ent) then
+		ent.sparking = true
+		timer.Simple(3, ent.CreateMoneybag, ent)
+	end
+end
+
+function ENT:CreateMoneybag()
+	if not ValidEntity(self) then return end
+	if self:IsOnFire() then return end
+	local MoneyPos = self:GetPos()
+
+	if math.random(1, 22) == 3 then self:BurstIntoFlames() end
 	
-	self.dt.alarm = true
-	timer.Simple(30, function()
-		if self.Sound then self.Sound:Stop() end
-		self.dt.alarm = false
-		self.dt.reporter = 1
-	end)
+	local amount = GetConVarNumber("mprintamount")
+	if amount == 0 then
+		amount = 250
+	end
+
+	DarkRPCreateMoneyBag(Vector(MoneyPos.x + 15, MoneyPos.y, MoneyPos.z + 15), amount)
+	self.sparking = false
+	timer.Simple(math.random(100, 350), PrintMore, self)
+end
+
+function ENT:Think()
+	if not self.sparking then return end
+
+	local effectdata = EffectData()
+	effectdata:SetOrigin(self:GetPos())
+	effectdata:SetMagnitude(1)
+	effectdata:SetScale(1)
+	effectdata:SetRadius(2)
+	util.Effect("Sparks", effectdata)
 end
