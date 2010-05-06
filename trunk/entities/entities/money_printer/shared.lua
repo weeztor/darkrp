@@ -1,11 +1,12 @@
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
-ENT.PrintName = "Money Printer"
-ENT.Author = "Render Case and philxyz"
+ENT.PrintName = "Reports Console"
+ENT.Author = "Eusion"
 ENT.Spawnable = false
 ENT.AdminSpawnable = false
 
 function ENT:SetupDataTables()
-	self:DTVar("Int",0,"price")
-	self:DTVar("Entity",1,"owning_ent")
+	self:DTVar("Entity", 1, "reporter")
+	self:DTVar("Bool", false, "alarm")
+	self:DTVar("Entity", 1, "reported")
 end
