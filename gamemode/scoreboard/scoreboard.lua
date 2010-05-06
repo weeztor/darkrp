@@ -19,7 +19,7 @@ function PANEL:Init()
 	self.Hostname:SetText(GetGlobalString("ServerName"))
 
 	self.Description = vgui.Create("Label", self)
-	self.Description:SetText("DarkRP by Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje")
+	self.Description:SetText("DarkRP by Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje, Eusion")
 
 	self.PlayerFrame = vgui.Create("PlayerFrame", self)
 

@@ -1,9 +1,8 @@
-if (SERVER) then
+if SERVER then
 	AddCSLuaFile("shared.lua")
-	SWEP.HoldType = "smg"
 end
 
-if (CLIENT) then
+if CLIENT then
 	SWEP.PrintName = "Silenced Sniper"
 	SWEP.Author = "Rickster"
 	SWEP.Slot = 0
@@ -22,6 +21,8 @@ SWEP.ViewModel = "models/weapons/v_snip_g3sg1.mdl"
 SWEP.WorldModel = "models/weapons/w_snip_g3sg1.mdl"
 
 SWEP.Weight = 3
+
+SWEP.HoldType = "smg"
 
 SWEP.Primary.Sound = Sound("Weapon_M4A1.Silenced")
 SWEP.Primary.Damage = 100

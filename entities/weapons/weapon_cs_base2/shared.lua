@@ -25,6 +25,8 @@ SWEP.Instructions = ""
 SWEP.Spawnable = false
 SWEP.AdminSpawnable = false
 
+SWEP.HoldType = "normal"
+
 SWEP.Primary.Sound = Sound("Weapon_AK47.Single")
 SWEP.Primary.Recoil = 1.5
 SWEP.Primary.Damage = 40
@@ -45,8 +47,8 @@ SWEP.Secondary.Ammo = "none"
 /*---------------------------------------------------------
 ---------------------------------------------------------*/
 function SWEP:Initialize()
-	if (SERVER) then
-		self:SetWeaponHoldType("normal")
+	self:SetWeaponHoldType("normal")
+	if SERVER then
 		self:SetNPCMinBurst( 30 )
 		self:SetNPCMaxBurst( 30 )
 		self:SetNPCFireRate( 0.01 )
@@ -59,9 +61,7 @@ end
 Deploy
 ---------------------------------------------------------*/
 function SWEP:Deploy()
-	if SERVER then
-		self:SetWeaponHoldType("normal")
-	end
+	self:SetWeaponHoldType("normal")
 	
 	self.LASTOWNER = self.Owner
 	
@@ -227,12 +227,12 @@ end
 SetIronsights
 ---------------------------------------------------------*/
 function SWEP:SetIronsights(b)
-	if b and SERVER then 
+	if b then 
 		self:SetWeaponHoldType(self.HoldType)
-		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3)
-	elseif SERVER then
+		if SERVER  then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3) end
+	else
 		self:SetWeaponHoldType("normal")
-		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
+		if SERVER  then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd")) end
 	end
 	self.Ironsights = b
 end

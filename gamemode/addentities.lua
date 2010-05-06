@@ -20,7 +20,7 @@ How to add custom vehicles:
 FIRST
 go ingame, type rp_getvehicles for available vehicles!
 then:
-AddCustomVehicle(<One of the vehicles from the rp_getvehicles list>, <Price of the vehicle>, <OPTIONAL jobs that can buy the vehicle>)
+AddCustomVehicle(<One of the vehicles from the rp_getvehicles list>, <Model of the vehicle>, <Price of the vehicle>, <OPTIONAL jobs that can buy the vehicle>)
 Examples:
 AddCustomVehicle("Jeep", "models/buggy.mdl", 100 )
 AddCustomVehicle("Airboat", "models/airboat.mdl", 600, {TEAM_GUN})

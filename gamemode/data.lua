@@ -15,6 +15,7 @@ function DB.Init()
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_zspawns('map' TEXT NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL);")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_disableddoors('map' TEXT NOT NULL, 'idx' INTEGER NOT NULL, 'title' TEXT NOT NULL, PRIMARY KEY('map', 'idx'));")
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_groupdoors('map' TEXT NOT NULL, 'idx' INTEGER NOT NULL, 'teams' TEXT NOT NULL, 'title' TEXT NOT NULL, PRIMARY KEY('map', 'idx'));")
+		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_consolespawns('map' TEXT NOT NULL, 'x' NUMERIC NOT NULL, 'y' NUMERIC NOT NULL, 'z' NUMERIC NOT NULL, 'pitch' NUMERIC NOT NULL, 'yaw' NUMERIC NOT NULL, 'roll' NUMERIC NOT NULL);")
 	sql.Commit()
 
 	DB.CreatePrivs()
@@ -23,6 +24,7 @@ function DB.Init()
 	DB.CreateZombiePos()
 	DB.SetUpNonOwnableDoors()
 	DB.SetUpGroupOwnableDoors()
+	DB.LoadConsoles()
 	
 	local settings = sql.Query("SELECT * FROM darkrp_cvars")
 	if settings then
@@ -604,3 +606,53 @@ function DB.Log(text)
 	end
 	file.Write(DB.File, file.Read(DB.File).."\n"..os.date().. "\t"..text)
 end
+
+function DB.LoadConsoles()
+	local map = string.lower(game.GetMap())
+	local data = sql.Query("SELECT * FROM darkrp_consolespawns WHERE map = " .. sql.SQLStr(map) .. ";")
+	
+	if data then
+		for k, v in pairs(data) do
+			local console = ents.Create("darkrp_console")
+			console:SetPos(Vector(tonumber(v.x), tonumber(v.y), tonumber(v.z)))
+			console:SetAngles(Angle(tonumber(v.pitch), tonumber(v.yaw), tonumber(v.roll)))
+			console:Spawn()
+		end
+	else--If there are no custom positions in the database, use the presets.
+		for k,v in pairs(RP_ConsolePositions) do
+			if v[1] == map then
+				local console = ents.Create("darkrp_console")
+				console:SetPos(Vector(RP_ConsolePositions[k][2], RP_ConsolePositions[k][3], RP_ConsolePositions[k][4]))
+				console:SetAngles(Angle(RP_ConsolePositions[k][5], RP_ConsolePositions[k][6], RP_ConsolePositions[k][7]))
+				console:Spawn()
+				console:Activate()
+			end
+		end
+	end
+end
+
+function DB.StoreConsole(ply, cmd, args)
+	if not ply:IsSuperAdmin() then return end
+	local map = string.lower(game.GetMap())
+	local data = sql.Query("SELECT * FROM darkrp_consolespawns WHERE map = " .. sql.SQLStr(map) .. ";")
+	
+	local tr = ply:GetEyeTrace().Entity
+	local ang = tr:GetAngles()
+	local pos = tr:GetPos()
+	
+--[[ Prevent the command from executing if there is already a console present in the database.
+	If you want to add a new console, remove the old one first by using rp_removeallconsoles. ]]
+	if ValidEntity(tr) and tr:GetClass() == "darkrp_console" and data == nil then
+		sql.Query("INSERT INTO darkrp_consolespawns VALUES(" .. sql.SQLStr(map) .. ", " .. pos.x .. ", " .. pos.y .. ", " .. pos.z .. ", " .. ang.p .. ", " .. ang.y .. ", " .. ang.r .. ");")
+		ply:ChatPrint("Added a new console.")
+		tr:Remove()
+		DB.LoadConsoles()
+	end
+end
+concommand.Add("rp_storeconsole", DB.StoreConsole)
+
+function DB.RemoveConsoles(ply, cmd, args)
+	if not ply:IsSuperAdmin() then return end
+	sql.Query("DELETE FROM darkrp_consolespawns WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";")
+end
+concommand.Add("rp_removeallconsoles", DB.RemoveConsoles)

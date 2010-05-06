@@ -37,7 +37,7 @@ if CLIENT then
 end
 
 function SWEP:Initialize()
-	if SERVER then self:SetWeaponHoldType("normal") end
+	self:SetWeaponHoldType("normal")
 end
 
 function SWEP:Deploy()

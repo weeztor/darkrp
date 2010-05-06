@@ -40,7 +40,7 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
 
 function SWEP:Initialize()
-	if SERVER then self:SetWeaponHoldType("normal") end
+	self:SetWeaponHoldType("normal")
 
 	self.Hit = {
 		Sound("weapons/stunstick/stunstick_impact1.wav"),
@@ -61,10 +61,9 @@ end
 function SWEP:PrimaryAttack()
 	if CurTime() < self.NextStrike then return end
 
-	if SERVER then
-		self:SetWeaponHoldType("melee")
-		timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
-	end
+	self:SetWeaponHoldType("melee")
+	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+		
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Weapon:EmitSound(self.Sound)
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
@@ -77,35 +76,31 @@ function SWEP:PrimaryAttack()
 
 	if not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100) then return end
 
-	if SERVER then
-		local hp = trace.Entity:Health()
-		hp = hp - math.random(4, 8)
+	local hp = trace.Entity:Health()
+	hp = hp - math.random(4, 8)
 
-		if (hp <= 0) then hp = 1 end
+	if (hp <= 0) then hp = 1 end
 
-		trace.Entity:SetHealth(hp)
+	trace.Entity:SetHealth(hp)
 
-		if not trace.Entity:IsDoor() then
-			trace.Entity:SetVelocity((trace.Entity:GetPos() - self.Owner:GetPos()) * 7)
-		end
+	if not trace.Entity:IsDoor() then
+		trace.Entity:SetVelocity((trace.Entity:GetPos() - self.Owner:GetPos()) * 7)
+	end
 
-		if trace.Entity:IsPlayer() then
-			timer.Simple(.3, self.DoFlash, self, trace.Entity)
-			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
-		else
-			self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
-			trace.Entity:TakeDamage(10, self.Owner, self.Owner)
-		end
+	if trace.Entity:IsPlayer() then
+		timer.Simple(.3, self.DoFlash, self, trace.Entity)
+		self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
+	else
+		self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
+		trace.Entity:TakeDamage(10, self.Owner, self.Owner)
 	end
 end
 
 function SWEP:SecondaryAttack()
 	if CurTime() < self.NextStrike then return end
 
-	if SERVER then
-		self:SetWeaponHoldType("melee")
-		timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
-	end
+	self:SetWeaponHoldType("melee")
+	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Weapon:EmitSound(self.Sound)
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)

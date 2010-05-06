@@ -52,6 +52,14 @@ AddChatCommand("/rpname", RPName)
 AddChatCommand("/name", RPName)
 AddChatCommand("/nick", RPName)
 
+function meta:IsCP()
+	local Team = self:Team()
+	if Team == TEAM_POLICE or Team == TEAM_CHIEF or Team == TEAM_MAYOR then
+		return true
+	end
+	return false
+end
+
 function meta:SetRPName(name, firstRun)
 	-- Make sure nobody on this server already has this RP name
 	local lowername = string.lower(tostring(name))
