@@ -33,20 +33,22 @@ concommand.Add("rp_commands", function()
 	end
 end)
 
-concommand.Add("rp_ResetAllSettings", function(ply, cmd, args)
-	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		Notify(ply, 1, 5, string.format(LANGUAGE.need_sadmin, "rp_resetallsettings"))
-		return
-	end
-	Notify(ply, 1, 4, LANGUAGE.reset_settings)
-	for k,v in pairs(ToggleCmds) do
-		RunConsoleCommand(v.var, v.default)
-	end
-	
-	for k,v in pairs(ValueCmds) do
-		RunConsoleCommand(v.var, v.default)
-	end
-end)
+if SERVER then
+	concommand.Add("rp_ResetAllSettings", function(ply, cmd, args)
+		if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
+			Notify(ply, 1, 5, string.format(LANGUAGE.need_sadmin, "rp_resetallsettings"))
+			return
+		end
+		Notify(ply, 1, 4, LANGUAGE.reset_settings)
+		for k,v in pairs(ToggleCmds) do
+			RunConsoleCommand(v.var, v.default)
+		end
+		
+		for k,v in pairs(ValueCmds) do
+			RunConsoleCommand(v.var, v.default)
+		end
+	end)
+end
 
 AddHelpCategory(HELP_CATEGORY_CHATCMD, "Chat Commands")
 AddHelpCategory(HELP_CATEGORY_CONCMD, "Console Commands")
@@ -529,7 +531,7 @@ function AddTeamCommands(CTeam, max)
 		local target = FindPlayer(args[1])
 		
         if (target) then
-			target:ChangeTeam(k)
+			target:ChangeTeam(k, true)
 			if (ply:EntIndex() ~= 0) then
 				nick = ply:Nick()
 			else

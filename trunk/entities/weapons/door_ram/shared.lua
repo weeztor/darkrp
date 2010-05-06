@@ -44,10 +44,8 @@ Desc: Called when the weapon is first loaded
 ---------------------------------------------------------*/
 function SWEP:Initialize()
 	self.LastIron = CurTime()
-	if (SERVER) then
-		self:SetWeaponHoldType("normal")
-		self.Ready = false
-	end
+	self:SetWeaponHoldType("normal")
+	self.Ready = false
 end
 
 function SWEP:Deploy()
@@ -139,9 +137,9 @@ end
 function SWEP:SecondaryAttack()
 	self.LastIron = CurTime()
 	self.Ready = not self.Ready
-	if self.Ready and SERVER then
+	if self.Ready then
 		self:SetWeaponHoldType("rpg")
-	elseif SERVER then
+	else
 		self:SetWeaponHoldType("normal")
 	end
 end

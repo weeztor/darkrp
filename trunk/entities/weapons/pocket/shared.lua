@@ -37,7 +37,7 @@ if CLIENT then
 end
 
 function SWEP:Initialize()
-	if SERVER then self:SetWeaponHoldType("normal") end
+	self:SetWeaponHoldType("normal")
 end
 
 function SWEP:Deploy()
@@ -66,10 +66,9 @@ function SWEP:PrimaryAttack()
 	if not phys:IsValid() then return end
 	local mass = phys:GetMass()
 	
-	if SERVER then
-		self:SetWeaponHoldType("pistol")
-		timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
-	end
+	self:SetWeaponHoldType("pistol")
+	
+	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	
 	self.Owner:GetTable().Pocket = self.Owner:GetTable().Pocket or {} 
 	if not FPP.PlayerCanTouchEnt(self.Owner, trace.Entity, "Gravgun", "FPP_GRAVGUN") or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) or trace.Entity.jailWall then
@@ -122,10 +121,10 @@ function SWEP:SecondaryAttack()
 	local ent = self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket]
 	self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket] = nil
 	if not ValidEntity(ent) then Notify(self.Owner, 1, 4, "Your pocket contains no items.") return end
-	if SERVER then
-		self:SetWeaponHoldType("pistol")
-		timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
-	end
+	self:SetWeaponHoldType("pistol")
+	
+	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+	
 	local trace = {}
 	trace.start = self.Owner:EyePos()
 	trace.endpos = trace.start + self.Owner:GetAimVector() * 85
@@ -265,10 +264,8 @@ elseif SERVER then
 			end
 			ply:GetTable().Pocket = table.ClearKeys(ply:GetTable().Pocket)
 			
-			if SERVER then
-				ply:GetActiveWeapon():SetWeaponHoldType("pistol")
-				timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, ply:GetActiveWeapon())
-			end
+			ply:GetActiveWeapon():SetWeaponHoldType("pistol")
+			timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, ply:GetActiveWeapon())
 			
 			local trace = {}
 			trace.start = ply:EyePos()

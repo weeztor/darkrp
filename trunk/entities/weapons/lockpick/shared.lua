@@ -62,15 +62,16 @@ function SWEP:PrimaryAttack()
 		self.IsLockPicking = true
 		self.StartPick = CurTime()
 		self.EndPick = CurTime() + self.LockPickTime
+		
+		self:SetWeaponHoldType("pistol")
+		
 		if SERVER then
-			self:SetWeaponHoldType("pistol")
 			timer.Create("LockPickSounds", 1, self.LockPickTime, function(wep)
 				if not ValidEntity(wep) then return end
 				local snd = {1,3,4}
 				wep:EmitSound("weapons/357/357_reload".. tostring(snd[math.random(1, #snd)]) ..".wav", 100, 100)
 			end, self)
-		end
-		if CLIENT then
+		elseif CLIENT then
 			self.Dots = self.Dots or ""
 			timer.Create("LockPickDots", 0.5, 0, function(wep) 
 				if not wep:IsValid() then timer.Destroy("LockPickDots") return end
@@ -103,8 +104,8 @@ end
 
 function SWEP:Fail()
 	self.IsLockPicking = false
-	if SERVER then self:SetWeaponHoldType("normal")
-	timer.Destroy("LockPickSounds")	end
+	self:SetWeaponHoldType("normal")
+	if SERVER then timer.Destroy("LockPickSounds") end
 	if CLIENT then timer.Destroy("LockPickDots") end
 end
 

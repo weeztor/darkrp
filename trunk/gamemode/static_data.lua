@@ -210,7 +210,18 @@ zombie_spawn_positions = nil
 
 -- Zombie Spawn Positions
 if zombie_spawn_positions then
-	-- table.insert(zombie_spawn_positions, {"rp_hometown2000", 0.0, 0.0, 0.0})
-	-- table.insert(zombie_spawn_positions, {"rp_hometown2000", 1.0, 2.0, 3.0})
+	--table.insert(zombie_spawn_positions, {"rp_hometown2000", 0.0, 0.0, 0.0})
+	--table.insert(zombie_spawn_positions, {"rp_hometown2000", 1.0, 2.0, 3.0})
 	-- etc
 end
+
+-- Positions for the 911 console
+RP_ConsolePositions = {}
+
+table.insert(RP_ConsolePositions, {"rp_downtown_v2", -1515, 178, -93, 0, 90, 0})
+table.insert(RP_ConsolePositions, {"rp_evocity_v2d", -6874, -9331, 147, 0, 90, 0})
+table.insert(RP_ConsolePositions, {"rp_hometown2000", -661, 1137, 96, 0, 90, 0})
+table.insert(RP_ConsolePositions, {"rp_cscdesert_v2-1", 2594, -8589, 68, 0, 0, 0})
+table.insert(RP_ConsolePositions, {"rp_cscdesert_v2-1_night", 2594, -8589, 68, 0, 0, 0})
+table.insert(RP_ConsolePositions, {"rp_oviscity_gmc4", -2869, -1110, -307, 0, 90, 0})
+table.insert(RP_ConsolePositions, {"rp_omgcity_final", -1038, 2625, 74, 0, 180, 0})
