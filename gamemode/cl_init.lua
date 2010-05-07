@@ -803,7 +803,7 @@ local function RPStopMessageMode()
 	playercolors = {}
 end
 
-
+local PlayerColorsOn = CreateClientConVar("rp_showchatcolors", 1, true, false)
 local function RPSelectwhohearit()
 	if PlayerColorsOn:GetInt() == 0 then return end
 	Messagemode = true
@@ -850,7 +850,6 @@ end
 hook.Add("StartChat", "RPDoSomethingWithChat", RPSelectwhohearit)
 hook.Add("FinishChat", "RPCloseRadiusDetection", function() Messagemode = false RPStopMessageMode() end)
 
-local PlayerColorsOn = CreateClientConVar("rp_showchatcolors", 1, true, false)
 function GM:ChatTextChanged(text)
 	if PlayerColorsOn:GetInt() == 0 then return end
 	
