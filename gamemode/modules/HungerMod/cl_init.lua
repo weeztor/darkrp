@@ -79,7 +79,7 @@ function HM.HUDPaint()
 end
 hook.Add("HUDPaint", "HM.HUDPaint", HM.HUDPaint)
 
-function AteFoodIcon(msg)
+local function AteFoodIcon(msg)
 	FoodAteAlpha = 1
 	FoodAteY = ScrH() - 8
 end

@@ -121,7 +121,8 @@ function GM:ShowSpare1(ply)
 end
 
 function GM:ShowSpare2(ply)
-	ply:SendLua("ChangeJobVGUI()")
+	umsg.Start("ChangeJobVGUI", ply)
+	umsg.End()
 end
 
 function GM:OnNPCKilled(victim, ent, weapon)
@@ -131,11 +132,11 @@ function GM:OnNPCKilled(victim, ent, weapon)
 
 		-- if it wasn't a player directly, find out who owns the prop that did the killing
 		if not ent:IsPlayer() then
-			ent = FindPlayerBySID(ent.SID)
+			ent = Player(ent.SID)
 		end
 
 		-- if we know by now who killed the NPC, pay them.
-		if ent and GetConVarNumber("npckillpay") > 0 then
+		if ValidEntity(ent) and GetConVarNumber("npckillpay") > 0 then
 			ent:AddMoney(GetConVarNumber("npckillpay"))
 			Notify(ent, 1, 4, string.format(LANGUAGE.npc_killpay, CUR .. GetConVarNumber("npckillpay")))
 		end

@@ -3,7 +3,7 @@ QuestionVGUI = {}
 local PanelNum = 0
 local LetterWritePanel
 
-function MsgDoVote(msg)
+local function MsgDoVote(msg)
 	local question = msg:ReadString()
 	local voteid = msg:ReadString()
 	local timeleft = msg:ReadFloat()
@@ -81,7 +81,7 @@ function MsgDoVote(msg)
 end
 usermessage.Hook("DoVote", MsgDoVote)
 
-function KillVoteVGUI(msg)
+local function KillVoteVGUI(msg)
 	local id = msg:ReadString()
 	
 	if VoteVGUI[id .. "vote"] and VoteVGUI[id .. "vote"]:IsValid() then
@@ -91,7 +91,7 @@ function KillVoteVGUI(msg)
 end
 usermessage.Hook("KillVoteVGUI", KillVoteVGUI)
 
-function MsgDoQuestion(msg)
+local function MsgDoQuestion(msg)
 	local question = msg:ReadString()
 	local quesid = msg:ReadString()
 	local timeleft = msg:ReadFloat()
@@ -164,7 +164,7 @@ function MsgDoQuestion(msg)
 end
 usermessage.Hook("DoQuestion", MsgDoQuestion)
 
-function KillQuestionVGUI(msg)
+local function KillQuestionVGUI(msg)
 	local id = msg:ReadString()
 
 	if QuestionVGUI[id .. "ques"] and QuestionVGUI[id .. "ques"]:IsValid() then
@@ -199,7 +199,7 @@ local function DoVoteAnswerQuestion(ply, cmd, args)
 end
 concommand.Add("rp_vote", DoVoteAnswerQuestion)
 
-function DoLetter(msg)
+local function DoLetter(msg)
 	LetterWritePanel = vgui.Create("Frame")
 	LetterWritePanel:SetPos(ScrW() / 2 - 75, ScrH() / 2 - 100)
 	LetterWritePanel:SetSize(150, 200)
@@ -213,7 +213,7 @@ local F4Menu
 local F4MenuTabs
 local F4Tabs
 local NoCloseF4 = CurTime()
-function ChangeJobVGUI()
+local function ChangeJobVGUI()
 	if not F4Menu or not F4Menu:IsValid() then
 		F4Menu = vgui.Create("DFrame")
 		F4Menu:SetSize(770, 580)
@@ -274,9 +274,11 @@ function ChangeJobVGUI()
 
 	F4Menu:SetSkin("DarkRP")
 end
+usermessage.Hook("ChangeJobVGUI", ChangeJobVGUI)
 
 local KeyFrameVisible = false
-function KeysMenu(Vehicle)
+local function KeysMenu(um)
+	local Vehicle = um:ReadBool()
 	if KeyFrameVisible then return end
 	local trace = LocalPlayer():GetEyeTrace()
 	local Frame = vgui.Create("DFrame")
@@ -480,3 +482,4 @@ function KeysMenu(Vehicle)
 	
 	Frame:SetSkin("DarkRP")
 end
+usermessage.Hook("KeysMenu", KeysMenu)

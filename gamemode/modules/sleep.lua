@@ -1,6 +1,6 @@
 KnockoutTime = 5
 
-function ResetKnockouts(player)
+local function ResetKnockouts(player)
 	player.SleepRagdoll = nil
 	player.KnockoutTimer = 0
 end

@@ -1,7 +1,3 @@
--- ========================
--- =          Crate SENT by Mahalis
--- ========================
-
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 

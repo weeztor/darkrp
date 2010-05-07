@@ -5,7 +5,7 @@ local meta = FindMetaTable("Player")
 /*---------------------------------------------------------
  RP names
  ---------------------------------------------------------*/
-function RPName(ply, args)
+local function RPName(ply, args)
 	if GetConVarNumber("allowrpnames") ~= 1 then
 		Notify(ply, 1, 6,  string.format(LANGUAGE.disabled, "RPname", "")) 
 		return ""
@@ -356,7 +356,7 @@ end
 /*---------------------------------------------------------
  Jail/arrest
  ---------------------------------------------------------*/
-function JailPos(ply)
+local function JailPos(ply)
 	-- Admin or Chief can set the Jail Position
 	if (ply:Team() == TEAM_CHIEF and GetConVarNumber("chiefjailpos") == 1) or ply:HasPriv(ADMIN) then
 		DB.StoreJailPos(ply)
@@ -372,7 +372,7 @@ function JailPos(ply)
 end
 AddChatCommand("/jailpos", JailPos)
 
-function AddJailPos(ply)
+local function AddJailPos(ply)
 	-- Admin or Chief can add Jail Positions
 	if (ply:Team() == TEAM_CHIEF and GetConVarNumber("chiefjailpos") == 1) or ply:HasPriv(ADMIN) then
 		DB.StoreJailPos(ply, true)

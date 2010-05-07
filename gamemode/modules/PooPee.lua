@@ -1,6 +1,6 @@
 if SERVER then includeCS("PooPee.lua") end
 
-PooPee = {}
+local PooPee = {}
 
 AddToggleCommand("rp_poopeemod", "poopeemod", 0)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_poopeemod <1 or 0> - Enable/disable poo pee mod")

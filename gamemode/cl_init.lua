@@ -60,7 +60,7 @@ function GM:DrawDeathNotice(x, y)
 	self.BaseClass:DrawDeathNotice(x, y)
 end
 
-function DisplayNotify(msg)
+local function DisplayNotify(msg)
 	local txt = msg:ReadString()
 	GAMEMODE:AddNotify(txt, msg:ReadShort(), msg:ReadLong())
 	surface.PlaySound("ambient/water/drip" .. math.random(1, 4) .. ".wav")
@@ -70,7 +70,7 @@ function DisplayNotify(msg)
 end
 usermessage.Hook("_Notify", DisplayNotify)
 
-function LoadModules(msg)
+local function LoadModules(msg)
 	local num = msg:ReadShort()
 
 	for n = 1, num do
@@ -106,13 +106,13 @@ include("FPP/sh_CPPI.lua")
 
 surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
 
-function GetTextHeight(font, str)
+local function GetTextHeight(font, str)
 	surface.SetFont(font)
 	local w, h = surface.GetTextSize(str)
 	return h
 end
 
-function DrawPlayerInfo(ply)
+local function DrawPlayerInfo(ply)
 	if not ply:Alive() then return end
 
 	local pos = ply:EyePos()
@@ -131,84 +131,6 @@ function DrawPlayerInfo(ply)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
-end
-
-function DrawPriceInfo(ent)
-	local pos = ent:GetPos()
-
-	pos.z = pos.z + 8
-	pos = pos:ToScreen()
-
-	local price = ent.dt.price
-
-	draw.DrawText(LANGUAGE.customer_price .. CUR .. tostring(price), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
-	draw.DrawText(LANGUAGE.customer_price .. CUR .. tostring(price), "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
-end
-
-function DrawShipmentInfo(ent)
-	local pos = ent:GetPos()
-	if not pos then return end
-	pos.z = pos.z + 8
-	pos = pos:ToScreen()
-
-	local content = ent.dt.contents or ""
-	local contents = CustomShipments[content]
-	if not contents then return end
-	contents = contents.name
-	local count = ent.dt.count
-
-	draw.DrawText(tostring(count) .. " x " .. contents, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
-	draw.DrawText(tostring(count) .. " x " .. contents, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
-end
-
-function DrawMoneyPrinterInfo(ent)
-	local pos = ent:GetPos()
-
-	pos.z = pos.z + 8
-	pos = pos:ToScreen()
-
-	local owner = "N/A!"
-	if ValidEntity(ent.dt.owning_ent) then
-		owner = ent.dt.owning_ent:Nick()
-	end
-	local text = owner .. "'s\nMoney Printer"
-
-	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
-	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
-end
-
-function DrawDrugLabInfo(ent)
-	local pos = ent:GetPos()
-
-	pos.z = pos.z + 20
-	pos = pos:ToScreen()
-	local owner = "N/A!"
-	if ValidEntity(ent.dt.owning_ent) then
-		owner = tostring(ent.dt.owning_ent:Nick())
-	end
-	
-	local price = tostring(ent.dt.price)
-	local text = owner.. "'s\ndruglab\n"..LANGUAGE.customer_price.. price
-
-	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
-	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
-end
-
-function DrawDrugsInfo(ent)
-	local pos = ent:GetPos()
-
-	pos.z = pos.z + 20
-	pos = pos:ToScreen()
-
-	local owner = "N/A!"
-	if ValidEntity(ent.dt.owning_ent) then
-		owner = ent.dt.owning_ent:Nick()
-	end
-	local price = tostring(ent.dt.price)
-	local text = owner .. "'s\ndrugs\n"..LANGUAGE.customer_price.. price
-
-	draw.DrawText(text, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
-	draw.DrawText(text, "TargetID", pos.x, pos.y, Color(150, 20, 20, 200), 1)
 end
 
 
@@ -230,7 +152,7 @@ function vector:RPIsInSight(v, ply)
 	end
 end 
 
-function DrawWantedInfo(ply)
+local function DrawWantedInfo(ply)
 	if not ply:Alive() then return end
 
 	local pos = ply:EyePos()
@@ -248,7 +170,7 @@ function DrawWantedInfo(ply)
 	draw.DrawText(LANGUAGE.wanted.."\nReason: "..tostring(ply.DarkRPVars["wantedReason"]), "TargetID", pos.x + 1, pos.y - 41, Color(255, 0, 0, 255), 1)
 end
 
-function DrawZombieInfo(ply)
+local function DrawZombieInfo(ply)
 	for x=1, LocalPlayer().DarkRPVars.numPoints, 1 do
 		local zPoint = LocalPlayer().DarkRPVars["zPoints".. x]
 		zPoint = zPoint:ToScreen()
@@ -329,27 +251,6 @@ local function DrawDisplay()
 		local pos = {x = ScrW()/2, y = ScrH() / 2}
 		if GetConVarNumber("globalshow") == 0 then
 			if tr.Entity:IsPlayer() then DrawPlayerInfo(tr.Entity) end
-		end
-
-		local class = tr.Entity:GetClass()
-		if class == "spawned_shipment" then
-			DrawShipmentInfo(tr.Entity)
-		end
-
-		if class == "money_printer" then
-			DrawMoneyPrinterInfo(tr.Entity)
-		end
-
-		if class == "gunlab" or class == "microwave" then
-			DrawPriceInfo(tr.Entity)
-		end
-		
-		if tr.Entity:GetClass() == "drug_lab" then
-			DrawDrugLabInfo(tr.Entity)
-		end
-		
-		if tr.Entity:GetClass() == "drug" then
-			DrawDrugsInfo(tr.Entity)
 		end
 
 		if tr.Entity:IsOwnable() then
@@ -731,11 +632,11 @@ function FindPlayer(info)
 	return nil
 end
 
-function EndStunStickFlash()
+local function EndStunStickFlash()
 	StunStickFlashAlpha = -1
 end
 
-function StunStickFlash()
+local function StunStickFlash()
 	if StunStickFlashAlpha == -1 then
 		StunStickFlashAlpha = 0
 	end
@@ -745,7 +646,7 @@ end
 usermessage.Hook("StunStickFlash", StunStickFlash)
 
 local HelpVGUI
-function ToggleHelp()
+local function ToggleHelp()
 	if not HelpVGUI then
 		HelpVGUI = vgui.Create("HelpVGUI")
 	end
@@ -758,14 +659,14 @@ function ToggleHelp()
 end
 usermessage.Hook("ToggleHelp", ToggleHelp)
 
-function AdminTell(msg)
+local function AdminTell(msg)
 	AdminTellStartTime = CurTime()
 	AdminTellAlpha = 0
 	AdminTellMsg = msg:ReadString()
 end
 usermessage.Hook("AdminTell", AdminTell)
 
-function ShowLetter(msg)
+local function ShowLetter(msg)
 	LetterMsg = ""
 	LetterType = msg:ReadShort()
 	LetterPos = msg:ReadVector()
@@ -786,7 +687,7 @@ end
 function KillLetter(msg) LetterAlpha = -1 end
 usermessage.Hook("KillLetter", KillLetter)
 
-function ToggleClicker()
+local function ToggleClicker()
 	GUIToggled = not GUIToggled
 	gui.EnableScreenClicker(GUIToggled)
 
@@ -798,11 +699,11 @@ function ToggleClicker()
 end
 usermessage.Hook("ToggleClicker", ToggleClicker)
 
-function AddHelpLabel(id, category, text, constant)
+local function AddHelpLabel(id, category, text, constant)
 	table.insert(HelpLabels, { id = id, category = category, text = text, constant = constant })
 end
 
-function ChangeHelpLabel(msg)
+local function ChangeHelpLabel(msg)
 	local id = msg:ReadShort()
 	local text = msg:ReadString()
 
@@ -894,12 +795,59 @@ local Messagemode = false
 local playercolors = {}
 local HearMode = "talk"
 
-function RPStopMessageMode()
+local function RPStopMessageMode()
 	Messagemode = false
 	hook.Remove("Think", "RPGetRecipients")
 	hook.Remove("HUDPaint", "RPinstructionsOnSayColors")
 	playercolors = {}
 end
+
+
+local function RPSelectwhohearit()
+	if PlayerColorsOn:GetInt() == 0 then return end
+	Messagemode = true
+	
+	hook.Add("HUDPaint", "RPinstructionsOnSayColors", function()
+		local w, l = chat.GetChatBoxPos()
+		local h = l - (#playercolors * 20) - 20
+		local AllTalk = GetConVarNumber("alltalk") == 1
+		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") or HearMode == "speak" ) then
+			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_noone, HearMode), "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
+		elseif HearMode == "talk through OOC" or HearMode == "advert" then
+			draw.WordBox(2, w, h, LANGUAGE.hear_everyone, "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
+		elseif not AllTalk or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") then
+			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_certain_persons, HearMode), "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
+		end
+		
+		for k,v in pairs(playercolors) do
+			if v.Nick then
+				draw.WordBox(2, w, h + k*20, v:Nick(), "ScoreboardText", Color(0,0,0,120), Color(255,255,255,255))
+			end
+		end
+	end)
+	
+	hook.Add("Think", "RPGetRecipients", function() 
+		if not Messagemode then RPStopMessageMode() hook.Remove("Think", "RPGetRecipients") return end 
+		if HearMode ~= "whisper" and HearMode ~= "yell" and HearMode ~= "talk" and HearMode ~= "speak" and HearMode ~= "me" then return end
+		playercolors = {}
+		for k,v in pairs(player.GetAll()) do
+			if v ~= LocalPlayer() then
+				local distance = LocalPlayer():GetPos():Distance(v:GetPos())
+				if HearMode == "whisper" and distance < 90 and not table.HasValue(playercolors, v) then
+					table.insert(playercolors, v)
+				elseif (HearMode == "yell" or HearMode == "speak") and distance < 550 and not table.HasValue(playercolors, v) then
+					table.insert(playercolors, v)
+				elseif HearMode == "talk" and GetConVarNumber("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
+					table.insert(playercolors, v)
+				elseif HearMode == "me" and GetConVarNumber("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
+					table.insert(playercolors, v)
+				end
+			end
+		end
+	end)
+end
+hook.Add("StartChat", "RPDoSomethingWithChat", RPSelectwhohearit)
+hook.Add("FinishChat", "RPCloseRadiusDetection", function() Messagemode = false RPStopMessageMode() end)
 
 local PlayerColorsOn = CreateClientConVar("rp_showchatcolors", 1, true, false)
 function GM:ChatTextChanged(text)
@@ -1011,53 +959,6 @@ function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
 	end	
 	self.BaseClass:PlayerEndVoice(ply)
 end
-
-
-function RPSelectwhohearit()
-	if PlayerColorsOn:GetInt() == 0 then return end
-	Messagemode = true
-	
-	hook.Add("HUDPaint", "RPinstructionsOnSayColors", function()
-		local w, l = chat.GetChatBoxPos()
-		local h = l - (#playercolors * 20) - 20
-		local AllTalk = GetConVarNumber("alltalk") == 1
-		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") or HearMode == "speak" ) then
-			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_noone, HearMode), "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
-		elseif HearMode == "talk through OOC" or HearMode == "advert" then
-			draw.WordBox(2, w, h, LANGUAGE.hear_everyone, "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
-		elseif not AllTalk or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") then
-			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_certain_persons, HearMode), "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
-		end
-		
-		for k,v in pairs(playercolors) do
-			if v.Nick then
-				draw.WordBox(2, w, h + k*20, v:Nick(), "ScoreboardText", Color(0,0,0,120), Color(255,255,255,255))
-			end
-		end
-	end)
-	
-	hook.Add("Think", "RPGetRecipients", function() 
-		if not Messagemode then RPStopMessageMode() hook.Remove("Think", "RPGetRecipients") return end 
-		if HearMode ~= "whisper" and HearMode ~= "yell" and HearMode ~= "talk" and HearMode ~= "speak" and HearMode ~= "me" then return end
-		playercolors = {}
-		for k,v in pairs(player.GetAll()) do
-			if v ~= LocalPlayer() then
-				local distance = LocalPlayer():GetPos():Distance(v:GetPos())
-				if HearMode == "whisper" and distance < 90 and not table.HasValue(playercolors, v) then
-					table.insert(playercolors, v)
-				elseif (HearMode == "yell" or HearMode == "speak") and distance < 550 and not table.HasValue(playercolors, v) then
-					table.insert(playercolors, v)
-				elseif HearMode == "talk" and GetConVarNumber("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
-					table.insert(playercolors, v)
-				elseif HearMode == "me" and GetConVarNumber("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
-					table.insert(playercolors, v)
-				end
-			end
-		end
-	end)
-end
-hook.Add("StartChat", "RPDoSomethingWithChat", RPSelectwhohearit)
-hook.Add("FinishChat", "RPCloseRadiusDetection", function() Messagemode = false RPStopMessageMode() end)
 
 function GM:PlayerBindPress(ply,bind,pressed)
 	self.BaseClass:PlayerBindPress(ply, bind, pressed)
