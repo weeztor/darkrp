@@ -260,7 +260,7 @@ function meta:Own(ply)
 	end
 end
 
-function SetDoorTitle(ply, args)
+local function SetDoorTitle(ply, args)
 	local trace = ply:GetEyeTrace()
 	
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
@@ -288,7 +288,7 @@ function SetDoorTitle(ply, args)
 end
 AddChatCommand("/title", SetDoorTitle)
 
-function RemoveDoorOwner(ply, args)
+local function RemoveDoorOwner(ply, args)
 	local trace = ply:GetEyeTrace()
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then

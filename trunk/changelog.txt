@@ -25,10 +25,15 @@ DarkRP 2.4.1 SVN
 [FIX] Compatability with extra seats in VUMod
 [FIX] animations to work with latest update
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
-[CHANGE] Credits
+[CHANGE] Credits, added Eusion
+[CHANGE] The way Entities like money and money printers show their information. Thanks MavBear!
+[CHANGE] Made a lot of functions local, this will give you better overall performance both on server and client
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
 [REMOVE] VoteCopOn. It's bullshit
 [REMOVE] All global integers. Result: Less server crashes, less buffer overflow in net message, faster spawning time
+[REMOVE] SendLua's to open keys and F4 menu. I don't even know why I had them there in the first place
+[REMOVE] FindPlayerBySID, SID is the player's UserID, Player(SID) does exactly the same thing.
+[REMOVE] Unused functions such as rp_paydaytime and FoodHeal
 
 DarkRP 2.4.1
 

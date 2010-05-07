@@ -2,7 +2,7 @@ local Question = { }
 local Questions = { }
 ques = { }
 
-function ccDoQuestion(ply, cmd, args)
+local function ccDoQuestion(ply, cmd, args)
 	if not Questions[args[1]] then return end
 	if not tonumber(args[2]) then return end
 

@@ -93,9 +93,3 @@ function FindPlayer(info)
 	end
 	return nil
 end
-
-function FindPlayerBySID(sid)
-	for k, v in pairs(player.GetAll()) do
-		if v.SID == sid then return v end
-	end
-end

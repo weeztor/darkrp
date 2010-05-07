@@ -20,17 +20,17 @@ end
 
 
 function ENT:Use(activator,caller)
-	local amount = self.Amount
+	local amount = self.dt.amount
 
 	activator:AddMoney(amount)
-	Notify(activator, 0, 4, "You have found " .. CUR .. (self.Amount or 0) .. "!")
+	Notify(activator, 0, 4, "You have found " .. CUR .. (self.dt.amount or 0) .. "!")
 	self:Remove()
 end
 
 function DarkRPCreateMoneyBag(pos, amount)
 	local moneybag = ents.Create("spawned_money")
 	moneybag:SetPos(pos)
-	moneybag.Amount = amount
+	moneybag.dt.amount = amount
 	moneybag:Spawn()
 	moneybag:Activate()
 end

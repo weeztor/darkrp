@@ -1,4 +1,4 @@
-function ccValueCommand(ply, cmd, args)
+local function ccValueCommand(ply, cmd, args)
 	local valuecmd = ValueCmds[cmd]
 
 	if not valuecmd then return end
@@ -38,7 +38,7 @@ function ccValueCommand(ply, cmd, args)
 	end
 end
 
-function ccToggleCommand(ply, cmd, args)
+local function ccToggleCommand(ply, cmd, args)
 	local togglecmd = ToggleCmds[cmd]
 
 	if not togglecmd then return end
@@ -100,7 +100,7 @@ end
 
 
 
-function ccDoorOwn(ply, cmd, args)
+local function ccDoorOwn(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		return
 	end
@@ -123,7 +123,7 @@ function ccDoorOwn(ply, cmd, args)
 end
 concommand.Add("rp_own", ccDoorOwn)
 
-function ccDoorUnOwn(ply, cmd, args)
+local function ccDoorUnOwn(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		return
 	end
@@ -145,7 +145,7 @@ function ccDoorUnOwn(ply, cmd, args)
 end
 concommand.Add("rp_unown", ccDoorUnOwn)
 
-function ccAddOwner(ply, cmd, args)
+local function ccAddOwner(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		return
 	end
@@ -180,7 +180,7 @@ function ccAddOwner(ply, cmd, args)
 end
 concommand.Add("rp_addowner", ccAddOwner)
 
-function ccRemoveOwner(ply, cmd, args)
+local function ccRemoveOwner(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		return
 	end
@@ -213,7 +213,7 @@ function ccRemoveOwner(ply, cmd, args)
 end
 concommand.Add("rp_removeowner", ccRemoveOwner)
 
-function ccLock(ply, cmd, args)
+local function ccLock(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		return
 	end
@@ -236,7 +236,7 @@ function ccLock(ply, cmd, args)
 end
 concommand.Add("rp_lock", ccLock)
 
-function ccUnLock(ply, cmd, args)
+local function ccUnLock(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		return
 	end
@@ -258,7 +258,7 @@ function ccUnLock(ply, cmd, args)
 end
 concommand.Add("rp_unlock", ccUnLock)
 
-function ccTell(ply, cmd, args)
+local function ccTell(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2,  string.format(LANGUAGE.need_admin, "rp_tell"))
@@ -293,7 +293,7 @@ function ccTell(ply, cmd, args)
 end
 concommand.Add("rp_tell", ccTell)
 
-function ccTellAll(ply, cmd, args)
+local function ccTellAll(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_tellall"))
@@ -320,7 +320,7 @@ function ccTellAll(ply, cmd, args)
 end
 concommand.Add("rp_tellall", ccTellAll)
 
-function ccRemoveLetters(ply, cmd, args)
+local function ccRemoveLetters(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_removeletters"))
 		return
@@ -347,40 +347,7 @@ function ccRemoveLetters(ply, cmd, args)
 end
 concommand.Add("rp_removeletters", ccRemoveLetters)
 
-function ccPayDayTime(ply, cmd, args)
-	if not args[1] then return end
-	if ply:EntIndex() ~= 0 and not ply:IsAdmin() and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_paydaytime"))
-		return
-	end
-
-	local amount = math.floor(tonumber(args[1]))
-
-	if not amount then return end
-
-	DB.SaveSetting("paydelay", amount)
-
-	for k, v in pairs(player.GetAll()) do
-		v:UpdateJob(v.DarkRPVars.job)
-	end
-
-	if ply:EntIndex() == 0 then
-		nick = "Console"
-	else
-		nick = ply:Nick()
-	end
-
-	NotifyAll(0, 3, nick .. " set rp_paydaytime to " .. amount)
-	
-	if ply:EntIndex() == 0 then
-		DB.Log("Console changed the paydaytime to "..amount )
-	else
-		DB.Log(ply:SteamName().." ("..ply:SteamID()..") changed the paydaytime to "..amount )
-	end
-end
-concommand.Add("rp_paydaytime", ccPayDayTime)
-
-function ccArrest(ply, cmd, args)
+local function ccArrest(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_arrest"))
@@ -421,7 +388,7 @@ function ccArrest(ply, cmd, args)
 end
 concommand.Add("rp_arrest", ccArrest)
 
-function ccUnarrest(ply, cmd, args)
+local function ccUnarrest(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_unarrest"))
@@ -451,7 +418,7 @@ function ccUnarrest(ply, cmd, args)
 end
 concommand.Add("rp_unarrest", ccUnarrest)
 
-function ccSetMoney(ply, cmd, args)
+local function ccSetMoney(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_setmoney"))
@@ -500,7 +467,7 @@ function ccSetMoney(ply, cmd, args)
 end
 concommand.Add("rp_setmoney", ccSetMoney)
 
-function ccSetSalary(ply, cmd, args)
+local function ccSetSalary(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_setsalary"))
@@ -557,7 +524,7 @@ function ccSetSalary(ply, cmd, args)
 end
 concommand.Add("rp_setsalary", ccSetSalary)
 
-function ccGrantPriv(ply, cmd, args)
+local function ccGrantPriv(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_grantpriv"))
 		return
@@ -650,7 +617,7 @@ function ccGrantPriv(ply, cmd, args)
 end
 concommand.Add("rp_grant", ccGrantPriv)
 
-function ccRevokePriv(ply, cmd, args)
+local function ccRevokePriv(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_revokepriv"))
 		return
@@ -743,7 +710,7 @@ function ccRevokePriv(ply, cmd, args)
 end
 concommand.Add("rp_revoke", ccRevokePriv)
 
-function ccSWEPSpawn(ply, cmd, args)
+local function ccSWEPSpawn(ply, cmd, args)
 	if GetConVarNumber("adminsweps") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_giveswep"))
@@ -755,7 +722,7 @@ function ccSWEPSpawn(ply, cmd, args)
 end
 concommand.Add("gm_giveswep", ccSWEPSpawn)
 
-function ccSWEPGive(ply, cmd, args)
+local function ccSWEPGive(ply, cmd, args)
 	if GetConVarNumber("adminsweps") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_spawnswep"))
@@ -767,7 +734,7 @@ function ccSWEPGive(ply, cmd, args)
 end
 concommand.Add("gm_spawnswep", ccSWEPGive)
 
-function ccSENTSPawn(ply, cmd, args)
+local function ccSENTSPawn(ply, cmd, args)
 	if GetConVarNumber("adminsents") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
 			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnsent"))

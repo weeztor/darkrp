@@ -542,7 +542,7 @@ function AddTeamCommands(CTeam, max)
 	end)
 end
 
-function GenerateChatCommandHelp()
+local function GenerateChatCommandHelp()
 	local p = "/"
 
 	AddHelpLabel(1000, HELP_CATEGORY_CHATCMD, p .. "help - Bring up this menu")

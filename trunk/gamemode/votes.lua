@@ -2,7 +2,7 @@ local Vote = {}
 local Votes = {}
 vote = { }
 
-function ccDoVote(ply, cmd, args)
+local function ccDoVote(ply, cmd, args)
 	if not Votes[args[1]] then return end
 	if not Votes[args[1]][tonumber(args[2])] then return end
 	

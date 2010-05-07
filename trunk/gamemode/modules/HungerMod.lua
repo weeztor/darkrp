@@ -2,7 +2,7 @@ includeCS("HungerMod/cl_init.lua")
 
 include("HungerMod/player.lua")
 
-HM = { }
+local HM = { }
 FoodItems = { }
 
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
@@ -77,7 +77,7 @@ AddFoodItem("bottle2", "models/props_junk/garbage_glassbottle002a.mdl", 10)
 AddFoodItem("bottle3", "models/props_junk/garbage_glassbottle003a.mdl", 10)
 AddFoodItem("orange", "models/props/cs_italy/orange.mdl", 20)
 
-function BuyFood(ply, args)
+local function BuyFood(ply, args)
 	if args == "" then return "" end
 
 	local trace = {}
@@ -122,14 +122,3 @@ function BuyFood(ply, args)
 	return ""
 end
 AddChatCommand("/buyfood", BuyFood)
-
-function FoodHeal(ply)
-	if GetConVarNumber("hungermod") == 0 then
-		ply:SetHealth(ply:Health() + (100 - ply:Health()))
-	else
-		ply:SetDarkRPVar("Energy", math.Clamp(ply.DarkRPVars.Energy + 100, 0, 100))
-		umsg.Start("AteFoodIcon", ply)
-		umsg.End()
-	end
-	return ""
-end

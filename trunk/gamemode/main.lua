@@ -416,7 +416,7 @@ function DrugPlayer(ply)
 	RP:AddAllPlayers()
 	
 	ply:SetJumpPower(300)
-	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd") * 2, CGetConVarNumber("rspd") * 2)
+	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd") * 2, GetConVarNumber("rspd") * 2)
 	
 	local IDSteam = string.gsub(ply:SteamID(), ":", "")
 	if not timer.IsTimer(IDSteam.."DruggedHealth") and not timer.IsTimer(IDSteam) then
@@ -748,7 +748,9 @@ end
 concommand.Add("gm_spare2", ShowSpare2)
 
 function GM:ShowTeam(ply)
-	ply:SendLua("KeysMenu(" ..tostring(ply:GetEyeTrace().Entity:IsVehicle()) .. ")")
+	umsg.Start("KeysMenu", ply)
+		umsg.Bool(ply:GetEyeTrace().Entity:IsVehicle())
+	umsg.End()
 end
 
 function GM:ShowHelp(ply)
@@ -1895,7 +1897,7 @@ end
 concommand.Add("rp_lockdown", Lockdown)
 AddChatCommand("/lockdown", Lockdown)
 
-local function UnLockdown(ply)
+function UnLockdown(ply) -- Must be global
 	if lstat and not wait_lockdown then
 		if ply:Team() == TEAM_MAYOR or ply:HasPriv(ADMIN) then
 			PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_ended)
