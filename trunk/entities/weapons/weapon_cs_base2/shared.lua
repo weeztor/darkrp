@@ -229,10 +229,10 @@ SetIronsights
 function SWEP:SetIronsights(b)
 	if b then 
 		self:SetWeaponHoldType(self.HoldType)
-		if SERVER  then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3) end
+		if SERVER then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3) end
 	else
 		self:SetWeaponHoldType("normal")
-		if SERVER  then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd")) end
+		if SERVER then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd")) end
 	end
 	self.Ironsights = b
 end
@@ -251,6 +251,7 @@ function SWEP:SecondaryAttack()
 	if (self.NextSecondaryAttack > CurTime()) then return end
 
 	bIronsights = not self.Ironsights
+	
 	self:SetIronsights(bIronsights)
 	self.NextSecondaryAttack = CurTime() + 0.3
 end

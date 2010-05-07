@@ -393,7 +393,6 @@ function AddEntityCommands(name, command, max, price)
 end
 
 function AddTeamCommands(CTeam, max)
-	print("ADDING TEAM COMMAND", CTeam.command)
 	local k = 0
 	for num,v in pairs(RPExtraTeams) do
 		if v.command == CTeam.command then

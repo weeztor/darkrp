@@ -1,9 +1,8 @@
-if (SERVER) then
+if SERVER then
 	AddCSLuaFile("shared.lua")
-	SWEP.HoldType = "smg"
 end
 
-if (CLIENT) then
+if CLIENT then
 	SWEP.PrintName = "MP5"
 	SWEP.Author = "Rickster"
 	SWEP.Slot = 2
@@ -24,7 +23,6 @@ SWEP.WorldModel = "models/weapons/w_smg_mp5.mdl"
 SWEP.Weight = 5
 SWEP.AutoSwitchTo = false
 SWEP.AutoSwitchFrom = false
-
 
 SWEP.HoldType = "smg"
 

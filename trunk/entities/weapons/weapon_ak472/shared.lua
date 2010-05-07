@@ -1,9 +1,8 @@
-if (SERVER) then
+if SERVER then
 	AddCSLuaFile("shared.lua")
-	SWEP.HoldType = "ar2"
 end
 
-if (CLIENT) then
+if CLIENT then
 	SWEP.PrintName = "AK47"
 	SWEP.Author = "Rickster"
 	SWEP.Slot = 3
@@ -24,6 +23,8 @@ SWEP.WorldModel = "models/weapons/w_rif_ak47.mdl"
 SWEP.Weight = 5
 SWEP.AutoSwitchTo = false
 SWEP.AutoSwitchFrom = false
+
+SWEP.HoldType = "ar2"
 
 SWEP.Primary.Sound = Sound("Weapon_AK47.Single")
 SWEP.Primary.Recoil = 1.5

@@ -43,9 +43,7 @@ Name: SWEP:Initialize()
 Desc: Called when the weapon is first loaded
 ---------------------------------------------------------*/
 function SWEP:Initialize()
-	if (SERVER) then
-		self:SetWeaponHoldType("normal")
-	end
+	self:SetWeaponHoldType("normal")
 end
 
 /*---------------------------------------------------------
