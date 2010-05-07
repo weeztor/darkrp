@@ -33,7 +33,7 @@ SWEP.Secondary.Ammo = ""
 
 local NoStripWeapons = {"weapon_physgun", "weapon_physcannon", "keys", "gmod_camera", "gmod_tool", "weaponchecker", "med_kit", "pocket"}
 function SWEP:Initialize()
-	if SERVER then self:SetWeaponHoldType("normal") end
+	self:SetWeaponHoldType("normal")
 end
 
 function SWEP:Deploy()

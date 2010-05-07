@@ -1073,8 +1073,8 @@ local function BuyVehicle(ply, args)
 	if not ent then return "" end
 	ent:SetModel(Vehicle.Model)
 	if Vehicle.KeyValues then
-		for k, v in pairs( Vehicle.KeyValues ) do
-			ent:SetKeyValue( k, v )
+		for k, v in pairs(Vehicle.KeyValues) do
+			ent:SetKeyValue(k, v)
 		end            
 	end
 	
@@ -1092,7 +1092,7 @@ local function BuyVehicle(ply, args)
 	ent.SID = ply.SID
 	ent.ClassOverride = Vehicle.Class
 	if Vehicle.Members then
-		table.Merge( ent, Vehicle.Members )
+		table.Merge(ent, Vehicle.Members)
 	end
 	ent:Own(ply)
 	gamemode.Call("PlayerSpawnedVehicle", ply, ent) -- VUMod compatability
@@ -2231,7 +2231,7 @@ end
 hook.Add("ScalePlayerDamage", "GetHit", GetHit)
 
 local function ReportAttacker(ply, cmd, args)
-	if ValidEntity(ply.attacker) and ply.attacker:IsPlayer() then
+	if ValidEntity(ply.attacker) and ply.attacker:IsPlayer() and ply:Alive() then
 		for k, v in pairs(ents.FindByClass("darkrp_console")) do
 			v.dt.reporter = ply
 			v.dt.reported = ply.attacker

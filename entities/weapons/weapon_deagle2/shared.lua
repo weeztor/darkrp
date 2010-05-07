@@ -1,6 +1,5 @@
-if (SERVER) then
+if SERVER then
 	AddCSLuaFile("shared.lua")
-	SWEP.HoldType = "pistol"
 end
 
 if (CLIENT) then
@@ -24,6 +23,8 @@ SWEP.WorldModel = "models/weapons/w_pist_deagle.mdl"
 SWEP.Weight = 5
 SWEP.AutoSwitchTo = false
 SWEP.AutoSwitchFrom = false
+
+SWEP.HoldType = "pistol"
 
 SWEP.Primary.Sound = Sound("Weapon_Deagle.Single")
 SWEP.Primary.Recoil = 1.1

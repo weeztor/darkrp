@@ -49,7 +49,6 @@ end
 
 local blacklist = {"drug_lab", "money_printer", "meteor", "microwave", "door", "func_", "player", "beam", "worldspawn", "env_", "path_", "spawned_shipment"}
 function SWEP:PrimaryAttack()
-	if CLIENT then return end
 
 	self.Weapon:SetNextPrimaryFire(CurTime() + 0.2)
 	local trace = self.Owner:GetEyeTrace()
@@ -62,13 +61,15 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	local phys = trace.Entity:GetPhysicsObject()
-	if not phys:IsValid() then return end
-	local mass = phys:GetMass()
-	
 	self:SetWeaponHoldType("pistol")
 	
 	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+	
+	if CLIENT then return end
+	
+	local phys = trace.Entity:GetPhysicsObject()
+	if not phys:IsValid() then return end
+	local mass = phys:GetMass()
 	
 	self.Owner:GetTable().Pocket = self.Owner:GetTable().Pocket or {} 
 	if not FPP.PlayerCanTouchEnt(self.Owner, trace.Entity, "Gravgun", "FPP_GRAVGUN") or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) or trace.Entity.jailWall then
@@ -111,6 +112,9 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
+	self:SetWeaponHoldType("pistol")
+	
+	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	if CLIENT then return end
 	self.Weapon:SetNextSecondaryFire(CurTime() + 0.2)
 	
@@ -121,9 +125,6 @@ function SWEP:SecondaryAttack()
 	local ent = self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket]
 	self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket] = nil
 	if not ValidEntity(ent) then Notify(self.Owner, 1, 4, "Your pocket contains no items.") return end
-	self:SetWeaponHoldType("pistol")
-	
-	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	
 	local trace = {}
 	trace.start = self.Owner:EyePos()

@@ -23,7 +23,7 @@ DarkRP 2.4.1 SVN
 [FIX] Modules not working when folder name was changed
 [FIX] Jail positions not saving
 [FIX] Compatability with extra seats in VUMod
-[FIX] animations with latest update
+[FIX] animations to work with latest update
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!

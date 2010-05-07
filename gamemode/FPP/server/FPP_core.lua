@@ -173,6 +173,13 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.toggle) then if FPP.UnGhost then FPP.UnGhost(ply, ent) end return end
 	if not ent:IsValid() then return FPP.CanTouch(ply, "FPP_PHYSGUN", "Not valid!", false) end
 	
+	if type(ent.PhysgunPickup) == "function" then
+		local val = ent.PhysgunPickup(ply, ent)
+		if val ~= nil then return val end
+	elseif ent.PhysgunPickup ~= nil then
+		return ent.PhysgunPickup
+	end
+	
 	if ent:IsPlayer() then return end
 	
 	local cantouch, why = FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN")
@@ -188,13 +195,6 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 end
 hook.Add("PhysgunPickup", "FPP.Protect.PhysgunPickup", FPP.Protect.PhysgunPickup)
 
-/*
-function FPP.Protect.PhysgunDrop(ply, DropEnt)
-	if not tobool(FPP.Settings.FPP_PHYSGUN.antinoob) then return end --Antinoob only code in the physgundrop
-	if DropEnt:GetClass() == "func_breakable_surf" then return end
-end
-hook.Add("PhysgunDrop", "FPP.Protect.PhysgunDrop", FPP.Protect.PhysgunDrop)*/
-
 --Physgun reload
 function FPP.Protect.PhysgunReload(weapon, ply)
 	if not tobool(FPP.Settings.FPP_PHYSGUN.reloadprotection) then return end
@@ -202,6 +202,13 @@ function FPP.Protect.PhysgunReload(weapon, ply)
 	local ent = ply:GetEyeTrace().Entity
 	
 	if not ValidEntity(ent) then return end
+	
+	if type(ent.OnPhysgunReload) == "function" then
+		local val = ent.OnPhysgunReload(weapon, ply)
+		if val ~= nil then return val end
+	elseif ent.OnPhysgunReload ~= nil then
+		return ent.OnPhysgunReload
+	end
 	
 	local cantouch, why = FPP.PlayerCanTouchEnt(ply, ent, "Physgun", "FPP_PHYSGUN")
 	if why then
@@ -213,6 +220,16 @@ function FPP.Protect.PhysgunReload(weapon, ply)
 end
 hook.Add("OnPhysgunReload", "FPP.Protect.PhysgunReload", FPP.Protect.PhysgunReload)
 
+function FPP.PhysgunFreeze(weapon, phys, ent, ply)
+	if type(ent.OnPhysgunReload) == "function" then
+		local val = ent.OnPhysgunReload(weapon, phys, ent, ply)
+		if val ~= nil then return val end
+	elseif ent.OnPhysgunReload ~= nil then
+		return ent.OnPhysgunReload
+	end
+end
+hook.Add("OnPhysgunFreeze", "FPP.Protect.PhysgunFreeze", FPP.PhysgunFreeze)
+
 --Gravgun pickup
 function FPP.Protect.GravGunPickup(ply, ent)
 	if not tobool(FPP.Settings.FPP_GRAVGUN.toggle) then return end
@@ -220,6 +237,13 @@ function FPP.Protect.GravGunPickup(ply, ent)
 	if not ValidEntity(ent) then return false end-- You don't want a cross when looking at the floor while holding right mouse
 	
 	if ent:IsPlayer() then return false end
+	
+	if type(ent.GravGunPickup) == "function" then
+		local val = ent.GravGunPickup(ply, ent)
+		if val ~= nil then return val end
+	elseif ent.GravGunPickup ~= nil then
+		return ent.GravGunPickup
+	end
 	
 	local cantouch, why = FPP.PlayerCanTouchEnt(ply, ent, "Gravgun", "FPP_GRAVGUN")
 	if why then
@@ -237,6 +261,13 @@ function FPP.Protect.GravGunPunt(ply, ent)
 	
 	if not ValidEntity(ent) then return FPP.CanTouch(ply, "FPP_GRAVGUN", "Not valid!", false) end
 	
+	if type(ent.GravGunPunt) == "function" then
+		local val = ent.GravGunPunt(ply, ent)
+		if val ~= nil then return val end
+	elseif ent.GravGunPunt ~= nil then
+		return ent.GravGunPunt
+	end
+	
 	local cantouch, why = FPP.PlayerCanTouchEnt(ply, ent, "Gravgun", "FPP_GRAVGUN")
 	if why then
 		FPP.CanTouch(ply, "FPP_GRAVGUN", why, cantouch)
@@ -252,6 +283,13 @@ function FPP.Protect.PlayerUse(ply, ent)
 	if not tobool(FPP.Settings.FPP_PLAYERUSE.toggle) then return end
 	
 	if not ValidEntity(ent) then return FPP.CanTouch(ply, "FPP_PLAYERUSE", "Not valid!", false) end
+	
+	if type(ent.PlayerUse) == "function" then
+		local val = ent.PlayerUse(ply, ent)
+		if val ~= nil then return val end
+	elseif ent.PlayerUse ~= nil then
+		return ent.PlayerUse
+	end
 	
 	local cantouch, why = FPP.PlayerCanTouchEnt(ply, ent, "PlayerUse", "FPP_PLAYERUSE")
 	if why then
@@ -273,6 +311,13 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 			dmginfo:SetDamage(0)
 		end
 		return 
+	end
+	
+	if type(ent.EntityDamage) == "function" then
+		local val = ent.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
+		if val ~= nil then return val end
+	elseif ent.EntityDamage ~= nil then
+		return ent.EntityDamage
 	end
 	
 	if not tobool(FPP.Settings.FPP_ENTITYDAMAGE.toggle) then return end
@@ -389,6 +434,13 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	end	
 	
 	local ent = ENT or trace.Entity
+	
+	if type(ent.CanTool) == "function" then
+		local val = ent:CanTool(ply, trace, tool, ent)
+		if val ~= nil then return val end
+	elseif ent.CanTool ~= nil then
+		return ent.CanTool
+	end
 	
 	if tobool(FPP.Settings.FPP_TOOLGUN.toggle) and ValidEntity(ent) then
 		
