@@ -84,6 +84,7 @@ for k,v in pairs(player.GetAll()) do
 	v.DarkRPVars = v.DarkRPVars or {}
 end
 
+include("help.lua")
 include("language_sh.lua")
 include("MakeThings.lua")
 include("cl_vgui.lua")

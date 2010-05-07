@@ -1,4 +1,4 @@
-local function ccValueCommand(ply, cmd, args)
+function ccValueCommand(ply, cmd, args)
 	local valuecmd = ValueCmds[cmd]
 
 	if not valuecmd then return end
@@ -38,7 +38,7 @@ local function ccValueCommand(ply, cmd, args)
 	end
 end
 
-local function ccToggleCommand(ply, cmd, args)
+function ccToggleCommand(ply, cmd, args)
 	local togglecmd = ToggleCmds[cmd]
 
 	if not togglecmd then return end
