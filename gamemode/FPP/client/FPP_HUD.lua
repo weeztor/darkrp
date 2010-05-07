@@ -47,6 +47,11 @@ hook.Add("CanTool", "FPP_CL_CanTool", function(ply, trace, tool) -- Prevent clie
 	end	
 end)
 
+hook.Add("PhysgunPickup", "FPP_CL_PhysgunPickup", function(ply, ent)
+	return false 
+end)--This looks weird, but whenever a client touches an ent he can't touch, without the code it'll look like he picked it up. WITH the code it really looks like he can't
+-- besides, when the client CAN pick up a prop, it also looks like he can.
+
 
 local HUDNote_c = 0
 local HUDNote_i = 1
