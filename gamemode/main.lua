@@ -1580,7 +1580,7 @@ AddChatCommand("/advert", PlayerAdvertise)
 
 local function MayorBroadcast(ply, args)
 	if args == "" then return "" end
-	if ply:Team() ~= TEAM_MAYOR then Notify(ply, 1, 4, "You have to be mayor") return end
+	if ply:Team() ~= TEAM_MAYOR then Notify(ply, 1, 4, "You have to be mayor") return "" end
 	local DoSay = function(text)
 		if text == "" then return end
 		for k,v in pairs(player.GetAll()) do
