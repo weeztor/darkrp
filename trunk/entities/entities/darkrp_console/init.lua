@@ -31,7 +31,7 @@ function ENT:Use(activator, caller)
 			umsg.Short(memory)
 		umsg.End()
 	elseif not activator:IsCP() then
-		Notify(ply, 1, 4, "You're not a cop")
+		Notify(activator, 1, 4, "You're not a cop")
 	end
 end
 
