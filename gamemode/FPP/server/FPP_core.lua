@@ -174,7 +174,7 @@ function FPP.Protect.PhysgunPickup(ply, ent)
 	if not ent:IsValid() then return FPP.CanTouch(ply, "FPP_PHYSGUN", "Not valid!", false) end
 	
 	if type(ent.PhysgunPickup) == "function" then
-		local val = ent.PhysgunPickup(ply, ent)
+		local val = ent:PhysgunPickup(ply, ent)
 		if val ~= nil then return val end
 	elseif ent.PhysgunPickup ~= nil then
 		return ent.PhysgunPickup
@@ -204,7 +204,7 @@ function FPP.Protect.PhysgunReload(weapon, ply)
 	if not ValidEntity(ent) then return end
 	
 	if type(ent.OnPhysgunReload) == "function" then
-		local val = ent.OnPhysgunReload(weapon, ply)
+		local val = ent:OnPhysgunReload(weapon, ply)
 		if val ~= nil then return val end
 	elseif ent.OnPhysgunReload ~= nil then
 		return ent.OnPhysgunReload
@@ -222,7 +222,7 @@ hook.Add("OnPhysgunReload", "FPP.Protect.PhysgunReload", FPP.Protect.PhysgunRelo
 
 function FPP.PhysgunFreeze(weapon, phys, ent, ply)
 	if type(ent.OnPhysgunReload) == "function" then
-		local val = ent.OnPhysgunReload(weapon, phys, ent, ply)
+		local val = ent:OnPhysgunReload(weapon, phys, ent, ply)
 		if val ~= nil then return val end
 	elseif ent.OnPhysgunReload ~= nil then
 		return ent.OnPhysgunReload
@@ -239,7 +239,7 @@ function FPP.Protect.GravGunPickup(ply, ent)
 	if ent:IsPlayer() then return false end
 	
 	if type(ent.GravGunPickup) == "function" then
-		local val = ent.GravGunPickup(ply, ent)
+		local val = ent:GravGunPickup(ply, ent)
 		if val ~= nil then
 			if val == false then DropEntityIfHeld(ent) end
 			return val
@@ -267,7 +267,7 @@ function FPP.Protect.GravGunPunt(ply, ent)
 	if not ValidEntity(ent) then DropEntityIfHeld(ent) return FPP.CanTouch(ply, "FPP_GRAVGUN", "Not valid!", false) end
 	
 	if type(ent.GravGunPunt) == "function" then
-		local val = ent.GravGunPunt(ply, ent)
+		local val = ent:GravGunPunt(ply, ent)
 		if val ~= nil then return val end
 	elseif ent.GravGunPunt ~= nil then
 		return ent.GravGunPunt
@@ -291,7 +291,7 @@ function FPP.Protect.PlayerUse(ply, ent)
 	if not ValidEntity(ent) then return FPP.CanTouch(ply, "FPP_PLAYERUSE", "Not valid!", false) end
 	
 	if type(ent.PlayerUse) == "function" then
-		local val = ent.PlayerUse(ply, ent)
+		local val = ent:PlayerUse(ply, ent)
 		if val ~= nil then return val end
 	elseif ent.PlayerUse ~= nil then
 		return ent.PlayerUse
@@ -320,7 +320,7 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 	end
 	
 	if type(ent.EntityDamage) == "function" then
-		local val = ent.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
+		local val = ent:EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 		if val ~= nil then return val end
 	elseif ent.EntityDamage ~= nil then
 		return ent.EntityDamage
