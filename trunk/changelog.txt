@@ -11,6 +11,9 @@ DarkRP 2.4.1 SVN
 [ADD] rp_DeathPOV: Enable/disable whether people see their death in first person view
 [ADD] rp_respawninjail - Enable/disable whether people can respawn in jail when they die (default on)
 [ADD] /911 and /report: Call 911 when you're being attacked and call /report when you see an illegal entity!
+[ADD] rp_enablebuyhealth
+[ADD] rp_npcarrest
+[ADD] /broadcast for mayors
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo

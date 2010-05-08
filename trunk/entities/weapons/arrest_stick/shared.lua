@@ -68,6 +68,10 @@ function SWEP:PrimaryAttack()
 	if not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) or (not trace.Entity:IsPlayer() and not trace.Entity:IsNPC()) then
 		return
 	end
+	
+	if not tobool("npcarrest") and trace.Entity:IsNPC() then
+		return
+	end
 
 	if GetConVarNumber("needwantedforarrest") == 1 and not trace.Entity:IsNPC() and not trace.Entity.DarkRPVars.wanted then
 		Notify(self.Owner, 1, 5, "The player must be wanted in order to be able to arrest them.")
