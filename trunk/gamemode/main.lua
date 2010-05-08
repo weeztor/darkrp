@@ -2214,7 +2214,7 @@ local function ReportEntity(ply, cmd, args)
 	tr = util.TraceLine(tracedata).Entity	
 	
 	local illegal = {"money_printer", "drug_lab", "drug"}
-	if ValidEntity(tr) and tr.dt and ValidEntity(tr.dt.owning_ent) and table.HasValue(illegal, tr:GetClass()) then
+	if ValidEntity(tr) and tr.dt and ValidEntity(tr.dt.owning_ent) and (table.HasValue(illegal, tr:GetClass()) or tr.Illegal) then
 		for k, v in pairs(ents.FindByClass("darkrp_console")) do
 			v.dt.reporter = ply
 			v.dt.reported = tr.dt.owning_ent
