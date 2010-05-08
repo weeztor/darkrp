@@ -556,6 +556,10 @@ function GM:PlayerSpawn(ply)
 	if ply:GetActiveWeapon() and ValidEntity(ply:GetActiveWeapon()) then
 		ply:GetActiveWeapon():Extinguish()
 	end
+	
+	for k,v in pairs(ents.FindByClass("predicted_viewmodel")) do -- Money printer ignite fix
+		v:Extinguish()
+	end
 
 	if ply.demotedWhileDead then
 		ply.demotedWhileDead = nil

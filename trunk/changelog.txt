@@ -29,6 +29,7 @@ DarkRP 2.4.1 SVN
 [FIX] Jail positions not saving
 [FIX] Compatability with extra seats in VUMod
 [FIX] animations to work with latest update
+[FIX] Staying on fire when respawning after money printer explosion
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits, added Eusion
 [CHANGE] The way Entities like money and money printers show their information. Thanks MavBear!

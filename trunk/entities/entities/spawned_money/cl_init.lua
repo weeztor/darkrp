@@ -9,10 +9,24 @@ function ENT:Draw()
 	surface.SetFont("ChatFont")
 	local TextWidth = surface.GetTextSize("$"..tostring(self.dt.amount))
 	
-	cam.Start3D2D(Pos + Ang:Up(), Ang, 0.1)
+	render.SuppressEngineLighting(true)
+	
+	
+	cam.Start3D2D(Pos + Ang:Up() * 0.9, Ang, 0.1)
 		surface.SetDrawColor(230, 255, 230, 255)
 		surface.SetTextPos(-TextWidth*0.5, -10)
 		surface.SetFont("ChatFont")
 		surface.DrawText("$"..tostring(self.dt.amount))
 	cam.End3D2D()
+	
+	Ang:RotateAroundAxis(Ang:Right(), 180)
+	
+	cam.Start3D2D(Pos, Ang, 0.1)
+		surface.SetDrawColor(230, 255, 230, 255)
+		surface.SetTextPos(-TextWidth*0.5, -10)
+		surface.SetFont("ChatFont")
+		surface.DrawText("$"..tostring(self.dt.amount))
+	cam.End3D2D()
+	
+	render.SuppressEngineLighting(false)
 end
