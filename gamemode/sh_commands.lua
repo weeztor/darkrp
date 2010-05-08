@@ -270,6 +270,12 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_deathpov - Enable/disable whethe
 AddToggleCommand("rp_respawninjail", "respawninjail", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_respawninjail - Enable/disable whether people can respawn in jail when they die")
 
+AddToggleCommand("rp_enablebuyhealth", "enablebuyhealth", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enablebuyhealth - Enable/disable buyhealth")
+
+AddToggleCommand("rp_npcarrest", "npcarrest", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_npcarrest - Enable/disable arresting npc's")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------

@@ -240,8 +240,12 @@ function FPP.Protect.GravGunPickup(ply, ent)
 	
 	if type(ent.GravGunPickup) == "function" then
 		local val = ent.GravGunPickup(ply, ent)
-		if val ~= nil then return val end
+		if val ~= nil then
+			if val == false then DropEntityIfHeld(ent) end
+			return val
+		end
 	elseif ent.GravGunPickup ~= nil then
+		if ent.GravGunPickup == false then DropEntityIfHeld(ent) end
 		return ent.GravGunPickup
 	end
 	
@@ -251,15 +255,16 @@ function FPP.Protect.GravGunPickup(ply, ent)
 	end
 	
 	if FPP.UnGhost and cantouch then FPP.UnGhost(ply, ent) end
+	if cantouch == false then DropEntityIfHeld(ent) end
 	return cantouch
 end
-hook.Add("GravGunPickupAllowed", "FPP.Protect.GravGunPickup", FPP.Protect.GravGunPickup)
+hook.Add("GravGunOnPickedUp", "FPP.Protect.GravGunPickup", FPP.Protect.GravGunPickup)
 
 --Gravgun punting
 function FPP.Protect.GravGunPunt(ply, ent)
 	if tobool(FPP.Settings.FPP_GRAVGUN.noshooting) then DropEntityIfHeld(ent) return false end
 	
-	if not ValidEntity(ent) then return FPP.CanTouch(ply, "FPP_GRAVGUN", "Not valid!", false) end
+	if not ValidEntity(ent) then DropEntityIfHeld(ent) return FPP.CanTouch(ply, "FPP_GRAVGUN", "Not valid!", false) end
 	
 	if type(ent.GravGunPunt) == "function" then
 		local val = ent.GravGunPunt(ply, ent)
@@ -274,6 +279,7 @@ function FPP.Protect.GravGunPunt(ply, ent)
 	end
 	
 	if FPP.UnGhost and cantouch then FPP.UnGhost(ply, ent) end
+	if cantouch == false then DropEntityIfHeld(ent) end
 	return cantouch
 end
 hook.Add("GravGunPunt", "FPP.Protect.GravGunPunt", FPP.Protect.GravGunPunt)
@@ -436,7 +442,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	local ent = ENT or trace.Entity
 	
 	if type(ent.CanTool) == "function" then
-		local val = ent:CanTool(ply, trace, tool, ent)
+		local val = ent:CanTool(ply, trace, tool, ENT)
 		if val ~= nil then return val end
 	elseif ent.CanTool ~= nil then
 		return ent.CanTool

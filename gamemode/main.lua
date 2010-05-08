@@ -1198,6 +1198,10 @@ AddChatCommand("/buyammo", BuyAmmo)
 
 local function BuyHealth(ply)
 	local cost = GetConVarNumber("healthcost")
+	if not tobool(GetConVarNumber("enablebuyhealth")) then
+		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "/buyhealth", ""))
+		return ""
+	end
 	if not ply:Alive() then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyhealth", ""))
 		return ""
@@ -1626,12 +1630,26 @@ local function PlayerAdvertise(ply, args)
 		if text == "" then return end
 		for k,v in pairs(player.GetAll()) do
 			local col = team.GetColor(ply:Team())
-			TalkToPerson(v, col, LANGUAGE.advert ..ply:Nick(), Color(255,255,0,255), text, ply)
+			TalkToPerson(v, col, LANGUAGE.advert .." "..ply:Nick(), Color(255,255,0,255), text, ply)
 		end
 	end
 	return args, DoSay
 end
 AddChatCommand("/advert", PlayerAdvertise)
+
+local function MayorBroadcast(ply, args)
+	if args == "" then return "" end
+	if ply:Team() ~= TEAM_MAYOR then Notify(ply, 1, 4, "You have to be mayor") return end
+	local DoSay = function(text)
+		if text == "" then return end
+		for k,v in pairs(player.GetAll()) do
+			local col = team.GetColor(ply:Team())
+			TalkToPerson(v, col, "[Broadcast!] " ..ply:Nick(), Color(170, 0, 0,255), text, ply)
+		end
+	end
+	return args, DoSay
+end
+AddChatCommand("/broadcast", MayorBroadcast)
 
 local function SetRadioChannel(ply,args)
 	if tonumber(args) == nil or tonumber(args) < 0 or tonumber(args) > 99 then
@@ -2233,6 +2251,7 @@ end
 hook.Add("ScalePlayerDamage", "GetHit", GetHit)
 
 local function ReportAttacker(ply, cmd, args)
+	print(ply, "player?")
 	if ValidEntity(ply.attacker) and ply.attacker:IsPlayer() and ply:Alive() then
 		for k, v in pairs(ents.FindByClass("darkrp_console")) do
 			v.dt.reporter = ply
