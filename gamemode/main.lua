@@ -342,65 +342,6 @@ local function EarthQuakeTest()
 end
 
 /*---------------------------------------------------------
- Flammable
- ---------------------------------------------------------*/
-local FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle", "prop_physics"}
-
-local function IsFlammable(ent)
-	local class = ent:GetClass()
-	for k, v in pairs(FlammableProps) do
-		if class == v then return true end
-	end
-	return false
-end
-
--- FireSpread from SeriousRP
-local function FireSpread(e)
-	if e:IsOnFire() then
-		if e:IsMoneyBag() then
-			e:Remove()
-		end
-		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
-		local maxcount = 3
-		local count = 1
-		local rand = 0
-		for k, v in pairs(en) do
-			if IsFlammable(v) then
-			if count >= maxcount then break end
-				if math.random(0.0, 60000) < 1.0 then
-					if not v.burned then
-						v:Ignite(math.random(5,180), 0)
-						v.burned = true
-					else
-						local r, g, b, a = v:GetColor()
-						if (r - 51)>=0 then r = r - 51 end
-						if (g - 51)>=0 then g = g - 51 end
-						if (b - 51)>=0 then b = b - 51 end
-						v:SetColor(r, g, b, a)
-						math.randomseed((r / (g+1)) + b)
-						if (r + g + b) < 103 and math.random(1, 100) < 35 then
-							v:Fire("enablemotion","",0)
-							constraint.RemoveAll(v)
-						end
-					end
-					count = count + 1
-				end
-			end
-		end
-	end
-end
-
-function FlammablePropThink()
-	for k, v in ipairs(FlammableProps) do
-		local ens = ents.FindByClass(v)
-		
-		for a, b in pairs(ens) do
-			FireSpread(b)
-		end
-	end
-end
-
-/*---------------------------------------------------------
  Drugs
  --------------------------------------a-------------------*/
 function DrugPlayer(ply)
@@ -1287,17 +1228,17 @@ hook.Add("KeyPress", "HangUpPhone", HangUp)
  Jobs
  ---------------------------------------------------------*/
 local function CreateAgenda(ply, args)
-	if ply:Team() == TEAM_MOB then
-		RunConsoleCommand("mobagenda", args)
-
-		for k, v in pairs(player.GetAll()) do
-			local t = v:Team()
-			if t == TEAM_GANG or t == TEAM_MOB then
-				Notify(v, 1, 4, LANGUAGE.agenda_updated)
+	if DarkRPAgendas[ply:Team()] then
+		ply:SetDarkRPVar("agenda", args)
+		
+		Notify(ply, 1, 4, LANGUAGE.agenda_updated)
+		for k,v in pairs(DarkRPAgendas[ply:Team()].Listeners) do
+			for a,b in pairs(team.GetPlayers(v)) do
+				Notify(b, 1, 4, LANGUAGE.agenda_updated)
 			end
 		end
 	else
-		Notify(ply, 1, 6, string.format(LANGUAGE.must_be_x, team.GetName(TEAM_MOB), "/agenda"))
+		Notify(ply, 1, 6, string.format(LANGUAGE.unable, "agenda", "Incorrect team"))
 	end
 	return ""
 end

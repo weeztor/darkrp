@@ -1,3 +1,9 @@
+local function GetTextHeight(font, str)
+	surface.SetFont(font)
+	local w, h = surface.GetTextSize(str)
+	return h
+end
+
 local HelpPanel = { }
 local LastChatPrefix = ""
 
