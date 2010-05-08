@@ -134,10 +134,24 @@ HOW TO MAKE A DOOR GROUP
 --------------------------------------------------------
 AddDoorGroup("NAME OF THE GROUP HERE, you see this when looking at a door", Team1, Team2, team3, team4, etc.)
 
-WARNING: THE DOOR GROUPS HAVE TO BE AT THE _BOTTOM_ OF SHARED.LUA. IF THEY ARE NOT, IT MIGHT MUCK UP!
+WARNING: THE DOOR GROUPS HAVE TO BE UNDER THE TEAMS IN SHARED.LUA. IF THEY ARE NOT, IT MIGHT MUCK UP!
 
 
 The default door groups, can also be used as examples:
 */
 AddDoorGroup("cops and mayor only", TEAM_CHIEF, TEAM_POLICE, TEAM_MAYOR)
 AddDoorGroup("gundealer only", TEAM_GUN)
+
+
+/*
+--------------------------------------------------------
+HOW TO MAKE An agenda
+--------------------------------------------------------
+AddAgenda(Title of the agenda, Manager (who edits it), Listeners (the ones who just see and follow the agenda))
+
+WARNING: THE AGENDAS HAVE TO BE UNDER THE TEAMS IN SHARED.LUA. IF THEY ARE NOT, IT MIGHT MUCK UP!
+
+The default agenda's, can also be used as examples:
+*/
+AddAgenda("Gangster's agenda", TEAM_MOB, {TEAM_GANG})
+AddAgenda("Police agenda", TEAM_MAYOR, {TEAM_CHIEF, TEAM_POLICE})

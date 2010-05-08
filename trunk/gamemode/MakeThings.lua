@@ -105,4 +105,10 @@ hook.Add("InitPostEntity", "AddShipments", function()
 	end
 end)
 
+DarkRPAgendas = {}
+
+function AddAgenda(Title, Manager, Listeners)
+	DarkRPAgendas[Manager] = {Title = Title, Listeners = Listeners} 
+end
+
 	

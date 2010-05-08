@@ -107,12 +107,6 @@ include("FPP/sh_CPPI.lua")
 
 surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
 
-local function GetTextHeight(font, str)
-	surface.SetFont(font)
-	local w, h = surface.GetTextSize(str)
-	return h
-end
-
 local function DrawPlayerInfo(ply)
 	if not ply:Alive() then return end
 
@@ -412,17 +406,27 @@ local function ChangeHealth(old, new)
 end
 
 local oldmoney = 0
+local draw = draw
+local surface = surface
+local GetConVarNumber = GetConVarNumber
+local math = math
+local Color = Color
+local table = table
+local util = util
+
 function GM:HUDPaint()
-	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
-	local health = LocalPlayer():Health()
-	local money = LocalPlayer().DarkRPVars.money or 0
-	local job = LocalPlayer().DarkRPVars.job or "" 
-	local salary = LocalPlayer().DarkRPVars.salary or 0
+	local SELF = LocalPlayer()
+	local Health = SELF:Health()
+	
+	SELF.DarkRPVars = SELF.DarkRPVars or {}
+	local money = SELF.DarkRPVars.money or 0
+	local job = SELF.DarkRPVars.job or "" 
+	local salary = SELF.DarkRPVars.salary or 0
 	local CurrentTime = CurTime()
 	
-	if arresttime ~= 0 and CurrentTime - arresttime <= arresteduntil and LocalPlayer().DarkRPVars.Arrested then
+	if arresttime ~= 0 and CurrentTime - arresttime <= arresteduntil and SELF.DarkRPVars.Arrested then
 		draw.DrawText(string.format(LANGUAGE.youre_arrested, math.ceil(arresteduntil - (CurrentTime - arresttime))), "ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
-	elseif arresttime ~= 0 or not LocalPlayer().DarkRPVars.Arrested then arresttime = 0
+	elseif arresttime ~= 0 or not SELF.DarkRPVars.Arrested then arresttime = 0
 	end
 	self.BaseClass:HUDPaint()
 
@@ -431,7 +435,7 @@ function GM:HUDPaint()
 	local hw = HUDwidth:GetInt()
 	local hh = HUDHeight:GetInt()
 	
-	if LocalPlayer():GetActiveWeapon().IAmControlling then return end
+	if SELF:GetActiveWeapon().IAmControlling then return end
 	local backgroundcolor = Color(backgroundr:GetInt(), backgroundg:GetInt(), backgroundb:GetInt(), backgrounda:GetInt())
 	local Healthbackgroundcolor = Color(Healthbackgroundr:GetInt(), Healthbackgroundg:GetInt(), Healthbackgroundb:GetInt(), Healthbackgrounda:GetInt())
 	local Healthforegroundcolor = Color(Healthforegroundr:GetInt(), Healthforegroundg:GetInt(), Healthforegroundb:GetInt(), Healthforegrounda:GetInt())
@@ -440,9 +444,9 @@ function GM:HUDPaint()
 
 	draw.RoundedBox(6, hx - 4, hy - 4, hw + 8, hh + 8, Healthbackgroundcolor)
 
-	if health ~= OldHealth then
-		ChangeHealth(OldHealth, health)
-		OldHealth = health
+	if Health ~= OldHealth then
+		ChangeHealth(OldHealth, Health)
+		OldHealth = Health
 	end
 	
 	if ShowHealth > 0 then
@@ -514,13 +518,13 @@ function GM:HUDPaint()
 			draw.DrawText(AdminTellMsg, "ChatFont", ScrW() / 2 + 10, 65, Color(200, 30, 30, AdminTellAlpha), 1)
 		end
 
-		if not LocalPlayer():Alive() then
+		if not SELF:Alive() then
 			draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), Color(0,0,0,255))
 			draw.SimpleText(LANGUAGE.nlr, "ChatFont", ScrW() / 2 +10, ScrH() / 2 - 5, Color(200,0,0,255),1)
 		end
 	end
 
-	if LocalPlayer().DarkRPVars.helpCop then
+	if SELF.DarkRPVars.helpCop then
 		draw.RoundedBox(10, 10, 10, 590, 194, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 586, 190, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
@@ -528,7 +532,7 @@ function GM:HUDPaint()
 		draw.DrawText(string.format(LANGUAGE.cophelp, GetConVarNumber("jailtimer")), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
-	if LocalPlayer().DarkRPVars.helpMayor then
+	if SELF.DarkRPVars.helpMayor then
 		draw.RoundedBox(10, 10, 10, 590, 158, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 586, 154, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
@@ -536,23 +540,15 @@ function GM:HUDPaint()
 		draw.DrawText(LANGUAGE.mayorhelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 
-	if LocalPlayer().DarkRPVars.helpAdmin then
+	if SELF.DarkRPVars.helpAdmin then
 		draw.RoundedBox(10, 10, 10, 560, 260, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 556, 256, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 556, 20, Color(0, 0, 70, 200))
 		draw.DrawText("Admin Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
 		draw.DrawText(LANGUAGE.adminhelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
-
-	if LocalPlayer():Team() == TEAM_GANG or LocalPlayer():Team() == TEAM_MOB and not LocalPlayer().DarkRPVars.helpBoss then
-		draw.RoundedBox(10, 10, 10, 460, 110, Color(0, 0, 0, 155))
-		draw.RoundedBox(10, 12, 12, 456, 106, Color(51, 58, 51,100))
-		draw.RoundedBox(10, 12, 12, 456, 20, Color(0, 0, 70, 100))
-		draw.DrawText(LANGUAGE.gangster_agenda, "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		draw.DrawText(string.gsub(string.gsub(GetConVarString("mobagenda"), "//", "\n"), "\\n", "\n"), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
-	end
-
-	if LocalPlayer().DarkRPVars.helpBoss then
+	
+	if SELF.DarkRPVars.helpBoss then
 		draw.RoundedBox(10, 10, 10, 560, 130, Color(0, 0, 0, 255))
 		draw.RoundedBox(10, 12, 12, 556, 126, Color(51, 58, 51, 200))
 		draw.RoundedBox(10, 12, 12, 556, 20, Color(0, 0, 70, 200))
@@ -560,7 +556,30 @@ function GM:HUDPaint()
 		draw.DrawText(LANGUAGE.mobhelp, "ScoreboardText", 30, 35, Color(255,255,255,255),0)
 	end
 	
-	if LocalPlayer().DarkRPVars.HasGunlicense then
+	local DrawAgenda, AgendaManager = DarkRPAgendas[SELF:Team()], SELF:Team()
+	if not DrawAgenda then
+		for k,v in pairs(DarkRPAgendas) do
+			if table.HasValue(v.Listeners, SELF:Team()) then
+				DrawAgenda, AgendaManager = DarkRPAgendas[k], k
+				break
+			end
+		end
+	end
+	if DrawAgenda then
+		draw.RoundedBox(10, 10, 10, 460, 110, Color(0, 0, 0, 155))
+		draw.RoundedBox(10, 12, 12, 456, 106, Color(51, 58, 51,100))
+		draw.RoundedBox(10, 12, 12, 456, 20, Color(0, 0, 70, 100))
+		
+		draw.DrawText(DrawAgenda.Title, "ScoreboardText", 30, 12, Color(255,0,0,255),0)
+		
+		local AgendaText = ""
+		for k,v in pairs(team.GetPlayers(AgendaManager)) do
+			AgendaText = AgendaText .. (v.DarkRPVars.agenda or "")
+		end
+		draw.DrawText(string.gsub(string.gsub(AgendaText, "//", "\n"), "\\n", "\n"), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+	end
+	
+	if SELF.DarkRPVars.HasGunlicense then
 		local QuadTable = {}  
 		
 		QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/page" ) 
@@ -579,7 +598,7 @@ function GM:HUDPaint()
 		draw.DrawText(LANGUAGE.lockdown_started, "ScoreboardSubtitle", chbxX, chboxY + 260, Color(cin * 255, 0, 255 - (cin * 255), 255), TEXT_ALIGN_LEFT)
 	end
 	
-	if LocalPlayer().DRPIsTalking then
+	if SELF.DRPIsTalking then
 		local Rotating = math.sin(CurTime()*3)
 		local backwards = 0
 		if Rotating < 0 then
