@@ -127,10 +127,8 @@ function SWEP:Reload()
 		return
 	end
 	if SERVER then
-		if trace.Entity:IsVehicle() then
-			self.Owner:SendLua("KeysMenu(true)")
-		else
-			self.Owner:SendLua("KeysMenu(false)")
-		end
+		umsg.Start("KeysMenu", self.Owner)
+			umsg.Bool(self.Owner:GetEyeTrace().Entity:IsVehicle())
+		umsg.End()
 	end
 end
