@@ -393,7 +393,8 @@ function meta:Arrest(time, rejoin)
 	self.warranted = false
 	self:SetDarkRPVar("HasGunlicense", false)
 	self:SetDarkRPVar("Arrested", true)
-	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("aspd"), GetConVarNumber("aspd") )
+	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("aspd"), GetConVarNumber("aspd"))
+	self:StripWeapons()
 	
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
 	if GetConVarNumber("teletojail") == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
@@ -401,10 +402,10 @@ function meta:Arrest(time, rejoin)
 		if not jailpos then return end
 		self:SetPos(jailpos)
 	end
+	
 	if not RPArrestedPlayers[self:SteamID()] or rejoin then
 		local ID = self:SteamID()
 		RPArrestedPlayers[ID] = true
-		self:StripWeapons()
 		self.LastJailed = CurTime()
 		
 		-- If the player has no remaining jail time,

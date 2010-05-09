@@ -1305,7 +1305,10 @@ local function FinishDemote(choice, v)
 	if choice == 1 then
 		v:TeamBan()
 		if v:Alive() then
-			v:ChangeTeam(TEAM_CITIZEN)
+			v:ChangeTeam(TEAM_CITIZEN, true)
+			if RPArrestedPlayers[v:SteamID()] then
+				v:Arrest()
+			end
 		else
 			v.demotedWhileDead = true
 		end
@@ -1333,7 +1336,7 @@ local function Demote(ply, args)
 	end
 	local p = FindPlayer(tableargs[1])
 	if p then
-		if CurTime() - ply:GetTable().LastVoteCop < 80 then
+		if CurTime() - ply.LastVoteCop < 80 then
 			Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait, math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)), "/demote"))
 			return ""
 		end

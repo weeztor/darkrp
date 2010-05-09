@@ -31,7 +31,13 @@ end
 
 function ENT:Use(activator,caller)
 	if PooPee then PooPee.AteFood(caller, "models/props_junk/garbage_takeoutcarton001a.mdl") end
-	FoodHeal(caller, 100)
+	if GetConVarNumber("hungermod") == 0 then		
+		caller:SetHealth(caller:Health() + (100 - caller:Health()))		
+	else		
+		caller:SetDarkRPVar("Energy", math.Clamp(caller.DarkRPVars.Energy + 100, 0, 100))		
+		umsg.Start("AteFoodIcon", caller)		
+		umsg.End()		
+	end	
 	self.Entity:Remove()
 end
 
