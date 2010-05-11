@@ -20,13 +20,13 @@ HELP_CATEGORY_HUNGERMOD = #HelpCategories + 1
 
 AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
 
-AddToggleCommand("rp_hungermod", "hungermod", 1)
+AddToggleCommand("rp_hungermod", "hungermod", 0)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungermod <1 or 0> - Enable/disable hunger mod")
 
 AddToggleCommand("rp_foodspawn", "foodspawn", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_foodspawn - Whether players(non-cooks) can spawn food props or not")
 
-AddToggleCommand("rp_foodspecialcost", "foodpay", 0)
+AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
 AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodspecialcost <1 or 0> - Enable/disable whether spawning food props have a special cost")
 
 AddValueCommand("rp_foodcost", "foodcost", 15)
