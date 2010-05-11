@@ -60,6 +60,7 @@ AddCSLuaFile("showteamtabs.lua")
 AddCSLuaFile("sh_commands.lua")
 AddCSLuaFile("DRPDermaSkin.lua")
 AddCSLuaFile("help.lua")
+AddCSLuaFile("sh_animations.lua")
 
 -- Earthquake Mod addon
 resource.AddFile("sound/earthquake.mp3")
@@ -92,6 +93,7 @@ include("addentities.lua")
 include("main.lua")
 include("bannedprops.lua")
 include("rating.lua")
+include("sh_animations.lua")
 
 
 --Falco's prop protection

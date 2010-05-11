@@ -99,6 +99,7 @@ include("scoreboard/player_row.lua")
 include("scoreboard/scoreboard.lua")
 include("scoreboard/vote_button.lua")
 include("DRPDermaSkin.lua")
+include("sh_animations.lua")
 
 include("FPP/client/FPP_Menu.lua")
 include("FPP/client/FPP_HUD.lua")
