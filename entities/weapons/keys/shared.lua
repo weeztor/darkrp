@@ -32,10 +32,6 @@ SWEP.Secondary.DefaultClip = 0
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
 
-if CLIENT then
-	SWEP.FrameVisible = false
-end
-
 function SWEP:Initialize()
 	self:SetWeaponHoldType("normal")
 end
@@ -48,8 +44,6 @@ function SWEP:Deploy()
 end
 
 function SWEP:PrimaryAttack()
-	if CLIENT then return end
-
 	local trace = self.Owner:GetEyeTrace()
 	
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or (trace.Entity.DoorData and trace.Entity.DoorData.NonOwnable) then
@@ -69,22 +63,25 @@ function SWEP:PrimaryAttack()
 	local Team = self.Owner:Team()
 	
 	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity.DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], Team))  then
-		trace.Entity:Fire("lock", "", 0)
-		self.Owner:EmitSound(self.Sound)
+		if SERVER then
+			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
+			trace.Entity:Fire("lock", "", 0) -- Lock the door immediately so it won't annoy people
+			timer.Simple(0.9, function(ply, sound) if ValidEntity(ply) then ply:EmitSound(sound) end end, self.Owner, self.Sound)
+		end
+		self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.3)
 	else
-		if trace.Entity:IsVehicle() then
+		if trace.Entity:IsVehicle() and SERVER then
 			Notify(self.Owner, 1, 3, "You don't own this vehicle!")
-		else
-			self.Owner:EmitSound("physics/wood/wood_crate_impact_hard2.wav", 100, math.random(90, 110))
+		elseif not trace.Entity:IsVehicle() then
+			if SERVER then self.Owner:EmitSound("physics/wood/wood_crate_impact_hard2.wav", 100, math.random(90, 110)) end
+			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
 		end
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.2)
 	end
 end
 
 function SWEP:SecondaryAttack()
-	if CLIENT then return end
-
 	local trace = self.Owner:GetEyeTrace()
 
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or trace.Entity.DoorData.NonOwnable then
@@ -101,15 +98,19 @@ function SWEP:SecondaryAttack()
 
 	local Team = self.Owner:Team()
 	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity.DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], Team)) then
-		trace.Entity:Fire("unlock", "", 0)
-
-		self.Owner:EmitSound(self.Sound)
+		if SERVER then
+			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
+			trace.Entity:Fire("unlock", "", 0)-- Unlock the door immediately so it won't annoy people
+			timer.Simple(0.9, function(ply, sound) if ValidEntity(ply) then ply:EmitSound(sound) end end, self.Owner, self.Sound)
+		end
+		self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
 		self.Weapon:SetNextSecondaryFire(CurTime() + 0.3)
 	else
-		if trace.Entity:IsVehicle() then
+		if trace.Entity:IsVehicle() and SERVER then
 			Notify(self.Owner, 1, 3, "You don't own this vehicle!")
-		else
-			self.Owner:EmitSound("physics/wood/wood_crate_impact_hard3.wav", 100, math.random(95, 105))
+		elseif not trace.Entity:IsVehicle() then
+			if SERVER then self.Owner:EmitSound("physics/wood/wood_crate_impact_hard3.wav", 100, math.random(95, 105)) end
+			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
 		end
 		self.Weapon:SetNextSecondaryFire(CurTime() + 0.2)
 	end

@@ -404,7 +404,18 @@ local function DropWeapon(ply)
 			return "" 
 		end
 	end
-	ply:DropWeapon(ent)
+	
+	local RP = RecipientFilter()
+	RP:AddAllPlayers()
+	
+	umsg.Start("anim_dropitem", RP) 
+		umsg.Entity(ply)
+	umsg.End()
+	ply.anim_DroppingItem = true
+	
+	timer.Simple(1, function(ply, ent) 
+		if ValidEntity(ply) and ValidEntity(ent) then ply:DropWeapon(ent) end 
+	end, ply, ent)
 	return ""
 end
 AddChatCommand("/drop", DropWeapon)
@@ -1669,6 +1680,9 @@ end
 AddChatCommand("/g", GroupMsg)
 
 -- here's the new easter egg. Easier to find, more subtle, doesn't only credit FPtje and unib5
+-- WARNING: DO NOT EDIT THIS
+-- You can edit DarkRP but you HAVE to credit the original authors!
+-- You even have to credit all the previous authors when you rename the gamemode.
 local CreditsWait = true
 local function GetDarkRPAuthors(ply)
 	if not CreditsWait then Notify(ply, 1, 4, "Wait with that") return "" end
@@ -1705,11 +1719,26 @@ local function GiveMoney(ply, args)
 			Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
 			return ""
 		end
+		
+		local RP = RecipientFilter()
+		RP:AddAllPlayers()
+		
+		umsg.Start("anim_giveitem", RP) 
+			umsg.Entity(ply)
+		umsg.End()
+		ply.anim_GivingItem = true
+		
+		timer.Simple(1.2, function(ply) 
+			if ValidEntity(ply) then
+				local trace2 = ply:GetEyeTrace()
+				if ValidEntity(trace2.Entity) and trace2.Entity:IsPlayer() and trace2.Entity:GetPos():Distance(ply:GetPos()) < 150 then
+					DB.PayPlayer(ply, trace2.Entity, amount)
 
-		DB.PayPlayer(ply, trace.Entity, amount)
-
-		Notify(trace.Entity, 0, 4, string.format(LANGUAGE.has_given, ply:Nick(), CUR .. tostring(amount)))
-		Notify(ply, 0, 4, string.format(LANGUAGE.you_gave, trace.Entity:Nick(), CUR .. tostring(amount)))
+					Notify(trace2.Entity, 0, 4, string.format(LANGUAGE.has_given, ply:Nick(), CUR .. tostring(amount)))
+					Notify(ply, 0, 4, string.format(LANGUAGE.you_gave, trace2.Entity:Nick(), CUR .. tostring(amount)))
+				end
+			end
+		end, ply)
 	else
 		Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "player"))
 	end
@@ -1734,17 +1763,30 @@ local function DropMoney(ply, args)
 		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
 		return ""
 	end
+	
+	
+	local RP = RecipientFilter()
+	RP:AddAllPlayers()
+	
+	umsg.Start("anim_dropitem", RP) 
+		umsg.Entity(ply)
+	umsg.End()
+	ply.anim_DroppingItem = true
+	
+	timer.Simple(1, function(ply) 
+		if ValidEntity(ply) then
+			ply:AddMoney(-amount)
 
-	ply:AddMoney(-amount)
+			local trace = {}
+			trace.start = ply:EyePos()
+			trace.endpos = trace.start + ply:GetAimVector() * 85
+			trace.filter = ply
 
-	local trace = {}
-	trace.start = ply:EyePos()
-	trace.endpos = trace.start + ply:GetAimVector() * 85
-	trace.filter = ply
-
-	local tr = util.TraceLine(trace)
-	DarkRPCreateMoneyBag(tr.HitPos, amount)
-
+			local tr = util.TraceLine(trace)
+			DarkRPCreateMoneyBag(tr.HitPos, amount)
+		end
+	end, ply)
+	
 	return ""
 end
 AddChatCommand("/dropmoney", DropMoney)
@@ -1843,16 +1885,14 @@ local function WaitLock()
 end
 
 local function Lockdown(ply)
-	if not lstat then
-		if ply:Team() == TEAM_MAYOR or ply:HasPriv(ADMIN) then
-			for k,v in pairs(player.GetAll()) do
-				v:ConCommand("play npc/overwatch/cityvoice/f_confirmcivilstatus_1_spkr.wav\n")
-			end
-			lstat = true
-			PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_started)
-			RunConsoleCommand("DarkRP_LockDown", 1)
-			NotifyAll(4, 3, LANGUAGE.lockdown_started)
+	if not lstat and ply:Team() == TEAM_MAYOR then
+		for k,v in pairs(player.GetAll()) do
+			v:ConCommand("play npc/overwatch/cityvoice/f_confirmcivilstatus_1_spkr.wav\n")
 		end
+		lstat = true
+		PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_started)
+		RunConsoleCommand("DarkRP_LockDown", 1)
+		NotifyAll(4, 3, LANGUAGE.lockdown_started)
 	end
 	return ""
 end
@@ -1860,14 +1900,12 @@ concommand.Add("rp_lockdown", Lockdown)
 AddChatCommand("/lockdown", Lockdown)
 
 function UnLockdown(ply) -- Must be global
-	if lstat and not wait_lockdown then
-		if ply:Team() == TEAM_MAYOR or ply:HasPriv(ADMIN) then
-			PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_ended)
-			NotifyAll(4, 3, LANGUAGE.lockdown_ended)
-			wait_lockdown = true
-			RunConsoleCommand("DarkRP_LockDown", 0)
-			timer.Create("spamlock", 20, 1, WaitLock, "")
-		end
+	if lstat and not wait_lockdown and ply:Team() == TEAM_MAYOR then
+		PrintMessageAll(HUD_PRINTTALK , LANGUAGE.lockdown_ended)
+		NotifyAll(4, 3, LANGUAGE.lockdown_ended)
+		wait_lockdown = true
+		RunConsoleCommand("DarkRP_LockDown", 0)
+		timer.Create("spamlock", 20, 1, WaitLock, "")
 	end
 	return ""
 end
@@ -1947,11 +1985,11 @@ concommand.Add("rp_mayor_setsalary", MayorSetSalary)
  ---------------------------------------------------------*/
 local function GrantLicense(answer, Ent, Initiator, Target)
 	if answer == 1 then
-		Notify(Initiator, 1, 4, string.format(LANGUAGE.gunlicense_granted, Initiator:Nick(), Target:Nick()))
-		Notify(Target, 1, 4, string.format(LANGUAGE.gunlicense_granted, Initiator:Nick(), Target:Nick()))
+		Notify(Initiator, 1, 4, string.format(LANGUAGE.gunlicense_granted, Target:Nick(), Initiator:Nick()))
+		Notify(Target, 1, 4, string.format(LANGUAGE.gunlicense_granted, Target:Nick(), Initiator:Nick()))
 		Initiator:SetDarkRPVar("HasGunlicense", true)
 	else
-		Notify(Initiator, 1, 4, string.format(LANGUAGE.gunlicense_denied, Initiator:Nick(), Target:Nick()))
+		Notify(Initiator, 1, 4, string.format(LANGUAGE.gunlicense_denied, Target:Nick(), Initiator:Nick()))
 	end
 end
 

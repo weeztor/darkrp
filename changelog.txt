@@ -16,6 +16,7 @@ DarkRP 2.4.1 SVN
 [ADD] /broadcast for mayors
 [ADD] Custom agenda's
 [ADD] Police agenda
+[ADD] Animations for several things!
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo
