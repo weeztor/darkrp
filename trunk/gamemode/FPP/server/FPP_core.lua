@@ -221,11 +221,11 @@ end
 hook.Add("OnPhysgunReload", "FPP.Protect.PhysgunReload", FPP.Protect.PhysgunReload)
 
 function FPP.PhysgunFreeze(weapon, phys, ent, ply)
-	if type(ent.OnPhysgunReload) == "function" then
-		local val = ent:OnPhysgunReload(weapon, phys, ent, ply)
+	if type(ent.OnPhysgunFreeze) == "function" then
+		local val = ent:OnPhysgunFreeze(weapon, phys, ent, ply)
 		if val ~= nil then return val end
-	elseif ent.OnPhysgunReload ~= nil then
-		return ent.OnPhysgunReload
+	elseif ent.OnPhysgunFreeze ~= nil then
+		return ent.OnPhysgunFreeze
 	end
 end
 hook.Add("OnPhysgunFreeze", "FPP.Protect.PhysgunFreeze", FPP.PhysgunFreeze)
