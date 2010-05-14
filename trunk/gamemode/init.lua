@@ -116,7 +116,7 @@ end
 local function RPVersion(ply)
 	local FindGameModes = file.FindDir("../gamemodes/*")
 	for _, folder in pairs(FindGameModes) do
-		local info_txt = file.Read("../gamemodes/"..GM.FolderName.."/info.txt")
+		local info_txt = file.Read("../gamemodes/"..GAMEMODE.FolderName.."/info.txt")
 		if not info_txt then info_txt = "" end
 		
 		local Gamemode = util.KeyValuesToTable(info_txt)

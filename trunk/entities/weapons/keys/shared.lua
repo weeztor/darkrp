@@ -67,15 +67,29 @@ function SWEP:PrimaryAttack()
 			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
 			trace.Entity:Fire("lock", "", 0) -- Lock the door immediately so it won't annoy people
 			timer.Simple(0.9, function(ply, sound) if ValidEntity(ply) then ply:EmitSound(sound) end end, self.Owner, self.Sound)
+			
+			local RP = RecipientFilter()
+			RP:AddAllPlayers()
+			
+			umsg.Start("anim_keys", RP) 
+				umsg.Entity(self.Owner)
+				umsg.String("usekeys")
+			umsg.End()
+			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
 		end
-		self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.3)
 	else
 		if trace.Entity:IsVehicle() and SERVER then
 			Notify(self.Owner, 1, 3, "You don't own this vehicle!")
 		elseif not trace.Entity:IsVehicle() then
-			if SERVER then self.Owner:EmitSound("physics/wood/wood_crate_impact_hard2.wav", 100, math.random(90, 110)) end
-			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
+			if SERVER then self.Owner:EmitSound("physics/wood/wood_crate_impact_hard2.wav", 100, math.random(90, 110))
+				umsg.Start("anim_keys", RP) 
+					umsg.Entity(self.Owner)
+					umsg.String("knocking")
+				umsg.End()
+				
+				self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
+			end
 		end
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.2)
 	end
@@ -102,15 +116,26 @@ function SWEP:SecondaryAttack()
 			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
 			trace.Entity:Fire("unlock", "", 0)-- Unlock the door immediately so it won't annoy people
 			timer.Simple(0.9, function(ply, sound) if ValidEntity(ply) then ply:EmitSound(sound) end end, self.Owner, self.Sound)
+			
+			umsg.Start("anim_keys", RP) 
+				umsg.Entity(self.Owner)
+				umsg.String("usekeys")
+			umsg.End()
+			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
 		end
-		self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
 		self.Weapon:SetNextSecondaryFire(CurTime() + 0.3)
 	else
 		if trace.Entity:IsVehicle() and SERVER then
 			Notify(self.Owner, 1, 3, "You don't own this vehicle!")
 		elseif not trace.Entity:IsVehicle() then
-			if SERVER then self.Owner:EmitSound("physics/wood/wood_crate_impact_hard3.wav", 100, math.random(95, 105)) end
-			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
+			if SERVER then self.Owner:EmitSound("physics/wood/wood_crate_impact_hard3.wav", 100, math.random(90, 110))
+				umsg.Start("anim_keys", RP) 
+					umsg.Entity(self.Owner)
+					umsg.String("knocking")
+				umsg.End()
+				
+				self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
+			end
 		end
 		self.Weapon:SetNextSecondaryFire(CurTime() + 0.2)
 	end

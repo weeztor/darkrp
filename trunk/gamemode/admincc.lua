@@ -399,7 +399,7 @@ local function ccUnarrest(ply, cmd, args)
 
 	if target then
 		target:Unarrest()
-		if not target:Alive() then v:Spawn() end
+		if not target:Alive() then target:Spawn() end
 		
 		if ply:EntIndex() == 0 then
 			DB.Log("Console force-unarrested "..target:SteamName())
