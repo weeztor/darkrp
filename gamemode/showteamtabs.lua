@@ -37,10 +37,10 @@ local function MayorOptns()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
 					if not ply.DarkRPVars.wanted and ply ~= LocalPlayer() then
-						menu:AddOption(ply:Nick(), Derma_StringRequest("wanted", "Why would you make "..ply:Nick().." wanted?", nil, 
+						menu:AddOption(ply:Nick(), function() Derma_StringRequest("wanted", "Why would you make "..ply:Nick().." wanted?", nil, 
 								function(a) 
 								LocalPlayer():ConCommand("say /wanted ".. tostring(ply:UserID()).." ".. a)
-								end, function() end ))
+								end, function() end ) end)
 					end
 				end
 				if #menu.Panels == 0 then
@@ -136,10 +136,10 @@ local function CPOptns()
 				local menu = DermaMenu()
 				for _,ply in pairs(player.GetAll()) do
 					if not ply.DarkRPVars.wanted and ply ~= LocalPlayer() then
-						menu:AddOption(ply:Nick(), Derma_StringRequest("wanted", "Why would you make "..ply:Nick().." wanted?", nil, 
+						menu:AddOption(ply:Nick(), function() Derma_StringRequest("wanted", "Why would you make "..ply:Nick().." wanted?", nil, 
 								function(a) 
 								LocalPlayer():ConCommand("say /wanted ".. tostring(ply:UserID()).." ".. a)
-								end, function() end ))
+								end, function() end ) end)
 					end
 				end
 				if #menu.Panels == 0 then
@@ -303,7 +303,7 @@ function MoneyTab()
 			Commands:SetLabel("Actions")
 				local ActionsPanel = vgui.Create("DPanelList")
 				ActionsPanel:SetSpacing(5)
-				ActionsPanel:SetSize(740,190)
+				ActionsPanel:SetSize(740,210)
 				ActionsPanel:EnableHorizontal( false )
 				ActionsPanel:EnableVerticalScrollbar(true)
 					local rpnamelabel = vgui.Create("DLabel")
@@ -359,6 +359,11 @@ function MoneyTab()
 					menu:Open()
 				end
 				ActionsPanel:AddItem(Demote)
+				
+				local UnOwnAllDoors = vgui.Create("DButton")
+						UnOwnAllDoors:SetText("Sell all doors")
+						UnOwnAllDoors.DoClick = function() LocalPlayer():ConCommand("say /unownalldoors") end
+					ActionsPanel:AddItem(UnOwnAllDoors)
 			Commands:SetContents(ActionsPanel)
 		FirstTabPanel:AddItem(MoneyCat)
 		Commands:SetSkin("DarkRP")

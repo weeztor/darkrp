@@ -724,22 +724,6 @@ local function AddHelpLabel(id, category, text, constant)
 	table.insert(HelpLabels, { id = id, category = category, text = text, constant = constant })
 end
 
-local function ChangeHelpLabel(msg)
-	local id = msg:ReadShort()
-	local text = msg:ReadString()
-
-	local function tChangeHelpLabel(id, text)
-		for k, v in pairs(HelpLabels) do
-			if v.id == id then
-				v.text = text
-				return
-			end
-		end
-	end
-
-	timer.Simple(.01, tChangeHelpLabel, id, text)
-end
-usermessage.Hook("ChangeHelpLabel", ChangeHelpLabel)
 function AddHelpCategory(id, name)
 	table.insert(HelpCategories, { id = id, text = name })
 end

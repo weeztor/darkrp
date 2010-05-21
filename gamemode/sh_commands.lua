@@ -1,8 +1,9 @@
 HELP_CATEGORY_CHATCMD = 1
 HELP_CATEGORY_CONCMD = 2
-HELP_CATEGORY_ADMINTOGGLE = 3
-HELP_CATEGORY_ADMINCMD = 4
-HELP_CATEGORY_ZOMBIE = 5
+HELP_CATEGORY_ZOMBIE = 3
+HELP_CATEGORY_ADMINTOGGLE = 5
+HELP_CATEGORY_ADMINCMD = 6
+
 
 ValueCmds = {}
 function AddValueCommand(cmd, cfgvar, default)
@@ -65,6 +66,7 @@ AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare1 - Toggle vote clicker (bin
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showspare2 - Job menu(bind this to F4 if you haven't already)")
 
 AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/addzombie (creates a zombie spawn)")
+AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/zombiemax (maximum amount of zombies that can be alive)")
 AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/removezombie index (removes a zombie spawn, index is the number inside ()")
 AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/showzombie (shows where the zombie spawns are)")
 AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/enablezombie (enables zombiemode)")
@@ -387,6 +389,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_startinghealth <Number> - the healt
 AddValueCommand("rp_startingmoney", "startingmoney", 500)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_startingmoney <Number> - your wallet when you join for the first time.")
 
+AddValueCommand("rp_pricecap", "pricecap", 500)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pricecap <Number> - The maximum price of items (using /price)")
+
 
 function AddEntityCommands(name, command, max, price)
 	local cmdname = string.gsub(command, " ", "_")
@@ -559,6 +564,13 @@ local function GenerateChatCommandHelp()
 	AddHelpLabel(1200, HELP_CATEGORY_CHATCMD, p .. "w <Message> - Whisper a message")
 	AddHelpLabel(1300, HELP_CATEGORY_CHATCMD, p .. "y <Message> - Yell a message")
 	AddHelpLabel(1350, HELP_CATEGORY_CHATCMD, p .. "g <Message> - Group only message")
+	AddHelpLabel(1350, HELP_CATEGORY_CHATCMD, p .. "pm <Person> <Message> - Private message")
+	AddHelpLabel(1350, HELP_CATEGORY_CHATCMD, p .. "call <Person> - Private voice chat with someone through the telephone")
+	AddHelpLabel(1400, HELP_CATEGORY_CHATCMD, "/Channel <1-100> - Set the channel of the radio", 1)
+	AddHelpLabel(1400, HELP_CATEGORY_CHATCMD, "/radio <Message> - Say something through the radio!", 1)
+	AddHelpLabel(1400, HELP_CATEGORY_CHATCMD, "/me <Message> - *name* is doing something!", 1)
+	AddHelpLabel(1400, HELP_CATEGORY_CHATCMD, "/advert <Message> - Advertise!", 1)
+	AddHelpLabel(1400, HELP_CATEGORY_CHATCMD, "/broadcast <Message> - Broadcast a message as mayor!", 1)
 	AddHelpLabel(1400, HELP_CATEGORY_CHATCMD, "//, or /a, or /ooc - Out of Character speak", 1)
 	AddHelpLabel(1500, HELP_CATEGORY_CHATCMD, "/x to close a help dialog", 1)
 	AddHelpLabel(2700, HELP_CATEGORY_CHATCMD, p .. "pm <Name/Partial Name> <Message> - Send another player a PM.")
@@ -568,19 +580,15 @@ local function GenerateChatCommandHelp()
 	AddHelpLabel(2600, HELP_CATEGORY_CHATCMD, p .. "type <Message> - Type a letter in computer font.  Use // to go down a line.")
 	AddHelpLabel(1450, HELP_CATEGORY_CHATCMD, "")
 	AddHelpLabel(1500, HELP_CATEGORY_CHATCMD, p .. "give <Amount> - Give a money amount")
-	AddHelpLabel(1600, HELP_CATEGORY_CHATCMD, p .. "moneydrop or dropmoney <Amount> - Drop a money amount")
+	AddHelpLabel(1600, HELP_CATEGORY_CHATCMD, p .. "moneydrop or "..p.."dropmoney <Amount> - Drop a money amount")
 	AddHelpLabel(1650, HELP_CATEGORY_CHATCMD, "")
 	AddHelpLabel(1700, HELP_CATEGORY_CHATCMD, p .. "title <Name> - Give a door you own, a title")
 	AddHelpLabel(1800, HELP_CATEGORY_CHATCMD, p .. "addowner or ao <Name> - Allow another to player to own your door")
 	AddHelpLabel(1825, HELP_CATEGORY_CHATCMD, p .. "removeowner <Name> - Remove an owner from your door")
-	AddHelpLabel(1850, HELP_CATEGORY_CHATCMD, "")
-	AddHelpLabel(1900, HELP_CATEGORY_CHATCMD, p .. "votecop - Vote to be a Cop")
-	AddHelpLabel(2750, HELP_CATEGORY_CHATCMD, p .. "votemayor - Vote to be Mayor")
-	AddHelpLabel(2100, HELP_CATEGORY_CHATCMD, p .. "citizen - Become a Citizen")
-	AddHelpLabel(2000, HELP_CATEGORY_CHATCMD, p .. "mayor - Become Mayor if you're on the admin's Mayor list")
-	AddHelpLabel(2200, HELP_CATEGORY_CHATCMD, p .. "cp - Become a Combine if you're on the admin's Cop list")
 	AddHelpLabel(2250, HELP_CATEGORY_CHATCMD, "")
 	AddHelpLabel(2300, HELP_CATEGORY_CHATCMD, p .. "cr <Message> - Request the CP's assistance")
+	AddHelpLabel(2300, HELP_CATEGORY_CHATCMD, p .. "/911 - Call 911 (when you're attacked by a person)")
+	AddHelpLabel(2300, HELP_CATEGORY_CHATCMD, p .. "/report - Call 911 for an illegal entity (you have to be looking at an entity)")
 end
 GenerateChatCommandHelp()
 

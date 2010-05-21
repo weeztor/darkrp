@@ -17,6 +17,9 @@ DarkRP 2.4.1 SVN
 [ADD] Custom agenda's
 [ADD] Police agenda
 [ADD] Animations for several things!
+[ADD] Possibility to give unownable door a title in the keys menu
+[ADD] maximum to /price. Set maximum with rp_pricecap
+[ADD] /unownalldoors, sell all your doors at once!
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo
@@ -35,6 +38,8 @@ DarkRP 2.4.1 SVN
 [CHANGE] Credits, added Eusion
 [CHANGE] The way Entities like money and money printers show their information. Thanks MavBear!
 [CHANGE] Made a lot of functions local, this will give you better overall performance both on server and client
+[CHANGE] Stunstick damage to prevent abuse. Left click: no damage, right click: 10 damage
+[CHANGE] F1 help text
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
 [REMOVE] VoteCopOn. It's bullshit
 [REMOVE] All global integers. Result: Less server crashes, less buffer overflow in net message, faster spawning time

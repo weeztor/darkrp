@@ -387,6 +387,7 @@ end
 /*---------------------------------------------------------
  Shipments
  ---------------------------------------------------------*/
+local NoDrop = {} -- Drop blacklist
 local function DropWeapon(ply)
 	local ent = ply:GetActiveWeapon()
 	if not ValidEntity(ent) then return "" end
@@ -399,6 +400,9 @@ local function DropWeapon(ply)
 				break
 			end
 		end
+		
+		if table.HasValue(NoDrop, ent:GetClass()) then found = false end
+		
 		if not found then
 			Notify(ply, 1, 4, LANGUAGE.cannot_drop_weapon)
 			return "" 
@@ -829,7 +833,7 @@ local function SetPrice(ply, args)
 
 	local a = tonumber(args)
 	if not a then return "" end
-	local b = math.floor(a)
+	local b = math.Min(math.floor(a), (GetConVarNumber("pricecap") ~= 0 and GetConVarNumber("pricecap")) or 500)
 	if b < 0 then return "" end
 	local trace = {}
 
@@ -840,6 +844,7 @@ local function SetPrice(ply, args)
 	local tr = util.TraceLine(trace)
 
 	local class = tr.Entity:GetClass()
+	print(class, tr.Entity.SID, ply.SID)
 	if ValidEntity(tr.Entity) and (class == "gunlab" or class == "microwave" or class == "drug_lab") and tr.Entity.SID == ply.SID then
 		tr.Entity.dt.price = b
 	else
