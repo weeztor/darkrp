@@ -27,7 +27,8 @@ function HelpPanel:Init()
 	self.Scroll = 0
 end
 
-function HelpPanel:FillHelpInfo(force)
+function HelpPanel:FillHelpInfo(force)	
+	self.Filled = true
 	local maxpertable = 11
 	local helptable = 1
 	local yoffset = 0
@@ -43,7 +44,7 @@ function HelpPanel:FillHelpInfo(force)
 		end
 	end
 
-	for k, v in pairs(HelpCategories) do
+	for k, v in SortedPairsByMemberValue(HelpCategories, "id") do
 		if not self.vguiHelpCategories[v.id] or force then
 			local helptext = ""
 			local Labels = { }
@@ -93,7 +94,7 @@ function HelpPanel:FillHelpInfo(force)
 end
 
 function HelpPanel:PerformLayout()
-	self:FillHelpInfo()
+	if not self.Filled then self:FillHelpInfo() end
 	self:SetSize(-self.StartHelpX, ScrH() - 70)
 
 	for k, v in pairs(self.vguiHelpCategories) do

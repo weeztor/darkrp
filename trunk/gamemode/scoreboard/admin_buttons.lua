@@ -85,6 +85,10 @@ function PANEL:DoCommand(ply)
 		RunConsoleCommand("say", "/unwanted " .. tostring( ply:UserID()))
 	else
 		RunConsoleCommand("say", "/wanted " .. tostring( ply:UserID()))
+		Derma_StringRequest("wanted", "Why would you make "..ply:Nick().." wanted?", nil, 
+							function(a) 
+							LocalPlayer():ConCommand("say /wanted ".. tostring(ply:UserID()).." ".. a)
+							end, function() end )
 	end
 end
 

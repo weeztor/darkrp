@@ -42,7 +42,7 @@ for k, v in pairs(player.GetAll()) do
 	v:NewHungerData()
 end
 
-HELP_CATEGORY_HUNGERMOD = #HelpCategories + 1
+HELP_CATEGORY_HUNGERMOD = 4
 
 AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
 

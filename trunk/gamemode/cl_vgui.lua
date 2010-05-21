@@ -450,12 +450,20 @@ local function KeysMenu(um)
 			timer.Simple(0.3, function() KeyFrameVisible = false end)
 		end	
 	elseif LocalPlayer():IsSuperAdmin() and trace.Entity.DoorData.NonOwnable then
-		Frame:SetSize(200, 140)
+		Frame:SetSize(200, 250)
 		local EnableOwnage = vgui.Create("DButton", Frame)
 		EnableOwnage:SetPos(10, 30)
 		EnableOwnage:SetSize(180, 100)
 		EnableOwnage:SetText("Allow ownership")
 		EnableOwnage.DoClick = function() Frame:Close() RunConsoleCommand("say", "/toggleownable") end
+		
+		local DoorTitle = vgui.Create("DButton", Frame)
+		DoorTitle:SetPos(10, Frame:GetTall() - 110)
+		DoorTitle:SetSize(180, 100)
+		DoorTitle:SetText("Set "..Entiteh.." title")
+		DoorTitle.DoClick = function()
+			Derma_StringRequest("Set door title", "Set the title of the "..Entiteh.." you're looking at", "", function(text) LocalPlayer():ConCommand("say /title ".. text) Frame:Close() end, function() end, "OK!", "CANCEL!")
+		end
 	elseif LocalPlayer():IsSuperAdmin() and not trace.Entity:OwnedBy(LocalPlayer()) and trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(LocalPlayer()) then
 		Frame:SetSize(200, 250)
 		local DisableOwnage = vgui.Create("DButton", Frame)

@@ -185,6 +185,23 @@ local function OwnDoor(ply)
 end
 AddChatCommand("/toggleown", OwnDoor)
 
+local function UnOwnAll(ply, cmd, args)
+	local amount = 0
+	for k,v in pairs(ents.GetAll()) do
+		if v:OwnedBy(ply) then
+			amount = amount + 1
+			v:Fire("unlock", "", 0)
+			v:UnOwn(ply)
+			ply:AddMoney(math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5)))
+			ply:GetTable().Ownedz[v:EntIndex()] = 0
+		end
+	end
+	ply:GetTable().OwnedNumz = 0
+	Notify(ply, 1, 4, string.format("You have sold "..amount.." doors for " .. CUR .. amount * math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5)) .. "!"))
+	return ""
+end
+AddChatCommand("/unownalldoors", UnOwnAll)
+
 function meta:UnOwn(ply)
 	self.DoorData = self.DoorData or {}
 	if not ply then

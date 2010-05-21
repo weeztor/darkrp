@@ -16,7 +16,7 @@ AddFoodItem("bottle2", "models/props_junk/garbage_glassbottle002a.mdl", 10)
 AddFoodItem("bottle3", "models/props_junk/garbage_glassbottle003a.mdl", 10)
 AddFoodItem("orange", "models/props/cs_italy/orange.mdl", 20)
 
-HELP_CATEGORY_HUNGERMOD = #HelpCategories + 1
+HELP_CATEGORY_HUNGERMOD = 4
 
 AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
 

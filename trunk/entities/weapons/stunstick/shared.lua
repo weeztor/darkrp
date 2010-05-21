@@ -76,23 +76,18 @@ function SWEP:PrimaryAttack()
 
 	if not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100) then return end
 
-	local hp = trace.Entity:Health()
-	hp = hp - math.random(4, 8)
-
-	if (hp <= 0) then hp = 1 end
-
-	trace.Entity:SetHealth(hp)
-
 	if not trace.Entity:IsDoor() then
 		trace.Entity:SetVelocity((trace.Entity:GetPos() - self.Owner:GetPos()) * 7)
 	end
 
-	if trace.Entity:IsPlayer() then
+	if trace.Entity:IsPlayer() or trace.Entity:IsNPC() then
 		timer.Simple(.3, self.DoFlash, self, trace.Entity)
 		self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 	else
 		self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
-		trace.Entity:TakeDamage(10, self.Owner, self.Owner)
+		if FPP and FPP.PlayerCanTouchEnt(ply, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
+			trace.Entity:TakeDamage(1000, self.Owner, self) -- for illegal entities
+		end
 	end
 end
 
@@ -117,17 +112,19 @@ function SWEP:SecondaryAttack()
 		if not trace.Entity:IsDoor() then
 			trace.Entity:SetVelocity((trace.Entity:GetPos() - self.Owner:GetPos()) * 7)
 		end
-
+		
+		trace.Entity:TakeDamage(10, self.Owner, self)
+		
 		if trace.Entity:IsPlayer() then
 			timer.Simple(.3, self.DoFlash, self, trace.Entity)
-			trace.Entity:TakeDamage(1000, self.Owner, self)
 			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 		elseif trace.Entity:IsNPC() then
-			trace.Entity:TakeDamage(1000, self.Owner, self)
 			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 		else
-			trace.Entity:TakeDamage(1000, self.Owner, self.Owner)
 			self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
+			if FPP and FPP.PlayerCanTouchEnt(ply, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
+				trace.Entity:TakeDamage(990, self.Owner, self)
+			end
 		end
 	end
 end
