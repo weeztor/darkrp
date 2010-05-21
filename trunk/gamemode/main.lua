@@ -418,7 +418,20 @@ local function DropWeapon(ply)
 	ply.anim_DroppingItem = true
 	
 	timer.Simple(1, function(ply, ent) 
-		if ValidEntity(ply) and ValidEntity(ent) then ply:DropWeapon(ent) end 
+		if ValidEntity(ply) and ValidEntity(ent) then 
+			ply:DropWeapon(ent) -- drop it so the model isn't the viewmodel
+			
+			local weapon = ents.Create("spawned_weapon")
+			weapon.ShareGravgun = true
+			weapon:SetPos(ply:GetShootPos() + ply:GetAimVector() * 30)
+			weapon:SetModel(ent:GetModel())
+			weapon:SetSkin(ent:GetSkin())
+			weapon.weaponclass = ent:GetClass()
+			weapon.nodupe = true
+			weapon:Spawn()
+			
+			ent:Remove()
+		end 
 	end, ply, ent)
 	return ""
 end

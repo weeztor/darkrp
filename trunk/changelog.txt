@@ -34,12 +34,14 @@ DarkRP 2.4.1 SVN
 [FIX] Compatability with extra seats in VUMod
 [FIX] animations to work with latest update
 [FIX] Staying on fire when respawning after money printer explosion
+[FIX] Pressing E on a gun you can't pick up making it pick up on walk over it (hard to explain lol)
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits, added Eusion
 [CHANGE] The way Entities like money and money printers show their information. Thanks MavBear!
 [CHANGE] Made a lot of functions local, this will give you better overall performance both on server and client
 [CHANGE] Stunstick damage to prevent abuse. Left click: no damage, right click: 10 damage
 [CHANGE] F1 help text
+[CHANGE] Made it so you have to press E on dropped weapons to pick them up
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
 [REMOVE] VoteCopOn. It's bullshit
 [REMOVE] All global integers. Result: Less server crashes, less buffer overflow in net message, faster spawning time
