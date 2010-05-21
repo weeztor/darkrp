@@ -401,13 +401,13 @@ local function DropWeapon(ply)
 			end
 		end
 		
-		if table.HasValue(NoDrop, ent:GetClass()) then found = false end
-		
 		if not found then
 			Notify(ply, 1, 4, LANGUAGE.cannot_drop_weapon)
 			return "" 
 		end
 	end
+	
+	if table.HasValue(NoDrop, ent:GetClass()) then return end
 	
 	local RP = RecipientFilter()
 	RP:AddAllPlayers()

@@ -54,6 +54,7 @@ function SWEP:Initialize()
 end
 
 function SWEP:DoFlash(ply)
+	if not ValidEntity(ply) or not ply:IsPlayer() then return end
 	umsg.Start("StunStickFlash", ply)
 	umsg.End()
 end
@@ -85,7 +86,7 @@ function SWEP:PrimaryAttack()
 		self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 	else
 		self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
-		if FPP and FPP.PlayerCanTouchEnt(ply, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
+		if FPP and FPP.PlayerCanTouchEnt(self.Owner, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
 			trace.Entity:TakeDamage(1000, self.Owner, self) -- for illegal entities
 		end
 	end
