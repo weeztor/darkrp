@@ -85,8 +85,10 @@ function meta:SetRPName(name, firstRun)
 			return ""
 		end
 	else
-		if not firstRun then NotifyAll(2, 6, string.format(LANGUAGE.rpname_changed, self:SteamName(), name)) end
-		DB.StoreRPName(self, name)
+		if not firstRun then 
+			NotifyAll(2, 6, string.format(LANGUAGE.rpname_changed, self:SteamName(), name))
+			DB.StoreRPName(self, name) -- Don't save the steam name in the database
+		end
 	end
 end
 
@@ -411,7 +413,7 @@ function meta:Arrest(time, rejoin)
 		-- If the player has no remaining jail time,
 		-- set it back to the max for this new sentence
 		if not time or time == 0 then
-			time = GetConVarNumber("jailtimer")
+			time = (GetConVarNumber("jailtimer") ~= 0 and GetConVarNumber("jailtimer")) or 120
 		end
 
 		self:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.youre_arrested, time))
@@ -465,8 +467,6 @@ function meta:Unarrest(ID)
 			RPArrestedPlayers[self:SteamID()] = nil
 		end
 	end
-	
-	
 end
 
 /*---------------------------------------------------------

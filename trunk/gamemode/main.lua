@@ -449,6 +449,7 @@ local function UnWarrant(ply, target)
 end 
 
 local function SetWarrant(ply, target, reason)
+	if RPArrestedPlayers[target:SteamID()] or target.warranted then return end
 	target.warranted = true
 	timer.Simple(GetConVarNumber("searchtime"), UnWarrant, ply, target)
 	for a, b in pairs(player.GetAll()) do
@@ -556,8 +557,8 @@ local function PlayerWanted(ply, args)
 			return "" 
 		end
 		local p = FindPlayer(tableargs[1])
-		
-		if p and p:Alive() then
+
+		if p and p:Alive() and not RPArrestedPlayers[p:SteamID()] and not p.DarkRPVars.wanted then
 			p:SetDarkRPVar("wanted", true)
 			p:SetDarkRPVar("wantedReason", tostring(reason))
 			for a, b in pairs(player.GetAll()) do
