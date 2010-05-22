@@ -35,6 +35,7 @@ DarkRP 2.4.1 SVN
 [FIX] animations to work with latest update
 [FIX] Staying on fire when respawning after money printer explosion
 [FIX] Pressing E on a gun you can't pick up making it pick up on walk over it (hard to explain lol)
+[FIX] Saving original steam names in the database
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits, added Eusion
 [CHANGE] The way Entities like money and money printers show their information. Thanks MavBear!

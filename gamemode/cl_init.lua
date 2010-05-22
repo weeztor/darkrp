@@ -427,7 +427,8 @@ function GM:HUDPaint()
 	
 	if arresttime ~= 0 and CurrentTime - arresttime <= arresteduntil and SELF.DarkRPVars.Arrested then
 		draw.DrawText(string.format(LANGUAGE.youre_arrested, math.ceil(arresteduntil - (CurrentTime - arresttime))), "ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
-	elseif arresttime ~= 0 or not SELF.DarkRPVars.Arrested then arresttime = 0
+	elseif arresttime ~= 0 and not SELF.DarkRPVars.Arrested then 
+		arresttime = 0
 	end
 	self.BaseClass:HUDPaint()
 
