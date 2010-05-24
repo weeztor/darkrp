@@ -467,13 +467,12 @@ local function FinishWarrant(choice, mayor, initiator, target, reason)
 	return ""
 end
 
-local function TimerUnwanted(ply, args)
-	local p = FindPlayer(args)
-	if p and p:Alive() and p.DarkRPVars.wanted then
-		p:SetDarkRPVar("wanted", false)
+local function TimerUnwanted(ply, target)
+	if ValidEntity(target) and target:Alive() and target.DarkRPVars.wanted then
+		target:SetDarkRPVar("wanted", false)
 		for a, b in pairs(player.GetAll()) do
-			b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_expired, p:Nick()))
-			timer.Destroy(p:Nick() .. " wantedtimer")
+			b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_expired, target:Nick()))
+			timer.Destroy(target:Nick() .. " wantedtimer")
 		end
 	else
 		return ""
@@ -563,7 +562,7 @@ local function PlayerWanted(ply, args)
 			p:SetDarkRPVar("wantedReason", tostring(reason))
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_by_police, p:Nick()).."\nReason: "..tostring(reason))
-				timer.Create(p:Nick() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, args)
+				timer.Create(p:Nick() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, p)
 			end
 		else
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
