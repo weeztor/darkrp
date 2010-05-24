@@ -302,7 +302,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		end
 	end
 
-	if ValidEntity(ply) and (ply ~= killer or ply:GetTable().Slayed) and not RPArrestedPlayers[ply:SteamID()] then
+	if ValidEntity(ply) and (ply ~= killer or ply.Slayed) and not RPArrestedPlayers[ply:SteamID()] then
 		ply:SetDarkRPVar("wanted", false)
 		ply.DeathPos = nil
 		ply.Slayed = false

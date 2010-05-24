@@ -96,7 +96,7 @@ function meta:RestoreRPName()
 	local name = DB.RetrieveRPName(self)
 	if not name or name == "" then name = string.gsub(self:SteamName(), "\\\"", "\"") end
 
-	self:SetRPName(name, true)
+	self:SetDarkRPVar("rpname", name)
 end
 
 /*---------------------------------------------------------
