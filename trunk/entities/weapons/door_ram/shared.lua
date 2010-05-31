@@ -11,11 +11,14 @@ if (CLIENT) then
 end
 
 -- Variables that are used on both client and server
+SWEP.Base = "weapon_cs_base2"
 
 SWEP.Author = "Rickster"
 SWEP.Instructions = "Left click to break open doors/unfreeze props or get people out of their vehicles."
 SWEP.Contact = ""
 SWEP.Purpose = ""
+
+SWEP.IconLetter = ""
 
 SWEP.ViewModelFOV = 62
 SWEP.ViewModelFlip = false
@@ -137,10 +140,10 @@ end
 function SWEP:SecondaryAttack()
 	self.LastIron = CurTime()
 	self.Ready = not self.Ready
-	if self.Ready then
-		self:SetWeaponHoldType("rpg")
-	else
-		self:SetWeaponHoldType("normal")
+	if self.Ready and SERVER then
+		self:SendHoldType("rpg")
+	elseif SERVER then
+		self:SendHoldType("normal")
 	end
 end
 

@@ -49,77 +49,85 @@ FPP.Groups = {}
 FPP.GroupMembers = {}
 
 FPP.Settings = {}
-	FPP.Settings.FPP_PHYSGUN = {
-		toggle = 1,
-		adminall = 1,
-		worldprops = 0, 
-		adminworldprops = 1,
-		canblocked = 0,
-		admincanblocked = 0,
-		shownocross = 1,
-		checkconstrained = 1,
-		antinoob = 0,
-		reloadprotection = 1,
-		iswhitelist = 0}
-	FPP.Settings.FPP_GRAVGUN = {
-		toggle = 1,
-		adminall = 1,
-		worldprops = 1, 
-		adminworldprops = 1,
-		canblocked = 0,
-		admincanblocked = 0,
-		shownocross = 1,
-		checkconstrained = 1,
-		noshooting = 1,
-		iswhitelist = 0}
-	FPP.Settings.FPP_TOOLGUN = {
-		toggle = 1,
-		adminall = 1,
-		worldprops = 1, 
-		adminworldprops = 1,
-		canblocked = 0,
-		admincanblocked = 0,
-		shownocross = 1,
-		checkconstrained = 1,
-		duplicatorprotect = 1,
-		duplicatenoweapons = 1,
-		iswhitelist = 0,
-		spawniswhitelist = 0}
-	FPP.Settings.FPP_PLAYERUSE = {
-		toggle = 0,
-		adminall = 1,
-		worldprops = 1, 
-		adminworldprops = 1,
-		canblocked = 0,
-		admincanblocked = 1,
-		shownocross = 1,
-		checkconstrained = 0,
-		iswhitelist = 0}
-	FPP.Settings.FPP_ENTITYDAMAGE = {
-		toggle = 1,
-		protectpropdamage = 1,
-		adminall = 1,
-		worldprops = 1, 
-		adminworldprops = 1,
-		canblocked = 0,
-		admincanblocked = 0,
-		shownocross = 1,
-		checkconstrained = 0,
-		iswhitelist = 0}
-	FPP.Settings.FPP_GLOBALSETTINGS = {
-		cleanupdisconnected = 1,
-		cleanupdisconnectedtime = 120,
-		cleanupadmin = 1,
-		antispeedhack = 0}
-	FPP.Settings.FPP_ANTISPAM = {
-		toggle = 1,
-		antispawninprop = 0,
-		bigpropsize = 5.85,
-		bigpropwait = 1.5,
-		smallpropdowngradecount = 3,
-		smallpropghostlimit = 2,
-		smallpropdenylimit = 6,
-		duplicatorlimit = 3}
+FPP.Settings.FPP_PHYSGUN = {
+	toggle = 1,
+	adminall = 1,
+	worldprops = 0, 
+	adminworldprops = 1,
+	canblocked = 0,
+	admincanblocked = 0,
+	shownocross = 1,
+	checkconstrained = 1,
+	antinoob = 0,
+	reloadprotection = 1,
+	iswhitelist = 0}
+FPP.Settings.FPP_GRAVGUN = {
+	toggle = 1,
+	adminall = 1,
+	worldprops = 1, 
+	adminworldprops = 1,
+	canblocked = 0,
+	admincanblocked = 0,
+	shownocross = 1,
+	checkconstrained = 1,
+	noshooting = 1,
+	iswhitelist = 0}
+FPP.Settings.FPP_TOOLGUN = {
+	toggle = 1,
+	adminall = 1,
+	worldprops = 1, 
+	adminworldprops = 1,
+	canblocked = 0,
+	admincanblocked = 0,
+	shownocross = 1,
+	checkconstrained = 1,
+	duplicatorprotect = 1,
+	duplicatenoweapons = 1,
+	iswhitelist = 0,
+	spawniswhitelist = 0}
+FPP.Settings.FPP_PLAYERUSE = {
+	toggle = 0,
+	adminall = 1,
+	worldprops = 1, 
+	adminworldprops = 1,
+	canblocked = 0,
+	admincanblocked = 1,
+	shownocross = 1,
+	checkconstrained = 0,
+	iswhitelist = 0}
+FPP.Settings.FPP_ENTITYDAMAGE = {
+	toggle = 1,
+	protectpropdamage = 1,
+	adminall = 1,
+	worldprops = 1, 
+	adminworldprops = 1,
+	canblocked = 0,
+	admincanblocked = 0,
+	shownocross = 1,
+	checkconstrained = 0,
+	iswhitelist = 0}
+FPP.Settings.FPP_GLOBALSETTINGS = {
+	cleanupdisconnected = 1,
+	cleanupdisconnectedtime = 120,
+	cleanupadmin = 1,
+	antispeedhack = 0}
+FPP.Settings.FPP_ANTISPAM = {
+	toggle = 1,
+	antispawninprop = 0,
+	bigpropsize = 5.85,
+	bigpropwait = 1.5,
+	smallpropdowngradecount = 3,
+	smallpropghostlimit = 2,
+	smallpropdenylimit = 6,
+	duplicatorlimit = 3
+}
+
+
+for Protection, Settings in pairs(FPP.Settings) do
+	for Option, value in pairs(Settings) do
+		CreateConVar("_"..Protection.."_"..Option, value, {FCVAR_SERVER_CAN_EXECUTE})
+	end
+end
 
 function FPP.Notify(ply, text, bool)
 	if ply:EntIndex() == 0 then
@@ -149,6 +157,7 @@ local function FPP_SetSetting(ply, cmd, args)
 	if not FPP.Settings[args[1]][args[2]] then FPP.Notify(ply, "Argument invalid",false) return end
 	
 	FPP.Settings[args[1]][args[2]] = tonumber(args[3])
+	RunConsoleCommand("_"..args[1].."_"..args[2], tonumber(args[3]))
 	
 	local data = sql.QueryValue("SELECT value FROM ".. args[1] .. " WHERE key = "..sql.SQLStr(args[2])..";")
 	if not data then
@@ -252,21 +261,16 @@ local function RetrieveSettings()
 	for k,v in pairs(FPP.Settings) do
 		local data = sql.Query("SELECT key, value FROM "..k..";")
 		if data then
+			local i = 0
 			for key, value in pairs(data) do
 				FPP.Settings[k][value.key] = tonumber(value.value)
+				i = i + 0.05
+				timer.Simple(i, RunConsoleCommand, "_"..k.."_"..value.key, tonumber(value.value))
 			end
 		end
 	end	
 end
 RetrieveSettings()
-
-local function SendSettings(ply, cmd, args)
-	if ply.FPPLastRetrieveSettings and ply.FPPLastRetrieveSettings > CurTime() then ply:PrintMessage(HUD_PRINTCONSOLE, "Don't spam, you double clicker!!") return end
-	ply.FPPLastRetrieveSettings = CurTime() + 2
-	
-	datastream.StreamToClients(ply, "FPP_Settings", FPP.Settings)
-end
-concommand.Add("_FPP_Retrievesettings", SendSettings)
 
 local function RetrieveBlocked()
 	local data = sql.Query("SELECT * FROM FPP_BLOCKED;")
