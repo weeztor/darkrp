@@ -11,21 +11,6 @@ FPP = FPP or {}
 FPP.Groups = {}
 FPP.GroupMembers = {}
 
-FPP.Settings = {}
-
-local UpdateSettings = {}
-local function GetSettings(handler, id, encoded, decoded)
-	FPP.Settings = decoded
-	for k,v in pairs(UpdateSettings) do
-		if ValidPanel(k) then
-			k:SetValue(FPP.Settings[v[1]][v[2]])
-		else
-			UpdateSettings[k] = nil
-		end
-	end
-end
-datastream.Hook("FPP_Settings", GetSettings)
-
 function FPP.AdminMenu(Panel)
 	AdminPanel = AdminPanel or Panel
 	Panel:ClearControls()
@@ -43,14 +28,6 @@ function FPP.AdminMenu(Panel)
 		end
 		AdminPanel:AddPanel(AmAdmin)
 	end
-	
-	local ReLoadSettings = vgui.Create("DButton")
-	ReLoadSettings:SetText("Reload settings")
-	ReLoadSettings:SetToolTip("You shouldn't be supposed to press this. Press this when everything is blank.")
-	function ReLoadSettings:DoClick()
-		RunConsoleCommand("_FPP_Retrievesettings")
-	end
-	AdminPanel:AddPanel(ReLoadSettings)
 	
 	local function MakeOption(Name)
 		local cat = vgui.Create("DCollapsibleCategory")
@@ -75,6 +52,7 @@ function FPP.AdminMenu(Panel)
 	local function addchk(label, command, plist)
 		local box = vgui.Create("DCheckBoxLabel")
 		box:SetText(label)
+		box:SetValue(tobool(GetConVarNumber("_"..command[1].."_"..command[2])))
 		box.Button.Toggle = function()
 			if not superadmin then return end--Hehe now you can't click it anymore non-admin!
 			if box.Button:GetChecked() == nil or not box.Button:GetChecked() then 
@@ -88,7 +66,6 @@ function FPP.AdminMenu(Panel)
 			RunConsoleCommand("FPP_Setting", command[1], command[2], tonum[box.Button:GetChecked()])
 		end
 		plist:AddItem(box)
-		UpdateSettings[box] = {command[1], command[2]}
 	end
 	
 	local function addblock(pan, Type)
@@ -155,11 +132,12 @@ function FPP.AdminMenu(Panel)
 		decimals = decimals or 1
 		sldr:SetDecimals(decimals)
 		sldr:SetText(text)
+		sldr:SetValue(GetConVarNumber("_"..command[1].."_"..command[2]))
 		function sldr.Slider:OnMouseReleased()
 			self:SetDragging( false ) 
 			self:MouseCapture( false ) 
 			if not superadmin then
-				sldr:SetValue(FPP.Settings[command[1]][command[2]])
+				sldr:SetValue(GetConVarNumber("_"..command[1].."_"..command[2]))
 				return
 			end
 			RunConsoleCommand("FPP_Setting", command[1], command[2], sldr:GetValue())
@@ -173,7 +151,7 @@ function FPP.AdminMenu(Panel)
 			if ( ValidPanel( self.IndicatorT ) ) then self.IndicatorT:Remove() end 
 			if ( ValidPanel( self.IndicatorB ) ) then self.IndicatorB:Remove() end
 			if not superadmin then
-				sldr:SetValue(FPP.Settings[command[1]][command[2]])
+				sldr:SetValue(GetConVarNumber("_"..command[1].."_"..command[2]))
 				return
 			end			
 			RunConsoleCommand("FPP_Setting", command[1], command[2], sldr:GetValue())
@@ -181,13 +159,12 @@ function FPP.AdminMenu(Panel)
 		
 		function sldr.Wang.TextEntry:OnEnter()
 			if not superadmin then
-				sldr:SetValue(FPP.Settings[command[1]][command[2]])
+				sldr:SetValue(GetConVarNumber("_"..command[1].."_"..command[2]))
 				return
 			end
 			RunConsoleCommand("FPP_Setting", command[1], command[2], sldr:GetValue())
 		end
 		plist:AddItem(sldr)
-		UpdateSettings[sldr] = {command[1], command[2]}
 	end
 	
 	local GeneralCat, general = MakeOption("General options")
@@ -570,7 +547,6 @@ function FPP.AdminMenu(Panel)
 	datastream.Hook("FPP_GroupMembers", RetrieveGroupMembers)
 	
 	Panel:AddControl("Label", {Text = "\nFalco's Prop Protection\nMade by Falco A.K.A. FPtje"})
-	RunConsoleCommand("_FPP_Retrievesettings")
 end
 
 RetrieveRestrictedTool = function(um)

@@ -11,10 +11,13 @@ if CLIENT then
 	SWEP.DrawCrosshair = false
 end
 
+SWEP.Base = "weapon_cs_base2"
+
 SWEP.Author = "FPtje and everyone who gave FPtje the idea"
 SWEP.Instructions = "Left click to pick up, right click to drop, reload for menu"
 SWEP.Contact = ""
 SWEP.Purpose = ""
+SWEP.IconLetter = ""
 
 SWEP.ViewModelFOV = 62
 SWEP.ViewModelFlip = false
@@ -61,11 +64,11 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	self:SetWeaponHoldType("pistol")
-	
-	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
-	
 	if CLIENT then return end
+	
+	self:SendHoldType("pistol")
+	
+	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
 	
 	local phys = trace.Entity:GetPhysicsObject()
 	if not phys:IsValid() then return end
@@ -112,10 +115,10 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	self:SetWeaponHoldType("pistol")
-	
-	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	if CLIENT then return end
+	self:SendHoldType("pistol")
+	
+	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
 	self.Weapon:SetNextSecondaryFire(CurTime() + 0.2)
 	
 	if not self.Owner:GetTable().Pocket or #self.Owner:GetTable().Pocket <= 0 then
@@ -265,8 +268,8 @@ elseif SERVER then
 			end
 			ply:GetTable().Pocket = table.ClearKeys(ply:GetTable().Pocket)
 			
-			ply:GetActiveWeapon():SetWeaponHoldType("pistol")
-			timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, ply:GetActiveWeapon())
+			ply:GetActiveWeapon():SendHoldType("pistol")
+			timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, ply:GetActiveWeapon())
 			
 			local trace = {}
 			trace.start = ply:EyePos()

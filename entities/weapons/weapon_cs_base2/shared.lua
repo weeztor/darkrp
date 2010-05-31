@@ -61,7 +61,7 @@ end
 Deploy
 ---------------------------------------------------------*/
 function SWEP:Deploy()
-	self:SetWeaponHoldType("normal")
+	if SERVER then self:SendHoldType("normal") end
 	
 	self.LASTOWNER = self.Owner
 	
@@ -226,13 +226,31 @@ end
 /*---------------------------------------------------------
 SetIronsights
 ---------------------------------------------------------*/
+if SERVER then
+	function SWEP:SendHoldType(holdtype)
+		self:SetWeaponHoldType(holdtype)
+		umsg.Start("Drp_SetWeaponHoldType")
+			umsg.Entity(self)
+			umsg.String(holdtype)
+		umsg.End()
+	end
+elseif CLIENT then
+	local function GetWeaponHoldType(um)
+		local weapon = um:ReadEntity()
+		if ValidEntity(weapon) then
+			weapon:SetWeaponHoldType(um:ReadString())
+		end
+	end
+	usermessage.Hook("Drp_SetWeaponHoldType", GetWeaponHoldType)
+end
+
 function SWEP:SetIronsights(b)
-	if b then 
-		self:SetWeaponHoldType(self.HoldType)
-		if SERVER then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3) end
-	else
-		self:SetWeaponHoldType("normal")
-		if SERVER then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd")) end
+	if b and SERVER then 
+		self:SendHoldType(self.HoldType)
+		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3)
+	elseif SERVER then
+		self:SendHoldType("normal")
+		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 	end
 	self.Ironsights = b
 end

@@ -10,10 +10,13 @@ if CLIENT then
 	SWEP.DrawCrosshair = false
 end
 
+SWEP.Base = "weapon_cs_base2"
+
 SWEP.Author = "Rick Darkaliono, philxyz"
 SWEP.Instructions = "Left or right click to unarrest"
 SWEP.Contact = ""
 SWEP.Purpose = ""
+SWEP.IconLetter = ""
 
 SWEP.ViewModelFOV = 62
 SWEP.ViewModelFlip = false
@@ -45,9 +48,6 @@ end
 
 function SWEP:PrimaryAttack()
 	if CurTime() < self.NextStrike then return end
-
-	self:SetWeaponHoldType("melee")
-	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Weapon:EmitSound(self.Sound)
@@ -56,6 +56,9 @@ function SWEP:PrimaryAttack()
 	self.NextStrike = CurTime() + .4
 	
 	if CLIENT then return end
+	
+	self:SendHoldType("melee")
+	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
 
 	local trace = self.Owner:GetEyeTrace()
 
