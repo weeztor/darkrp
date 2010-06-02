@@ -262,6 +262,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_dropweaponondeath - Enable/disab
 AddToggleCommand("rp_droppocketondeath", "droppocketdeath", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_droppocketondeath - Enable/disable whether people drop the stuff in their pockets when they die.")
 
+AddToggleCommand("rp_droppocketonarrest", "droppocketarrest", 0)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_droppocketonarrest - Enable/disable whether people drop the stuff in their pockets when they get arrested.")
+
 AddToggleCommand("rp_allowvehicleowning", "allowvehicleowning", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowvehicleowning - Enable/disable whether people can own vehicles.")
 

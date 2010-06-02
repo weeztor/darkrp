@@ -127,10 +127,16 @@ local function DrawPlayerInfo(ply)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
+	
+	if ply.DarkRPVars.HasGunlicense then
+		surface.SetTexture(surface.GetTextureID("gui/silkicons/page"))
+		surface.SetDrawColor(255,255,255,255)
+		surface.DrawTexturedRect(pos.x-16, pos.y + 50, 32, 32)
+	end
 end
 
 
---Copy from FESP(made by FPtje Falco)
+-- Copy from FESP(made by FPtje Falco)
 -- This is no stealing since I made FESP myself.
 local vector = FindMetaTable("Vector")
 function vector:RPIsInSight(v, ply)
@@ -245,8 +251,8 @@ local function DrawDisplay()
 
 	if ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
 		local pos = {x = ScrW()/2, y = ScrH() / 2}
-		if GetConVarNumber("globalshow") == 0 then
-			if tr.Entity:IsPlayer() then DrawPlayerInfo(tr.Entity) end
+		if GetConVarNumber("globalshow") == 0 and tr.Entity:IsPlayer() then
+			DrawPlayerInfo(tr.Entity)
 		end
 
 		if tr.Entity:IsOwnable() then

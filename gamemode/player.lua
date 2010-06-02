@@ -291,12 +291,6 @@ function meta:ChangeTeam(t, force)
 		for k,v in pairs(ents.FindByClass("spawned_shipment")) do
 			if v.SID == self.SID then v:Remove() end
 		end
-		
-		for k,v in pairs(ents.GetAll()) do 
-			if v:IsVehicle() and v.SID == self.SID then
-				v:Remove()
-			end
-		end
 	end
 	
 	self:SetTeam(t)
@@ -397,6 +391,23 @@ function meta:Arrest(time, rejoin)
 	self:SetDarkRPVar("Arrested", true)
 	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("aspd"), GetConVarNumber("aspd"))
 	self:StripWeapons()
+	
+	if tobool(GetConVarNumber("droppocketarrest")) and self.Pocket then 
+		for k, v in pairs(self.Pocket) do
+			if ValidEntity(v) then
+				v:SetMoveType(MOVETYPE_VPHYSICS)
+				v:SetNoDraw(false)
+				v:SetCollisionGroup(4)
+				v:SetPos(self:GetPos() + Vector(0,0,10))
+				local phys = v:GetPhysicsObject()
+				if phys:IsValid() then
+					phys:EnableCollisions(true)
+					phys:Wake()
+				end
+			end
+		end
+		self.Pocket = nil
+	end
 	
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
 	if GetConVarNumber("teletojail") == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
