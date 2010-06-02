@@ -15,15 +15,26 @@ local function MsgDoVote(msg)
 
 	LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
 	local panel = vgui.Create("DFrame")
-	panel:SetPos(3 + PanelNum * 140, ScrH() / 2 - 50)
+	panel:SetPos(3 + PanelNum, ScrH() / 2 - 50)
 	panel:SetTitle("Vote")
 	panel:SetSize(140, 140)
 	panel:SetSizable(false)
 	panel.btnClose:SetVisible(false)
 	panel:SetDraggable(false)
 	function panel:Close()
-		PanelNum = PanelNum - 1
+		PanelNum = PanelNum - 140
 		VoteVGUI[voteid .. "vote"] = nil
+		
+		local num = 0
+		for k,v in SortedPairs(VoteVGUI) do
+			v:SetPos(num, ScrH() / 2 - 50)
+			num = num + 140
+		end
+		
+		for k,v in SortedPairs(QuestionVGUI) do
+			v:SetPos(num, ScrH() / 2 - 50)
+			num = num + 300
+		end
 		self:Remove()
 	end
 	
@@ -75,7 +86,7 @@ local function MsgDoVote(msg)
 		panel:Close()
 	end
 
-	PanelNum = PanelNum + 1
+	PanelNum = PanelNum + 140
 	VoteVGUI[voteid .. "vote"] = panel
 	panel:SetSkin("DarkRP")
 end
@@ -101,7 +112,7 @@ local function MsgDoQuestion(msg)
 	local OldTime = CurTime()
 	LocalPlayer():EmitSound("Town.d1_town_02_elevbell1", 100, 100)
 	local panel = vgui.Create("DFrame")
-	panel:SetPos(3 + PanelNum * 140, ScrH() / 2 - 50)--Times 140 because if the quesion is the second screen, the first screen is always a vote screen.
+	panel:SetPos(3 + PanelNum, ScrH() / 2 - 50)--Times 140 because if the quesion is the second screen, the first screen is always a vote screen.
 	panel:SetSize(300, 140)
 	panel:SetSizable(false)
 	panel.btnClose:SetVisible(false)
@@ -110,8 +121,19 @@ local function MsgDoQuestion(msg)
 	panel:SetVisible(true)
 	
 	function panel:Close()
-		PanelNum = PanelNum - 1
+		PanelNum = PanelNum - 300
 		QuestionVGUI[quesid .. "ques"] = nil
+		local num = 0
+		for k,v in SortedPairs(VoteVGUI) do
+			v:SetPos(num, ScrH() / 2 - 50)
+			num = num + 140
+		end
+		
+		for k,v in SortedPairs(QuestionVGUI) do
+			v:SetPos(num, ScrH() / 2 - 50)
+			num = num + 300
+		end
+		
 		self:Remove()
 	end
 	
@@ -157,7 +179,7 @@ local function MsgDoQuestion(msg)
 		panel:Close()
 	end
 
-	PanelNum = PanelNum + 1
+	PanelNum = PanelNum + 300
 	QuestionVGUI[quesid .. "ques"] = panel
 	
 	panel:SetSkin("DarkRP")
