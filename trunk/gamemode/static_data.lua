@@ -175,6 +175,10 @@ if jail_positions then
 	table.insert(jail_positions, {"rp_themitropolis_v3c", 1846.9181, -1258.3672, 12753.0313})
 	table.insert(jail_positions, {"rp_themitropolis_v3c", 2011.4276, -1264.5491, 12753.0313})
 	table.insert(jail_positions, {"rp_themitropolis_v3c", 2186.7952, -1265.4106, 12753.0313})
+	
+	table.insert(jail_positions, {"rp_townsend_v1p", -12723.4492, 4453.4521, -0.6875})
+	table.insert(jail_positions, {"rp_townsend_v1p", -12943.6230, 4471.7676, -0.6875})
+	table.insert(jail_positions, {"rp_townsend_v1p", -13164.2646, 4443.9443, -0.6875})
 	--table.insert(jail_positions, {"", , , })
 end
 
