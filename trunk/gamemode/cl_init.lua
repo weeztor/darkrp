@@ -105,6 +105,7 @@ include("FPP/client/FPP_Menu.lua")
 include("FPP/client/FPP_HUD.lua")
 include("FPP/client/FPP_Buddies.lua")
 include("FPP/sh_CPPI.lua")
+include("FPP/sh_settings.lua")
 
 surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
 
