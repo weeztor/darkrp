@@ -99,6 +99,7 @@ include("sh_animations.lua")
 --Falco's prop protection
 
 AddCSLuaFile("FPP/sh_CPPI.lua")
+AddCSLuaFile("FPP/sh_settings.lua")
 AddCSLuaFile("FPP/client/FPP_Menu.lua")
 AddCSLuaFile("FPP/client/FPP_HUD.lua")
 AddCSLuaFile("FPP/client/FPP_Buddies.lua")
