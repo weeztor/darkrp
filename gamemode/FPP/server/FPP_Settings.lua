@@ -189,7 +189,7 @@ local function RetrieveSettings()
 		end
 	end	
 end
-RetrieveSettings()
+timer.Simple(1, RetrieveSettings)
 
 local function RetrieveBlocked()
 	local data = sql.Query("SELECT * FROM FPP_BLOCKED;")
