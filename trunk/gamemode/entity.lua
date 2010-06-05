@@ -193,7 +193,7 @@ local function UnOwnAll(ply, cmd, args)
 			v:Fire("unlock", "", 0)
 			v:UnOwn(ply)
 			ply:AddMoney(math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5)))
-			ply:GetTable().Ownedz[v:EntIndex()] = 0
+			ply:GetTable().Ownedz[v:EntIndex()] = nil
 		end
 	end
 	ply:GetTable().OwnedNumz = 0

@@ -68,6 +68,10 @@ function SWEP:PrimaryAttack()
 
 	trace.Entity:Unarrest()
 	Notify(trace.Entity, 1, 4, "You were unarrested by " .. self.Owner:Nick())
+	
+	if self.Owner.SteamName then
+		DB.Log(self.Owner:SteamName().." ("..self.Owner:SteamID()..") unarrested "..trace.Entity:Nick())
+	end
 end
 
 function SWEP:SecondaryAttack()

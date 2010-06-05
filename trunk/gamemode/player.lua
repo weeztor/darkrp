@@ -498,9 +498,9 @@ function meta:UnownAll()
 	end
 
 	for k, v in pairs(player.GetAll()) do
-		if  v:GetTable().Ownedz then
+		if v:GetTable().Ownedz then
 			for n, m in pairs(v:GetTable().Ownedz) do
-				if m:AllowedToOwn(self) then
+				if ValidEntity(m) and m:AllowedToOwn(self) then
 					m:RemoveAllowed(self)
 				end
 			end
