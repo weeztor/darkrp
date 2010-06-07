@@ -46,6 +46,7 @@ DarkRP 2.4.1 SVN
 [CHANGE] F1 help text
 [CHANGE] Made it so you have to press E on dropped weapons to pick them up
 [CHANGE] It doesn't remove vehicles anymore when you change job.
+[CHANGE] Made lockpicking time random
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
 [REMOVE] VoteCopOn. It's bullshit
 [REMOVE] All global integers. Result: Less server crashes, less buffer overflow in net message, faster spawning time

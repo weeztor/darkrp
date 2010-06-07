@@ -46,6 +46,16 @@ function SWEP:Initialize()
 	self:SetWeaponHoldType("normal")
 end
 
+if CLIENT then
+	usermessage.Hook("lockpick_time", function(um)
+		local wep = um:ReadEntity()
+		local time = um:ReadLong()
+		
+		wep.LockPickTime = time
+		wep.EndPick = CurTime() + time
+	end)
+end
+
 /*---------------------------------------------------------
 Name: SWEP:PrimaryAttack()
 Desc: +attack1 has been pressed
@@ -59,6 +69,14 @@ function SWEP:PrimaryAttack()
 	if ValidEntity(e) and trace.HitPos:Distance(self.Owner:GetShootPos()) <= 100 and (e:IsDoor() or e:IsVehicle() or string.find(string.lower(e:GetClass()), "vehicle")) then
 		self.IsLockPicking = true
 		self.StartPick = CurTime()
+		if SERVER then
+			self.LockPickTime = math.Rand(1, 30)
+			umsg.Start("lockpick_time", self.Owner)
+				umsg.Entity(self)
+				umsg.Long(self.LockPickTime)
+			umsg.End()
+		end
+		
 		self.EndPick = CurTime() + self.LockPickTime
 		
 		self:SetWeaponHoldType("pistol")

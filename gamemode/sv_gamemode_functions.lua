@@ -430,6 +430,7 @@ function meta:SetDarkRPVar(var, value)
 	umsg.Start("DarkRP_PlayerVar")
 		umsg.Entity(self)
 		umsg.String(var)
+		if value == nil then value = "nil" end
 		umsg.String(tostring(value))
 	umsg.End()
 end
