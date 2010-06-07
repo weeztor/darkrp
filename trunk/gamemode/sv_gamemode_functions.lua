@@ -280,7 +280,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if tobool(GetConVarNumber("dropmoneyondeath")) then
 		local amount = GetConVarNumber("deathfee")
 		if not ply:CanAfford(GetConVarNumber("deathfee")) then
-			amount = ply.DarkRPVars.Money
+			amount = ply.DarkRPVars.money
 		end
 		
 		ply:AddMoney(-amount)
@@ -426,7 +426,12 @@ local meta = FindMetaTable("Player")
 function meta:SetDarkRPVar(var, value)
 	self.DarkRPVars = self.DarkRPVars or {}
 	self.DarkRPVars[var] = value
-	datastream.StreamToClients(player.GetAll(), "DarkRP_PlayerVar", {self, var, value})
+	//datastream.StreamToClients(player.GetAll(), "DarkRP_PlayerVar", {self, var, value})
+	umsg.Start("DarkRP_PlayerVar")
+		umsg.Entity(self)
+		umsg.String(var)
+		umsg.String(tostring(value))
+	umsg.End()
 end
 
 local function SendDarkRPVars(ply)
@@ -719,21 +724,45 @@ end
 
 function GM:Think()
 	-- Doors
-	for k,ply in pairs(player.GetAll()) do
+	for k, ply in pairs(player.GetAll()) do
 		local trace = ply:GetEyeTrace()
 		if ValidEntity(trace.Entity) and (trace.Entity:IsDoor() or trace.Entity:IsVehicle()) and ply.LookingAtDoor ~= trace.Entity and trace.HitPos:Distance(ply:GetShootPos()) < 410 then
 			ply.LookingAtDoor = trace.Entity -- Variable that prevents streaming to clients every frame
 			
 			trace.Entity.DoorData = trace.Entity.DoorData or {}
 			
-			
 			local DoorString = "Data:\n"
-			for k,v in pairs(trace.Entity.DoorData) do
-				DoorString = DoorString .. k.."\t\t".. tostring(v) .. "\n"
+			for key, v in pairs(trace.Entity.DoorData) do
+				DoorString = DoorString .. key.."\t\t".. tostring(v) .. "\n"
 			end
 			
-			
-			datastream.StreamToClients(ply, "DarkRP_DoorData", {trace.Entity, trace.Entity.DoorData})
+			if not ply.DRP_DoorMemory or not ply.DRP_DoorMemory[trace.Entity] then
+				datastream.StreamToClients(ply, "DarkRP_DoorData", {trace.Entity, trace.Entity.DoorData})
+				ply.DRP_DoorMemory = ply.DRP_DoorMemory or {}
+				ply.DRP_DoorMemory[trace.Entity] = table.Copy(trace.Entity.DoorData)
+			else
+				for key, v in pairs(trace.Entity.DoorData) do
+					if not ply.DRP_DoorMemory[trace.Entity][key] or ply.DRP_DoorMemory[trace.Entity][key] ~= v then
+						ply.DRP_DoorMemory[trace.Entity][key] = v
+						umsg.Start("DRP_UpdateDoorData", ply)
+							umsg.Entity(trace.Entity)
+							umsg.String(key)
+							umsg.String(tostring(v))
+						umsg.End()
+					end
+				end
+				
+				for key, v in pairs(ply.DRP_DoorMemory[trace.Entity]) do
+					if not trace.Entity.DoorData[key] then
+						ply.DRP_DoorMemory[trace.Entity][key] = nil
+						umsg.Start("DRP_UpdateDoorData", ply)
+							umsg.Entity(trace.Entity)
+							umsg.String(key)
+							umsg.String("nil")
+						umsg.End()
+					end
+				end
+			end
 		elseif ply.LookingAtDoor ~= trace.Entity then
 			ply.LookingAtDoor = nil
 		end

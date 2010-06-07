@@ -325,12 +325,12 @@ end
  ---------------------------------------------------------*/
 function meta:CanAfford(amount)
 	if not amount then return false end
-	return math.floor(amount) >= 0 and DB.RetrieveMoney(self) - math.floor(amount) >= 0
+	return math.floor(amount) >= 0 and self.DarkRPVars.money - math.floor(amount) >= 0
 end
 
 function meta:AddMoney(amount)
 	if not amount then return false end
-	DB.StoreMoney(self, DB.RetrieveMoney(self) + math.floor(amount))
+	DB.StoreMoney(self, self.DarkRPVars.money + math.floor(amount))
 end
 
 function meta:PayDay()

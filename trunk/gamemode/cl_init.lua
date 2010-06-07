@@ -753,7 +753,7 @@ local function DoSpecialEffects(Type)
 			DOF_SPACING = 8
 			DOF_OFFSET = 9
 			DOF_Start()
-		elseif thetype == "colormod" then
+		elseif thetype == "colormod" and not LocalPlayer():Alive() then
 			hook.Add("RenderScreenspaceEffects", thetype, function()
 				local settings = {}
 				settings[ "$pp_colour_addr" ] = 0
@@ -807,6 +807,7 @@ usermessage.Hook("DarkRPEffects", DoSpecialEffects)
 local Messagemode = false
 local playercolors = {}
 local HearMode = "talk"
+local isSpeaking = false
 
 local function RPStopMessageMode()
 	Messagemode = false
@@ -860,11 +861,18 @@ local function RPSelectwhohearit()
 	end)
 end
 hook.Add("StartChat", "RPDoSomethingWithChat", RPSelectwhohearit)
-hook.Add("FinishChat", "RPCloseRadiusDetection", function() Messagemode = false RPStopMessageMode() end)
+hook.Add("FinishChat", "RPCloseRadiusDetection", function() 
+	if not isSpeaking then 
+		Messagemode = false
+		RPStopMessageMode() 
+	else
+		HearMode = "speak" 
+	end
+end)
 
 function GM:ChatTextChanged(text)
 	if PlayerColorsOn:GetInt() == 0 then return end
-	
+	if not Messagemode or HearMode == "speak" then return end
 	local old = HearMode
 	HearMode = "talk"
 	if GetConVarNumber("alltalk") == 0 then
@@ -931,6 +939,7 @@ function GM:PlayerStartVoice(ply)
 		return
 	end
 	
+	isSpeaking = true
 	
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 and not ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		HearMode = "speak"
@@ -956,6 +965,7 @@ function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
 		return
 	end
 	
+	isSpeaking = false
 	
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 then
 		HearMode = "talk"
@@ -1022,12 +1032,44 @@ local function RetrieveDoorData(handler, id, encoded, decoded)
 end
 datastream.Hook("DarkRP_DoorData", RetrieveDoorData)
 
-local function RetrievePlayerVar(handler, id, encoded, decoded)
-	if not ValidEntity(decoded[1]) then return end
-	decoded[1].DarkRPVars = decoded[1].DarkRPVars or {}
-	decoded[1].DarkRPVars[decoded[2]] = decoded[3]
+local function UpdateDoorData(um)
+	local door = um:ReadEntity()
+	
+	local convert = {}
+	convert["true"] = true
+	convert["false"] = false
+	
+	local var, value = um:ReadString(), um:ReadString()
+	value = convert[value] or tonumber(value) or value
+	
+	if string.sub(value, 1, 6) == "Player" and ValidEntity(Entity(string.sub(value, 9, 9))) then
+		value = Entity(string.sub(value, 9, 9))
+	end
+	
+	if value == "nil" then value = nil end
+	
+	door.DoorData[var] = value
 end
-datastream.Hook("DarkRP_PlayerVar", RetrievePlayerVar)
+usermessage.Hook("DRP_UpdateDoorData", UpdateDoorData)
+
+local function RetrievePlayerVar(um)
+	local ply = um:ReadEntity()
+	if not ValidEntity(ply) then return end
+	
+	ply.DarkRPVars = ply.DarkRPVars or {}
+	
+	local convert = {}
+	convert["true"] = true
+	convert["false"] = false
+	
+	local var, value = um:ReadString(), um:ReadString()
+	value = convert[value] or tonumber(value) or value
+	
+	if value == "nil" then value = nil end
+	
+	ply.DarkRPVars[var] = value
+end
+usermessage.Hook("DarkRP_PlayerVar", RetrievePlayerVar)
 
 local function InitializeDarkRPVars(handler, id, encoded, decoded)
 	if not decoded then return end
