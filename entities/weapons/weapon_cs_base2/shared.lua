@@ -1,11 +1,11 @@
-if (SERVER) then
+if SERVER then
 	AddCSLuaFile("shared.lua")
 	SWEP.Weight = 5
 	SWEP.AutoSwitchTo = false
 	SWEP.AutoSwitchFrom = false
 end
 
-if (CLIENT) then
+if CLIENT then
 	SWEP.DrawAmmo			= true
 	SWEP.DrawCrosshair		= false
 	SWEP.ViewModelFOV		= 82
@@ -16,6 +16,8 @@ if (CLIENT) then
 	surface.CreateFont("csd", ScreenScale(30), 500, true, true, "CSKillIcons")
 	surface.CreateFont("csd", ScreenScale(60), 500, true, true, "CSSelectIcons")
 end
+
+SWEP.Base = "weapon_base"
 
 SWEP.Autho = "Rickster"
 SWEP.Contact = ""
@@ -147,11 +149,36 @@ Checks the objects before any action is taken
 This is to make sure that the entities haven't been removed
 ---------------------------------------------------------*/
 function SWEP:DrawWeaponSelection(x, y, wide, tall, alpha)
-	draw.SimpleText(self.IconLetter, "CSSelectIcons", x + wide/2, y + tall*0.2, Color(255, 210, 0, 255), TEXT_ALIGN_CENTER)
+	local iconletters = {"x", "w", "b", "k", "u", "f", "d", "l", "z", "c"}
+	if self.IconLetter and table.HasValue(iconletters, self.IconLetter) then
+		draw.SimpleText(self.IconLetter, "CSSelectIcons", x + wide/2, y + tall*0.2, Color(255, 210, 0, 255), TEXT_ALIGN_CENTER)
 
-	-- try to fool them into thinking they're playing a Tony Hawks game
-	draw.SimpleText(self.IconLetter, "CSSelectIcons", x + wide/2 + math.Rand(-4, 4), y + tall*0.2+ math.Rand(-14, 14), Color(255, 210, 0, math.Rand(10, 120)), TEXT_ALIGN_CENTER)
-	draw.SimpleText(self.IconLetter, "CSSelectIcons", x + wide/2 + math.Rand(-4, 4), y + tall*0.2+ math.Rand(-9, 9), Color(255, 210, 0, math.Rand(10, 120)), TEXT_ALIGN_CENTER)
+		-- try to fool them into thinking they're playing a Tony Hawks game
+		draw.SimpleText(self.IconLetter, "CSSelectIcons", x + wide/2 + math.Rand(-4, 4), y + tall*0.2+ math.Rand(-14, 14), Color(255, 210, 0, math.Rand(10, 120)), TEXT_ALIGN_CENTER)
+		draw.SimpleText(self.IconLetter, "CSSelectIcons", x + wide/2 + math.Rand(-4, 4), y + tall*0.2+ math.Rand(-9, 9), Color(255, 210, 0, math.Rand(10, 120)), TEXT_ALIGN_CENTER)
+	else
+		// Set us up the texture
+		surface.SetDrawColor( 255, 255, 255, alpha )
+		surface.SetTexture( self.WepSelectIcon )
+		
+		// Lets get a sin wave to make it bounce
+		local fsin = 0
+		
+		if self.BounceWeaponIcon then
+			fsin = math.sin( CurTime() * 10 ) * 5
+		end
+		
+		// Borders
+		y = y + 10
+		x = x + 10
+		wide = wide - 20
+		
+		// Draw that motherfucker
+		surface.DrawTexturedRect( x + (fsin), y - (fsin),  wide-fsin*2 , ( wide / 2 ) + (fsin) )
+		
+		// Draw weapon info box
+		self:PrintWeaponInfo( x + wide + 20, y + tall * 0.95, alpha )
+	end
 end
 
 local IRONSIGHT_TIME = 0.25
@@ -237,7 +264,7 @@ if SERVER then
 elseif CLIENT then
 	local function GetWeaponHoldType(um)
 		local weapon = um:ReadEntity()
-		if ValidEntity(weapon) then
+		if ValidEntity(weapon) and weapon.SetWeaponHoldType then
 			weapon:SetWeaponHoldType(um:ReadString())
 		end
 	end
