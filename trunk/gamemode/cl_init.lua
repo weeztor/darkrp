@@ -1034,17 +1034,16 @@ datastream.Hook("DarkRP_DoorData", RetrieveDoorData)
 
 local function UpdateDoorData(um)
 	local door = um:ReadEntity()
-	
-	local convert = {}
-	convert["true"] = true
-	convert["false"] = false
+	if not ValidEntity(door) then return end
 	
 	local var, value = um:ReadString(), um:ReadString()
-	value = convert[value] or tonumber(value) or value
+	value = tonumber(value) or value
 	
 	if string.sub(value, 1, 6) == "Player" and ValidEntity(Entity(string.sub(value, 9, 9))) then
 		value = Entity(string.sub(value, 9, 9))
 	end
+	
+	if value == "true" or value == "false" then value = tobool(value) end
 	
 	if value == "nil" then value = nil end
 	
@@ -1058,15 +1057,12 @@ local function RetrievePlayerVar(um)
 	
 	ply.DarkRPVars = ply.DarkRPVars or {}
 	
-	local convert = {}
-	convert["true"] = true
-	convert["false"] = false
-	
 	local var, value = um:ReadString(), um:ReadString()
-	value = convert[value] or tonumber(value) or value
+	value = tonumber(value) or value
+	
+	if value == "true" or value == "false" then value = tobool(value) end
 	
 	if value == "nil" then value = nil end
-	
 	ply.DarkRPVars[var] = value
 end
 usermessage.Hook("DarkRP_PlayerVar", RetrievePlayerVar)
