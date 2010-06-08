@@ -50,7 +50,7 @@ function meta:OwnedBy(ply)
 	if ply == self:GetDoorOwner() then return true end
 	self.DoorData = self.DoorData or {}
 	
-	if self.DoorData.ExtraOwners and table.HasValue(self.DoorData.ExtraOwners, ply) then
+	if self.DoorData.ExtraOwners and string.find(self.DoorData.ExtraOwners, ply:UserID()) then
 		return true
 	end
 
@@ -60,7 +60,7 @@ end
 function meta:AllowedToOwn(ply)
 	self.DoorData = self.DoorData or {}
 	if not self.DoorData then return false end
-	if self.DoorData.AllowedToOwn and table.HasValue(self.DoorData.AllowedToOwn, ply) then
+	if self.DoorData.AllowedToOwn and string.find(self.DoorData.AllowedToOwn, ply:UserID()) then
 		return true
 	end
 	return false
@@ -218,51 +218,31 @@ function meta:UnOwn(ply)
 
 	local num = 0
 
-	if self.DoorData.ExtraOwners and table.HasValue(self.DoorData.ExtraOwners, ply) then
-		for k,v in pairs(self.DoorData.ExtraOwners) do
-			if v == ply then
-				table.remove(self.DoorData.ExtraOwners, k)
-				break
-			end
-		end
-	end
+	self:RemoveOwner(ply)
 	ply.LookingAtDoor = nil
 end
 
 function meta:AddAllowed(ply)
 	self.DoorData = self.DoorData or {}
-	self.DoorData.AllowedToOwn = self.DoorData.AllowedToOwn or {}
-	table.insert(self.DoorData.AllowedToOwn, ply)
+	self.DoorData.AllowedToOwn = self.DoorData.AllowedToOwn and self.DoorData.AllowedToOwn .. ";" .. tostring(ply:UserID()) or tostring(ply:UserID())
 end
 
 function meta:RemoveAllowed(ply)
 	self.DoorData = self.DoorData or {}
-	self.DoorData.AllowedToOwn = self.DoorData.AllowedToOwn or {}
-	for k,v in pairs(self.DoorData.AllowedToOwn) do
-		if v == ply then
-			table.remove(self.DoorData.AllowedToOwn, k)
-			break
-		end
-	end
+	if self.DoorData.AllowedToOwn then self.DoorData.AllowedToOwn = string.gsub(self.DoorData.AllowedToOwn, tostring(ply:UserID())..".?", "") end
+	if string.sub(self.DoorData.AllowedToOwn, -1) == ";" then self.DoorData.AllowedToOwn = string.sub(self.DoorData.AllowedToOwn, 1, -2) end
 end
 
 function meta:AddOwner(ply)
 	self.DoorData = self.DoorData or {}
-	self.DoorData.ExtraOwners = self.DoorData.ExtraOwners or {}
-	table.insert(self.DoorData.ExtraOwners, ply)
+	self.DoorData.ExtraOwners = self.DoorData.ExtraOwners and self.DoorData.ExtraOwners .. ";" .. tostring(ply:UserID()) or tostring(ply:UserID())
 	self:RemoveAllowed(ply)
 end
 
 function meta:RemoveOwner(ply)
 	self.DoorData = self.DoorData or {}
-	self.DoorData.ExtraOwners = self.DoorData.ExtraOwners or {}
-	
-	for k,v in pairs(self.DoorData.ExtraOwners) do
-		if v == ply then
-			table.remove(self.DoorData.ExtraOwners, k)
-			break
-		end
-	end
+	if self.DoorData.ExtraOwners then self.DoorData.ExtraOwners = string.gsub(self.DoorData.ExtraOwners, tostring(ply:UserID())..".?", "") end
+	if string.sub(self.DoorData.ExtraOwners, -1) == ";" then self.DoorData.ExtraOwners = string.sub(self.DoorData.ExtraOwners, 1, -2) end
 end
 
 function meta:Own(ply)
