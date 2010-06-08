@@ -270,14 +270,16 @@ local function DrawDisplay()
 				end
 			end
 			
-			if ent.DoorData.AllowedToOwn and table.Count(ent.DoorData.AllowedToOwn) > 0 then
+			if type(ent.DoorData.AllowedToOwn) == "string" and ent.DoorData.AllowedToOwn ~= "" and ent.DoorData.AllowedToOwn ~= ";" then
 				local names = {}
-				for a,b in pairs(ent.DoorData.AllowedToOwn) do
-					if ValidEntity(b) then
-						table.insert(names, b:Nick())
+				for a,b in pairs(string.Explode(";", ent.DoorData.AllowedToOwn)) do
+					if ValidEntity(Player(b)) then
+						table.insert(names, Player(b):Nick())
 					end
 				end
 				ownerstr = ownerstr .. string.format(LANGUAGE.keys_other_allowed).. table.concat(names, "\n").."\n"
+			elseif type(ent.DoorData.AllowedToOwn) == "number" and ValidEntity(Player(ent.DoorData.AllowedToOwn)) then
+				ownerstr = ownerstr .. string.format(LANGUAGE.keys_other_allowed)..Player(ent.DoorData.AllowedToOwn):Nick().."\n"
 			end
 
 			if not LocalPlayer():InVehicle() then
@@ -1046,7 +1048,6 @@ local function UpdateDoorData(um)
 	if value == "true" or value == "false" then value = tobool(value) end
 	
 	if value == "nil" then value = nil end
-	
 	door.DoorData[var] = value
 end
 usermessage.Hook("DRP_UpdateDoorData", UpdateDoorData)
