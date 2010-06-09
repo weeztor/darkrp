@@ -242,7 +242,7 @@ end
 function meta:RemoveOwner(ply)
 	self.DoorData = self.DoorData or {}
 	if self.DoorData.ExtraOwners then self.DoorData.ExtraOwners = string.gsub(self.DoorData.ExtraOwners, tostring(ply:UserID())..".?", "") end
-	if string.sub(self.DoorData.ExtraOwners, -1) == ";" then self.DoorData.ExtraOwners = string.sub(self.DoorData.ExtraOwners, 1, -2) end
+	if string.sub(self.DoorData.ExtraOwners or "", -1) == ";" then self.DoorData.ExtraOwners = string.sub(self.DoorData.ExtraOwners, 1, -2) end
 end
 
 function meta:Own(ply)

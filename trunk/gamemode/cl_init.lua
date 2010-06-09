@@ -132,7 +132,7 @@ local function DrawPlayerInfo(ply)
 	if ply.DarkRPVars.HasGunlicense then
 		surface.SetTexture(surface.GetTextureID("gui/silkicons/page"))
 		surface.SetDrawColor(255,255,255,255)
-		surface.DrawTexturedRect(pos.x-16, pos.y + 50, 32, 32)
+		surface.DrawTexturedRect(pos.x-16, pos.y + 60, 32, 32)
 	end
 end
 
@@ -605,12 +605,12 @@ function GM:HUDPaint()
 	
 	local chbxX, chboxY = chat.GetChatBoxPos()
 	if util.tobool(GetConVarNumber("DarkRP_LockDown")) then
-		local cin = (math.sin(CurTime()) + 1) / 2
+		local cin = (math.sin(CurrentTime) + 1) / 2
 		draw.DrawText(LANGUAGE.lockdown_started, "ScoreboardSubtitle", chbxX, chboxY + 260, Color(cin * 255, 0, 255 - (cin * 255), 255), TEXT_ALIGN_LEFT)
 	end
 	
 	if SELF.DRPIsTalking then
-		local Rotating = math.sin(CurTime()*3)
+		local Rotating = math.sin(CurrentTime*3)
 		local backwards = 0
 		if Rotating < 0 then
 			Rotating = 1-(1+Rotating)
@@ -755,8 +755,9 @@ local function DoSpecialEffects(Type)
 			DOF_SPACING = 8
 			DOF_OFFSET = 9
 			DOF_Start()
-		elseif thetype == "colormod" and not LocalPlayer():Alive() then
+		elseif thetype == "colormod" then
 			hook.Add("RenderScreenspaceEffects", thetype, function()
+				if not LocalPlayer():Alive() then return end
 				local settings = {}
 				settings[ "$pp_colour_addr" ] = 0
 			 	settings[ "$pp_colour_addg" ] = 0 
@@ -937,12 +938,12 @@ function GM:ChatTextChanged(text)
 end
 
 function GM:PlayerStartVoice(ply)
-	if ply == LocalPlayer() and ValidEntity(LocalPlayer().DarkRPVars.phone) then
+	if ply == LocalPlayer() and LocalPlayer().DarkRPVars and ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		return
 	end
 	
 	isSpeaking = true
-	
+	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 and not ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		HearMode = "speak"
 		RPSelectwhohearit()
@@ -956,7 +957,7 @@ function GM:PlayerStartVoice(ply)
 end
 
 function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
-	if ValidEntity(LocalPlayer().DarkRPVars.phone) then
+	if LocalPlayer().DarkRPVars and ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		ply.DRPIsTalking = false
 		timer.Simple(0.2, function() 
 			if ValidEntity(LocalPlayer().DarkRPVars.phone) then
@@ -1059,11 +1060,21 @@ local function RetrievePlayerVar(um)
 	ply.DarkRPVars = ply.DarkRPVars or {}
 	
 	local var, value = um:ReadString(), um:ReadString()
+	local stringvalue = value
 	value = tonumber(value) or value
 	
-	if value == "true" or value == "false" then value = tobool(value) end
+	if string.match(stringvalue, "Entity .([0-9]*)") then
+		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
+	end
 	
-	if value == "nil" then value = nil end
+	if string.match(stringvalue, "(.*) (.*) (.*)") then 
+		local x,y,z = string.match(value, "(.*) (.*) (.*)")
+		value = Vector(x,y,z)
+	end
+	
+	if stringvalue == "true" or stringvalue == "false" then value = tobool(value) end
+	
+	if stringvalue == "nil" then value = nil end
 	ply.DarkRPVars[var] = value
 end
 usermessage.Hook("DarkRP_PlayerVar", RetrievePlayerVar)

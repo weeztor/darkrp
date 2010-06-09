@@ -855,9 +855,10 @@ local function SetPrice(ply, args)
 	trace.filter = ply
 
 	local tr = util.TraceLine(trace)
-
+	
+	if not ValidEntity(tr.Entity) then Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "gunlab / druglab / microwave")) return end
+	
 	local class = tr.Entity:GetClass()
-	print(class, tr.Entity.SID, ply.SID)
 	if ValidEntity(tr.Entity) and (class == "gunlab" or class == "microwave" or class == "drug_lab") and tr.Entity.SID == ply.SID then
 		tr.Entity.dt.price = b
 	else
@@ -1881,6 +1882,9 @@ local function DoLottery(ply)
 		Notify(ply, 1, 5, string.format(LANGUAGE.have_to_wait,  tostring(CanLottery - CurTime()), "/lottery"))
 		return "" 
 	end
+	
+	NotifyAll(1, 4, "A lottery has started!")
+	
 	LotteryON = true
 	LotteryPeople = {}
 	for k,v in pairs(player.GetAll()) do 
