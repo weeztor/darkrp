@@ -783,7 +783,7 @@ local function DoSpecialEffects(Type)
 				
 				local head = Ragdoll:LookupAttachment("eyes")
 				head = Ragdoll:GetAttachment(head)
-				if not head.Pos then return end
+				if not head or not head.Pos then return end
 
 				local view = {}
 				view.origin = head.Pos
@@ -1067,8 +1067,8 @@ local function RetrievePlayerVar(um)
 		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
 	end
 	
-	if string.match(stringvalue, "(.*) (.*) (.*)") then 
-		local x,y,z = string.match(value, "(.*) (.*) (.*)")
+	if string.match(stringvalue, "([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+)") then 
+		local x,y,z = string.match(value, "([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+)")
 		value = Vector(x,y,z)
 	end
 	
