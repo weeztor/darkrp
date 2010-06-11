@@ -1042,8 +1042,12 @@ local function UpdateDoorData(um)
 	local var, value = um:ReadString(), um:ReadString()
 	value = tonumber(value) or value
 	
-	if string.sub(value, 1, 6) == "Player" and ValidEntity(Entity(string.sub(value, 9, 9))) then
-		value = Entity(string.sub(value, 9, 9))
+	if string.match(stringvalue, "Entity .([0-9]*)") then
+		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
+	end
+	
+	if string.match(stringvalue, "Player .([0-9]*)") then
+		value = Entity(string.match(stringvalue, "Player .([0-9]*)"))
 	end
 	
 	if value == "true" or value == "false" then value = tobool(value) end
@@ -1067,8 +1071,8 @@ local function RetrievePlayerVar(um)
 		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
 	end
 	
-	if string.match(stringvalue, "([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+)") then 
-		local x,y,z = string.match(value, "([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+) ([0-9]+\.[0-9]+)")
+	if string.match(stringvalue, "([0-9]+\.[0-9]+)%s([0-9]+\.[0-9]+)%s([0-9]+\.[0-9]+)") then 
+		local x,y,z = string.match(value, "([0-9]+\.[0-9]+)%s([0-9]+\.[0-9]+)%s([0-9]+\.[0-9]+)")
 		value = Vector(x,y,z)
 	end
 	

@@ -134,6 +134,24 @@ end
 
 function meta:CompleteSentence()
 	if not ValidEntity(self) then return end
+	for k,v in pairs(ToggleCmds) do
+		local value = GetConVarNumber(v.var)
+		if value ~= v.default then
+			print("toggle cmd differs ", value, v.default, k)
+			RunConsoleCommand(v.var, v.default)
+			timer.Simple(0, RunConsoleCommand, v.var, value)
+		end
+	end
+	
+	for k,v in pairs(ValueCmds) do
+		local value = GetConVarNumber(v.var)
+		if value ~= v.default then
+			print("value cmd differs ", value, v.default, k)
+			RunConsoleCommand(v.var, v.default)
+			timer.Simple(0, RunConsoleCommand, v.var, value)
+		end
+	end
+	
 	local ID = self:SteamID()
 	if ValidEntity(self) and ID ~= nil and RPArrestedPlayers[ID] then
 		local time = GetConVarNumber("jailtimer")
