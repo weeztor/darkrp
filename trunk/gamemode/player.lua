@@ -137,7 +137,6 @@ function meta:CompleteSentence()
 	for k,v in pairs(ToggleCmds) do
 		local value = GetConVarNumber(v.var)
 		if value ~= v.default then
-			print("toggle cmd differs ", value, v.default, k)
 			RunConsoleCommand(v.var, v.default)
 			timer.Simple(0, RunConsoleCommand, v.var, value)
 		end
@@ -146,7 +145,6 @@ function meta:CompleteSentence()
 	for k,v in pairs(ValueCmds) do
 		local value = GetConVarNumber(v.var)
 		if value ~= v.default then
-			print("value cmd differs ", value, v.default, k)
 			RunConsoleCommand(v.var, v.default)
 			timer.Simple(0, RunConsoleCommand, v.var, value)
 		end

@@ -1042,12 +1042,12 @@ local function UpdateDoorData(um)
 	local var, value = um:ReadString(), um:ReadString()
 	value = tonumber(value) or value
 	
-	if string.match(stringvalue, "Entity .([0-9]*)") then
-		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
+	if string.match(tostring(value), "Entity .([0-9]*)") then
+		value = Entity(string.match(value, "Entity .([0-9]*)"))
 	end
 	
-	if string.match(stringvalue, "Player .([0-9]*)") then
-		value = Entity(string.match(stringvalue, "Player .([0-9]*)"))
+	if string.match(tostring(value), "Player .([0-9]*)") then
+		value = Entity(string.match(value, "Player .([0-9]*)"))
 	end
 	
 	if value == "true" or value == "false" then value = tobool(value) end
