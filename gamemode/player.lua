@@ -44,7 +44,6 @@ local function RPName(ply, args)
 			return "" 
 		end
 	end 
-
 	ply:SetRPName(args)
 	return ""
 end
@@ -63,40 +62,42 @@ end
 function meta:SetRPName(name, firstRun)
 	-- Make sure nobody on this server already has this RP name
 	local lowername = string.lower(tostring(name))
-	local rpNames = DB.RetrieveRPNames()
-	local taken = false
+	DB.RetrieveRPNames(function(rpNames)
+		local taken = false
 
-	for id, row in pairs(rpNames) do
-		if row.name and lowername == string.lower(row.name) and row.steam ~= self:SteamID() and row.steam ~= "STEAM_ID_PENDING" and row.steam ~= "UNKNOWN" then
-			taken = true
+		for id, row in pairs(rpNames) do
+			if row.name and lowername == string.lower(row.name) and row.steam ~= self:SteamID() and row.steam ~= "STEAM_ID_PENDING" and row.steam ~= "UNKNOWN" then
+				taken = true
+			end
 		end
-	end
-	
-	if string.len(lowername) < 2 and not firstrun then return end
-	-- If we found that this name exists for another player
-	if taken then
-		if firstRun then
-			-- If we just connected and another player happens to be using our steam name as their RP name
-			-- Put a 1 after our steam name
-			DB.StoreRPName(self, name .. " 1")
-			Notify(self, 1, 12, "Someone is already using your Steam name as their RP name so we gave you a '1' after your name.") 
+		
+		if string.len(lowername) < 2 and not firstrun then return end
+		-- If we found that this name exists for another player
+		if taken then
+			if firstRun then
+				-- If we just connected and another player happens to be using our steam name as their RP name
+				-- Put a 1 after our steam name
+				DB.StoreRPName(self, name .. " 1")
+				Notify(self, 1, 12, "Someone is already using your Steam name as their RP name so we gave you a '1' after your name.") 
+			else
+				Notify(self, 1, 5, string.format(LANGUAGE.unable, "RPname", ""))
+				return ""
+			end
 		else
-			Notify(self, 1, 5, string.format(LANGUAGE.unable, "RPname", ""))
-			return ""
+			if not firstRun then -- Don't save the steam name in the database
+				NotifyAll(2, 6, string.format(LANGUAGE.rpname_changed, self:SteamName(), name))
+				DB.StoreRPName(self, name)
+			end
 		end
-	else
-		if not firstRun then 
-			NotifyAll(2, 6, string.format(LANGUAGE.rpname_changed, self:SteamName(), name))
-			DB.StoreRPName(self, name) -- Don't save the steam name in the database
-		end
-	end
+	end)
 end
 
 function meta:RestoreRPName()
-	local name = DB.RetrieveRPName(self)
-	if not name or name == "" then name = string.gsub(self:SteamName(), "\\\"", "\"") end
+	DB.RetrieveRPName(self, function(name)
+		if not name or name == "" then name = string.gsub(self:SteamName(), "\\\"", "\"") end
 
-	self:SetDarkRPVar("rpname", name)
+		self:SetDarkRPVar("rpname", name)
+	end)
 end
 
 /*---------------------------------------------------------
@@ -352,13 +353,15 @@ end
 function meta:PayDay()
 	if ValidEntity(self) and self:GetTable().Pay == 1 then
 		if not RPArrestedPlayers[self:SteamID()] then
-			local amount = math.floor(DB.RetrieveSalary(self))
-			if amount == 0 then
-				Notify(self, 4, 4, LANGUAGE.payday_unemployed)
-			else
-				self:AddMoney(amount)
-				Notify(self, 4, 4, string.format(LANGUAGE.payday_message, CUR .. amount))
-			end
+			DB.RetrieveSalary(self, function(amount)
+				amount = math.floor(amount)
+				if amount == 0 then
+					Notify(self, 4, 4, LANGUAGE.payday_unemployed)
+				else
+					self:AddMoney(amount)
+					Notify(self, 4, 4, string.format(LANGUAGE.payday_message, CUR .. amount))
+				end
+			end)
 		else
 			Notify(self, 4, 4, LANGUAGE.payday_missed)
 		end

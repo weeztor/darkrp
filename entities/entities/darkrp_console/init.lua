@@ -51,7 +51,10 @@ function ENT:PhysgunPickup(ply, ent)
 	return ply:IsSuperAdmin()
 end
 
+local timeout = 0
 function ENT:OnPhysgunFreeze(weapon, phys, ent, ply)
+	if CurTime() - timeout < 0.5 then return end
+	timeout = CurTime()
 	if ply:IsSuperAdmin() then
 		local pos = self:GetPos()
 		local ang = self:GetAngles()
@@ -61,43 +64,56 @@ function ENT:OnPhysgunFreeze(weapon, phys, ent, ply)
 			pos.x, pos.y, pos.z,
 			ang.p, ang.y, ang.r
 			
-		local data = sql.Query("SELECT id FROM darkrp_consolespawns WHERE map = " .. sql.SQLStr(map) .. ";")
-		
-		if data then
-			for k,v in pairs(data) do
-				if v.id == self.ID then
-					sql.Query([[UPDATE darkrp_consolespawns SET ]]
-					.. "x = " .. SQLStr(x)..", "
-					.. "y = " .. SQLStr(y)..", "
-					.. "z = " .. SQLStr(z)..", "
-					.. "pitch = " .. SQLStr(pitch)..", "
-					.. "yaw = " .. SQLStr(yaw)..", "
-					.. "roll = " .. SQLStr(roll)
-					.. " WHERE id = "..v.id..";")
-					
-					Notify(ply, 1, 4, "CP console position updated!")
-					return
+		DB.Query("SELECT id FROM darkrp_consolespawns WHERE map = " .. sql.SQLStr(map) .. ";", function(data)
+			if data then
+				for k,v in pairs(data) do
+					if tonumber(v.id) == tonumber(self.ID) then
+						DB.Query([[UPDATE darkrp_consolespawns SET ]]
+						.. "x = " .. SQLStr(x)..", "
+						.. "y = " .. SQLStr(y)..", "
+						.. "z = " .. SQLStr(z)..", "
+						.. "pitch = " .. SQLStr(pitch)..", "
+						.. "yaw = " .. SQLStr(yaw)..", "
+						.. "roll = " .. SQLStr(roll)
+						.. " WHERE id = "..v.id..";")
+						
+						Notify(ply, 1, 4, "CP console position updated!")
+						return
+					end
 				end
 			end
-		end
-		
-		sql.Query([[INSERT INTO darkrp_consolespawns VALUES(NULL, ]]
-		.. SQLStr(map)..", "
-		.. SQLStr(x)..", "
-		.. SQLStr(y)..", "
-		.. SQLStr(z)..", "
-		.. SQLStr(pitch)..", "
-		.. SQLStr(yaw)..", "
-		.. SQLStr(roll)
-		.. ");")
-		Notify(ply, 1, 4, "CP console position created!")
+			
+			local ID = 0
+			local found = false
+			for k,v in SortedPairs(data or {}) do
+				if k == ID + 1 then
+					ID = k
+					found = true
+				else
+					ID = ID + 1
+					found = false
+					break
+				end
+			end
+			if found or ID == 0 then ID = ID + 1 end
+			DB.Query([[INSERT INTO darkrp_consolespawns VALUES(]].. (self.ID or ID) .. [[, ]]
+			.. SQLStr(map)..", "
+			.. SQLStr(x)..", "
+			.. SQLStr(y)..", "
+			.. SQLStr(z)..", "
+			.. SQLStr(pitch)..", "
+			.. SQLStr(yaw)..", "
+			.. SQLStr(roll)
+			.. ");")
+			Notify(ply, 1, 4, "CP console position created!")
+		end)
 	end
 end
 
 function ENT:CanTool(ply, trace, tool, ENT)
 	if ply:IsSuperAdmin() and tool == "remover" then
 		self.CanRemove = true
-		sql.Query("DELETE FROM darkrp_consolespawns WHERE id = "..self.ID..";") -- Remove from database if it's there
+		DB.Query("DELETE FROM darkrp_consolespawns WHERE id = "..self.ID..";") -- Remove from database if it's there
 		Notify(ply, 1, 4, "CP console successfully removed!")
 		return true
 	end

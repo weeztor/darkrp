@@ -417,7 +417,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply.DarkRPVars = {}
 	ply:NewData()
 	ply.SID = ply:UserID()
-	DB.RetrieveSalary(ply)
+	DB.RetrieveSalary(ply, function() end)
 	DB.RetrieveMoney(ply)
 	timer.Simple(10, ply.CompleteSentence, ply)
 end
@@ -800,7 +800,13 @@ function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's 
 end
 
 function GM:InitPostEntity() 
-	timer.Simple(2, DB.Init)
+	timer.Simple(2, function()
+		if RP_MySQLConfig and RP_MySQLConfig.EnableMySQL then
+			DB.ConnectToMySQL(RP_MySQLConfig.Host, RP_MySQLConfig.Username, RP_MySQLConfig.Password, RP_MySQLConfig.Database_name, RP_MySQLConfig.Database_port)
+			return
+		end
+		DB.Init()
+	end)
 	if not hook.GetTable().PlayerSay then return end
 	for k,v in pairs(hook.GetTable().PlayerSay) do -- Remove all PlayerSay hooks, they all interfere with DarkRP's PlayerSay
 		otherhooks[k] = v
