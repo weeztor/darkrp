@@ -25,8 +25,9 @@ local function ControlZombie()
 			timeLeft2 = math.random(150,300)
 			zombieOn = true
 			timer.Start("start2")
-			DB.RetrieveZombies()
-			ZombieStart()
+			DB.RetrieveZombies(function()
+				ZombieStart()
+			end)
 		end
 	end
 end
@@ -63,13 +64,14 @@ local function ReMoveZombie(ply, index)
 		if not index or zombieSpawns[tonumber(index)] == nil then
 			Notify(ply, 1, 4, string.format(LANGUAGE.zombie_spawn_not_exist, tostring(index)))
 		else
-			DB.RetrieveZombies()
-			Notify(ply, 1, 4, LANGUAGE.zombie_spawn_removed)
-			table.remove(zombieSpawns,index)
-			DB.StoreZombies()
-			if ply.DarkRPVars.zombieToggle then
-				LoadTable(ply)
-			end
+			DB.RetrieveZombies(function()
+				Notify(ply, 1, 4, LANGUAGE.zombie_spawn_removed)
+				table.remove(zombieSpawns,index)
+				DB.StoreZombies()
+				if ply.DarkRPVars.zombieToggle then
+					LoadTable(ply)
+				end
+			end)
 		end
 	else
 		Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "/removezombie"))
@@ -80,11 +82,12 @@ AddChatCommand("/removezombie", ReMoveZombie)
 
 local function AddZombie(ply)
 	if ply:HasPriv(ADMIN) then
-		DB.RetrieveZombies()
-		table.insert(zombieSpawns, tostring(ply:GetPos()))
-		DB.StoreZombies()
-		if ply.DarkRPVars.zombieToggle then LoadTable(ply) end
-		Notify(ply, 1, 4, LANGUAGE.zombie_spawn_added)
+		DB.RetrieveZombies(function()
+			table.insert(zombieSpawns, tostring(ply:GetPos()))
+			DB.StoreZombies()
+			if ply.DarkRPVars.zombieToggle then LoadTable(ply) end
+			Notify(ply, 1, 4, LANGUAGE.zombie_spawn_added)
+		end)
 	else
 		Notify(ply, 1, 6, string.format(LANGUAGE.need_admin, "/addzombie"))
 	end
@@ -95,9 +98,10 @@ AddChatCommand("/addzombie", AddZombie)
 local function ToggleZombie(ply)
 	if ply:HasPriv(ADMIN) then
 		if not ply.DarkRPVars.zombieToggle then
-			DB.RetrieveZombies()
-			ply:SetDarkRPVar("zombieToggle", true)
-			LoadTable(ply)
+			DB.RetrieveZombies(function()
+				ply:SetDarkRPVar("zombieToggle", true)
+				LoadTable(ply)
+			end)
 		else
 			ply:SetDarkRPVar("zombieToggle", false)
 		end

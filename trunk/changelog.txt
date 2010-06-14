@@ -22,6 +22,7 @@ DarkRP 2.4.1 SVN
 [ADD] /unownalldoors, sell all your doors at once!
 [ADD] rp_droppocketonarrest, drop pocket items on arrest.
 [ADD] Showing whether someone has a gunlicense above their heads
+[ADD] MySQL support!
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo

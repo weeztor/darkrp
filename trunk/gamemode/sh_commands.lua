@@ -35,7 +35,7 @@ end)
 
 if SERVER then
 	concommand.Add("rp_ResetAllSettings", function(ply, cmd, args)
-		sql.Query("DELETE FROM darkrp_cvars;")
+		DB.Query("DELETE FROM darkrp_cvars;")
 		if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 			Notify(ply, 1, 5, string.format(LANGUAGE.need_sadmin, "rp_resetallsettings"))
 			return

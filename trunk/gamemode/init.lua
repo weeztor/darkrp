@@ -74,6 +74,7 @@ DB = {}
 -- This will fix the rp_voiceradius not working
 game.ConsoleCommand("sv_alltalk 0\n")
 
+include("_MySQL.lua")
 include("language_sh.lua")
 include("MakeThings.lua")
 include("shared.lua")
