@@ -5,7 +5,7 @@ DB.privcache = {}
  MySQL
  ---------------------------------------------------------
 */
-if file.Exists("../lua/includes/modules/gmsv_mysqloo.dll") then
+if file.Exists("../lua/includes/modules/gmsv_mysqloo.dll") or file.Exists("../lua/includes/modules/gmsv_mysqloo_i486.dll") then
 	require("mysqloo")
 end
 
@@ -13,10 +13,10 @@ local CONNECTED_TO_MYSQL = false
 DB.MySQLDB = nil
 
 function DB.Begin()
-	if CONNECTED_TO_MYSQL then sql.Begin() end
+	if not CONNECTED_TO_MYSQL then sql.Begin() end
 end
 function DB.Commit()
-	if CONNECTED_TO_MYSQL then sql.Commit() end
+	if not CONNECTED_TO_MYSQL then sql.Commit() end
 end
 
 function DB.Query(query, callback)
@@ -122,6 +122,53 @@ function DB.Init()
 	
 	DB.TeamSpawns = {}
 	DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end)
+	
+	if CONNECTED_TO_MYSQL then -- In a listen server, the connection with the external database is often made AFTER the listen server host has joined, 
+								--so he walks around with the settings from the SQLite database
+		for k,v in pairs(player.GetAll()) do
+			local SteamID = sql.SQLStr(v:SteamID())
+			DB.Query([[SELECT amount, salary, name, admin, mayor, cp, tool, phys, prop FROM darkrp_wallets 
+				LEFT OUTER JOIN darkrp_salaries ON darkrp_wallets.steam = darkrp_salaries.steam
+				LEFT OUTER JOIN darkrp_rpnames ON darkrp_wallets.steam = darkrp_rpnames.steam
+				LEFT OUTER JOIN darkrp_privs ON darkrp_wallets.steam = darkrp_privs.steam
+				WHERE darkrp_wallets.steam = ]].. SteamID ..[[
+			;]], function(data)
+				local Data = data[1]
+				if Data.name then
+					v:SetDarkRPVar("rpname", Data.name)
+				end
+				if Data.salary then
+					v:SetDarkRPVar("salary", Data.salary)
+				end
+				if Data.amount then
+					v:SetDarkRPVar("money", Data.amount)
+				end
+				
+				local steamID = v:SteamID()
+				if DB.privcache[steamID] == nil then
+					DB.privcache[steamID] = {}
+				end
+				
+				v:SetDarkRPVar("Privadmin", Data.admin)
+				DB.privcache[steamID]["admin"] = (Data.admin and 1) or 0
+				
+				v:SetDarkRPVar("Privmayor", Data.mayor)
+				DB.privcache[steamID]["mayor"] = (Data.mayor and 1) or 0
+				
+				v:SetDarkRPVar("Privcp", Data.cp)
+				DB.privcache[steamID]["cp"] = (Data.cp and 1) or 0
+				
+				v:SetDarkRPVar("Privtool", Data.tool)
+				DB.privcache[steamID]["tool"] = (Data.tool and 1) or 0
+				
+				v:SetDarkRPVar("Privphys", Data.phys)
+				DB.privcache[steamID]["phys"] = (Data.phys and 1) or 0
+				
+				v:SetDarkRPVar("Privprop", Data.prop)
+				DB.privcache[steamID]["prop"] = (Data.prop and 1) or 0
+			end)
+		end
+	end
 end
 
 /*---------------------------------------------------------
@@ -274,7 +321,6 @@ function DB.CreateZombiePos()
 
 	local once = false
 	DB.Begin()
-
 		for k, v in pairs(zombie_spawn_positions) do
 			if map == string.lower(v[1]) then
 				if not once then
@@ -299,7 +345,10 @@ function DB.StoreZombies()
 	DB.Commit()
 end
 
+local FirstZombieSpawn = true
 function DB.RetrieveZombies(callback)
+	if zombieSpawns and table.Count(zombieSpawns) > 0 and not FirstZombieSpawn then return zombieSpawns end
+	FirstZombieSpawn = false
 	zombieSpawns = {}
 	DB.Query("SELECT * FROM darkrp_zspawns WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";", function(r)
 		if not r then return end
@@ -328,7 +377,6 @@ local function IsEmpty(vector)
 end
 
 function DB.RetrieveRandomZombieSpawnPos()
-	local map = string.lower(game.GetMap())
 	local r = false
 		
 	r = table.Random(zombieSpawns)
@@ -440,8 +488,9 @@ function DB.RetrieveJailPos()
 		end
 	end
 	-- Mark that position as having been used just now
-	DB.Query("UPDATE darkrp_jailpositions SET lastused = " .. CurTime() .. " WHERE map = " .. sql.SQLStr(map) .. " AND x = " .. ret.x .. " AND y = " .. ret.y .. " AND z = " .. ret.z .. ";")
-	DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
+	DB.Query("UPDATE darkrp_jailpositions SET lastused = " .. CurTime() .. " WHERE map = " .. sql.SQLStr(map) .. " AND x = " .. ret.x .. " AND y = " .. ret.y .. " AND z = " .. ret.z .. ";", function()
+		DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
+	end)
 	return Vector(ret.x, ret.y, ret.z)
 end
 
@@ -471,7 +520,7 @@ local function FixDarkRPTspawnsTable() -- SQLite only
 end
 
 function DB.StoreTeamSpawnPos(t, pos)
-	if not CONNECTED_TO_MYSQL then FixDarkRPTspawnsTable() end--Check if the server doesn't use an out of date version of this table
+	if not CONNECTED_TO_MYSQL then FixDarkRPTspawnsTable() end -- Check if the server doesn't use an out of date version of this table
 	local map = string.lower(game.GetMap())
 	DB.QueryValue("SELECT COUNT(*) FROM darkrp_tspawns WHERE team = " .. t .. " AND map = " .. sql.SQLStr(map) .. ";", function(already)
 		already = tonumber(already)
@@ -552,6 +601,8 @@ Players
  ---------------------------------------------------------*/
 function DB.StoreRPName(ply, name)
 	if not name or string.len(name) < 2 then return end
+	ply:SetDarkRPVar("rpname", name)
+	
 	DB.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";", function(r)
 		if r then
 			DB.Query("UPDATE darkrp_rpnames SET name = " .. sql.SQLStr(name) .. " WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
@@ -559,8 +610,6 @@ function DB.StoreRPName(ply, name)
 			DB.Query("INSERT INTO darkrp_rpnames VALUES(" .. sql.SQLStr(ply:SteamID()) .. ", " .. sql.SQLStr(name) .. ");")
 		end
 	end)
-
-	ply:SetDarkRPVar("rpname", name)
 end
 
 local rpnameslist --Make sure the DB doesn't get checked for ALL RPnames when someone InitialSpawns
@@ -570,18 +619,28 @@ function DB.RetrieveRPNames(callback)
 	end
 	
 	DB.Query("SELECT * FROM darkrp_rpnames;", function(r)
-		if r then rpnameslist = r callback(rpnameslist)
-		else rpnameslist = {} callback({}) end
+		if r then 
+			rpnameslist = r
+			callback(rpnameslist)
+		else
+			rpnameslist = {}
+			callback(rpnameslist)
+		end
 	end)
 end
 
 function DB.RetrieveRPName(ply, callback)
+	for k,v in pairs(rpnameslist or {}) do
+		if v.steam == ply:SteamID() then return callback(v.name) end -- First check the cache for RP names
+	end
 	DB.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";", callback)
 end
 
 function DB.StoreMoney(ply, amount)
 	if not ValidEntity(ply) then return end
 	if amount < 0  then return end
+	ply:SetDarkRPVar("money", math.floor(amount))
+	
 	local steamID = ply:SteamID()
 	DB.QueryValue("SELECT amount FROM darkrp_wallets WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(r)
 		if r then
@@ -590,10 +649,9 @@ function DB.StoreMoney(ply, amount)
 			DB.Query("INSERT INTO darkrp_wallets VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
 		end
 	end)
-	ply:SetDarkRPVar("money", math.floor(amount))
 end
 
-function DB.RetrieveMoney(ply)
+function DB.RetrieveMoney(ply) -- This is only run once when the player joins, there's no need for a cache unless the player keeps rejoining.
 	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
 	local startingAmount = GetConVarNumber("startingmoney") or 500
@@ -612,7 +670,7 @@ function DB.ResetAllMoney(ply,cmd,args)
 	if not ply:IsSuperAdmin() then return end
 	DB.Query("DELETE FROM darkrp_wallets;")
 	for k,v in pairs(player.GetAll()) do
-		DB.StoreMoney(v, GetConVarNumber("startingmoney") or 500)
+		v:SetDarkRPVar("money", GetConVarNumber("startingmoney") or 500)
 	end
 	if ply:IsPlayer() then
 		NotifyAll(1,4, string.format(LANGUAGE.reset_money, ply:Nick()))
@@ -636,6 +694,7 @@ end
 
 function DB.StoreSalary(ply, amount)
 	local steamID = ply:SteamID()
+	ply:SetDarkRPVar("salary", math.floor(amount))
 	DB.QueryValue("SELECT COUNT(*) FROM darkrp_salaries WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(already)
 		if not already or already == 0 then
 			DB.Query("INSERT INTO darkrp_salaries VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
@@ -643,7 +702,7 @@ function DB.StoreSalary(ply, amount)
 			DB.Query("UPDATE darkrp_salaries SET salary = " .. math.floor(amount) .. " WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 		end
 	end)
-	ply:SetDarkRPVar("salary", math.floor(amount))
+	
 	return amount
 end
 
@@ -651,10 +710,11 @@ function DB.RetrieveSalary(ply, callback)
 	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
 	local normal = GetConVarNumber("normalsalary")
+	if ply.DarkRPVars.salary then return callback(ply.DarkRPVars.salary) end -- First check the cache.
 
 	DB.QueryValue("SELECT salary FROM darkrp_salaries WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(r)
 		if not r then
-			DB.StoreSalary(ply, normal)
+			ply:SetDarkRPVar("salary", normal)
 			callback(normal)
 		else
 			callback(r)
@@ -682,9 +742,9 @@ function DB.StoreDoorOwnability(ent)
 end
 
 function DB.StoreNonOwnableDoorTitle(ent, text)
-	DB.Query("UPDATE darkrp_disableddoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
 	ent.DoorData = ent.DoorData or {}
 	ent.DoorData.title = text
+	DB.Query("UPDATE darkrp_disableddoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
 end
 
 function DB.SetUpNonOwnableDoors()
