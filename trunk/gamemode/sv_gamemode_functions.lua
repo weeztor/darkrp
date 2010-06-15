@@ -426,7 +426,6 @@ local meta = FindMetaTable("Player")
 function meta:SetDarkRPVar(var, value)
 	self.DarkRPVars = self.DarkRPVars or {}
 	self.DarkRPVars[var] = value
-	//datastream.StreamToClients(player.GetAll(), "DarkRP_PlayerVar", {self, var, value})
 	umsg.Start("DarkRP_PlayerVar")
 		umsg.Entity(self)
 		umsg.String(var)
