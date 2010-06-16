@@ -36,7 +36,7 @@ function DB.Query(query, callback)
 		return
 	end
 	local Result = sql.Query(query)
-	if callback then callback(result) end
+	if callback then callback(Result) end
 	return Result
 end
 
@@ -106,10 +106,20 @@ function DB.Init()
 	DB.SetUpGroupOwnableDoors()
 	DB.LoadConsoles()
 	
-	DB.Query("SELECT * FROM darkrp_cvars", function(settings)
+	DB.Query("SELECT * FROM darkrp_cvars;", function(settings)
 		if settings then
+			local reset = false -- For the old SQLite Databases that had the "key" column instead of "var"
 			for k,v in pairs(settings) do
-				RunConsoleCommand(v.var, v.value)
+				if v.key then reset = true end
+				RunConsoleCommand(v.var or v.key, v.value)
+			end
+			if reset then -- Renaming the column is impossible in SQLite, so do it the hard way
+				DB.Begin()
+				DB.Query("ALTER TABLE darkrp_cvars RENAME TO darkrp_cvars2;")
+				DB.Query("CREATE TABLE darkrp_cvars (var char(20) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
+				DB.Query("INSERT INTO darkrp_cvars SELECT * FROM darkrp_cvars2;")
+				DB.Query("DROP TABLE darkrp_cvars2;")
+				DB.Commit()
 			end
 		end
 	end)
@@ -527,8 +537,8 @@ function DB.StoreTeamSpawnPos(t, pos)
 		local ID = 0
 		local found = false
 		for k,v in SortedPairs(DB.TeamSpawns or {}) do 
-			if k == ID + 1 then
-				ID = k
+			if tonumber(v.id) == ID + 1 then
+				ID = tonumber(v.id)
 				found = true
 			else
 				ID = ID + 1
@@ -536,15 +546,17 @@ function DB.StoreTeamSpawnPos(t, pos)
 				break
 			end
 		end
-		if found then ID = ID + 1 end
+		if found or ID == 0 then ID = ID + 1 end
 		
 		if not already or already == 0 then
-			-- id == NULL so it will increment automatically
-			DB.Query("INSERT INTO darkrp_tspawns VALUES(".. ID .. ", ".. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
+			DB.Query("INSERT INTO darkrp_tspawns VALUES(".. ID .. ", ".. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");", function()
+				DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end) end)
 			print(string.format(LANGUAGE.created_spawnpos, team.GetName(t)))
 		else
-			DB.RemoveTeamSpawnPos(t) -- remove everything and create new
-			DB.Query("INSERT INTO darkrp_tspawns VALUES(".. ID .. ", ".. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");")
+			DB.RemoveTeamSpawnPos(t, function() -- remove everything and create new
+				DB.Query("INSERT INTO darkrp_tspawns VALUES(".. ID .. ", ".. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");", function()
+					DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end) end)
+			end)
 			print(string.format(LANGUAGE.updated_spawnpos, team.GetName(t)))
 		end
 	end)
@@ -556,8 +568,8 @@ function DB.AddTeamSpawnPos(t, pos)
 	local ID = 0
 	local found = false
 	for k,v in SortedPairs(DB.TeamSpawns or {}) do 
-		if k == ID + 1 then
-			ID = k
+		if tonumber(v.id) == ID + 1 then
+			ID = tonumber(v.id)
 			found = true
 		else
 			ID = ID + 1
@@ -565,16 +577,17 @@ function DB.AddTeamSpawnPos(t, pos)
 			break
 		end
 	end
-	if found then ID = ID + 1 end
-		
+	if found or ID == 0 then ID = ID + 1 end
+	
 	DB.Query("INSERT INTO darkrp_tspawns VALUES(".. ID .. ", " .. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");", function()
 		DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end) end)
 end
 
-function DB.RemoveTeamSpawnPos(t)
+function DB.RemoveTeamSpawnPos(t, callback)
 	local map = string.lower(game.GetMap())
 	DB.Query("DELETE FROM darkrp_tspawns WHERE team = "..t..";", function()
 		DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end)
+		if callback then callback() end
 	end)
 end
 	
@@ -586,10 +599,8 @@ function DB.RetrieveTeamSpawnPos(ply)
 	
 	if DB.TeamSpawns then
 		for k,v in pairs(DB.TeamSpawns) do
-			for a,b in pairs(v) do
-				if b.map == map and b.team == t then
-					table.insert(returnal, Vector(b.x, b.y, b.z))
-				end
+			if v.map == map and tonumber(v.team) == t then
+				table.insert(returnal, Vector(v.x, v.y, v.z))
 			end
 		end
 		return (table.Count(returnal) > 0 and returnal) or nil
