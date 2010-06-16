@@ -663,7 +663,7 @@ local function RemoveSpawnPos(ply, args)
 	end
 
 	if t then
-		DB.RemoveTeamSpawnPos(t, pos)
+		DB.RemoveTeamSpawnPos(t)
 	else
 		Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "team: "..tostring(args)))
 	end
