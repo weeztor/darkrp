@@ -26,7 +26,7 @@ local pmeta = FindMetaTable("Player")
 
 pmeta.SteamName = pmeta.Name
 function pmeta:Name()
-	if not ValidEntity(self) then return "" end
+	if not self or not self.IsValid or not ValidEntity(self) then return "" end
 	
 	self.DarkRPVars = self.DarkRPVars or {}
 	if GetConVarNumber("allowrpnames") == 0 then
@@ -250,7 +250,7 @@ local function DrawDisplay()
 		end
 	end
 
-	if ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
+	if tr.Entity and tr.Entity.IsValid and ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
 		local pos = {x = ScrW()/2, y = ScrH() / 2}
 		if GetConVarNumber("globalshow") == 0 and tr.Entity:IsPlayer() then
 			DrawPlayerInfo(tr.Entity)
@@ -1025,7 +1025,7 @@ concommand.Add("rp_getvehicles", GetAvailableVehicles)
 local function RetrieveDoorData(handler, id, encoded, decoded)
 	-- decoded[1] = Entity you were looking at
 	-- Decoded[2] = table of that door
-	if not ValidEntity(decoded[1]) then return end
+	if not decoded[1] or not decoded[1].IsValid or not ValidEntity(decoded[1]) then return end
 	decoded[1].DoorData = decoded[2]
 	
 	local DoorString = "Data:\n"
