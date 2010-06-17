@@ -20,7 +20,7 @@ function ENT:Use(activator,caller)
 	if not weapon:IsValid() then return false end
 	
 	local CanPickup = hook.Call("PlayerCanPickupWeapon", GAMEMODE, activator, weapon)
-	if not CanPickup then weapon:Remove() return end
+	if CanPickup == false then weapon:Remove() return end
 
 	weapon:SetAngles(self.Entity:GetAngles())
 	weapon:SetPos(self.Entity:GetPos())
