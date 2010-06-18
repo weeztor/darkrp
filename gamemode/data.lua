@@ -485,15 +485,17 @@ function DB.RetrieveJailPos()
 	local map = string.lower(game.GetMap())
 	local r = DB.JailPos
 	if not r then return Vector(0,0,0) end
-
+	
 	-- Retrieve the least recently used jail position
 	local now = CurTime()
 	local oldest = 0
-	local ret = r[1] -- Select the first one if there's only one
+	local ret
 	
-	for _, row in pairs(r) do
-		if (now - tonumber(row.lastused)) > oldest then
+	for k, row in pairs(r) do
+		if row.map == map and (now - tonumber(row.lastused)) > oldest then
 			oldest = (now - tonumber(row.lastused))
+			ret = row
+		elseif row.map == map and oldest == 0 then
 			ret = row
 		end
 	end
@@ -501,7 +503,7 @@ function DB.RetrieveJailPos()
 	DB.Query("UPDATE darkrp_jailpositions SET lastused = " .. CurTime() .. " WHERE map = " .. sql.SQLStr(map) .. " AND x = " .. ret.x .. " AND y = " .. ret.y .. " AND z = " .. ret.z .. ";", function()
 		DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
 	end)
-	return Vector(ret.x, ret.y, ret.z)
+	return ret and Vector(ret.x, ret.y, ret.z)
 end
 
 function DB.SaveSetting(setting, value)
