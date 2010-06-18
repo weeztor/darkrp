@@ -84,7 +84,7 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 		return true, ent.Owner
 	end
 	
-	if ent.Owner ~= ply then
+	if ent.Owner ~= ply and ValidEntity(ply) then
 		if not TryingToShare and ValidEntity(ent.Owner) and ent.Owner.Buddies and ent.Owner.Buddies[ply] and ent.Owner.Buddies[ply][string.lower(Type1)] then
 			return true, ent.Owner
 		elseif ent.Owner and ply:IsAdmin() and tobool(FPP.Settings[Type2].adminall) then -- if not world prop AND admin allowed

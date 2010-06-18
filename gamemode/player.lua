@@ -123,6 +123,7 @@ function meta:ResetDMCounter()
 end
 
 function meta:TeamUnBan(Team)
+	if not ValidEntity(self) then return end
 	if not self.bannedfrom then self.bannedfrom = {} end
 	self.bannedfrom[Team] = 0
 end

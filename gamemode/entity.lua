@@ -34,6 +34,7 @@ function meta:IsOwned()
 end
 
 function meta:GetDoorOwner()
+	if not ValidEntity(self) then return end
 	self.DoorData = self.DoorData or {}
 	return self.DoorData.Owner
 end
