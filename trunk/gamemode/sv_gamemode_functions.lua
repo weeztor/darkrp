@@ -424,6 +424,7 @@ end
 
 local meta = FindMetaTable("Player")
 function meta:SetDarkRPVar(var, value)
+	if not ValidEntity(self) then return end
 	self.DarkRPVars = self.DarkRPVars or {}
 	self.DarkRPVars[var] = value
 	umsg.Start("DarkRP_PlayerVar")
