@@ -432,8 +432,9 @@ function meta:Arrest(time, rejoin)
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
 	if GetConVarNumber("teletojail") == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
 		local jailpos = DB.RetrieveJailPos()
-		if not jailpos then return end
-		self:SetPos(jailpos)
+		if jailpos then
+			self:SetPos(jailpos)
+		end
 	end
 	
 	if not RPArrestedPlayers[self:SteamID()] or rejoin then

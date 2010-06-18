@@ -500,9 +500,9 @@ function DB.RetrieveJailPos()
 		end
 	end
 	-- Mark that position as having been used just now
-	DB.Query("UPDATE darkrp_jailpositions SET lastused = " .. CurTime() .. " WHERE map = " .. sql.SQLStr(map) .. " AND x = " .. ret.x .. " AND y = " .. ret.y .. " AND z = " .. ret.z .. ";", function()
+	if ret then DB.Query("UPDATE darkrp_jailpositions SET lastused = " .. CurTime() .. " WHERE map = " .. sql.SQLStr(map) .. " AND x = " .. ret.x .. " AND y = " .. ret.y .. " AND z = " .. ret.z .. ";", function()
 		DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
-	end)
+	end) end
 	return ret and Vector(ret.x, ret.y, ret.z)
 end
 
