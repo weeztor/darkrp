@@ -27,6 +27,7 @@ end
 local meta = FindMetaTable("Player")
 meta.SteamName = meta.Name
 meta.Name = function(self)
+	if not ValidEntity(self) then return "" end
 	if GetConVarNumber("allowrpnames") == 1 then
 		self.DarkRPVars = self.DarkRPVars or {}
 		return self.DarkRPVars.rpname or self:SteamName()
