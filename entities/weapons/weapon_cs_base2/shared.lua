@@ -314,6 +314,7 @@ function SWEP:OnDrop()
 	self.PrimaryClipLeft = self:Clip1()
 	self.SecondaryClipLeft = self:Clip2()
 	
+	if not self.LASTOWNER then return end
 	self.PrimaryAmmoLeft = self.LASTOWNER:GetAmmoCount(self:GetPrimaryAmmoType())
 	self.SecondaryAmmoLeft = self.LASTOWNER:GetAmmoCount(self:GetSecondaryAmmoType())
 end
