@@ -7,9 +7,7 @@ local function ccDoVote(ply, cmd, args)
 	if not Votes[args[1]][tonumber(args[2])] then return end
 	
 	-- If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
-	if not ply:GetTable().VotesVoted then
-		ply:GetTable().VotesVoted = {}
-	end
+	ply.VotesVoted = ply.VotesVoted or {}
 	
 	if ply:GetTable().VotesVoted[args[1]] then
 		Notify(ply, 1, 4, "You can not vote!")
@@ -80,7 +78,8 @@ function vote.DestroyVotesWithEnt(ent)
 				umsg.String(v.ID)
 			umsg.End()
 			for a, b in pairs(player.GetAll()) do
-				b:GetTable().VotesVoted[v.ID] = nil
+				b.VotesVoted = b.VotesVoted or {}
+				b.VotesVoted[v.ID] = nil
 			end
 
 			Votes[k] = nil
