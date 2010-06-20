@@ -141,8 +141,10 @@ end
 concommand.Add("rp_version", RPVersion)
 
 local function GetAvailableVehicles()
+	ServerLog("Available vehicles for custom vehicles:")
 	print("Available vehicles for custom vehicles:")
 	for k,v in pairs(list.Get("Vehicles")) do
+		ServerLog("\""..k.."\"")
 		print("\""..k.."\"")
 	end
 end
