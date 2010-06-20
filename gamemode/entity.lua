@@ -235,12 +235,14 @@ function meta:RemoveAllowed(ply)
 end
 
 function meta:AddOwner(ply)
+	if not ValidEntity(self) then return end
 	self.DoorData = self.DoorData or {}
 	self.DoorData.ExtraOwners = self.DoorData.ExtraOwners and self.DoorData.ExtraOwners .. ";" .. tostring(ply:UserID()) or tostring(ply:UserID())
 	self:RemoveAllowed(ply)
 end
 
 function meta:RemoveOwner(ply)
+	if not ValidEntity(self) then return end
 	self.DoorData = self.DoorData or {}
 	if self.DoorData.ExtraOwners then self.DoorData.ExtraOwners = string.gsub(self.DoorData.ExtraOwners, tostring(ply:UserID())..".?", "") end
 	if string.sub(self.DoorData.ExtraOwners or "", -1) == ";" then self.DoorData.ExtraOwners = string.sub(self.DoorData.ExtraOwners, 1, -2) end
