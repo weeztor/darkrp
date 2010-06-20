@@ -1240,6 +1240,7 @@ local function MakeACall(ply,args)
 	ownphone:Spawn()
 	ownphone:Use(ply,ply)--Put it on the ear already, since you're the one who's calling...
 	timer.Simple(20, function(ply, OtherPhone)
+		ply.DarkRPVars = ply.DarkRPVars or {}
 		local MyPhone = ply.DarkRPVars.phone
 		local WhoPickedItUp = MyPhone.Caller
 		if ValidEntity(MyPhone) and ValidEntity(OtherPhone) and not ValidEntity(WhoPickedItUp) then -- if noone picked up the phone then hang up :)
