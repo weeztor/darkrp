@@ -140,6 +140,14 @@ local function RPVersion(ply)
 end
 concommand.Add("rp_version", RPVersion)
 
+local function GetAvailableVehicles()
+	print("Available vehicles for custom vehicles:")
+	for k,v in pairs(list.Get("Vehicles")) do
+		print("\""..k.."\"")
+	end
+end
+concommand.Add("rp_getvehicles_sv", GetAvailableVehicles)
+
 -- Vehicle fix from tobba!
 function debug.getupvalues(f)
 	local t, i, k, v = {}, 1, debug.getupvalue(f, 1)
