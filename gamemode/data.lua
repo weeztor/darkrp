@@ -271,7 +271,7 @@ function DB.GrantPriv(ply, priv)
 	local p = DB.Priv2Text(priv)
 	if not p then return false end
 	DB.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(count)
-		if count and count > 0 then
+		if count and tonumber(count) > 0 then
 			DB.Query("UPDATE darkrp_privs SET " .. p .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 		else
 			DB.Begin()
