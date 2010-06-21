@@ -366,7 +366,7 @@ function DrugPlayer(ply)
 	local IDSteam = string.gsub(ply:SteamID(), ":", "")
 	if not timer.IsTimer(IDSteam.."DruggedHealth") and not timer.IsTimer(IDSteam) then
 		ply:SetHealth(ply:Health() + 100)
-		timer.Create(IDSteam.."DruggedHealth", 60/(100 + 5), 100 + 5, function() ply:SetHealth(ply:Health() - 1) end)
+		timer.Create(IDSteam.."DruggedHealth", 60/(100 + 5), 100 + 5, function() if ValidEntity(ply) then ply:SetHealth(ply:Health() - 1) end end)
 		timer.Create(IDSteam, 60, 1, UnDrugPlayer, ply)
 	end
 end
