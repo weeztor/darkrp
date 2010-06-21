@@ -36,6 +36,7 @@ function DB.Query(query, callback)
 		return
 	end
 	local Result = sql.Query(query)
+	sql.Commit() -- otherwise it won't save, don't ask me why
 	if callback then callback(Result) end
 	return Result
 end
@@ -615,7 +616,6 @@ Players
 function DB.StoreRPName(ply, name)
 	if not name or string.len(name) < 2 then return end
 	ply:SetDarkRPVar("rpname", name)
-	
 	DB.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";", function(r)
 		if r then
 			DB.Query("UPDATE darkrp_rpnames SET name = " .. sql.SQLStr(name) .. " WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
