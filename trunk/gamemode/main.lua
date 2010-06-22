@@ -739,6 +739,7 @@ local function LookPersonUp(ply, cmd, args)
 	local P = FindPlayer(args[1])
 	if not ValidEntity(P) then
 		ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
+		return
 	end
 	ply:PrintMessage(2, "Nick: ".. P:Nick())
 	ply:PrintMessage(2, "Steam name: "..P:SteamName())

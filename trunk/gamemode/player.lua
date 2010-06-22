@@ -93,6 +93,7 @@ function meta:SetRPName(name, firstRun)
 end
 
 function meta:RestoreRPName()
+	if not ValidEntity(self) then return end
 	DB.RetrieveRPName(self, function(name)
 		if not name or name == "" then name = string.gsub(self:SteamName(), "\\\"", "\"") end
 
@@ -167,6 +168,7 @@ function includeCS(dir)
 end
 
 function meta:NewData()
+	if not ValidEntity(self) then return end
 	local function ModuleDelay(ply)
 		umsg.Start("LoadModules", ply)
 			umsg.Short(#CSFiles)

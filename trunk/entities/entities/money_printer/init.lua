@@ -19,7 +19,7 @@ end
 function ENT:OnTakeDamage(dmg)
 	if self.burningup then return end
 
-	self.damage = self.damage - dmg:GetDamage()
+	self.damage = (self.damage or 100) - dmg:GetDamage()
 	if self.damage <= 0 then
 		local rnd = math.random(1, 10)
 		if rnd < 3 then
