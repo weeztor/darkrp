@@ -20,7 +20,7 @@ function RP_PlayerChat(ply, text)
 			text = string.sub(text, string.len(v.cmd) + 2, string.len(text)).. " "
 		end
 	end
-	if callback ~= "" then callback = callback.." " end
+	if callback ~= "" then callback = (callback or "").." " end
 	return text, callback, DoSayFunc
 end
 
