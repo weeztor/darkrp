@@ -518,7 +518,7 @@ function DB.SaveSetting(setting, value)
 end
 
 function DB.CountJailPos()
-	return table.Count(DB.JailPos)
+	return table.Count(DB.JailPos or {})
 end
 
 local function FixDarkRPTspawnsTable() -- SQLite only
