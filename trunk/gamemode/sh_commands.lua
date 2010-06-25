@@ -100,12 +100,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_propertytax - Enable/disable pro
 AddToggleCommand("rp_citpropertytax", "cit_propertytax", 0)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_citpropertytax - Enable/disable property tax that is exclusive only for citizens.")
 
-AddToggleCommand("rp_bannedprops", "banprops", 1)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_bannedprops - Whether or not the banned props list is active. (overrides allowed props)")
-
-AddToggleCommand("rp_allowedprops", "allowedprops", 0)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowedprops - Whether or not the allowed props list is active.")
-
 AddToggleCommand("rp_strictsuicide", "strictsuicide", 0)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_strictsuicide - Whether or not players should spawn where they suicided (regardless of whether or not they are arrested)")
 

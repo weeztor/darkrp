@@ -93,13 +93,16 @@ include("questions.lua")
 include("entity.lua")
 include("addentities.lua")
 include("main.lua")
-include("bannedprops.lua")
 include("rating.lua")
 include("sh_animations.lua")
 
 
 --Falco's prop protection
-
+local BlockedModelsExist = sql.QueryValue("SELECT COUNT(*) FROM FPP_BLOCKEDMODELS;") ~= false
+if not BlockedModelsExist then
+	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKEDMODELS('model' TEXT NOT NULL PRIMARY KEY);")
+	include("FPP/FPP_DefaultBlockedModels.lua") -- Load the default blocked models
+end
 AddCSLuaFile("FPP/sh_CPPI.lua")
 AddCSLuaFile("FPP/sh_settings.lua")
 AddCSLuaFile("FPP/client/FPP_Menu.lua")

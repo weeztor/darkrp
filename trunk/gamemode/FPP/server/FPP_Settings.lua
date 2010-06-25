@@ -25,6 +25,7 @@ sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_PLAYERUSE('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_ENTITYDAMAGE('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GLOBALSETTINGS('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
+	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKEDMODELSETTINGS('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_ANTISPAM('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICT('toolname' TEXT NOT NULL, 'adminonly' INTEGER NOT NULL, 'teamrestrict' TEXT NOT NULL, PRIMARY KEY('toolname'));")
@@ -32,6 +33,7 @@ sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICTPERSON('toolname' TEXT NOT NULL, 'steamid' TEXT NOT NULL, 'allow' INTEGER NOT NULL, PRIMARY KEY('steamid', 'toolname'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPS('groupname' TEXT NOT NULL, 'allowdefault' INTEGER NOT NULL, 'tools' TEXT NOT NULL, PRIMARY KEY('groupname'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPMEMBERS('steamid' TEXT NOT NULL, 'groupname' TEXT NOT NULL, PRIMARY KEY('steamid'));")
+	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKEDMODELS('model' TEXT NOT NULL PRIMARY KEY);")
 sql.Commit()
 
 FPP.Blocked = {}
@@ -41,7 +43,9 @@ FPP.Blocked = {}
 	FPP.Blocked.Toolgun = {}
 	FPP.Blocked.PlayerUse = {}
 	FPP.Blocked.EntityDamage = {}
-	
+
+FPP.BlockedModels = {}
+
 FPP.RestrictedTools = {}
 FPP.RestrictedToolsPlayers = {}
 
@@ -119,6 +123,20 @@ local function AddBlocked(ply, cmd, args)
 end
 concommand.Add("FPP_AddBlocked", AddBlocked)
 
+local function AddBlockedModel(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[1] then FPP.Notify(ply, "Argument(s) invalid", false) return end
+	
+	local model = string.lower(args[1])
+	if table.HasValue(FPP.BlockedModels, model) then FPP.Notify(ply, "This model is already in the black/whitelist", false) return end
+	
+	table.insert(FPP.BlockedModels, model)
+	sql.Query("INSERT INTO FPP_BLOCKEDMODELS VALUES("..sql.SQLStr(model)..");")
+	
+	FPP.NotifyAll(ply:Nick().. " added ".. model .. " from the blocked models black/whitelist", true)
+end
+concommand.Add("FPP_AddBlockedModel", AddBlockedModel)
+
 local function RemoveBlocked(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
 	if not args[1] or not args[2] or not FPP.Blocked[args[1]] then FPP.Notify(ply, "Argument(s) invalid", false) return end
@@ -142,6 +160,19 @@ local function RemoveBlocked(ply, cmd, args)
 	FPP.NotifyAll(ply:Nick().. " removed ".. args[2] .. " from the "..args[1] .. " black/whitelist", false)
 end
 concommand.Add("FPP_RemoveBlocked", RemoveBlocked)
+
+local function RemoveBlockedModel(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
+	if not args[1] then FPP.Notify(ply, "Argument(s) invalid", false) return end
+	local model = string.lower(args[1])
+	
+	for k,v in pairs(FPP.BlockedModels) do
+		if v == model then table.remove(FPP.BlockedModels, k) break end
+	end
+	sql.Query("DELETE FROM FPP_BLOCKEDMODELS WHERE model = "..sql.SQLStr(model)..";")
+	FPP.NotifyAll(ply:Nick().. " added ".. model .. " from the blocked models black/whitelist", false)
+end
+concommand.Add("FPP_RemoveBlockedModel", RemoveBlockedModel)
 
 local function ShareProp(ply, cmd, args)
 	if not args[1] or not ValidEntity(Entity(args[1])) or not args[2] then FPP.Notify(ply, "Argument(s) invalid", false) return end
@@ -264,6 +295,15 @@ local function RetrieveBlocked()
 end
 RetrieveBlocked()
 
+
+local function RetrieveBlockedModels()
+	local Query = sql.Query("SELECT * FROM FPP_BLOCKEDMODELS;")
+	for k,v in pairs(Query or {}) do
+		table.insert(FPP.BlockedModels, v.model)
+	end
+end
+RetrieveBlockedModels()
+
 local function RetrieveRestrictedTools()
 	local data = sql.Query("SELECT * FROM FPP_TOOLRESTRICT;")
 	
@@ -326,6 +366,21 @@ local function RetrieveGroups()
 end
 RetrieveGroups()
 
+local function SendSettings(ply)
+	timer.Simple(10, function(ply)
+		local i = 0
+		for k,v in pairs(FPP.Settings) do
+			for a,b in pairs(v) do
+				i = i + FrameTime()*2
+				timer.Simple(i, function()
+					RunConsoleCommand("_"..k.."_"..a, (b and b + 1) or 0)
+					timer.Simple(i, RunConsoleCommand, "_"..k.."_"..a, b or "")
+				end)
+			end
+		end
+	end, ply)
+end
+hook.Add("PlayerInitialSpawn", "FPP_SendSettings", SendSettings)
 local function AddGroup(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
 	if not args[1] then FPP.Notify(ply, "Invalid argument(s)", false) return end-- Args: 1 = name, optional: 2 = allowdefault
@@ -500,6 +555,16 @@ local function SendBlocked(ply, cmd, args)
 	end
 end
 concommand.Add("FPP_sendblocked", SendBlocked)
+
+local function SendBlockedModels(ply, cmd, args)
+	--I don't need an admin check here since people should be able to find out without having admin
+	for k,v in pairs(FPP.BlockedModels) do
+		umsg.Start("FPP_BlockedModel", ply)
+			umsg.String(v)
+		umsg.End()
+	end
+end
+concommand.Add("FPP_sendblockedmodels", SendBlockedModels)
 
 local function SendRestrictedTools(ply, cmd, args)
 	if not args[1] then return end

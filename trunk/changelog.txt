@@ -54,6 +54,7 @@ DarkRP 2.4.1 SVN
 [REMOVE] SendLua's to open keys and F4 menu. I don't even know why I had them there in the first place
 [REMOVE] FindPlayerBySID, SID is the player's UserID, Player(SID) does exactly the same thing.
 [REMOVE] Unused functions such as rp_paydaytime and FoodHeal
+[REMOVE] Bannedprops/allowed props, it has been replaced by FPP.
 
 DarkRP 2.4.1
 

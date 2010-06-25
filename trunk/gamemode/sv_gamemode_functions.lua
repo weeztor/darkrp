@@ -10,35 +10,13 @@ end
 function GM:PlayerSpawnProp(ply, model)
 	if not self.BaseClass:PlayerSpawnProp(ply, model) then return false end
 
-	local allowed = false
+	-- If prop spawning is enabled or the user has admin or prop privileges
+	local allowed = ((GetConVarNumber("propspawning") == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PROP)) and true) or false
 
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	model = string.gsub(model, "\\", "/")
 	if string.find(model,  "//") then Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model) 
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with an invalid path "..model) return false end
-	-- Banned props take precedence over allowed props
-	if GetConVarNumber("banprops") == 1 then
-		for k, v in pairs(BannedProps) do
-			if string.lower(v) == string.lower(model) then 
-				Notify(ply, 1, 4, "You can't spawn this prop as it is banned. "..model) 
-				DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn banned prop "..model)
-				return false 
-			end
-		end
-	end
-
-	-- If prop spawning is enabled or the user has admin or prop privileges
-	if GetConVarNumber("propspawning") == 1 or ply:HasPriv(ADMIN) or ply:HasPriv(PROP) then
-		-- If we are specifically allowing certain props, if it's not in the list, allowed will remain false
-		if GetConVarNumber("allowedprops") == 1 then
-			for k, v in pairs(AllowedProps) do
-				if v == model then allowed = true end
-			end
-		else
-			-- allowedprops is not enabled, so assume that if it wasn't banned above, it's allowed
-			allowed = true
-		end
-	end
 
 	if allowed then
 		if GetConVarNumber("proppaying") == 1 then
