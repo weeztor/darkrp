@@ -4,8 +4,10 @@ local AdminPanel
 local BuddiesPanel
 local EditGroupTools
 local RetrieveRestrictedTool
+local RetrieveBlockedModels
 local BlockedLists = {}
 local CatsOpened = {}
+local ShowBlockedModels
 FPP = FPP or {}
 
 FPP.Groups = {}
@@ -278,6 +280,30 @@ function FPP.AdminMenu(Panel)
 	addchk("The blocked list is a white list", {"FPP_ENTITYDAMAGE", "iswhitelist"}, damage)
 	addblock(damage, "EntityDamage")
 	
+	local blockedmodelscat, blockedmodels = MakeOption("Blocked models options")
+	local BlockedModelsLabel = vgui.Create("DLabel")
+	BlockedModelsLabel:SetText("\nTo add a model in the blocked models list:\nOpen the spawn menu, right click a prop and\nadd it to the blocked list")
+	BlockedModelsLabel:SizeToContents()
+	blockedmodels:AddItem(BlockedModelsLabel)
+	
+	addchk("Blocked models enabled", {"FPP_BLOCKMODELSETTINGS", "toggle"}, blockedmodels)
+	addchk("The blocked models list is a white list", {"FPP_BLOCKMODELSETTINGS", "iswhitelist"}, blockedmodels)
+	
+	local BlockedModelsAddLA = vgui.Create("DButton")
+	BlockedModelsAddLA:SetText("Add model of entity you're looking at")
+	function BlockedModelsAddLA:DoClick()
+		if not ValidEntity(LocalPlayer():GetEyeTrace().Entity) then return end
+		RunConsoleCommand("FPP_AddBlockedModel", LocalPlayer():GetEyeTrace().Entity:GetModel())
+	end
+	blockedmodels:AddItem(BlockedModelsAddLA)
+	
+	local BlockedModelsList = vgui.Create("DButton")
+	BlockedModelsList:SetText("Show blocked models")
+	BlockedModelsList:SetToolTip("If there are no models in the list THIS BUTTON WON'T DO ANYTHING")
+	function BlockedModelsList:DoClick()
+		RunConsoleCommand("FPP_sendblockedmodels")
+	end
+	blockedmodels:AddItem(BlockedModelsList)
 	
 	local ToolRestrictCat, ToolRestrict = MakeOption("Tool restriction") --spawnmenu.GetTools()
 	
@@ -548,6 +574,62 @@ function FPP.AdminMenu(Panel)
 	
 	Panel:AddControl("Label", {Text = "\nFalco's Prop Protection\nMade by Falco A.K.A. FPtje"})
 end
+
+RetrieveBlockedModels = function(um)
+	local model = um:ReadString()
+	if not ShowBlockedModels then
+		local frame = vgui.Create("DFrame")
+		frame:MakePopup()
+		frame:SetVisible(true)
+		frame:SetSize(math.Min(1280, ScrW() - 100), math.Min(720, ScrH() - 100))
+		frame:Center()
+		frame:SetTitle(((tobool(GetConVarNumber("_FPP_BLOCKMODELSETTINGS_iswhitelist")) and "Allowed") or "Blocked") .. " models list")
+		function frame:Close()
+			ShowBlockedModels = nil
+			self:Remove()
+		end
+		
+		local Explanation = vgui.Create("DLabel", frame)
+		Explanation:SetPos(5, 25)
+		Explanation:SetText([[This is the list of props that are currently in the Blocked/Allowed props list. 
+		If this is a whitelist (set in settings), only the entities with the models in this list can be spawned
+		If it's a blacklist, people will be able to spawn any model except for the ones in this list.
+		
+		To remove a model from the list, click the model in this list and click remove.
+		To add a model to this list:
+		        - open your spawn menu (Q by default)
+		        - find the model in the props list
+		        - right click it 
+		        - click "Add to blocked models"]])
+		Explanation:SizeToContents()
+		
+		frame.pan = vgui.Create("DPanelList", frame)
+		frame.pan:SetPos(5, 160)
+		frame.pan:SetSize(frame:GetWide() - 10, frame:GetTall() - 165)
+		frame.pan:EnableHorizontal(true)
+		frame.pan:EnableVerticalScrollbar(true)
+		frame.pan:SetSpacing(0)
+		frame.pan:SetPadding(4)
+		frame.pan:SetAutoSize(false)
+		ShowBlockedModels = frame
+	end
+	if not ShowBlockedModels.pan then return end
+	
+	local Icon = vgui.Create("SpawnIcon", ShowBlockedModels.pan)
+	Icon:SetModel(model, 1)
+	Icon:SetSize(64, 64)
+	Icon.DoClick = function()
+		local menu = DermaMenu()
+		menu:AddOption("Remove from FPP blocked models list", function() -- I use a DMenu so people don't accidentally click the wrong icon and go FFFUUU
+			RunConsoleCommand("FPP_RemoveBlockedModel", model)
+			Icon:Remove() 
+			ShowBlockedModels.pan:InvalidateLayout()
+		end)
+		menu:Open()
+	end
+	ShowBlockedModels.pan:AddItem(Icon)
+end
+usermessage.Hook("FPP_BlockedModel", RetrieveBlockedModels)
 
 RetrieveRestrictedTool = function(um)
 	local tool, admin, Teams = um, 0, {}--Settings when it's not a usermessage
@@ -1048,3 +1130,30 @@ function FPP.SharedMenu(um)
 	frame:Center()
 end
 usermessage.Hook("FPP_ShareSettings", FPP.SharedMenu)
+
+
+local OldVGUICreate = vgui.Create
+function vgui.Create(classname, parent, name, ...)
+	if classname == "SpawnIcon" and parent and parent.IconList and parent.PropList then
+		local SpawnIcon = OldVGUICreate(classname, parent, name, ...)
+		timer.Simple(0, function() -- The .OpenMenu function will be there the next frame
+			if not SpawnIcon.OpenMenu or not SpawnIcon.strTooltipText then return end
+			
+			local model = string.match(SpawnIcon.strTooltipText, "(.*.mdl)")
+			if not model then return end
+			function SpawnIcon:OpenMenu()
+				local menu = DermaMenu()
+					menu:AddOption("Copy to Clipboard", function() SetClipboardText(model) end)
+					local submenu = menu:AddSubMenu("Re-Render", function() SpawnIcon:RebuildSpawnIcon() end)
+						submenu:AddOption("This Icon", function() SpawnIcon:RebuildSpawnIcon() end)
+						submenu:AddOption("All Icons", function() self:RebuildAll() end)
+					menu:AddSpacer()
+					menu:AddOption("Delete", function() self:DeleteIcon(self.m_strCategoryName, SpawnIcon, model) end)
+					menu:AddOption("Add to FPP blocked models", function() RunConsoleCommand("FPP_AddBlockedModel", model) end)
+				menu:Open()
+			end
+		end)
+		return SpawnIcon
+	end
+	return OldVGUICreate(classname, parent, name, ...)
+end

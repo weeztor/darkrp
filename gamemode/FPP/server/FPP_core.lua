@@ -12,6 +12,22 @@ if cleanup then
 			if FPP.AntiSpam and Type ~= "constraints" and Type ~= "stacks" then
 				FPP.AntiSpam.CreateEntity(ply, ent, Type == "duplicates")
 			end
+			
+			local model = string.lower(ent:GetModel() or "")
+			if FPP.Settings and FPP.Settings.FPP_BLOCKMODELSETTINGS and tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS.toggle) then
+				if not FPP.BlockedModels or not model then return end
+				if tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS.iswhitelist) and not table.HasValue(FPP.BlockedModels, model) then
+					-- Prop is not in the white list
+					FPP.Notify(ply, "The model of this entity is not in the white list!", false)
+					ent:Remove()
+					return
+				elseif not tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS.iswhitelist) and table.HasValue(FPP.BlockedModels, model) then
+					-- prop is in the black list
+					FPP.Notify(ply, "The model of this entity is in the black list!", false)
+					ent:Remove()
+					return
+				end
+			end
 		end
 		FPP.oldcleanup(ply, Type, ent)
 	end

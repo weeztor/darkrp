@@ -941,7 +941,6 @@ function GM:PlayerStartVoice(ply)
 	if ply == LocalPlayer() and LocalPlayer().DarkRPVars and ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		return
 	end
-	
 	isSpeaking = true
 	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 and not ValidEntity(LocalPlayer().DarkRPVars.phone) then

@@ -73,6 +73,10 @@ FPP.Settings.FPP_ANTISPAM = {
 	smallpropdenylimit = 6,
 	duplicatorlimit = 3
 }
+FPP.Settings.FPP_BLOCKMODELSETTINGS = {
+	toggle = 1,
+	iswhitelist = 0
+}
 
 
 for Protection, Settings in pairs(FPP.Settings) do
