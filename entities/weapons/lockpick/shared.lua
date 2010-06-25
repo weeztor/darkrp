@@ -61,7 +61,7 @@ Name: SWEP:PrimaryAttack()
 Desc: +attack1 has been pressed
 ---------------------------------------------------------*/
 function SWEP:PrimaryAttack()
-	self.Weapon:SetNextPrimaryFire(CurTime() + .4)
+	self.Weapon:SetNextPrimaryFire(CurTime() + 2)
 	if self.IsLockPicking then return end
 
 	local trace = self.Owner:GetEyeTrace()
@@ -70,7 +70,7 @@ function SWEP:PrimaryAttack()
 		self.IsLockPicking = true
 		self.StartPick = CurTime()
 		if SERVER then
-			self.LockPickTime = math.Rand(1, 30)
+			self.LockPickTime = math.Rand(10, 30)
 			umsg.Start("lockpick_time", self.Owner)
 				umsg.Entity(self)
 				umsg.Long(self.LockPickTime)
