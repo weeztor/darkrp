@@ -191,7 +191,7 @@ function FPP.AdminMenu(Panel)
 		local rm = vgui.Create("DButton")
 		rm:SetText(v:Nick())
 		rm:SetConsoleCommand("FPP_Cleanup", v:UserID())
-		rm:SetDisabled(not superadmin)
+		rm:SetDisabled(not LocalPlayer():IsAdmin() and not superadmin)
 		general:AddItem(rm)
 	end
 	if not areplayers then
