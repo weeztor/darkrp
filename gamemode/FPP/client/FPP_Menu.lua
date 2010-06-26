@@ -181,20 +181,18 @@ function FPP.AdminMenu(Panel)
 	delnow:SetDisabled(not superadmin)
 	general:AddItem(delnow)
 	
-	local other = Label("\nDelete other player's entities:")
+	local other = Label("\nDelete player's entities:")
 	other:SizeToContents()
 	general:AddItem(other)
 	
 	local areplayers = false
 	for k,v in pairs(player.GetAll()) do
-		if v ~= LocalPlayer() then
-			areplayers = true
-			local rm = vgui.Create("DButton")
-			rm:SetText(v:Nick())
-			rm:SetConsoleCommand("FPP_Cleanup", v:UserID())
-			rm:SetDisabled(not superadmin)
-			general:AddItem(rm)
-		end
+		areplayers = true
+		local rm = vgui.Create("DButton")
+		rm:SetText(v:Nick())
+		rm:SetConsoleCommand("FPP_Cleanup", v:UserID())
+		rm:SetDisabled(not superadmin)
+		general:AddItem(rm)
 	end
 	if not areplayers then
 		local nope = Label("<No players available>")
@@ -249,11 +247,14 @@ function FPP.AdminMenu(Panel)
 	addchk("Admins can use tool on blocked entities", {"FPP_TOOLGUN", "admincanblocked"}, toolgun)
 	addchk("Show icon in the middle of the screen", {"FPP_TOOLGUN", "shownocross"}, toolgun)
 	addchk("Check constrained entities", {"FPP_TOOLGUN", "checkconstrained"}, toolgun)
-	addchk("Duplicator restriction(blocked list)", {"FPP_TOOLGUN", "duplicatorprotect"}, toolgun)
-	addchk("People can't duplicate weapons", {"FPP_TOOLGUN", "duplicatenoweapons"}, toolgun)
 	addchk("The blocked list is a white list", {"FPP_TOOLGUN", "iswhitelist"}, toolgun)
-	addchk("Duplicator blocked list is a white list", {"FPP_TOOLGUN", "spawniswhitelist"}, toolgun)
 	addblock(toolgun, "Toolgun")
+	
+	addchk("Duplicator restriction (blocked list)", {"FPP_TOOLGUN", "duplicatorprotect"}, toolgun)
+	addchk("People can't duplicate weapons", {"FPP_TOOLGUN", "duplicatenoweapons"}, toolgun)
+	addchk("Duplicator blocked list is a white list", {"FPP_TOOLGUN", "spawniswhitelist"}, toolgun)
+	addchk("Admins can spawn blocked weapons", {"FPP_TOOLGUN", "spawnadmincanweapon"}, toolgun)
+	addchk("Admins can spawn blocked entities", {"FPP_TOOLGUN", "spawnadmincanblocked"}, toolgun)
 	addblock(toolgun, "Spawning")
 	
 	local usecat, playeruse = MakeOption("Player use options")

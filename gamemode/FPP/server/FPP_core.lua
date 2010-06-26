@@ -401,7 +401,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	local ignoreGeneralRestrictTool = false
 	local SteamID = ply:SteamID()
 	
-	if not FPP.RestrictedToolsPlayers then FPP.RestrictedToolsPlayers = {} end
+	FPP.RestrictedToolsPlayers = FPP.RestrictedToolsPlayers or {}
 	if FPP.RestrictedToolsPlayers[tool] and FPP.RestrictedToolsPlayers[tool][SteamID] ~= nil then--Player specific
 		if FPP.RestrictedToolsPlayers[tool][SteamID] == false then
 			FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted for you!", false)
@@ -445,9 +445,9 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	
 	-- Anti model server crash
 	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon().GetToolObject and ply:GetActiveWeapon():GetToolObject() and 
-	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "*") or 
-	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ), "*") or
-	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ), "\\")
+	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("model"), "*") or 
+	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("material"), "*") or
+	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("model"), "\\")
 	/*or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "tool" ), "/")*/) then
 		FPP.Notify(ply, "The material/model of the tool is invalid!", false)
 		FPP.CanTouch(ply, "FPP_TOOLGUN", "The material/model of the tool is invalid!", false)
@@ -476,7 +476,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	if not FPP.AntiSpam.DuplicatorSpam(ply) then return false end
 	if tool == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 		for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
-			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) then
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) and (not ply:IsAdmin() or (ply:IsAdmin() and not tobool(FPP.Settings.FPP_TOOLGUN.spawnadmincanweapon))) then
 				for c, d in pairs(allweapons) do
 					if string.lower(v.Class) == string.lower(d) then
 						FPP.CanTouch(ply, "FPP_TOOLGUN", "Duplicating blocked entity", false)
@@ -484,7 +484,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 					end
 				end
 			end
-			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatorprotect) then
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatorprotect) and (not ply:IsAdmin() or (ply:IsAdmin() and not tobool(FPP.Settings.FPP_TOOLGUN.spawnadmincanblocked))) then
 				local setspawning = tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist)
 				for c, d in pairs(FPP.Blocked.Spawning) do
 					if not tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then
@@ -506,10 +506,10 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 		return --No further questions sir!
 	end
 	
-	if tool == "duplicator" and ply:UniqueIDTable( "Duplicator" ).Entities then
-		local Ents = ply:UniqueIDTable( "Duplicator" ).Entities
+	if tool == "duplicator" and ply:UniqueIDTable("Duplicator").Entities then
+		local Ents = ply:UniqueIDTable("Duplicator").Entities
 		for k,v in pairs(Ents) do
-			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) then
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) and (not ply:IsAdmin() or (ply:IsAdmin() and not tobool(FPP.Settings.FPP_TOOLGUN.spawnadmincanweapon))) then
 				for c, d in pairs(allweapons) do
 					if string.lower(v.Class) == string.lower(d) then
 						FPP.CanTouch(ply, "FPP_TOOLGUN", "Duplicating blocked entity", false)
@@ -517,7 +517,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 					end
 				end
 			end
-			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatorprotect) then
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatorprotect) and (not ply:IsAdmin() or (ply:IsAdmin() and not tobool(FPP.Settings.FPP_TOOLGUN.spawnadmincanblocked))) then
 				local setspawning = tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist)
 				for c, d in pairs(FPP.Blocked.Spawning) do
 					if not tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then

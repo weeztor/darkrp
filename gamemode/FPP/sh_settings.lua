@@ -33,10 +33,13 @@ FPP.Settings.FPP_TOOLGUN = {
 	admincanblocked = 0,
 	shownocross = 1,
 	checkconstrained = 1,
+	iswhitelist = 0,
+	
 	duplicatorprotect = 1,
 	duplicatenoweapons = 1,
-	iswhitelist = 0,
-	spawniswhitelist = 0}
+	spawniswhitelist = 0,
+	spawnadmincanweapon = 0,
+	spawnadmincanblocked = 0}
 FPP.Settings.FPP_PLAYERUSE = {
 	toggle = 0,
 	adminall = 1,
