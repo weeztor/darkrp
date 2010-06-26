@@ -1007,7 +1007,7 @@ local function AddToChat(msg)
 		end
 	else
 		chat.AddText(col1, name)
-		hook.Call("ChatText", GM, "0", name, "", "none")
+		hook.Call("ChatText", GM, "0", name, name, "none")
 	end
 	chat.PlaySound()
 end
