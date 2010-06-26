@@ -45,6 +45,33 @@ if PLAYER.AddCount then
 	end
 end
 
+if undo then
+	local AddEntity, SetPlayer, Finish =  undo.AddEntity, undo.SetPlayer, undo.Finish
+	local Undo = {}
+	local UndoPlayer
+	function undo.AddEntity(ent, ...)
+		table.insert(Undo, ent)
+		AddEntity(ent, ...)
+	end
+	
+	function undo.SetPlayer(ply, ...)
+		UndoPlayer = ply
+		SetPlayer(ply, ...)
+	end
+	
+	function undo.Finish(...)
+		if ValidEntity(UndoPlayer) then
+			for k,v in pairs(Undo) do
+				v.Owner = UndoPlayer
+			end
+		end
+		Undo = {}
+		UndoPlayer = nil
+		
+		Finish(...)
+	end
+end
+
 
 --------------------------------------------------------------------------------------
 --When you can't touch something
