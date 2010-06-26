@@ -723,7 +723,7 @@ function DB.RetrieveSalary(ply, callback)
 	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
 	local normal = GetConVarNumber("normalsalary")
-	if ply.DarkRPVars.salary then return callback(ply.DarkRPVars.salary) end -- First check the cache.
+	if ply.DarkRPVars.salary then return callback and callback(ply.DarkRPVars.salary) end -- First check the cache.
 
 	DB.QueryValue("SELECT salary FROM darkrp_salaries WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(r)
 		if not r then
