@@ -50,7 +50,7 @@ if undo then
 	local Undo = {}
 	local UndoPlayer
 	function undo.AddEntity(ent, ...)
-		table.insert(Undo, ent)
+		if type(ent) ~= "boolean" and ValidEntity(ent) then table.insert(Undo, ent) end
 		AddEntity(ent, ...)
 	end
 	
