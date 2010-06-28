@@ -1002,7 +1002,7 @@ local function AddToChat(msg)
 	local text = msg:ReadString()
 	if text and text ~= "" then
 		chat.AddText(col1, name, col2, ": "..text)
-		if ply:IsValid() then
+		if ValidEntity(ply) then
 			hook.Call("OnPlayerChat", GM, ply, text, false, ply:Alive())
 		end
 	else
