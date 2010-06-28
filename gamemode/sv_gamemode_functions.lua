@@ -637,6 +637,9 @@ function GM:PlayerDisconnected(ply)
 		UnLockdown(ply)
 	end
 	
+	if ValidEntity(ply.SleepRagdoll) then
+		ply.SleepRagdoll:Remove()
+	end
 	
 	ply:UnownAll()
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") disconnected")
