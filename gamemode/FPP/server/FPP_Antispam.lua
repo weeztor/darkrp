@@ -1,8 +1,7 @@
 FPP = FPP or {}
 FPP.AntiSpam = {}
 
-
-local function GhostFreeze(ent, phys)
+function FPP.AntiSpam.GhostFreeze(ent, phys)
 	ent:SetRenderMode(RENDERMODE_TRANSALPHA)
 	ent:DrawShadow(false)
 	ent.OldColor = ent.OldColor or {ent:GetColor()}
@@ -50,8 +49,7 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 	if phys:GetVolume() and phys:GetVolume() > math.pow(10, FPP.Settings.FPP_ANTISPAM.bigpropsize) and not string.find(class, "constraint") and not string.find(class, "hinge") 
 	and not string.find(class, "magnet") and not string.find(class, "collision") then
 		if not IsDuplicate then
-			ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
-			ply.FPPAntispamBigProp = ply.FPPAntispamBigProp + 1
+			ply.FPPAntispamBigProp = (ply.FPPAntispamBigProp or 0) + 1
 			timer.Simple(10*FPP.Settings.FPP_ANTISPAM.bigpropwait, function(ply)
 				if not ply:IsValid() then return end
 				ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
@@ -60,7 +58,7 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 		end
 		
 		if ply.FPPAntiSpamLastBigProp and ply.FPPAntiSpamLastBigProp > (CurTime() - (FPP.Settings.FPP_ANTISPAM.bigpropwait * ply.FPPAntispamBigProp)) then
-			FPP.Notify(ply, "Please wait " .. FPP.Settings.FPP_ANTISPAM.bigpropwait * ply.FPPAntispamBigProp ../*string.sub(tostring(2 - (CurTime() - ply.FPPAntiSpamLastBigProp)), 1, 3) ..*/ " Seconds before spawning a big prop again", false)
+			FPP.Notify(ply, "Please wait " .. FPP.Settings.FPP_ANTISPAM.bigpropwait * ply.FPPAntispamBigProp .. " Seconds before spawning a big prop again", false)
 			ply.FPPAntiSpamLastBigProp = CurTime()
 			ent:Remove()
 			return
@@ -69,17 +67,17 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 		if not IsDuplicate then
 			ply.FPPAntiSpamLastBigProp = CurTime()
 		end
-		GhostFreeze(ent, phys)
+		FPP.AntiSpam.GhostFreeze(ent, phys)
 		FPP.Notify(ply, "Your prop is ghosted because it is too big. Interract with it to unghost it.", true)
 		return
 	end
 
 	if not IsDuplicate then
-		ply.FPPAntiSpamCount = ply.FPPAntiSpamCount or 0
-		ply.FPPAntiSpamCount = ply.FPPAntiSpamCount + 1
+		ply.FPPAntiSpamCount = (ply.FPPAntiSpamCount or 0) + 1
 		timer.Simple(ply.FPPAntiSpamCount / FPP.Settings.FPP_ANTISPAM.smallpropdowngradecount, function(ply) if ValidEntity(ply) then ply.FPPAntiSpamCount = ply.FPPAntiSpamCount - 1 end end, ply)
-		if ply.FPPAntiSpamCount >= FPP.Settings.FPP_ANTISPAM.smallpropghostlimit and ply.FPPAntiSpamCount <= FPP.Settings.FPP_ANTISPAM.smallpropdenylimit then
-			GhostFreeze(ent, phys)
+		if ply.FPPAntiSpamCount >= FPP.Settings.FPP_ANTISPAM.smallpropghostlimit and ply.FPPAntiSpamCount <= FPP.Settings.FPP_ANTISPAM.smallpropdenylimit
+			and not ent:IsVehicle()--[[Vehicles don't like being ghosted, they tend to crash the server]] then
+			FPP.AntiSpam.GhostFreeze(ent, phys)
 			FPP.Notify(ply, "Your prop is ghosted for antispam, interract with it to unghost it.", true)
 			return
 		elseif ply.FPPAntiSpamCount > FPP.Settings.FPP_ANTISPAM.smallpropdenylimit then
