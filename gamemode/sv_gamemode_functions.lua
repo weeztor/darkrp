@@ -150,17 +150,17 @@ end
 
 function GM:PlayerCanHearPlayersVoice(listener, talker, other)
 	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then 
-		return true, true
+		return true, tobool(GetConVarNumber("3dvoice"))
 	elseif talker.DarkRPVars and ValidEntity(talker.DarkRPVars.phone) then
-		return false, true
+		return false, tobool(GetConVarNumber("3dvoice"))
 	end
 	
 	if GetConVarNumber("voiceradius") == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
-		return true, true
+		return true, tobool(GetConVarNumber("3dvoice"))
 	elseif GetConVarNumber("voiceradius") == 1 then
-		return false, true
+		return false, tobool(GetConVarNumber("3dvoice"))
 	end
-	return true, true
+	return true, tobool(GetConVarNumber("3dvoice"))
 end
 
 function GM:CanTool(ply, trace, mode)
