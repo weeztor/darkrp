@@ -148,19 +148,19 @@ function GM:KeyPress(ply, code)
 	end
 end
 
-function GM:PlayerCanHearPlayersVoice(listener, talker)
+function GM:PlayerCanHearPlayersVoice(listener, talker, other)
 	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then 
-		return true
+		return true, true
 	elseif talker.DarkRPVars and ValidEntity(talker.DarkRPVars.phone) then
-		return false
+		return false, true
 	end
 	
 	if GetConVarNumber("voiceradius") == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
-		return true
+		return true, true
 	elseif GetConVarNumber("voiceradius") == 1 then
-		return false
+		return false, true
 	end
-	return true
+	return true, true
 end
 
 function GM:CanTool(ply, trace, mode)
