@@ -274,6 +274,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enablebuyhealth - Enable/disable
 AddToggleCommand("rp_npcarrest", "npcarrest", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_npcarrest - Enable/disable arresting npc's")
 
+AddToggleCommand("rp_3dvoice", "3dvoice", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_3dvoice - Enable/disable 3DVoice is enabled")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
