@@ -807,10 +807,11 @@ function DB.SetUpGroupOwnableDoors()
 
 		for _, row in pairs(r) do
 			local e = ents.GetByIndex(tonumber(row.idx))
-			if not ValidEntity(e) then return end
-			e.DoorData = e.DoorData or {}
-			e.DoorData.title = row.title
-			e.DoorData.GroupOwn = row.teams
+			if ValidEntity(e) then
+				e.DoorData = e.DoorData or {}
+				e.DoorData.title = row.title
+				e.DoorData.GroupOwn = row.teams
+			end
 		end
 	end)
 end
