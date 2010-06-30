@@ -23,14 +23,6 @@ function AddDoorGroup(name, ...)
 	RPExtraTeamDoors[name] = {...}
 end
 
-hook.Add("InitPostEntity", "AddTeams", function()
-	if file.Exists("CustomTeams.txt") then
-		RunString(file.Read("CustomTeams.txt"))
-		if SERVER then resource.AddFile("data/CustomTeams.txt") end
-		if CLIENT and not LocalPlayer():IsSuperAdmin() then file.Delete("CustomTeams.txt") end
-	end
-end)
-
 CustomVehicles = {}
 CustomShipments = {}
 function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shipment, Sold_seperately, price_seperately, noshipment, classes, shipmodel)
@@ -96,14 +88,6 @@ function AddEntity(name, entity, model, price, max, command, classes)
 	table.insert(DarkRPEntities, {name = name, ent = entity, model = model, price = price, max = max, cmd = command, allowed = classes})
 	AddEntityCommands(name, entity, max, price)
 end
-
-hook.Add("InitPostEntity", "AddShipments", function()
-	if file.Exists("CustomShipments.txt") then
-		timer.Simple(2, RunString, file.Read("CustomShipments.txt"))
-		if SERVER then resource.AddFile("data/CustomShipments.txt") end
-		if CLIENT and not LocalPlayer():IsSuperAdmin() then file.Delete("CustomShipments.txt") end
-	end
-end)
 
 DarkRPAgendas = {}
 
