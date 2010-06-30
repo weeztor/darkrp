@@ -431,9 +431,9 @@ local function KeysMenu(um)
 			SetCopsOnly:SetText("(Re)set door group")
 			SetCopsOnly.DoClick = function() 
 				local menu = DermaMenu()
-				menu:AddOption("No group", function() RunConsoleCommand("say", "/togglegroupownable") Frame:Close() end)
+				menu:AddOption("No group", function() RunConsoleCommand("say", "/togglegroupownable") if ValidPanel(Frame) then Frame:Close()  end end)
 				for k,v in pairs(RPExtraTeamDoors) do
-					menu:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) Frame:Close() end)
+					menu:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) if ValidPanel(Frame) then Frame:Close()  end end)
 				end
 				menu:Open()
 			end

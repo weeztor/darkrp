@@ -35,6 +35,7 @@ function DB.Query(query, callback)
 		query:start()
 		return
 	end
+	sql.Begin()
 	local Result = sql.Query(query)
 	sql.Commit() -- otherwise it won't save, don't ask me why
 	if callback then callback(Result) end
@@ -116,10 +117,10 @@ function DB.Init()
 			end
 			if reset then -- Renaming the column is impossible in SQLite, so do it the hard way
 				DB.Begin()
-				DB.Query("ALTER TABLE darkrp_cvars RENAME TO darkrp_cvars2;")
-				DB.Query("CREATE TABLE darkrp_cvars (var char(20) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
-				DB.Query("INSERT INTO darkrp_cvars SELECT * FROM darkrp_cvars2;")
-				DB.Query("DROP TABLE darkrp_cvars2;")
+					DB.Query("ALTER TABLE darkrp_cvars RENAME TO darkrp_cvars2;")
+					DB.Query("CREATE TABLE darkrp_cvars (var char(20) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
+					DB.Query("INSERT INTO darkrp_cvars SELECT * FROM darkrp_cvars2;")
+					DB.Query("DROP TABLE darkrp_cvars2;")
 				DB.Commit()
 			end
 		end
