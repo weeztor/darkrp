@@ -181,7 +181,7 @@ rp_languages.english = {
 	
 	
 	searchwarrantbutton = "Make a player wanted",
-	unwarrantbutton = "Remove the search warrant for a player",
+	unwarrantbutton = "Remove the wanted status from a player",
 	noone_available = "Noone available",
 	request_warrant = "Request a search warrant for a player",
 	make_wanted = "Make someone wanted",
