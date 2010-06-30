@@ -133,7 +133,7 @@ local function AddBlockedModel(ply, cmd, args)
 	table.insert(FPP.BlockedModels, model)
 	sql.Query("INSERT INTO FPP_BLOCKEDMODELS VALUES("..sql.SQLStr(model)..");")
 	
-	FPP.NotifyAll(ply:Nick().. " added ".. model .. " from the blocked models black/whitelist", true)
+	FPP.NotifyAll(ply:Nick().. " added ".. model .. " to the blocked models black/whitelist", true)
 end
 concommand.Add("FPP_AddBlockedModel", AddBlockedModel)
 
@@ -170,7 +170,7 @@ local function RemoveBlockedModel(ply, cmd, args)
 		if v == model then table.remove(FPP.BlockedModels, k) break end
 	end
 	sql.Query("DELETE FROM FPP_BLOCKEDMODELS WHERE model = "..sql.SQLStr(model)..";")
-	FPP.NotifyAll(ply:Nick().. " added ".. model .. " from the blocked models black/whitelist", false)
+	FPP.NotifyAll(ply:Nick().. " removed ".. model .. " from the blocked models black/whitelist", false)
 end
 concommand.Add("FPP_RemoveBlockedModel", RemoveBlockedModel)
 
