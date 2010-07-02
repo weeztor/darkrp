@@ -152,7 +152,7 @@ function SWEP:SecondaryAttack()
 			end
 
 			self.ScopeLevel = 0
-			self.Ironsights = true
+			self.Ironsights = false
 		end
 	end
 end
