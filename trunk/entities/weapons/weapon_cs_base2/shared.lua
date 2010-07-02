@@ -19,7 +19,7 @@ end
 
 SWEP.Base = "weapon_base"
 
-SWEP.Autho = "Rickster"
+SWEP.Author = "Rickster"
 SWEP.Contact = ""
 SWEP.Purpose = ""
 SWEP.Instructions = ""
