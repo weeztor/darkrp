@@ -365,7 +365,7 @@ function DB.RetrieveZombies(callback)
 	DB.Query("SELECT * FROM darkrp_zspawns WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";", function(r)
 		if not r then return end
 		for map, row in pairs(r) do
-			zombieSpawns[map] = tostring(row.x) .. " " .. tostring(row.y) .. " " .. tostring(row.z)
+			zombieSpawns[map] = Vector(row.x, row.y, row.z)
 		end
 		callback()
 	end)
@@ -374,7 +374,7 @@ end
 local function IsEmpty(vector)
 	local point = util.PointContents(vector)
 	local a = point ~= CONTENTS_SOLID 
-	and point ~= CONTENTS_MOVEABLE 
+	and point ~= CONTENTS_MOVEABLE
 	and point ~= CONTENTS_LADDER 
 	and point ~= CONTENTS_PLAYERCLIP 
 	and point ~= CONTENTS_MONSTERCLIP

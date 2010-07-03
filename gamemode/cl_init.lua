@@ -176,9 +176,11 @@ end
 local function DrawZombieInfo(ply)
 	for x=1, LocalPlayer().DarkRPVars.numPoints, 1 do
 		local zPoint = LocalPlayer().DarkRPVars["zPoints".. x]
-		zPoint = zPoint:ToScreen()
-		draw.DrawText("Zombie Spawn (" .. x .. ")", "TargetID", zPoint.x, zPoint.y - 20, Color(255, 255, 255, 200), 1)
-		draw.DrawText("Zombie Spawn (" .. x .. ")", "TargetID", zPoint.x + 1, zPoint.y - 21, Color(255, 0, 0, 255), 1)
+		if zPoint then
+			zPoint = zPoint:ToScreen()
+			draw.DrawText("Zombie Spawn (" .. x .. ")", "TargetID", zPoint.x, zPoint.y - 20, Color(255, 255, 255, 200), 1)
+			draw.DrawText("Zombie Spawn (" .. x .. ")", "TargetID", zPoint.x + 1, zPoint.y - 21, Color(255, 0, 0, 255), 1)
+		end
 	end
 end
 
@@ -1070,8 +1072,8 @@ local function RetrievePlayerVar(um)
 		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
 	end
 	
-	if string.match(stringvalue, "([0-9]+\.[0-9]+)%s([0-9]+\.[0-9]+)%s([0-9]+\.[0-9]+)") then 
-		local x,y,z = string.match(value, "([0-9]+\.[0-9]+)%s([0-9]+\.[0-9]+)%s([0-9]+\.[0-9]+)")
+	if string.match(stringvalue, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)") then 
+		local x,y,z = string.match(value, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)")
 		value = Vector(x,y,z)
 	end
 	

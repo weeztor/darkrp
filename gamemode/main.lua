@@ -6,7 +6,6 @@ local timeLeft2 = 10
 local stormOn = false
 local zombieOn = false
 local maxZombie = 10
-RPArrestedPlayersPositions = {}
 
 /*---------------------------------------------------------
  Zombie
@@ -32,7 +31,7 @@ local function ControlZombie()
 	end
 end
 
-local function ZombieStart()
+ZombieStart = function()
 	for k, v in pairs(player.GetAll()) do
 		if v:Alive() then
 			v:PrintMessage(HUD_PRINTCENTER, LANGUAGE.zombie_approaching)
@@ -41,7 +40,7 @@ local function ZombieStart()
 	end
 end
 
-local function ZombieEnd()
+ZombieEnd = function()
 	for k, v in pairs(player.GetAll()) do
 		if v:Alive() then
 			v:PrintMessage(HUD_PRINTCENTER, LANGUAGE.zombie_leaving)
@@ -54,8 +53,7 @@ local function LoadTable(ply)
 	ply:SetDarkRPVar("numPoints", table.getn(zombieSpawns))
 
 	for k, v in pairs(zombieSpawns) do
-		local Sep = (string.Explode(" " ,v))
-		ply:SetDarkRPVar("zPoints" .. k, Vector(tonumber(Sep[1]),tonumber(Sep[2]),tonumber(Sep[3])))
+		ply:SetDarkRPVar("zPoints" .. k, tostring(v))
 	end
 end
 
