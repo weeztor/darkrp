@@ -312,7 +312,7 @@ local function TremorReport(mag)
 	end
 end
 
-local function EarthQuakeTest()
+function EarthQuakeTest() -- needs to be global
 	if GetConVarNumber("earthquakes") ~= 1 then return end
 
 	if CurTime() > (next_update_time or 0) then
