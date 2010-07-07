@@ -1,8 +1,8 @@
-if (SERVER) then
+if SERVER then
 	AddCSLuaFile("shared.lua")
 end
 
-if (CLIENT) then
+if CLIENT then
 	SWEP.PrintName = "Lock Pick"
 	SWEP.Slot = 5
 	SWEP.SlotPos = 1
