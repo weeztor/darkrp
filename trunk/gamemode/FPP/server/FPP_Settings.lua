@@ -559,9 +559,11 @@ concommand.Add("FPP_sendblocked", SendBlocked)
 local function SendBlockedModels(ply, cmd, args)
 	--I don't need an admin check here since people should be able to find out without having admin
 	for k,v in pairs(FPP.BlockedModels) do
-		umsg.Start("FPP_BlockedModel", ply)
-			umsg.String(v)
-		umsg.End()
+		timer.Simple(k*0.05, function()
+			umsg.Start("FPP_BlockedModel", ply)
+				umsg.String(v)
+			umsg.End()
+		end)
 	end
 end
 concommand.Add("FPP_sendblockedmodels", SendBlockedModels)

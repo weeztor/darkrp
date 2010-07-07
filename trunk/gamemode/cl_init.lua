@@ -254,7 +254,7 @@ local function DrawDisplay()
 
 	if tr.Entity and tr.Entity.IsValid and ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
 		local pos = {x = ScrW()/2, y = ScrH() / 2}
-		if GetConVarNumber("globalshow") == 0 and tr.Entity:IsPlayer() then
+		if not tobool(GetConVarNumber("globalshow")) and tr.Entity:IsPlayer() then
 			DrawPlayerInfo(tr.Entity)
 		end
 
