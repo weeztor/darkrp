@@ -420,7 +420,7 @@ local function DropWeapon(ply)
 	ply.anim_DroppingItem = true
 	
 	timer.Simple(1, function(ply, ent) 
-		if ValidEntity(ply) and ValidEntity(ent) then 
+		if ValidEntity(ply) and ValidEntity(ent) and ent:GetModel() then 
 			ply:DropWeapon(ent) -- drop it so the model isn't the viewmodel
 			
 			local weapon = ents.Create("spawned_weapon")
