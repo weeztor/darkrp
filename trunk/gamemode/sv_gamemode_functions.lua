@@ -236,6 +236,13 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if weapon:IsVehicle() and weapon:GetDriver():IsPlayer() then killer = weapon:GetDriver() end
 	if GetConVarNumber("deathnotice") == 1 then
 		self.BaseClass:PlayerDeath(ply, weapon, killer)
+	else
+		for k,v in pairs(player.GetAll()) do
+			if v:IsAdmin() then
+				local KillerName = (killer:IsPlayer() and killer:Nick()) or killer:GetClass()
+				v:PrintMessage(HUD_PRINTCONSOLE, ply:Nick().." was killed by "..KillerName.." with "..weapon:GetClass())
+			end
+		end
 	end
 
 	ply:Extinguish()
