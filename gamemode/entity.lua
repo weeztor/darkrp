@@ -51,8 +51,11 @@ function meta:OwnedBy(ply)
 	if ply == self:GetDoorOwner() then return true end
 	self.DoorData = self.DoorData or {}
 	
-	if self.DoorData.ExtraOwners and string.find(self.DoorData.ExtraOwners, ply:UserID()) then
-		return true
+	if self.DoorData.ExtraOwners then
+		local People = string.Explode(";", self.DoorData.ExtraOwners)
+		for k,v in pairs(People) do
+			if tonumber(v) == ply:UserID() then return true end
+		end
 	end
 
 	return false
