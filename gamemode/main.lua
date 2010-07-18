@@ -249,7 +249,7 @@ local function AttackEnt(ent)
 	meteor = ents.Create("meteor")
 	meteor.nodupe = true
 	meteor:Spawn()
-	meteor:SetTarget(ent)
+	meteor:SetMeteorTarget(ent)
 end
 
 local function StartShower()

@@ -19,7 +19,7 @@ function ENT:Initialize()
 	self.Entity:GetPhysicsObject():EnableGravity(false)
 end
 
-function ENT:SetTarget(ent)
+function ENT:SetMeteorTarget(ent)
 	local foundSky = util.IsInWorld(ent:GetPos())
 	local zPos = ent:GetPos().z
 
@@ -33,7 +33,7 @@ function ENT:SetTarget(ent)
 	end
 
 	self.Entity:SetPos(Vector(ent:GetPos().x + math.random(-4000,4000),ent:GetPos().y + math.random(-4000,4000), zPos))
-	local speed = 100000000
+	local speed = 2048
 	local VNormal = (Vector(ent:GetPos().x + math.random(-500,500),ent:GetPos().y + math.random(-500,500),ent:GetPos().z) - self.Entity:GetPos()):GetNormal()
 	self:GetPhysicsObject():ApplyForceCenter(VNormal * speed)
 end
