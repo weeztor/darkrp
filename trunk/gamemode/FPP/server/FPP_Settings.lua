@@ -25,7 +25,7 @@ sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_PLAYERUSE('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_ENTITYDAMAGE('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GLOBALSETTINGS('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
-	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKEDMODELSETTINGS('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
+	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKMODELSETTINGS('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_ANTISPAM('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICT('toolname' TEXT NOT NULL, 'adminonly' INTEGER NOT NULL, 'teamrestrict' TEXT NOT NULL, PRIMARY KEY('toolname'));")
@@ -35,6 +35,7 @@ sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPMEMBERS('steamid' TEXT NOT NULL, 'groupname' TEXT NOT NULL, PRIMARY KEY('steamid'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKEDMODELS('model' TEXT NOT NULL PRIMARY KEY);")
 sql.Commit()
+
 
 FPP.Blocked = {}
 	FPP.Blocked.Physgun = {}
@@ -89,7 +90,7 @@ local function FPP_SetSetting(ply, cmd, args)
 		sql.Query("UPDATE ".. args[1] .. " SET value = " .. args[3] .. " WHERE key = " .. sql.SQLStr(args[2]) .. ";")
 	end
 
-	FPP.NotifyAll(ply:Nick().. " set ".. string.lower(string.gsub(args[1], "FPP_", "")) .. " "..args[2].." to " .. tostring(args[3]), util.tobool(tonumber(args[3])))
+	FPP.NotifyAll((ply.Nick and ply:Nick()) or "Console".. " set ".. string.lower(string.gsub(args[1], "FPP_", "")) .. " "..args[2].." to " .. tostring(args[3]), util.tobool(tonumber(args[3])))
 end
 concommand.Add("FPP_setting", FPP_SetSetting)
 
@@ -119,7 +120,7 @@ local function AddBlocked(ply, cmd, args)
 		sql.Query("INSERT INTO FPP_BLOCKED VALUES(1, " .. sql.SQLStr(args[1]) .. ", " .. sql.SQLStr(args[2]) .. ");")
 	end
 	
-	FPP.NotifyAll(ply:Nick().. " added ".. args[2] .. " to the "..args[1] .. " black/whitelist", true)
+	FPP.NotifyAll((ply.Nick and ply:Nick()) or "Console".. " added ".. args[2] .. " to the "..args[1] .. " black/whitelist", true)
 end
 concommand.Add("FPP_AddBlocked", AddBlocked)
 
@@ -133,7 +134,7 @@ local function AddBlockedModel(ply, cmd, args)
 	table.insert(FPP.BlockedModels, model)
 	sql.Query("INSERT INTO FPP_BLOCKEDMODELS VALUES("..sql.SQLStr(model)..");")
 	
-	FPP.NotifyAll(ply:Nick().. " added ".. model .. " to the blocked models black/whitelist", true)
+	FPP.NotifyAll(((ply.Nick and ply:Nick()) or "Console").. " added ".. model .. " to the blocked models black/whitelist", true)
 end
 concommand.Add("FPP_AddBlockedModel", AddBlockedModel)
 
@@ -157,7 +158,7 @@ local function RemoveBlocked(ply, cmd, args)
 		end
 	end
 	
-	FPP.NotifyAll(ply:Nick().. " removed ".. args[2] .. " from the "..args[1] .. " black/whitelist", false)
+	FPP.NotifyAll((ply.Nick and ply:Nick()) or "Console".. " removed ".. args[2] .. " from the "..args[1] .. " black/whitelist", false)
 end
 concommand.Add("FPP_RemoveBlocked", RemoveBlocked)
 
@@ -170,7 +171,7 @@ local function RemoveBlockedModel(ply, cmd, args)
 		if v == model then table.remove(FPP.BlockedModels, k) break end
 	end
 	sql.Query("DELETE FROM FPP_BLOCKEDMODELS WHERE model = "..sql.SQLStr(model)..";")
-	FPP.NotifyAll(ply:Nick().. " removed ".. model .. " from the blocked models black/whitelist", false)
+	FPP.NotifyAll((ply.Nick and ply:Nick()) or "Console".. " removed ".. model .. " from the blocked models black/whitelist", false)
 end
 concommand.Add("FPP_RemoveBlockedModel", RemoveBlockedModel)
 
@@ -381,6 +382,7 @@ local function SendSettings(ply)
 	end, ply)
 end
 hook.Add("PlayerInitialSpawn", "FPP_SendSettings", SendSettings)
+
 local function AddGroup(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
 	if not args[1] then FPP.Notify(ply, "Invalid argument(s)", false) return end-- Args: 1 = name, optional: 2 = allowdefault
@@ -610,7 +612,7 @@ local function CleanupDisconnected(ply, cmd, args)
 				v:Remove()
 			end
 		end
-		FPP.NotifyAll(ply:Nick() .. " removed all disconnected players' props", true)
+		FPP.NotifyAll((ply.Nick and ply:Nick()) or "Console" .. " removed all disconnected players' props", true)
 		return
 	elseif not ValidEntity(Player(args[1])) then FPP.Notify(ply, "Invalid player", false) return 
 	end
@@ -620,7 +622,7 @@ local function CleanupDisconnected(ply, cmd, args)
 			v:Remove()
 		end
 	end
-	FPP.NotifyAll(ply:Nick() .. " removed "..Player(args[1]):Nick().. "'s entities", true)
+	FPP.NotifyAll((ply.Nick and ply:Nick()) or "Console" .. " removed "..Player(args[1]):Nick().. "'s entities", true)
 end
 concommand.Add("FPP_Cleanup", CleanupDisconnected)
 

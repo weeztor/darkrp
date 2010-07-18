@@ -140,12 +140,14 @@ local function OwnDoor(ply)
 		end
 
 		if trace.Entity:OwnedBy(ply) then
-			Notify(ply, 1, 4, string.format(LANGUAGE.door_sold,  CUR .. math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5))))
+			
 			trace.Entity:Fire("unlock", "", 0)
 			trace.Entity:UnOwn(ply)
 			ply:GetTable().Ownedz[trace.Entity:EntIndex()] = nil
 			ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz - 1
-			ply:AddMoney(math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5)))
+			local GiveMoneyBack = (((trace.Entity:IsVehicle() and GetConVarNumber("vehiclecost")) or GetConVarNumber("doorcost")) * 0.666) + 0.5
+			ply:AddMoney(math.floor(GiveMoneyBack))
+			Notify(ply, 1, 4, string.format(LANGUAGE.door_sold,  CUR .. math.floor(math.floor(GiveMoneyBack))))
 			ply.LookingAtDoor = nil
 		else
 			if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
