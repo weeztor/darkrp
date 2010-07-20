@@ -696,12 +696,6 @@ concommand.Add("rp_resetallmoney", DB.ResetAllMoney)
 
 function DB.PayPlayer(ply1, ply2, amount)
 	if not ValidEntity(ply1) or not ValidEntity(ply2) then return end
-	local sid1 = ply1:SteamID()
-	local sid2 = ply2:SteamID()
-	DB.Begin() -- Transaction
-		DB.Query("UPDATE darkrp_wallets SET amount = amount - " ..  amount .. " WHERE steam = " .. sql.SQLStr(sid1) .. ";")
-		DB.Query("UPDATE darkrp_wallets SET amount = amount + " ..  amount .. " WHERE steam = " .. sql.SQLStr(sid2) .. ";")
-	DB.Commit()
 	ply1:AddMoney(-amount)
 	ply2:AddMoney(amount)
 end

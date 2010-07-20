@@ -535,7 +535,7 @@ end
 
 function meta:DoPropertyTax()
 	if GetConVarNumber("propertytax") == 0 then return end
-	if self:Team() == TEAM_POLICE or self:Team() == TEAM_MAYOR or self:Team() == TEAM_CHIEF and GetConVarNumber("cit_propertytax") == 1 then return end
+	if (self:Team() == TEAM_POLICE or self:Team() == TEAM_MAYOR or self:Team() == TEAM_CHIEF) and GetConVarNumber("cit_propertytax") == 1 then return end
 
 	local numowned = self:GetTable().OwnedNumz
 
