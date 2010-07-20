@@ -1755,6 +1755,10 @@ local function GiveMoney(ply, args)
 			if ValidEntity(ply) then
 				local trace2 = ply:GetEyeTrace()
 				if ValidEntity(trace2.Entity) and trace2.Entity:IsPlayer() and trace2.Entity:GetPos():Distance(ply:GetPos()) < 150 then
+					if not ply:CanAfford(amount) then
+						Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
+						return ""
+					end
 					DB.PayPlayer(ply, trace2.Entity, amount)
 
 					Notify(trace2.Entity, 0, 4, string.format(LANGUAGE.has_given, ply:Nick(), CUR .. tostring(amount)))
