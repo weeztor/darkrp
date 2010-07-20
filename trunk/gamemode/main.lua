@@ -1787,7 +1787,7 @@ local function DropMoney(ply, args)
 		return ""
 	end
 	
-	
+	ply:AddMoney(-amount)
 	local RP = RecipientFilter()
 	RP:AddAllPlayers()
 	
@@ -1798,8 +1798,6 @@ local function DropMoney(ply, args)
 	
 	timer.Simple(1, function(ply) 
 		if ValidEntity(ply) then
-			ply:AddMoney(-amount)
-
 			local trace = {}
 			trace.start = ply:EyePos()
 			trace.endpos = trace.start + ply:GetAimVector() * 85
