@@ -41,6 +41,7 @@ DarkRP 2.4.1 SVN
 [FIX] Pressing E on a gun you can't pick up making it pick up on walk over it (hard to explain lol)
 [FIX] Saving original steam names in the database
 [FIX] Door issue: random other people co-owning it when one co-owner is added.
+[FIX] Meteor emitter spam
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits, added Eusion
 [CHANGE] The way Entities like money and money printers show their information. Thanks MavBear!
