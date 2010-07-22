@@ -505,7 +505,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 		for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) and (not ply:IsAdmin() or (ply:IsAdmin() and not tobool(FPP.Settings.FPP_TOOLGUN.spawnadmincanweapon))) then
 				for c, d in pairs(allweapons) do
-					if string.lower(v.Class) == string.lower(d) then
+					if string.lower(v.Class) == string.lower(d) or string.find(v.Class:lower(), "ai_") == 1 or string.find(v.Class:lower(), "item_ammo_") == 1 then
 						FPP.CanTouch(ply, "FPP_TOOLGUN", "Duplicating blocked entity", false)
 						ply:GetActiveWeapon():GetToolObject().Entities[k] = nil
 					end
@@ -538,7 +538,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 		for k,v in pairs(Ents) do
 			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) and (not ply:IsAdmin() or (ply:IsAdmin() and not tobool(FPP.Settings.FPP_TOOLGUN.spawnadmincanweapon))) then
 				for c, d in pairs(allweapons) do
-					if string.lower(v.Class) == string.lower(d) then
+					if string.lower(v.Class) == string.lower(d) or string.find(v.Class:lower(), "ai_") == 1 or string.find(v.Class:lower(), "item_ammo_") == 1 then
 						FPP.CanTouch(ply, "FPP_TOOLGUN", "Duplicating blocked entity", false)
 						ply:UniqueIDTable( "Duplicator" ).Entities[k] = nil
 					end

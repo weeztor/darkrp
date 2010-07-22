@@ -806,3 +806,14 @@ function GM:InitPostEntity()
 		end
 	end
 end
+
+function GM:PlayerNoClip(ply)
+	if LevelToString and string.lower(LevelToString(ply:GetNWInt("ASS_isAdmin"))) == "banned" then -- Assmod's bullshit
+		for k, v in pairs(player.GetAll()) do
+			if v:IsAdmin() then
+				TalkToPerson(v, Color(255,0,0,255), "WARNING", Color(0,0,255,255), "If DarkRP didn't intervene, assmod would have given a banned user noclip access.\nGet rid of assmod, it's a piece of shit.", ply)
+			end
+		end
+		return false
+	end
+end
