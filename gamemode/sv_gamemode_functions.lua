@@ -806,8 +806,7 @@ function GM:InitPostEntity()
 		end
 	end
 end
-
-function GM:PlayerNoClip(ply)
+hook.Add("PlayerNoClip", "DarkRP_FuckAss", function(ply)
 	if LevelToString and string.lower(LevelToString(ply:GetNWInt("ASS_isAdmin"))) == "banned" then -- Assmod's bullshit
 		for k, v in pairs(player.GetAll()) do
 			if v:IsAdmin() then
@@ -816,4 +815,4 @@ function GM:PlayerNoClip(ply)
 		end
 		return false
 	end
-end
+end)
