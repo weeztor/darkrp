@@ -74,7 +74,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	if not tobool("npcarrest") and trace.Entity:IsNPC() then
+	if not tobool(GetConVarNumber("npcarrest")) and trace.Entity:IsNPC() then
 		return
 	end
 

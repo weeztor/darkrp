@@ -92,8 +92,8 @@ function SWEP:PrimaryAttack()
 	if (trace.Entity:IsDoor()) then
 		local allowed = false
 		local team = self.Owner:Team()
-		-- if we need a warrant to get in and we're not a gangster or the mob boss
-		if GetConVarNumber("doorwarrants") == 1 and trace.Entity:IsOwned() and not trace.Entity:OwnedBy(self.Owner) and team ~= 4 and team ~= 5 then
+		-- if we need a warrant to get in
+		if GetConVarNumber("doorwarrants") == 1 and trace.Entity:IsOwned() and not trace.Entity:OwnedBy(self.Owner) then
 			-- if anyone who owns this door has a warrant for their arrest
 			-- allow the police to smash the door in
 			for k, v in pairs(player.GetAll()) do
@@ -106,11 +106,21 @@ function SWEP:PrimaryAttack()
 			-- rp_doorwarrants 0, allow warrantless entry
 			allowed = true
 		end
+		
+		if GetConVarNumber("doorwarrants") == 1 and trace.Entity.DoorData.GroupOwn and RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn] then -- Be able to open the door if anyone is warranted
+			allowed = false
+			for k,v in pairs(player.GetAll()) do
+				if table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], v:Team()) and v.warranted then
+					allowed = true
+					break
+				end
+			end
+		end
 		-- Do we have a warrant for this player?
 		if allowed then
 			trace.Entity:Fire("unlock", "", .5)
 			trace.Entity:Fire("open", "", .6)
-			trace.Entity:Fire("setanimation","open",.6)
+			trace.Entity:Fire("setanimation", "open", .6)
 		else
 			Notify(self.Owner, 1, 5, "You need a warrant in order to be able to unlock this door.")
 		end

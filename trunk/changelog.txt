@@ -24,6 +24,7 @@ DarkRP 2.4.1 SVN
 [ADD] Showing whether someone has a gunlicense above their heads
 [ADD] MySQL support!
 [ADD] Support for 3D voice chat!
+[ADD] rp_adminvehicles and rp_adminnpc, restrict vehicles and NPC's!
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo
@@ -52,6 +53,8 @@ DarkRP 2.4.1 SVN
 [CHANGE] It doesn't remove vehicles anymore when you change job.
 [CHANGE] Made lockpicking time random
 [CHANGE] Weapon checker to take a while to confiscate weapons
+[CHANGE] Made warrant possible on arrest
+[CHANGE] Made it so group doors need to have at least one warranted owner for it to be opened with battering ram
 [REMOVE] ALL NWVars in doors, players and custom entities (shipments, druglabs etc.) DarkRP now has LESS NWVars than sandbox!
 [REMOVE] VoteCopOn. It's bullshit
 [REMOVE] All global integers. Result: Less server crashes, less buffer overflow in net message, faster spawning time

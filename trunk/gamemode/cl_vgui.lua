@@ -513,3 +513,20 @@ local function KeysMenu(um)
 	Frame:SetSkin("DarkRP")
 end
 usermessage.Hook("KeysMenu", KeysMenu)
+
+local function TradeMenu(handler, id, encoded, decoded)
+	local items = decoded
+	
+	local TradeFrame = vgui.Create("DFrame")
+	TradeFrame:SetSize(1000, 250)
+	TradeFrame:Center()
+	TradeFrame:SetTitle("Initialize a trade")
+	TradeFrame:MakePopup()
+	
+	local ItemsForm = vgui.Create("DForm", TradeFrame)
+	ItemsForm:SetSize(980, 219)
+	ItemsForm:Center()
+	ItemsForm:SetSpacing(10)
+	ItemsForm:SetName("Items")
+end
+datastream.Hook("darkrp_trade", TradeMenu)

@@ -11,7 +11,6 @@ hook.Add("CalcMainActivity", "darkrp_animations", function(ply, velocity) -- Usi
 		ply.anim_GivingItem = nil
 	end
 	
-	
 	if CLIENT and ply.SaidHi then
 		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_SIGNAL_GROUP)
 		ply.SaidHi = nil

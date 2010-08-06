@@ -145,6 +145,26 @@ function GM:KeyPress(ply, code)
 			umsg.Start("KillLetter", ply)
 			umsg.End()
 		end
+		
+		--Begin trading server-side (Although this appears to be unstable, don't worry, I've planned the system out, I've just not implemented the update completely).
+		--Note: Uncomplete; Please leave for Eusion to complete :).
+		if ValidEntity(tr.Entity) and tr.Entity:IsPlayer() then
+			local recipient = tr.Entity
+			local items = {}
+			for k, v in pairs(ents.GetAll()) do
+				local owner = v.dt.owning_ent or nil
+				if owner and ValidEntity(owner) then
+					if owner == ply then
+						table.insert(items, v)
+					end
+				end
+			end
+			if #items > 0 then
+				datastream.StreamToClients(ply, "darkrp_trade", items)
+			else
+				Notify(ply, 1, 4, "You have no items that you can trade.")
+			end
+		end
 	end
 end
 
@@ -268,8 +288,10 @@ function GM:PlayerDeath(ply, weapon, killer)
 			amount = ply.DarkRPVars.money
 		end
 		
-		ply:AddMoney(-amount)
-		DarkRPCreateMoneyBag(ply:GetPos(), amount)
+		if amount > 0 then
+			ply:AddMoney(-amount)
+			DarkRPCreateMoneyBag(ply:GetPos(), amount)
+		end
 	end
 
 	if GetConVarNumber("dmautokick") == 1 and killer and killer:IsPlayer() and killer ~= ply then
@@ -314,7 +336,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	end
 	if weapon:IsPlayer() then weapon = weapon:GetActiveWeapon() killer = killer:SteamName() if ( !weapon || weapon == NULL ) then weapon = killer else weapon = weapon:GetClass() end end
 	if killer == ply then killer = "Himself" weapon = "suicide trick" end
-	DB.Log(ply:Nick() .. " was killed by "..tostring(killer) .. " with a "..tostring(weapon))
+	DB.Log(ply:SteamName() .. " was killed by "..tostring(killer) .. " with a "..tostring(weapon))
 end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
@@ -655,7 +677,7 @@ end
 /*---------------------------------------------------------
  Flammable
  ---------------------------------------------------------*/
-local FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "cash_bundle", "prop_physics"}
+local FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "spawned_money", "prop_physics"}
 
 local function IsFlammable(ent)
 	local class = ent:GetClass()
@@ -678,7 +700,7 @@ local function FireSpread(e)
 		for k, v in pairs(en) do
 			if IsFlammable(v) then
 			if count >= maxcount then break end
-				if math.random(0.0, 60000) < 1.0 then
+				if math.random(0.0, 600) < 1.0 then
 					if not v.burned then
 						v:Ignite(math.random(5,180), 0)
 						v.burned = true

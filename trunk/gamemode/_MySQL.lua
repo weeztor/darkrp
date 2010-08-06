@@ -16,7 +16,8 @@ RP_MySQLConfig.Database_name = "DarkRP" -- This is the name of the Database on t
 RP_MySQLConfig.Database_port = 3306 -- This is the port of the MySQL server. Again, contact the MySQL server host if you don't know this.
 
 
---[[ MANUAL!
+--[[
+MANUAL!
 HOW TO USE MySQL FOR DARKRP!
 Download andyvincent's gm_MySQL OO module to your hard drive:
 http://www.facepunch.com/showthread.php?t=933647
@@ -24,7 +25,7 @@ http://www.facepunch.com/showthread.php?t=933647
 Unpack it
 
 on the SERVER:
-	- Put libmySQL.dll in the same folder as HL2.exe OR srcds.ex (e.g srcds\orangebox OR steamapps\username\garrysmod)
+	- Put libmySQL.dll in the same folder as HL2.exe OR srcds.exe (e.g srcds\orangebox OR steamapps\username\garrysmod)
 	- Put gmsv_mysqloo.dll in garrysmod\lua\includes\modules\. If any of those folders don't exist, create them. 
 		You can also copy and paste the lua folder from the download to garrysmod/
 	- Make sure the configurations in this file (_MySQL.lua) are set up correctly

@@ -98,7 +98,7 @@ end
 function SWEP:SecondaryAttack()
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or trace.Entity.DoorData.NonOwnable then
+	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or (trace.Entity.DoorData and trace.Entity.DoorData.NonOwnable) then
 		return
 	end
 

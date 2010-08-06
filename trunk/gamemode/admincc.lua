@@ -744,3 +744,27 @@ local function ccSENTSPawn(ply, cmd, args)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned SENT "..args[1] )
 end
 concommand.Add("gm_spawnsent", ccSENTSPawn)
+
+local function ccVehicleSpawn(ply, cmd, args)
+	if GetConVarNumber("adminvehicles") == 1 then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnvehicle"))
+			return
+		end
+	end
+	CCSpawnVehicle(ply, cmd, args)
+	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned Vehicle "..args[1] )
+end
+concommand.Add("gm_spawnvehicle", ccVehicleSpawn)
+
+local function ccVehicleSpawn(ply, cmd, args)
+	if GetConVarNumber("adminnpc") == 1 then
+		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnnpc"))
+			return
+		end
+	end
+	CCSpawnNPC(ply, cmd, args)
+	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned NPC "..args[1] )
+end
+concommand.Add("gm_spawnnpc", ccVehicleSpawn)
