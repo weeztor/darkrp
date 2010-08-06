@@ -22,7 +22,7 @@ local function RPName(ply, args)
 		return ""
 	end
 	
-	if string.find(args, "\160") or string.find(args, " ") == 1 then --No system spaces in your name bro!
+ 	if string.find(args, "\160") or string.find(args, " ") == 1 then --No system spaces in your name bro!
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end

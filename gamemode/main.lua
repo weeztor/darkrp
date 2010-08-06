@@ -422,11 +422,12 @@ local function DropWeapon(ply)
 	timer.Simple(1, function(ply, ent) 
 		if ValidEntity(ply) and ValidEntity(ent) and ent:GetModel() then 
 			ply:DropWeapon(ent) -- drop it so the model isn't the viewmodel
-			
 			local weapon = ents.Create("spawned_weapon")
+			local model = (ent:GetModel() == "models/weapons/v_physcannon.mdl" and "models/weapons/w_physics.mdl") or ent:GetModel()
+			
 			weapon.ShareGravgun = true
 			weapon:SetPos(ply:GetShootPos() + ply:GetAimVector() * 30)
-			weapon:SetModel(ent:GetModel())
+			weapon:SetModel(model)
 			weapon:SetSkin(ent:GetSkin())
 			weapon.weaponclass = ent:GetClass()
 			weapon.nodupe = true
@@ -451,7 +452,7 @@ local function UnWarrant(ply, target)
 end 
 
 local function SetWarrant(ply, target, reason)
-	if RPArrestedPlayers[target:SteamID()] or target.warranted then return end
+	if target.warranted then return end
 	target.warranted = true
 	timer.Simple(GetConVarNumber("searchtime"), UnWarrant, ply, target)
 	for a, b in pairs(player.GetAll()) do
@@ -1817,6 +1818,55 @@ end
 AddChatCommand("/dropmoney", DropMoney)
 AddChatCommand("/moneydrop", DropMoney)
 
+local function CreateCheque(ply, args)
+	local argt = string.Explode(" ", args)
+	local recipient = FindPlayer(argt[1])
+	local amount = tonumber(argt[2])
+	
+	if not recipient then
+		Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "recipient (1)"))
+		return ""
+	end
+
+	if amount <= 1 then
+		Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "amount (2)"))
+		return ""
+	end
+
+	if not ply:CanAfford(amount) then
+		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
+		return ""
+	end
+	
+	if ValidEntity(ply) and ValidEntity(recipient) then
+		ply:AddMoney(-amount)
+	end
+	
+	umsg.Start("anim_dropitem", RecipientFilter():AddAllPlayers()) 
+		umsg.Entity(ply)
+	umsg.End()
+	ply.anim_DroppingItem = true
+	
+	timer.Simple(1, function(ply) 
+		if ValidEntity(ply) and ValidEntity(recipient) then
+			local trace = {}
+			trace.start = ply:EyePos()
+			trace.endpos = trace.start + ply:GetAimVector() * 85
+			trace.filter = ply
+
+			local tr = util.TraceLine(trace)
+			local Cheque = ents.Create("darkrp_cheque")
+			Cheque:SetPos(tr.HitPos)
+			Cheque.dt.owning_ent = ply
+			Cheque.dt.recipient = recipient
+			Cheque.dt.amount = amount
+			Cheque:Spawn()
+		end
+	end, ply)
+	return ""
+end
+AddChatCommand("/cheque", CreateCheque)
+
 local function MakeZombieSoundsAsHobo(ply)
 	if not ply.nospamtime then 
 		ply.nospamtime = CurTime() - 2
@@ -2261,7 +2311,6 @@ end
 hook.Add("ScalePlayerDamage", "GetHit", GetHit)
 
 local function ReportAttacker(ply, cmd, args)
-	print(ply, "player?")
 	if ValidEntity(ply.attacker) and ply.attacker:IsPlayer() and ply:Alive() then
 		for k, v in pairs(ents.FindByClass("darkrp_console")) do
 			v.dt.reporter = ply

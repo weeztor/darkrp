@@ -145,6 +145,12 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_adminsweps - Whether or not SWEP
 AddToggleCommand("rp_adminsents", "adminsents", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_adminsents - Whether or not SENTs should be admin only.")
 
+AddToggleCommand("rp_adminvehicles", "adminvehicles", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_adminvehicles - Whether or not Vehicles should be admin only.")
+
+AddToggleCommand("rp_adminnpcs", "adminnpcs", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_adminnpcs - Whether or not NPCs should be admin only.")
+
 AddToggleCommand("rp_enforcemodels", "enforceplayermodel", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enforcemodels - Whether or not to force players to use their role-defined character models.")
 
