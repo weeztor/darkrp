@@ -649,13 +649,13 @@ function EntitiesTab()
 						if not v.allowed or (type(v.allowed) == "table" and table.HasValue(v.allowed, LocalPlayer():Team())) then
 							local cmdname = string.gsub(v.ent, " ", "_")
 							
-							if tobool(GetConVarNumber("disable"..cmdname)) then return end
-							
-							local price = GetConVarNumber(cmdname.."_price")
-							if price == 0 then 
-								price = v.price
+							if not tobool(GetConVarNumber("disable"..cmdname)) then
+								local price = GetConVarNumber(cmdname.."_price")
+								if price == 0 then 
+									price = v.price
+								end
+								AddEntIcon(v.model, "Buy a " .. v.name .." " .. CUR .. price, v.cmd)
 							end
-							AddEntIcon(v.model, "Buy a " .. v.name .." " .. CUR .. price, v.cmd)
 						end
 					end
 					
