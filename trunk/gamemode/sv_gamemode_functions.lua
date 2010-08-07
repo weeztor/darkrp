@@ -80,7 +80,7 @@ function GM:EntityRemoved(ent)
 		end
 	end
 	
-	for k,v in pairs(DarkRPEntities) do
+	for k,v in pairs(DarkRPEntities or {}) do
 		if ent:IsValid() and ent:GetClass() == v.ent and ent.dt and ValidEntity(ent.dt.owning_ent) and not ent.IsRemoved then
 			local ply = ent.dt.owning_ent
 			local cmdname = string.gsub(v.ent, " ", "_")
@@ -152,7 +152,7 @@ function GM:KeyPress(ply, code)
 			local recipient = tr.Entity
 			local items = {}
 			for k, v in pairs(ents.GetAll()) do
-				local owner = v.dt.owning_ent or nil
+				local owner = (v.dt and v.dt.owning_ent) or nil
 				if owner and ValidEntity(owner) then
 					if owner == ply then
 						table.insert(items, v)
