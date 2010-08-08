@@ -398,6 +398,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_startingmoney <Number> - your walle
 AddValueCommand("rp_pricecap", "pricecap", 500)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pricecap <Number> - The maximum price of items (using /price)")
 
+AddValueCommand("rp_pricemin", "pricemin", 50)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_pricemin <Number> - The minimum price of items (using /price)")
+
 
 function AddEntityCommands(name, command, max, price)
 	local cmdname = string.gsub(command, " ", "_")
