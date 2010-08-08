@@ -1,14 +1,15 @@
 include("shared.lua")
 
 function ENT:Draw()
+	if not ValidEntity(self.dt.owning_ent) or not ValidEntity(self.dt.recipient) then return end
 	self.Entity:DrawModel()
 	
 	local Pos = self:GetPos()
 	local Ang = self:GetAngles()
 	
 	local amount = tostring(self.dt.amount) or "0"
-	local owner = self.dt.owning_ent:Name() or "N/A"
-	local recipient = self.dt.recipient:Name() or "N/A"
+	local owner = (self.dt.owning_ent.Name() and self.dt.owning_ent:Name()) or "N/A"
+	local recipient = (self.dt.recipient.Name() and self.dt.recipient:Name()) or "N/A"
 	
 	surface.SetFont("ChatFont")
 	local TextWidth = surface.GetTextSize("Pay: " .. recipient .. "\n$" .. amount .. "\nSigned: " .. owner)	
