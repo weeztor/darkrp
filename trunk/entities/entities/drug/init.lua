@@ -2,6 +2,49 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+local function DrugPlayer(ply)
+	if not ValidEntity(ply) then return end
+	local RP = RecipientFilter()
+	RP:RemoveAllPlayers()
+	RP:AddPlayer(ply)
+	umsg.Start("DarkRPEffects", RP)
+		umsg.String("Drugged")
+		umsg.String("1")
+	umsg.End()
+	
+	RP:AddAllPlayers()
+	
+	ply:SetJumpPower(300)
+	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd") * 2, GetConVarNumber("rspd") * 2)
+	
+	local IDSteam = string.gsub(ply:SteamID(), ":", "")
+	if not timer.IsTimer(IDSteam.."DruggedHealth") and not timer.IsTimer(IDSteam) then
+		ply:SetHealth(ply:Health() + 100)
+		timer.Create(IDSteam.."DruggedHealth", 60/(100 + 5), 100 + 5, function() 
+			if ValidEntity(ply) then ply:SetHealth(ply:Health() - 1) end 
+			if ply:Health() <= 0 then ply:Kill() end 
+		end)
+		timer.Create(IDSteam, 60, 1, UnDrugPlayer, ply)
+	end
+end
+
+function UnDrugPlayer(ply) -- Global function, used in sv_gamemode_functions
+	if not ValidEntity(ply) then return end
+	local RP = RecipientFilter()
+	RP:RemoveAllPlayers()
+	RP:AddPlayer(ply)
+	local IDSteam = string.gsub(ply:SteamID(), ":", "")
+	timer.Remove(IDSteam.."DruggedHealth")
+	timer.Remove(IDSteam)
+	umsg.Start("DarkRPEffects", RP)
+		umsg.String("Drugged")
+		umsg.String("0")
+	umsg.End()
+	RP:AddAllPlayers()
+	ply:SetJumpPower(190)
+	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") )	
+end
+
 function ENT:Initialize()
 	self.Entity:SetModel("models/props_lab/jar01a.mdl") 
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
@@ -15,8 +58,6 @@ function ENT:Initialize()
 	self.damage = 10
 	self.dt.price = self.dt.price or 100
 end
-
-
 
 function ENT:OnTakeDamage(dmg)
 	self.damage = self.damage - dmg:GetDamage()
