@@ -574,6 +574,7 @@ function FPP.PlayerDisconnect(ply)
 	if ValidEntity(ply) and tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnected) and FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime then
 		if ply:IsAdmin() and not tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupadmin) then return end
 		timer.Simple(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime, function(SteamID)
+			if not tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnected) then return end -- Settings can change in time.
 			for k,v in pairs(player.GetAll()) do
 				if v:SteamID() == SteamID then
 					return
@@ -667,3 +668,12 @@ function FPP.Protect.LeaveVehicle(ply, vehicle)
 	end, pos)
 end
 hook.Add("PlayerLeaveVehicle", "FPP.PlayerLeaveVehicle", FPP.Protect.LeaveVehicle)
+
+local function PreventNoclip(ent)
+	if ent:IsVehicle() then
+		if ValidEntity(ent:GetDriver()) then
+			ent:GetDriver():SetMoveType(MOVETYPE_WALK) -- Otherwise they could be in noclip
+		end
+	end
+end
+hook.Add("EntityRemoved", "FPP.Protect.PreventNoclipFromVehicle", PreventNoclip)
