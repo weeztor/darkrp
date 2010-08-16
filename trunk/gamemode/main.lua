@@ -366,7 +366,7 @@ local function DropWeapon(ply)
 		end
 	end
 	
-	if table.HasValue(NoDrop, ent:GetClass()) then return end
+	if table.HasValue(NoDrop, ent:GetClass()) then return "" end
 	
 	local RP = RecipientFilter()
 	RP:AddAllPlayers()
