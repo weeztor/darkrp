@@ -124,7 +124,7 @@ end
 function GM:KeyPress(ply, code)
 	self.BaseClass:KeyPress(ply, code)
 
-	if code == IN_USE then
+	/*if code == IN_USE then
 		local trace = { }
 		trace.start = ply:EyePos()
 		trace.endpos = trace.start + ply:GetAimVector() * 95
@@ -149,24 +149,61 @@ function GM:KeyPress(ply, code)
 		--Begin trading server-side (Although this appears to be unstable, don't worry, I've planned the system out, I've just not implemented the update completely).
 		--Note: Uncomplete; Please leave for Eusion to complete :).
 		if ValidEntity(tr.Entity) and tr.Entity:IsPlayer() then
+			ply.Trading = nil
 			local recipient = tr.Entity
 			local items = {}
 			for k, v in pairs(ents.GetAll()) do
 				local owner = (v.dt and v.dt.owning_ent) or nil
-				if owner and ValidEntity(owner) then
-					if owner == ply then
-						table.insert(items, v)
-					end
+				if owner and ValidEntity(owner) and owner == ply then
+					table.insert(items, v)
 				end
 			end
 			if #items > 0 then
 				datastream.StreamToClients(ply, "darkrp_trade", items)
+				items = {}
+				ply.Trading = recipient
 			else
 				Notify(ply, 1, 4, "You have no items that you can trade.")
 			end
 		end
-	end
+	end*/
 end
+
+local AllowedTrades = {"money_printer"}
+concommand.Add("rp_tradeitem", function(ply, cmd, args)
+	local ent = Entity(tonumber(args[1]))
+	local owner = (ent.dt and ent.dt.owning_ent) or nil
+	local recipient = ply.Trading or nil
+	if owner and owner == ply and ValidEntity(ent) and recipient and ValidEntity(recipient) then
+		if table.HasValue(AllowedTrades, ent:GetClass()) then
+			vote:Trade(tonumber(ply:EntIndex()), ply, recipient, ent)
+		else
+			Notify(ply, 1, 4, "An administrator has forbidden trades using this item!")
+		end
+	else
+		Notify(ply, 1, 4, "Can't trade at this time.")
+	end
+end)
+
+concommand.Add("rp_killtrade", function(ply, cmd, args)
+	local id = args[1]
+	if not Trades[id] then return end
+	local recipient = Trades[id].recipient
+	local client = Trades[id].client
+	if not recipient then return end
+	if not client then return end
+	if not id then return end
+	if (ply == client or ply == recipient) then
+		local rf = RecipientFilter()
+		rf:AddPlayer(client)
+		rf:AddPlayer(recipient)
+		umsg.Start("darkrp_killtrade", rf)
+			umsg.Entity(ply) --Send the player who declined.
+		umsg.End()
+		Trades[id] = {}
+		table.remove(Trades, id)
+	end
+end)
 
 function GM:PlayerCanHearPlayersVoice(listener, talker, other)
 	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then 
@@ -699,8 +736,8 @@ local function FireSpread(e)
 		local rand = 0
 		for k, v in pairs(en) do
 			if IsFlammable(v) then
-			if count >= maxcount then break end
-				if math.random(0.0, 600) < 1.0 then
+				if count >= maxcount then break end
+				if math.random(0.0, 60000) < 2.0 then
 					if not v.burned then
 						v:Ignite(math.random(5,180), 0)
 						v.burned = true

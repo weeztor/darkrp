@@ -955,6 +955,7 @@ local function BuyShipment(ply, args)
 	Notify(ply, 1, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
 	local crate = ents.Create("spawned_shipment")
 	crate.SID = ply.SID
+	crate.dt.owning_ent = ply
 	crate:SetContents(foundKey, found.amount, found.weight)
 	
 	crate:SetPos(Vector(tr.HitPos.x, tr.HitPos.y, tr.HitPos.z))

@@ -8,4 +8,5 @@ ENT.AdminSpawnable = false
 function ENT:SetupDataTables()
 	self:DTVar("Int",0,"contents")
 	self:DTVar("Int",1,"count")
+	self:DTVar("Entity", 0, "owning_ent")
 end
