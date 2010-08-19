@@ -35,6 +35,7 @@ sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPMEMBERS('steamid' TEXT NOT NULL, 'groupname' TEXT NOT NULL, PRIMARY KEY('steamid'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKEDMODELS('model' TEXT NOT NULL PRIMARY KEY);")
 sql.Commit()
+
 FPP.Blocked = {}
 	FPP.Blocked.Physgun = {}
 	FPP.Blocked.Spawning = {}
@@ -127,6 +128,8 @@ local function AddBlockedModel(ply, cmd, args)
 	if not args[1] then FPP.Notify(ply, "Argument(s) invalid", false) return end
 	
 	local model = string.lower(args[1])
+	model = string.Replace(model, "\\", "/")
+	
 	if table.HasValue(FPP.BlockedModels, model) then FPP.Notify(ply, "This model is already in the black/whitelist", false) return end
 	
 	table.insert(FPP.BlockedModels, model)
