@@ -14,6 +14,8 @@ if cleanup then
 			end
 			
 			local model = string.lower(ent:GetModel() or "")
+			model = string.Replace(model, "\\", "/")
+			for k,v in pairs(FPP.BlockedModels) do FPP.BlockedModels[k] = string.Replace(v, "\\", "/") end
 			if model ~= "" and FPP.Settings and FPP.Settings.FPP_BLOCKMODELSETTINGS and tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS.toggle) then
 				if not FPP.BlockedModels or not model then return end
 				if tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS.iswhitelist) and not table.HasValue(FPP.BlockedModels, model) then
