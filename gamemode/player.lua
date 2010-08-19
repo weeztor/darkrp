@@ -457,7 +457,7 @@ function meta:Arrest(time, rejoin)
 			end
 		end
 		
-		timer.Create(ID .. "jailtimer", time, 1, function() self:Unarrest(ID) end)
+		timer.Create(ID .. "jailtimer", time, 1, function() if ValidEntity(self) then self:Unarrest(ID) end end)
 		umsg.Start("GotArrested", self)
 			umsg.Float(time)
 		umsg.End()
@@ -470,37 +470,23 @@ function meta:Unarrest(ID)
 		RPArrestedPlayers[ID] = nil
 		return
 	end
+	
 	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 	if self.Sleeping then
 		KnockoutToggle(self, "force")
 	end
-	if type(self) == "string" then
-		if RPArrestedPlayers[ID] then
-			RPArrestedPlayers[ID] = nil
-			if GetConVarNumber("telefromjail") == 1 then
-				local _, pos = GAMEMODE:PlayerSelectSpawn(self)
-				self:SetPos(pos)
-			end
-			GAMEMODE:PlayerLoadout(self)
-			timer.Stop(self .. "jailtimer")
-			timer.Destroy(self .. "jailtimer")
-			NotifyAll(1, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
+
+	if RPArrestedPlayers[self:SteamID()] ~= nil then
+		if GetConVarNumber("telefromjail") == 1 then
+			local _, pos = GAMEMODE:PlayerSelectSpawn(self)
+			self:SetPos(pos)
 		end
-	else
-		if self and RPArrestedPlayers[self:SteamID()] then
-			RPArrestedPlayers[self:SteamID()] = nil
-			if GetConVarNumber("telefromjail") == 1 then
-				local _, pos = GAMEMODE:PlayerSelectSpawn(self)
-				self:SetPos(pos)
-			end
-			GAMEMODE:PlayerLoadout(self)
-			timer.Stop(self:SteamID() .. "jailtimer")
-			timer.Destroy(self:SteamID() .. "jailtimer")
-			NotifyAll(1, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
-		elseif not self and RPArrestedPlayers[self:SteamID()] then
-			RPArrestedPlayers[self:SteamID()] = nil
-		end
+		GAMEMODE:PlayerLoadout(self)
+		
+		timer.Destroy(self:SteamID() .. "jailtimer")
+		NotifyAll(1, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
 	end
+	RPArrestedPlayers[self:SteamID()] = nil
 end
 
 /*---------------------------------------------------------
