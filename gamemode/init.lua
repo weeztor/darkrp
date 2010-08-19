@@ -143,7 +143,8 @@ local function RPVersion(ply)
 end
 concommand.Add("rp_version", RPVersion)
 
-local function GetAvailableVehicles()
+local function GetAvailableVehicles(ply)
+	if not ply:IsAdmin() then return end
 	ServerLog("Available vehicles for custom vehicles:")
 	print("Available vehicles for custom vehicles:")
 	for k,v in pairs(list.Get("Vehicles")) do
