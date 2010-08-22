@@ -1721,7 +1721,7 @@ local function GiveMoney(ply, args)
 
 					Notify(trace2.Entity, 0, 4, string.format(LANGUAGE.has_given, ply:Nick(), CUR .. tostring(amount)))
 					Notify(ply, 0, 4, string.format(LANGUAGE.you_gave, trace2.Entity:Nick(), CUR .. tostring(amount)))
-					DB.Log(ply:Nick().. " (" .. ply:SteamID() .. ") has given "..CUR .. tostring(amount).. " to "..trace2.Entity:Nick() .. " (" .. trace2.Entity:SteamID() .. "))
+					DB.Log(ply:Nick().. " (" .. ply:SteamID() .. ") has given "..CUR .. tostring(amount).. " to "..trace2.Entity:Nick() .. " (" .. trace2.Entity:SteamID() .. ")")
 				end
 			end
 		end, ply)

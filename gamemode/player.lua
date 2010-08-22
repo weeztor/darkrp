@@ -472,21 +472,21 @@ function meta:Unarrest(ID)
 	end
 	
 	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
+	GAMEMODE:PlayerLoadout(self)
 	if self.Sleeping then
 		KnockoutToggle(self, "force")
 	end
 
 	if RPArrestedPlayers[self:SteamID()] ~= nil then
+		RPArrestedPlayers[self:SteamID()] = nil
 		if GetConVarNumber("telefromjail") == 1 then
 			local _, pos = GAMEMODE:PlayerSelectSpawn(self)
 			self:SetPos(pos)
 		end
-		GAMEMODE:PlayerLoadout(self)
 		
 		timer.Destroy(self:SteamID() .. "jailtimer")
 		NotifyAll(1, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
 	end
-	RPArrestedPlayers[self:SteamID()] = nil
 end
 
 /*---------------------------------------------------------
