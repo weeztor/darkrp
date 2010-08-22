@@ -130,11 +130,19 @@ function SWEP:PrimaryAttack()
 		if driver and driver.ExitVehicle then
 			driver:ExitVehicle()
 		end
-	elseif a and b and not trace.Entity:GetPhysicsObject( ):IsMoveable() and self.Owner:EyePos():Distance(trace.HitPos) < 100 then
+	elseif a and b and (not trace.Entity:GetPhysicsObject():IsMoveable() or trace.Entity.isFadingDoor) and self.Owner:EyePos():Distance(trace.HitPos) < 100 then
 		if c then
-			trace.Entity:GetPhysicsObject( ):EnableMotion( true ) 
+			if trace.Entity.isFadingDoor and trace.Entity.fadeActivate then
+				if not trace.Entity.fadeActive then
+					trace.Entity:fadeActivate()
+					timer.Simple(5, function() if trace.Entity.fadeActive then trace.Entity:fadeDeactivate() end end)
+				end
+			else
+				trace.Entity:GetPhysicsObject( ):EnableMotion( true ) 
+			end
 		else
-			Notify(self.Owner, 1, 5,"You need a warrant in order to be able to unfreeze this prop.")
+			local FadingProp = (trace.Entity.isFadingDoor and "open fading door.") or "unfreeze this prop"
+			Notify(self.Owner, 1, 5,"You need a warrant in order to be able to "..FadingProp)
 		end
 	end
 	if d and b and self.Owner:EyePos():Distance(trace.HitPos) < 100 then

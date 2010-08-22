@@ -26,6 +26,7 @@ DarkRP 2.4.1 SVN
 [ADD] Support for 3D voice chat!
 [ADD] rp_adminvehicles and rp_adminnpc, restrict vehicles and NPC's!
 [ADD] rp_pricemin, set minimum price of entities.
+[ADD] New fading door tool compatability (DOESN'T WORK WITH OLD DOOR TOOL (Conna's tool))
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo
