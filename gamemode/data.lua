@@ -297,7 +297,7 @@ function DB.RevokePriv(ply, priv)
 	local steamID = ply:SteamID()	
 	local p = DB.Priv2Text(priv)
 	DB.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(val)
-		val = tonumber(Val)
+		val = tonumber(Val) or 0
 		if not p or val < 1 then return end
 		DB.Query("UPDATE darkrp_privs SET " .. p .. " = 0 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
 	end)
@@ -359,13 +359,13 @@ end
 
 local FirstZombieSpawn = true
 function DB.RetrieveZombies(callback)
-	if zombieSpawns and table.Count(zombieSpawns) > 0 and not FirstZombieSpawn then return zombieSpawns end
+	if zombieSpawns and table.Count(zombieSpawns) > 0 and not FirstZombieSpawn then callback() return zombieSpawns end
 	FirstZombieSpawn = false
 	zombieSpawns = {}
 	DB.Query("SELECT * FROM darkrp_zspawns WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";", function(r)
-		if not r then return end
+		if not r then callback() return end
 		for map, row in pairs(r) do
-			zombieSpawns[map] = Vector(row.x, row.y, row.z)
+			zombieSpawns[map] = tostring(Vector(row.x, row.y, row.z))
 		end
 		callback()
 	end)
@@ -389,9 +389,9 @@ local function IsEmpty(vector)
 end
 
 function DB.RetrieveRandomZombieSpawnPos()
-	local r = false
-		
-	r = table.Random(zombieSpawns)
+	if #zombieSpawns < 1 then return end
+	local r = string.Explode(" ", table.Random(zombieSpawns))
+	r = Vector(r[1], r[2], r[3])
 	if not IsEmpty(Vector(r.x, r.y, r.z)) then
 		local found = false
 		for i = 40, 200, 10 do
@@ -430,6 +430,7 @@ function DB.RetrieveRandomZombieSpawnPos()
 	else
 		return Vector(r.x, r.y, r.z)
 	end
+	
 	return Vector(r.x, r.y, r.z) + Vector(0,0,70)        
 end
 
@@ -878,5 +879,5 @@ function DB.Log(text, force)
 		file.Write(DB.File, os.date().. "\t".. text)
 		return
 	end
-	file.Write(DB.File, file.Read(DB.File).."\n"..os.date().. "\t"..text)
+	file.Write(DB.File, (file.Read(DB.File) or "").."\n"..os.date().. "\t"..(text or ""))
 end

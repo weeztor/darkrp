@@ -112,21 +112,12 @@ AddChatCommand("/showzombie", ToggleZombie)
 
 local function GetAliveZombie()
 	local zombieCount = 0
-
-	for k, v in pairs(ents.FindByClass("npc_zombie")) do
-		zombieCount = zombieCount + 1
-	end
-
-	for k, v in pairs(ents.FindByClass("npc_fastzombie")) do
-		zombieCount = zombieCount + 1
-	end
-
-	for k, v in pairs(ents.FindByClass("npc_antlion")) do
-		zombieCount = zombieCount + 1
-	end
-
-	for k, v in pairs(ents.FindByClass("npc_headcrab_fast")) do
-		zombieCount = zombieCount + 1
+	
+	local ZombieTypes = {"npc_zombie", "npc_fastzombie", "npc_antlion", "npc_headcrab_fast"}
+	for _, Type in pairs(ZombieTypes) do
+		for _, zombie in pairs(ents.FindByClass(Type)) do
+			zombieCount = zombieCount + 1
+		end
 	end
 
 	return zombieCount
@@ -137,31 +128,13 @@ local function SpawnZombie()
 	if GetAliveZombie() < maxZombie then
 		if table.getn(zombieSpawns) > 0 then
 			local zombieType = math.random(1, 4)
-			if zombieType == 1 then
-				local zombie1 = ents.Create("npc_zombie")
-				zombie1:SetPos(DB.RetrieveRandomZombieSpawnPos())
-				zombie1.nodupe = true
-				zombie1:Spawn()
-				zombie1:Activate()
-			elseif zombieType == 2 then
-				local zombie2 = ents.Create("npc_fastzombie")
-				zombie2:SetPos(DB.RetrieveRandomZombieSpawnPos())
-				zombie2.nodupe = true
-				zombie2:Spawn()
-				zombie2:Activate()
-			elseif zombieType == 3 then
-				local zombie3 = ents.Create("npc_antlion")
-				zombie3:SetPos(DB.RetrieveRandomZombieSpawnPos())
-				zombie3.nodupe = true
-				zombie3:Spawn()
-				zombie3:Activate()
-			elseif zombieType == 4 then
-				local zombie4 = ents.Create("npc_headcrab_fast")
-				zombie4:SetPos(DB.RetrieveRandomZombieSpawnPos())
-				zombie4.nodupe = true
-				zombie4:Spawn()
-				zombie4:Activate()
-			end
+			local ZombieTypes = {"npc_zombie", "npc_fastzombie", "npc_antlion", "npc_headcrab_fast"}
+			
+			local Zombie = ents.Create(ZombieTypes[zombieType])
+			Zombie.nodupe = true
+			Zombie:Spawn()
+			Zombie:Activate()
+			Zombie:SetPos(DB.RetrieveRandomZombieSpawnPos())
 		end
 	end
 end
