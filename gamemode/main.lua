@@ -316,7 +316,7 @@ local function EarthQuakeTest()
 		next_update_time = CurTime() + 1
 	end
 end
-timer.Create("EarthquakeTest", 0.1, 0, EarthQuakeTest())
+timer.Create("EarthquakeTest", 0.1, 0, EarthQuakeTest)
 
 /*---------------------------------------------------------
  Shipments
