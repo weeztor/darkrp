@@ -734,13 +734,11 @@ local function FireSpread(e)
 			e:Remove()
 		end
 		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
-		local maxcount = 3
-		local count = 1
-		local rand = 0
-		for k, v in pairs(en) do
-			if IsFlammable(v) then
-				if count >= maxcount then break end
-				if math.random(0.0, 60000) < 2.0 then
+		local rand = math.random(0, 300)
+		
+		if rand <= 1 then
+			for k, v in pairs(en) do
+				if IsFlammable(v) then
 					if not v.burned then
 						v:Ignite(math.random(5,180), 0)
 						v.burned = true
@@ -750,13 +748,12 @@ local function FireSpread(e)
 						if (g - 51)>=0 then g = g - 51 end
 						if (b - 51)>=0 then b = b - 51 end
 						v:SetColor(r, g, b, a)
-						math.randomseed((r / (g+1)) + b)
 						if (r + g + b) < 103 and math.random(1, 100) < 35 then
 							v:Fire("enablemotion","",0)
 							constraint.RemoveAll(v)
 						end
 					end
-					count = count + 1
+					break -- Don't ignite all entities in sphere at once, just one at a time
 				end
 			end
 		end
@@ -772,6 +769,7 @@ local function FlammablePropThink()
 		end
 	end
 end
+timer.Create("FlammableProps", 0.1, 0, FlammablePropThink)
 
 function GM:Think()
 	-- Doors
@@ -818,7 +816,6 @@ function GM:Think()
 			ply.LookingAtDoor = nil
 		end
 	end
-	FlammablePropThink()
 	if EarthQuakeTest then EarthQuakeTest() end
 end
 
