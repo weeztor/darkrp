@@ -289,9 +289,10 @@ function EarthQuakeTest() -- needs to be global
 	if GetConVarNumber("earthquakes") ~= 1 then return end
 
 	if CurTime() > (next_update_time or 0) then
-		local en = ents.FindByClass("prop_physics")
-		local plys = ents.FindByClass("player")
 		if math.random(0, GetConVarNumber("quakechance")) < 1 then
+			local en = ents.FindByClass("prop_physics")
+			local plys = ents.FindByClass("player")
+			
 			local force = math.random(10,1000)
 			tremor:SetKeyValue("magnitude",force/6)
 			for k,v in pairs(plys) do
