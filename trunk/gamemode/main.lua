@@ -285,7 +285,7 @@ local function TremorReport(mag)
 	end
 end
 
-function EarthQuakeTest() -- needs to be global
+local function EarthQuakeTest()
 	if GetConVarNumber("earthquakes") ~= 1 then return end
 
 	if CurTime() > (next_update_time or 0) then
@@ -316,6 +316,7 @@ function EarthQuakeTest() -- needs to be global
 		next_update_time = CurTime() + 1
 	end
 end
+timer.Create("EarthquakeTest", 0.1, 0, EarthQuakeTest())
 
 /*---------------------------------------------------------
  Shipments
