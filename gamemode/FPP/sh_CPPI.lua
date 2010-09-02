@@ -54,7 +54,9 @@ if SERVER then
 	
 	function ENTITY:CPPICanTool(ply, tool)
 		local trace = ply:GetEyeTrace()
-		return FPP.Protect.CanTool(ply, trace, tool, self) -- fourth argument is entity, to avoid traces.
+		local Value = FPP.Protect.CanTool(ply, trace, tool, self)
+		if Value ~= false and Value ~= true then Value = true end
+		return  Value-- fourth argument is entity, to avoid traces.
 	end
 	
 	function ENTITY:CPPICanPhysgun(ply)
