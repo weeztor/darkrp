@@ -3,6 +3,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+local PrintMore
 function ENT:Initialize()
 	self:SetModel("models/props_c17/consolebox01a.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
@@ -13,7 +14,7 @@ function ENT:Initialize()
 	self.sparking = false
 	self.damage = 100
 	self.IsMoneyPrinter = true
-	timer.Simple(30, self.CreateMoneybag, self)
+	timer.Simple(27, PrintMore, self)
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -59,7 +60,7 @@ function ENT:Fireball()
 	self:Remove()
 end
 
-local function PrintMore(ent)
+PrintMore = function(ent)
 	if ValidEntity(ent) then
 		ent.sparking = true
 		timer.Simple(3, ent.CreateMoneybag, ent)
