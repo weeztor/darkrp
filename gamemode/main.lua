@@ -1793,6 +1793,7 @@ local function CreateCheque(ply, args)
 			Cheque:SetPos(tr.HitPos)
 			Cheque.dt.owning_ent = ply
 			Cheque.dt.recipient = recipient
+			
 			Cheque.dt.amount = amount
 			Cheque:Spawn()
 		end

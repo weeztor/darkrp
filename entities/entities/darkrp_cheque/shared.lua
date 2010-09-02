@@ -7,6 +7,6 @@ ENT.AdminSpawnable = false
 
 function ENT:SetupDataTables()
 	self:DTVar("Entity", 0, "owning_ent")
-	self:DTVar("Entity", 0, "recipient")
+	self:DTVar("Entity", 1, "recipient")
 	self:DTVar("Int", 0, "amount")
 end

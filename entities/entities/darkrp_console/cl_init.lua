@@ -6,7 +6,7 @@ end
 function ENT:Draw()
 	self.Entity:DrawModel()
 	
-	if ValidEntity(self.dt.reporter) and self.dt.reporter.Name and self:GetNWString("reason") != nil then
+	if ValidEntity(self.dt.reporter) and self.dt.reporter.Name and ValidEntity(self.dt.reported) and self.dt.reported.Name and self:GetNWString("reason") != nil then
 		local reporter = self.dt.reporter:Name()
 		local reported = self.dt.reported:Name()
 		local reason = self:GetNWString("reason")
