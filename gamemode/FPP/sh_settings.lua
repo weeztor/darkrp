@@ -10,7 +10,6 @@ FPP.Settings.FPP_PHYSGUN = {
 	admincanblocked = 0,
 	shownocross = 1,
 	checkconstrained = 1,
-	antinoob = 0,
 	reloadprotection = 1,
 	iswhitelist = 0}
 FPP.Settings.FPP_GRAVGUN = {

@@ -353,17 +353,7 @@ end
 hook.Add("PlayerUse", "FPP.Protect.PlayerUse", FPP.Protect.PlayerUse)
 
 --EntityDamage
-function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
-	if ent:IsPlayer() then
-		if tobool(FPP.Settings.FPP_PHYSGUN.antinoob) and not dmginfo:IsBulletDamage() and 
-		((ValidEntity(attacker.Owner) and attacker.Owner != ent) or 
-			(ValidEntity(inflictor.Owner) and inflictor.Owner != ent) or 
-			(attacker == GetWorldEntity() and amount == 200)) then -- Somehow when you prop kill someone while using world spawn(You push someone against the wall) The damage is ALWAYS 200.
-			dmginfo:SetDamage(0)
-		end
-		return 
-	end
-	
+function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)	
 	if type(ent.EntityDamage) == "function" then
 		local val = ent:EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 		if val ~= nil then return val end
@@ -405,10 +395,6 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 	local cantouch, why = FPP.PlayerCanTouchEnt(attacker, ent, "EntityDamage", "FPP_ENTITYDAMAGE")
 	if why /*and (not ValidEntity(attacker:GetActiveWeapon()) or (ValidEntity(attacker:GetActiveWeapon()) and attacker:GetActiveWeapon():GetClass() == "weapon_physcannon")) */then
 		FPP.CanTouch(attacker, "FPP_ENTITYDAMAGE", why, cantouch)
-	end
-	
-	if FPP.Settings.FPP_PHYSGUN.antinoob and ValidEntity(attacker.Owner) and attacker.Owner ~= ent and ent:IsPlayer() then
-		cantouch = false
 	end
 	
 	if not cantouch then dmginfo:SetDamage(0) end
