@@ -827,7 +827,7 @@ local function RPSelectwhohearit()
 	Messagemode = true
 	
 	hook.Add("HUDPaint", "RPinstructionsOnSayColors", function()
-		local w, l = chat.GetChatBoxPos()
+		local w, l = ScrW()/80, ScrH() /1.75
 		local h = l - (#playercolors * 20) - 20
 		local AllTalk = GetConVarNumber("alltalk") == 1
 		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") or HearMode == "speak" ) then
