@@ -88,15 +88,8 @@ include("language_sh.lua")
 include("MakeThings.lua")
 include("cl_vgui.lua")
 include("entity.lua")
-include("cl_scoreboard.lua")
 include("cl_helpvgui.lua")
 include("showteamtabs.lua")
-include("scoreboard/admin_buttons.lua")
-include("scoreboard/player_frame.lua")
-include("scoreboard/player_infocard.lua")
-include("scoreboard/player_row.lua")
-include("scoreboard/scoreboard.lua")
-include("scoreboard/vote_button.lua")
 include("DRPDermaSkin.lua")
 include("sh_animations.lua")
 
@@ -1134,3 +1127,34 @@ function GM:InitPostEntity()
 		end
 	end)
 end
+
+-- DarkRP plugin for FAdmin. It's this simple to make a plugin. If FAdmin isn't installed, this code won't bother anyone
+hook.Add("FAdmin_PluginsLoaded", "DarkRP", function()
+	-- DarkRP information:
+	FAdmin.ScoreBoard.Player:AddInformation("Steam name", function(ply) return ply:SteamName() end, true)
+	FAdmin.ScoreBoard.Player:AddInformation("Money", function(ply) if LocalPlayer():IsAdmin() then return "$"..ply.DarkRPVars.money end end)
+	FAdmin.ScoreBoard.Player:AddInformation("Wanted", function(ply) if ply.DarkRPVars.wanted then return tostring(ply.DarkRPVars["wantedReason"] or "N/A") end end)
+	
+	-- Warrant
+	FAdmin.ScoreBoard.Player:AddActionButton("Warrant", "FAdmin/icons/Message",	Color(0, 0, 200, 255), 
+		function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end, 
+		function(ply, button)
+			Derma_StringRequest("Warrant reason", "Enter the reason for the warrant", "", function(Reason)
+				LocalPlayer():ConCommand("say /warrant ".. ply:UserID().." ".. Reason)
+			end)
+		end)
+		
+	--wanted
+	FAdmin.ScoreBoard.Player:AddActionButton(function(ply)
+			return ((ply.DarkRPVars.wanted and "un") or "") .. "wanted"
+		end, 
+		function(ply) return "FAdmin/icons/jail", ply.DarkRPVars.wanted and "FAdmin/icons/disable" end,
+		Color(0, 0, 200, 255), 
+		function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end, 
+		function(ply, button)
+			Derma_StringRequest("wanted reason", "Enter the reason to arrest this player", "", function(Reason)
+				LocalPlayer():ConCommand("say /wanted ".. ply:UserID().." ".. Reason)
+			end)
+		end)
+end)
+include("FAdmin_DarkRP.lua")
