@@ -660,6 +660,7 @@ function GM:PlayerLoadout(ply)
 		ply:Give("weaponchecker") 
 	end
 
+	if not RPExtraTeams[Team] then return end
 	for k,v in pairs(RPExtraTeams[Team].Weapons) do
 		ply:Give(v)
 	end
