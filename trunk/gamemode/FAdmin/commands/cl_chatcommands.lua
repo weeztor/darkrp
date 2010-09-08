@@ -2,7 +2,7 @@ local prefix = "/"
 
 local Options = {}
 hook.Add("ChatTextChanged", "FAdmin_Chat_autocomplete", function(text)
-	if not GetGlobalBool("FAdmin") then return end
+	if not FAdmin.GlobalSetting.FAdmin then return end
 	if string.sub(text, 1, 1) == prefix then
 		Options = {}
 		
@@ -48,7 +48,7 @@ hook.Add("FinishChat", "FAdmin_Chat_autocomplete", function() hook.Remove("HUDPa
 
 local i = 1
 hook.Add("OnChatTab", "FAdmin_Chat_autocomplete", function(text)
-	if not GetGlobalBool("FAdmin") then return end
+	if not FAdmin.GlobalSetting.FAdmin then return end
 	if #Options > 0 and not string.find(text, " ") then
 		return string.sub(Options[1], 1, string.find(Options[1], " "))
 	elseif #Options > 0 and string.find(text, " ") then

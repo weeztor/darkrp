@@ -16,7 +16,7 @@ local function concommand_executed(ply, cmd, args)
 		end
 	end
 	table.ClearKeys(args2)
-	FAdmin.Commands.List[name].callback (ply, name, args2)
+	FAdmin.Commands.List[name].callback(ply, name, args2)
 end
 
 local function AutoComplete(command, ...)
