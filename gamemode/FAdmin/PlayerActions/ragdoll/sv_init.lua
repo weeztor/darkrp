@@ -85,7 +85,7 @@ local function Ragdoll(ply, cmd, args)
 	
 	for _, target in pairs(targets) do
 		if ValidEntity(target) then
-			if RagdollType == "unragdoll" or string.lower(cmd) == "unragdoll" then
+			if RagdollType == "unragdoll" or string.lower(cmd) == "unragdoll" and target:FAdmin_GetGlobal("fadmin_ragdolled") then
 				target:FAdmin_SetGlobal("fadmin_ragdolled", false)
 				target:UnSpectate()
 				target:Spawn()
