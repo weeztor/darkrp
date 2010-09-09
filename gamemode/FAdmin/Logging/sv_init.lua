@@ -13,6 +13,7 @@ end)
 
 local LogFile
 function FAdmin.Log(text)
+	if not text or text == "" then return end
 	if not tobool(GetConVarNumber("FAdmin_logging")) then return end
 	ServerLog(text)
 	if not LogFile then -- The log file of this session, if it's not there then make it!
