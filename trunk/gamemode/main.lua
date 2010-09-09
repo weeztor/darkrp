@@ -291,7 +291,7 @@ local function EarthQuakeTest()
 	if CurTime() > (next_update_time or 0) then
 		if math.random(0, GetConVarNumber("quakechance")) < 1 then
 			local en = ents.FindByClass("prop_physics")
-			local plys = ents.FindByClass("player")
+			local plys = ents.FindByClass("player") or {}
 			
 			local force = math.random(10,1000)
 			tremor:SetKeyValue("magnitude",force/6)

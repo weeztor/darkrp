@@ -46,7 +46,7 @@ hook.Add("PlayerDeath", "FAdmin_Log", function(ply, inflictor, Killer)
 	local Nick, SteamID, KillerName, InflictorName = (ValidEntity(ply) and ply:Nick() or "N/A"), (ValidEntity(ply) and ply:SteamID() or "N/A"), 
 		(ValidEntity(Killer) and (Killer:IsPlayer() and Killer:Nick() or Killer:GetClass()) or "N/A"),
 		(ValidEntity(inflictor) and inflictor:GetClass() or "N/A")
-	FAdmin.Log(Nick.." ("..ply:SteamID()..") Got killed by "..KillerName.." with a "..) 
+	FAdmin.Log(Nick.." ("..ply:SteamID()..") Got killed by "..KillerName.." with a "..InflictorName) 
 end)
 hook.Add("PlayerSilentDeath", "FAdmin_Log", function(ply) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Got killed silently") end)
 hook.Add("PlayerDisconnected", "FAdmin_Log", function(ply) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Disconnected") end)
