@@ -1,4 +1,4 @@
-CreateConVar("_FAdmin_MOTDPage", "data/FADmin/MOTD.txt", {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE})
+CreateConVar("_FAdmin_MOTDPage", "data/FADmin/MOTD.txt", {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE})
 
 if CLIENT then -- I can't be bothered to make a cl_init when there's a shared file with just one line in it.
 	hook.Add("FAdmin_PluginsLoaded", "MOTD", function()
