@@ -38,8 +38,8 @@ if SERVER then
 			end
 		end
 	end
-	AddCSLuaFolder("DarkRP/gamemode/FAdmin/")
-	AddCSLuaFolder("DarkRP/gamemode/FAdmin/PlayerActions/")
+	AddCSLuaFolder(GM.FolderName.."/gamemode/FAdmin/")
+	AddCSLuaFolder(GM.FolderName.."/gamemode/FAdmin/PlayerActions/")
 elseif CLIENT then
 	local function IncludeFolder(fol)
 		for _, folder in SortedPairs(file.FindInLua(fol.."*"), true) do
@@ -54,8 +54,8 @@ elseif CLIENT then
 			end
 		end
 	end
-	IncludeFolder("DarkRP/gamemode/FAdmin/")
-	IncludeFolder("DarkRP/gamemode/FAdmin/PlayerActions/")
+	IncludeFolder(GM.FolderName.."/gamemode/FAdmin/")
+	IncludeFolder(GM.FolderName.."/gamemode/FAdmin/PlayerActions/")
 end
 
 /*
