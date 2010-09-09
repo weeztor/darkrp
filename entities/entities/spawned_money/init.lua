@@ -22,7 +22,7 @@ end
 function ENT:Use(activator,caller)
 	local amount = self.dt.amount
 
-	activator:AddMoney(amount)
+	activator:AddMoney(amount or 0)
 	Notify(activator, 0, 4, "You have found " .. CUR .. (self.dt.amount or 0) .. "!")
 	self:Remove()
 end

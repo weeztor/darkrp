@@ -40,6 +40,7 @@ local PLAYER = FindMetaTable("Player")
 if PLAYER.AddCount then
 	FPP.oldcount = FPP.oldcount or PLAYER.AddCount
 	function PLAYER:AddCount(Type, ent)
+		if not ValidEntity(self) or not ValidEntity(ent) then return FPP.oldcount(self, Type, ent) end
 		--Set the owner of the entity
 		ent.Owner = self
 		ent.OwnerID = self:SteamID()
