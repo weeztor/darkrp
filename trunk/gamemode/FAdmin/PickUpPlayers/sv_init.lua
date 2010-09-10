@@ -40,7 +40,7 @@ local function ChangeUser(ply, cmd, args)
 end
 
 hook.Add("FAdmin_PluginsLoaded", "PickUpPlayers", function()
-	FAdmin.Access.AddPrivilege("PickUpPlayers", 5)
+	FAdmin.Access.AddPrivilege("PickUpPlayers", 2)
 	FAdmin.Commands.AddCommand("AdminsCanPickUpPlayers", ChangeAdmin)
 	FAdmin.Commands.AddCommand("PlayersCanPickUpPlayers", ChangeUser)
 end)

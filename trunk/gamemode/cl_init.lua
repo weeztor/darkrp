@@ -1128,6 +1128,7 @@ function GM:InitPostEntity()
 	end)
 end
 
+
 -- DarkRP plugin for FAdmin. It's this simple to make a plugin. If FAdmin isn't installed, this code won't bother anyone
 hook.Add("FAdmin_PluginsLoaded", "DarkRP", function()
 	-- DarkRP information:
