@@ -19,7 +19,7 @@ for k,v in pairs(Whitelist) do
 end
 
 hook.Add("InitPostEntity", "FAdmin_Settings", function()
-	local Settings = sql.Query("SELECT * FROM FAdmin_ServerSettings;")
+	local Settings = sql.Query("SELECT * FROM FAdmin_ServerSettings;") or {}
 	for k,v in pairs(Settings) do
 		RunConsoleCommand(v.setting, v.value)
 	end

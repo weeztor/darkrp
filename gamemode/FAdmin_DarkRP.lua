@@ -4,8 +4,9 @@ FAdmin.PlayerActions = {}
 
 if SERVER then
 	local function AddDir(dir) // recursively adds everything in a directory to be downloaded by client
-		local list = file.FindDir("../"..dir.."/*")
-		for _, fdir in pairs(list) do
+		local List = file.FindDir("../"..dir.."/*")
+
+		for _, fdir in pairs(List) do
 			if fdir != ".svn" then // don't spam people with useless .svn folders
 				AddDir(dir.."/"..fdir)
 			end
@@ -45,7 +46,7 @@ elseif CLIENT then
 		for _, folder in SortedPairs(file.FindInLua(fol.."*"), true) do
 			if folder ~= "." and folder ~= ".." then
 				for _, File in SortedPairs(file.FindInLua(fol .. folder .."/sh_*.lua"), true) do
-					include(fol.. folder .. "/" ..File)
+					include(fol.. folder .. "/" ..File) 
 				end
 				
 				for _, File in SortedPairs(file.FindInLua(fol .. folder .."/cl_*.lua"), true) do
@@ -57,7 +58,6 @@ elseif CLIENT then
 	IncludeFolder(GM.FolderName.."/gamemode/FAdmin/")
 	IncludeFolder(GM.FolderName.."/gamemode/FAdmin/PlayerActions/")
 end
-
 /*
 
 Utilities!
@@ -169,6 +169,7 @@ end
 */
 FAdmin.GlobalSetting = {}
 
+
 function _R.Player:FAdmin_GetGlobal(setting)
 	return self.GlobalSetting and self.GlobalSetting[setting]
 end
@@ -239,6 +240,7 @@ elseif CLIENT then
 	string = "ReadString",
 	Vector = "ReadVector"}
 	usermessage.Hook("FAdmin_GlobalSetting", function(um)
+		FAdmin.GlobalSetting = FAdmin.GlobalSetting or {}
 		FAdmin.GlobalSetting[um:ReadString()] = um[GetTypes[um:ReadString()]](um)
 	end)
 	usermessage.Hook("FAdmin_PlayerSetting", function(um)
