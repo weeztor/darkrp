@@ -22,8 +22,6 @@ function FAdmin.ScoreBoard.ChangeView(newView, ...)
 		FAdmin.ScoreBoard.ChangeView("Main")
 	end
 	FAdmin.ScoreBoard.Controls.BackButton.Paint = function()end
-	
-	if newView == "Main" then FAdmin.ScoreBoard.Controls.BackButton:SetVisible(false) end
 end
 
 local GmodLogo, TempGmodLogo, GmodLogoColor = surface.GetTextureID("gui/gmod_logo"), surface.GetTextureID("gui/gmod_logo"), Color(255,255,255,255)//"FAdmin/back", gui/gmod_tool
@@ -96,8 +94,6 @@ function FAdmin.ScoreBoard.ShowScoreBoard()
 	FAdmin.ScoreBoard.Controls.ServerSettings:SetPos(FAdmin.ScoreBoard.Width-200, FAdmin.ScoreBoard.Y - 20)
 	FAdmin.ScoreBoard.Controls.ServerSettings:SizeToContents()
 	FAdmin.ScoreBoard.Controls.ServerSettings:SetVisible(true)
-	
-	if FAdmin.ScoreBoard.CurrentView ~= "Main" then FAdmin.ScoreBoard.Controls.BackButton:SetVisible(true) end
 	
 	function FAdmin.ScoreBoard.Controls.ServerSettings:DoClick()
 		FAdmin.ScoreBoard.ChangeView("Server")
