@@ -21,7 +21,7 @@ hook.Add("FAdmin_PluginsLoaded", "Health", function()
 			
 			function Wang:OnMouseReleased()
 				if self.Dragging then
-					RunConsoleCommand("_fadmin", "SetHealth", ply:UserID(), self:GetFloatValue())
+					RunConsoleCommand("_fadmin", "SetHealth", ply:UserID(), math.floor(self:GetFloatValue()))
 					self:EndWang()
 					self:Remove()
 				end
