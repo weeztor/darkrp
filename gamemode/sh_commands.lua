@@ -481,7 +481,7 @@ function AddTeamCommands(CTeam, max)
 				return ""
 			end
 			
-			if ply.DarkRPVars["Priv"..CTeam.command] then
+			if ply:HasPriv("rp_"..CTeam.command) then
 				ply:ChangeTeam(k, true)
 				return ""
 			end
@@ -493,6 +493,7 @@ function AddTeamCommands(CTeam, max)
 				Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, CTeam.name))
 				return ""
 			end
+			
 			if a == 0 and not ply:IsAdmin()
 			or a == 1 and not ply:IsSuperAdmin()
 			or a == 2
@@ -500,6 +501,7 @@ function AddTeamCommands(CTeam, max)
 				Notify(ply, 1, 4, string.format(LANGUAGE.need_to_make_vote, CTeam.name))
 				return ""
 			end
+
 			ply:ChangeTeam(k, true)
 			return ""
 		end)
@@ -523,7 +525,7 @@ function AddTeamCommands(CTeam, max)
 	end
 	
 	concommand.Add("rp_"..CTeam.command, function(ply, cmd, args)
-		if (ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN)) then
+		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
 			ply:PrintMessage(2, string.format(LANGUAGE.need_admin, cmd))
 			return
         end
@@ -534,7 +536,7 @@ function AddTeamCommands(CTeam, max)
 		end
 		
 		if CTeam.Vote then
-			if CTeam.admin == 1 and ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
+			if CTeam.admin >= 1 and ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 				ply:PrintMessage(2, string.format(LANGUAGE.need_admin, cmd))
 				return
 			elseif CTeam.admin > 1 and ply:IsSuperAdmin() and ply:EntIndex() ~= 0 then
@@ -564,6 +566,15 @@ function AddTeamCommands(CTeam, max)
         end
 	end)
 end
+
+hook.Add("FAdmin_PluginsLoaded", "DarkRP_privs", function()
+	FAdmin.Access.AddPrivilege("rp_commands", 2)
+	for k,v in pairs(RPExtraTeams) do
+		if v.Vote then
+			FAdmin.Access.AddPrivilege("rp_"..v.command, (v.admin or 0) + 2) -- Add privileges for the teams that are voted for
+		end
+	end
+end)
 
 local function GenerateChatCommandHelp()
 	local p = "/"

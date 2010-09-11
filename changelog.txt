@@ -66,6 +66,7 @@ DarkRP 2.4.1 SVN
 [REMOVE] Unused functions such as rp_paydaytime and FoodHeal
 [REMOVE] Bannedprops/allowed props, it has been replaced by FPP.
 [REMOVE] CustomTeams and Customshipments.txt, no one used them
+[REMOVE] Traditional privilege system. It has been replaced by FAdmin.
 
 DarkRP 2.4.1
 

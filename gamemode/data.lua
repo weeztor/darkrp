@@ -1,5 +1,5 @@
 include("static_data.lua")
-DB.privcache = {}
+
 /*
  ---------------------------------------------------------
  MySQL
@@ -89,7 +89,6 @@ function DB.Init()
 	DB.Begin()
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_cvars(var char(20) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_tspawns(id INTEGER NOT NULL, map char(30) NOT NULL, team INTEGER NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL, PRIMARY KEY(id));")
-		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_privs(steam char(20) NOT NULL, admin INTEGER NOT NULL, mayor INTEGER NOT NULL, cp INTEGER NOT NULL, tool INTEGER NOT NULL, phys INTEGER NOT NULL, prop INTEGER NOT NULL, PRIMARY KEY(steam));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_salaries(steam char(20) NOT NULL, salary INTEGER NOT NULL, PRIMARY KEY(steam));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_wallets(steam char(20) NOT NULL, amount INTEGER NOT NULL, PRIMARY KEY(steam));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_jailpositions(map char(30) NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL, lastused NUMERIC NOT NULL, PRIMARY KEY(map, x, y, z));")
@@ -100,7 +99,6 @@ function DB.Init()
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_consolespawns(id INTEGER NOT NULL PRIMARY KEY, map char(30) NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL, pitch NUMERIC NOT NULL, yaw NUMERIC NOT NULL, roll NUMERIC NOT NULL);")
 	DB.Commit()
 
-	DB.CreatePrivs()
 	DB.CreateJailPos()
 	DB.CreateSpawnPos()
 	DB.CreateZombiePos()
@@ -142,7 +140,6 @@ function DB.Init()
 			DB.Query([[SELECT amount, salary, name, admin, mayor, cp, tool, phys, prop FROM darkrp_wallets 
 				LEFT OUTER JOIN darkrp_salaries ON darkrp_wallets.steam = darkrp_salaries.steam
 				LEFT OUTER JOIN darkrp_rpnames ON darkrp_wallets.steam = darkrp_rpnames.steam
-				LEFT OUTER JOIN darkrp_privs ON darkrp_wallets.steam = darkrp_privs.steam
 				WHERE darkrp_wallets.steam = ]].. SteamID ..[[
 			;]], function(data)
 				local Data = data[1]
@@ -155,162 +152,9 @@ function DB.Init()
 				if Data.amount then
 					v:SetDarkRPVar("money", Data.amount)
 				end
-				
-				local steamID = v:SteamID()
-				if DB.privcache[steamID] == nil then
-					DB.privcache[steamID] = {}
-				end
-				
-				v:SetDarkRPVar("Privadmin", Data.admin)
-				DB.privcache[steamID]["admin"] = (Data.admin and 1) or 0
-				
-				v:SetDarkRPVar("Privmayor", Data.mayor)
-				DB.privcache[steamID]["mayor"] = (Data.mayor and 1) or 0
-				
-				v:SetDarkRPVar("Privcp", Data.cp)
-				DB.privcache[steamID]["cp"] = (Data.cp and 1) or 0
-				
-				v:SetDarkRPVar("Privtool", Data.tool)
-				DB.privcache[steamID]["tool"] = (Data.tool and 1) or 0
-				
-				v:SetDarkRPVar("Privphys", Data.phys)
-				DB.privcache[steamID]["phys"] = (Data.phys and 1) or 0
-				
-				v:SetDarkRPVar("Privprop", Data.prop)
-				DB.privcache[steamID]["prop"] = (Data.prop and 1) or 0
 			end)
 		end
 	end
-end
-
-/*---------------------------------------------------------
- The privileges
- ---------------------------------------------------------*/
-function DB.CreatePrivs()
-	DB.Begin()
-	if reset_all_privileges_to_these_on_startup then
-		DB.Query("DELETE FROM darkrp_privs;")
-	end
-	local already_inserted = {}
-	for k, v in pairs(RPAdmins) do
-		local admin = 0
-		local mayor = 0
-		local cp = 0
-		local tool = 0
-		local phys = 0
-		local prop = 0
-		for a, b in pairs(RPAdmins[k]) do
-			if b == ADMIN then admin = 1 end
-			if b == MAYOR then mayor = 1 end
-			if b == CP then cp = 1 end
-			if b == PTOOL then tool = 1 end
-			if b == PHYS then phys = 1 end
-			if b == PROP then prop = 1 end
-		end
-		if already_inserted[RPAdmins[k]] then
-			DB.Query("UPDATE darkrp_privs SET admin = " .. admin .. ", mayor = " .. mayor .. ", cp = " .. cp .. ", tool = " .. tool .. ", phys = " .. phys .. ", prop = " .. prop .. " WHERE steam = " .. sql.SQLStr(RPAdmins[k]) .. ";")
-		else
-			DB.Query("INSERT INTO darkrp_privs VALUES(" .. sql.SQLStr(k) .. ", " .. admin .. ", " .. mayor .. ", " .. cp .. ", " .. tool .. ", " .. phys .. ", " .. prop .. ");")
-			already_inserted[RPAdmins[k]] = true
-		end
-	end
-	DB.Commit()
-end
-
-function DB.Priv2Text(priv)
-	if priv == ADMIN then
-		return "admin"
-	elseif priv == MAYOR then
-		return "mayor"
-	elseif priv == CP then
-		return "cp"
-	elseif priv == PTOOL then
-		return "tool"
-	elseif priv == PHYS then
-		return "phys"
-	elseif priv == PROP then
-		return "prop"
-	else
-		return nil
-	end
-end
-
-function DB.HasPriv(ply, priv)
-	local SteamID = ply:SteamID()
-	if priv == ADMIN and (ply:EntIndex() == 0 or ply:IsAdmin()) then return true end
-
-	local p = DB.Priv2Text(priv)
-	if not p then return false end
-
-	-- If there is a current cache of priveleges
-	if DB.privcache[SteamID] and DB.privcache[SteamID][p] ~= nil then
-		if DB.privcache[SteamID][p] == 1 then
-			return true
-		else
-			return false
-		end
-	-- If there is no cache for this user
-	else 
-		DB.QueryValue("SELECT " .. sql.SQLStr(p) .. " FROM darkrp_privs WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";", function(result)
-			result = tonumber(result)
-			if not DB.privcache[SteamID] then
-				DB.privcache[SteamID] = {}
-			end
-
-			if result == 1 then
-				DB.privcache[SteamID][p] = 1
-				return true
-			else
-				DB.privcache[SteamID][p] = 0
-				return false
-			end
-		end)
-	end
-end
-
-function DB.GrantPriv(ply, priv)
-	local steamID = ply:SteamID()
-	local p = DB.Priv2Text(priv)
-	if not p then return false end
-	DB.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(count)
-		if count and tonumber(count) > 0 then
-			DB.Query("UPDATE darkrp_privs SET " .. p .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
-		else
-			DB.Begin()
-			DB.Query("INSERT INTO darkrp_privs VALUES(" .. sql.SQLStr(steamID) .. ", 0, 0, 0, 0, 0, 0);")
-			DB.Query("UPDATE darkrp_privs SET " .. sql.SQLStr(p) .. " = 1 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
-			
-			DB.Commit()
-		end
-	end)
-	-- privelege structure altered, fix the goddamn cache
-
-	if DB.privcache[steamID] == nil then
-		DB.privcache[steamID] = {}
-	end
-	ply:SetDarkRPVar("Priv"..p, true)
-	DB.privcache[steamID][p] = 1
-	return true
-end
-
-function DB.RevokePriv(ply, priv)
-	local steamID = ply:SteamID()	
-	local p = DB.Priv2Text(priv)
-	DB.QueryValue("SELECT COUNT(*) FROM darkrp_privs WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(val)
-		val = tonumber(Val) or 0
-		if not p or val < 1 then return end
-		DB.Query("UPDATE darkrp_privs SET " .. p .. " = 0 WHERE steam = " .. sql.SQLStr(steamID) .. ";")
-	end)
-	
-	-- privelege structure altered, alter the cache
-	if DB.privcache[steamID] == nil then
-		DB.privcache[steamID] = {}
-	end
-	DB.privcache[steamID][p] = 0
-	if ply.DarkRPVars["Priv"..p] then
-		ply:SetDarkRPVar("Priv"..p, false)
-	end
-	return true
 end
 
 /*---------------------------------------------------------
