@@ -99,6 +99,8 @@ function FAdmin.ScoreBoard.ShowScoreBoard()
 		FAdmin.ScoreBoard.ChangeView("Server")
 	end
 	
+	if FAdmin.ScoreBoard.Controls.BackButton then FAdmin.ScoreBoard.Controls.BackButton:SetVisible(true) end
+	
 	FAdmin.ScoreBoard[FAdmin.ScoreBoard.CurrentView].Show()
 	
 	gui.EnableScreenClicker(true)
