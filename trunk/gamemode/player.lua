@@ -105,11 +105,7 @@ end
  Admin/automatic stuff
  ---------------------------------------------------------*/
 function meta:HasPriv(priv)
-	return DB.HasPriv(self, priv)
-end
-
-function meta:GrantPriv(priv)
-	return DB.GrantPriv(self, priv)
+	return (FAdmin and FAdmin.Access.PlayerHasPrivilege(self, priv)) or self:IsAdmin()
 end
 
 function meta:ChangeAllowed(t)
@@ -193,14 +189,6 @@ function meta:NewData()
 	self:GetTable().LastVoteCop = CurTime() - 61
 
 	self:SetTeam(1)
-	
-	--set up privileges
-	for i=0,5 do
-		if DB.HasPriv(self, i) then
-			local p = DB.Priv2Text(i)
-			self:SetDarkRPVar("Priv"..p, true)
-		end
-	end
 
 	-- Whether or not a player is being prevented from joining
 	-- a specific team for a certain length of time
@@ -376,7 +364,7 @@ end
  ---------------------------------------------------------*/
 local function JailPos(ply)
 	-- Admin or Chief can set the Jail Position
-	if (ply:Team() == TEAM_CHIEF and GetConVarNumber("chiefjailpos") == 1) or ply:HasPriv(ADMIN) then
+	if (ply:Team() == TEAM_CHIEF and GetConVarNumber("chiefjailpos") == 1) or ply:HasPriv("rp_commands") then
 		DB.StoreJailPos(ply)
 	else
 		local str = "Admin only!"
@@ -392,7 +380,7 @@ AddChatCommand("/jailpos", JailPos)
 
 local function AddJailPos(ply)
 	-- Admin or Chief can add Jail Positions
-	if (ply:Team() == TEAM_CHIEF and GetConVarNumber("chiefjailpos") == 1) or ply:HasPriv(ADMIN) then
+	if (ply:Team() == TEAM_CHIEF and GetConVarNumber("chiefjailpos") == 1) or ply:HasPriv("rp_commands") then
 		DB.StoreJailPos(ply, true)
 	else
 		local str = LANGUAGE.admin_only

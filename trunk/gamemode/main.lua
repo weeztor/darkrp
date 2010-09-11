@@ -58,7 +58,7 @@ local function LoadTable(ply)
 end
 
 local function ReMoveZombie(ply, index)
-	if ply:HasPriv(ADMIN) then
+	if ply:HasPriv("rp_commands") then
 		if not index or zombieSpawns[tonumber(index)] == nil then
 			Notify(ply, 1, 4, string.format(LANGUAGE.zombie_spawn_not_exist, tostring(index)))
 		else
@@ -79,7 +79,7 @@ end
 AddChatCommand("/removezombie", ReMoveZombie)
 
 local function AddZombie(ply)
-	if ply:HasPriv(ADMIN) then
+	if ply:HasPriv("rp_commands") then
 		DB.RetrieveZombies(function()
 			table.insert(zombieSpawns, tostring(ply:GetPos()))
 			DB.StoreZombies()
@@ -94,7 +94,7 @@ end
 AddChatCommand("/addzombie", AddZombie)
 
 local function ToggleZombie(ply)
-	if ply:HasPriv(ADMIN) then
+	if ply:HasPriv("rp_commands") then
 		if not ply.DarkRPVars.zombieToggle then
 			DB.RetrieveZombies(function()
 				ply:SetDarkRPVar("zombieToggle", true)
@@ -140,7 +140,7 @@ local function SpawnZombie()
 end
 
 local function ZombieMax(ply, args)
-	if ply:HasPriv(ADMIN) then
+	if ply:HasPriv("rp_commands") then
 		if not tonumber(args) then
 			Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", ""))
 			return ""
@@ -154,7 +154,7 @@ end
 AddChatCommand("/zombiemax", ZombieMax)
 
 local function StartZombie(ply)
-	if ply:HasPriv(ADMIN) then
+	if ply:HasPriv("rp_commands") then
 		timer.Start("zombieControl")
 		Notify(ply, 1, 4, LANGUAGE.zombie_enabled)
 	end
@@ -163,7 +163,7 @@ end
 AddChatCommand("/enablezombie", StartZombie)
 
 local function StopZombie(ply)
-	if ply:HasPriv(ADMIN) then
+	if ply:HasPriv("rp_commands") then
 		timer.Stop("zombieControl")
 		zombieOn = false
 		timer.Stop("start2")
@@ -235,7 +235,7 @@ local function StartShower()
 end
 
 local function StartStorm(ply)
-	if ply:HasPriv(ADMIN) then
+	if ply:HasPriv("rp_commands") then
 		timer.Start("stormControl")
 		Notify(ply, 1, 4, LANGUAGE.meteor_enabled)
 	end
@@ -244,7 +244,7 @@ end
 AddChatCommand("/enablestorm", StartStorm)
 
 local function StopStorm(ply)
-	if ply:HasPriv(ADMIN) then
+	if ply:HasPriv("rp_commands") then
 		timer.Stop("stormControl")
 		stormOn = false
 		timer.Stop("start")
@@ -532,7 +532,7 @@ AddChatCommand("/unwanted", PlayerUnWanted)
 Spawning 
  ---------------------------------------------------------*/
 local function SetSpawnPos(ply, args)
-	if not ply:HasPriv(ADMIN) and not ply:IsAdmin() and not ply:IsSuperAdmin() then return "" end
+	if not ply:HasPriv("rp_commands") then return "" end
 
 	local pos = string.Explode(" ", tostring(ply:GetPos()))
 	local selection = "citizen"
@@ -556,7 +556,7 @@ end
 AddChatCommand("/setspawn", SetSpawnPos)
 
 local function AddSpawnPos(ply, args)
-	if not ply:HasPriv(ADMIN) and not ply:IsAdmin() and not ply:IsSuperAdmin() then return "" end
+	if not ply:HasPriv("rp_commands") then return "" end
 
 	local pos = string.Explode(" ", tostring(ply:GetPos()))
 	local selection = "citizen"
@@ -580,7 +580,7 @@ end
 AddChatCommand("/addspawn", AddSpawnPos)
 
 local function RemoveSpawnPos(ply, args)
-	if not ply:HasPriv(ADMIN) and not ply:IsAdmin() and not ply:IsSuperAdmin() then return "" end
+	if not ply:HasPriv("rp_commands") then return "" end
 
 	local pos = string.Explode(" ", tostring(ply:GetPos()))
 	local selection = "citizen"

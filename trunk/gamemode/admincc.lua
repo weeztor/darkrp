@@ -12,7 +12,7 @@ function ccValueCommand(ply, cmd, args)
 		return
 	end
 
-	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, cmd))
 		return
 	end
@@ -53,7 +53,7 @@ function ccToggleCommand(ply, cmd, args)
 		return
 	end
 
-	if (ply:EntIndex() ~= 0 and not DB.HasPriv(ply, ADMIN)) or (togglecmd.superadmin and not ply:IsSuperAdmin()) then
+	if (ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands")) or (togglecmd.superadmin and not ply:IsSuperAdmin()) then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, cmd))
 		return
 	end
@@ -105,7 +105,7 @@ local function ccDoorOwn(ply, cmd, args)
 		return
 	end
 
-	if not ply:HasPriv(ADMIN) then
+	if not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_own"))
 		return
 	end
@@ -128,7 +128,7 @@ local function ccDoorUnOwn(ply, cmd, args)
 		return
 	end
 
-	if not ply:HasPriv(ADMIN) then
+	if not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_unown"))
 		return
 	end
@@ -150,7 +150,7 @@ local function ccAddOwner(ply, cmd, args)
 		return
 	end
 
-	if not ply:HasPriv(ADMIN) then
+	if not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_addowner"))
 		return
 	end
@@ -185,7 +185,7 @@ local function ccRemoveOwner(ply, cmd, args)
 		return
 	end
 
-	if not ply:HasPriv(ADMIN) then
+	if not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2,  string.format(LANGUAGE.need_admin, "rp_removeowner"))
 		return
 	end
@@ -218,7 +218,7 @@ local function ccLock(ply, cmd, args)
 		return
 	end
 
-	if not ply:HasPriv(ADMIN) then
+	if not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2,  string.format(LANGUAGE.need_admin, "rp_lock"))
 		return
 	end
@@ -241,7 +241,7 @@ local function ccUnLock(ply, cmd, args)
 		return
 	end
 
-	if not ply:HasPriv(ADMIN) then
+	if not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2,  string.format(LANGUAGE.need_admin, "rp_unlock"))
 		return
 	end
@@ -260,7 +260,7 @@ concommand.Add("rp_unlock", ccUnLock)
 
 local function ccTell(ply, cmd, args)
 	if not args[1] then return end
-	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2,  string.format(LANGUAGE.need_admin, "rp_tell"))
 		return
 	end
@@ -295,7 +295,7 @@ concommand.Add("rp_tell", ccTell)
 
 local function ccTellAll(ply, cmd, args)
 	if not args[1] then return end
-	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_tellall"))
 		return
 	end
@@ -321,7 +321,7 @@ end
 concommand.Add("rp_tellall", ccTellAll)
 
 local function ccRemoveLetters(ply, cmd, args)
-	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands")then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_removeletters"))
 		return
 	end
@@ -349,7 +349,7 @@ concommand.Add("rp_removeletters", ccRemoveLetters)
 
 local function ccArrest(ply, cmd, args)
 	if not args[1] then return end
-	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_arrest"))
 		return
 	end
@@ -390,7 +390,7 @@ concommand.Add("rp_arrest", ccArrest)
 
 local function ccUnarrest(ply, cmd, args)
 	if not args[1] then return end
-	if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands") then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_unarrest"))
 		return
 	end
@@ -523,195 +523,9 @@ local function ccSetSalary(ply, cmd, args)
 end
 concommand.Add("rp_setsalary", ccSetSalary)
 
-local function ccGrantPriv(ply, cmd, args)
-	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_grantpriv"))
-		return
-	end
-	local PLAYER = ""
-	if ply:EntIndex() == 0 then
-		PLAYER = "console"
-	else
-		PLAYER = ply:Nick()
-	end
-	
-	if not args[1] then
-		ply:PrintMessage(2, "rp_grant <player> <privilege> Grant a player a privilege\nThese privileges are available:\ntool\nadmin\nphys\nprop\nmayor\ncp")
-		return
-	end
-
-	local target = FindPlayer(args[1])
-	if not target then
-		if ply:EntIndex() == 0 then
-			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
-		else
-			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
-		end
-		return
-	end
-
-	if not args[2] then
-		ply:PrintMessage(2, target:Nick() .. " has these privileges:")
-		for i=0, 5, 1 do
-			ply:PrintMessage(2, tostring(DB.Priv2Text(i)).. "        "..tostring(target:HasPriv(i)))
-		end
-		return
-	end
-	
-	if args[2] == "tool" then
-		DB.GrantPriv(target, PTOOL)
-		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." toolgun priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has granted "..target:Nick().." toolgun priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." toolgun priveleges." )
-		end
-	elseif args[2] == "admin" then
-		DB.GrantPriv(target, ADMIN)
-		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." admin priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has granted "..target:Nick().." admin priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." admin priveleges." )
-		end
-	elseif args[2] == "phys" then
-		DB.GrantPriv(target, PHYS)
-		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." physgun priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has granted "..target:Nick().." physgun priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." physgun priveleges." )
-		end
-	elseif args[2] == "prop" then
-		DB.GrantPriv(target, PROP)
-		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." prop spawn priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has granted "..target:Nick().." prop spawn priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." prop spawn priveleges." )
-		end
-	elseif args[2] == "mayor" then
-		DB.GrantPriv(target, MAYOR)
-		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." /mayor priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has granted "..target:Nick().." mayor priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." mayor priveleges." )
-		end
-	elseif args[2] == "cp" then
-		DB.GrantPriv(target, CP)
-		NotifyAll( 1, 3, PLAYER .. " has granted "..target:Nick().." /cp priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has granted "..target:Nick().." CP priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has granted "..target:Nick().." CP priveleges." )
-		end
-	else
-		if ply:EntIndex() == 0 then
-			print("There is not a " .. args[2] .. " privilege!")
-		else
-			ply:PrintMessage(2, "There is not a " .. args[2] .. " privilege!")
-		end
-	end
-end
-concommand.Add("rp_grant", ccGrantPriv)
-
-local function ccRevokePriv(ply, cmd, args)
-	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
-		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_revokepriv"))
-		return
-	end
-	
-	local PLAYER = ""
-	if ply:EntIndex() == 0 then
-		PLAYER = "console"
-	else
-		PLAYER = ply:Nick()
-	end
-	
-	if not args[1] then
-		ply:PrintMessage(2, "rp_revoke <player> <privilege> Revoke a player's privileges\nThese privileges are available:\ntool\nadmin\nphys\nprop\nmayor\ncp")
-		return
-	end
-	
-	local target = FindPlayer(args[1])
-	if not target then
-		if ply:EntIndex() == 0 then
-			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
-		else
-			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
-		end
-		return
-	end
-	if not args[2] then
-		ply:PrintMessage(2, target:Nick() .. " has these privileges:")
-		for i=0, 5, 1 do
-			ply:PrintMessage(2, DB.Priv2Text(i).. "        "..tostring(target:HasPriv(i)))
-		end
-		return
-	end
-		
-	if args[2] == "tool" then
-		DB.RevokePriv(target, PTOOL)
-		NotifyAll( 1, 3, ply:Nick() .. " has revoked "..target:Nick().."'s toolgun priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has revoked "..target:Nick().." toolgun priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." toolgun priveleges." )
-		end
-	elseif args[2] == "admin" then
-		DB.RevokePriv(target, ADMIN)
-		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s admin priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has revoked "..target:Nick().." admin priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." admin priveleges." )
-		end
-	elseif args[2] == "phys" then
-		DB.RevokePriv(target, PHYS)
-		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s physgun priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has revoked "..target:Nick().." physgun priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." physgun priveleges." )
-		end
-	elseif args[2] == "prop" then
-		DB.RevokePriv(target, PROP)
-		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s prop spawn priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has revoked "..target:Nick().." prop spawn priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." prop spawn priveleges." )
-		end
-	elseif args[2] == "mayor" then
-		DB.RevokePriv(target, MAYOR)
-		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s /mayor priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has revoked "..target:Nick().." mayor priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." mayor priveleges." )
-		end
-	elseif args[2] == "cp" then
-		DB.RevokePriv(target, CP)
-		NotifyAll( 1, 3, PLAYER .. " has revoked "..target:Nick().."'s /cp priveleges.")
-		if ply:EntIndex() == 0 then
-			DB.Log("Console has revoked "..target:Nick().." CP priveleges." )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") has revoked "..target:Nick().." CP priveleges." )
-		end
-	else
-		if ply:EntIndex() == 0 then
-			print("There is not a " .. args[2] .. " privilege!")
-		else
-			ply:PrintMessage(2, "There is not a " .. args[2] .. " privilege!")
-		end
-	end
-end
-concommand.Add("rp_revoke", ccRevokePriv)
-
 local function ccSWEPSpawn(ply, cmd, args)
 	if GetConVarNumber("adminsweps") == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
 			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_giveswep"))
 			return
 		end
@@ -723,7 +537,7 @@ concommand.Add("gm_giveswep", ccSWEPSpawn)
 
 local function ccSWEPGive(ply, cmd, args)
 	if GetConVarNumber("adminsweps") == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
 			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_spawnswep"))
 			return
 		end
@@ -735,7 +549,7 @@ concommand.Add("gm_spawnswep", ccSWEPGive)
 
 local function ccSENTSPawn(ply, cmd, args)
 	if GetConVarNumber("adminsents") == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
 			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnsent"))
 			return
 		end
@@ -747,7 +561,7 @@ concommand.Add("gm_spawnsent", ccSENTSPawn)
 
 local function ccVehicleSpawn(ply, cmd, args)
 	if GetConVarNumber("adminvehicles") == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
 			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnvehicle"))
 			return
 		end
@@ -759,7 +573,7 @@ concommand.Add("gm_spawnvehicle", ccVehicleSpawn)
 
 local function ccVehicleSpawn(ply, cmd, args)
 	if GetConVarNumber("adminnpc") == 1 then
-		if ply:EntIndex() ~= 0 and not ply:HasPriv(ADMIN) then
+		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
 			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnnpc"))
 			return
 		end
