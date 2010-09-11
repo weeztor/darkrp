@@ -15,8 +15,8 @@ sql.Query([[CREATE TABLE IF NOT EXISTS FADMIN_MOTD(
 local MOTD = sql.Query("SELECT * FROM FADMIN_MOTD WHERE LOWER(map) = "..SQLStr(string.lower(game.GetMap()))..";")
 
 hook.Add("InitPostEntity", "PlaceMOTD", function() 
-	if not MOTD then return end
-	MOTD = MOTD[1]
+	if not MOTD or (not MOTD[1] and not MOTD["1"]) then return end
+	MOTD = MOTD[1] or MOTD["1"]
 	
 	local ent = ents.Create("fadmin_motd")
 	ent:SetPos(Vector(MOTD.x, MOTD.y, MOTD.z))

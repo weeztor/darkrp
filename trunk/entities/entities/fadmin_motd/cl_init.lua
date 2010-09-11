@@ -68,7 +68,7 @@ function ENT:Draw()
 	ang:RotateAroundAxis(ang:Up(), 90)
 	
 	
-	
+	local posX, posY = WorldToScreen(LocalPlayer():GetEyeTrace().HitPos, self:GetPos() + ang:Up()*3, 0.25, ang)
 	render.SuppressEngineLighting(true)
 	cam.Start3D2D(self:GetPos() + ang:Up()*3, ang, 0.25)
 		
@@ -87,7 +87,7 @@ function ENT:Draw()
 				surface.DrawTexturedRect(-10, 240, 16, 16)
 			end
 			if (HasPhysgun and LocalPlayer():KeyDown(IN_ATTACK)) or LocalPlayer():KeyDown(IN_USE) then
-				local posX, posY = WorldToScreen(LocalPlayer():GetEyeTrace().HitPos, self:GetPos() + ang:Up()*3, 0.25, ang)
+				
 				posX, posY = math.Clamp(posX, -506, 506), math.Clamp(posY, -250, 250)
 				surface.SetTexture(ArrowTexture)
 				surface.DrawTexturedRectRotated(posX + 5, posY + 5, 16, 16, 45)
@@ -110,13 +110,8 @@ function ENT:Draw()
 	
 	--Drawing the actual HTML panel:
 	
-	/*local width = 130
-	local height = 60
-	
-	render.SetMaterial(self.HTMLMat)
-	render.DrawQuad(pos+Vector(0, width, height), pos+Vector(0, -width, height), pos+Vector(0, -width, -height), pos+Vector(0, width, -height))*/
-	
-	if (HasPhysgun and LocalPlayer():KeyDown(IN_ATTACK)) or LocalPlayer():KeyDown(IN_USE) then
+	if ((HasPhysgun and LocalPlayer():KeyDown(IN_ATTACK)) or LocalPlayer():KeyDown(IN_USE))
+		and posX > -500 and posX < 500 and posY < 250 and posY > -250 then
 		if not self.Disabled and self.HTML and self.HTML:IsValid() and self.CanClickAgain and CurTime() > self.CanClickAgain then
 			XFix, YFix = 200, 40
 			

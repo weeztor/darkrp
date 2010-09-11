@@ -6,7 +6,7 @@ local function SetHealth(ply, cmd, args)
 	local targets = FAdmin.FindPlayer(args[1])
 	if not targets or #targets == 1 and not ValidEntity(targets[1]) or not targets then
 		targets = {ply}
-		Health = tonumber(args[1] or 100)
+		Health = math.floor(tonumber(args[1] or 100))
 		return
 	end
 
