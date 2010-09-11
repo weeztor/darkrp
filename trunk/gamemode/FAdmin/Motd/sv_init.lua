@@ -66,7 +66,7 @@ function FAdmin.MOTD.SetMOTDPage(ply, cmd, args)
 		FAdmin.Messages.SendMessage(ply, 4, "MOTD is set to: "..GetConVarString("_FAdmin_MOTDPage"))
 		return
 	end
-	if ply:EntIndex() ~= 0 and (not ply.IsSuperAdmin() or not ply:IsSuperAdmin()) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
+	if ply:EntIndex() ~= 0 and (not ply.IsSuperAdmin or not ply:IsSuperAdmin()) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	game.ConsoleCommand("_FAdmin_MOTDPage \""..args[1].."\"\n")
 end
 
