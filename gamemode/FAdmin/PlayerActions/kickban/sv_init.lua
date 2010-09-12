@@ -46,16 +46,21 @@ end)
 -- Banning
 local BANS = {}
 
+local function RequestBans(ply, cmd, args)
+	if not FAdmin.Access.PlayerHasPrivilege(ply, "UnBan") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
+	datastream.StreamToClients({ply}, "FAdmin_retrievebans", BANS)
+end
+
 if file.Exists("FAdmin/Bans.txt") then
 	BANS = util.KeyValuesToTable(file.Read("FAdmin/Bans.txt"))
 	for k,v in pairs(BANS) do
-		if v < os.time() and v ~= 0 then
+		if v.time < os.time() and v ~= 0 then
 			BANS[k] = nil
 		end
-		if v == 0 then
+		if v.time == 0 then
 			game.ConsoleCommand("banid 0 "..k.. "\n")
 		else
-			game.ConsoleCommand("banid ".. (v - os.time())/60 .." " .. k.. "\n")
+			game.ConsoleCommand("banid ".. (v.time - os.time())/60 .." " .. k.. "\n")
 		end
 	end
 	file.Write("FAdmin/Bans.txt", util.TableToKeyValues(BANS))
@@ -64,7 +69,7 @@ end
 timer.Create("FAdminCheckBans", 60, 0, function()
 	local changed = false
 	for k,v in pairs(BANS) do
-		if v < os.time() and v ~= 0 then
+		if v.time and v.time < os.time() and v.time ~= 0 then
 			BANS[k] = nil
 			changed = true
 		end
@@ -75,11 +80,15 @@ timer.Create("FAdminCheckBans", 60, 0, function()
 	end
 end)
 
-local function SaveBan(SteamID, Duration)
+local function SaveBan(SteamID, Nick, Duration)
 	if tonumber(Duration) == 0 then
-		BANS[SteamID] = 0
+		BANS[SteamID] = {}
+		BANS[SteamID].time = 0
+		BANS[SteamID].name = Nick
 	else
-		BANS[SteamID] = os.time() + Duration*60--in minutes, so *60
+		BANS[SteamID] = {}
+		BANS[SteamID].time = os.time() + Duration*60--in minutes, so *60
+		BANS[SteamID].name = Nick
 	end
 	
 	file.Write("FAdmin/Bans.txt", util.TableToKeyValues(BANS))
@@ -142,7 +151,7 @@ local function Ban(ply, cmd, args)
 					end
 				end
 				
-				SaveBan(target:SteamID(), time)
+				SaveBan(target:SteamID(), target:Nick(), time)
 				game.ConsoleCommand("banid " .. time.." ".. target:SteamID().."\n") -- Don't use banid in combination with RunConsoleCommand
 				RunConsoleCommand("kickid", target:UserID(), " banned for "..TimeText.." "..Reason) -- Also kicks someone if only a steam ID is entered
 			else
@@ -152,7 +161,7 @@ local function Ban(ply, cmd, args)
 						break
 					end
 				end
-				SaveBan(args[1], args[3] or 60) -- Again default to one hour
+				SaveBan(args[1], "UNKNOWN", args[3] or 60) -- Again default to one hour
 				RunConsoleCommand("banid", time, args[1])
 			end
 			ply.FAdminKickReason = nil
@@ -161,7 +170,7 @@ local function Ban(ply, cmd, args)
 end
 -- Unbanning
 local function UnBan(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "UnBan") then return end
+	if not FAdmin.Access.PlayerHasPrivilege(ply, "UnBan") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 	local SteamID = string.upper(args[1])
 	
@@ -181,6 +190,7 @@ local function UnBan(ply, cmd, args)
 
 	file.Write("FAdmin/Bans.txt", util.TableToKeyValues(BANS))
 	game.ConsoleCommand("removeid ".. SteamID .. "\n")
+	FAdmin.Messages.SendMessage(ply, 4, "Unban successful!")
 end
 
 -- Commands and privileges
@@ -188,6 +198,7 @@ hook.Add("FAdmin_PluginsLoaded", "KickBan", function()
 	FAdmin.Commands.AddCommand("kick", Kick)
 	FAdmin.Commands.AddCommand("ban", Ban)
 	FAdmin.Commands.AddCommand("unban", UnBan)
+	FAdmin.Commands.AddCommand("RequestBans", RequestBans)
 	
 	FAdmin.Access.AddPrivilege("Kick", 2)
 	FAdmin.Access.AddPrivilege("Ban", 2)
