@@ -275,4 +275,36 @@ hook.Add("FAdmin_PluginsLoaded", "CL_KickBan", function()
 		Window:MakePopup()
 		Window:DoModal()
 	end)
+	
+	FAdmin.ScoreBoard.Server:AddPlayerAction("Unban", function() return "FAdmin/icons/Ban", "FAdmin/icons/disable" end, Color(0, 155, 0, 255), true, function(button)
+		local Frame = vgui.Create("DFrame")
+		Frame:SetSize(400, 600)
+		Frame:SetTitle("Unban Details")
+		Frame:SetDraggable(true)
+		Frame:ShowCloseButton(true)
+		Frame:SetBackgroundBlur(true)
+		Frame:SetDrawOnTop(true)
+		
+		local BanList = vgui.Create("DListView", Frame)
+		BanList:StretchToParent(5, 25, 5, 5)
+		BanList:AddColumn("SteamID")
+		BanList:AddColumn("Name")
+		BanList:AddColumn("Time")
+		local function RetrieveBans(handler, id, encoded, decoded)
+			for k,v in pairs(decoded) do
+				local Line = BanList:AddLine(k, v.name or "N/A", v.time or "N/A")
+				
+				function Line:OnSelect()
+					RunConsoleCommand("_FAdmin", "Unban", string.upper(self:GetValue(1)))
+					BanList:RemoveLine(self:GetID())
+				end
+			end
+		end
+		datastream.Hook("FAdmin_retrievebans", RetrieveBans)
+		RunConsoleCommand("_FAdmin", "RequestBans")
+		
+		Frame:Center()
+		Frame:MakePopup()
+		Frame:DoModal()
+	end)
 end)
