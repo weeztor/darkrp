@@ -11,7 +11,7 @@ function GM:PlayerSpawnProp(ply, model)
 	if not self.BaseClass:PlayerSpawnProp(ply, model) then return false end
 
 	-- If prop spawning is enabled or the user has admin or prop privileges
-	local allowed = ((GetConVarNumber("propspawning") == 1 or ply:IsAdmin()) and true) or false
+	local allowed = ((GetConVarNumber("propspawning") == 1 or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_prop")) or ply:IsAdmin()) and true) or false
 
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	model = string.gsub(model, "\\", "/")
@@ -640,7 +640,7 @@ function GM:PlayerLoadout(ply)
 	ply:Give("weapon_physcannon")
 	ply:Give("gmod_camera")
 	
-	if GetConVarNumber("toolgun") == 1 or ply:IsAdmin()  then
+	if GetConVarNumber("toolgun") == 1 or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_tool")) or ply:IsAdmin()  then
 		ply:Give("gmod_tool")
 	end
 	
@@ -648,7 +648,7 @@ function GM:PlayerLoadout(ply)
 		ply:Give("pocket")
 	end
 	
-	if GetConVarNumber("physgun") == 1 or ply:IsAdmin() then
+	if GetConVarNumber("physgun") == 1 or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_phys")) or ply:IsAdmin() then
 		ply:Give("weapon_physgun")
 	end
 	
