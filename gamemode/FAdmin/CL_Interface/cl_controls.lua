@@ -170,8 +170,9 @@ derma.DefineControl("FAdminPlayerIcon", "Icon for Player in scoreboard", PANEL4,
 -- FAdmin player row (from the sandbox player row)
 PANEL = {}
 
+CreateClientConVar("FAdmin_PlayerRowSize", 36, true, false)
 function PANEL:Init()
-	self.Size = 36
+	self.Size = GetConVarNumber("FAdmin_PlayerRowSize")
 	
 	self.lblName 	= vgui.Create("Label", self)
 	self.lblFrags 	= vgui.Create("Label", self)
@@ -192,9 +193,13 @@ function PANEL:Init()
 end
 
 function PANEL:Paint()
+	if not ValidEntity(self.Player) then return end
+	
+	self.Size = GetConVarNumber("FAdmin_PlayerRowSize")
+	self.imgAvatar:SetSize(self.Size - 4, self.Size - 4)
+	
 	local color = Color(100, 150, 245, 255)
 
-	if not ValidEntity(self.Player) then return end
 	
 	if GAMEMODE.Name == "Sandbox" then
 		color = Color(100, 150, 245, 255)
@@ -211,13 +216,13 @@ function PANEL:Paint()
 		color = team.GetColor(self.Player:Team())
 	end
 	
-	draw.RoundedBox(4, 0, 0, self:GetWide(), 36, color)
+	draw.RoundedBox(4, 0, 0, self:GetWide(), self.Size, color)
 	
 	surface.SetTexture(texGradient)
 	if self.Player == LocalPlayer() or self.Player:GetFriendStatus() == "friend" then
 		surface.SetDrawColor(255, 255, 255, 50 + math.sin(RealTime() * 2) * 50)
 	end
-	surface.DrawTexturedRect(0, 0, self:GetWide(), 36) 	
+	surface.DrawTexturedRect(0, 0, self:GetWide(), self.Size) 	
 	return true
 end
 

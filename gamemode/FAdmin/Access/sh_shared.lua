@@ -102,8 +102,8 @@ timer.Simple(0, function()
 			if CLIENT and MaxPlayers() == 1 and self:Ping() == 0 then -- Probably single player
 				uid = "1" -- Fix garry's bug
 			end
-			if not ULib.ucl.authed[ uid ] then ULib.ucl.probe(self) end-- return FAdmin.Access.Groups[self:GetNWString("usergroup")] and FAdmin.Access.ADMIN[FAdmin.Access.Groups[self:GetNWString("usergroup")].ADMIN] end
-			return ULib.ucl.authed[ uid ].group or "user"
+			if not ULib.ucl.authed[ uid ] then if ULib.ucl.probe then ULib.ucl.probe(self) end end-- return FAdmin.Access.Groups[self:GetNWString("usergroup")] and FAdmin.Access.ADMIN[FAdmin.Access.Groups[self:GetNWString("usergroup")].ADMIN] end
+			return (ULib.ucl.authed[ uid ] and ULib.ucl.authed[ uid ].group) or "user"
 		end
 	end
 end)
