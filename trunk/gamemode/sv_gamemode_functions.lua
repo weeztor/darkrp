@@ -772,8 +772,7 @@ local function FlammablePropThink()
 end
 timer.Create("FlammableProps", 0.1, 0, FlammablePropThink)
 
-function GM:Think()
-	-- Doors
+local function PlayerDoorCheck()
 	for k, ply in pairs(player.GetAll()) do
 		local trace = ply:GetEyeTrace()
 		if ValidEntity(trace.Entity) and (trace.Entity:IsDoor() or trace.Entity:IsVehicle()) and ply.LookingAtDoor ~= trace.Entity and trace.HitPos:Distance(ply:GetShootPos()) < 410 then
@@ -817,8 +816,8 @@ function GM:Think()
 			ply.LookingAtDoor = nil
 		end
 	end
-	if EarthQuakeTest then EarthQuakeTest() end
 end
+timer.Create("RP_DoorCheck", 0.1, 0, PlayerDoorCheck)
 
 function GM:GetFallDamage( ply, flFallSpeed )
 	if GetConVarNumber("mp_falldamage") == 1 then
