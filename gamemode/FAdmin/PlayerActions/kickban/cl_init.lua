@@ -236,6 +236,7 @@ hook.Add("FAdmin_PluginsLoaded", "CL_KickBan", function()
 			Button.DoClick = function() 
 				Window:Close()
 				M, H, D, W, Y = Minutes:GetValue(), Hours:GetValue(), Days:GetValue(), Weeks:GetValue(), Years:GetValue()
+				update()
 				RunConsoleCommand("_FAdmin", "ban", SteamID, BanTime)
 			end
 			
@@ -292,7 +293,7 @@ hook.Add("FAdmin_PluginsLoaded", "CL_KickBan", function()
 		BanList:AddColumn("Time")
 		local function RetrieveBans(handler, id, encoded, decoded)
 			for k,v in pairs(decoded) do
-				local Line = BanList:AddLine(k, v.name or "N/A", v.time or "N/A")
+				local Line = BanList:AddLine(k, v.name or "N/A", (v.time and FAdmin.PlayerActions.ConvertBanTime((tonumber(v.time) - os.time())/60)) or "N/A")
 				
 				function Line:OnSelect()
 					RunConsoleCommand("_FAdmin", "Unban", string.upper(self:GetValue(1)))
