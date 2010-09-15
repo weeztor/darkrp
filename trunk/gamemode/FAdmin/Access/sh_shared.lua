@@ -1,4 +1,7 @@
 FAdmin.Access = {}
+FAdmin.Access.ADMIN = {"user", "admin", "superadmin", "superadmin"} -- Superadmin is there twice because root_user is based on superadmin
+FAdmin.Access.ADMIN[0] = "noaccess"
+
 FAdmin.Access.Groups = {}
 FAdmin.Access.Privileges = {}
 
@@ -89,4 +92,18 @@ end
 hook.Add("FAdmin_PluginsLoaded", "AccessFunctions", function()
 	FAdmin.Access.AddPrivilege("SetAccess", 4) -- AddPrivilege is shared, run on both client and server
 	FAdmin.Commands.AddCommand("RemoveGroup", FAdmin.Access.RemoveGroup)
+end)
+
+--ULX compatibility!
+timer.Simple(0, function()
+	if ULib and ULib.ucl then
+		function _R.Player:GetUserGroup()
+			local uid = self:UniqueID()
+			if CLIENT and MaxPlayers() == 1 and self:Ping() == 0 then -- Probably single player
+				uid = "1" -- Fix garry's bug
+			end
+			if not ULib.ucl.authed[ uid ] then ULib.ucl.probe(self) end-- return FAdmin.Access.Groups[self:GetNWString("usergroup")] and FAdmin.Access.ADMIN[FAdmin.Access.Groups[self:GetNWString("usergroup")].ADMIN] end
+			return ULib.ucl.authed[ uid ].group or "user"
+		end
+	end
 end)
