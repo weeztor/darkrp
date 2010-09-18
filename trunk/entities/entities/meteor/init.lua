@@ -14,9 +14,9 @@ function ENT:Initialize()
 		phys:Wake()
 	end
 
-	self.Entity:GetPhysicsObject():EnableMotion(true)
-	self.Entity:GetPhysicsObject():SetMass(1000)
-	self.Entity:GetPhysicsObject():EnableGravity(false)
+	phys:EnableMotion(true)
+	phys:SetMass(1000)
+	phys:EnableGravity(false)
 end
 
 function ENT:SetMeteorTarget(ent)
