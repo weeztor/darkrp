@@ -11,3 +11,9 @@ FAdmin.PlayerActions.JailTimes[30] = "30 seconds"
 FAdmin.PlayerActions.JailTimes[60] = "1 minute"
 FAdmin.PlayerActions.JailTimes[300] = "5 minutes"
 FAdmin.PlayerActions.JailTimes[600] = "10 minutes"
+
+hook.Add("CanTool", "FAdmin_jailed", function(ply) -- shared so it doesn't look like you can use tool
+	if ply:FAdmin_GetGlobal("fadmin_jailed") then
+		return false
+	end
+end)

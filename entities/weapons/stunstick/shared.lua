@@ -133,3 +133,11 @@ function SWEP:SecondaryAttack()
 		end
 	end
 end
+
+function SWEP:Reload()
+	if not SERVER then return end
+	self.Owner:EmitSound("weapons/stunstick/spark"..math.random(1,3)..".wav")
+	self:SendHoldType("melee")
+	timer.Destroy("rp_stunstick_threaten")
+	timer.Create("rp_stunstick_threaten", 1, 1, function() self:SendHoldType("normal") end)
+end

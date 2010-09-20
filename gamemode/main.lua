@@ -1269,6 +1269,7 @@ end
 AddChatCommand("/job", ChangeJob)
 
 local function FinishDemote(choice, v)
+	v.IsBeingDemoted = nil
 	if choice == 1 then
 		v:TeamBan()
 		if v:Alive() then
@@ -1312,6 +1313,7 @@ local function Demote(ply, args)
 		else
 			TalkToPerson(p, team.GetColor(ply:Team()), "(DEMOTE) "..ply:Nick(),Color(255,0,0,255), "I want to demote you. Reason: "..reason, p)
 			NotifyAll(1, 4, string.format(LANGUAGE.demote_vote_started, ply:Nick(), p:Nick()))
+			p.IsBeingDemoted = true
 			vote:Create(p:Nick() .. ":\n"..string.format(LANGUAGE.demote_vote_text, reason), p:EntIndex() .. "votecop"..ply:EntIndex(), p, 20, FinishDemote, true)
 			ply:GetTable().LastVoteCop = CurTime()
 		end

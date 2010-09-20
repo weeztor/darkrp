@@ -74,6 +74,7 @@ end
 function vote.DestroyVotesWithEnt(ent)
 	for k, v in pairs(Votes) do
 		if v.Ent == ent then
+			timer.Destroy(v.ID .. "timer")
 			umsg.Start("KillVoteVGUI")
 				umsg.String(v.ID)
 			umsg.End()
