@@ -428,7 +428,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	end
 	
 	if not ignoreGeneralRestrictTool then
-		local Group = FPP.Groups[FPP.GroupMembers[SteamID] or "default"] -- What group is the player in. If not in a special group, then he's in default group
+		local Group = FPP.Groups[FPP.GroupMembers[SteamID]] or FPP.Groups[ply:GetNWString("usergroup")] or FPP.Groups.default  -- What group is the player in. If not in a special group, then he's in default group
 		
 		local CanGroup = true
 		if Group and ((Group.allowdefault and table.HasValue(Group.tools, tool)) or -- If the tool is on the BLACKLIST or
@@ -444,7 +444,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 				FPP.CanTouch(ply, "FPP_TOOLGUN", "Toolgun restricted! Superadmin only!", false)
 				return false
 			elseif (tonumber(FPP.RestrictedTools[tool].admin) == 1 and ply:IsAdmin()) or (tonumber(FPP.RestrictedTools[tool].admin) == 2 and ply:IsSuperAdmin()) then
-				CanGroup = true -- If the person is not in the group BUT has admin access, he should be able to use the tool
+				CanGroup = true -- If the person is not in the BUT has admin access, he should be able to use the tool
 			end
 			
 			if FPP.RestrictedTools[tool]["team"] and #FPP.RestrictedTools[tool]["team"] > 0 and not table.HasValue(FPP.RestrictedTools[tool]["team"], ply:Team()) then
