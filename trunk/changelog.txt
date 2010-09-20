@@ -28,6 +28,7 @@ DarkRP 2.4.1 SVN
 [ADD] rp_pricemin, set minimum price of entities.
 [ADD] New fading door tool compatability (DOESN'T WORK WITH OLD DOOR TOOL (Conna's tool))
 [ADD] FAdmin admin mod
+[ADD] Threaten with stunstick (reload)
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo
@@ -46,6 +47,7 @@ DarkRP 2.4.1 SVN
 [FIX] Saving original steam names in the database
 [FIX] Door issue: random other people co-owning it when one co-owner is added.
 [FIX] Meteor emitter spam
+[FIX] Escaping demote
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits, added Eusion
 [CHANGE] The way Entities like money and money printers show their information. Thanks MavBear!

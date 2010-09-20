@@ -125,9 +125,9 @@ function meta:TeamUnBan(Team)
 	self.bannedfrom[Team] = 0
 end
 
-function meta:TeamBan()
+function meta:TeamBan(t)
 	if not self.bannedfrom then self.bannedfrom = {} end
-	self.bannedfrom[self:Team()] = 1
+	self.bannedfrom[t or self:Team()] = 1
 	timer.Simple(GetConVarNumber("demotetime"), self.TeamUnBan, self, self:Team())
 end
 
@@ -230,6 +230,11 @@ function meta:ChangeTeam(t, force)
 		return 
 	end
 	
+	if self.IsBeingDemoted then
+		self:TeamBan()
+		vote.DestroyVotesWithEnt(self)
+		Notify(self, 1, 4, "You tried to escape demotion. You have been demoted.")
+	end
 	
 	for k,v in pairs(RPExtraTeams) do
 		if t == k then
@@ -269,7 +274,6 @@ function meta:ChangeTeam(t, force)
 			break
 		end
 	end
-
 	
 	self.LastJob = CurTime()
 	
