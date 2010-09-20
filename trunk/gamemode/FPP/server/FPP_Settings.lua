@@ -360,7 +360,7 @@ local function RetrieveGroups()
 	if type(members) ~= "table" then return end
 	for _,v in pairs(members) do
 		FPP.GroupMembers[v.steamid] = v.groupname
-		if not FPP.Groups[v.groupname] then -- if group does not exist then set to default
+		if not FPP.Groups[v.groupname] and (not FAdmin or not FAdmin.Access.Groups[group]) then -- if group does not exist then set to default
 			FPP.GroupMembers[v.steamid] = nil
 			sql.Query("DELETE FROM FPP_GROUPMEMBERS WHERE steamid = "..sql.SQLStr(v.steamid)..";")
 		end
@@ -403,6 +403,14 @@ local function AddGroup(ply, cmd, args)
 	FPP.Notify(ply, "Group added succesfully", true)
 end
 concommand.Add("FPP_AddGroup", AddGroup)
+
+hook.Add("InitPostEntity", "FPP_Load_FAdmin", function() 
+	if FAdmin then
+		for k,v in pairs(FAdmin.Access.Groups) do
+			if not FPP.Groups[k] then AddGroup(Entity(0), "", {k, 1}) end
+		end
+	end
+end)
 
 local function RemoveGroup(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
@@ -511,7 +519,7 @@ local function PlayerSetGroup(ply, cmd, args)
 	if ValidEntity(Player(name)) then name = Player(name):SteamID()
 	elseif not string.find(name, "STEAM") and name ~= "UNKNOWN" then FPP.Notify(ply, "Invalid argument(s)", false) return end
 	
-	if not FPP.Groups[group] then 
+	if not FPP.Groups[group] and (not FAdmin or not FAdmin.Access.Groups[group]) then 
 		FPP.Notify(ply, "Group does not exists", false)
 		return
 	end
