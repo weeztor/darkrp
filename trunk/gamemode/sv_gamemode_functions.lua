@@ -130,21 +130,6 @@ function GM:KeyPress(ply, code)
 		trace.endpos = trace.start + ply:GetAimVector() * 95
 		trace.filter = ply
 		local tr = util.TraceLine(trace)
-
-		if ValidEntity(tr.Entity) and not ply:KeyDown(IN_ATTACK) then
-			if tr.Entity:GetTable().Letter then
-				umsg.Start("ShowLetter", ply)
-					umsg.Short(tr.Entity.type)
-					umsg.Vector(tr.Entity:GetPos())
-					local numParts = tr.Entity.numPts
-					umsg.Short(numParts)
-					for a,b in pairs(tr.Entity.Parts) do umsg.String(b) end
-				umsg.End()
-			end
-		else
-			umsg.Start("KillLetter", ply)
-			umsg.End()
-		end
 		
 		--Begin trading server-side (Although this appears to be unstable, don't worry, I've planned the system out, I've just not implemented the update completely).
 		--Note: Uncomplete; Please leave for Eusion to complete :).
