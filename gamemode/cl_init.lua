@@ -1157,5 +1157,22 @@ hook.Add("FAdmin_PluginsLoaded", "DarkRP", function()
 				LocalPlayer():ConCommand("say /wanted ".. ply:UserID().." ".. Reason)
 			end)
 		end)
+	
+	--Teamban
+	FAdmin.ScoreBoard.Player:AddActionButton("Ban from job", "FAdmin/icons/changeteam", Color(200, 0, 0, 255), 
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands") end, function(ply, button)
+		local menu = DermaMenu()
+		local Title = vgui.Create("DLabel")
+		Title:SetText("  Jobs:\n")
+		Title:SetFont("UiBold")
+		Title:SizeToContents()
+		Title:SetTextColor(color_black)
+		
+		menu:AddPanel(Title)
+		for k,v in SortedPairsByMemberValue(RPExtraTeams, "name") do
+			menu:AddOption(v.name, function() RunConsoleCommand("rp_teamban", ply:UserID(), v.command) end)
+		end
+		menu:Open()
+	end)
 end)
 include("FAdmin_DarkRP.lua")
