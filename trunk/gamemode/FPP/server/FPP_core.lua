@@ -211,7 +211,7 @@ function FPP.ShowOwner()
 		end
 	end
 end
-hook.Add("Think", "FPP_ShowOwner", FPP.ShowOwner)
+timer.Create("FPP_ShowOwner", 0.1, 0, FPP.ShowOwner)
 
 
 --Physgun Pickup
