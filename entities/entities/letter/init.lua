@@ -8,6 +8,7 @@ function ENT:Initialize()
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self:SetUseType(SIMPLE_USE)
 	local phys = self.Entity:GetPhysicsObject()
 
 	if phys and phys:IsValid() then phys:Wake() end
@@ -21,4 +22,19 @@ function ENT:OnRemove()
 		ply.maxletters = 0
 	end
 	ply.maxletters = ply.maxletters - 1
+end
+
+function ENT:Use(ply)
+	if not ply:KeyDown(IN_ATTACK) then
+		umsg.Start("ShowLetter", ply)
+			umsg.Short(self.type)
+			umsg.Vector(self:GetPos())
+			local numParts = self.numPts
+			umsg.Short(numParts)
+			for a,b in pairs(self.Parts) do umsg.String(b) end
+		umsg.End()
+	else
+		umsg.Start("KillLetter", ply)
+		umsg.End()
+	end
 end
