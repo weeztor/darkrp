@@ -1,18 +1,3 @@
---ULX fuckup fix
-local meta = FindMetaTable("Player")
-function meta:CheckGroup( group_check )
-	if not ULib.ucl then return false end
-	if not ULib.ucl.groups[ group_check ] then return false end
-	local group = self:GetUserGroup()
-	if not ULib.ucl.groups[ group ] then return false end
-	while group do
-		if group == group_check then return true end
-		group = ULib.ucl.groupInheritsFrom( group )
-	end
-	
-	return false
-end
-
 FPP = FPP or {}
 
 require("datastream")
