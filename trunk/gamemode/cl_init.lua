@@ -1147,7 +1147,7 @@ hook.Add("FAdmin_PluginsLoaded", "DarkRP", function()
 		
 	--wanted
 	FAdmin.ScoreBoard.Player:AddActionButton(function(ply)
-			return ((ply.DarkRPVars.wanted and "un") or "") .. "wanted"
+			return ((ply.DarkRPVars.wanted and "Unw") or "W") .. "anted"
 		end, 
 		function(ply) return "FAdmin/icons/jail", ply.DarkRPVars.wanted and "FAdmin/icons/disable" end,
 		Color(0, 0, 200, 255), 
