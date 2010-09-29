@@ -997,11 +997,11 @@ local function AddToChat(msg)
 	if text and text ~= "" then
 		chat.AddText(col1, name, col2, ": "..text)
 		if ValidEntity(ply) then
-			hook.Call("OnPlayerChat", GM, ply, text, false, ply:Alive())
+			hook.Call("OnPlayerChat", nil, ply, text, false, ply:Alive())
 		end
 	else
 		chat.AddText(col1, name)
-		hook.Call("ChatText", GM, "0", name, name, "none")
+		hook.Call("ChatText", nil, "0", name, name, "none")
 	end
 	chat.PlaySound()
 end
