@@ -85,7 +85,6 @@ include("questions.lua")
 include("entity.lua")
 include("addentities.lua")
 include("main.lua")
-include("rating.lua")
 include("sh_animations.lua")
 
 
