@@ -130,7 +130,7 @@ local function SortedPairsByFunction(Table, Sorted, SortDown)
 	end
 	
 	if SortDown then
-		table.sort(SortedValues, function(a, b) return a > b end)
+		table.sort(SortedValues, function(a, b) return tostring(a or "") > tostring(b or "") end)
 	else
 		table.sort(SortedValues)
 	end
