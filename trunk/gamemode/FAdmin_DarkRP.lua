@@ -17,7 +17,7 @@ if SERVER then
 		end
 	end
 	
-	AddDir("materials/fadmin")
+	AddDir("materials/FAdmin")
 	
 	AddCSLuaFile("FAdmin.lua")
 	
