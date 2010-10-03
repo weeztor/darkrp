@@ -216,6 +216,14 @@ function PANEL:Paint()
 		color = team.GetColor(self.Player:Team())
 	end
 	
+	local hooks = hook.GetTable().FAdmin_PlayerRowColour
+	if hooks then
+		for k,v in pairs(hooks) do
+			color = (v and v(self.Player, color)) or color
+			break
+		end
+	end
+	
 	draw.RoundedBox(4, 0, 0, self:GetWide(), self.Size, color)
 	
 	surface.SetTexture(texGradient)
