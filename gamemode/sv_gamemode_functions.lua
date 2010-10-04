@@ -812,8 +812,8 @@ function GM:GetFallDamage( ply, flFallSpeed )
 end
 
 local otherhooks = {}
-function GM:PlayerSay(ply, text)--We will make the old hooks run AFTER DarkRP's playersay has been run.
-	local text2 = text
+function GM:PlayerSay(ply, text, Global)--We will make the old hooks run AFTER DarkRP's playersay has been run.
+	local text2 = (Global and "" or "/g ") .. text
 	local callback
 	text2, callback, DoSayFunc = RP_PlayerChat(ply, text2)
 	if tostring(text2) == " " then text2, callback = callback, text2 end
