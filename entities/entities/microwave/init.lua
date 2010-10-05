@@ -13,7 +13,7 @@ function ENT:Initialize()
 	if phys and phys:IsValid() then phys:Wake() end
 	self.sparking = false
 	self.damage = 100
-	self.Entity.dt.price = 30
+	self.Entity.dt.price = math.Clamp((GetConVarNumber("pricemin") ~= 0 and GetConVarNumber("pricemin")) or 30, (GetConVarNumber("pricecap") ~= 0 and GetConVarNumber("pricecap")) or 30)
 end
 
 function ENT:OnTakeDamage(dmg)
