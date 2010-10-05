@@ -317,9 +317,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_doorcost <Number> - Sets the cost o
 AddValueCommand("rp_vehiclecost", "vehiclecost", 40)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_vehiclecost <Number> - Sets the cost of a vehicle (To own it).")
 
-AddValueCommand("rp_microwavefoodcost", "microwavefoodcost", 30)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_microwavefoodcost <Number> - Sets the sale price of Microwave Food.")
-
 AddValueCommand("rp_maxfoods", "maxfoods", 2)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxfoods <Number> - Sets the max food cartons per Microwave owner.")
 
