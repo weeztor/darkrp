@@ -65,28 +65,20 @@ function FindPlayer(info)
 	local pls = player.GetAll()
 
 	-- Find by Index Number (status in console)
-	for k, v in pairs(pls) do
+	for k = 1, #pls do -- proven to be faster than pairs loop.
+		local v = pls[k]
 		if tonumber(info) == v:UserID() then
 			return v
 		end
-	end
 
-	-- Find by Steam ID
-	for k, v in pairs(pls) do
 		if info == v:SteamID() then
 			return v
 		end
-	end
-
-	-- Find by RP Name
-	for k, v in pairs(pls) do
+	
 		if string.find(string.lower(v:SteamName()), string.lower(tostring(info)), 1, true) ~= nil then
 			return v
 		end
-	end
-
-	-- Find by Partial Nick
-	for k, v in pairs(pls) do
+	
 		if string.find(string.lower(v:Name()), string.lower(tostring(info)), 1, true) ~= nil then
 			return v
 		end

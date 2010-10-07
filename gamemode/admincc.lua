@@ -99,7 +99,6 @@ if not LANGUAGE then
 end
 
 
-
 local function ccDoorOwn(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		return
