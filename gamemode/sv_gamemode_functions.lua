@@ -252,9 +252,9 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
 	ply:AddDeaths( 1 )
 	if ValidEntity(attacker) and attacker:IsPlayer() then
 		if attacker == ply then
-			attacker:AddFrags( -1 )
+			attacker:AddFrags(-1)
 		else
-			attacker:AddFrags( 1 )
+			attacker:AddFrags(1)
 		end
 	end
 end

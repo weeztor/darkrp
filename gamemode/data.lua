@@ -25,7 +25,7 @@ function DB.Query(query, callback)
 		local data
 		query.onData = function(Q, D)
 			data = data or {}
-			table.insert(data, D)
+			data[#data + 1] = D
 		end
 		
 		query.onError = function(Q, E) Error(E) callback() DB.Log("MySQL Error: ".. E) end
