@@ -15,6 +15,8 @@ local function GiveWeaponGui(ply)
 		
 		RunConsoleCommand("FAdmin", "give"..giveWhat, ply:UserID(), SpawnName)
 	end
+	
+	WeaponMenu:BuildList()
 end
 
 hook.Add("FAdmin_PluginsLoaded", "GiveWeapons", function()
