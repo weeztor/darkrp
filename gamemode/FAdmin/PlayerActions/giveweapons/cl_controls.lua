@@ -76,29 +76,29 @@ function PANEL2:Init()
 	self.PanelList:SetPadding(4)
 	self.PanelList:SetSpacing(2)
 	self.PanelList:EnableVerticalScrollbar(true)
-		
-	self:BuildList()
 end
 
 function PANEL2:BuildList()
 	self.PanelList:Clear()
 	
-	local AmmoCat = vgui.Create("DCollapsibleCategory", self)
-	self.PanelList:AddItem(AmmoCat)
-	AmmoCat:SetLabel("Give ammo")
+	if not self.HideAmmo then
+		local AmmoCat = vgui.Create("DCollapsibleCategory", self)
+		self.PanelList:AddItem(AmmoCat)
+		AmmoCat:SetLabel("Give ammo")
 	
-	local AmmoPan = vgui.Create("DPanelList")
-	AmmoCat:SetContents(AmmoPan)
-	AmmoPan:EnableHorizontal(true)
-	AmmoPan:SetDrawBackground(false)
-	AmmoPan:SetSpacing(2)
-	AmmoPan:SetPadding(2)
-	AmmoPan:SetAutoSize(true)
-	
-	for k, v in SortedPairs(FAdmin.AmmoTypes) do
-		local Icon = vgui.CreateFromTable(WeaponIcon, self)
-		Icon:Setup(k, k, "vgui/achievements/ep1_beat_game_onebullet", false, self, true)
-		AmmoPan:AddItem(Icon)
+		local AmmoPan = vgui.Create("DPanelList")
+		AmmoCat:SetContents(AmmoPan)
+		AmmoPan:EnableHorizontal(true)
+		AmmoPan:SetDrawBackground(false)
+		AmmoPan:SetSpacing(2)
+		AmmoPan:SetPadding(2)
+		AmmoPan:SetAutoSize(true)
+		
+		for k, v in SortedPairs(FAdmin.AmmoTypes) do
+			local Icon = vgui.CreateFromTable(WeaponIcon, self)
+			Icon:Setup(k, k, "vgui/achievements/ep1_beat_game_onebullet", false, self, true)
+			AmmoPan:AddItem(Icon)
+		end
 	end
 	
 	local Weapons = weapons.GetList()
