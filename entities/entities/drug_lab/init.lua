@@ -15,8 +15,7 @@ function ENT:Initialize()
 	local ply = self.dt.owning_ent
 	self.Entity.SID = ply.SID
 	self.SID = ply.SID
-	self.Entity.dt.price = self.Entity.dt.price = 
-		math.Clamp((GetConVarNumber("pricemin") ~= 0 and GetConVarNumber("pricemin")) or 100, (GetConVarNumber("pricecap") ~= 0 and GetConVarNumber("pricecap")) or 100)
+	self.Entity.dt.price = math.Clamp((GetConVarNumber("pricemin") ~= 0 and GetConVarNumber("pricemin")) or 100, (GetConVarNumber("pricecap") ~= 0 and GetConVarNumber("pricecap")) or 100)
 	self.Entity.CanUse = true
 	self.ShareGravgun = true
 end
