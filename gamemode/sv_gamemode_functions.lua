@@ -190,6 +190,15 @@ concommand.Add("rp_killtrade", function(ply, cmd, args)
 	end
 end)
 
+local function IsInRoom(listener, talker) -- IsInRoom function to see if the player is in the same room.
+	local tracedata = {}
+	tracedata.start = talker:GetShootPos()
+	tracedata.endpos = listener:GetShootPos()
+	local trace = util.TraceLine( tracedata )
+	
+	return not trace.HitWorld
+end
+
 function GM:PlayerCanHearPlayersVoice(listener, talker, other)
 	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then 
 		return true, tobool(GetConVarNumber("3dvoice"))
@@ -198,6 +207,13 @@ function GM:PlayerCanHearPlayersVoice(listener, talker, other)
 	end
 	
 	if GetConVarNumber("voiceradius") == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
+		if GetConVarNumber("dynamicvoice") == 1 then
+			if IsInRoom( listener, talker ) then
+				return true, tobool(GetConVarNumber("3dvoice"))
+			else
+				return false, tobool(GetConVarNumber("3dvoice"))
+			end
+		end
 		return true, tobool(GetConVarNumber("3dvoice"))
 	elseif GetConVarNumber("voiceradius") == 1 then
 		return false, tobool(GetConVarNumber("3dvoice"))
@@ -858,5 +874,12 @@ hook.Add("PlayerNoClip", "DarkRP_FuckAss", function(ply)
 			end
 		end
 		return false
+	end
+end)
+
+hook.Add("WeaponEquip", "AmmoHackFix", function( wep )
+	if wep.ammohacked then
+		local clip = wep.Primary.ClipSize
+		wep:TakePrimaryAmmo(clip)
 	end
 end)

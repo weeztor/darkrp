@@ -813,6 +813,15 @@ local function RPStopMessageMode()
 	playercolors = {}
 end
 
+local function IsInRoom(listener, talker) -- IsInRoom function to see if the player is in the same room.
+	local tracedata = {}
+	tracedata.start = talker:GetShootPos()
+	tracedata.endpos = listener:GetShootPos()
+	local trace = util.TraceLine( tracedata )
+	
+	return not trace.HitWorld
+end
+
 local PlayerColorsOn = CreateClientConVar("rp_showchatcolors", 1, true, false)
 local function RPSelectwhohearit()
 	if PlayerColorsOn:GetInt() == 0 then return end
@@ -846,8 +855,16 @@ local function RPSelectwhohearit()
 				local distance = LocalPlayer():GetPos():Distance(v:GetPos())
 				if HearMode == "whisper" and distance < 90 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
-				elseif (HearMode == "yell" or HearMode == "speak") and distance < 550 and not table.HasValue(playercolors, v) then
+				elseif HearMode == "yell" and distance < 550 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
+				elseif HearMode == "speak" and distance < 550 and not table.HasValue(playercolors, v) then
+					if GetConVarNumber("dynamicvoice") == 1 then
+						if CL_IsInRoom( v ) then
+							table.insert(playercolors, v)
+						end
+					else
+						table.insert(playercolors, v)
+					end
 				elseif HearMode == "talk" and GetConVarNumber("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
 					table.insert(playercolors, v)
 				elseif HearMode == "me" and GetConVarNumber("alltalk") ~= 1 and distance < 250 and not table.HasValue(playercolors, v) then
