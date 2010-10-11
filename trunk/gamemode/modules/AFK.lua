@@ -10,7 +10,18 @@ AddValueCommand("rp_afk_demotetime", "afkdemotetime", 120)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demote <1/0> - If set to 1, players who don't do anything for ".. GetConVarNumber("afkdemotetime") .." seconds will be demoted if they do not use AFK mode.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demotetime <time> - Sets the time a player has to be AFK for before they are demoted (in seconds).")
 
-function StartAFKOnPlayer(ply)
+local function AFKDemote(ply)
+	local rpname = ply.DarkRPVars.rpname
+	if ply.DarkRPVars.AFK then return
+	elseif ply:Team() ~= TEAM_CITIZEN then
+		ply:ChangeTeam(TEAM_CITIZEN, true)
+		ply:SetDarkRPVar("AFKDemoted", true)
+		NotifyAll(1, 5, rpname .. " has been demoted for being AFK for too long.")
+	end
+	ply:SetDarkRPVar("job", "AFK")
+end
+
+local function StartAFKOnPlayer(ply)
 	ply:SetDarkRPVar("AFK", true)
 	local demotetime
 	if GetConVarNumber("afkdemote") == 0 then
@@ -22,10 +33,10 @@ function StartAFKOnPlayer(ply)
 end
 hook.Add("PlayerInitialSpawn", "StartAFKOnPlayer", StartAFKOnPlayer)
 
-function ToggleAFK(ply)
+local function ToggleAFK(ply)
 	if GetConVarNumber("afkdemote") == 0 then
 		Notify( ply, 1, 5, "AFK mode is disabled.")
-		return
+		return ""
 	end
 	local rpname = ply.DarkRPVars.rpname
 	if not ply.DarkRPVars.AFK then
@@ -64,7 +75,8 @@ local function AFKTimer(ply, key)
 	if GetConVarNumber("afkdemote") == 0 then return end
 	ply.AFKDemote = CurTime() + GetConVarNumber("afkdemotetime")
 	if ply.DarkRPVars.AFKDemoted then
-		timer.Simple(10, function() ply:SetDarkRPVar("AFKDemoted", false) end)
+		ply:SetDarkRPVar("job", "Citizen")
+		timer.Simple(3, function() ply:SetDarkRPVar("AFKDemoted", false) end)
 	end
 end
 hook.Add("KeyPress", "DarkRPKeyReleasedCheck", AFKTimer)
@@ -78,14 +90,3 @@ local function KillAFKTimer()
 	end
 end
 hook.Add("Think", "DarkRPKeyPressedCheck", KillAFKTimer)
-
-function AFKDemote(ply)
-	local rpname = ply.DarkRPVars.rpname
-	if ply.DarkRPVars.AFK then return
-	elseif ply:Team() != TEAM_HOBO then
-		ply:ChangeTeam(TEAM_HOBO, true)
-		ply:SetDarkRPVar("AFKDemoted", true)
-		NotifyAll(1, 5, rpname .. " has been demoted for being AFK for too long.")
-	end
-	ply:SetDarkRPVar("job", "AFK")
-end
