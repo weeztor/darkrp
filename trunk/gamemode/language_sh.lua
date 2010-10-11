@@ -20,7 +20,7 @@ rp_languages.english = {
 	
 	payday_message = "Payday! You received %s!",
 	payday_unemployed = "You received no salary because you are unemployed!",
-	payday_missed = "Pay day missed! (you're arrested)",
+	payday_missed = "Pay day missed! (You're Arrested)",
 	
 	property_tax = "Property tax! %s",
 	property_tax_cant_afford = "You couldn't pay the taxes! Your property has been taken away from you!",
@@ -42,7 +42,7 @@ rp_languages.english = {
 	warrant_expired = "The search warrant for %s has expired!",
 	wanted_by_police = "%s is wanted by the police!",
 	wanted_expired = "%s is no longer wanted by the Police.",
-	rpname_changed = "%s changed their RPname to: %s",
+	rpname_changed = "%s changed their RPName to: %s",
 	
 	--teams
 	need_to_be_before = "You need to be %s first in order to be able to become %s",
@@ -79,7 +79,7 @@ rp_languages.english = {
 	keys_everyone = "(Press Reload with keys or press F2 to enable for everyone)",
 	keys_cops = "(Press Reload with keys or press F2 to set to cops and mayor only)",
 	door_unown_arrested = "You can not own or unown things while arrested!",
-	door_unownable = "This door can not be owned or unowned!",
+	door_unownable = "This door cannot be owned or unowned!",
 	door_sold = "You have sold this for %s",
 	door_already_owned = "This door is already owned by someone!",
 	door_cannot_afford = "You can not afford this door!",
@@ -87,12 +87,12 @@ rp_languages.english = {
 	door_bought = "You've bought this door for %s",
 	vehicle_bought = "You've bought this vehicle for %s",
 	door_need_to_own = "You need to own this door in order to be able to %s",
-	door_rem_owners_unownable = "You can not remove owners while Door is non-ownable!",
-	door_add_owners_unownable = "You can not add owners while Door is non-ownable!",
+	door_rem_owners_unownable = "You can not remove owners if a door is non-ownable!",
+	door_add_owners_unownable = "You can not add owners if a door is non-ownable!",
 	rp_addowner_already_owns_door = "%s already owns (or is already allowed to own) this door!",
 	
 	-- talking
-	hear_noone = "Noone can hear you %s!",
+	hear_noone = "No-one can hear you %s!",
 	hear_everyone = "Everyone can hear you!",
 	hear_certain_persons = "Players who can hear you %s: ",
 	
@@ -147,7 +147,7 @@ rp_languages.english = {
 	gunlicense_remove_vote_text = "%s has started a vote for the gun license removal of %s",
 	gunlicense_remove_vote_text2 = "Revoke gunlicense:\n%s", --where %s is the reason
 	gunlicense_removed = "%s's license has been removed!",
-	gunlicense_not_removed = "%s's license has  NOT been removed!",
+	gunlicense_not_removed = "%s's license has not been removed!",
 	vote_specify_reason = "You need to specify a reason!",
 	vote_started = "The vote is created",
 	vote_alone = "You have won the vote since you are alone in the server.",
@@ -162,7 +162,7 @@ rp_languages.english = {
 	lottery_started = "There is a lottery! Participate for %s",
 	lottery_entered = "You entered the lottery for %s",
 	lottery_not_entered = "%s did not enter the lottery",
-	lottery_noone_entered = "Noone has entered the lottery",
+	lottery_noone_entered = "No-one has entered the lottery",
 	lottery_won = "%s has won the lottery! He has won %s",
 	
 	--hungermod 
@@ -182,16 +182,16 @@ rp_languages.english = {
 	
 	searchwarrantbutton = "Make a player wanted",
 	unwarrantbutton = "Remove the wanted status from a player",
-	noone_available = "Noone available",
+	noone_available = "No-one available",
 	request_warrant = "Request a search warrant for a player",
 	make_wanted = "Make someone wanted",
 	make_unwanted = "Make someone unwanted",
 	set_jailpos = "Set the jail position",
 	add_jailpos = "Add a jail position",
 	
-	set_custom_job = "Set a custom job(press enter to activate)",
+	set_custom_job = "Set a custom job (press enter to activate)",
 	
-	set_agenda = "Set the agenda(press enter to activate)",
+	set_agenda = "Set the agenda (press enter to activate)",
 	
 	initiate_lockdown = "Initiate a lockdown",
 	stop_lockdown = "Stop the lockdown",
@@ -246,15 +246,13 @@ rp_languages.english = {
 	/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line
 	Type /mobbosshelp toggles this menu, /x closes it]],
 	
-	gangster_agenda = "Gangster's agenda",
-	
 	hints = 
 	--English hints:
-	{"Roleplay according to the Server Rules!",
+	{"Roleplay according to the server rules!",
 	"You can be arrested for buying or owning an illegal weapon!",
 	"Type /sleep to fall asleep.",
 	"You may own a handgun, but use it only in self defence.",
-	"All weapons can NOT shoot unless you see through the sight post!",
+	"All weapons can NOT shoot unless you aim down the sight.",
 	"If you are a cop, do your job properly or you could get demoted.",
 	"Type /buyshipment <Weapon name> to buy a shipment of weapons (e.g: /buyshipment ak47).",
 	"Type /buy <Pistol name/item name> to buy a pistol, e.g: /buy glock.",
@@ -271,7 +269,7 @@ rp_languages.english = {
 	"Type /buydruglab to buy a druglab. be sure you sell your drugs!",
 	"Press F2 or reload with keys to open the keys menu",
 	"You will be teleported to a jail if you get arrested!",
-	"Type /price <Price> while looking at a druglab,  Gun Lab or a Microwave to set the customer purchase price.",
+	"Type /price <Price> while looking at a drug lab, gun lab or a microwave to set the customer purchase price.",
 	"Type /warrant [Nick|SteamID|UserID] to get a search warrant for a player.",
 	"Type /wanted or /unwanted [Nick|SteamID|UserID] to set a player as wanted/unwanted by the Police.",
 	"Type /drop to drop the weapon you are holding.",
@@ -288,6 +286,13 @@ rp_languages.english = {
 	"Type /buyfood <Type> (e.g: /buyfood melon)",
 	"Type /rpname <Name> to choose your roleplay name.",
 	"Type /call <Name> to call someone!",
+	"If you are a cop you can use the CP console in the Police Station to respond to 911 calls.",
+	"Use /911 to call the police (only works if you have taken damage recently).",
+	"Found an illegal item? Look at it and type /report to alert the police.",
+	"You will be automatically demoted if you go AFK for "..GetConVarNumber("afkdemotetime").." seconds, use /afk to avoid this.",
+	"Type /dropmoney <Amount> to drop money on the floor.",
+	"Type /give <Amount> to give money to the player you are looking at.",
+	"Type /cheque <Name> <Amount> to create a cheque, only the player you assign can pick it up."
 	}
 }
 
@@ -536,8 +541,6 @@ rp_languages.dutch = {
 	met de unarrest stick kun je anderen uit de gevangenis bevrijden
 	/agenda <bericht> (verandert de gangster agenda. Gebruik // of \n om naar de volgende lijn te gaan
 	Typ /mobboss help om dit menu tevoorschijn te halen, /x om het te sluiten]],
-	
-	gangster_agenda = "Gangster agenda",
 	
 	hints = 
 	--English hints:
@@ -826,7 +829,7 @@ rp_languages.danish = {
 	/agenda <Besked> (Sætter Gangsters 'dagsorden. Brug / / for at gå til den næste linje
 	Type /mobbosshelp toggles this menu, /x closes it]],
 
-	gangster_agenda = "Gangster's dagsorden",
+
 
 	hints =
 	--English hints:
@@ -1118,7 +1121,7 @@ rp_languages.swedish = {
 	/agenda <Message> Ändrar gangstrars agenda. Använd // för att gå till en ny rad.
 	Skriv /mobbosshelp för att "toggla" denna meny, /x för att stänga den.]],
 	
-	gangster_agenda = "Gangstrar's agenda",
+
 	
 	hints = 
 	--English hints:
