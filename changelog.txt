@@ -1,4 +1,5 @@
 DarkRP 2.4.1 SVN
+[ADD DrakeHawke] AFK module
 [ADD] Group ownable doors
 [ADD] rp_startingmoney
 [ADD] rp_copscanunweld
