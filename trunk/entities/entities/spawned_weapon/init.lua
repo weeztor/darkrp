@@ -15,6 +15,7 @@ end
 
 function ENT:Use(activator,caller)
 	local class = self.Entity.weaponclass
+	local ammohax = self.Entity.ammohacked
 	local weapon = ents.Create(class)
 
 	if not weapon:IsValid() then return false end
@@ -26,6 +27,7 @@ function ENT:Use(activator,caller)
 	weapon:SetPos(self.Entity:GetPos())
 	weapon.ShareGravgun = true
 	weapon.nodupe = true
+	weapon.ammohacked = ammohax
 	weapon:Spawn()
 	self.Entity:Remove()
 end
