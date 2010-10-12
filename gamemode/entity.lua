@@ -358,3 +358,22 @@ local function AddDoorOwner(ply, args)
 end
 AddChatCommand("/addowner", AddDoorOwner)
 AddChatCommand("/ao", AddDoorOwner)
+
+concommand.Add( "gmod_admin_cleanup", function( pl, command, args )
+	local PreCleanupEntData = { }
+	for id, ent in pairs(ents.GetAll()) do
+		if ent:IsDoor() then
+			table.insert( PreCleanupEntData, ent:EntIndex(), ent.DoorData )
+		end
+	end
+
+	cleanup.CC_AdminCleanup( pl, command, args )
+
+	timer.Simple(0.1, function()
+		for id, table in pairs(PreCleanupEntData) do
+			if Entity(id) then
+				Entity(id).DoorData = table
+			end
+		end
+	end)
+end)
