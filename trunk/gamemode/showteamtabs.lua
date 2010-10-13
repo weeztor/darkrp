@@ -177,8 +177,8 @@ local function CPOptns()
 				CPpanel:AddItem(AddJailPos)
 			end
 			
-			local ismayor--first look if there's a mayor
-			local ischief-- then if there's a chief
+			local ismayor -- Firstly look if there's a mayor
+			local ischief -- Then if there's a chief
 			for k,v in pairs(player.GetAll()) do
 				if v:Team() == TEAM_MAYOR then
 					ismayor = true
@@ -361,7 +361,7 @@ function MoneyTab()
 				ActionsPanel:AddItem(Demote)
 				
 				local UnOwnAllDoors = vgui.Create("DButton")
-						UnOwnAllDoors:SetText("Sell all doors")
+						UnOwnAllDoors:SetText("Sell all of your doors")
 						UnOwnAllDoors.DoClick = function() LocalPlayer():ConCommand("say /unownalldoors") end
 					ActionsPanel:AddItem(UnOwnAllDoors)
 			Commands:SetContents(ActionsPanel)
@@ -416,7 +416,7 @@ function JobsTab()
 			Information:EnableHorizontal( false )
 			Information:EnableVerticalScrollbar( true )
 			Information:SetSkin("DarkRP")
-			function Information:Rebuild() -- YES IM OVERRIDING IT AND CHANGE ONLY ONE LINE BUT I HAVE A FUCKING GOOD REASON TO DO IT!
+			function Information:Rebuild() -- YES IM OVERRIDING IT AND CHANGING ONLY ONE LINE BUT I HAVE A FUCKING GOOD REASON TO DO IT!
 				local Offset = 0
 				if ( self.Horizontal ) then
 					local x, y = self.Padding, self.Padding;
@@ -622,7 +622,7 @@ function EntitiesTab()
 					
 					AddIcon("models/Items/BoxSRounds.mdl", string.format(LANGUAGE.buy_a, "Pistol ammo", CUR .. tostring(GetConVarNumber("ammopistolcost"))), "/buyammo pistol")
 					AddIcon("models/Items/BoxMRounds.mdl", string.format(LANGUAGE.buy_a, "Rifle ammo", CUR .. tostring(GetConVarNumber("ammoriflecost"))), "/buyammo rifle")
-					AddIcon("models/Items/BoxBuckshot.mdl", string.format(LANGUAGE.buy_a, "shotgun ammo", CUR .. tostring(GetConVarNumber("ammoshotguncost"))), "/buyammo shotgun")
+					AddIcon("models/Items/BoxBuckshot.mdl", string.format(LANGUAGE.buy_a, "Shotgun ammo", CUR .. tostring(GetConVarNumber("ammoshotguncost"))), "/buyammo shotgun")
 			WepCat:SetContents(WepPanel)
 			WepCat:SetSkin("DarkRP")
 			self:AddItem(WepCat)
@@ -781,7 +781,7 @@ function RPHUDTab()
 		hbackgrndcat = vgui.Create("DCollapsibleCategory")
 		hbackgrndcat:SetSize(230, 130)
 		function hbackgrndcat.Header:OnMousePressed() end
-		hbackgrndcat:SetLabel("Health bar background")
+		hbackgrndcat:SetLabel("Health bar Background")
 			local hbackgrndpanel = vgui.Create("DPanelList")
 			hbackgrndpanel:SetTall(130)
 				local hbackgrnd = vgui.Create("CtrlColor")

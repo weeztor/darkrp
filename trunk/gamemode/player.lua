@@ -22,7 +22,7 @@ local function RPName(ply, args)
 		return ""
 	end
 	
- 	if string.find(args, "\160") or string.find(args, " ") == 1 then --No system spaces in your name bro!
+ 	if string.find(args, "\160") or string.find(args, " ") == 1 then -- No system spaces in your name bro!
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end
@@ -233,7 +233,7 @@ function meta:ChangeTeam(t, force)
 	if self.IsBeingDemoted then
 		self:TeamBan()
 		vote.DestroyVotesWithEnt(self)
-		Notify(self, 1, 4, "You tried to escape demotion. You have been demoted.")
+		Notify(self, 1, 4, "You tried to escape demotion. You failed, and have been demoted.")
 	end
 	
 	for k,v in pairs(RPExtraTeams) do
@@ -313,7 +313,7 @@ function meta:ChangeTeam(t, force)
 		local vPoint = self:GetShootPos() + Vector(0,0,50)
 		local effectdata = EffectData()
 		effectdata:SetEntity(self)
-		effectdata:SetStart( vPoint ) -- not sure if we need a start and origin (endpoint) for this effect, but whatever
+		effectdata:SetStart( vPoint ) -- Not sure if we need a start and origin (endpoint) for this effect, but whatever
 		effectdata:SetOrigin( vPoint )
 		effectdata:SetScale(1)
 		util.Effect( "entity_remove", effectdata)

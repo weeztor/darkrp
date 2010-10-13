@@ -1,7 +1,7 @@
 rp_languages = {}
 -- DO NOT remove the english language!, you can edit it though
 rp_languages.english = {
-	-- admin things
+	-- Admin things
 	need_admin = "You need admin privileges in order to be able to %s",
 	need_sadmin = "You need super admin privileges in order to be able to %s",
 	no_jail_pos = "No jail position",
@@ -11,7 +11,7 @@ rp_languages.english = {
 	get_mod = "Get the mod at garrysmod.org!",
 	mouse_wheel_to_scroll = "Use mousewheel to scroll",
 	
-	--money things:
+	-- Money things:
 	customer_price = "Customer price: ",
 	reset_money = "%s has reset all player's money!",
 	has_given = "%s has given you %s",
@@ -25,7 +25,7 @@ rp_languages.english = {
 	property_tax = "Property tax! %s",
 	property_tax_cant_afford = "You couldn't pay the taxes! Your property has been taken away from you!",
 	
-	--Players
+	-- Players
 	wanted = "Wanted by Police!",
 	youre_arrested = "You have been arrested for %d seconds!",
 	hes_arrested = "%s has been arrested for %d seconds!",
@@ -44,7 +44,7 @@ rp_languages.english = {
 	wanted_expired = "%s is no longer wanted by the Police.",
 	rpname_changed = "%s changed their RPName to: %s",
 	
-	--teams
+	-- Teams
 	need_to_be_before = "You need to be %s first in order to be able to become %s",
 	need_to_make_vote = "You need to make a vote to become a %s!",
 	team_limit_reached = "Can not become %s as the limit is reached",
@@ -52,7 +52,7 @@ rp_languages.english = {
 	has_not_been_made_team = "%s has not been made %s!",
 	job_has_become = "%s has been made a %s!",
 	
-	--disasters
+	-- Disasters
 	zombie_approaching = "WARNING: Zombies are approaching!",
 	zombie_leaving = "Zombies are leaving.",
 	zombie_spawn_not_exist = "Zombie Spawn %s does not exist.",
@@ -68,7 +68,7 @@ rp_languages.english = {
 	earthquake_report = "Earthquake reported of magnitude %sMw",
 	earthtremor_report = "Earth tremor reported of magnitude %sMw",
 	
-	--keys, vehicles and doors
+	-- Keys, vehicles and doors
 	keys_allowed_to_coown = "You are allowed to co-own this\n(Press Reload with keys or press F2 to co-own)\n",
 	keys_other_allowed = "Allowed to co-own:\n",
 	keys_allow_ownership = "(Press Reload with keys or press F2 to allow ownership)",
@@ -91,7 +91,7 @@ rp_languages.english = {
 	door_add_owners_unownable = "You can not add owners if a door is non-ownable!",
 	rp_addowner_already_owns_door = "%s already owns (or is already allowed to own) this door!",
 	
-	-- talking
+	-- Talking
 	hear_noone = "No-one can hear you %s!",
 	hear_everyone = "Everyone can hear you!",
 	hear_certain_persons = "Players who can hear you %s: ",
@@ -103,7 +103,7 @@ rp_languages.english = {
 	request = "(REQUEST!)",
 	group = "(group)",
 	
-	--Notifies
+	-- Notifies
 	disabled = "%s is disabled! %s", 
 	limit = "You have reached the %s limit!", 
 	have_to_wait = "You need to wait another %d seconds before using %s!", 
@@ -125,10 +125,10 @@ rp_languages.english = {
 	cannot_drop_weapon = "Can't drop this weapon!",
 	team_switch = "Jobs switched successfully!",
 	
-	--misc
+	-- Misc
 	could_not_find = "Could not find %s",
 	f3tovote = "Hit F3 to vote",
-	listen_up = "Listen up:", --In rp_tell
+	listen_up = "Listen up:", -- In rp_tell or rp_tellall
 	nlr = "New Life Rule: Do Not Revenge Arrest/Kill.",
 	reset_settings = "You have reset all settings!",
 	must_be_x = "You must be a %s in order to be able to %s.",
@@ -137,7 +137,7 @@ rp_languages.english = {
 	demoted = "%s has been demoted",
 	demoted_not = "%s has not been demoted",
 	demote_vote_started = "%s has started a vote for the demotion of %s",
-	demote_vote_text = "Demotion nominee:\n%s", --s is the reason here
+	demote_vote_text = "Demotion nominee:\n%s", -- '%s' is the reason here
 	lockdown_started = "The mayor has initiated a Lockdown, please return to your homes!",
 	lockdown_ended = "The lockdown has ended",
 	gunlicense_requested = "%s has requested %s a gun license",
@@ -145,31 +145,31 @@ rp_languages.english = {
 	gunlicense_denied = "%s has denied %s a gun license",
 	gunlicense_question_text = "Grant %s a gun license?",
 	gunlicense_remove_vote_text = "%s has started a vote for the gun license removal of %s",
-	gunlicense_remove_vote_text2 = "Revoke gunlicense:\n%s", --where %s is the reason
+	gunlicense_remove_vote_text2 = "Revoke gunlicense:\n%s", -- Where %s is the reason
 	gunlicense_removed = "%s's license has been removed!",
 	gunlicense_not_removed = "%s's license has not been removed!",
 	vote_specify_reason = "You need to specify a reason!",
 	vote_started = "The vote is created",
 	vote_alone = "You have won the vote since you are alone in the server.",
 	jail_punishment = "Punishment for disconnecting! Jailed for: %d seconds.",
-	admin_only = "admin only!", -- when doing /addjailpos
-	chief_or = "Chief or",-- when doing /addjailpos
+	admin_only = "Admin only!", -- When doing /addjailpos
+	chief_or = "Chief or",-- When doing /addjailpos
 	
 	dead_in_jail = "You now are dead until your jail time is up!",
 	died_in_jail = "%s has died in jail!",
 	
-	--lottery
+	-- The lottery
 	lottery_started = "There is a lottery! Participate for %s",
 	lottery_entered = "You entered the lottery for %s",
 	lottery_not_entered = "%s did not enter the lottery",
 	lottery_noone_entered = "No-one has entered the lottery",
 	lottery_won = "%s has won the lottery! He has won %s",
 	
-	--hungermod 
+	-- Hungermod 
 	starving = "Starving!",
 	
-	--F4menu 
-	--Tab 1
+	-- F4menu 
+	-- Tab 1
 	give_money = "Give money at the one you're looking at",
 	drop_money = "Drop money",
 	change_name = "Change your DarkRP name",
@@ -198,15 +198,15 @@ rp_languages.english = {
 	start_lottery = "Start a lottery",
 	give_license_lookingat = "Give <lookingat> a gun license",
 	
-	--second tab
+	-- Second tab
 	job_name = "Name: ",
 	job_description = "Description: " ,
 	job_weapons = "Weapons: ",
 	
-	--entities tab
+	-- Entities tab
 	buy_a = "Buy %s: %s",
 	
-	--licenseweaponstab
+	-- Licenseweaponstab
 	license_tab = [[License weapons
 	
 	Tick the weapons people should be able to get WITHOUT a license!
@@ -214,7 +214,7 @@ rp_languages.english = {
 	license_tab_other_weapons = "Other weapons:",
 	
 	
-	--Help!
+	-- Help!
 	cophelp = [[Things Cops need to know
 	Please don't abuse your job
 	When you arrest someone they are auto transported to jail.
@@ -232,22 +232,22 @@ rp_languages.english = {
 	Type /unlockdown to end a lockdown
 	Type /mayorhelp toggles this menu, /x closes it]],
 	
-	adminhelp = [[/enablestorm enables meteor storms
+	adminhelp = [[/enablestorm Enables meteor storms
 	/disablestorm Disables meteor storms
-	You can change the price of weapons, jailtimer, max gangsters, ect.
+	You can change the price of weapons, jailtime, max gangsters, etc.
 	To do this press F1 then scroll down and you will see all of the console commands
 	If you edit the init.lua file you can save the vars.
 	/jailpos sets the jailposition!
 	/setspawn <team> - Enter teamname Ex. police, mayor, gangster
 	/adminhelp toggles this menu, /x closes it]],
 	
-	mobhelp = [[As the mob boss, you decide what you want the other Gangsters to do
-	You get an Unarrest Stick which you can use to break people out of jail
-	/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line
-	Type /mobbosshelp toggles this menu, /x closes it]],
+	mobhelp = [[As the mob boss, you decide what you want the other Gangsters to do.
+	You get an Unarrest Stick which you can use to break people out of jail.
+	/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line.
+	Typing /mobbosshelp toggles this menu, /x closes it]],
 	
 	hints = 
-	--English hints:
+	-- English hints:
 	{"Roleplay according to the server rules!",
 	"You can be arrested for buying or owning an illegal weapon!",
 	"Type /sleep to fall asleep.",
@@ -298,7 +298,7 @@ rp_languages.english = {
 
 //Dutch bitches!
 rp_languages.dutch = {
-	-- admin things
+	-- Admin things
 	need_admin = "Je hebt administrator toegang nodig om %s te kunnen doen",
 	need_sadmin = "Je hebt superadmin toegang nodig om %s te kunnen doen",
 	no_jail_pos = "Er is geen gevangenis positie!",
@@ -308,7 +308,7 @@ rp_languages.dutch = {
 	get_mod = "Verkrijg DarkRP op garrysmod.org!",
 	mouse_wheel_to_scroll = "Gebruik je muiswiel om te scrollen",
 	
-	--money things:
+	-- Money things:
 	customer_price = "klantenprijs: ",
 	reset_money = "%s heeft iedereen zijn geld gereset!",
 	has_given = "%s heeft jou %s gegeven",
@@ -322,7 +322,7 @@ rp_languages.dutch = {
 	property_tax = "BTW over je eigendom! %s",
 	property_tax_cant_afford = "Je kon de belasting niet betalen, nu is je eigendom je ontnomen!",
 	
-	--Players
+	-- Players
 	wanted = "Gezocht!",
 	youre_arrested = "Je bent gearresteerd voor %d seconden!",
 	hes_arrested = "%s is gearresteerd voor %d seconden!",
@@ -341,7 +341,7 @@ rp_languages.dutch = {
 	wanted_expired = "%s wordt niet meer gezocht",
 	rpname_changed = "%s heeft zijn RPname veranderd naar: %s",
 	
-	--teams
+	-- Teams
 	need_to_be_before = "Je moet eerst een %s zijn voordat je een %s kan worden!",
 	need_to_make_vote = "Je moet eerst een vote maken om %s te kunnen worden!",
 	team_limit_reached = "Je kan geen %s worden omdat het limiet bereikt is.",
@@ -349,7 +349,7 @@ rp_languages.dutch = {
 	has_not_been_made_team = "%s is geen %s geworden!",
 	job_has_become = "%s is een %s geworden!",
 	
-	--disasters
+	-- Disasters
 	zombie_approaching = "PAS OP: er komen zombies aan!",
 	zombie_leaving = "De zombies vertrekken!",
 	zombie_spawn_not_exist = "Zombie Spawn %s bestaat niet.",
@@ -365,7 +365,7 @@ rp_languages.dutch = {
 	earthquake_report = "Aardbeving gemeten met een kracht van %sMw",
 	earthtremor_report = "Lichte aardbeving gemeten met een kracht van %sMw",
 	
-	--keys, vehicles and doors
+	-- Keys, vehicles and doors
 	keys_allowed_to_coown = "Jij mag mede-eigenaar zijn\n(Druk op reload met de keys of druk op F2 om mede-eigenaar te zijn\n",
 	keys_other_allowed = "%s mag mede-eigenaar zijn\n",
 	keys_allow_ownership = "(Druk op reload met de keys of druk op F2 om eigenaarschap toe te staan",
@@ -388,7 +388,7 @@ rp_languages.dutch = {
 	door_add_owners_unownable = "Je kan geen eigenaren toevoegen terwijl de deur geen eigenaren mag hebben!",
 	rp_addowner_already_owns_door = "%s is al (mede) eigenaar van deze deur!",
 	
-	-- talking
+	-- Talking
 	hear_noone = "Niemand hoort je %s!",
 	hear_everyone = "Iedereen kan je horen!",
 	hear_certain_persons = "Mensen die je horen %s: ",
@@ -400,7 +400,7 @@ rp_languages.dutch = {
 	request = "(112!)",
 	group = "(groep)",
 	
-	--Notifies
+	-- Notifies
 	disabled = "%s is uitgeschakeld! %s", 
 	limit = "Je hebt het %s limit bereikt!", 
 	have_to_wait = "Je moet %d seconden wachten voordat je weer %s kan doen!", 
@@ -422,10 +422,10 @@ rp_languages.dutch = {
 	cannot_drop_weapon = "Kan dit wapen niet laten vallen!",
 	team_switch = "Banen succesvol gewisseld!",
 	
-	--misc
+	-- Misc
 	could_not_find = "Kan %s niet vinden",
 	f3tovote = "Druk op F3 te stemmen",
-	listen_up = "Let op:", --In rp_tell
+	listen_up = "Let op:", -- In rp_tell and rp_tellall
 	nlr = "New Life Rule: Als je gedood wordt mag je je dood niet wreken of de dader arresteren.",
 	reset_settings = "Je hebt alle instellingen gereset.",
 	must_be_x = "Je moet eerst een %s zijn om een %s te kunnen worden.",
@@ -434,7 +434,7 @@ rp_languages.dutch = {
 	demoted = "%s is ontslagen!",
 	demoted_not = "%s is niet ontslagen",
 	demote_vote_started = "%s is een referendum gestart voor het ontslag van %s",
-	demote_vote_text = "Ontslagene:\n%s", --s is the reason here
+	demote_vote_text = "Ontslagene:\n%s", -- '%s' is the reason here
 	lockdown_started = "De mayor heeft een Lockdown gestart, blijf alstublieft binnen!",
 	lockdown_ended = "De lockdown is geëindigd!",
 	gunlicense_requested = "%s verzoekt een %s gun license",
@@ -442,31 +442,31 @@ rp_languages.dutch = {
 	gunlicense_denied = "%s heeft de gun license van %s afgewezen",
 	gunlicense_question_text = "%s een gun license geven?",
 	gunlicense_remove_vote_text = "%s heeft een referendum geplaatst voor het afnemen van de license van %s",
-	gunlicense_remove_vote_text2 = "gun license afnemen?:\n%s", --where %s is the reason
+	gunlicense_remove_vote_text2 = "gun license afnemen?:\n%s", -- Where %s is the reason
 	gunlicense_removed = "Gun license van %s is afgenomen!",
 	gunlicense_not_removed = "Gun license van %s is NIET afgenomen!",
 	vote_specify_reason = "Je moet een rede invoeren!",
 	vote_started = "Het referendum is geplaatst!",
 	vote_alone = "Je hebt het referendum gewonnen omdat je in je uppie zit.",
 	jail_punishment = "Straf omdat je hem gepeert bent! In de gevangenis voor: %d seconden!",
-	admin_only = "administrator only!", -- when doing /addjailpos
-	chief_or = "Chief of",-- when doing /addjailpos
+	admin_only = "Administrator only!", -- When doing /addjailpos
+	chief_or = "Chief of",-- When doing /addjailpos
 	
 	dead_in_jail = "Je bent nu dood totdat je uit de gevangenis mag!",
 	died_in_jail = "%s is in de gevangenis gestorven",
 	
-	--lottery
+	-- The lottery
 	lottery_started = "Er is een loterij! Doe mee voor %s!",
 	lottery_entered = "Je doet mee aan de loterij voor %s",
 	lottery_not_entered = "Je doet NIET mee aan de loterij!",
 	lottery_noone_entered = "Niemand doet mee aan de loterij!",
 	lottery_won = "%s heeft de loterij gewonnen! hij heeft %s gewonnen!",
 	
-	--hungermod 
+	-- Hungermod 
 	starving = "Uitgehongerd!",
 	
-	--F4menu 
-	--Tab 1
+	-- F4menu 
+	-- Tab 1
 	give_money = "Geef geld aan de persoon naar wie je kijkt",
 	drop_money = "laat geld vallen",
 	change_name = "Verander je RPName",
@@ -495,15 +495,15 @@ rp_languages.dutch = {
 	start_lottery = "Start a loterij",
 	give_license_lookingat = "Geef een gun license",
 	
-	--second tab
+	-- Second tab
 	job_name = "Naam: ",
 	job_description = "Beschrijving: " ,
 	job_weapons = "Wapens: ",
 	
-	--entities tab
+	-- Entities tab
 	buy_a = "Koop %s: %s",
 	
-	--licenseweaponstab
+	-- Licenseweaponstab
 	license_tab = [[Licentie wapens
 	
 	Tik de wapens aan waar mensen géén gun license voor nodig hebben
@@ -511,7 +511,7 @@ rp_languages.dutch = {
 	license_tab_other_weapons = "Andere wapens:",
 	
 	
-	--Help!
+	-- Help!
 	cophelp = [[Dingen die de politie moet weten:
 	Maak geen misbruik van je baan
 	Als je iemand arresteerd teleporteert hij naar de gevangenis
@@ -543,7 +543,7 @@ rp_languages.dutch = {
 	Typ /mobboss help om dit menu tevoorschijn te halen, /x om het te sluiten]],
 	
 	hints = 
-	--English hints:
+	-- Dutch hints:
 	{"Speel volgens de regels!",
 	"Je kan gearresteerd worden voor een illegaal wapen!",
 	"Zeg /sleep om te slapen.",
@@ -586,7 +586,7 @@ rp_languages.dutch = {
 
 	-- Danish Language by  WoRmS
 rp_languages.danish = {
-	-- admin things
+	-- Admin things
 	need_admin = "Du har brug for admin rettigheder for at kunne være i stand til at %s",
 	need_sadmin = "Du har brug for super admin rettigheder for at kunne være i stand til at %s",
 	no_jail_pos = "Ingen fængsel position",
@@ -596,7 +596,7 @@ rp_languages.danish = {
 	get_mod = "Få denne mod på garrysmod.org!",
 	mouse_wheel_to_scroll = "Brug musehjulet til at pladra",
 
-	--money things:
+	-- Money things:
 	customer_price = "Kunde pris: ",
 	reset_money = "%s har nulstille alle spillerens penge!",
 	has_given = "%s har givet dig %s",
@@ -610,7 +610,7 @@ rp_languages.danish = {
 	property_tax = "Ejendomsskat! %s",
 	property_tax_cant_afford = "Du kunne ikke betale skat! Din ejendom er blevet taget fra dig!",
 
-	--Players
+	-- Players
 	wanted = "Eftersøgt af politiet!",
 	youre_arrested = "Du er blevet arresteret for %d sekunder!",
 	hes_arrested = "%s er blevet arresteret for %d sekunder!",
@@ -629,7 +629,7 @@ rp_languages.danish = {
 	wanted_expired = "%s er ikke længere eftersøgt af politiet.",
 	rpname_changed = "%s har ændret hans RPnavn til: %s",
 
-	--teams
+	-- Teams
 	need_to_be_before = "Du skal være %s første med henblik på at kunne blive %s",
 	need_to_make_vote = "Du er nødt til at foretage en afstemning om at blive en %s!",
 	team_limit_reached = "Kan ikke blive %s efter som grænsen er nået",
@@ -637,7 +637,7 @@ rp_languages.danish = {
 	has_not_been_made_team = "%s er ikke blevet gjort %s!",
 	job_has_become = "%s blevet gjort til en %s!",
 
-	--disasters
+	-- Disasters
 	zombie_approaching = "ADVARSEL: Zombierne nærmer sig!",
 	zombie_leaving = "Zombierne forlader.",
 	zombie_spawn_not_exist = "Zombie Spawn %s eksisterer ikke.",
@@ -653,7 +653,7 @@ rp_languages.danish = {
 	earthquake_report = "Jordskælv rapporteret størrelsesorden %SMW",
 	earthtremor_report = "Jordskælv rapporteret størrelsesorden %SMW",
 
-	--keys, vehicles and doors
+	-- Keys, vehicles and doors
 	keys_allowed_to_coown = "Du har lov til at co-ejer denne \n (Tryk på Genlad med nøgler eller trykke på F2 for at co-eget) \n",
 	keys_other_allowed = "%s får lov til at co-ejer dette \n",
 	keys_allow_ownership = "(Tryk på Genlad med nøgler eller trykke på F2 for at give ejerskab)",
@@ -676,7 +676,7 @@ rp_languages.danish = {
 	door_add_owners_unownable = "Du kan ikke tilføje ejere, mens Door er ikke-ownable!",
 	rp_addowner_already_owns_door = " %s allerede ejer (eller allerede er tilladt at eje) denne dør!",
 
-	-- talking
+	-- Talking
 	hear_noone = "Ingen kan høre dig %s!",
 	hear_everyone = "Alle kan høre dig!",
 	hear_certain_persons = "Spillere, der kan høre dig %s:",
@@ -687,7 +687,7 @@ rp_languages.danish = {
 	request = "(Anmod!)",
 	group = "(gruppe)",
 
-	--Notifies
+	-- Notifies
 	disabled = "%s er slået fra !%s",
 	limit = "Du har nået %s grænse!",
 	have_to_wait = "Du er nødt til at vente endnu %d sekunder, før du kan bruger %s!",
@@ -709,10 +709,10 @@ rp_languages.danish = {
 	cannot_drop_weapon = "Kan ikke smide dette våben!!",
 	team_switch = "Jobskift fuldført!",
 
-	--misc
+	-- Misc
 	could_not_find = "Kunne ikke finde %s",
 	f3tovote = "Tryk på F3 for at stemme",
-	listen_up = "Hør her:", --In rp_tell
+	listen_up = "Hør her:", --In rp_tell and rp_tellall
 	nlr = "Nyt Liv Regel: ikke hævn ved at anholdele/Dræbe.",
 	reset_settings = "Du har nulstille alle indstillinger!",
 	must_be_x = "You must be a %s in order to be able to %s.",
@@ -721,7 +721,7 @@ rp_languages.danish = {
 	demoted = "%s er blevet degraderet",
 	demoted_not = "%s er ikke blevet degraderet",
 	demote_vote_started = "%s har startet en afstemning for degraderingen af %s",
-	demote_vote_text = "Degradering kandidat:\n%s", --s is the reason here
+	demote_vote_text = "Degradering kandidat:\n%s", -- '%s' is the reason here
 	lockdown_started = "Borgmesteren har indledt en nedlåsning, du bedes du vende tilbage til dit hjem!!",
 	lockdown_ended = "nedlåsning er overstået",
 	gunlicense_requested = "%s har anmodet %s en pistol licens",
@@ -729,31 +729,31 @@ rp_languages.danish = {
 	gunlicense_denied = "%s har nægtet %s en pistol licens",
 	gunlicense_question_text = "Giv %s en pistol licens?",
 	gunlicense_remove_vote_text = "%s har startet en afstemning for pistol licens fjernelse af %s",
-	gunlicense_remove_vote_text2 = "Tilbagekald våben licens:\n%s", --where %s is the reason
+	gunlicense_remove_vote_text2 = "Tilbagekald våben licens:\n%s", -- Where %s is the reason
 	gunlicense_removed = "%s's licens er blivet fjernet!",
 	gunlicense_not_removed = "%s's licens er ikke blevet fjernet!!",
 	vote_specify_reason = "Du skal angive en grund!",
 	vote_started = "Afstemningen er skabt",
 	vote_alone = "Du har vundet afstemningen, da du er alene i serveren.",
 	jail_punishment = "straf for at forlade serveren! fængslet for:%d sekunder.",
-	admin_only = "admin kun!!", -- when doing /addjailpos
-	chief_or = "Chief eller",-- when doing /addjailpos
+	admin_only = "Admin kun!!", -- When doing /addjailpos
+	chief_or = "Chief eller",-- When doing /addjailpos
 
 	dead_in_jail = "Du nu er døde, indtil din fængsel tid er forbi!",
 	died_in_jail = "%s er døde i fængsel!!",
 
-	--lottery
+	-- Lottery
 	lottery_started = "Der er et lotteri! Deltage for %s",
 	lottery_entered = "Du har indtastet i lotteriet for %s",
 	lottery_not_entered = "%s deltog ikke i lotteriet",
 	lottery_noone_entered = "Ingen har deltaget i lotteriet",
 	lottery_won = "%s har vundet i lotteriet! Han har vundet %s",
 
-	--hungermod
+	-- Hungermod
 	starving = "Sulter!",
 
-	--F4menu
-	--Tab 1
+	-- F4menu
+	-- Tab 1
 	give_money = "Giv penge på den du kigger på",
 	drop_money = "Smid penge",
 	change_name = "Skift dit DarkRP navn",
@@ -781,15 +781,15 @@ rp_languages.danish = {
 	start_lottery = "Start et lotteri",
 	give_license_lookingat = "Giv <Kiggerpå> en pistol licens",
 
-	--second tab
+	-- Second tab
 	job_name = "Navn: ",
 	job_description = "Beskrivelse: " ,
 	job_weapons = "våben: ",
 
-	--entities tab
+	-- Entities tab
 	buy_a = "Køb %s: %s",
 
-	--licenseweaponstab
+	-- License weapons tab
 	license_tab = [[License våben
 
 	Sæt kryds ud for våben folk bør være i stand til at komme uden en licens!
@@ -797,7 +797,7 @@ rp_languages.danish = {
 	license_tab_other_weapons = "Andre våben:",
 
 
-	--Help!
+	-- Help!
 	cophelp = [[Ting, Betjente skal vide
 	Vær venlig ikke at misbruge dit job
 	Når du anholde en person, de er automatisk transporteret til fængsel.
@@ -825,14 +825,14 @@ rp_languages.danish = {
 	Skriv /adminhelp åbner/lukker denne menu, /x lukker den]],
 
 	mobhelp = [[Som mafiabossen, beslutter du, hvad du ønsker, at andre gangstere skal gøre.
-	Du får en Unarrest Stick, som du kan bruge til at bryde folk ud af fængsel
-	/agenda <Besked> (Sætter Gangsters 'dagsorden. Brug / / for at gå til den næste linje
-	Type /mobbosshelp toggles this menu, /x closes it]],
+	Du får en Unarrest Stick, som du kan bruge til at bryde folk ud af fængsel.
+	/agenda <Besked> (Sætter Gangsters 'dagsorden. Brug / / for at gå til den næste linje.
+	Typing /mobbosshelp toggles this menu, /x closes it]],
 
 
 
 	hints =
-	--English hints:
+	-- Danish hints:
 	{"Rolespil ifølge Servern's Regler!",
 	"du kan blive anholdt for at købe eller eje en ulovlig våben!",
 	"Type /sleep for at falde i søvn.",
@@ -876,7 +876,7 @@ rp_languages.danish = {
 
 // Swedish language, by Donkie
 rp_languages.swedish = {
-	-- admin things
+	-- Admin things
 	need_admin = "Du måste vara admin för att göra %s",
 	need_sadmin = "Du måste vara superadmin för att göra %s",
 	no_jail_pos = "Finns ingen jail position",
@@ -886,7 +886,7 @@ rp_languages.swedish = {
 	get_mod = "Hämta modden på garrysmod.org!",
 	mouse_wheel_to_scroll = "Använd mushjulet för att skrolla",
 	
-	--money things:
+	-- Money things:
 	customer_price = "Kundens pris: ",
 	reset_money = "%s har resetat alla spelares pengar!",
 	has_given = "%s har gett dig %s",
@@ -900,7 +900,7 @@ rp_languages.swedish = {
 	property_tax = "Hus/Lägenhet räkning! %s",
 	property_tax_cant_afford = "Du kunde inte betala räkningarna! Ditt hus/lägenhet har blivit tagen!",
 	
-	--Players
+	-- Players
 	wanted = "Efterlyst av polisen!",
 	youre_arrested = "%s har blivit arresterad i %d sekunder!",
 	hes_arrested = "%s har blivit arresterad i %d sekunder!",
@@ -919,7 +919,7 @@ rp_languages.swedish = {
 	wanted_expired = "%s är inte längre efterlyst av polisen.",
 	rpname_changed = "%s har ändrat sitt RPNamn till: %s",
 	
-	--teams
+	-- Teams
 	need_to_be_before = "Du måste vara %s först för att kunna bli %s",
 	need_to_make_vote = "Du måste rösta för att kunna bli en %s!",
 	team_limit_reached = "Du kan inte bli %s för gränsen är redan nådd.",
@@ -927,7 +927,7 @@ rp_languages.swedish = {
 	has_not_been_made_team = "%s har inte blivit %s!",
 	job_has_become = "%s har blivit %s!",
 	
-	--disasters
+	-- Disasters
 	zombie_approaching = "Varning: Zombies har kommit!",
 	zombie_leaving = "Zombies börjar lämna.",
 	zombie_spawn_not_exist = "Zombie spawnen %s finns inte.",
@@ -943,7 +943,7 @@ rp_languages.swedish = {
 	earthquake_report = "Jordbävningen blev en jordbävning på skala %sMw",
 	earthtremor_report = "Jordbävningen blev en jordbävning på skala %sMw",
 	
-	--keys, vehicles and doors
+	-- Keys, vehicles and doors
 	keys_allowed_to_coown = "Du är tillåten att co-äga den här dörren.\n(Tryck reload/ladda knappen eller F2 för att öppna menyn)\n",
 	keys_other_allowed = "%s är tillåten att co-äga den här.\n",
 	keys_allow_ownership = "(Tryck reload/ladda knappen eller F2 för att godkänna co-ägande)",
@@ -966,7 +966,7 @@ rp_languages.swedish = {
 	door_add_owners_unownable = "Du kan inte lägga till ägare om dörren är tillåten för alla!",
 	rp_addowner_already_owns_door = "%s äger redan (eller är redan tillåten att äga) den här dörren!",
 	
-	-- talking
+	-- Talking
 	hear_noone = "Ingen kan höra dig %s!",
 	hear_everyone = "Alla kan höra dig!",
 	hear_certain_persons = "Spelare som kan höra dig %s: ",
@@ -978,7 +978,7 @@ rp_languages.swedish = {
 	request = "(Begäran!)",
 	group = "(grupp)",
 	
-	--Notifies
+	-- Notifies
 	disabled = "%s är avaktiverad! %s", 
 	limit = "Du har nått %s gräns!", 
 	have_to_wait = "Du måste vänta yttligare %d sekunder innan du kan använda %s!", 
@@ -1000,10 +1000,10 @@ rp_languages.swedish = {
 	cannot_drop_weapon = "Du kan inte släppa det här vapnet!",
 	team_switch = "Jobbbyte utfört!",
 	
-	--misc
+	-- Misc
 	could_not_find = "Kunde inte hitta %s",
 	f3tovote = "Tryck F3 för att rösta",
-	listen_up = "Lyssna:", --In rp_tell
+	listen_up = "Lyssna:", -- In rp_tell and rp_tellall
 	nlr = "New Life Rule: Gör inte ett hämnings mord.",
 	reset_settings = "Du har resettat alla ändringar!",
 	must_be_x = "Du måste vara en %s för att kunna göra %s.",
@@ -1012,7 +1012,7 @@ rp_languages.swedish = {
 	demoted = "%s har blivit degraderad.",
 	demoted_not = "%s har inte blivit degraderad.",
 	demote_vote_started = "%s har gjort en röst för at degradera %s",
-	demote_vote_text = "Degraderings röst:\n%s", --s is the reason here
+	demote_vote_text = "Degraderings röst:\n%s", -- '%s' is the reason here
 	lockdown_started = "Borgmästaren har startat en lockdown, gå tillbaka till ditt hem.",
 	lockdown_ended = "Lockdownen har upphört.",
 	gunlicense_requested = "%s har begärt %s en vapen license",
@@ -1020,31 +1020,31 @@ rp_languages.swedish = {
 	gunlicense_denied = "%s har inte beviljat %s en vapen license",
 	gunlicense_question_text = "Bevilja %s en vapen license?",
 	gunlicense_remove_vote_text = "%s har startat en röstning för att ta bort %s vapen license",
-	gunlicense_remove_vote_text2 = "Tabort vapen license:\n%s", --where %s is the reason
+	gunlicense_remove_vote_text2 = "Tabort vapen license:\n%s", -- Where %s is the reason
 	gunlicense_removed = "%s's license har blivit borttagen!",
 	gunlicense_not_removed = "%s's license har inte blivit borttagen!",
 	vote_specify_reason = "Du måste ge en anledning!",
 	vote_started = "Rösten är skapad.",
 	vote_alone = "Du har vunnit rösten för du är ensam på servern.",
 	jail_punishment = "Bestraffning för att du har lämnat servern! Fängslad för: %d seconds.",
-	admin_only = "admin endast!", -- when doing /addjailpos
-	chief_or = "Chief eller",-- when doing /addjailpos
+	admin_only = "Admin endast!", -- When doing /addjailpos
+	chief_or = "Chief eller",-- When doing /addjailpos
 	
 	dead_in_jail = "Du är nu död i fängelse tills din tid är uppe!",
 	died_in_jail = "%s har dött i fängelset!",
 	
-	--lottery
+	-- Lottery
 	lottery_started = "Lottning! Följ med för bara %s",
 	lottery_entered = "Du har gått med i en lottning för %s",
 	lottery_not_entered = "%s har inte gått med i lottningen",
 	lottery_noone_entered = "Ingen har gått med i lottningen",
 	lottery_won = "%s har vunnit lottningen! Han vann %s",
 	
-	--hungermod 
+	-- Hungermod 
 	starving = "Svälter!",
 	
-	--F4menu 
-	--Tab 1
+	-- F4menu 
+	-- Tab 1
 	give_money = "Ge pengar till den du tittar på.",
 	drop_money = "Släpp pengar.",
 	change_name = "Ändra ditt DarkRP namn.",
@@ -1073,15 +1073,15 @@ rp_languages.swedish = {
 	start_lottery = "Starta en lottning",
 	give_license_lookingat = "Ge <Tittar på> en vapen license",
 	
-	--second tab
+	-- Second tab
 	job_name = "Namn: ",
 	job_description = "Description: " ,
 	job_weapons = "Vapen: ",
 	
-	--entities tab
+	-- Entities tab
 	buy_a = "Köp %s: %s",
 	
-	--licenseweaponstab
+	-- License weapons tab
 	license_tab = [[License vapen
 	
 	"Checka" vapnen som man kan plocka upp UTAN att ha en license!
@@ -1089,7 +1089,7 @@ rp_languages.swedish = {
 	license_tab_other_weapons = "Andra vapen:",
 	
 	
-	--Help!
+	-- Help!
 	cophelp = [[Saker polisen borde veta:
 	"Abusa" inte ditt jobb.
 	När du arresterar någon är dom automatiskt teleporterade till fängelset.
@@ -1124,7 +1124,7 @@ rp_languages.swedish = {
 
 	
 	hints = 
-	--English hints:
+	-- Swedish hints:
 	{"Rollspel enligt servern's regler.",
 	"Du kan bli arresterad för att ha köpt/köper ett olagligt vapen!",
 	"Skriv /sleep för att somna.",
@@ -1175,5 +1175,5 @@ if not ConVarExists("rp_language") then
 end
 LANGUAGE = rp_languages[GetConVarString("rp_language")]
 if not LANGUAGE then
-	LANGUAGE = rp_languages["english"]--now hope people don't remove the english language ._.
+	LANGUAGE = rp_languages["english"] -- Now we hope people don't remove the english language ._.
 end

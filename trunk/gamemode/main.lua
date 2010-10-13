@@ -360,7 +360,7 @@ local function DropWeapon(ply)
 			if ammo <= clip then
 				ammohax = true
 			end
-			ply:DropWeapon(ent) -- drop it so the model isn't the viewmodel
+			ply:DropWeapon(ent) -- Drop it so the model isn't the viewmodel
 			local weapon = ents.Create("spawned_weapon")
 			local model = (ent:GetModel() == "models/weapons/v_physcannon.mdl" and "models/weapons/w_physics.mdl") or ent:GetModel()
 			
@@ -439,8 +439,8 @@ local function SearchWarrant(ply, args)
 			reason = reason .. " " .. tableargs[i]
 		end 
 		reason = string.sub(reason, 2)
-		if string.len(reason) > 22 then
-			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/warrant", "<23 chars"))
+		if string.len(reason) > 25 then
+			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/warrant", "<25 chars"))
 			return "" 
 		end
 		local p = FindPlayer(tableargs[1])
@@ -460,11 +460,11 @@ local function SearchWarrant(ply, args)
 				end
 				-- If we found the mayor
 				if m ~= nil then
-					-- request a search warrent for player "p"
+					-- Request a search warrent for player "p"
 					ques:Create(string.format(LANGUAGE.warrant_request.."\nReason: "..reason, ply:Nick(), p:Nick()), p:EntIndex() .. "warrant", m, 40, FinishWarrant, ply, p, reason)
 					Notify(ply, 1, 4, string.format(LANGUAGE.warrant_request2, m:Nick()))
 				else
-					-- there is no mayor, CPs can set warrants.
+					-- There is no mayor, CPs can set warrants.
 					SetWarrant(ply, p, reason)
 				end
 			end
@@ -514,6 +514,7 @@ local function PlayerWanted(ply, args)
 	return ""
 end
 AddChatCommand("/wanted", PlayerWanted)
+AddChatCommand("/wantid", PlayerWanted) -- Inspired by the /warrent for people not spelling write. You can rewrite so you can want like this: STEAM_0:0:29257121 stupid kid 
 
 local function PlayerUnWanted(ply, args)
 	local t = ply:Team()
@@ -534,6 +535,7 @@ local function PlayerUnWanted(ply, args)
 	return ""
 end
 AddChatCommand("/unwanted", PlayerUnWanted)
+AddChatCommand("/unwantid", PlayerUnWanted) -- Can also do like /wantid but for now it's also for grammar mistakes made by people.
 
 
 /*---------------------------------------------------------

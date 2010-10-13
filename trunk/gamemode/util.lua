@@ -65,7 +65,7 @@ function FindPlayer(info)
 	local pls = player.GetAll()
 
 	-- Find by Index Number (status in console)
-	for k = 1, #pls do -- proven to be faster than pairs loop.
+	for k = 1, #pls do -- Proven to be faster than pairs loop.
 		local v = pls[k]
 		if tonumber(info) == v:UserID() then
 			return v

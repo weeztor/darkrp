@@ -50,7 +50,7 @@ hook.Add("CalcMainActivity", "darkrp_animations", function(ply, velocity) -- Usi
 		ply.ThrewPoop = nil
 	end
 	
-	-- saying hi to a player
+	-- Saying hi/hello to a player
 	if not ply.SaidHi and ValidEntity(Weapon) and Weapon:GetClass() == "weapon_physgun" and ply:KeyDown(IN_ATTACK) then
 		local ent = ply:GetEyeTrace().Entity
 		if ValidEntity(ent) and ent:IsPlayer() then

@@ -37,7 +37,7 @@ function DB.Query(query, callback)
 	end
 	sql.Begin()
 	local Result = sql.Query(query)
-	sql.Commit() -- otherwise it won't save, don't ask me why
+	sql.Commit() -- Otherwise it won't save, don't ask me why
 	if callback then callback(Result) end
 	return Result
 end
@@ -370,7 +370,7 @@ end
 local function FixDarkRPTspawnsTable() -- SQLite only
 	local FixTable = sql.Query("SELECT * FROM darkrp_tspawns;")
 	if not FixTable or (FixTable and FixTable[1] and not FixTable[1].id) then -- The old tspawns table didn't have an 'id' column, this checks if the table is out of date
-		sql.Query("DROP TABLE IF EXISTS darkrp_tspawns;") -- remove the table and remake it
+		sql.Query("DROP TABLE IF EXISTS darkrp_tspawns;") -- Remove the table and remake it
 		sql.Query("CREATE TABLE IF NOT EXISTS darkrp_tspawns(id INTEGER NOT NULL, map TEXT NOT NULL, team INTEGER NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL, PRIMARY KEY(id));")
 		for k,v in pairs(FixTable or {}) do -- Put back the old data in the new format so the end user will not notice any changes, if there was nothing in the old table then loop through nothing
 			sql.Query("INSERT INTO darkrp_tspawns VALUES(NULL, "..sql.SQLStr(v.map)..", "..v.team..", "..v.x..", "..v.y..", "..v.z..");")
@@ -402,7 +402,7 @@ function DB.StoreTeamSpawnPos(t, pos)
 				DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end) end)
 			print(string.format(LANGUAGE.created_spawnpos, team.GetName(t)))
 		else
-			DB.RemoveTeamSpawnPos(t, function() -- remove everything and create new
+			DB.RemoveTeamSpawnPos(t, function() -- Remove everything and create new
 				DB.Query("INSERT INTO darkrp_tspawns VALUES(".. ID .. ", ".. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");", function()
 					DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end) end)
 			end)
@@ -412,7 +412,7 @@ function DB.StoreTeamSpawnPos(t, pos)
 end
 
 function DB.AddTeamSpawnPos(t, pos)
-	if not CONNECTED_TO_MYSQL then FixDarkRPTspawnsTable() end--Check if the server doesn't use an out of date version of this table
+	if not CONNECTED_TO_MYSQL then FixDarkRPTspawnsTable() end -- Check if the server doesn't use an out of date version of this table
 	local map = string.lower(game.GetMap())
 	local ID = 0
 	local found = false
@@ -666,7 +666,7 @@ function DB.LoadConsoles()
 				console:Spawn()
 				console.ID = v.id
 			end
-		else--If there are no custom positions in the database, use the presets.
+		else -- If there are no custom positions in the database, use the presets.
 			for k,v in pairs(RP_ConsolePositions) do
 				if v[1] == map then
 					local console = ents.Create("darkrp_console")

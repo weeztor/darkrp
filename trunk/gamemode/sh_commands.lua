@@ -58,7 +58,7 @@ AddHelpCategory(HELP_CATEGORY_CHATCMD, "Chat Commands")
 AddHelpCategory(HELP_CATEGORY_CONCMD, "Console Commands")
 AddHelpCategory(HELP_CATEGORY_ADMINTOGGLE, "Admin Toggle Commands (1 or 0!)")
 AddHelpCategory(HELP_CATEGORY_ADMINCMD, "Admin Console Commands")
-AddHelpCategory(HELP_CATEGORY_ZOMBIE, "Zombie chat commands")
+AddHelpCategory(HELP_CATEGORY_ZOMBIE, "Zombie Chat Commands")
 
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showhelp - Toggle help menu (bind this to F1 if you haven't already)")
 AddHelpLabel(-1, HELP_CATEGORY_CONCMD, "gm_showteam - Show door menu")
@@ -71,13 +71,13 @@ AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/removezombie index (removes a zombie sp
 AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/showzombie (shows where the zombie spawns are)")
 AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/enablezombie (enables zombiemode)")
 AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/disablezombie (disables zombiemode)")
-AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/enablestorm enables meteor storms")
+AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/enablestorm (enables meteor storms)")
 
 -----------------------------------------------------------
 -- TOGGLE COMMANDS -- 
 -----------------------------------------------------------
 -- Usage of AddToggleCommand
--- (command name,  cfg variable name, Default value, superadmin only)
+-- (Command name,  Cfg variable name, Default value, Superadmin only)
 local DefaultWeapons = {"weapon_physcannon", "weapon_physgun","weapon_crowbar","weapon_stunstick","weapon_pistol","weapon_357","weapon_smg1","weapon_shotgun","weapon_crossbow","weapon_ar2","weapon_bugbait", "weapon_rpg", "gmod_camera", "gmod_tool"}
 local Allowedweps = {"weapon_physcannon", "weapon_physgun", "weapon_bugbait", "gmod_tool", "gmod_camera"}
 for k,v in pairs(DefaultWeapons) do
@@ -282,6 +282,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_npcarrest - Enable/disable arres
 
 AddToggleCommand("rp_3dvoice", "3dvoice", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_3dvoice - Enable/disable 3DVoice is enabled")
+
+AddToggleCommand("rp_voiceradius_dynamic", "dynamicvoice", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_voiceradius_dynamic - Enable/disable whether only people in the same room as you can hear your mic.")
 
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
