@@ -3,7 +3,7 @@ GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome 
 
 CUR = "$"
 
---Checking if counterstrike is installed correctly
+-- Checking if counterstrike is installed correctly
 local foundCSS = false
 for k,v in pairs(GetMountedContent()) do
 	if v == "cstrike" then
@@ -64,7 +64,7 @@ util.PrecacheSound("earthquake.mp3")
 DB = {}
 
 -- sv_alltalk must be 0
--- note, everyone will STILL hear everyone UNLESS rp_voiceradius is 1!!!
+-- Note, everyone will STILL hear everyone UNLESS rp_voiceradius is 1!!!
 -- This will fix the rp_voiceradius not working
 game.ConsoleCommand("sv_alltalk 0\n")
 
@@ -88,7 +88,7 @@ include("main.lua")
 include("sh_animations.lua")
 
 
---Falco's prop protection
+-- Falco's prop protection
 local BlockedModelsExist = sql.QueryValue("SELECT COUNT(*) FROM FPP_BLOCKEDMODELS;") ~= false
 if not BlockedModelsExist then
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKEDMODELS('model' TEXT NOT NULL PRIMARY KEY);")

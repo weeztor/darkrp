@@ -179,7 +179,7 @@ if jail_positions then
 	table.insert(jail_positions, {"rp_townsend_v1p", -12723.4492, 4453.4521, -0.6875})
 	table.insert(jail_positions, {"rp_townsend_v1p", -12943.6230, 4471.7676, -0.6875})
 	table.insert(jail_positions, {"rp_townsend_v1p", -13164.2646, 4443.9443, -0.6875})
-	--table.insert(jail_positions, {"", , , })
+	-- table.insert(jail_positions, {"", , , })
 end
 
 
@@ -214,8 +214,8 @@ zombie_spawn_positions = nil
 
 -- Zombie Spawn Positions
 if zombie_spawn_positions then
-	--table.insert(zombie_spawn_positions, {"rp_hometown2000", 0.0, 0.0, 0.0})
-	--table.insert(zombie_spawn_positions, {"rp_hometown2000", 1.0, 2.0, 3.0})
+	-- table.insert(zombie_spawn_positions, {"rp_hometown2000", 0.0, 0.0, 0.0})
+	-- table.insert(zombie_spawn_positions, {"rp_hometown2000", 1.0, 2.0, 3.0})
 	-- etc
 end
 

@@ -10,7 +10,7 @@ local function ccDoVote(ply, cmd, args)
 	ply.VotesVoted = ply.VotesVoted or {}
 	
 	if ply:GetTable().VotesVoted[args[1]] then
-		Notify(ply, 1, 4, "You can not vote!")
+		Notify(ply, 1, 4, "You cannot vote!")
 		return
 	end
 	ply:GetTable().VotesVoted[args[1]] = true
@@ -40,7 +40,7 @@ function vote:Create(question, voteid, ent, delay, callback, special)
 		return
 	end 
 	
-	-- If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
+	-- If the player has never voted for anything then he doesn't have a table of things he has voted for. So create it.
 	if not ent:GetTable().VotesVoted then
 		ent:GetTable().VotesVoted = {}
 	end
@@ -110,7 +110,7 @@ function vote.HandleVoteEnd(id, OnePlayer)
 	Votes[id] = nil
 end
 
---Eusion's vote handler; note this is not related to DarkRP votes, the system is different. Please report any bugs; I haven't tested extensively.
+-- Eusion's vote handler; note this is not related to DarkRP votes, the system is different. Please report any bugs; I haven't tested extensively.
 local Trades = {}
 function vote:Trade(id, client, recipient, trade)
 	Trades[id] = {["client"] = client, ["recipient"] = recipient, ["votes"] = 0, ["trade"] = trade}
@@ -133,17 +133,17 @@ function HandleTrade(id)
 		rf:AddPlayer(Trades[id].client)
 		rf:AddPlayer(Trades[id].recipient)
 		umsg.Start("darkrp_trade", rf)
-			umsg.Entity(Trades[id].client) --Client making the trade
-			umsg.Entity(Trades[id].recipient) --Recipient recieving the request
-			umsg.Entity(Trades[id].trade) --The entity being traded
+			umsg.Entity(Trades[id].client) -- Client making the trade
+			umsg.Entity(Trades[id].recipient) -- Recipient recieving the request
+			umsg.Entity(Trades[id].trade) -- The entity being traded
 			umsg.Short(id) -- The trade ID so the trade can be killed client-side.
 		umsg.End()
-		--Empty the table to make sure the vote can't be repeated (extra security).
+		-- Empty the table to make sure the vote can't be repeated (extra security).
 		Trades[id] = {}
 		table.remove(Trades, id)
 	else
 		Notify(Trades[id].client, 1, 4, "Recipient declined this trade request.")
-		--Empty the table to make sure the vote can't be repeated (extra security).
+		-- Empty the table to make sure the vote can't be repeated (extra security).
 		Trades[id] = {}
 		table.remove(Trades, id)
 	end

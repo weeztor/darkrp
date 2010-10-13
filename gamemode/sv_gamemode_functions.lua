@@ -108,12 +108,12 @@ function GM:OnNPCKilled(victim, ent, weapon)
 	if ent then
 		if ent:IsVehicle() and ent:GetDriver():IsPlayer() then ent = ent:GetDriver() end
 
-		-- if it wasn't a player directly, find out who owns the prop that did the killing
+		-- If it wasn't a player directly, find out who owns the prop that did the killing
 		if not ent:IsPlayer() then
 			ent = Player(ent.SID)
 		end
 
-		-- if we know by now who killed the NPC, pay them.
+		-- If we know by now who killed the NPC, pay them.
 		if ValidEntity(ent) and GetConVarNumber("npckillpay") > 0 then
 			ent:AddMoney(GetConVarNumber("npckillpay"))
 			Notify(ent, 1, 4, string.format(LANGUAGE.npc_killpay, CUR .. GetConVarNumber("npckillpay")))
@@ -131,8 +131,8 @@ function GM:KeyPress(ply, code)
 		trace.filter = ply
 		local tr = util.TraceLine(trace)
 		
-		--Begin trading server-side (Although this appears to be unstable, don't worry, I've planned the system out, I've just not implemented the update completely).
-		--Note: Uncomplete; Please leave for Eusion to complete :).
+		-- Begin trading server-side (Although this appears to be unstable, don't worry, I've planned the system out, I've just not implemented the update completely).
+		-- Note: Uncomplete; Please leave for Eusion to complete. :)
 		if ValidEntity(tr.Entity) and tr.Entity:IsPlayer() then
 			ply.Trading = nil
 			local recipient = tr.Entity
@@ -183,7 +183,7 @@ concommand.Add("rp_killtrade", function(ply, cmd, args)
 		rf:AddPlayer(client)
 		rf:AddPlayer(recipient)
 		umsg.Start("darkrp_killtrade", rf)
-			umsg.Entity(ply) --Send the player who declined.
+			umsg.Entity(ply) -- Send the player who declined.
 		umsg.End()
 		Trades[id] = {}
 		table.remove(Trades, id)
@@ -340,11 +340,11 @@ function GM:PlayerDeath(ply, weapon, killer)
 			killer.kills = 1
 			timer.Simple(GetConVarNumber("dmgracetime"), killer.ResetDMCounter, killer)
 		else
-			-- if this player is going over their limit, kick their ass
+			-- If this player is going over their limit, kick their ass
 			if killer.kills + 1 > GetConVarNumber("dmmaxkills") then
 				game.ConsoleCommand("kickid " .. killer:UserID() .. " Auto-kicked. Excessive Deathmatching.\n")
 			else
-				-- killed another player
+				-- Killed another player
 				killer.kills = killer.kills + 1
 			end
 		end
@@ -519,7 +519,7 @@ function GM:PlayerSelectSpawn(ply)
 		for i = 40, 300, 15 do
 			if IsEmpty(POS + Vector(i, 0, 0)) then
 				POS = POS + Vector(i, 0, 0)
-				--Yeah I found a nice position to put the player in!
+				-- Yeah I found a nice position to put the player in!
 				found = true
 				break
 			end
@@ -546,7 +546,7 @@ function GM:PlayerSelectSpawn(ply)
 			for i = 40, 300, 15 do
 				if IsEmpty(POS + Vector(-i, 0, 0)) then
 					POS = POS + Vector(-i, 0, 0)
-					--Yeah I found a nice position to put the player in!
+					-- Yeah I found a nice position to put the player in!
 					found = true
 					break
 				end
@@ -571,7 +571,7 @@ function GM:PlayerSpawn(ply)
 	
 	SendUserMessage("DarkRPEffects", ply, "deathPOV", "0") -- No checks to prevent bugs
 	
-	--Kill any colormod
+	-- Kill any colormod
 	local RP = RecipientFilter()
 	RP:RemoveAllPlayers()
 	RP:AddPlayer(ply)
@@ -828,7 +828,7 @@ function GM:GetFallDamage( ply, flFallSpeed )
 end
 
 local otherhooks = {}
-function GM:PlayerSay(ply, text, Global)--We will make the old hooks run AFTER DarkRP's playersay has been run.
+function GM:PlayerSay(ply, text, Global) -- We will make the old hooks run AFTER DarkRP's playersay has been run.
 	local text2 = (Global and "" or "/g ") .. text
 	local callback
 	text2, callback, DoSayFunc = RP_PlayerChat(ply, text2)

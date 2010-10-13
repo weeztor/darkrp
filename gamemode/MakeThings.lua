@@ -1,7 +1,7 @@
 RPExtraTeams = {}
 function AddExtraTeam( Name, color, model, Description, Weapons, command, maximum_amount_of_this_class, Salary, admin, Vote, Haslicense, NeedToChangeFrom)
 	if not Name or not color or not model or not Description or not Weapons or not command or not maximum_amount_of_this_class or not Salary or not admin or Vote == nil then
-		local text = "One of the custom teams is wrongly made! Attempt to give name of the wrongly made team!(if it's nil then I failed):\n" .. tostring(Name)
+		local text = "One of the custom teams is wrongly made! Attempting to give name of the wrongly made team!(if it's nil then I failed):\n" .. tostring(Name)
 		print(text)
 		hook.Add("PlayerSpawn", "TeamError", function(ply)
 			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end
@@ -69,7 +69,7 @@ function AddCustomVehicle(Name_of_vehicle, model, price, Jobs_that_can_buy_it)
 		if string.lower(k) == string.lower(Name_of_vehicle) then found = true break end
 	end
 	if not found and SERVER then
-		warn("vehicle not found!")
+		warn("Vehicle not found!")
 		return
 	end
 	table.insert(CustomVehicles, {name = Name_of_vehicle, model = model, price = price, allowed = Jobs_that_can_buy_it})

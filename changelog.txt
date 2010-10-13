@@ -1,4 +1,5 @@
 DarkRP 2.4.1 SVN
+[CHANGE Drakehawke] Fixed the default GMod admin cleanup from unowning/resetting doors.
 [ADD Drakehawke] Dynamic mic chat - if enabled (rp_voiceradius_dynamic), only players in the same room as you can hear your mic (rp_voiceradius must be 1).
 [ADD Drakehawke] AFK module
 [ADD] Group ownable doors
