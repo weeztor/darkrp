@@ -1,12 +1,17 @@
 -- Kicking
 local function Kick(ply, cmd, args)
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "Kick") then FAdmin.Messages.SendMessage(ply, 5, "No access!")  return end
-	--start cancel update execute
+	
 	local targets = FAdmin.FindPlayer(args[1])
 	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
+	
+	local CanKick = hook.Call("FAdmin_CanKick", nil, ply, targets)
+	
+	if CanKick == false then return end
+	
 	local stage = args[2] or ""
 	stage = string.lower(stage)
 	local stages = {"start", "cancel", "update", "execute"}
@@ -51,21 +56,6 @@ local function RequestBans(ply, cmd, args)
 	datastream.StreamToClients({ply}, "FAdmin_retrievebans", BANS)
 end
 
-if file.Exists("FAdmin/Bans.txt") then
-	BANS = util.KeyValuesToTable(file.Read("FAdmin/Bans.txt"))
-	for k,v in pairs(BANS) do
-		if v.time < os.time() and v ~= 0 then
-			BANS[k] = nil
-		end
-		if v.time == 0 then
-			game.ConsoleCommand("banid 0 "..k.. "\n")
-		else
-			game.ConsoleCommand("banid ".. (v.time - os.time())/60 .." " .. k.. "\n")
-		end
-	end
-	file.Write("FAdmin/Bans.txt", util.TableToKeyValues(BANS))
-end
-
 timer.Create("FAdminCheckBans", 60, 0, function()
 	local changed = false
 	for k,v in pairs(BANS) do
@@ -81,6 +71,9 @@ timer.Create("FAdminCheckBans", 60, 0, function()
 end)
 
 local function SaveBan(SteamID, Nick, Duration)
+	local StoreBans = hook.Call("FAdmin_StoreBan", nil, SteamID, Nick, Duration)
+	
+	if StoreBans == true then return end
 	if tonumber(Duration) == 0 then
 		BANS[SteamID] = {}
 		BANS[SteamID].time = 0
@@ -100,12 +93,17 @@ local function Ban(ply, cmd, args)
 	--start cancel update execute
 	
 	local targets = FAdmin.FindPlayer(args[1])
+	
 	if not targets and string.find(args[1], "STEAM_") ~= 1 then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	elseif not targets and string.find(args[1], "STEAM_") == 1 then
 		targets = {args[1]}
 	end
+	
+	local CanBan = hook.Call("FAdmin_CanBan", nil, ply, targets)
+	
+	if CanBan == false then return end
 	
 	local stage = string.lower(args[2])
 	local Reason = args[4] or ply.FAdminKickReason or ""
@@ -203,4 +201,25 @@ hook.Add("FAdmin_PluginsLoaded", "KickBan", function()
 	FAdmin.Access.AddPrivilege("Kick", 2)
 	FAdmin.Access.AddPrivilege("Ban", 2)
 	FAdmin.Access.AddPrivilege("UnBan", 2)
+end)
+
+hook.Add("InitPostEntity", "FAdmin_Retrievebans", function()
+	local RetrieveBans = hook.Call("FAdmin_RetrieveBans", nil)
+	
+	if RetrieveBans == true then return end
+	
+	if file.Exists("FAdmin/Bans.txt") then
+		BANS = util.KeyValuesToTable(file.Read("FAdmin/Bans.txt"))
+		for k,v in pairs(BANS) do
+			if v.time < os.time() and v ~= 0 then
+				BANS[k] = nil
+			end
+			if v.time == 0 then
+				game.ConsoleCommand("banid 0 "..k.. "\n")
+			else
+				game.ConsoleCommand("banid ".. (v.time - os.time())/60 .." " .. k.. "\n")
+			end
+		end
+		file.Write("FAdmin/Bans.txt", util.TableToKeyValues(BANS))
+	end
 end)
