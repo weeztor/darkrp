@@ -1,6 +1,6 @@
 local LAYOUT = CreateClientConVar("FAdmin_ScoreBoardLayout", 1, true, false)
 
-local Sorted, SortDown = "Name", true
+local Sorted, SortDown = "Team", true
 function FAdmin.ScoreBoard.Main.Show()
 	local ScreenWidth, ScreenHeight = ScrW(), ScrH()
 	
