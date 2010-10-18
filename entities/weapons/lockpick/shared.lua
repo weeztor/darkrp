@@ -54,6 +54,13 @@ if CLIENT then
 		wep.LockPickTime = time
 		wep.EndPick = CurTime() + time
 	end)
+	
+	usermessage.Hook("IsFadingDoor", function(um) -- Set isFadingDoor clientside (this is the best way I could think of to do this, if anyone can think of a better way feel free to change it.
+		local door = um:ReadEntity()
+		if ValidEntity(door) then
+			door.isFadingDoor = true
+		end
+	end)	
 end
 
 /*---------------------------------------------------------
@@ -66,7 +73,8 @@ function SWEP:PrimaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 	local e = trace.Entity
-	if ValidEntity(e) and trace.HitPos:Distance(self.Owner:GetShootPos()) <= 100 and (e:IsDoor() or e:IsVehicle() or string.find(string.lower(e:GetClass()), "vehicle")) then
+	if SERVER and e.isFadingDoor then SendUserMessage("IsFadingDoor", self.Owner, e) end -- The fading door tool only sets isFadingDoor serverside, for the lockpick to work we need this to be set clientside too.
+	if ValidEntity(e) and trace.HitPos:Distance(self.Owner:GetShootPos()) <= 100 and (e:IsDoor() or e:IsVehicle() or string.find(string.lower(e:GetClass()), "vehicle") or e.isFadingDoor) then
 		self.IsLockPicking = true
 		self.StartPick = CurTime()
 		if SERVER then
@@ -109,7 +117,12 @@ end
 function SWEP:Succeed()
 	self.IsLockPicking = false
 	local trace = self.Owner:GetEyeTrace()
-	if ValidEntity(trace.Entity) and trace.Entity.Fire then
+	if trace.Entity.isFadingDoor and trace.Entity.fadeActivate then
+		if not trace.Entity.fadeActive then
+			trace.Entity:fadeActivate()
+			timer.Simple(5, function() if trace.Entity.fadeActive then trace.Entity:fadeDeactivate() end end)
+		end
+	elseif ValidEntity(trace.Entity) and trace.Entity.Fire then
 		trace.Entity:Fire("unlock", "", .5)
 		trace.Entity:Fire("open", "", .6)
 		trace.Entity:Fire("setanimation","open",.6)
@@ -131,7 +144,7 @@ function SWEP:Think()
 		if not ValidEntity(trace.Entity) then 
 			self:Fail()
 		end
-		if trace.HitPos:Distance(self.Owner:GetShootPos()) > 100 or (not trace.Entity:IsDoor() and not trace.Entity:IsVehicle() and not string.find(string.lower(trace.Entity:GetClass()), "vehicle")) then
+		if trace.HitPos:Distance(self.Owner:GetShootPos()) > 100 or (not trace.Entity:IsDoor() and not trace.Entity:IsVehicle() and not string.find(string.lower(trace.Entity:GetClass()), "vehicle") and not trace.Entity.isFadingDoor) then
 			self:Fail()
 		end
 		if self.EndPick <= CurTime() then
