@@ -170,7 +170,7 @@ derma.DefineControl("FAdminPlayerIcon", "Icon for Player in scoreboard", PANEL4,
 -- FAdmin player row (from the sandbox player row)
 PANEL = {}
 
-CreateClientConVar("FAdmin_PlayerRowSize", 36, true, false)
+CreateClientConVar("FAdmin_PlayerRowSize", 30, true, false)
 function PANEL:Init()
 	self.Size = GetConVarNumber("FAdmin_PlayerRowSize")
 	
