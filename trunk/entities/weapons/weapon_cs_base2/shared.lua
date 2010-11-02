@@ -272,6 +272,9 @@ elseif CLIENT then
 end
 
 function SWEP:SetIronsights(b)
+	if SinglePlayer() then -- Make ironsights work on SP
+		self.Owner:SendLua("LocalPlayer():GetActiveWeapon().Ironsights = "..tostring(b))
+	end
 	if b and SERVER then 
 		self:SendHoldType(self.HoldType)
 		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3)
