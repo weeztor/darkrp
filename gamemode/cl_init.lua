@@ -8,6 +8,8 @@ util.PrecacheSound("earthquake.mp3")
 
 CUR = "$"
 
+local GetConVarNumber = GetConVarNumber
+
 local GUIToggled = false
 local HelpToggled = false
 
@@ -231,8 +233,8 @@ usermessage.Hook("GotArrested", GetArrested)
 local function DrawDisplay()
 	for k, v in pairs(player.GetAll()) do
 		v.DarkRPVars = v.DarkRPVars or {}
-		if v.DarkRPVars.zombieToggle == true then DrawZombieInfo(v) end
-		if v.DarkRPVars.wanted == true then DrawWantedInfo(v) end
+		if v.DarkRPVars.zombieToggle then DrawZombieInfo(v) end
+		if v.DarkRPVars.wanted then DrawWantedInfo(v) end
 	end
 
 	local tr = LocalPlayer():GetEyeTrace()
@@ -723,14 +725,6 @@ local function ToggleClicker()
 	end
 end
 usermessage.Hook("ToggleClicker", ToggleClicker)
-
-local function AddHelpLabel(id, category, text, constant)
-	table.insert(HelpLabels, { id = id, category = category, text = text, constant = constant })
-end
-
-function AddHelpCategory(id, name)
-	table.insert(HelpCategories, { id = id, text = name })
-end
 	
 include("sh_commands.lua")
 include("shared.lua")
