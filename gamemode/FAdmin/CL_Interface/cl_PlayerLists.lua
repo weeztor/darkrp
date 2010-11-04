@@ -122,27 +122,31 @@ function FAdmin.ScoreBoard.Main.PlayerIconView()
 end
 
 local function SortedPairsByFunction(Table, Sorted, SortDown)
-	local CopyTable = table.Copy(Table)
+	local CopyTable = {}
+	for k,v in pairs(Table) do
+		table.insert(CopyTable, {NAME = v:Nick(), PLY = v})
+	end
+	table.SortByMember(CopyTable, "NAME", SortDown)
 	
-	local SortedValues = {}
-	for k,v in pairs(CopyTable) do
-		table.insert(SortedValues, v[Sorted](v))
+	local SortedTable = {}
+	for k,v in ipairs(CopyTable) do
+		local SortBy = (Sorted ~= "Team" and v.PLY[Sorted](v.PLY)) or team.GetName(v.PLY[Sorted](v.PLY))
+		SortedTable[SortBy] = SortedTable[SortBy] or {}
+		table.insert(SortedTable[SortBy], v.PLY)
 	end
 	
-	if SortDown then
-		table.sort(SortedValues, function(a, b) return tostring(a or "") > tostring(b or "") end)
-	else
-		table.sort(SortedValues)
+	local SecondSort = {}
+	for k,v in SortedPairs(SortedTable, SortDown) do
+		table.insert(SecondSort, v)
 	end
+	
 	CopyTable = {}
-	for k,v in ipairs(SortedValues) do
-		for a, b in pairs(Table) do
-			if b[Sorted](b) == v and not table.HasValue(CopyTable, b)--[[Check if the table doesn't have the player in it yet(when values are same)]] then
-				table.insert(CopyTable, b)
-				break
-			end
+	for k,v in pairs(SecondSort) do
+		for a,b in pairs(v) do
+			table.insert(CopyTable, b)
 		end
 	end
+
 	return ipairs(CopyTable)
 end
 
