@@ -1,6 +1,6 @@
 local LAYOUT = CreateClientConVar("FAdmin_ScoreBoardLayout", 1, true, false)
 
-local Sorted, SortDown = "Team", true
+local Sorted, SortDown = CreateClientConVar("FAdmin_SortPlayerList", "Team", true), CreateClientConVar("FAdmin_SortPlayerListDown", 1, true)
 function FAdmin.ScoreBoard.Main.Show()
 	local ScreenWidth, ScreenHeight = ScrW(), ScrH()
 	
@@ -89,7 +89,7 @@ function FAdmin.ScoreBoard.Main.Show()
 			Sort.Ping:SetVisible(true)
 			
 			FAdmin.ScoreBoard.Main.Controls.FAdminPanelList:EnableHorizontal(false)
-			FAdmin.ScoreBoard.Main.PlayerListView(Sorted, SortDown)
+			FAdmin.ScoreBoard.Main.PlayerListView(Sorted:GetString(), SortDown:GetBool())
 			for k,v in pairs(Sort) do
 				v:SetFont("Trebuchet20")
 				v:SizeToContents()
@@ -99,12 +99,10 @@ function FAdmin.ScoreBoard.Main.Show()
 				v.BtnSort = vgui.Create("DSysButton")
 				v.BtnSort:SetType("down")
 				v.BtnSort.Type = "down"
-				if Sorted == v.Type then
+				if Sorted:GetString() == v.Type then
 					v.BtnSort.Depressed = true
-					if not SortDown then
-						v.BtnSort:SetType("up")
-						v.BtnSort.Type = "up"
-					end
+					v.BtnSort:SetType((SortDown:GetBool() and "down") or "up")
+					v.BtnSort.Type = (SortDown:GetBool() and "down") or "up"
 				end
 				v.BtnSort:SetSize(16, 16)
 				v.BtnSort:SetPos(X + v:GetWide() + 5, Y + 4)
@@ -115,9 +113,10 @@ function FAdmin.ScoreBoard.Main.Show()
 					v.BtnSort:SetType((v.BtnSort.Type == "down" and "up") or "down")
 					v.BtnSort.Type = (v.BtnSort.Type == "down" and "up") or "down"
 					
-					Sorted, SortDown = v.Type, v.BtnSort.Type == "down"
+					RunConsoleCommand("FAdmin_SortPlayerList", v.Type)
+					RunConsoleCommand("FAdmin_SortPlayerListDown", (v.BtnSort.Type == "down" and "1") or "0")
 					FAdmin.ScoreBoard.Main.Controls.FAdminPanelList:Clear(true)
-					FAdmin.ScoreBoard.Main.PlayerListView(Sorted, SortDown)
+					FAdmin.ScoreBoard.Main.PlayerListView(v.Type, v.BtnSort.Type == "down")
 				end
 				table.insert(FAdmin.ScoreBoard.Main.Controls, v) -- Add them to the table so they get removed when you close the scoreboard
 				table.insert(FAdmin.ScoreBoard.Main.Controls, v.BtnSort)
