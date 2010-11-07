@@ -807,9 +807,9 @@ local function RPStopMessageMode()
 	playercolors = {}
 end
 
-local function CL_IsInRoom(listener, talker) -- IsInRoom function to see if the player is in the same room.
+local function CL_IsInRoom(listener) -- IsInRoom function to see if the player is in the same room.
 	local tracedata = {}
-	tracedata.start = talker:GetShootPos()
+	tracedata.start = LocalPlayer():GetShootPos()
 	tracedata.endpos = listener:GetShootPos()
 	local trace = util.TraceLine( tracedata )
 	
