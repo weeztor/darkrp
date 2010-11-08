@@ -119,7 +119,6 @@ ContinueNewGroup = function(ply, name, admin_access)
 	end
 	
 	local TickBoxPanel = vgui.Create("DPanelList", Window)
-	TickBoxPanel:StretchToParent(5, 25, 5, 5)
 	TickBoxPanel:EnableHorizontal(false)
 	TickBoxPanel:EnableVerticalScrollbar()
 	TickBoxPanel:SetSpacing(5)
@@ -150,13 +149,14 @@ ContinueNewGroup = function(ply, name, admin_access)
 		
 		TickBoxPanel:AddItem(chkBox)
 	end
-	TickBoxPanel:SetTall(math.Min(#TickBoxPanel.Items*20, ScrH() - 30))
+	
 	Window:SetTall(math.Min(#TickBoxPanel.Items*20 + 30 + 30, ScrH()))
 	Window:Center()
+	TickBoxPanel:StretchToParent(5, 25, 5, 35)
 	
 	local OKButton = vgui.Create("DButton", Window)
 	OKButton:SetText("OK")
-	OKButton:StretchToParent(5, #TickBoxPanel.Items*20 + 30, Window:GetWide()/2 + 2 , 5)
+	OKButton:StretchToParent(5, 30 + TickBoxPanel:GetTall(), Window:GetWide()/2 + 2, 5)
 	function OKButton:DoClick()
 		RunConsoleCommand("_FAdmin", "setaccess", ply:UserID(), name, admin_access, unpack(privs))
 		Window:Close()
@@ -164,7 +164,7 @@ ContinueNewGroup = function(ply, name, admin_access)
 	
 	local CancelButton = vgui.Create("DButton", Window)
 	CancelButton:SetText("Cancel")
-	CancelButton:StretchToParent(Window:GetWide()/2 + 2, #TickBoxPanel.Items*20 + 30, 5, 5)
+	CancelButton:StretchToParent(Window:GetWide()/2 + 2, 30 + TickBoxPanel:GetTall(), 5, 5)
 	function CancelButton:DoClick()
 		Window:Close()
 	end
