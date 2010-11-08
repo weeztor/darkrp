@@ -570,7 +570,7 @@ local function ccVehicleSpawn(ply, cmd, args)
 end
 concommand.Add("gm_spawnvehicle", ccVehicleSpawn)
 
-local function ccVehicleSpawn(ply, cmd, args)
+local function ccNPCSpawn(ply, cmd, args)
 	if GetConVarNumber("adminnpc") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
 			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnnpc"))
@@ -580,7 +580,7 @@ local function ccVehicleSpawn(ply, cmd, args)
 	CCSpawnNPC(ply, cmd, args)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned NPC "..args[1] )
 end
-concommand.Add("gm_spawnnpc", ccVehicleSpawn)
+concommand.Add("gm_spawnnpc", ccNPCSpawn)
 
 local function ccSetRPName(ply, cmd, args)
 	if not args[1] then return end
@@ -590,6 +590,14 @@ local function ccSetRPName(ply, cmd, args)
 	end
 
 	local target = FindPlayer(args[1])
+	
+	if not args[2] or string.len(args[2]) < 2 or string.len(args[2]) > 30 then
+		if ply:EntIndex() == 0 then
+			print(string.format(LANGUAGE.invalid_x, "argument", args[2]))
+		else
+			ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "argument", args[2]))
+		end
+	end
 	
 	if target then
 		local oldname = target:Nick()
