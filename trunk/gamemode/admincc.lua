@@ -581,3 +581,42 @@ local function ccVehicleSpawn(ply, cmd, args)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned NPC "..args[1] )
 end
 concommand.Add("gm_spawnnpc", ccVehicleSpawn)
+
+local function ccSetRPName(ply, cmd, args)
+	if not args[1] then return end
+	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
+		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, "rp_setname"))
+		return
+	end
+
+	local target = FindPlayer(args[1])
+	
+	if target then
+		local oldname = target:Nick()
+		local nick = ""
+		DB.StoreRPName(target, args[2])
+		target:SetDarkRPVar("rpname", args[2])
+		if ply:EntIndex() == 0 then
+			print("Set " .. oldname .. "'s name to: " .. args[2])
+			nick = "Console"
+		else
+			ply:PrintMessage(2, "Set " .. oldname .. "'s name to: " .. args[2])
+			nick = ply:Nick()
+		end
+		target:PrintMessage(2, nick .. " set your name to: " .. args[2])
+		if ply:EntIndex() == 0 then
+			DB.Log("Console set "..target:SteamName().."'s name to " .. args[2])
+		else
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..target:SteamName().."'s name to " .. args[2])
+		end
+	else
+		if ply:EntIndex() == 0 then
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
+		else 
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
+		end
+		return
+	end
+	
+end
+concommand.Add("rp_setname", ccSetRPName)
