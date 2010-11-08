@@ -72,7 +72,7 @@ function FAdmin.Access.AddPrivilege(Name, admin_access)
 end
 
 function FAdmin.Access.PlayerHasPrivilege(ply, priv, target)
-	//if ply:EntIndex() == 0 or SinglePlayer() or (ply.IsListenServerHost and ply:IsListenServerHost()) then return true end -- This is the server console
+	if ply:EntIndex() == 0 or SinglePlayer() or (ply.IsListenServerHost and ply:IsListenServerHost()) then return true end -- This is the server console
 	if not FAdmin.Access.Privileges[priv] then return ply:IsAdmin() end
 	
 	local Usergroup = ply:GetNWString("usergroup")
