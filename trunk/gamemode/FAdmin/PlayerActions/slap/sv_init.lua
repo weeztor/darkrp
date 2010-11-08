@@ -14,7 +14,6 @@ local function ExecuteSlap(target, Amount, ply)
 end
 
 local function Slap(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Slap") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 	
 	local targets = FAdmin.FindPlayer(args[1])
@@ -26,6 +25,7 @@ local function Slap(ply, cmd, args)
 	local Repetitions = tonumber(args[3])
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Slap", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) then
 			if not Repetitions or Repetitions == 1 then 
 				ExecuteSlap(target, Amount, ply)

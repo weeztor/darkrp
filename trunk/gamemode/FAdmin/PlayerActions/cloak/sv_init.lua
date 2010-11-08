@@ -1,11 +1,10 @@
 local CloakThink
 
 local function Cloak(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Cloak") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-	
 	local targets = FAdmin.FindPlayer(args[1]) or {ply}
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Cloak", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) and not target:FAdmin_GetGlobal("FAdmin_cloaked") then
 			target:FAdmin_SetGlobal("FAdmin_cloaked", true) 
 			target:SetNoDraw(true)
@@ -26,11 +25,10 @@ local function Cloak(ply, cmd, args)
 end
 
 local function UnCloak(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Cloak") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-	
 	local targets = FAdmin.FindPlayer(args[1]) or {ply}
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Cloak", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) and target:FAdmin_GetGlobal("FAdmin_cloaked") then
 			target:FAdmin_SetGlobal("FAdmin_cloaked", false) 
 			

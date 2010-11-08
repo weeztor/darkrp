@@ -12,7 +12,7 @@ hook.Add("FAdmin_PluginsLoaded", "Ragdoll", function()
 		return "FAdmin/icons/ragdoll" 
 	end,
 	Color(255, 130, 0, 255), 
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Ragdoll") end, 
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Ragdoll", ply) end, 
 	function(ply, button)
 		if ply:FAdmin_GetGlobal("fadmin_ragdolled") then 
 			RunConsoleCommand("_FAdmin", "unragdoll", ply:UserID())

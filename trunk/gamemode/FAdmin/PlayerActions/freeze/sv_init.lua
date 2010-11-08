@@ -1,5 +1,4 @@
 local function Freeze(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Freeze") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 	
 	local targets = FAdmin.FindPlayer(args[1])
@@ -9,6 +8,7 @@ local function Freeze(ply, cmd, args)
 	end
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Freeze", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) and not target:FAdmin_GetGlobal("FAdmin_frozen") then
 			target:FAdmin_SetGlobal("FAdmin_frozen", true) 
 			target:Lock()
@@ -18,7 +18,6 @@ local function Freeze(ply, cmd, args)
 end
 
 local function Unfreeze(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Freeze") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 	
 	local targets = FAdmin.FindPlayer(args[1])
@@ -28,6 +27,7 @@ local function Unfreeze(ply, cmd, args)
 	end
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Freeze", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) and target:FAdmin_GetGlobal("FAdmin_frozen") then
 			target:FAdmin_SetGlobal("FAdmin_frozen", false) 
 			target:UnLock()

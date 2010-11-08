@@ -4,7 +4,7 @@ hook.Add("FAdmin_PluginsLoaded", "Health", function()
 	FAdmin.Commands.AddCommand("SetHealth", nil, "[Player]", "<health>")
 	
 	FAdmin.ScoreBoard.Player:AddActionButton("Set health", "gui/silkicons/heart", Color(255, 130, 0, 255), 
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "SetHealth") end, 
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "SetHealth", ply) end, 
 	function(ply, button)
 		--Do nothing when the button has been clicked
 	end,

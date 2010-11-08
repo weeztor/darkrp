@@ -7,7 +7,7 @@ hook.Add("FAdmin_PluginsLoaded", "Slay", function()
 	end)
 	
 	FAdmin.ScoreBoard.Player:AddActionButton("Slay", "FAdmin/icons/slay", Color(255, 130, 0, 255), 
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Slay") end, 
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Slay", ply) end, 
 	function(ply)
 		local menu = DermaMenu()
 		local Title = vgui.Create("DLabel")

@@ -3,7 +3,7 @@ hook.Add("FAdmin_PluginsLoaded", "zzSetTeam", function()
 	FAdmin.Commands.AddCommand("SetTeam", nil, "<Player>", "<Team>")
 	
 	FAdmin.ScoreBoard.Player:AddActionButton("Set team", "FAdmin/icons/changeteam", Color(0, 200, 0, 255), 
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "SetTeam") end, function(ply, button)
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "SetTeam", ply) end, function(ply, button)
 		local menu = DermaMenu()
 		local Title = vgui.Create("DLabel")
 		Title:SetText("  Teams:\n")

@@ -1,7 +1,5 @@
 -- Kicking
 local function Kick(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Kick") then FAdmin.Messages.SendMessage(ply, 5, "No access!")  return end
-	
 	local targets = FAdmin.FindPlayer(args[1])
 	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
@@ -18,6 +16,7 @@ local function Kick(ply, cmd, args)
 	local Reason = args[3] or (not table.HasValue(stages, stage) and stage) or ply.FAdminKickReason
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Kick", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!")  return end
 		if ValidEntity(target) then
 			if stage == "start" then
 				SendUserMessage("FAdmin_kick_start", target) -- Tell him he's getting kicked
@@ -89,7 +88,6 @@ end
 
 local function Ban(ply, cmd, args)
 	if not args[2] then return end
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Ban") then FAdmin.Messages.SendMessage(ply, 5, "No access!")  return end
 	--start cancel update execute
 	
 	local targets = FAdmin.FindPlayer(args[1])
@@ -108,6 +106,7 @@ local function Ban(ply, cmd, args)
 	local stage = string.lower(args[2])
 	local Reason = args[4] or ply.FAdminKickReason or ""
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Ban", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if stage == "start" and type(target) ~= "string" and ValidEntity(target) then
 			SendUserMessage("FAdmin_ban_start", target) -- Tell him he's getting banned
 			target:Lock() -- Make sure he can't remove the hook clientside and keep minging.

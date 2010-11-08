@@ -1,6 +1,4 @@
 local function StripWeapons(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "StripWeapons") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-	
 	local targets = FAdmin.FindPlayer(args[1])
 	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
@@ -8,6 +6,7 @@ local function StripWeapons(ply, cmd, args)
 	end
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "StripWeapons", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) then
 			target:StripWeapons()
 		end

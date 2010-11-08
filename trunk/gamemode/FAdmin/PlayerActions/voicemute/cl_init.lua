@@ -19,7 +19,7 @@ hook.Add("FAdmin_PluginsLoaded", "Voicemute", function()
 	end, 
 	Color(255, 130, 0, 255), 
 	
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Voicemute") end, function(ply, button)
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Voicemute", ply) end, function(ply, button)
 		if not ply:FAdmin_GetGlobal("FAdmin_voicemuted") then
 			RunConsoleCommand("_FAdmin", "Voicemute", ply:UserID())
 		else

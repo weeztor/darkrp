@@ -100,6 +100,22 @@ hook.Add("FAdmin_PluginsLoaded", "1SetAccess", function() -- 1 in hook name so i
 		end
 		usermessage.Hook("FADMIN_RetrieveGroup", ReceiveGroup)
 	end)
+	
+	-- Admin immunity
+	FAdmin.ScoreBoard.Server:AddServerSetting(function()
+			return (FAdmin.GlobalSetting.Immunity and "Disable" or "Enable").." Admin immunity" 
+		end, 
+		function()
+			return "FAdmin/icons/access", FAdmin.GlobalSetting.Immunity and "FAdmin/icons/disable" 
+		end, Color(0, 0, 155, 255), function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "SetAccess") end, function(button)
+			button:SetImage2((not FAdmin.GlobalSetting.Immunity and "FAdmin/icons/disable") or "null") 
+			button:SetText((not FAdmin.GlobalSetting.Immunity and "Disable" or "Enable").." player vs player damage")
+			button:GetParent():InvalidateLayout()
+			
+			RunConsoleCommand("_Fadmin", "immunity", (FAdmin.GlobalSetting.Immunity and 0) or 1)
+		end
+		
+	)
 end)
 
 ContinueNewGroup = function(ply, name, admin_access)
