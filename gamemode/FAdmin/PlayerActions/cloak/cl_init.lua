@@ -11,7 +11,7 @@ hook.Add("FAdmin_PluginsLoaded", "zz_Cloak", function()
 		return "FAdmin/icons/cloak" 
 	end, Color(0, 200, 0, 255), 
 	
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Cloak") end, function(ply, button)
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Cloak", ply) end, function(ply, button)
 		if not ply:FAdmin_GetGlobal("FAdmin_cloaked") then
 			RunConsoleCommand("_FAdmin", "Cloak", ply:UserID())
 		else

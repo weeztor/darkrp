@@ -1,5 +1,4 @@
 local function MuteChat(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Chatmute") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 	
 	local targets = FAdmin.FindPlayer(args[1]) or {}
@@ -9,6 +8,7 @@ local function MuteChat(ply, cmd, args)
 	end
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Chatmute", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) and not target:FAdmin_GetGlobal("FAdmin_chatmuted") then
 			target:FAdmin_SetGlobal("FAdmin_chatmuted", true)
 		end
@@ -17,7 +17,6 @@ local function MuteChat(ply, cmd, args)
 end
 
 local function UnMuteChat(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Chatmute") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 	
 	local targets = FAdmin.FindPlayer(args[1])
@@ -27,6 +26,7 @@ local function UnMuteChat(ply, cmd, args)
 	end
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Chatmute", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) and target:FAdmin_GetGlobal("FAdmin_chatmuted") then
 			target:FAdmin_SetGlobal("FAdmin_chatmuted", false)
 		end

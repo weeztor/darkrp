@@ -16,7 +16,7 @@ hook.Add("FAdmin_PluginsLoaded", "Jail", function()
 		return "FAdmin/icons/jail" 
 	end,
 	Color(255, 130, 0, 255), 
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Jail") end, 
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Jail", ply) end, 
 	function(ply, button)
 		if ply:FAdmin_GetGlobal("fadmin_jailed") then RunConsoleCommand("_FAdmin", "unjail", ply:UserID()) button:SetImage2("null") button:SetText("Jail") button:GetParent():InvalidateLayout() return end
 		

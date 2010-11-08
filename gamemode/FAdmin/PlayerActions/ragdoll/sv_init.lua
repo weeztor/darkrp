@@ -73,7 +73,6 @@ local KickerAng = {
 }
 
 local function Ragdoll(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Ragdoll") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 	
 	local targets = FAdmin.FindPlayer(args[1])
@@ -84,6 +83,7 @@ local function Ragdoll(ply, cmd, args)
 	local RagdollType = string.lower(FAdmin.PlayerActions.RagdollTypes[tonumber(args[2])] or args[2] or cmd)
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Ragdoll", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) then
 			if RagdollType == "unragdoll" or string.lower(cmd) == "unragdoll" and target:FAdmin_GetGlobal("fadmin_ragdolled") then
 				target:FAdmin_SetGlobal("fadmin_ragdolled", false)

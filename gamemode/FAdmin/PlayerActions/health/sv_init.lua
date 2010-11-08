@@ -1,5 +1,4 @@
 local function SetHealth(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "StripWeapons") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 	
 	local Health = tonumber(args[2] or 100)
@@ -11,6 +10,7 @@ local function SetHealth(ply, cmd, args)
 	end
 
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "SetHealth", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) then
 			target:SetHealth(Health)
 		end

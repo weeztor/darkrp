@@ -11,7 +11,7 @@ hook.Add("FAdmin_PluginsLoaded", "Freeze", function()
 		return "FAdmin/icons/freeze" 
 	end, Color(255, 130, 0, 255), 
 	
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Freeze") end, function(ply, button)
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Freeze", ply) end, function(ply, button)
 		if not ply:FAdmin_GetGlobal("FAdmin_frozen") then
 			RunConsoleCommand("_FAdmin", "freeze", ply:UserID())
 		else

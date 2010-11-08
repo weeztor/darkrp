@@ -1,3 +1,8 @@
+--Immunity
+cvars.AddChangeCallback("_FAdmin_immunity", function(Cvar, Previous, New)
+	FAdmin.SetGlobalSetting("Immunity", (tonumber(New) == 1 and true) or false)
+end)
+
 sql.Query("CREATE TABLE IF NOT EXISTS FADMIN_GROUPS('NAME' TEXT NOT NULL PRIMARY KEY, 'ADMIN_ACCESS' INTEGER NOT NULL, 'PRIVS' TEXT);")
 
 local SavedGroups = sql.Query("SELECT * FROM FADMIN_GROUPS")
@@ -85,9 +90,20 @@ hook.Add("PlayerInitialSpawn", "FAdmin_SetAccess", function(ply)
 	end
 end)
 
+local function SetImmunity(ply, cmd, args)
+	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end -- SetAccess privilege because they can handle immunity settings
+	if not args[1] then FAdmin.Messages.SendMessage(ply, 5, "Invalid argument!") return end
+	RunConsoleCommand("_FAdmin_immunity", args[1])
+	FAdmin.Messages.SendMessage(ply, 4, "turned " .. ((tonumber(args[1]) == 1 and "on") or "off") .. " admin immunity!")
+end
+
 hook.Add("FAdmin_PluginsLoaded", "Access", function() --Run all functions that depend on other plugins
 	FAdmin.Commands.AddCommand("setroot", FAdmin.Access.SetRoot)
 	FAdmin.Commands.AddCommand("setaccess", FAdmin.Access.SetAccess)
+	
+	FAdmin.Commands.AddCommand("immunity", SetImmunity)
+	
+	FAdmin.SetGlobalSetting("Immunity", (GetConVarNumber("_FAdmin_immunity") == 1 and true) or false)
 end)
 
 concommand.Add("_FAdmin_SendUserGroups", function(ply)

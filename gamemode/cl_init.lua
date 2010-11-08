@@ -1171,7 +1171,7 @@ hook.Add("FAdmin_PluginsLoaded", "DarkRP", function()
 	
 	--Teamban
 	FAdmin.ScoreBoard.Player:AddActionButton("Ban from job", "FAdmin/icons/changeteam", Color(200, 0, 0, 255), 
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands") end, function(ply, button)
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", ply) end, function(ply, button)
 		local menu = DermaMenu()
 		local Title = vgui.Create("DLabel")
 		Title:SetText("  Jobs:\n")

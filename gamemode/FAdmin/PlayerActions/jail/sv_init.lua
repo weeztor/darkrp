@@ -1,5 +1,4 @@
 local function Jail(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Jail") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 	
 	local targets = FAdmin.FindPlayer(args[1])
@@ -14,6 +13,7 @@ local function Jail(ply, cmd, args)
 	local time
 	
 	for _, target in pairs(targets) do
+		if not FAdmin.Access.PlayerHasPrivilege(ply, "Jail", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if ValidEntity(target) then
 			local JailProps = {}
 			if JailType == "unjail" or string.lower(cmd) == "unjail" then		

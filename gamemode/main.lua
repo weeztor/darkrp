@@ -1359,10 +1359,6 @@ AddChatCommand("/jobswitch", SwitchJob)
 
 local function DoTeamBan(ply, args, cmdargs)
 	if not args or args == "" then return "" end
-	if not ply:IsAdmin() then 
-		Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "/teamban"))
-		return ""
-	end
 	
 	local ent = args
 	local Team = args
@@ -1385,6 +1381,10 @@ local function DoTeamBan(ply, args, cmdargs)
 		return ""
 	end
 	
+	if (FAdmin and FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", target)) or not ply:IsAdmin() then 
+		Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "/teamban"))
+		return ""
+	end
 
 	local found = false
 	for k,v in pairs(team.GetAllTeams()) do

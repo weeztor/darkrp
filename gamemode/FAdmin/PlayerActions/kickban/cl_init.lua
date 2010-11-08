@@ -63,7 +63,7 @@ hook.Add("FAdmin_PluginsLoaded", "CL_KickBan", function()
 	
 	
 	-- Kick button
-	FAdmin.ScoreBoard.Player:AddActionButton("Kick", "FAdmin/icons/kick", nil, function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Kick") end, function(ply)
+	FAdmin.ScoreBoard.Player:AddActionButton("Kick", "FAdmin/icons/kick", nil, function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Kick", ply) end, function(ply)
 		local UserID = ply:UserID()
 		local NICK = ply:Nick()
 		
@@ -141,7 +141,7 @@ hook.Add("FAdmin_PluginsLoaded", "CL_KickBan", function()
 	end)
 	
 	-- Ban button
-	FAdmin.ScoreBoard.Player:AddActionButton("Ban", "FAdmin/icons/Ban", nil, function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Ban") end, function(ply)
+	FAdmin.ScoreBoard.Player:AddActionButton("Ban", "FAdmin/icons/Ban", nil, function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Ban", ply) end, function(ply)
 		local SteamID = ply:SteamID()
 		local NICK = ply:Nick()
 		local BanTime = 0

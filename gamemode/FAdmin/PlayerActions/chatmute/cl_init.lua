@@ -11,7 +11,7 @@ hook.Add("FAdmin_PluginsLoaded", "Chatmute", function()
 		return "FAdmin/icons/chatmute", "FAdmin/icons/disable" 
 	end, Color(255, 130, 0, 255), 
 	
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Chatmute") end, function(ply, button)
+	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "Chatmute", ply) end, function(ply, button)
 		if not ply:FAdmin_GetGlobal("FAdmin_chatmuted") then
 			RunConsoleCommand("_FAdmin", "chatmute", ply:UserID())
 		else
