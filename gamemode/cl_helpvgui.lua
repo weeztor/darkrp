@@ -49,12 +49,13 @@ function HelpPanel:FillHelpInfo(force)
 			local helptext = ""
 			local Labels = { }
 
-			self.vguiHelpCategories[v.id] = vgui.Create("Label", self.HelpInfo)
-			self.vguiHelpCategories[v.id]:SetText(v.text)
+			self.vguiHelpCategories[v.id] = vgui.Create("DLabel", self.HelpInfo)
+			self.vguiHelpCategories[v.id]:SetText(v.name)
 			self.vguiHelpCategories[v.id].OrigY = yoffset
 			self.vguiHelpCategories[v.id]:SetPos(5, yoffset)
 			self.vguiHelpCategories[v.id]:SetFont("GModToolSubtitle")
-			self.vguiHelpCategories[v.id]:SetFGColor(Color(255, 255, 255, 200))
+			self.vguiHelpCategories[v.id]:SetColor(Color(140, 0, 0, 200))
+			self.vguiHelpCategories[v.id]:SetExpensiveShadow(2, Color(0,0,0,255))
 
 			for n, m in pairs(HelpLabels) do
 				if m.category == v.id then
