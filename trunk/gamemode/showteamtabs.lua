@@ -683,10 +683,11 @@ function EntitiesTab()
 				VehiclePanel:SetSpacing(1)
 				VehiclePanel:EnableHorizontal(true)
 				VehiclePanel:EnableVerticalScrollbar(true)
-				local function AddVehicleIcon(Model, description, command)
+				local function AddVehicleIcon(Model, skin, description, command)
 					local icon = vgui.Create("SpawnIcon")
 					icon:InvalidateLayout( true ) 
 					icon:SetModel(Model)
+					icon:SetSkin(skin)
 					icon:SetIconSize(64)
 					icon:SetToolTip(description)
 					icon.DoClick = function() LocalPlayer():ConCommand("say "..command) end
@@ -696,7 +697,8 @@ function EntitiesTab()
 				local founds = 0
 				for k,v in pairs(CustomVehicles) do
 					if not v.allowed or table.HasValue(v.allowed, LocalPlayer():Team()) then
-						AddVehicleIcon(v.model or "models/buggy.mdl", "Buy a "..v.name.." for "..CUR..v.price, "/buyvehicle "..v.name)
+						local Skin = (list.Get("Vehicles")[v.name] and list.Get("Vehicles")[v.name].KeyValues and list.Get("Vehicles")[v.name].KeyValues.Skin) or "0"
+						AddVehicleIcon(v.model or "models/buggy.mdl", Skin, "Buy a "..v.name.." for "..CUR..v.price, "/buyvehicle "..v.name)
 						founds = founds + 1
 					end
 				end
