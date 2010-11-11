@@ -87,6 +87,8 @@ function KnockoutToggle(player, command, args, caller)
 				ragdoll:Activate()
 				ragdoll:SetVelocity(player:GetVelocity())
 				ragdoll.OwnerINT = player:EntIndex()
+				ragdoll.PhysgunPickup = false
+				ragdoll.CanTool = false
 				player:StripWeapons()
 				player:Spectate(OBS_MODE_CHASE)
 				player:SpectateEntity(ragdoll)
