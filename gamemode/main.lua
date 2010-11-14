@@ -526,8 +526,8 @@ local function PlayerUnWanted(ply, args)
 			p:SetDarkRPVar("wanted", false)
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_expired, p:Nick()))
-				timer.Destroy(p:Nick() .. " wantedtimer")
 			end
+			timer.Destroy(p:Nick() .. " wantedtimer")
 		else
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "Player: "..tostring(args)))
 		end
