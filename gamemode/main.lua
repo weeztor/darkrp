@@ -505,8 +505,8 @@ local function PlayerWanted(ply, args)
 			p:SetDarkRPVar("wantedReason", tostring(reason))
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_by_police, p:Nick()).."\nReason: "..tostring(reason))
-				timer.Create(p:Nick() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, p)
 			end
+			timer.Create(p:Nick() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, p)
 		else
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
 		end
