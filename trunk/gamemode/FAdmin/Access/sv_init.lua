@@ -32,7 +32,7 @@ function FAdmin.Access.SetRoot(ply, cmd, args) -- FAdmin setroot player
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	
 	local targets = FAdmin.FindPlayer(args[1])
-	if #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
