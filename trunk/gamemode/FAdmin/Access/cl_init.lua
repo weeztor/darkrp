@@ -109,7 +109,7 @@ hook.Add("FAdmin_PluginsLoaded", "1SetAccess", function() -- 1 in hook name so i
 			return "FAdmin/icons/access", FAdmin.GlobalSetting.Immunity and "FAdmin/icons/disable" 
 		end, Color(0, 0, 155, 255), function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "SetAccess") end, function(button)
 			button:SetImage2((not FAdmin.GlobalSetting.Immunity and "FAdmin/icons/disable") or "null") 
-			button:SetText((not FAdmin.GlobalSetting.Immunity and "Disable" or "Enable").." player vs player damage")
+			button:SetText((not FAdmin.GlobalSetting.Immunity and "Disable" or "Enable").." Admin immunity")
 			button:GetParent():InvalidateLayout()
 			
 			RunConsoleCommand("_Fadmin", "immunity", (FAdmin.GlobalSetting.Immunity and 0) or 1)
