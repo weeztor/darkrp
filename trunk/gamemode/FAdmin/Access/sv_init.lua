@@ -97,14 +97,14 @@ local function SetImmunity(ply, cmd, args)
 	FAdmin.Messages.SendMessage(ply, 4, "turned " .. ((tonumber(args[1]) == 1 and "on") or "off") .. " admin immunity!")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Access", function() --Run all functions that depend on other plugins
+FAdmin.StartHooks["Access"] = function() --Run all functions that depend on other plugins
 	FAdmin.Commands.AddCommand("setroot", FAdmin.Access.SetRoot)
 	FAdmin.Commands.AddCommand("setaccess", FAdmin.Access.SetAccess)
 	
 	FAdmin.Commands.AddCommand("immunity", SetImmunity)
 	
 	FAdmin.SetGlobalSetting("Immunity", (GetConVarNumber("_FAdmin_immunity") == 1 and true) or false)
-end)
+end
 
 concommand.Add("_FAdmin_SendUserGroups", function(ply)
 	for k,v in SortedPairsByMemberValue(FAdmin.Access.Groups, "ADMIN", true) do

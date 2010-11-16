@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "Chatmute", function()
+FAdmin.StartHooks["Chatmute"] = function()
 	FAdmin.Access.AddPrivilege("Chatmute", 2)
 	FAdmin.Commands.AddCommand("Chatmute", nil, "<Player>")
 	FAdmin.Commands.AddCommand("UnChatmute", nil, "<Player>")
@@ -23,4 +23,4 @@ hook.Add("FAdmin_PluginsLoaded", "Chatmute", function()
 		button:SetText("Mute chat")
 		button:GetParent():InvalidateLayout()
 	end)
-end)
+end

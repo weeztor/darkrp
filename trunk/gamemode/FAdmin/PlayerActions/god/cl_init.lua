@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "God", function()
+FAdmin.StartHooks["God"] = function()
 	FAdmin.Access.AddPrivilege("God", 2)
 	FAdmin.Commands.AddCommand("god", nil, "<Player>")
 	FAdmin.Commands.AddCommand("ungod", nil, "<Player>")
@@ -23,4 +23,4 @@ hook.Add("FAdmin_PluginsLoaded", "God", function()
 		button:SetText("God")
 		button:GetParent():InvalidateLayout()
 	end)
-end)
+end

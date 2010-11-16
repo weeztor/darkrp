@@ -19,9 +19,9 @@ local function SetHealth(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, targets, "You've set the health of %s to ".. Health, "Your health was set by %s", "Set the health of %s to ".. Health)
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Health", function()
+FAdmin.StartHooks["Health"] = function()
 	FAdmin.Commands.AddCommand("SetHealth", SetHealth)
 	FAdmin.Commands.AddCommand("hp", SetHealth)
 	
 	FAdmin.Access.AddPrivilege("SetHealth", 2)
-end)
+end

@@ -36,12 +36,12 @@ local function Unfreeze(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, targets, "You have unfrozen %s", "You were unfrozen by %s", "Unfroze %s")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Freeze", function()
+FAdmin.StartHooks["Freeze"] = function()
 	FAdmin.Commands.AddCommand("freeze", Freeze)
 	FAdmin.Commands.AddCommand("unfreeze", Unfreeze)
 	
 	FAdmin.Access.AddPrivilege("Freeze", 2)
-end)
+end
 
 hook.Add("PlayerSpawnObject", "FAdmin_jail", function(ply)
 	if ply:FAdmin_GetGlobal("FAdmin_frozen") then

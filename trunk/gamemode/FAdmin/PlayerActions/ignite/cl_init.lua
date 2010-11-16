@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "Ignite", function()
+FAdmin.StartHooks["Ignite"] = function()
 	FAdmin.Access.AddPrivilege("Ignite", 2)
 	FAdmin.Commands.AddCommand("Ignite", nil, "<Player>", "[time]")
 	FAdmin.Commands.AddCommand("unignite", nil, "<Player>")
@@ -20,4 +20,4 @@ hook.Add("FAdmin_PluginsLoaded", "Ignite", function()
 			button:GetParent():InvalidateLayout()
 		end
 	end)
-end)
+end

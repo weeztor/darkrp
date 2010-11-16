@@ -43,6 +43,6 @@ local function RestrictWeaponMenu()
 	WeaponMenu:StretchToParent(0,25,0,0)
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Restrict", function()
+FAdmin.StartHooks["Restrict"] = function()
 	FAdmin.ScoreBoard.Server:AddPlayerAction("Restrict weapons", "FAdmin/icons/weapon", Color(0, 155, 0, 255), true, RestrictWeaponMenu)
-end)
+end

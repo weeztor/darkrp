@@ -19,7 +19,7 @@ local function GiveWeaponGui(ply)
 	WeaponMenu:BuildList()
 end
 
-hook.Add("FAdmin_PluginsLoaded", "GiveWeapons", function()
+FAdmin.StartHooks["GiveWeapons"] = function()
 	FAdmin.Access.AddPrivilege("giveweapon", 2)
 	FAdmin.Commands.AddCommand("giveweapon", nil, "<Player>", "<weapon>")
 	
@@ -28,4 +28,4 @@ hook.Add("FAdmin_PluginsLoaded", "GiveWeapons", function()
 	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "giveweapon") end, function(ply, button)
 		GiveWeaponGui(ply)
 	end)
-end)
+end

@@ -59,12 +59,12 @@ local function UnCloak(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, targets, "You have uncloaked %s", "You were uncloaked by %s", "Uncloaked %s")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Cloak", function()
+FAdmin.StartHooks["Cloak"] = function()
 	FAdmin.Commands.AddCommand("Cloak", Cloak)
 	FAdmin.Commands.AddCommand("Uncloak", UnCloak)
 	
 	FAdmin.Access.AddPrivilege("Cloak", 2)
-end)
+end
 
 function CloakThink()
 	for k,v in pairs(player.GetAll()) do

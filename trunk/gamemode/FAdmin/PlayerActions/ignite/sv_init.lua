@@ -40,9 +40,9 @@ local function UnIgnite(ply, cmd, args)
 end
 
 
-hook.Add("FAdmin_PluginsLoaded", "Ignite", function()
+FAdmin.StartHooks["Ignite"] = function()
 	FAdmin.Commands.AddCommand("Ignite", Ignite)
 	FAdmin.Commands.AddCommand("Unignite", UnIgnite)
 	
 	FAdmin.Access.AddPrivilege("Ignite", 2)
-end)
+end

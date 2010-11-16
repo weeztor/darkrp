@@ -1139,51 +1139,53 @@ function GM:InitPostEntity()
 	end)
 end
 
-
 -- DarkRP plugin for FAdmin. It's this simple to make a plugin. If FAdmin isn't installed, this code won't bother anyone
-hook.Add("FAdmin_PluginsLoaded", "DarkRP", function()
-	-- DarkRP information:
-	FAdmin.ScoreBoard.Player:AddInformation("Steam name", function(ply) return ply:SteamName() end, true)
-	FAdmin.ScoreBoard.Player:AddInformation("Money", function(ply) if LocalPlayer():IsAdmin() and ply.DarkRPVars and ply.DarkRPVars.money then return "$"..ply.DarkRPVars.money end end)
-	FAdmin.ScoreBoard.Player:AddInformation("Wanted", function(ply) if ply.DarkRPVars and ply.DarkRPVars.wanted then return tostring(ply.DarkRPVars["wantedReason"] or "N/A") end end)
-	
-	-- Warrant
-	FAdmin.ScoreBoard.Player:AddActionButton("Warrant", "FAdmin/icons/Message",	Color(0, 0, 200, 255), 
-		function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end, 
-		function(ply, button)
-			Derma_StringRequest("Warrant reason", "Enter the reason for the warrant", "", function(Reason)
-				LocalPlayer():ConCommand("say /warrant ".. ply:UserID().." ".. Reason)
-			end)
-		end)
+hook.Add("PostGamemodeLoaded", "FAdmin_DarkRP", function()
+	if not FAdmin or not FAdmin.StartHooks then return end
+	FAdmin.StartHooks["DarkRP"] = function()
+		-- DarkRP information:
+		FAdmin.ScoreBoard.Player:AddInformation("Steam name", function(ply) return ply:SteamName() end, true)
+		FAdmin.ScoreBoard.Player:AddInformation("Money", function(ply) if LocalPlayer():IsAdmin() and ply.DarkRPVars and ply.DarkRPVars.money then return "$"..ply.DarkRPVars.money end end)
+		FAdmin.ScoreBoard.Player:AddInformation("Wanted", function(ply) if ply.DarkRPVars and ply.DarkRPVars.wanted then return tostring(ply.DarkRPVars["wantedReason"] or "N/A") end end)
 		
-	--wanted
-	FAdmin.ScoreBoard.Player:AddActionButton(function(ply)
-			return ((ply.DarkRPVars.wanted and "Unw") or "W") .. "anted"
-		end, 
-		function(ply) return "FAdmin/icons/jail", ply.DarkRPVars.wanted and "FAdmin/icons/disable" end,
-		Color(0, 0, 200, 255), 
-		function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end, 
-		function(ply, button)
-			Derma_StringRequest("wanted reason", "Enter the reason to arrest this player", "", function(Reason)
-				LocalPlayer():ConCommand("say /wanted ".. ply:UserID().." ".. Reason)
+		-- Warrant
+		FAdmin.ScoreBoard.Player:AddActionButton("Warrant", "FAdmin/icons/Message",	Color(0, 0, 200, 255), 
+			function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end, 
+			function(ply, button)
+				Derma_StringRequest("Warrant reason", "Enter the reason for the warrant", "", function(Reason)
+					LocalPlayer():ConCommand("say /warrant ".. ply:UserID().." ".. Reason)
+				end)
 			end)
-		end)
-	
-	--Teamban
-	FAdmin.ScoreBoard.Player:AddActionButton("Ban from job", "FAdmin/icons/changeteam", Color(200, 0, 0, 255), 
-	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", ply) end, function(ply, button)
-		local menu = DermaMenu()
-		local Title = vgui.Create("DLabel")
-		Title:SetText("  Jobs:\n")
-		Title:SetFont("UiBold")
-		Title:SizeToContents()
-		Title:SetTextColor(color_black)
+			
+		--wanted
+		FAdmin.ScoreBoard.Player:AddActionButton(function(ply)
+				return ((ply.DarkRPVars.wanted and "Unw") or "W") .. "anted"
+			end, 
+			function(ply) return "FAdmin/icons/jail", ply.DarkRPVars.wanted and "FAdmin/icons/disable" end,
+			Color(0, 0, 200, 255), 
+			function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end, 
+			function(ply, button)
+				Derma_StringRequest("wanted reason", "Enter the reason to arrest this player", "", function(Reason)
+					LocalPlayer():ConCommand("say /wanted ".. ply:UserID().." ".. Reason)
+				end)
+			end)
 		
-		menu:AddPanel(Title)
-		for k,v in SortedPairsByMemberValue(RPExtraTeams, "name") do
-			menu:AddOption(v.name, function() RunConsoleCommand("rp_teamban", ply:UserID(), v.command) end)
-		end
-		menu:Open()
-	end)
+		--Teamban
+		FAdmin.ScoreBoard.Player:AddActionButton("Ban from job", "FAdmin/icons/changeteam", Color(200, 0, 0, 255), 
+		function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", ply) end, function(ply, button)
+			local menu = DermaMenu()
+			local Title = vgui.Create("DLabel")
+			Title:SetText("  Jobs:\n")
+			Title:SetFont("UiBold")
+			Title:SizeToContents()
+			Title:SetTextColor(color_black)
+			
+			menu:AddPanel(Title)
+			for k,v in SortedPairsByMemberValue(RPExtraTeams, "name") do
+				menu:AddOption(v.name, function() RunConsoleCommand("rp_teamban", ply:UserID(), v.command) end)
+			end
+			menu:Open()
+		end)
+	end
 end)
 include("FAdmin_DarkRP.lua")

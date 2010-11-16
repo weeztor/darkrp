@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "StripWeapons", function()
+FAdmin.StartHooks["StripWeapons"] = function()
 	FAdmin.Access.AddPrivilege("StripWeapons", 2)
 	FAdmin.Commands.AddCommand("StripWeapons", nil, "<Player>")
 	FAdmin.Commands.AddCommand("Strip", nil, "<Player>")
@@ -7,4 +7,4 @@ hook.Add("FAdmin_PluginsLoaded", "StripWeapons", function()
 	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "StripWeapons", ply) end, function(ply, button)
 		RunConsoleCommand("_FAdmin", "StripWeapons", ply:UserID())
 	end)
-end)
+end

@@ -42,8 +42,8 @@ local function Slay(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, targets, "Slayed %s", "You were slayed by %s", "Slayed %s")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Slay", function()
+FAdmin.StartHooks["Slay"] = function()
 	FAdmin.Commands.AddCommand("Slay", Slay)
 	
 	FAdmin.Access.AddPrivilege("Slay", 2)
-end)
+end

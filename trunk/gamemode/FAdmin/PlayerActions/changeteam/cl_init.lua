@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "zzSetTeam", function()
+FAdmin.StartHooks["zzSetTeam"] = function()
 	FAdmin.Access.AddPrivilege("SetTeam", 2)
 	FAdmin.Commands.AddCommand("SetTeam", nil, "<Player>", "<Team>")
 	
@@ -17,4 +17,4 @@ hook.Add("FAdmin_PluginsLoaded", "zzSetTeam", function()
 		end
 		menu:Open()
 	end)
-end)
+end

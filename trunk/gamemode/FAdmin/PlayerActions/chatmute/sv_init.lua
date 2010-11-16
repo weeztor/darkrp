@@ -34,12 +34,12 @@ local function UnMuteChat(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, targets, "You have chat unmuted %s", "Your chat was unmuted by %s", "Chat unmuted %s")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Chatmute", function()
+FAdmin.StartHooks["Chatmute"] = function()
 	FAdmin.Commands.AddCommand("Chatmute", MuteChat)
 	FAdmin.Commands.AddCommand("UnChatmute", UnMuteChat)
 	
 	FAdmin.Access.AddPrivilege("Chatmute", 2)
-end)
+end
 
 hook.Add("PlayerSay", "FAdmin_Chatmute", function(ply, text, Team, dead)
 	if ply:FAdmin_GetGlobal("FAdmin_chatmuted") then return "" end

@@ -256,12 +256,12 @@ local function Ragdoll(ply, cmd, args)
 	end
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Ragdoll", function()
+FAdmin.StartHooks["Ragdoll"] = function()
 	FAdmin.Commands.AddCommand("Ragdoll", Ragdoll)
 	FAdmin.Commands.AddCommand("UnRagdoll", Ragdoll)
 	
 	FAdmin.Access.AddPrivilege("Ragdoll", 2)
-end)
+end
 
 hook.Add("PlayerSpawnObject", "FAdmin_ragdoll", function(ply)
 	if type(ply.FAdminRagdoll) == "table" or ValidEntity(ply.FAdminRagdoll) then

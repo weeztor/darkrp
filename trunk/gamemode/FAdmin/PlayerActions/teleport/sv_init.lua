@@ -195,12 +195,11 @@ local function Goto(ply, cmd, args)
 	ply:EmitSound("ambient/energy/zap"..Zap..".wav")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Teleport", function()
+FAdmin.StartHooks["Teleport"] = function()
 	FAdmin.Access.AddPrivilege("Teleport", 2)
 	
 	FAdmin.Commands.AddCommand("Teleport", Teleport)
 	FAdmin.Commands.AddCommand("TP", Teleport)
 	FAdmin.Commands.AddCommand("Bring", Bring)
 	FAdmin.Commands.AddCommand("Goto", Goto)
-end)
-
+end

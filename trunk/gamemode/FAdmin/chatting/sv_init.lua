@@ -41,7 +41,7 @@ local function ToAdmins(ply, cmd, args)
 	umsg.End()
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Chatting", function()
+FAdmin.StartHooks["Chatting"] = function()
 	FAdmin.Commands.AddCommand("pm", PM)
 	FAdmin.Commands.AddCommand("adminhelp", ToAdmins)
-end)
+end

@@ -20,8 +20,8 @@ local function SetTeam(ply, cmd, args)
 	end
 end
 
-hook.Add("FAdmin_PluginsLoaded", "SetTeam", function()
+FAdmin.StartHooks["SetTeam"] = function()
 	FAdmin.Commands.AddCommand("SetTeam", SetTeam)
 	
 	FAdmin.Access.AddPrivilege("SetTeam", 2)
-end)
+end

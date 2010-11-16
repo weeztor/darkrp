@@ -76,10 +76,10 @@ local function CreateMOTD(ply)
 	MOTD:SpawnFunction(ply, ply:GetEyeTrace())
 end
 
-hook.Add("FAdmin_PluginsLoaded", "MOTD", function()
+FAdmin.StartHooks["MOTD"] = function()
 	FAdmin.Commands.AddCommand("MOTDPage", FAdmin.MOTD.SetMOTDPage)
 	FAdmin.Commands.AddCommand("CreateMOTD", CreateMOTD)
-end)
+end
 
 hook.Add("PlayerInitialSpawn", "SendMOTDSite", function()
 	local Site = GetConVarString("_FAdmin_MOTDPage")

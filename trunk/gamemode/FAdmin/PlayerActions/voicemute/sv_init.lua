@@ -36,12 +36,12 @@ local function UnMuteVoice(ply, cmd, args)
 	end
 end
 
-hook.Add("FAdmin_PluginsLoaded", "VoiceMute", function()
+FAdmin.StartHooks["VoiceMute"] = function()
 	FAdmin.Commands.AddCommand("Voicemute", MuteVoice)
 	FAdmin.Commands.AddCommand("UnVoicemute", UnMuteVoice)
 	
 	FAdmin.Access.AddPrivilege("Voicemute", 2)
-end)
+end
 
 hook.Add("PlayerCanHearPlayersVoice", "FAdmin_Voicemute", function(Listener, Talker)
 	if Talker:FAdmin_GetGlobal("FAdmin_voicemuted") then return false end

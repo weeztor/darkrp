@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "00RCon", function()
+FAdmin.StartHooks["00RCon"] = function()
 	FAdmin.Access.AddPrivilege("RCon", 4)
 	FAdmin.Commands.AddCommand("RCon", "<command>", "<args>")
 	
@@ -7,4 +7,4 @@ hook.Add("FAdmin_PluginsLoaded", "00RCon", function()
 		Derma_StringRequest("RCon comand", "Enter a command to be run on the server. Note: a lot of commands are blocked and they will not work!", "", 
 			function(text) RunConsoleCommand("_FAdmin", "RCon", unpack(string.Explode(" ", text))) end)
 	end)
-end)
+end

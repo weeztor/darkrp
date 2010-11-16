@@ -43,9 +43,9 @@ local function GiveAmmo(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, targets, "You gave %s "..amount.." "..ammo.. " ammo", "%s gave you ".. amount.." "..ammo.. " ammo", "Gave %s "..amount.." "..ammo)
 end
 
-hook.Add("FAdmin_PluginsLoaded", "GiveWeapons", function()
+FAdmin.StartHooks["GiveWeapons"] = function()
 	FAdmin.Commands.AddCommand("giveweapon", GiveWeapon)
 	FAdmin.Commands.AddCommand("giveammo", GiveAmmo)
 	
 	FAdmin.Access.AddPrivilege("giveweapon", 2)
-end)
+end

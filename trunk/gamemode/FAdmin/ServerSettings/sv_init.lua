@@ -37,8 +37,8 @@ local function ServerSetting(ply, cmd, args)
 	args[1].. " was set to " .. unpack(CommandArgs), "Set ".. args[1].. " to ".. unpack(CommandArgs))
 end
 
-hook.Add("FAdmin_PluginsLoaded", "ServerSettings", function()
+FAdmin.StartHooks["ServerSettings"] = function()
 	FAdmin.Commands.AddCommand("ServerSetting", ServerSetting)
 	
 	FAdmin.Access.AddPrivilege("ServerSetting", 2)
-end)
+end

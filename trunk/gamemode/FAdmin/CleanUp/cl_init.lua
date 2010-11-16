@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "CleanUp", function()
+FAdmin.StartHooks["CleanUp"] = function()
 	FAdmin.Access.AddPrivilege("CleanUp", 2)
 	FAdmin.Commands.AddCommand("ClearDecals", nil)
 	FAdmin.Commands.AddCommand("StopSounds", nil)
@@ -15,4 +15,4 @@ hook.Add("FAdmin_PluginsLoaded", "CleanUp", function()
 	FAdmin.ScoreBoard.Server:AddServerAction("Clean up server", "FAdmin/icons/CleanUp", Color(155, 0, 0, 255), true, function(ply, button)
 		RunConsoleCommand("_FAdmin", "CleanUp")
 	end)
-end)
+end

@@ -103,12 +103,12 @@ local function Jail(ply, cmd, args)
 	end
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Jail", function()
+FAdmin.StartHooks["Jail"] = function()
 	FAdmin.Commands.AddCommand("Jail", Jail)
 	FAdmin.Commands.AddCommand("UnJail", Jail)
 	
 	FAdmin.Access.AddPrivilege("Jail", 2)
-end)
+end
 
 hook.Add("PlayerSpawn", "FAdmin_jail", function(ply)
 	if ply:FAdmin_GetGlobal("fadmin_jailed") then

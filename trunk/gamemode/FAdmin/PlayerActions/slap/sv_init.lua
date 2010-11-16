@@ -45,8 +45,8 @@ local function Slap(ply, cmd, args)
 	end
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Slap", function()
+FAdmin.StartHooks["Slap"] = function()
 	FAdmin.Commands.AddCommand("Slap", Slap)
 	
 	FAdmin.Access.AddPrivilege("Slap", 2)
-end)
+end

@@ -4,7 +4,7 @@ local function EnableDisableNoclip(ply)
 			and not ply:FAdmin_GetGlobal("FADmin_DisableNoclip"))
 end
 
-hook.Add("FAdmin_PluginsLoaded", "zz_Noclip", function()
+FAdmin.StartHooks["zz_Noclip"] = function()
 	FAdmin.Access.AddPrivilege("Noclip", 2)
 	FAdmin.Access.AddPrivilege("SetNoclip", 2)
 	
@@ -34,4 +34,4 @@ hook.Add("FAdmin_PluginsLoaded", "zz_Noclip", function()
 		button:SetImage2("FAdmin/icons/disable")
 		button:GetParent():InvalidateLayout()
 	end)
-end)
+end
