@@ -1,7 +1,7 @@
 CreateConVar("FAdmin_logging", 1, {FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE})
 
 if SERVER then return end
-hook.Add("FAdmin_PluginsLoaded", "Logging", function()
+FAdmin.StartHooks["Logging"] = function()
 	FAdmin.Access.AddPrivilege("Logging", 3)
 	FAdmin.Commands.AddCommand("Logging", nil)
 	
@@ -14,4 +14,4 @@ hook.Add("FAdmin_PluginsLoaded", "Logging", function()
 		
 		RunConsoleCommand("_Fadmin", "Logging", (tobool(GetConVarNumber("FAdmin_logging")) and 0) or 1)
 	end)
-end)
+end

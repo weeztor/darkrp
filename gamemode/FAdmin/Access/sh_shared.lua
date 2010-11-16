@@ -96,10 +96,10 @@ function FAdmin.Access.PlayerHasPrivilege(ply, priv, target)
 	return false
 end
 
-hook.Add("FAdmin_PluginsLoaded", "AccessFunctions", function()
+FAdmin.StartHooks["AccessFunctions"] = function()
 	FAdmin.Access.AddPrivilege("SetAccess", 4) -- AddPrivilege is shared, run on both client and server
 	FAdmin.Commands.AddCommand("RemoveGroup", FAdmin.Access.RemoveGroup)
-end)
+end
 
 --ULX compatibility!
 timer.Simple(0, function()

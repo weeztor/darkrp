@@ -3,7 +3,7 @@ hook.Add("PlayerBindPress", "FAdmin_voicemuted", function(ply, bind, pressed)
 	-- The voice muting is not done clientside, this is just so people know they can't talk
 end)
 
-hook.Add("FAdmin_PluginsLoaded", "Voicemute", function()
+FAdmin.StartHooks["Voicemute"] = function()
 	FAdmin.Access.AddPrivilege("Voicemute", 2)
 	FAdmin.Commands.AddCommand("Voicemute", nil, "<Player>")
 	FAdmin.Commands.AddCommand("UnVoicemute", nil, "<Player>")
@@ -31,4 +31,4 @@ hook.Add("FAdmin_PluginsLoaded", "Voicemute", function()
 		button:SetText("Mute voice")
 		button:GetParent():InvalidateLayout()
 	end)
-end)
+end

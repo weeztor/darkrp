@@ -47,7 +47,7 @@ end)
 /*
 ADD BUTTONS ETC. TO MENU
 */
-hook.Add("FAdmin_PluginsLoaded", "CL_KickBan", function()
+FAdmin.StartHooks["CL_KickBan"] = function()
 	FAdmin.Access.AddPrivilege("Kick", 2)
 	FAdmin.Access.AddPrivilege("Ban", 2)
 	FAdmin.Access.AddPrivilege("UnBan", 2)
@@ -308,4 +308,4 @@ hook.Add("FAdmin_PluginsLoaded", "CL_KickBan", function()
 		Frame:MakePopup()
 		Frame:DoModal()
 	end)
-end)
+end

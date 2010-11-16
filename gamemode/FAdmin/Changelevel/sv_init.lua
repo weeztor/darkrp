@@ -11,8 +11,8 @@ local function ChangeLevel(ply, cmd, args)
 	end
 end
 
-hook.Add("FAdmin_PluginsLoaded", "ChangeLevel", function()
+FAdmin.StartHooks["ChangeLevel"] = function()
 	FAdmin.Commands.AddCommand("changelevel", ChangeLevel)
 	
 	FAdmin.Access.AddPrivilege("changelevel", 2)
-end)
+end

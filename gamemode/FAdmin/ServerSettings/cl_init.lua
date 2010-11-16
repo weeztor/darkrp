@@ -38,7 +38,7 @@ local function SetLimits()
 	PanelList:AddItem(Form)
 end
 
-hook.Add("FAdmin_PluginsLoaded", "ServerSettings", function()
+FAdmin.StartHooks["ServerSettings"] = function()
 	FAdmin.Access.AddPrivilege("ServerSetting", 2)
 	
 	
@@ -74,4 +74,4 @@ hook.Add("FAdmin_PluginsLoaded", "ServerSettings", function()
 	
 	
 	FAdmin.ScoreBoard.Server:AddServerSetting("Set server limits", "FAdmin/icons/ServerSetting", Color(0, 0, 155, 255), true, SetLimits)
-end)
+end

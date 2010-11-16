@@ -9,7 +9,7 @@ end
 usermessage.Hook("FADMIN_RetrievePrivs", RetrievePrivs)
 
 
-hook.Add("FAdmin_PluginsLoaded", "1SetAccess", function() -- 1 in hook name so it will be executed first.
+FAdmin.StartHooks["1SetAccess"] = function() -- 1 in hook name so it will be executed first.
 	FAdmin.Commands.AddCommand("setaccess", nil, "<Player>", "<Group name>", "[new group based on (number)]", "[new group privileges]")
 	
 	FAdmin.ScoreBoard.Player:AddActionButton("Set access", "FAdmin/icons/access", Color(255, 0, 0, 255), 
@@ -116,7 +116,7 @@ hook.Add("FAdmin_PluginsLoaded", "1SetAccess", function() -- 1 in hook name so i
 		end
 		
 	)
-end)
+end
 
 ContinueNewGroup = function(ply, name, admin_access)
 	local privs = {}

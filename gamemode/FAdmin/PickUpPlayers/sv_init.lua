@@ -40,8 +40,8 @@ local function ChangeUser(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, player.GetAll(), ply:Nick().." turned Player>Player pickup "..OnOff, "Player>Player pickup has been turned "..OnOff, "Turned Player>Player pickup "..OnOff)
 end
 
-hook.Add("FAdmin_PluginsLoaded", "PickUpPlayers", function()
+FAdmin.StartHooks["PickUpPlayers"] = function()
 	FAdmin.Access.AddPrivilege("PickUpPlayers", 2)
 	FAdmin.Commands.AddCommand("AdminsCanPickUpPlayers", ChangeAdmin)
 	FAdmin.Commands.AddCommand("PlayersCanPickUpPlayers", ChangeUser)
-end)
+end

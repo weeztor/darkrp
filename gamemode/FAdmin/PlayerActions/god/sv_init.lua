@@ -34,12 +34,12 @@ local function Ungod(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, targets, "Ungodded %s", "You were ungodded by %s", "Ungodded %s")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "God", function()
+FAdmin.StartHooks["God"] = function()
 	FAdmin.Commands.AddCommand("God", God)
 	FAdmin.Commands.AddCommand("Ungod", Ungod)
 	
 	FAdmin.Access.AddPrivilege("God", 2)
-end)
+end
 
 hook.Add("PlayerSpawn", "FAdmin_God", function()
 	for _, ply in pairs(player.GetAll()) do

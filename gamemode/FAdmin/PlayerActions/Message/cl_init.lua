@@ -64,7 +64,7 @@ local function MessageGui(ply)
 	end
 end
 
-hook.Add("FAdmin_PluginsLoaded", "zzSendMessage", function()
+FAdmin.StartHooks["zzSendMessage"] = function()
 	FAdmin.Access.AddPrivilege("Message", 1)
 	FAdmin.Commands.AddCommand("Message", nil, "<Player>", "[type]", "<text>")
 	
@@ -73,4 +73,4 @@ hook.Add("FAdmin_PluginsLoaded", "zzSendMessage", function()
 			MessageGui(ply)
 		end
 	)
-end)
+end

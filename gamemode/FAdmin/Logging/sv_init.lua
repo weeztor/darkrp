@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "Logging", function()
+FAdmin.StartHooks["Logging"] = function()
 	FAdmin.Access.AddPrivilege("Logging", 3)
 	FAdmin.Commands.AddCommand("Logging", function(ply, cmd, args)
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Logging") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
@@ -9,7 +9,7 @@ hook.Add("FAdmin_PluginsLoaded", "Logging", function()
 		
 		RunConsoleCommand("FAdmin_logging", args[1])
 	end)
-end)
+end
 
 local LogFile
 function FAdmin.Log(text)

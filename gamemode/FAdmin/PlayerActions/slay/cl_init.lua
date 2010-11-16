@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "Slay", function()
+FAdmin.StartHooks["Slay"] = function()
 	FAdmin.Access.AddPrivilege("Slay", 2)
 	FAdmin.Commands.AddCommand("Slay", nil, "<Player>", "[Normal/Silent/Explode/Rocket]")
 	
@@ -26,4 +26,4 @@ hook.Add("FAdmin_PluginsLoaded", "Slay", function()
 		
 		menu:Open()
 	end)
-end)
+end

@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "Health", function()
+FAdmin.StartHooks["Health"] = function()
 	FAdmin.Access.AddPrivilege("SetHealth", 2)
 	FAdmin.Commands.AddCommand("hp", nil, "<Player>", "<health>")
 	FAdmin.Commands.AddCommand("SetHealth", nil, "[Player]", "<health>")
@@ -28,4 +28,4 @@ hook.Add("FAdmin_PluginsLoaded", "Health", function()
 			end
 		end
 	end)
-end)
+end

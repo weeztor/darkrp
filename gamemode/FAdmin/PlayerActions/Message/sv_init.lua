@@ -23,8 +23,8 @@ local function DoMessage(ply, cmd, args)
 end
 
 
-hook.Add("FAdmin_PluginsLoaded", "DoMessage", function()
+FAdmin.StartHooks["DoMessage"] = function()
 	FAdmin.Commands.AddCommand("Message", DoMessage)
 	
 	FAdmin.Access.AddPrivilege("Message", 1)-- Anyone can send messages. Why not?
-end)
+end

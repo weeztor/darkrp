@@ -24,10 +24,10 @@ local function CleanUp(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, player.GetAll(), "You have cleaned up the map", "The map has been cleaned up", "Cleaned up the map")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "CleanUp", function()
+FAdmin.StartHooks["CleanUp"] = function()
 	FAdmin.Commands.AddCommand("ClearDecals", ClearDecals)
 	FAdmin.Commands.AddCommand("StopSounds", StopSounds)
 	FAdmin.Commands.AddCommand("CleanUp", CleanUp)
 	
 	FAdmin.Access.AddPrivilege("CleanUp", 2)
-end)
+end

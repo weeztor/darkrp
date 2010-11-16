@@ -570,14 +570,17 @@ function AddTeamCommands(CTeam, max)
 	end)
 end
 
-hook.Add("FAdmin_PluginsLoaded", "DarkRP_privs", function()
-	FAdmin.Access.AddPrivilege("rp_commands", 2)
-	FAdmin.Access.AddPrivilege("rp_tool", 2)
-	FAdmin.Access.AddPrivilege("rp_phys", 2)
-	FAdmin.Access.AddPrivilege("rp_prop", 2)
-	for k,v in pairs(RPExtraTeams) do
-		if v.Vote then
-			FAdmin.Access.AddPrivilege("rp_"..v.command, (v.admin or 0) + 2) -- Add privileges for the teams that are voted for
+hook.Add("PostGamemodeLoaded", "FAdmin_DarkRP_privs", function()
+	if not FAdmin or not FAdmin.StartHooks then return end
+	FAdmin.StartHooks["DarkRP_privs"] = function()
+		FAdmin.Access.AddPrivilege("rp_commands", 2)
+		FAdmin.Access.AddPrivilege("rp_tool", 2)
+		FAdmin.Access.AddPrivilege("rp_phys", 2)
+		FAdmin.Access.AddPrivilege("rp_prop", 2)
+		for k,v in pairs(RPExtraTeams) do
+			if v.Vote then
+				FAdmin.Access.AddPrivilege("rp_"..v.command, (v.admin or 0) + 2) -- Add privileges for the teams that are voted for
+			end
 		end
 	end
 end)

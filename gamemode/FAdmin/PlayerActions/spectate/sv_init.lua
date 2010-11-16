@@ -13,8 +13,8 @@ local function Spectate(ply, cmd, args)
 	FAdmin.Messages.SendMessage(ply, 4, "You are now spectating "..target:Nick() .. " ("..target:SteamID()..")")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Spectate", function()
+FAdmin.StartHooks["Spectate"] = function()
 	FAdmin.Commands.AddCommand("Spectate", Spectate)
 	
 	FAdmin.Access.AddPrivilege("Spectate", 2)
-end)
+end

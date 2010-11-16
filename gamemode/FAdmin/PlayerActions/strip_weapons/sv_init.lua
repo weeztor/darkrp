@@ -15,9 +15,9 @@ local function StripWeapons(ply, cmd, args)
 	FAdmin.Messages.ActionMessage(ply, targets, "Stripped the weapons of %s", "Your weapons were stripped by %s", "Stripped the weapons of %s")
 end
 
-hook.Add("FAdmin_PluginsLoaded", "StripWeapons", function()
+FAdmin.StartHooks["StripWeapons"] = function()
 	FAdmin.Commands.AddCommand("StripWeapons", StripWeapons)
 	FAdmin.Commands.AddCommand("Strip", StripWeapons)
 	
 	FAdmin.Access.AddPrivilege("StripWeapons", 2)
-end)
+end

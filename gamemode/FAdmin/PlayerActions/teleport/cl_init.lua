@@ -4,7 +4,7 @@ local function EnableDisableNoclip(ply)
 			and not ply:GetNWBool("FADmin_DisableNoclip"))
 end
 
-hook.Add("FAdmin_PluginsLoaded", "zz_Teleport", function()
+FAdmin.StartHooks["zz_Teleport"] = function()
 	FAdmin.Access.AddPrivilege("Teleport", 2)
 	
 	FAdmin.Commands.AddCommand("Teleport", nil, "[Player]")
@@ -46,4 +46,4 @@ hook.Add("FAdmin_PluginsLoaded", "zz_Teleport", function()
 		end
 		menu:Open()
 	end)
-end)
+end

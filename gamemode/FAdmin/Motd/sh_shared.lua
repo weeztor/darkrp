@@ -1,7 +1,7 @@
 CreateConVar("_FAdmin_MOTDPage", "data/FADmin/MOTD.txt", {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE})
 
 if CLIENT then -- I can't be bothered to make a cl_init when there's a shared file with just one line in it.
-	hook.Add("FAdmin_PluginsLoaded", "MOTD", function()
+	FAdmin.StartHooks["MOTD"] = function()
 		FAdmin.ScoreBoard.Server:AddServerAction("Place MOTD", "FAdmin/icons/MOTD", Color(155, 0, 0, 255), true, function()
 			RunConsoleCommand("_FAdmin", "CreateMOTD")
 		end)
@@ -82,5 +82,5 @@ if CLIENT then -- I can't be bothered to make a cl_init when there's a shared fi
 			Window:MakePopup()
 			Window:DoModal()
 		end)
-	end)
+	end
 end

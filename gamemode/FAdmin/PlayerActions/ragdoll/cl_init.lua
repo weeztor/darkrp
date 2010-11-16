@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "Ragdoll", function()
+FAdmin.StartHooks["Ragdoll"] = function()
 	FAdmin.Access.AddPrivilege("Ragdoll", 2)
 	FAdmin.Commands.AddCommand("Ragdoll", nil, "<Player>", "[normal/hang/kick]")
 	FAdmin.Commands.AddCommand("UnRagdoll", nil, "<Player>")
@@ -44,4 +44,4 @@ hook.Add("FAdmin_PluginsLoaded", "Ragdoll", function()
 		
 		menu:Open()
 	end)
-end)
+end

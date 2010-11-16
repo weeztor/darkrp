@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "zz_Cloak", function()
+FAdmin.StartHooks["zz_Cloak"] = function()
 	FAdmin.Access.AddPrivilege("Cloak", 2)
 	FAdmin.Commands.AddCommand("Cloak", nil, "<Player>")
 	FAdmin.Commands.AddCommand("Uncloak", nil, "<Player>")
@@ -23,4 +23,4 @@ hook.Add("FAdmin_PluginsLoaded", "zz_Cloak", function()
 		button:SetText("Cloak")
 		button:GetParent():InvalidateLayout()
 	end)
-end)
+end

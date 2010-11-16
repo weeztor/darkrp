@@ -191,7 +191,7 @@ local function UnBan(ply, cmd, args)
 end
 
 -- Commands and privileges
-hook.Add("FAdmin_PluginsLoaded", "KickBan", function()
+FAdmin.StartHooks["KickBan"] = function()
 	FAdmin.Commands.AddCommand("kick", Kick)
 	FAdmin.Commands.AddCommand("ban", Ban)
 	FAdmin.Commands.AddCommand("unban", UnBan)
@@ -200,7 +200,7 @@ hook.Add("FAdmin_PluginsLoaded", "KickBan", function()
 	FAdmin.Access.AddPrivilege("Kick", 2)
 	FAdmin.Access.AddPrivilege("Ban", 2)
 	FAdmin.Access.AddPrivilege("UnBan", 2)
-end)
+end
 
 hook.Add("InitPostEntity", "FAdmin_Retrievebans", function()
 	local RetrieveBans = hook.Call("FAdmin_RetrieveBans", nil)

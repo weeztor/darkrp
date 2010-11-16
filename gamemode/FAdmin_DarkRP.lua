@@ -1,6 +1,7 @@
 FAdmin = FAdmin or {}
 
 FAdmin.PlayerActions = {}
+FAdmin.StartHooks = {}
 
 if SERVER then
 	local function AddDir(dir) // recursively adds everything in a directory to be downloaded by client
@@ -257,7 +258,7 @@ end
 	there will be a hook that is called when all plugins are loaded.
 	This way there will be no hassle with which plugin loads first, which one next etc.
 */
-
-for k,v in SortedPairs(hook.GetTable().FAdmin_PluginsLoaded) do
+for k,v in pairs(FAdmin.StartHooks) do if type(k) ~= "string" then FAdmin.StartHooks[k] = nil end end
+for k,v in SortedPairs(FAdmin.StartHooks) do
 	v()
 end

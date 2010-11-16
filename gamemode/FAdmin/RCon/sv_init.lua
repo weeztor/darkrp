@@ -7,8 +7,8 @@ local function RCon(ply, cmd, args)
 	RunConsoleCommand(args[1], unpack(CommandArgs))
 end
 
-hook.Add("FAdmin_PluginsLoaded", "RCon", function()
+FAdmin.StartHooks["RCon"] = function()
 	FAdmin.Commands.AddCommand("RCon", RCon)
 	
 	FAdmin.Access.AddPrivilege("RCon", 4) -- Root only
-end)
+end

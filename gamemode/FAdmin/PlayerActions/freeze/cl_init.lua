@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "Freeze", function()
+FAdmin.StartHooks["Freeze"] = function()
 	FAdmin.Access.AddPrivilege("Freeze", 2)
 	FAdmin.Commands.AddCommand("freeze", nil, "<Player>")
 	FAdmin.Commands.AddCommand("unfreeze", nil, "<Player>")
@@ -23,4 +23,4 @@ hook.Add("FAdmin_PluginsLoaded", "Freeze", function()
 		button:SetText("Freeze")
 		button:GetParent():InvalidateLayout()
 	end)
-end)
+end

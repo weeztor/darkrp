@@ -1,4 +1,4 @@
-hook.Add("FAdmin_PluginsLoaded", "Jail", function()
+FAdmin.StartHooks["Jail"] = function()
 	FAdmin.Access.AddPrivilege("Jail", 2)
 	FAdmin.Commands.AddCommand("Jail", nil, "<Player>", "[Small/Normal/Big]", "[Time]")
 	FAdmin.Commands.AddCommand("UnJail", nil, "<Player>")
@@ -55,4 +55,4 @@ hook.Add("FAdmin_PluginsLoaded", "Jail", function()
 		
 		menu:Open()
 	end)
-end)
+end

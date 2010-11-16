@@ -36,12 +36,12 @@ local function SetNoclip(ply, cmd, args)
 	end
 end
 
-hook.Add("FAdmin_PluginsLoaded", "Noclip", function()
+FAdmin.StartHooks["Noclip"] = function()
 	FAdmin.Access.AddPrivilege("Noclip", 2)
 	FAdmin.Access.AddPrivilege("SetNoclip", 2)
 	
 	FAdmin.Commands.AddCommand("SetNoclip", SetNoclip)
-end)
+end
 
 hook.Add("PlayerNoClip", "FAdmin_noclip", function(ply)
 	if not util.tobool(GetConVarNumber("sbox_noclip")) and 

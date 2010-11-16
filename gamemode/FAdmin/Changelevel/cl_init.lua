@@ -4,7 +4,7 @@ include("menu/maplist_listview.lua")
 include("menu/map_icon.lua")
 
 local Changelevel
-hook.Add("FAdmin_PluginsLoaded", "ChangeLevel", function()
+FAdmin.StartHooks["ChangeLevel"] = function()
 	FAdmin.Access.AddPrivilege("changelevel", 2)
 	FAdmin.Commands.AddCommand("changelevel", "[gamemode]", "<map>")
 	
@@ -15,4 +15,4 @@ hook.Add("FAdmin_PluginsLoaded", "ChangeLevel", function()
 		Changelevel:Center()
 		Changelevel:MakePopup()
 	end)
-end)
+end
