@@ -137,7 +137,7 @@ function DB.Init()
 								--so he walks around with the settings from the SQLite database
 		for k,v in pairs(player.GetAll()) do
 			local SteamID = sql.SQLStr(v:SteamID())
-			DB.Query([[SELECT amount, salary, name, admin FROM darkrp_wallets 
+			DB.Query([[SELECT amount, salary, name FROM darkrp_wallets 
 				LEFT OUTER JOIN darkrp_salaries ON darkrp_wallets.steam = darkrp_salaries.steam
 				LEFT OUTER JOIN darkrp_rpnames ON darkrp_wallets.steam = darkrp_rpnames.steam
 				WHERE darkrp_wallets.steam = ]].. SteamID ..[[
