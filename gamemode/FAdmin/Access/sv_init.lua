@@ -45,6 +45,28 @@ function FAdmin.Access.SetRoot(ply, cmd, args) -- FAdmin setroot player
 	end
 end
 
+local nosend = {"user", "admin", "superadmin", "root_user", "noaccess"}
+local function SendCustomGroups(ply)
+	for k,v in pairs(FAdmin.Access.Groups) do
+		if not table.HasValue(nosend, k) then
+			SendUserMessage("FADMIN_SendGroups", ply, k, v.ADMIN)
+			local privs = {}
+			local SendAmount = 1
+			privs[SendAmount] = ""
+			for k,v in pairs(v.PRIVS) do
+				if string.len(privs[SendAmount]) > 200 then
+					SendAmount = SendAmount + 1
+					privs[SendAmount] = ""
+				end
+				privs[SendAmount] = privs[SendAmount].. ((privs[SendAmount] ~= "" and ";") or "")..v
+			end
+			for i = 1, SendAmount do
+				SendUserMessage("FAdmin_SendPrivs", ply, k, privs[SendAmount])
+			end
+		end
+	end
+end
+
 function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> groupname [new_groupadmin, new_groupprivs]
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	
@@ -64,6 +86,7 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 		
 		FAdmin.Access.AddGroup(args[2], tonumber(args[3]), Privs)-- Add new group
 		FAdmin.Messages.SendMessage(ply, 2, "Group created")
+		SendCustomGroups()
 	end
 	
 	for _, target in pairs(targets) do
@@ -75,6 +98,7 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 end
 
 --hooks and stuff
+
 hook.Add("PlayerInitialSpawn", "FAdmin_SetAccess", function(ply)
 	local Group = sql.QueryValue("SELECT groupname FROM FAdmin_PlayerGroups WHERE steamid = "..sql.SQLStr(ply:SteamID())..";")
 	if Group then
@@ -88,6 +112,7 @@ hook.Add("PlayerInitialSpawn", "FAdmin_SetAccess", function(ply)
 			end
 		end
 	end
+	SendCustomGroups(ply)
 end)
 
 local function SetImmunity(ply, cmd, args)

@@ -4,10 +4,27 @@ local function RetrievePrivs(um)
 	local Priv = um:ReadString()
 	if not Priv then return end
 	LocalPlayer().FADMIN_PRIVS = LocalPlayer().FADMIN_PRIVS or {}
-	table.insert(LocalPlayer().FADMIN_PRIVS, Priv)
+	table.insert(LocalPlayer().FADMIN_PRIVS or {}, Priv)
 end
 usermessage.Hook("FADMIN_RetrievePrivs", RetrievePrivs)
 
+local function RetrieveGroups(um)
+	FAdmin.Access.AddGroup(um:ReadString(), um:ReadShort(), {})
+end
+usermessage.Hook("FADMIN_SendGroups", RetrieveGroups)
+
+local function RetrievePRIVS(um)
+	local name, Privs = um:ReadString(), um:ReadString()
+	if not FAdmin.Access.Groups[name] then return end
+	
+	Privs = string.Explode(";", Privs)
+	
+	FAdmin.Access.Groups[name].PRIVS = FAdmin.Access.Groups[name].PRIVS or {}
+	for k,v in pairs(Privs) do
+		table.insert(FAdmin.Access.Groups[name].PRIVS, v) -- Insert since there could be more privs coming
+	end
+end
+usermessage.Hook("FAdmin_SendPrivs", RetrievePRIVS)
 
 FAdmin.StartHooks["1SetAccess"] = function() -- 1 in hook name so it will be executed first.
 	FAdmin.Commands.AddCommand("setaccess", nil, "<Player>", "<Group name>", "[new group based on (number)]", "[new group privileges]")
@@ -144,9 +161,11 @@ ContinueNewGroup = function(ply, name, admin_access)
 		chkBox:SetText(Pname)
 		chkBox:SizeToContents()
 		
-		if Padmin_access <= admin_access then
+		if (Padmin_access - 1) <= admin_access then
 			chkBox:SetValue(true)
-			chkBox:SetDisabled(true)
+			chkBox.Button:SetDisabled(true)
+			chkBox.Button:SetType("close")
+			chkBox.Label.OnMouseReleased = function() end
 		end
 		
 		function chkBox.Button:Toggle()
