@@ -46,11 +46,11 @@ function PLAYER:IsAdmin(...)
 	
 	if not FAdmin or not FAdmin.Access or not FAdmin.Access.Groups or not FAdmin.Access.Groups[usergroup] then return oldplyIsAdmin(self, ...) or SinglePlayer() end
 	
-	if (FAdmin.Access.Groups[usergroup] and FAdmin.Access.Groups[usergroup].ADMIN >= 2/*1 = admin*/) or (self.IsListenServerHost and self:IsListenServerHost()) then
+	if (FAdmin.Access.Groups[usergroup] and FAdmin.Access.Groups[usergroup].ADMIN >= 1/*1 = admin*/) or (self.IsListenServerHost and self:IsListenServerHost()) then
 		return true
 	end
 	
-	if CLIENT and tonumber(self:FAdmin_GetGlobal("FAdmin_admin")) and self:FAdmin_GetGlobal("FAdmin_admin")>= 2 then return true end
+	if CLIENT and tonumber(self:FAdmin_GetGlobal("FAdmin_admin")) and self:FAdmin_GetGlobal("FAdmin_admin")>= 1 then return true end
 	
 	return oldplyIsAdmin(self, ...) or SinglePlayer()
 end
@@ -59,10 +59,10 @@ local oldplyIsSuperAdmin = PLAYER.IsSuperAdmin
 function PLAYER:IsSuperAdmin(...)
 	local usergroup = self:GetNWString("usergroup")
 	if not FAdmin or not FAdmin.Access or not FAdmin.Access.Groups or not FAdmin.Access.Groups[usergroup] then return oldplyIsSuperAdmin(self, ...) or SinglePlayer() end
-	if (FAdmin.Access.Groups[usergroup] and FAdmin.Access.Groups[usergroup].ADMIN >= 3/*2 = superadmin*/) or (self.IsListenServerHost and self:IsListenServerHost()) then
+	if (FAdmin.Access.Groups[usergroup] and FAdmin.Access.Groups[usergroup].ADMIN >= 2/*2 = superadmin*/) or (self.IsListenServerHost and self:IsListenServerHost()) then
 		return true
 	end
-	if CLIENT and tonumber(self:FAdmin_GetGlobal("FAdmin_admin")) and self:FAdmin_GetGlobal("FAdmin_admin") >= 3 then return true end
+	if CLIENT and tonumber(self:FAdmin_GetGlobal("FAdmin_admin")) and self:FAdmin_GetGlobal("FAdmin_admin") >= 2 then return true end
 	return oldplyIsSuperAdmin(self, ...) or SinglePlayer()
 end
 
