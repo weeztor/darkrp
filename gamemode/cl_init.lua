@@ -1165,9 +1165,13 @@ hook.Add("PostGamemodeLoaded", "FAdmin_DarkRP", function()
 			Color(0, 0, 200, 255), 
 			function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end, 
 			function(ply, button)
-				Derma_StringRequest("wanted reason", "Enter the reason to arrest this player", "", function(Reason)
-					LocalPlayer():ConCommand("say /wanted ".. ply:UserID().." ".. Reason)
-				end)
+				if ply.DarkRPVars.wanted  then
+					Derma_StringRequest("wanted reason", "Enter the reason to arrest this player", "", function(Reason)
+						LocalPlayer():ConCommand("say /wanted ".. ply:UserID().." ".. Reason)
+					end)
+				else
+					LocalPlayer():ConCommand("say /unwanted ".. ply:UserID())
+				end
 			end)
 		
 		--Teamban
