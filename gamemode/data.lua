@@ -21,6 +21,10 @@ end
 
 function DB.Query(query, callback)
 	if CONNECTED_TO_MYSQL then 
+		if DB.MySQLDB and DB.MySQLDB:status() == mysqloo.DATABASE_NOT_CONNECTED then
+			DB.ConnectToMySQL(RP_MySQLConfig.Host, RP_MySQLConfig.Username, RP_MySQLConfig.Password, RP_MySQLConfig.Database_name, RP_MySQLConfig.Database_port)
+		end
+		
 		local query = DB.MySQLDB:query(query)
 		local data
 		query.onData = function(Q, D)
@@ -43,7 +47,11 @@ function DB.Query(query, callback)
 end
 
 function DB.QueryValue(query, callback)
-	if CONNECTED_TO_MYSQL then 
+	if CONNECTED_TO_MYSQL then
+		if DB.MySQLDB and DB.MySQLDB:status() == mysqloo.DATABASE_NOT_CONNECTED then
+			DB.ConnectToMySQL(RP_MySQLConfig.Host, RP_MySQLConfig.Username, RP_MySQLConfig.Password, RP_MySQLConfig.Database_name, RP_MySQLConfig.Database_port)
+		end
+		
 		local query = DB.MySQLDB:query(query)
 		local data
 		query.onData = function(Q, D)
