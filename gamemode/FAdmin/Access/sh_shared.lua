@@ -21,10 +21,10 @@ function FAdmin.Access.AddGroup(name, admin_access/*0 = not admin, 1 = admin, 2 
 	end
 end
 
-FAdmin.Access.AddGroup("root_user", 4)
-FAdmin.Access.AddGroup("superadmin", 3)
-FAdmin.Access.AddGroup("admin", 2)
-FAdmin.Access.AddGroup("user", 1)
+FAdmin.Access.AddGroup("root_user", 3)
+FAdmin.Access.AddGroup("superadmin", 2)
+FAdmin.Access.AddGroup("admin", 1)
+FAdmin.Access.AddGroup("user", 0)
 FAdmin.Access.AddGroup("noaccess", 0)
 
 function FAdmin.Access.RemoveGroup(ply, cmd, args)
