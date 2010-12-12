@@ -473,9 +473,11 @@ function meta:Unarrest(ID)
 		
 		GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 		GAMEMODE:PlayerLoadout(self)
-		if GetConVarNumber("telefromjail") == 1 then
+		if GetConVarNumber("telefromjail") == 1 and (not FAdmin or not self:FAdmin_GetGlobal("fadmin_jailed")) then
 			local _, pos = GAMEMODE:PlayerSelectSpawn(self)
 			self:SetPos(pos)
+		elseif FAdmin and self:FAdmin_GetGlobal("fadmin_jailed") then
+			self:SetPos(self.FAdminJailPos)
 		end
 		
 		timer.Destroy(self:SteamID() .. "jailtimer")

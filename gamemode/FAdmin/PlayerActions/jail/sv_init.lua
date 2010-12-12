@@ -10,7 +10,7 @@ local function Jail(ply, cmd, args)
 	local JailType = FAdmin.PlayerActions.JailTypes[tonumber(args[2])] or args[2] or FAdmin.PlayerActions.JailTypes[2]
 	JailType = string.lower(JailType)
 	local JailTime = tonumber(args[3]) or 0
-	local time
+	local time = ""
 	
 	for _, target in pairs(targets) do
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Jail", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
