@@ -50,7 +50,7 @@ local function ToggleAFK(ply)
 			umsg.String("colormod")
 			umsg.String("1")
 		umsg.End()
-		for k, v in pairs(ply.bannedfrom) do
+		for k, v in pairs(team.GetAllTeams()) do
 			ply.bannedfrom[k] = 1
 		end
 	else
@@ -63,7 +63,7 @@ local function ToggleAFK(ply)
 			umsg.String("colormod")
 			umsg.String("0")
 		umsg.End()
-		for k, v in pairs(ply.bannedfrom) do
+		for k, v in pairs(team.GetAllTeams()) do
 			ply.bannedfrom[k] = 0
 		end
 	end
