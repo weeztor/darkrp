@@ -82,6 +82,12 @@ function SWEP:PrimaryAttack()
 		Notify(self.Owner, 1, 5, "The player must be wanted in order to be able to arrest them.")
 		return
 	end
+	
+	if FAdmin and trace.Entity:FAdmin_GetGlobal("fadmin_jailed") then
+		Notify(self.Owner, 1, 5, "You cannot arrest a player who has been jailed by an admin.")
+		return
+	end
+	
 	local jpc = DB.CountJailPos()
 
 	if not jpc or jpc == 0 then
