@@ -1,4 +1,6 @@
 FPP = FPP or {}
+FPP.DisconnectedPlayers = {}
+
 --------------------------------------------------------------------------------------
 --Setting owner when someone spawns something
 --------------------------------------------------------------------------------------
@@ -562,6 +564,9 @@ hook.Add("CanTool", "FPP.Protect.CanTool", FPP.Protect.CanTool)
 function FPP.PlayerDisconnect(ply)
 	if ValidEntity(ply) and tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnected) and FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime then
 		if ply:IsAdmin() and not tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupadmin) then return end
+
+		FPP.DisconnectedPlayers[ply:SteamID()] = true
+
 		timer.Simple(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnectedtime, function(SteamID)
 			if not tobool(FPP.Settings.FPP_GLOBALSETTINGS.cleanupdisconnected) then return end -- Settings can change in time.
 			for k,v in pairs(player.GetAll()) do
@@ -574,6 +579,7 @@ function FPP.PlayerDisconnect(ply)
 					v:Remove()
 				end
 			end
+			FPP.DisconnectedPlayers[SteamID] = nil -- Player out of the Disconnect table
 		end, ply:SteamID())
 	end
 end
@@ -592,26 +598,13 @@ function FPP.PlayerInitialSpawn(ply)
 		umsg.End()
 	end, ply)
 	
-	for k,v in pairs(ents.GetAll()) do
-		if ValidEntity(v) and v.OwnerID == ply:SteamID() then
-			v.Owner = ply
+	if FPP.DisconnectedPlayers[ply:SteamID()] then -- Check if the player has rejoined within the auto remove time
+		for k,v in pairs(ents.GetAll()) do
+			if ValidEntity(v) and v.OwnerID == ply:SteamID() then
+				v.Owner = ply
+			end
 		end
 	end
-	
-	----------------------------------------------------------------
-	-- AntiSpeedHack, Thanks Eusion(bloodychef) for the idea.
-	---------------------------------------------------------------
-	if not tobool(FPP.Settings.FPP_GLOBALSETTINGS.antispeedhack) then return end
-	ply:SendLua([[local function a()
-		if GetConVarNumber("host_timescale") ~= 1 or GetConVarNumber("host_framerate") ~= 0 then
-			LocalPlayer():Remove()
-		end
-	end
-	local function b()
-		a()
-		timer.Simple(0.1, b)
-	end
-	timer.Simple(0.1, b)]])--I know Lua scripters can get around this, but at least this protects from the noobs with speedhacks ^^
 end
 hook.Add("PlayerInitialSpawn", "FPP.PlayerInitialSpawn", FPP.PlayerInitialSpawn)
 
