@@ -145,7 +145,6 @@ local function Ragdoll(ply, cmd, args)
 					prop:SetAngles(v.ang)
 					prop:Spawn()
 					prop:Activate()
-					//prop:SetMoveType(MOVETYPE_NONE)
 					
 					local phys = prop:GetPhysicsObject()
 					if phys:IsValid() then phys:EnableMotion(false) end
@@ -266,5 +265,12 @@ end
 hook.Add("PlayerSpawnObject", "FAdmin_ragdoll", function(ply)
 	if type(ply.FAdminRagdoll) == "table" or ValidEntity(ply.FAdminRagdoll) then
 		return false
+	end
+end)
+
+hook.Add("PlayerDisconnected", "FAdmin_ragdoll", function(ply)
+	if not ply.FAdminRagdoll then return end
+	for k,v in pairs(ply.FAdminRagdoll) do
+			if ValidEntity(v) then v:Remove() end
 	end
 end)
