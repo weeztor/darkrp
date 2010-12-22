@@ -69,8 +69,8 @@ timer.Create("FAdminCheckBans", 60, 0, function()
 	end
 end)
 
-local function SaveBan(SteamID, Nick, Duration)
-	local StoreBans = hook.Call("FAdmin_StoreBan", nil, SteamID, Nick, Duration)
+local function SaveBan(SteamID, Nick, Duration, Reason, AdminName, Admin_steam)
+	local StoreBans = hook.Call("FAdmin_StoreBan", nil, SteamID, Nick, Duration, Reason, AdminName, Admin_steam)
 	
 	if StoreBans == true then return end
 	if tonumber(Duration) == 0 then
@@ -148,7 +148,7 @@ local function Ban(ply, cmd, args)
 					end
 				end
 				
-				SaveBan(target:SteamID(), target:Nick(), time)
+				SaveBan(target:SteamID(), target:Nick(), time, Reason, ply:Nick(), ply:SteamID())
 				game.ConsoleCommand("banid " .. time.." ".. target:SteamID().."\n") -- Don't use banid in combination with RunConsoleCommand
 				RunConsoleCommand("kickid", target:UserID(), " banned for "..TimeText.." "..Reason) -- Also kicks someone if only a steam ID is entered
 			else
@@ -158,7 +158,7 @@ local function Ban(ply, cmd, args)
 						break
 					end
 				end
-				SaveBan(args[1], "UNKNOWN", args[3] or 60) -- Again default to one hour
+				SaveBan(args[1], "UNKNOWN", args[3] or 60, "Banned after Disconnect", ply:Nick(), ply:SteamID()) -- Again default to one hour
 				RunConsoleCommand("banid", time, args[1])
 			end
 			ply.FAdminKickReason = nil
