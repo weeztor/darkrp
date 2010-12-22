@@ -76,10 +76,8 @@ function FAdmin.ScoreBoard.Main.PlayerIconView()
 	else
 		for Team, TeamTable in SortedPairsByMemberValue(team.GetAllTeams(), "Name") do
 			if #team.GetPlayers(Team) > 0 then
-				for i=1,1 do -- TESTING PURPOSES
 				local cat, pan = ScoreboardAddTeam(TeamTable.Name, TeamTable.Color)
 				for _, ply in pairs(team.GetPlayers(Team)) do
-					for i=1,1 do -- TESTING PURPOSES
 					local icon = vgui.Create("FAdminPlayerIcon")
 					icon:SetPlayer(ply)
 					icon:SetSize(96, 116)
@@ -90,7 +88,6 @@ function FAdmin.ScoreBoard.Main.PlayerIconView()
 					end
 					pan:AddItem(icon)
 					pan:SizeToContents()
-					end
 				end
 				
 				local x, y, w, h, xtop = 5, 201, 96, 116, 20
@@ -103,7 +100,7 @@ function FAdmin.ScoreBoard.Main.PlayerIconView()
 					cat.Header:SizeToContents()
 					cat.Header:SetTall(25)
 					
-					xtop = math.Min(xtop + w + pan.Spacing, (FAdmin.ScoreBoard.Width - 40)/2 - pan.Spacing)//+ pan.Spacing)
+					xtop = math.Min(xtop + w + pan.Spacing, (FAdmin.ScoreBoard.Width - 40)/2 - pan.Spacing)
 					x = x + w + pan.Spacing
 				end
 				
@@ -113,8 +110,6 @@ function FAdmin.ScoreBoard.Main.PlayerIconView()
 					cat:SetTall(y)
 					pan:SetTall(y-72)
 					cat:SetWide(math.Max(xtop, HeaderSize))
-				end
-				
 				end
 			end
 		end
