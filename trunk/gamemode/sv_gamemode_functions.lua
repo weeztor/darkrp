@@ -245,6 +245,7 @@ function GM:CanTool(ply, trace, mode)
 			return false
 		end
 	end
+	return true
 end
 
 function GM:CanPlayerSuicide(ply)
