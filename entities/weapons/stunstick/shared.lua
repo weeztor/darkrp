@@ -84,7 +84,7 @@ function SWEP:PrimaryAttack()
 		trace.Entity:SetVelocity((trace.Entity:GetPos() - self.Owner:GetPos()) * 7)
 	end
 
-	if trace.Entity:IsPlayer() or trace.Entity:IsNPC() then
+	if trace.Entity:IsPlayer() or trace.Entity:IsNPC() or trace.Entity:IsVehicle() then
 		timer.Simple(.3, self.DoFlash, self, trace.Entity)
 		self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 	else
@@ -120,7 +120,7 @@ function SWEP:SecondaryAttack()
 		
 		trace.Entity:TakeDamage(10, self.Owner, self)
 		
-		if trace.Entity:IsPlayer() then
+		if trace.Entity:IsPlayer() or trace.Entity:IsVehicle() then
 			timer.Simple(.3, self.DoFlash, self, trace.Entity)
 			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 		elseif trace.Entity:IsNPC() then
