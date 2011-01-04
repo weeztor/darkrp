@@ -423,37 +423,32 @@ concommand.Add("_rp_ChosenModel", SetPlayerModel)
 function GM:PlayerSetModel(ply)
 	local EndModel = ""
 	if GetConVarNumber("enforceplayermodel") == 1 then
-		for k,v in pairs(RPExtraTeams) do
-			if ply:Team() == k then
-				if type(v.model) == "table" then
-					local ChosenModel = ply.rpChosenModel or ply:GetInfo("rp_playermodel")
-					ChosenModel = string.lower(ChosenModel)
-					
-					local found
-					for _,Models in pairs(v.model) do
-						if ChosenModel == string.lower(Models) then
-							EndModel = Models
-							found = true
-							break
-						end
-					end
-					
-					if not found then
-						EndModel = v.model[math.random(#v.model)]
-					end
-				else
-					EndModel = v.model
-				end
-				break
-			end
-		end
+		local TEAM = RPExtraTeams[ply:Team()]
 		
-		util.PrecacheModel(EndModel)
+		if type(TEAM.model) == "table" then
+			local ChosenModel = ply.rpChosenModel or ply:GetInfo("rp_playermodel")
+			ChosenModel = string.lower(ChosenModel)
+			
+			local found
+			for _,Models in pairs(TEAM.model) do
+				if ChosenModel == string.lower(Models) then
+					EndModel = Models
+					found = true
+					break
+				end
+			end
+			
+			if not found then
+				EndModel = TEAM.model[math.random(#TEAM.model)]
+			end
+		else
+			EndModel = TEAM.model
+		end
+
 		ply:SetModel(EndModel)
 	else
 		local cl_playermodel = ply:GetInfo( "cl_playermodel" )
         local modelname = player_manager.TranslatePlayerModel( cl_playermodel )
-        util.PrecacheModel( modelname )
         ply:SetModel( modelname )
 	end
 end
@@ -658,7 +653,7 @@ function GM:PlayerLoadout(ply)
 		ply:Give("arrest_stick")
 		ply:Give("unarrest_stick")
 		ply:Give("stunstick")
-		ply:Give("weaponchecker") 
+		ply:Give("weaponchecker")
 	end
 
 	if not RPExtraTeams[Team] then return end

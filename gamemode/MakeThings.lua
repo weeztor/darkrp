@@ -14,6 +14,12 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 	
 	timer.Simple(0, function(CustomTeam, maximum_amount_of_this_class) AddTeamCommands(CustomTeam, maximum_amount_of_this_class) end, CustomTeam, maximum_amount_of_this_class)
 	
+	// Precache model here. Not right before the job change is done
+	if type(model) == "table" then
+		for k,v in pairs(model) do util.PrecacheModel(v) end
+	else 
+		util.PrecacheModel(model)
+	end
 	return Team
 end
 
@@ -49,6 +55,7 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 	local price = tonumber(price)
 	local shipmentmodel = shipmodel or "models/Items/item_item_crate.mdl"
 	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
+	util.PrecacheModel(model)
 end
 
 function AddCustomVehicle(Name_of_vehicle, model, price, Jobs_that_can_buy_it)
