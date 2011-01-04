@@ -237,47 +237,44 @@ function meta:ChangeTeam(t, force)
 		Notify(self, 1, 4, "You tried to escape demotion. You failed, and have been demoted.")
 	end
 	
-	for k,v in pairs(RPExtraTeams) do
-		if t == k then
-			if self:Team() == t then
-				Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
-				return
-			end
-			
-			if not self.DarkRPVars["Priv"..v.command] then
-				if type(v.NeedToChangeFrom) == "number" and self:Team() ~= v.NeedToChangeFrom and not force then
-					Notify(self, 1,4, string.format(LANGUAGE.need_to_be_before, team.GetName(v.NeedToChangeFrom), v.name))
-					return
-				elseif type(v.NeedToChangeFrom) == "table" and not table.HasValue(v.NeedToChangeFrom, self:Team()) and not force then
-					local teamnames = ""
-					for a,b in pairs(v.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
-					Notify(self, 1,4, string.format(string.sub(teamnames, 5), team.GetName(v.NeedToChangeFrom), v.name))
-					return
-				end
-				if GetConVarNumber("max"..v.command.."s") and GetConVarNumber("max"..v.command.."s") ~= 0 and team.NumPlayers(t) >= GetConVarNumber("max"..v.command.."s") and not force then
-					Notify(self, 1, 4, string.format(LANGUAGE.team_limit_reached, v.name))
-					return
-				end
-			end
-			if self:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then
-				UnLockdown(self)
-			end
-			self:UpdateJob(v.name)
-			DB.StoreSalary(self, v.salary)
-			NotifyAll(1, 4, string.format(LANGUAGE.job_has_become, self:Nick(), v.name))
-			if self.DarkRPVars.HasGunlicense then
-				self:SetDarkRPVar("HasGunlicense", false)
-			end
-			if v.Haslicense and GetConVarNumber("license") ~= 0 then
-				self:SetDarkRPVar("HasGunlicense", true)
-			end
-			
-			break
+	
+	if self:Team() == t then
+		Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
+		return
+	end
+
+	local TEAM = RPExtraTeams[t]
+	if not TEAM then return end
+	
+	if not self.DarkRPVars["Priv"..TEAM.command] and not force  then
+		if type(TEAM.NeedToChangeFrom) == "number" and self:Team() ~= TEAM.NeedToChangeFrom then
+			Notify(self, 1,4, string.format(LANGUAGE.need_to_be_before, team.GetName(TEAM.NeedToChangeFrom), TEAM.name))
+			return
+		elseif type(TEAM.NeedToChangeFrom) == "table" and not table.HasValue(TEAM.NeedToChangeFrom, self:Team()) then
+			local teamnames = ""
+			for a,b in pairs(TEAM.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
+			Notify(self, 1,4, string.format(string.sub(teamnames, 5), team.GetName(TEAM.NeedToChangeFrom), TEAM.name))
+			return
 		end
+		if GetConVarNumber("max"..TEAM.command.."s") and GetConVarNumber("max"..TEAM.command.."s") ~= 0 and team.NumPlayers(t) >= GetConVarNumber("max"..TEAM.command.."s")then
+			Notify(self, 1, 4, string.format(LANGUAGE.team_limit_reached, TEAM.name))
+			return
+		end
+	end
+	if self:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then
+		UnLockdown(self)
+	end
+	self:UpdateJob(TEAM.name)
+	DB.StoreSalary(self, TEAM.salary)
+	NotifyAll(1, 4, string.format(LANGUAGE.job_has_become, self:Nick(), TEAM.name))
+	if self.DarkRPVars.HasGunlicense then
+		self:SetDarkRPVar("HasGunlicense", false)
+	end
+	if TEAM.Haslicense and GetConVarNumber("license") ~= 0 then
+		self:SetDarkRPVar("HasGunlicense", true)
 	end
 	
 	self.LastJob = CurTime()
-	
 	
 	if t == TEAM_POLICE then	
 		self:SetDarkRPVar("helpCop", true)
@@ -289,20 +286,20 @@ function meta:ChangeTeam(t, force)
 	
 	if GetConVarNumber("removeclassitems") == 1 then
 		for k, v in pairs(ents.FindByClass("microwave")) do
-			if v.SID == self.SID then v:Remove() end
+			if TEAM.SID == self.SID then v:Remove() end
 		end
 		for k, v in pairs(ents.FindByClass("gunlab")) do
-			if v.SID == self.SID then v:Remove() end
+			if TEAM.SID == self.SID then v:Remove() end
 		end
 		
 		if t ~= TEAM_MOB and t ~= TEAM_GANG then
 			for k, v in pairs(ents.FindByClass("drug_lab")) do
-				if v.SID == self.SID then v:Remove() end
+				if TEAM.SID == self.SID then v:Remove() end
 			end
 		end
 		
 		for k,v in pairs(ents.FindByClass("spawned_shipment")) do
-			if v.SID == self.SID then v:Remove() end
+			if TEAM.SID == self.SID then v:Remove() end
 		end
 	end
 	
@@ -317,7 +314,7 @@ function meta:ChangeTeam(t, force)
 		effectdata:SetStart( vPoint ) -- Not sure if we need a start and origin (endpoint) for this effect, but whatever
 		effectdata:SetOrigin( vPoint )
 		effectdata:SetScale(1)
-		util.Effect( "entity_remove", effectdata)
+		util.Effect("entity_remove", effectdata)
 		GAMEMODE:PlayerSetModel(self)
 		GAMEMODE:PlayerLoadout(self)
 	else

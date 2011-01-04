@@ -51,6 +51,7 @@ DarkRP 2.4.1 SVN
 [FIX] Door issue: random other people co-owning it when one co-owner is added.
 [FIX] Meteor emitter spam
 [FIX] Escaping demote
+[FIX] Lag when switching team
 [CHANGE] Microphone GUI layout. It's way more RP'ish now!
 [CHANGE] Credits, added Eusion
 [CHANGE] The way Entities like money and money printers show their information. Thanks MavBear!
