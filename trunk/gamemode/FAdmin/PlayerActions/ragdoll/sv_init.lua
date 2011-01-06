@@ -268,6 +268,12 @@ hook.Add("PlayerSpawnObject", "FAdmin_ragdoll", function(ply)
 	end
 end)
 
+hook.Add("CanPlayerSuicide", "FAdmin_ragdoll", function(ply)
+	if type(ply.FAdminRagdoll) == "table" or ValidEntity(ply.FAdminRagdoll) then
+		return false
+	end
+end)
+
 hook.Add("PlayerDisconnected", "FAdmin_ragdoll", function(ply)
 	if not ply.FAdminRagdoll then return end
 	for k,v in pairs(ply.FAdminRagdoll) do
