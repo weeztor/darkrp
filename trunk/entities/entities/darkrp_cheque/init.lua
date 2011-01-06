@@ -25,10 +25,12 @@ function ENT:Use(activator, caller)
 	local amount = self.dt.amount or 0
 	
 	if (ValidEntity(activator) and ValidEntity(recipient)) and activator == recipient then
+		owner = (ValidEntity(owner) and owner:Nick()) or "Disconnected player"
+		Notify(activator, 0, 4, "You have found " .. CUR .. amount .. " in a cheque made out to you from " .. owner .. ".")
 		activator:AddMoney(amount)
-		Notify(activator, 0, 4, "You have found " .. CUR .. amount .. " in a cheque made out to you from " .. owner:Name() .. ".")
 		self:Remove()
-	else
+	elseif (ValidEntity(owner) and ValidEntity(recipient)) then
 		Notify(activator, 0, 4, "This cheque is made out to " .. recipient:Name() .. ".")
+	elseif not ValidEntity(recipient) then self:Remove()
 	end
 end
