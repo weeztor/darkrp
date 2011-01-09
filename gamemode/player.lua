@@ -7,6 +7,12 @@ local meta = FindMetaTable("Player")
  RP names
  ---------------------------------------------------------*/
 local function RPName(ply, args)
+	
+	if ply.LastNameChange and ply.LastNameChange > (CurTime() - 5) then
+		Notify( ply, 1, 4, string.format( LANGUAGE.have_to_wait,  math.ceil(5 - (CurTime() - ply.LastNameChange)), "/rpname" )
+		return ""
+	end
+	
 	if GetConVarNumber("allowrpnames") ~= 1 then
 		Notify(ply, 1, 6,  string.format(LANGUAGE.disabled, "RPname", "")) 
 		return ""
@@ -46,6 +52,7 @@ local function RPName(ply, args)
 		end
 	end 
 	ply:SetRPName(args)
+	ply.LastNameChange = CurTime()
 	return ""
 end
 AddChatCommand("/rpname", RPName)

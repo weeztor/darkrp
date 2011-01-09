@@ -673,30 +673,14 @@ function GM:PlayerDisconnected(ply)
 	self.BaseClass:PlayerDisconnected(ply)
 	timer.Destroy(ply:SteamID() .. "jobtimer")
 	timer.Destroy(ply:SteamID() .. "propertytax")
-	for k, v in pairs(ents.FindByClass("money_printer")) do
-		if v.SID == ply.SID then v:Remove() end
-	end
-	for k, v in pairs(ents.FindByClass("microwave")) do
-		if v.SID == ply.SID then v:Remove() end
-	end
-	for k, v in pairs(ents.FindByClass("gunlab")) do
-		if v.SID == ply.SID then v:Remove() end
-	end
-	for k, v in pairs(ents.FindByClass("letter")) do
-		if v.SID == ply.SID then v:Remove() end
-	end
-	for k, v in pairs(ents.FindByClass("drug_lab")) do
-		if v.SID == ply.SID then v:Remove() end
-	end
-	for k, v in pairs(ents.FindByClass("drug")) do
-		if v.SID == ply.SID then v:Remove() end
-	end
 	
-	for k,v in pairs(ents.GetAll()) do 
-		if v:IsVehicle() and v.SID == ply.SID then
+	for k, v in pairs( ents.GetAll() ) do
+		local class = v:GetClass()
+		if (class == "money_printer" or class == "microwave" or class == "gunlab" or class == "letter" or class == "drug_lab" or class == "drug" or v:IsVehicle()) and v.SID == ply.SID then
 			v:Remove()
 		end
 	end
+		
 	vote.DestroyVotesWithEnt(ply)
 	
 	if ply:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then -- Stop the lockdown

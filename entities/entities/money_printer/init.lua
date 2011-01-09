@@ -51,7 +51,7 @@ function ENT:BurstIntoFlames()
 end
 
 function ENT:Fireball()
-	if not self:IsOnFire() then return end
+	if not self:IsOnFire() then self.burningup = false return end
 	local dist = math.random(20, 280) -- Explosion radius
 	self:Destruct()
 	for k, v in pairs(ents.FindInSphere(self:GetPos(), dist)) do
