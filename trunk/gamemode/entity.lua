@@ -360,20 +360,11 @@ AddChatCommand("/addowner", AddDoorOwner)
 AddChatCommand("/ao", AddDoorOwner)
 
 concommand.Add( "gmod_admin_cleanup", function( pl, command, args )
-	local PreCleanupEntData = { }
-	for id, ent in pairs(ents.GetAll()) do
-		if ent:IsDoor() then
-			table.insert( PreCleanupEntData, ent:EntIndex(), ent.DoorData )
+	if not pl:IsAdmin() then return end
+	for k,v in pairs(ents.GetAll()) do
+		if v.Owner and not v:IsWeapon() then -- DarkRP entities have the Owner part of their table as nil.
+			v:Remove()
 		end
 	end
-
-	cleanup.CC_AdminCleanup( pl, command, args )
-
-	timer.Simple(0.1, function()
-		for id, table in pairs(PreCleanupEntData) do
-			if Entity(id) then
-				Entity(id).DoorData = table
-			end
-		end
-	end)
+	NotifyAll( 1, 4, pl:Nick() .. " cleaned up everything." )
 end)
