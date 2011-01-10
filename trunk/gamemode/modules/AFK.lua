@@ -83,7 +83,7 @@ hook.Add("KeyPress", "DarkRPKeyReleasedCheck", AFKTimer)
 
 local function KillAFKTimer()
 	for id, ply in pairs(player.GetAll()) do 
-		if CurTime() > ply.AFKDemote then
+		if ply.AFKDemote and CurTime() > ply.AFKDemote then
 			AFKDemote(ply)
 			ply.AFKDemote = math.huge
 		end

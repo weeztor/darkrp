@@ -9,7 +9,7 @@ local meta = FindMetaTable("Player")
 local function RPName(ply, args)
 	
 	if ply.LastNameChange and ply.LastNameChange > (CurTime() - 5) then
-		Notify( ply, 1, 4, string.format( LANGUAGE.have_to_wait,  math.ceil(5 - (CurTime() - ply.LastNameChange)), "/rpname" )
+		Notify( ply, 1, 4, string.format( LANGUAGE.have_to_wait,  math.ceil(5 - (CurTime() - ply.LastNameChange)), "/rpname" ))
 		return ""
 	end
 	
