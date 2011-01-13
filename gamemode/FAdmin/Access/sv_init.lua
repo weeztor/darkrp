@@ -40,6 +40,9 @@ function FAdmin.Access.SetRoot(ply, cmd, args) -- FAdmin setroot player
 	for _, target in pairs(targets) do
 		if ValidEntity(target) then
 			FAdmin.Access.PlayerSetGroup(target, "root_user")
+			if ULib and ULib.ucl then --Add to ULX' root user
+				ULib.ucl.addUser(target:SteamID(), nil, nil, "root_user")
+			end
 			FAdmin.Messages.SendMessage(ply, 2, "User set to root!")
 		end
 	end
@@ -92,6 +95,9 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 	for _, target in pairs(targets) do
 		if ValidEntity(target) then
 			FAdmin.Access.PlayerSetGroup(target, args[2])
+			if ULib and ULib.ucl and ULib.ucl.groups and ULib.ucl.groups[args[2]] then --Add to ULX' root user
+				ULib.ucl.addUser(target:SteamID(), nil, nil, args[2])
+			end
 			FAdmin.Messages.SendMessage(ply, 2, "User access set!")
 		end
 	end
@@ -134,5 +140,11 @@ end
 concommand.Add("_FAdmin_SendUserGroups", function(ply)
 	for k,v in SortedPairsByMemberValue(FAdmin.Access.Groups, "ADMIN", true) do
 		SendUserMessage("FADMIN_RetrieveGroup", ply, k)
+	end
+end)
+
+hook.Add("InitPostEntity", "HookIntoULX", function()
+	if ULib and ULib.ucl then -- Make the root user have superadmin access in ULX.
+		ULib.ucl.setGroupInheritance("root_user", "superadmin")
 	end
 end)
