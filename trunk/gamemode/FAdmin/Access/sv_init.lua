@@ -95,9 +95,6 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 	for _, target in pairs(targets) do
 		if ValidEntity(target) then
 			FAdmin.Access.PlayerSetGroup(target, args[2])
-			if ULib and ULib.ucl and ULib.ucl.groups and ULib.ucl.groups[args[2]] then --Add to ULX' root user
-				ULib.ucl.addUser(target:SteamID(), nil, nil, args[2])
-			end
 			FAdmin.Messages.SendMessage(ply, 2, "User access set!")
 		end
 	end
