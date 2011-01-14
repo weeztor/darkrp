@@ -1,3 +1,4 @@
+local StarterGroups = {"root_user", "superadmin", "admin", "user", "noaccess"}
 local ContinueNewGroup
 
 local function RetrievePrivs(um)
@@ -43,9 +44,7 @@ FAdmin.StartHooks["1SetAccess"] = function() -- 1 in hook name so it will be exe
 		for k,v in SortedPairsByMemberValue(FAdmin.Access.Groups, "ADMIN", true) do
 			menu:AddOption(k, function() RunConsoleCommand("_FAdmin", "setaccess", ply:UserID(), k) end)
 		end
-		
-		RunConsoleCommand("_FAdmin_SendUserGroups")
-		
+
 		local Other = menu:AddSubMenu("Other")
 		local NoOthers = Other:AddOption("Loading/no other groups")
 		local function ReceiveGroup(um)
@@ -59,6 +58,7 @@ FAdmin.StartHooks["1SetAccess"] = function() -- 1 in hook name so it will be exe
 			end
 		end
 		usermessage.Hook("FADMIN_RetrieveGroup", ReceiveGroup)
+		RunConsoleCommand("_FAdmin_SendUserGroups")
 		
 		menu:AddOption("New...", function()
 			local name = ""
@@ -98,13 +98,12 @@ FAdmin.StartHooks["1SetAccess"] = function() -- 1 in hook name so it will be exe
 			end
 		end
 		
-		RunConsoleCommand("_FAdmin_SendUserGroups")
 		local NoOthers = Panel:AddLine("Loading/no custom groups")
 		local RemoveFirst = true
 		local function ReceiveGroup(um)
 			local GroupName = um:ReadString()
 			
-			if not FAdmin.Access.Groups[GroupName] then
+			if not table.HasValue(StarterGroups, GroupName) then
 				if RemoveFirst then Panel:RemoveLine(1) end -- remove the "Loading/no custom groups" line
 				RemoveFirst = false
 				
@@ -116,6 +115,7 @@ FAdmin.StartHooks["1SetAccess"] = function() -- 1 in hook name so it will be exe
 			end
 		end
 		usermessage.Hook("FADMIN_RetrieveGroup", ReceiveGroup)
+		RunConsoleCommand("_FAdmin_SendUserGroups")
 	end)
 	
 	-- Admin immunity

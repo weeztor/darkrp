@@ -1,4 +1,4 @@
-sql.Query("CREATE TABLE IF NOT EXISTS FADMIN_RESTRICTED('TYPE' TEXT NOT NULL PRIMARY KEY, 'ENTITY' TEXT NOT NULL, 'ADMIN_GROUP' TEXT NOT NULL);")
+sql.Query("CREATE TABLE IF NOT EXISTS FADMIN_RESTRICTEDENTS('TYPE' TEXT NOT NULL, 'ENTITY' TEXT NOT NULL, 'ADMIN_GROUP' TEXT NOT NULL, PRIMARY KEY(TYPE, ENTITY));")
 
 local Restricted = {}
 Restricted.Weapons = {}
@@ -12,18 +12,18 @@ local function RetrieveRestricted()
 	end
 end RetrieveRestricted()
 
-local function RestrictWeapons(ply, cmd, args)
-	if not FAdmin.Access.PlayerHasPrivilege(ply, "Restrict") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
+local function DoRestrictWeapons(ply, cmd, args)
+	if not FAdmin.Access.PlayerHasPrivilege(ply, "Restrict") then print("no1") FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	local Weapon = args[1]
 	local Group = args[2]
-	if not Group or not FAdmin.Access.Groups[Group] or not Weapon then return end
-	
+	if not Group or not FAdmin.Access.Groups[Group] or not Weapon then print("no2") return end
 	if Restricted.Weapons[Weapon] then
-		sql.Query("UPDATE FADMIN_RESTRICTED SET ADMIN_GROUP = "..sql.SQLStr(Group).." WHERE ENTITY = "..sql.SQLStr(Weapon).." AND TYPE = "..sql.SQLStr("Weapons")..";")
+		sql.Query("UPDATE FADMIN_RESTRICTEDENTS SET ADMIN_GROUP = "..sql.SQLStr(Group).." WHERE ENTITY = "..sql.SQLStr(Weapon).." AND TYPE = "..sql.SQLStr("Weapons")..";")
 	else
-		sql.Query("INSERT INTO FADMIN_RESTRICTED VALUES("..sql.SQLStr("Weapons")..", "..sql.SQLStr(Weapon)..", "..sql.SQLStr(Group)..");")
+		sql.Query("INSERT INTO FADMIN_RESTRICTEDENTS VALUES("..sql.SQLStr("Weapons")..", "..sql.SQLStr(Weapon)..", "..sql.SQLStr(Group)..");")
 	end
 	Restricted.Weapons[Weapon] = Group
+	FAdmin.Messages.SendMessage(ply, 4, "Weapon restricted!")
 end
 
 local function RestrictWeapons(ply, Weapon, WeaponTable)
@@ -38,7 +38,7 @@ hook.Add("PlayerGiveSWEP", "FAdmin_RestrictWeapons", RestrictWeapons)
 hook.Add("PlayerSpawnSWEP", "FAdmin_RestrictWeapons", RestrictWeapons)
 
 FAdmin.StartHooks["Restrict"] = function()
-	FAdmin.Commands.AddCommand("RestrictWeapon", RestrictWeapons)
+	FAdmin.Commands.AddCommand("RestrictWeapon", DoRestrictWeapons)
 	
 	FAdmin.Access.AddPrivilege("Restrict", 3)
 end
