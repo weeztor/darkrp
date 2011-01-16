@@ -43,5 +43,5 @@ end
 
 function ENT:OnRemove()
 	local ply = self.Entity.dt.owning_ent
-	ply.maxFoods = ply.maxFoods - 1
+	ply.maxFoods = ply.maxFoods and ply.maxFoods - 1 or 0
 end
