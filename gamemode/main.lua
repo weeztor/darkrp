@@ -801,7 +801,7 @@ local function SetPrice(ply, args)
 
 	local tr = util.TraceLine(trace)
 	
-	if not ValidEntity(tr.Entity) then Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "gunlab / druglab / microwave")) return end
+	if not ValidEntity(tr.Entity) then Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "gunlab / druglab / microwave")) return "" end
 	
 	local class = tr.Entity:GetClass()
 	if ValidEntity(tr.Entity) and (class == "gunlab" or class == "microwave" or class == "drug_lab") and tr.Entity.SID == ply.SID then
