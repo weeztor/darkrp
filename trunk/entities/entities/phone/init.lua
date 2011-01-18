@@ -129,5 +129,6 @@ function ENT:OnRemove()
 	if self.sound then
 		self.sound:Stop()
 	end
+	timer.Destroy("PhoneRinging"..tostring(self:EntIndex()))
 	self:HangUp()
 end
