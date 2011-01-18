@@ -1813,6 +1813,7 @@ local function CreateCheque(ply, args)
 	return ""
 end
 AddChatCommand("/cheque", CreateCheque)
+AddChatCommand("/check", CreateCheque) -- for those of you who can't spell
 
 local function MakeZombieSoundsAsHobo(ply)
 	if not ply.nospamtime then 
