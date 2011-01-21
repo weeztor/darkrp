@@ -32,9 +32,27 @@ if cleanup then
 					return
 				end
 			end
+
+			if ent:GetClass() == "gmod_wire_expression2" then
+				ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+			end
 		end
 		FPP.oldcleanup(ply, Type, ent)
 	end
+end
+
+FPP.ApplyForceCenter = FPP.ApplyForceCenter or _R.PhysObj.ApplyForceCenter
+function _R.PhysObj.ApplyForceCenter(self, force, ...)
+	local i = 0
+	while true and tobool(FPP.Settings.FPP_GLOBALSETTINGS.antie2minge) do
+		i = i + 1
+		local DebugLevel = debug.getinfo(i, "Sln")
+		if not DebugLevel then break end
+		if DebugLevel and string.find(DebugLevel.short_src, "gmod_wire_expression2") and ValidEntity(self:GetEntity()) and tobool(FPP.Settings.FPP_GLOBALSETTINGS.antie2minge) then
+			self:GetEntity():SetCollisionGroup(COLLISION_GROUP_WEAPON)
+		end
+	end
+	return FPP.ApplyForceCenter(self, force, ...)
 end
 
 local PLAYER = FindMetaTable("Player")

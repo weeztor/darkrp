@@ -32,6 +32,7 @@ DarkRP 2.4.1 SVN
 [ADD] New fading door tool compatability (DOESN'T WORK WITH OLD DOOR TOOL (Conna's tool))
 [ADD] FAdmin admin mod
 [ADD] Threaten with stunstick (reload)
+[ADD] E2 antiminge! (one of the best updates ever!)
 [FIX] // not working in letters
 [FIX] Disabling RP names not working clientside
 [FIX] Weapon checker resetting ammo
