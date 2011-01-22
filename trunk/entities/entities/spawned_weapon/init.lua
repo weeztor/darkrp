@@ -10,6 +10,7 @@ function ENT:Initialize()
 	local phys = self.Entity:GetPhysicsObject()
 
 	if phys and phys:IsValid() then phys:Wake() end
+	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS) 
 end
 
 
