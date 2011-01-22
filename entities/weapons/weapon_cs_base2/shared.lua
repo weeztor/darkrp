@@ -320,6 +320,7 @@ function SWEP:OnDrop()
 	if not self.LASTOWNER then return end
 	self.PrimaryAmmoLeft = self.LASTOWNER:GetAmmoCount(self:GetPrimaryAmmoType())
 	self.SecondaryAmmoLeft = self.LASTOWNER:GetAmmoCount(self:GetSecondaryAmmoType())
+	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS) 
 end
 
 function SWEP:Equip(NewOwner)
