@@ -313,27 +313,6 @@ function PANEL:PerformLayout()
 end
 vgui.Register("FadminPlayerRow", PANEL, "Button")
 
-
--- FAdminServerSettingsButton
-local PANEL5 = {}
-
-function PANEL5:Init()
-	self.Image = vgui.Create("DImageButton")
-	
-end
-
-function PANEL5:PerformLayout()
-	self.Image:SetMaterial("vgui/gmod_tool")
-	self.Image:SizeToContents()
-	self.Image:SetPos(self:GetPos())
-end
-/*
-function PANEL5:DoClick(...)
-	return self.Image:DoClick(...)
-end*/
-
-derma.DefineControl("FAdminServerSettingsButton", "Button for changing server settings", PANEL5, "Panel")
-
 -- FAdminActionButton
 local PANEL6 = {}
 

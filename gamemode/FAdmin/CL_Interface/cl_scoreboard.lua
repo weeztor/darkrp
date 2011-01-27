@@ -55,14 +55,17 @@ end
 
 
 function FAdmin.ScoreBoard.DrawScoreBoard()
-	if input.IsMouseDown(MOUSE_4) or input.IsKeyDown(KEY_BACKSPACE) then
+	if (input.IsMouseDown(MOUSE_4) or input.IsKeyDown(KEY_BACKSPACE)) and not FAdmin.ScoreBoard.DontGoBack then
 		FAdmin.ScoreBoard.ChangeView("Main")
+	elseif FAdmin.ScoreBoard.DontGoBack then
+		FAdmin.ScoreBoard.DontGoBack = input.IsMouseDown(MOUSE_4) or input.IsKeyDown(KEY_BACKSPACE)
 	end
 	FAdmin.ScoreBoard.Background()
 end
 
 function FAdmin.ScoreBoard.ShowScoreBoard()
 	FAdmin.ScoreBoard.Visible = true
+	FAdmin.ScoreBoard.DontGoBack = input.IsMouseDown(MOUSE_4) or input.IsKeyDown(KEY_BACKSPACE)
 	local ScreenWidth, ScreenHeight = ScrW(), ScrH()
 	
 	FAdmin.ScoreBoard.Controls.Hostname = FAdmin.ScoreBoard.Controls.Hostname or vgui.Create( "Label", self )
@@ -95,9 +98,19 @@ function FAdmin.ScoreBoard.ShowScoreBoard()
 	FAdmin.ScoreBoard.Controls.ServerSettings:SetPos(FAdmin.ScoreBoard.Width-200, FAdmin.ScoreBoard.Y - 20)
 	FAdmin.ScoreBoard.Controls.ServerSettings:SizeToContents()
 	FAdmin.ScoreBoard.Controls.ServerSettings:SetVisible(true)
+
+	FAdmin.ScoreBoard.Controls.HelpButton = FAdmin.ScoreBoard.Controls.HelpButton or vgui.Create("DImageButton")
+	FAdmin.ScoreBoard.Controls.HelpButton:SetMaterial("FAdmin/Help")
+	FAdmin.ScoreBoard.Controls.HelpButton:SetPos(FAdmin.ScoreBoard.Width-330, FAdmin.ScoreBoard.Y + 5)
+	FAdmin.ScoreBoard.Controls.HelpButton:SizeToContents()
+	FAdmin.ScoreBoard.Controls.HelpButton:SetVisible(true)
 	
 	function FAdmin.ScoreBoard.Controls.ServerSettings:DoClick()
 		FAdmin.ScoreBoard.ChangeView("Server")
+	end
+
+	function FAdmin.ScoreBoard.Controls.HelpButton:DoClick()
+		FAdmin.ScoreBoard.ChangeView("Help")
 	end
 	
 	if FAdmin.ScoreBoard.Controls.BackButton then FAdmin.ScoreBoard.Controls.BackButton:SetVisible(true) end
@@ -136,7 +149,7 @@ end
 concommand.Add("-FAdmin_menu", FAdmin.ScoreBoard.HideScoreBoard)
 
 hook.Add("ScoreboardHide", "FAdmin_scoreboard", function()
-	if tobool(GetConVarNumber("FAdmin_IsScoreboard")) and FAdmin.GlobalSetting.FAdmin then -- Don't show scoreboard when FAdmin is not installed on server 
+	if tobool(GetConVarNumber("FAdmin_IsScoreboard")) and FAdmin.GlobalSetting.FAdmin and FAdmin.ScoreBoard.CurrentView ~= "Help" then -- Don't show scoreboard when FAdmin is not installed on server 
 		return FAdmin.ScoreBoard.HideScoreBoard()
 	end
 end)
