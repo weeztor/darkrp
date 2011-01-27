@@ -20,7 +20,7 @@ local function GetBigAvatar(content, size)
 	FAdmin.ScoreBoard.Player.Controls.AvatarLarge:SetPos(FAdmin.ScoreBoard.X + 20, FAdmin.ScoreBoard.Y + 100)
 	FAdmin.ScoreBoard.Player.Controls.AvatarLarge:SetSize(213, 218)
 	FAdmin.ScoreBoard.Player.Controls.AvatarLarge:SetVisible(false)
-	FAdmin.ScoreBoard.Player.Controls.AvatarLarge:SetHTML("<body bgcolor=black> <img SRC=\""..match.."\"/> </body>")
+	FAdmin.ScoreBoard.Player.Controls.AvatarLarge:SetHTML("<body bgcolor=black> <img SRC=\""..match.."\"/></body>")
 	function FAdmin.ScoreBoard.Player.Controls.AvatarLarge:FinishedURL(url)
 		if CancelRetrieveAvatar or not FAdmin.ScoreBoard.Player.Controls.AvatarBackground or not FAdmin.ScoreBoard.Player.Controls.AvatarBackground:IsVisible() then
 			if FAdmin.ScoreBoard.Player.Controls.AvatarLarge then

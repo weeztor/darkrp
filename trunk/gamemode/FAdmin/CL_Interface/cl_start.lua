@@ -22,3 +22,7 @@ FAdmin.ScoreBoard.Player.Logo = "FAdmin/back"
 FAdmin.ScoreBoard.Server = {}
 FAdmin.ScoreBoard.Server.Controls = {}
 FAdmin.ScoreBoard.Server.Logo = "FAdmin/back"
+
+FAdmin.ScoreBoard.Help = {}
+FAdmin.ScoreBoard.Help.Controls = {}
+FAdmin.ScoreBoard.Help.Logo = "FAdmin/back"
