@@ -102,7 +102,7 @@ function DB.Init()
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_jailpositions(map char(30) NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL, lastused NUMERIC NOT NULL, PRIMARY KEY(map, x, y, z));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_rpnames(steam char(20) NOT NULL, name char(35) NOT NULL, PRIMARY KEY(steam));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_zspawns(map char(30) NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL);")
-		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_disableddoors(map char(30) NOT NULL, idx INTEGER NOT NULL, title char(25) NOT NULL, PRIMARY KEY(map, idx));")
+		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_doors(map char(30) NOT NULL, idx INTEGER NOT NULL, title char(25), locked INTEGER(1), disabled INTEGER(1), PRIMARY KEY(map, idx));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_groupdoors(map char(30) NOT NULL, idx INTEGER NOT NULL, teams char(50) NOT NULL, title char(25) NOT NULL, PRIMARY KEY(map, idx));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_consolespawns(id INTEGER NOT NULL PRIMARY KEY, map char(30) NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL, pitch NUMERIC NOT NULL, yaw NUMERIC NOT NULL, roll NUMERIC NOT NULL);")
 	DB.Commit()
@@ -590,14 +590,12 @@ function DB.StoreDoorOwnability(ent)
 	local map = string.lower(game.GetMap())
 	ent.DoorData = ent.DoorData or {}
 	local nonOwnable = ent.DoorData.NonOwnable
-	DB.QueryValue("SELECT COUNT(*) FROM darkrp_disableddoors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";", function(r)
-		r = tonumber(r)
-		if not r then return end
-
-		if r > 0 and not nonOwnable then
-			DB.Query("DELETE FROM darkrp_disableddoors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";")
-		elseif r == 0 and nonOwnable then
-			DB.Query("INSERT INTO darkrp_disableddoors VALUES(" .. sql.SQLStr(map) .. ", " .. ent:EntIndex() .. ", " .. sql.SQLStr("Non-Ownable Door") .. ");")
+	DB.QueryValue("SELECT locked FROM darkrp_doors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";", function(r)
+		print(r)
+		if r and not nonOwnable then
+			DB.Query("UPDATE darkrp_doors SET disabled = 0 WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";")
+		elseif nonOwnable then
+			DB.Query("REPLACE INTO darkrp_doors VALUES(" .. sql.SQLStr(map) .. ", " .. ent:EntIndex() .. ", " .. sql.SQLStr(ent.DoorData.title or "") .. ", "..(tobool(r) and 1 or 0)..", 1);")
 		end
 	end)
 end
@@ -605,24 +603,24 @@ end
 function DB.StoreNonOwnableDoorTitle(ent, text)
 	ent.DoorData = ent.DoorData or {}
 	ent.DoorData.title = text
-	DB.Query("UPDATE darkrp_disableddoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
+	DB.Query("UPDATE darkrp_doors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
 end
 
 function DB.SetUpNonOwnableDoors()
-	DB.Query("SELECT idx, title FROM darkrp_disableddoors WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";", function(r)
+	DB.Query("SELECT idx, title, locked, disabled FROM darkrp_doors WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";", function(r)
 		if not r then return end
 
 		for _, row in pairs(r) do
 			local e = ents.GetByIndex(tonumber(row.idx))
 			if ValidEntity(e) then
 				e.DoorData = e.DoorData or {}
-				e.DoorData.NonOwnable = true
+				e.DoorData.NonOwnable = tobool(row.disabled)
+				e:Fire((tobool(row.locked) and "" or "un").."lock", "", 0)
 				e.DoorData.title = row.title
 			end
 		end
 	end)
 end
-
 
 function DB.StoreGroupDoorOwnability(ent)
 	local map = string.lower(game.GetMap())
