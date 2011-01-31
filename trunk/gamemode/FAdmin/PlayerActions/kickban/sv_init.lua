@@ -92,11 +92,11 @@ local function Ban(ply, cmd, args)
 	
 	local targets = FAdmin.FindPlayer(args[1])
 	
-	if not targets and string.find(args[1], "STEAM_") ~= 1 then
+	if not targets and string.find(args[1], "STEAM_") ~= 1 and string.find(args[2], "STEAM_") ~= 1 then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
-	elseif not targets and string.find(args[1], "STEAM_") == 1 then
-		targets = {args[1]}
+	elseif not targets and (string.find(args[1], "STEAM_") == 1 or string.find(args[2], "STEAM_") == 1) then
+		targets = {(args[1] ~= "execute" and args[1]) or args[2]}
 	end
 	
 	local CanBan = hook.Call("FAdmin_CanBan", nil, ply, targets)
@@ -157,8 +157,8 @@ local function Ban(ply, cmd, args)
 						break
 					end
 				end
-				SaveBan(args[1], "UNKNOWN", time, (Reason ~= "" and Reason) or "Banned after Disconnect", ply:Nick(), ply:SteamID()) -- Again default to one hour
-				game.ConsoleCommand("banid ".. time.." ".. args[1].."\n")
+				SaveBan(target, "UNKNOWN", time, (Reason ~= "" and Reason) or "Banned after Disconnect", ply:Nick(), ply:SteamID()) -- Again default to one hour
+				game.ConsoleCommand("banid ".. time.." ".. target.."\n")
 			end
 			ply.FAdminKickReason = nil
 		end
