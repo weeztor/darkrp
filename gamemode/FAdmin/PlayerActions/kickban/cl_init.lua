@@ -171,7 +171,7 @@ FAdmin.StartHooks["CL_KickBan"] = function()
 				RunConsoleCommand("_FAdmin", "ban", SteamID, "update", BanTime, self:GetValue())
 			end
 			TextEntry:SetText("No reason")
-			TextEntry.OnEnter = function() Window:Close() RunConsoleCommand("_FAdmin", "ban", SteamID, "execute") end
+			TextEntry.OnEnter = function() Window:Close() RunConsoleCommand("_FAdmin", "ban", SteamID, "execute", BanTime, TextEntry:GetValue()) end
 			function TextEntry:OnFocusChanged(changed)
 				self:RequestFocus()
 				self:SelectAllText(true)
@@ -237,7 +237,7 @@ FAdmin.StartHooks["CL_KickBan"] = function()
 				Window:Close()
 				M, H, D, W, Y = Minutes:GetValue(), Hours:GetValue(), Days:GetValue(), Weeks:GetValue(), Years:GetValue()
 				update()
-				RunConsoleCommand("_FAdmin", "ban", SteamID, BanTime)
+				RunConsoleCommand("_FAdmin", "ban", SteamID, BanTime, (TextEntry and TextEntry:GetValue()) or "")
 			end
 			
 		local ButtonCancel = vgui.Create( "DButton", ButtonPanel )
