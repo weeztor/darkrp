@@ -101,7 +101,7 @@ FAdmin.StartHooks["AccessFunctions"] = function()
 	FAdmin.Commands.AddCommand("RemoveGroup", FAdmin.Access.RemoveGroup)
 end
 
---ULX compatibility!
+/*--ULX compatibility!
 timer.Simple(0, function()
 	if ULib and ULib.ucl then
 		function _R.Player:GetUserGroup()
@@ -113,4 +113,4 @@ timer.Simple(0, function()
 			return (ULib.ucl.authed[ uid ] and ULib.ucl.authed[ uid ].group) or "user"
 		end
 	end
-end)
+end)/*
