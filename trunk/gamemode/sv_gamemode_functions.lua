@@ -844,6 +844,8 @@ function GM:InitPostEntity()
 			otherhooks[a] = nil
 		end
 	end
+
+	game.ConsoleCommand("durgz_witty_sayings 0\n") -- Deal with the cigarettes exploit. I'm fucking tired of them. I hate having to fix other people's mods, but this mod maker is retarded.
 end
 hook.Add("PlayerNoClip", "DarkRP_FuckAss", function(ply)
 	if LevelToString and string.lower(LevelToString(ply:GetNWInt("ASS_isAdmin"))) == "banned" then -- Assmod's bullshit
