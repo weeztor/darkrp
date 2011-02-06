@@ -44,7 +44,6 @@ hook.Add("PlayerAuthed", "FAdmin_LeavingBeforeBan", function(ply, SteamID, ...)
 	if table.HasValue(StartBannedUsers, SteamID) then
 		RunConsoleCommand("kickid", ply:UserID(), "Getting banned")
 	end
-	return false
 end)
 
 -- Banning
