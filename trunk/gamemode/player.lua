@@ -355,7 +355,7 @@ function meta:PayDay()
 		if not RPArrestedPlayers[self:SteamID()] then
 			DB.RetrieveSalary(self, function(amount)
 				amount = math.floor(amount or GetConVarNumber("normalsalary"))
-				if amount == 0 then
+				if amount == 0 or not amount then
 					Notify(self, 4, 4, LANGUAGE.payday_unemployed)
 				else
 					self:AddMoney(amount)

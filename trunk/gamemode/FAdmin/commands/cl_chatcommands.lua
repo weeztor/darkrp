@@ -7,6 +7,7 @@ hook.Add("ChatTextChanged", "FAdmin_Chat_autocomplete", function(text)
 		Options = {}
 		
 		local TExplode = string.Explode(" ", string.sub(text, 2))
+		if not TExplode[1] then return end
 		local Command = string.lower(TExplode[1])
 		local Args = table.Copy(TExplode)
 		Args[1] = nil
