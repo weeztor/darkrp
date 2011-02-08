@@ -16,7 +16,7 @@ function ENT:LoadPage()
 		Page = string.sub(Page, 6)
 		self.HTML:SetHTML(file.Read(Page))
 	else
-		http.Get(Page, "", function(content) self.HTML:SetHTML(content) end)
+		self.HTML:OpenURL(Page)
 	end
 end
 
