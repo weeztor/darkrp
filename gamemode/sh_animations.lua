@@ -69,7 +69,21 @@ hook.Add("CalcMainActivity", "darkrp_animations", function(ply, velocity) -- Usi
 	end
 end)
 
-if SERVER then return end
+if SERVER then 
+	local function CustomAnim(ply, cmd, args)
+		local Gesture = tonumber(args[1] or 0)
+		if Gesture < 1559 or Gesture > 1694 then return end
+		local RP = RecipientFilter()
+		RP:AddAllPlayers()
+
+		umsg.Start("_DarkRP_CustomAnim", RP)
+		umsg.Entity(ply)
+		umsg.Short(Gesture)
+		umsg.End()
+	end
+	concommand.Add("_DarkRP_DoAnimation", CustomAnim)
+	return
+end
 
 local function DropItem(um)
 	local ply = um:ReadEntity()
@@ -110,3 +124,43 @@ local function KeysAnims(um)
 	ply[Type] = true
 end
 usermessage.Hook("anim_keys", KeysAnims)
+
+
+local function CustomAnimation(um)
+	local ply = um:ReadEntity()
+	local act = um:ReadShort()
+	ply:AnimRestartGesture(GESTURE_SLOT_CUSTOM, act)
+end
+usermessage.Hook("_DarkRP_CustomAnim", CustomAnimation)
+
+local Anims = {}
+Anims["Thumbs up"] = ACT_GMOD_GESTURE_AGREE
+Anims["Non-verbal no"] = ACT_GMOD_GESTURE_DISAGREE
+Anims["Salute"] = ACT_GMOD_GESTURE_SALUTE
+Anims["Bow"] = ACT_GMOD_GESTURE_BOW
+Anims["Wave"] = ACT_GMOD_GESTURE_WAVE
+Anims["Follow me!"] = ACT_GMOD_GESTURE_BECON
+
+local function AnimationMenu()
+	local Frame = vgui.Create("DFrame")
+	Frame:SetSize(200, table.Count(Anims) * 110)
+	Frame:Center()
+	Frame:SetTitle("Custom animation!")
+	Frame:SetVisible(true)
+	Frame:MakePopup()
+
+	local i = 0
+	for k,v in pairs(Anims) do
+		i = i + 1
+		local button = vgui.Create("DButton", Frame)
+		button:SetPos(10, (i-1)*105 + 30)
+		button:SetSize(180, 100)
+		button:SetText(k)
+
+		button.DoClick = function()
+			RunConsoleCommand("_DarkRP_DoAnimation", v)
+		end
+	end
+	Frame:SetSkin("DarkRP")
+end
+concommand.Add("_DarkRP_AnimationMenu", AnimationMenu)
