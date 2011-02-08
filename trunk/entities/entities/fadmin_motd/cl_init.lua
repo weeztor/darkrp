@@ -26,7 +26,7 @@ function ENT:Initialize()
 	self.HTML = self.HTMLControl or vgui.Create("HTML")
 	self.HTML:SetPaintedManually(true)
 	self.HTML:SetPos(-512, -256)
-	self.HTML:SetSize(1024, 512)
+	self.HTML:SetSize(ScrW(), ScrH() - 100)
 	self:LoadPage()
 	
 	self.HTML:StartAnimate(100)
@@ -45,7 +45,6 @@ end
 
 local gripTexture = surface.GetTextureID( "sprites/grip" )
 local ArrowTexture = surface.GetTextureID("gui/arrow")
-local XFix, YFix = 0,0 --Opening the HTML panel full screen changes the size on the 3D2D even if you reset the size to their original values.
 function ENT:Draw()
 	self.Entity:DrawModel()
 	
@@ -102,7 +101,7 @@ function ENT:Draw()
 		elseif self.HTMLMat then
 			surface.SetMaterial(self.HTMLMat)
 			surface.SetDrawColor(255, 255, 255, 255)
-			surface.DrawTexturedRect(-512, -256, 1024 + XFix, 512 + YFix)
+			surface.DrawTexturedRect(-512, -256, 1254, 552)
 		end
 	cam.End3D2D()
 	render.SuppressEngineLighting(false)
@@ -112,9 +111,7 @@ function ENT:Draw()
 	
 	if ((HasPhysgun and LocalPlayer():KeyDown(IN_ATTACK)) or LocalPlayer():KeyDown(IN_USE))
 		and posX > -500 and posX < 500 and posY < 250 and posY > -250 then
-		if not self.Disabled and self.HTML and self.HTML:IsValid() and self.CanClickAgain and CurTime() > self.CanClickAgain then
-			XFix, YFix = 200, 40
-			
+		if not self.Disabled and self.HTML and self.HTML:IsValid() and self.CanClickAgain and CurTime() > self.CanClickAgain then		
 			self.CanClickAgain = CurTime() + 1
 			self.HTML:SetPaintedManually(false)
 			self.HTML:SetPos(0, 100)
