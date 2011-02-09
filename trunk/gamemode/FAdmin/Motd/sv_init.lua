@@ -23,6 +23,10 @@ hook.Add("InitPostEntity", "PlaceMOTD", function()
 	ent:SetAngles(Angle(MOTD.pitch, MOTD.yaw, MOTD.roll))
 	ent:Spawn()
 	ent:Activate()
+
+	if file.Exists("FAdmin/CurMOTDPage.txt") and file.Read("FAdmin/CurMOTDPage.txt") ~= "" then
+		game.ConsoleCommand("_FAdmin_MOTDPage \""..file.Read("FAdmin/CurMOTDPage.txt").."\"\n")
+	end
 end)
 
 function FAdmin.MOTD.SaveMOTD(ent, ply)
@@ -68,6 +72,7 @@ function FAdmin.MOTD.SetMOTDPage(ply, cmd, args)
 	end
 	if ply:EntIndex() ~= 0 and (not ply.IsSuperAdmin or not ply:IsSuperAdmin()) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	game.ConsoleCommand("_FAdmin_MOTDPage \""..args[1].."\"\n")
+	file.Write("FAdmin/CurMOTDPage.txt", args[1])
 end
 
 local function CreateMOTD(ply)
