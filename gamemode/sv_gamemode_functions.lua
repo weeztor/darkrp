@@ -382,7 +382,7 @@ end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
 	if RPArrestedPlayers[ply:SteamID()] then return false end
-	if ply:IsAdmin() and GetConVarNumber("AdminsSpawnWithCopWeapons") == 1 then return true end
+	if ply:IsAdmin() and GetConVarNumber("AdminsCopWeapons") == 1 then return true end
 	if GetConVarNumber("license") == 1 and not ply.DarkRPVars.HasGunlicense and not ply:GetTable().RPLicenseSpawn then
 		if GetConVarNumber("licenseweapon_"..string.lower(weapon:GetClass())) == 1 or not weapon:IsWeapon() then
 			return true
@@ -648,7 +648,7 @@ function GM:PlayerLoadout(ply)
 		ply:Give("weapon_physgun")
 	end
 	
-	if ply:HasPriv("rp_commands") and GetConVarNumber("AdminsSpawnWithCopWeapons") == 1 then
+	if ply:HasPriv("rp_commands") and GetConVarNumber("AdminsCopWeapons") == 1 then
 		ply:Give("door_ram")
 		ply:Give("arrest_stick")
 		ply:Give("unarrest_stick")

@@ -141,18 +141,19 @@ Anims["Bow"] = ACT_GMOD_GESTURE_BOW
 Anims["Wave"] = ACT_GMOD_GESTURE_WAVE
 Anims["Follow me!"] = ACT_GMOD_GESTURE_BECON
 
+local AnimFrame
 local function AnimationMenu()
-	local Frame = vgui.Create("DFrame")
-	Frame:SetSize(200, table.Count(Anims) * 110)
-	Frame:Center()
-	Frame:SetTitle("Custom animation!")
-	Frame:SetVisible(true)
-	Frame:MakePopup()
+	local AnimFrame = AnimFrame or vgui.Create("DFrame")
+	AnimFrame:SetSize(200, table.Count(Anims) * 110)
+	AnimFrame:Center()
+	AnimFrame:SetTitle("Custom animation!")
+	AnimFrame:SetVisible(true)
+	AnimFrame:MakePopup()
 
 	local i = 0
 	for k,v in pairs(Anims) do
 		i = i + 1
-		local button = vgui.Create("DButton", Frame)
+		local button = vgui.Create("DButton", AnimFrame)
 		button:SetPos(10, (i-1)*105 + 30)
 		button:SetSize(180, 100)
 		button:SetText(k)
@@ -161,6 +162,6 @@ local function AnimationMenu()
 			RunConsoleCommand("_DarkRP_DoAnimation", v)
 		end
 	end
-	Frame:SetSkin("DarkRP")
+	AnimFrame:SetSkin("DarkRP")
 end
 concommand.Add("_DarkRP_AnimationMenu", AnimationMenu)

@@ -175,7 +175,7 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_removeclassitems - Enable/disabl
 AddToggleCommand("rp_lottery", "lottery", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_lottery - Enable/disable creating lotteries for mayors")
 
-AddToggleCommand("rp_AdminsSpawnWithCopWeapons", "AdminsSpawnWithCopWeapons", 1, true)
+AddToggleCommand("rp_AdminsSpawnWithCopWeapons", "AdminsCopWeapons", 1, true)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_AdminsSpawnWithCopWeapons - Enable/disable admins spawning with cops weapons(SUPERADMIN ONLY)")
 
 AddToggleCommand("rp_babygod", "babygod", 5)
