@@ -99,6 +99,11 @@ end
 DarkRPAgendas = {}
 
 function AddAgenda(Title, Manager, Listeners)
+	if not Manager then 
+		hook.Add("PlayerSpawn", "AgendaError", function(ply)
+		if ply:IsAdmin() then ply:ChatPrint("WARNING: Agenda made incorrectly, there is no manager! failed to load!") end end) 
+		return 
+	end
 	DarkRPAgendas[Manager] = {Title = Title, Listeners = Listeners} 
 end
 

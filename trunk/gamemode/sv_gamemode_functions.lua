@@ -14,7 +14,7 @@ function GM:PlayerSpawnProp(ply, model)
 	local allowed = ((GetConVarNumber("propspawning") == 1 or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_prop")) or ply:IsAdmin()) and true) or false
 
 	if RPArrestedPlayers[ply:SteamID()] then return false end
-	model = string.gsub(model, "\\", "/")
+	model = string.gsub(tostring(model), "\\", "/")
 	if string.find(model,  "//") then Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model) 
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with an invalid path "..model) return false end
 
