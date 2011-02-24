@@ -2,6 +2,7 @@ require("datastream")
 
 local AdminPanel
 local BuddiesPanel
+//local PrivateSettingsPanel
 local EditGroupTools
 local RetrieveRestrictedTool
 local RetrieveBlockedModels
@@ -1040,9 +1041,31 @@ function FPP.SetBuddyMenu(SteamID, Name, data)
 	AddChk("Entity damage", "entitydamage", data[5])
 end
 
+local PrivateSettings = {
+	["touch my own entities"] = "OwnProps",
+	["touch world entities"] = "WorldProps",
+	["touch other people's entities"] = "OtherPlayerProps",
+	["touch players"] = "Players",
+	["touch blocked entities"] = "BlockedProps",
+	["see an icon in the middle of the screen"] = "ShowIcon"
+}
+
+for k,v in pairs(PrivateSettings) do
+	CreateClientConVar("FPP_PrivateSettings_"..v, 0, true, true)
+end
+
+function FPP.PrivateSettings(Panel)
+	//PrivateSettingsPanel = PrivateSettingsPanel or Panel
+	Panel:AddControl("Label", {Text = "\nPrivate settings menu\nUse to set settings that override server settings\n\nThese settings can only restrict you further.\n"})
+	for k,v in pairs(PrivateSettings) do
+		Panel:AddControl("CheckBox", {Label = "I don't want to "..k, Command = "FPP_PrivateSettings_"..v})
+	end
+end
+
 local function makeMenus()
 	spawnmenu.AddToolMenuOption( "Utilities", "Falco's prop protection", "Falco's prop protection admin settings", "Admin settings", "", "", FPP.AdminMenu)
 	spawnmenu.AddToolMenuOption( "Utilities", "Falco's prop protection", "Falco's prop protection buddies", "Buddies", "", "", FPP.BuddiesMenu)
+	spawnmenu.AddToolMenuOption( "Utilities", "Falco's prop protection", "Falco's prop protection Private settings", "Private Settings", "", "", FPP.PrivateSettings)
 end
 hook.Add("PopulateToolMenu", "FPPMenus", makeMenus)
 
