@@ -100,7 +100,7 @@ end
 --When you can't touch something
 --------------------------------------------------------------------------------------
 function FPP.CanTouch(ply, Type, Owner, Toggle)
-	if not ValidEntity(ply) or not FPP.Settings[Type] or not tobool(FPP.Settings[Type].shownocross) then return false end
+	if not ValidEntity(ply) or not FPP.Settings[Type] or not tobool(FPP.Settings[Type].shownocross) or tobool(ply:GetInfoNum("FPP_PrivateSettings_ShowIcon")) then return false end
 	if ply.FPP_LastCanTouch and ply.FPP_LastCanTouch > CurTime() - 0.5 then return end
 	ply.FPP_LastCanTouch = CurTime()
 	
@@ -126,6 +126,12 @@ end
 FPP.Protect = {}
 
 local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
+	local OnlyMine = tobool(ply:GetInfoNum("FPP_PrivateSettings_OtherPlayerProps"))
+	-- prevent player pickup when you don't want to
+	if ValidEntity(ent) and ent:IsPlayer() and not tobool(ply:GetInfoNum("FPP_PrivateSettings_Players")) then
+		return false
+	end
+	-- Blocked entity
 	local Returnal 
 	for k,v in pairs(FPP.Blocked[Type1]) do
 		if tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), string.lower(v)) then --If it's a whitelist and the entity is found in the whitelist
@@ -135,42 +141,49 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 			if ply:IsAdmin() and tobool(FPP.Settings[Type2].admincanblocked) then
 				Returnal = true
 			elseif tobool(FPP.Settings[Type2].canblocked) then
-				Returnal = true
+				Returnal = true 
 			else
 				Returnal = false
 			end	
 		end
 	end
-	
+
+	Returnal = Returnal and ValidEntity(ply) and not tobool(ply:GetInfoNum("FPP_PrivateSettings_BlockedProps"))
 	if Returnal ~= nil and (not ent.Owner or ent.Owner == ply) then return Returnal, "Blocked!" end
 	
-	if ent["Share"..Type1] then return true, ent.Owner end
+	-- Shared entity
+	if ent["Share"..Type1] then return not OnlyMine, ent.Owner end
 	
 	if not TryingToShare and ent.AllowedPlayers and table.HasValue(ent.AllowedPlayers, ply) then 
-		return true, ent.Owner
+		return not OnlyMine, ent.Owner
 	end
 	
+	-- Misc.
 	if ent.Owner ~= ply and ValidEntity(ply) then
 		if not TryingToShare and ValidEntity(ent.Owner) and ent.Owner.Buddies and ent.Owner.Buddies[ply] and ent.Owner.Buddies[ply][string.lower(Type1)] then
-			return true, ent.Owner
+			return not OnlyMine, ent.Owner
 		elseif ent.Owner and ply:IsAdmin() and tobool(FPP.Settings[Type2].adminall) then -- if not world prop AND admin allowed
-			return true, ent.Owner
+			return not OnlyMine, ent.Owner
 		elseif ent == GetWorldEntity() or ent:GetClass() == "gmod_anchor" then
 			return true
 		elseif not ValidEntity(ent.Owner) then --If world prop or a prop belonging to someone who left
 			local world = "World prop"
-			if ent.Owner then world = "Disconnected player's prop" end
+			local Restrict = "WorldProps"
+			if ent.Owner then 
+				world = "Disconnected player's prop" 
+				Restrict =  "OtherPlayerProps"
+			end
 			if ply:IsAdmin() and tobool(FPP.Settings[Type2].adminworldprops) then -- if admin and admin allowed
-				return true, world
+				return not tobool(ply:GetInfoNum("FPP_PrivateSettings_"..Restrict)), world
 			elseif tobool(FPP.Settings[Type2].worldprops) then -- if worldprop allowed
-				return true, world
+				return not tobool(ply:GetInfoNum("FPP_PrivateSettings_"..Restrict)), world
 			end -- if not allowed then
 			return false, world
 		else -- You don't own this, simple
 			return false, ent.Owner
 		end
 	end 
-	return true
+	return true and not tobool(ply:GetInfoNum("FPP_PrivateSettings_OwnProps"))
 end
 
 --Global cantouch function
