@@ -117,6 +117,11 @@ local function Ban(ply, cmd, args)
 				SendUserMessage("FAdmin_ban_cancel", target) -- No I changed my mind, you can stay
 				target:UnLock()
 				target:Spawn()
+				for k,v in pairs(StartBannedUsers) do
+					if v == target:SteamID() then
+						table.remove(StartBannedUsers, k)
+					end
+				end
 			else -- If he left and you want to cancel
 				for k,v in pairs(StartBannedUsers) do
 					if v == args[1] then
