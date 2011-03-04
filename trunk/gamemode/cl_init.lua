@@ -733,7 +733,6 @@ include("addentities.lua")
 local function DoSpecialEffects(Type)
 	local thetype = string.lower(Type:ReadString())
 	local toggle = tobool(Type:ReadString())
-
 	if toggle then
 		if thetype == "motionblur" then
 			hook.Add("RenderScreenspaceEffects", thetype, function()
@@ -745,7 +744,6 @@ local function DoSpecialEffects(Type)
 			DOF_Start()
 		elseif thetype == "colormod" then
 			hook.Add("RenderScreenspaceEffects", thetype, function()
-				if not LocalPlayer():Alive() then return end
 				local settings = {}
 				settings[ "$pp_colour_addr" ] = 0
 			 	settings[ "$pp_colour_addg" ] = 0 
