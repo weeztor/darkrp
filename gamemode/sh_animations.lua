@@ -143,12 +143,27 @@ Anims["Follow me!"] = ACT_GMOD_GESTURE_BECON
 
 local AnimFrame
 local function AnimationMenu()
-	local AnimFrame = AnimFrame or vgui.Create("DFrame")
-	AnimFrame:SetSize(200, table.Count(Anims) * 110)
-	AnimFrame:Center()
+	local AnimFrame
+
+	local Panel = vgui.Create("Panel")
+	Panel:SetPos(0,0)
+	Panel:SetSize(ScrW(), ScrH())
+	function Panel:OnMousePressed()
+		AnimFrame:Close()
+	end
+	//Panel:SetAlpha(0)
+	
+	AnimFrame = AnimFrame or vgui.Create("DFrame", Panel)
+	local Height = table.Count(Anims) * 110
+	AnimFrame:SetSize(200, Height)
+	AnimFrame:SetPos(ScrW()/2 + ScrW() * 0.1, ScrH()/2 - (Height/2))
 	AnimFrame:SetTitle("Custom animation!")
 	AnimFrame:SetVisible(true)
 	AnimFrame:MakePopup()
+
+	function AnimFrame:Close()
+		Panel:Remove()
+	end
 
 	local i = 0
 	for k,v in pairs(Anims) do
