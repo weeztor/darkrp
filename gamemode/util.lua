@@ -62,6 +62,7 @@ function TalkToPerson(receiver, col1, text1, col2, text2, sender)
 end
 
 function FindPlayer(info)
+	if not info then return nil end
 	local pls = player.GetAll()
 
 	-- Find by Index Number (status in console)
@@ -84,4 +85,21 @@ function FindPlayer(info)
 		end
 	end
 	return nil
+end
+
+function IsEmpty(vector)
+	local point = util.PointContents(vector)
+	local a = point ~= CONTENTS_SOLID 
+	and point ~= CONTENTS_MOVEABLE
+	and point ~= CONTENTS_LADDER 
+	and point ~= CONTENTS_PLAYERCLIP 
+	and point ~= CONTENTS_MONSTERCLIP
+	local b = true
+	
+	for k,v in pairs(ents.FindInSphere(vector, 35)) do
+		if v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics" then
+			b = false
+		end
+	end
+	return a and b
 end

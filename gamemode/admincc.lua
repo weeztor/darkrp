@@ -1,3 +1,6 @@
+/*---------------------------------------------------------------------------
+Concommands to change DarkRP ConVars
+---------------------------------------------------------------------------*/
 function ccValueCommand(ply, cmd, args)
 	local valuecmd = ValueCmds[cmd]
 
@@ -89,16 +92,9 @@ function ccToggleCommand(ply, cmd, args)
 	end
 end
 
-if not ConVarExists("rp_language") then
-	CreateConVar("rp_language", "english", {FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY})	
-end
-
-LANGUAGE = rp_languages[GetConVarString("rp_language")]
-if not LANGUAGE then
-	LANGUAGE = rp_languages["english"]--now hope people don't remove the english language ._.
-end
-
-
+/*---------------------------------------------------------------------------
+Doors
+---------------------------------------------------------------------------*/
 local function ccDoorOwn(ply, cmd, args)
 	if ply:EntIndex() == 0 then
 		return
@@ -259,6 +255,9 @@ local function ccUnLock(ply, cmd, args)
 end
 concommand.Add("rp_unlock", ccUnLock)
 
+/*---------------------------------------------------------------------------
+Messages
+---------------------------------------------------------------------------*/
 local function ccTell(ply, cmd, args)
 	if not args[1] then return end
 	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands") then
@@ -321,6 +320,9 @@ local function ccTellAll(ply, cmd, args)
 end
 concommand.Add("rp_tellall", ccTellAll)
 
+/*---------------------------------------------------------------------------
+Misc
+---------------------------------------------------------------------------*/
 local function ccRemoveLetters(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands")then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_removeletters"))

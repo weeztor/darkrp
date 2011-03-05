@@ -4,7 +4,7 @@ local function GetTextHeight(font, str)
 	return h
 end
 
-local HelpPanel = { }
+local HelpPanel = {}
 local LastChatPrefix = ""
 
 function HelpPanel:Init()
@@ -12,7 +12,7 @@ function HelpPanel:Init()
 	self.HelpX = self.StartHelpX
 
 	self.title = vgui.Create("Label", self)
-	self.title:SetText("DarkRP 2.4.1")
+	self.title:SetText(GAMEMODE.Name)
 
 	self.modinfo = vgui.Create("Label", self)
 	self.modinfo:SetText(LANGUAGE.get_mod)
@@ -22,8 +22,8 @@ function HelpPanel:Init()
 
 	self.HelpInfo = vgui.Create("Panel", self)
 
-	self.vguiHelpCategories = { }
-	self.vguiHelpLabels = { }
+	self.vguiHelpCategories = {}
+	self.vguiHelpLabels = {}
 	self.Scroll = 0
 end
 
@@ -47,7 +47,7 @@ function HelpPanel:FillHelpInfo(force)
 	for k, v in SortedPairsByMemberValue(HelpCategories, "id") do
 		if not self.vguiHelpCategories[v.id] or force then
 			local helptext = ""
-			local Labels = { }
+			local Labels = {}
 
 			self.vguiHelpCategories[v.id] = vgui.Create("DLabel", self.HelpInfo)
 			self.vguiHelpCategories[v.id]:SetText(v.name)
@@ -64,7 +64,7 @@ function HelpPanel:FillHelpInfo(force)
 			end
 
 			local index = 1
-			local HelpText = { }
+			local HelpText = {}
 
 			for i = 1, math.ceil(#Labels / maxpertable) do
 				for n = index, maxpertable * i do

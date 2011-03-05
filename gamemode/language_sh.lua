@@ -1167,9 +1167,6 @@ rp_languages.swedish = {
 }
 
 
-
-
-
 if not ConVarExists("rp_language") then
 	CreateConVar("rp_language", "english", {FCVAR_ARCHIVE, FCVAR_REPLICATED})	
 end

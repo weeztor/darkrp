@@ -358,13 +358,3 @@ local function AddDoorOwner(ply, args)
 end
 AddChatCommand("/addowner", AddDoorOwner)
 AddChatCommand("/ao", AddDoorOwner)
-
-concommand.Add( "gmod_admin_cleanup", function( pl, command, args )
-	if not pl:IsAdmin() then return end
-	for k,v in pairs(ents.GetAll()) do
-		if v.Owner and not v:IsWeapon() then -- DarkRP entities have the Owner part of their table as nil.
-			v:Remove()
-		end
-	end
-	NotifyAll( 1, 4, pl:Nick() .. " cleaned up everything." )
-end)

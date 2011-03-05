@@ -1,4 +1,5 @@
-GM.Name = "DarkRP 2.4.1"
+GM.Version = "2.4.1"
+GM.Name = "DarkRP "..GM.Version
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco, Eusion"
 
 CUR = "$"
@@ -86,6 +87,7 @@ include("entity.lua")
 include("addentities.lua")
 include("main.lua")
 include("sh_animations.lua")
+include("Workarounds.lua")
 
 
 -- Falco's prop protection
