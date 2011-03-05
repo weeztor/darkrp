@@ -1,4 +1,5 @@
-GM.Name = "DarkRP 2.4.1"
+GM.Version = "2.4.1"
+GM.Name = "DarkRP "..GM.Version
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco, Eusion"
 
 require("datastream")
@@ -94,6 +95,7 @@ include("cl_helpvgui.lua")
 include("showteamtabs.lua")
 include("DRPDermaSkin.lua")
 include("sh_animations.lua")
+include("Workarounds.lua")
 
 include("FPP/sh_settings.lua")
 include("FPP/client/FPP_Menu.lua")
@@ -1092,22 +1094,6 @@ local function InitializeDarkRPVars(handler, id, encoded, decoded)
 	end
 end
 datastream.Hook("DarkRP_InitializeVars", InitializeDarkRPVars)
-
--- Vehicle fix from tobba!
-function debug.getupvalues(f)
-	local t, i, k, v = {}, 1, debug.getupvalue(f, 1)
-	while k do
-		t[k] = v
-		i = i+1
-		k,v = debug.getupvalue(f, i)
-	end
-	return t
-end
-
-glon.encode_types = debug.getupvalues(glon.Write).encode_types
-glon.encode_types["Vehicle"] = glon.encode_types["Vehicle"] or {10, function(o)
-		return (ValidEntity(o) and o:EntIndex() or -1).."\1"
-	end}
 	
 function GM:InitPostEntity()
 	function VoiceNotify:Init()

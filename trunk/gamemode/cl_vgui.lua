@@ -1,5 +1,5 @@
-VoteVGUI = {}
-QuestionVGUI = {}
+local VoteVGUI = {}
+local QuestionVGUI = {}
 local PanelNum = 0
 local LetterWritePanel
 

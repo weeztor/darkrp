@@ -153,7 +153,7 @@ function GM:KeyPress(ply, code)
 		end
 	end*/
 end
-
+/*
 local AllowedTrades = {"money_printer"}
 concommand.Add("rp_tradeitem", function(ply, cmd, args)
 	local ent = Entity(tonumber(args[1]))
@@ -188,7 +188,7 @@ concommand.Add("rp_killtrade", function(ply, cmd, args)
 		Trades[id] = {}
 		table.remove(Trades, id)
 	end
-end)
+end)*/
 
 local function IsInRoom(listener, talker) -- IsInRoom function to see if the player is in the same room.
 	local tracedata = {}
@@ -390,23 +390,6 @@ function GM:PlayerCanPickupWeapon(ply, weapon)
 		return false
 	end
 	return true
-end
-
-local function IsEmpty(vector)
-	local point = util.PointContents(vector)
-	local a = point ~= CONTENTS_SOLID 
-	and point ~= CONTENTS_MOVEABLE 
-	and point ~= CONTENTS_LADDER 
-	and point ~= CONTENTS_PLAYERCLIP 
-	and point ~= CONTENTS_MONSTERCLIP
-	local b = true
-	
-	for k,v in pairs(ents.FindInSphere(vector, 35)) do
-		if v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics" then
-			b = false
-		end
-	end
-	return a and b
 end
 
 local function removelicense(ply) 
@@ -695,63 +678,6 @@ function GM:PlayerDisconnected(ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") disconnected")
 end
 
-/*---------------------------------------------------------
- Flammable
- ---------------------------------------------------------*/
-local FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "spawned_money", "prop_physics"}
-
-local function IsFlammable(ent)
-	local class = ent:GetClass()
-	for k, v in pairs(FlammableProps) do
-		if class == v then return true end
-	end
-	return false
-end
-
--- FireSpread from SeriousRP
-local function FireSpread(e)
-	if e:IsOnFire() then
-		if e:IsMoneyBag() then
-			e:Remove()
-		end
-		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
-		local rand = math.random(0, 300)
-		
-		if rand <= 1 then
-			for k, v in pairs(en) do
-				if IsFlammable(v) then
-					if not v.burned then
-						v:Ignite(math.random(5,180), 0)
-						v.burned = true
-					else
-						local r, g, b, a = v:GetColor()
-						if (r - 51)>=0 then r = r - 51 end
-						if (g - 51)>=0 then g = g - 51 end
-						if (b - 51)>=0 then b = b - 51 end
-						v:SetColor(r, g, b, a)
-						if (r + g + b) < 103 and math.random(1, 100) < 35 then
-							v:Fire("enablemotion","",0)
-							constraint.RemoveAll(v)
-						end
-					end
-					break -- Don't ignite all entities in sphere at once, just one at a time
-				end
-			end
-		end
-	end
-end
-
-local function FlammablePropThink()
-	for k, v in ipairs(FlammableProps) do
-		local ens = ents.FindByClass(v)
-		
-		for a, b in pairs(ens) do
-			FireSpread(b)
-		end
-	end
-end
-timer.Create("FlammableProps", 0.1, 0, FlammablePropThink)
-
 local function PlayerDoorCheck()
 	for k, ply in pairs(player.GetAll()) do
 		local trace = ply:GetEyeTrace()
@@ -806,26 +732,6 @@ function GM:GetFallDamage( ply, flFallSpeed )
 	return 10
 end
 
-local otherhooks = {}
-function GM:PlayerSay(ply, text, Global) -- We will make the old hooks run AFTER DarkRP's playersay has been run.
-	local text2 = (Global and "" or "/g ") .. text
-	local callback
-	text2, callback, DoSayFunc = RP_PlayerChat(ply, text2)
-	if tostring(text2) == " " then text2, callback = callback, text2 end
-	for k,v in SortedPairs(otherhooks, false) do
-		if type(v) == "function" then
-			text2 = v(ply, text2) or text2
-		end
-	end
-	if isDedicatedServer() then
-		ServerLog("\""..ply:Nick().."<"..ply:UserID()..">" .."<"..ply:SteamID()..">".."<"..team.GetName( ply:Team() )..">\" say \""..text.. "\"\n")
-	end
-	
-	if DoSayFunc then DoSayFunc(text2) return "" end
-	text2 = RP_ActualDoSay(ply, text2, callback) 
-	return ""
-end
-
 function GM:InitPostEntity() 
 	timer.Simple(2, function()
 		if RP_MySQLConfig and RP_MySQLConfig.EnableMySQL then
@@ -834,29 +740,7 @@ function GM:InitPostEntity()
 		end
 		DB.Init()
 	end)
-	if not hook.GetTable().PlayerSay then return end
-	for k,v in pairs(hook.GetTable().PlayerSay) do -- Remove all PlayerSay hooks, they all interfere with DarkRP's PlayerSay
-		otherhooks[k] = v
-		hook.Remove("PlayerSay", k)
-	end
-	for a,b in pairs(otherhooks) do
-		if type(b) ~= "function" then
-			otherhooks[a] = nil
-		end
-	end
-
-	game.ConsoleCommand("durgz_witty_sayings 0\n") -- Deal with the cigarettes exploit. I'm fucking tired of them. I hate having to fix other people's mods, but this mod maker is retarded.
 end
-hook.Add("PlayerNoClip", "DarkRP_FuckAss", function(ply)
-	if LevelToString and string.lower(LevelToString(ply:GetNWInt("ASS_isAdmin"))) == "banned" then -- Assmod's bullshit
-		for k, v in pairs(player.GetAll()) do
-			if v:IsAdmin() then
-				TalkToPerson(v, Color(255,0,0,255), "WARNING", Color(0,0,255,255), "If DarkRP didn't intervene, assmod would have given a banned user noclip access.\nGet rid of assmod, it's a piece of shit.", ply)
-			end
-		end
-		return false
-	end
-end)
 
 hook.Add("WeaponEquip", "AmmoHackFix", function( wep )
 	if wep.ammohacked then

@@ -1,8 +1,8 @@
-HELP_CATEGORY_CHATCMD = 1
-HELP_CATEGORY_CONCMD = 2
-HELP_CATEGORY_ZOMBIE = 3
-HELP_CATEGORY_ADMINTOGGLE = 5
-HELP_CATEGORY_ADMINCMD = 6
+local HELP_CATEGORY_CHATCMD = 1
+local HELP_CATEGORY_CONCMD = 2
+local HELP_CATEGORY_ZOMBIE = 3
+local HELP_CATEGORY_ADMINTOGGLE = 5
+local HELP_CATEGORY_ADMINCMD = 6
 
 
 ValueCmds = {}
@@ -619,7 +619,7 @@ local function GenerateChatCommandHelp()
 end
 GenerateChatCommandHelp()
 
--- concommand help labesl
+-- concommand help labels
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_own - Own the door you're looking at.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_unown - Remove ownership from the door you're looking at.")
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_addowner [Nick|SteamID|UserID] - Add a co-owner to the door you're looking at.")
