@@ -213,7 +213,7 @@ hook.Add("InitPostEntity", "FAdmin_Retrievebans", function()
 	if file.Exists("FAdmin/Bans.txt") then
 		BANS = util.KeyValuesToTable(file.Read("FAdmin/Bans.txt"))
 		for k,v in pairs(BANS) do
-			if v.time < os.time() and v ~= 0 then
+			if tonumber(v.time) < os.time() and v ~= 0 then
 				BANS[k] = nil
 			end
 			if v.time == 0 then
