@@ -57,7 +57,7 @@ end
 timer.Create("FAdminCheckBans", 60, 0, function()
 	local changed = false
 	for k,v in pairs(BANS) do
-		if v.time and v.time < os.time() and v.time ~= 0 then
+		if v.time and tonumber(v.time) < os.time() and v.time ~= 0 then
 			BANS[k] = nil
 			changed = true
 		end
