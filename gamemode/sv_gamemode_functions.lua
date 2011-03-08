@@ -743,8 +743,8 @@ function GM:InitPostEntity()
 end
 
 hook.Add("WeaponEquip", "AmmoHackFix", function( wep )
-	if wep.ammohacked then
-		local clip = (wep.Primary and wep.Primary.ClipSize) or 0
+	if wep.ammohacked and wep.Primary then
+		local clip = wep.Primary.ClipSize
 		wep:TakePrimaryAmmo(clip)
 	end
 end)
