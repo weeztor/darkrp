@@ -744,7 +744,7 @@ end
 
 hook.Add("WeaponEquip", "AmmoHackFix", function( wep )
 	if wep.ammohacked then
-		local clip = wep.Primary.ClipSize
+		local clip = (wep.Primary and wep.Primary.ClipSize) or 0
 		wep:TakePrimaryAmmo(clip)
 	end
 end)
