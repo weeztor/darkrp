@@ -1,4 +1,4 @@
-GM.Version = "2.4.1"
+GM.Version = "2.4.2"
 GM.Name = "DarkRP "..GM.Version
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco, Eusion"
 
@@ -719,12 +719,6 @@ usermessage.Hook("KillLetter", KillLetter)
 local function ToggleClicker()
 	GUIToggled = not GUIToggled
 	gui.EnableScreenClicker(GUIToggled)
-
-	for k, v in pairs(QuestionVGUI) do
-		if v:IsValid() then
-			v:SetMouseInputEnabled(GUIToggled)
-		end
-	end
 end
 usermessage.Hook("ToggleClicker", ToggleClicker)
 	
