@@ -412,9 +412,9 @@ local function DropWeapon(ply)
 		if ValidEntity(ply) and ValidEntity(ent) and ent:GetModel() then 
 			local ammohax = false
 			local ammotype = ent:GetPrimaryAmmoType()
-			local ammo = ply:GetAmmoCount( ammotype )
-			local clip = ent.Primary.ClipSize
-			if ammo <= clip then
+			local ammo = ply:GetAmmoCount(ammotype)
+			local clip = (ent.Primary and ent.Primary.ClipSize) or 0
+			if ammo and ammo <= clip then
 				ammohax = true
 			end
 			ply:DropWeapon(ent) -- Drop it so the model isn't the viewmodel
