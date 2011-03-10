@@ -1,3 +1,6 @@
+DarkRP 2.4.2 SVN
+[CHANGE] People need to be alive in order to be able to wanted/warrant
+
 DarkRP 2.4.2
 [CHANGE Drakehawke] Fixed the default GMod admin cleanup from unowning/resetting doors.
 [ADD Drakehawke] Dynamic mic chat - if enabled (rp_voiceradius_dynamic), only players in the same room as you can hear your mic (rp_voiceradius must be 1).
