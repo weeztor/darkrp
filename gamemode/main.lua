@@ -491,6 +491,11 @@ local function SearchWarrant(ply, args)
 			Notify(ply, 1, 4, LANGUAGE.vote_specify_reason)
 			return ""
 		end
+
+		if not ply:Alive() then
+			Notify(ply, 1, 4, "You must be alive in order to issue a warrant")
+			return ""
+		end
 		
 		for i = 2, #tableargs, 1 do
 			reason = reason .. " " .. tableargs[i]
@@ -544,6 +549,11 @@ local function PlayerWanted(ply, args)
 		
 		if #tableargs == 1 then
 			Notify(ply, 1, 4, LANGUAGE.vote_specify_reason)
+			return ""
+		end
+
+		if not ply:Alive() then
+			Notify(ply, 1, 4, "You must be alive in order to make someone wanted")
 			return ""
 		end
 		
