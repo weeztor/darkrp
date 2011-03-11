@@ -1,6 +1,6 @@
 local OldSetMaterial = _R.Entity.SetMaterial
 function _R.Entity:SetMaterial(mat, ...)
-	if string.find(mat:lower(), "ar2_altfire") then return end
+	if mat and string.find(mat:lower(), "ar2_altfire") then return end
 	OldSetMaterial(self, mat, ...)
 end
 
