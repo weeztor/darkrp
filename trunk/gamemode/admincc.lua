@@ -627,8 +627,6 @@ local function ccSetRPName(ply, cmd, args)
 		else 
 			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
-		return
 	end
-	
 end
 concommand.Add("rp_setname", ccSetRPName)
