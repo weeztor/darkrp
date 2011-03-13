@@ -33,7 +33,7 @@ if CLIENT then
 				v:Remove()
 			end
 		end
-		NotifyAll( 1, 4, pl:Nick() .. " cleaned up everything." )
+		NotifyAll( 0, 4, pl:Nick() .. " cleaned up everything." )
 	end)
 
 	/*---------------------------------------------------------------------------

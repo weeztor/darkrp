@@ -61,10 +61,7 @@ AddChatCommand("/nick", RPName)
 
 function meta:IsCP()
 	local Team = self:Team()
-	if Team == TEAM_POLICE or Team == TEAM_CHIEF or Team == TEAM_MAYOR then
-		return true
-	end
-	return false
+	return Team == TEAM_POLICE or Team == TEAM_CHIEF or Team == TEAM_MAYOR
 end
 
 function meta:SetRPName(name, firstRun)
@@ -273,7 +270,7 @@ function meta:ChangeTeam(t, force)
 	end
 	self:UpdateJob(TEAM.name)
 	DB.StoreSalary(self, TEAM.salary)
-	NotifyAll(1, 4, string.format(LANGUAGE.job_has_become, self:Nick(), TEAM.name))
+	NotifyAll(0, 4, string.format(LANGUAGE.job_has_become, self:Nick(), TEAM.name))
 	if self.DarkRPVars.HasGunlicense then
 		self:SetDarkRPVar("HasGunlicense", false)
 	end
@@ -485,7 +482,7 @@ function meta:Unarrest(ID)
 		end
 		
 		timer.Destroy(self:SteamID() .. "jailtimer")
-		NotifyAll(1, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
+		NotifyAll(0, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
 	end
 end
 
@@ -521,7 +518,7 @@ end
 
 function meta:DoPropertyTax()
 	if GetConVarNumber("propertytax") == 0 then return end
-	if (self:Team() == TEAM_POLICE or self:Team() == TEAM_MAYOR or self:Team() == TEAM_CHIEF) and GetConVarNumber("cit_propertytax") == 1 then return end
+	if (self:IsCP()) and GetConVarNumber("cit_propertytax") == 1 then return end
 
 	local numowned = self:GetTable().OwnedNumz
 
@@ -533,7 +530,7 @@ function meta:DoPropertyTax()
 	if self:CanAfford(tax) then
 		if tax ~= 0 then
 			self:AddMoney(-tax)
-			Notify(self, 1, 5, string.format(LANGUAGE.property_tax, CUR .. tax))
+			Notify(self, 0, 5, string.format(LANGUAGE.property_tax, CUR .. tax))
 		end
 	else
 		Notify(self, 1, 8, LANGUAGE.property_tax_cant_afford)

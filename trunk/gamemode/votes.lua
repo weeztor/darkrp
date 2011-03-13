@@ -29,13 +29,13 @@ end
 
 function vote:Create(question, voteid, ent, delay, callback, special)
 	if #player.GetAll() == 1 then
-		Notify(ent, 1, 4, LANGUAGE.vote_alone)
+		Notify(ent, 0, 4, LANGUAGE.vote_alone)
 		callback(1, ent)
 		return
 	end
 	
 	if special and #player.GetAll() <= 2 then
-		Notify(ent, 1, 4, LANGUAGE.vote_alone)
+		Notify(ent, 0, 4, LANGUAGE.vote_alone)
 		callback(1, ent)
 		return
 	end 
@@ -128,7 +128,7 @@ function HandleTrade(id)
 	if not ValidEntity(Trades[id].recipient) then return end
 	if not ValidEntity(Trades[id].trade) then return end
 	if Trades[id].votes > 0 then
-		Notify(Trades[id].client, 1, 4, "Recipient accepted the trade request.")
+		Notify(Trades[id].client, 2, 4, "Recipient accepted the trade request.")
 		local rf = RecipientFilter()
 		rf:AddPlayer(Trades[id].client)
 		rf:AddPlayer(Trades[id].recipient)

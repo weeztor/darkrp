@@ -59,7 +59,7 @@ function ENT:Use(activator,caller)
 	end
 	local diff = (self:SalePrice(activator) - self:SalePrice(owner))
 	if diff < 0 and not owner:CanAfford(math.abs(diff)) then
-		Notify(activator, 1, 3, "Microwave owner is too poor to subsidize this sale!")
+		Notify(activator, 2, 3, "Microwave owner is too poor to subsidize this sale!")
 		return ""
 	end
 	if activator.maxFoods and activator.maxFoods >= GetConVarNumber("maxfoods") then
@@ -72,7 +72,7 @@ function ENT:Use(activator,caller)
 		local cash = self:SalePrice(activator)
 
 		activator:AddMoney(cash * -1)
-		Notify(activator, 1, 3, "You have purchased food for " .. CUR .. tostring(cash) .. "!")
+		Notify(activator, 0, 3, "You have purchased food for " .. CUR .. tostring(cash) .. "!")
 
 		if activator ~= owner then
 			local gain = 0
@@ -82,12 +82,12 @@ function ENT:Use(activator,caller)
 				gain = math.floor(self.dt.price - GetConVarNumber("microwavefoodcost"))
 			end
 			if gain == 0 then
-				Notify(owner, 1, 3, "You sold some food but made no profit!")
+				Notify(owner, 2, 3, "You sold some food but made no profit!")
 			else
 				owner:AddMoney(gain)
 				local word = "profit"
 				if gain < 0 then word = "loss" end
-				Notify(owner, 1, 3, "You made a " .. word .. " of " .. CUR .. tostring(math.abs(gain)) .. " by selling food!")
+				Notify(owner, 0, 3, "You made a " .. word .. " of " .. CUR .. tostring(math.abs(gain)) .. " by selling food!")
 			end
 		end
 		timer.Create(self.Entity:EntIndex() .. "food", 1, 1, self.createFood, self)
