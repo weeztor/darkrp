@@ -460,27 +460,15 @@ function DB.StoreRPName(ply, name)
 	end)
 end
 
-local rpnameslist --Make sure the DB doesn't get checked for ALL RPnames when someone InitialSpawns
-function DB.RetrieveRPNames(callback)
-	if rpnameslist then
-		return callback(rpnameslist)
-	end
-	
-	DB.Query("SELECT * FROM darkrp_rpnames;", function(r)
-		if r then 
-			rpnameslist = r
-			callback(rpnameslist)
-		else
-			rpnameslist = {}
-			callback(rpnameslist)
-		end
+function DB.RetrieveRPNames(ply, name, callback)
+	DB.Query("SELECT COUNT(*) AS count FROM darkrp_rpnames WHERE name = "..sql.SQLStr(name)..
+	" AND steam <> 'UNKNOWN' AND steam <> 'STEAM_ID_PENDING'"..
+	" AND steam <> "..sql.SQLStr(ply:SteamID())..";", function(r)
+		callback(tonumber(r[1].count) > 0)
 	end)
 end
 
 function DB.RetrieveRPName(ply, callback)
-	for k,v in pairs(rpnameslist or {}) do
-		if v.steam == ply:SteamID() then return callback(v.name) end -- First check the cache for RP names
-	end
 	DB.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";", callback)
 end
 
