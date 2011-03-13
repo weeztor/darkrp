@@ -153,7 +153,7 @@ function SWEP:Reload()
 			wep:SetClip2(v[7])
 			
 		end
-		Notify(self.Owner, 1, 4, "Returned "..trace.Entity:Nick() .. "'s confisquated weapons!")
+		Notify(self.Owner, 2, 4, "Returned "..trace.Entity:Nick() .. "'s confisquated weapons!")
 		trace.Entity:GetTable().ConfisquatedWeapons = nil
 	end
 end

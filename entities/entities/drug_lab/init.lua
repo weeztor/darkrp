@@ -51,7 +51,7 @@ function ENT:Use(activator,caller)
 			return false
 		end
 		activator:AddMoney(-productioncost)
-		Notify(activator, 1, 4, "You have made drugs! production cost: " .. CUR .. tostring(productioncost).."!")
+		Notify(activator, 0, 4, "You have made drugs! production cost: " .. CUR .. tostring(productioncost).."!")
 		self.sparking = true
 		timer.Create(self:EntIndex() .. "drug", 1, 1, self.createDrug, self)
 	end

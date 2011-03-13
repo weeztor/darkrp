@@ -109,7 +109,7 @@ local function SetDoorGroupOwnable(ply, arg)
 		ent.DoorData = ent.DoorData or {}
 		ent.DoorData.GroupOwn = arg
 		if arg == "" then ent.DoorData.GroupOwn = nil end
-		Notify(ply, 1, 8, "Door group set succesfully")
+		Notify(ply, 0, 8, "Door group set succesfully")
 		-- Save it for future map loads
 		DB.StoreGroupDoorOwnability(ent)
 	end
@@ -147,7 +147,7 @@ local function OwnDoor(ply)
 			ply:GetTable().OwnedNumz = math.abs(ply:GetTable().OwnedNumz - 1)
 			local GiveMoneyBack = (((trace.Entity:IsVehicle() and GetConVarNumber("vehiclecost")) or GetConVarNumber("doorcost")) * 0.666) + 0.5
 			ply:AddMoney(math.floor(GiveMoneyBack))
-			Notify(ply, 1, 4, string.format(LANGUAGE.door_sold,  CUR .. math.floor(math.floor(GiveMoneyBack))))
+			Notify(ply, 0, 4, string.format(LANGUAGE.door_sold,  CUR .. math.floor(math.floor(GiveMoneyBack))))
 			ply.LookingAtDoor = nil
 		else
 			if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
@@ -168,10 +168,10 @@ local function OwnDoor(ply)
 
 			if trace.Entity:IsVehicle() then
 				ply:AddMoney(-GetConVarNumber("vehiclecost"))
-				Notify(ply, 1, 4, string.format(LANGUAGE.vehicle_bought, CUR .. math.floor(GetConVarNumber("vehiclecost"))))
+				Notify(ply, 0, 4, string.format(LANGUAGE.vehicle_bought, CUR .. math.floor(GetConVarNumber("vehiclecost"))))
 			else
 				ply:AddMoney(-GetConVarNumber("doorcost"))
-				Notify(ply, 1, 4, string.format(LANGUAGE.door_bought, CUR .. math.floor(GetConVarNumber("doorcost"))))
+				Notify(ply, 0, 4, string.format(LANGUAGE.door_bought, CUR .. math.floor(GetConVarNumber("doorcost"))))
 			end
 			trace.Entity:Own(ply)
 
@@ -203,7 +203,7 @@ local function UnOwnAll(ply, cmd, args)
 		end
 	end
 	ply:GetTable().OwnedNumz = 0
-	Notify(ply, 1, 4, string.format("You have sold "..amount.." doors for " .. CUR .. amount * math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5)) .. "!"))
+	Notify(ply, 2, 4, string.format("You have sold "..amount.." doors for " .. CUR .. amount * math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5)) .. "!"))
 	return ""
 end
 AddChatCommand("/unownalldoors", UnOwnAll)

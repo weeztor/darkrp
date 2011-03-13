@@ -297,13 +297,13 @@ function DB.StoreJailPos(ply, addingPos)
 			DB.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");", function()
 				DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
 			end)
-			Notify(ply, 1, 4,  LANGUAGE.created_first_jailpos)
+			Notify(ply, 0, 4,  LANGUAGE.created_first_jailpos)
 		else
 			if addingPos then
 				DB.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");", function()
 					DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
 				end)
-				Notify(ply, 1, 4,  LANGUAGE.added_jailpos)
+				Notify(ply, 0, 4,  LANGUAGE.added_jailpos)
 			else
 				DB.Begin()
 				DB.Query("DELETE FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";")
@@ -311,7 +311,7 @@ function DB.StoreJailPos(ply, addingPos)
 					DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
 				end)
 				DB.Commit()
-				Notify(ply, 1, 5,  LANGUAGE.reset_add_jailpos)
+				Notify(ply, 0, 5,  LANGUAGE.reset_add_jailpos)
 			end
 		end
 	end)
@@ -521,9 +521,9 @@ function DB.ResetAllMoney(ply,cmd,args)
 		v:SetDarkRPVar("money", GetConVarNumber("startingmoney") or 500)
 	end
 	if ply:IsPlayer() then
-		NotifyAll(1,4, string.format(LANGUAGE.reset_money, ply:Nick()))
+		NotifyAll(0,4, string.format(LANGUAGE.reset_money, ply:Nick()))
 	else
-		NotifyAll(1,4, string.format(LANGUAGE.reset_money, "Console"))
+		NotifyAll(0,4, string.format(LANGUAGE.reset_money, "Console"))
 	end
 end
 concommand.Add("rp_resetallmoney", DB.ResetAllMoney)

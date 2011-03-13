@@ -21,7 +21,7 @@ function GM:PlayerSpawnProp(ply, model)
 	if allowed then
 		if GetConVarNumber("proppaying") == 1 then
 			if ply:CanAfford(GetConVarNumber("propcost")) then
-				Notify(ply, 1, 4, "Deducted " .. CUR .. GetConVarNumber("propcost"))
+				Notify(ply, 0, 4, "Deducted " .. CUR .. GetConVarNumber("propcost"))
 				ply:AddMoney(-GetConVarNumber("propcost"))
 				return true
 			else
@@ -116,7 +116,7 @@ function GM:OnNPCKilled(victim, ent, weapon)
 		-- If we know by now who killed the NPC, pay them.
 		if ValidEntity(ent) and GetConVarNumber("npckillpay") > 0 then
 			ent:AddMoney(GetConVarNumber("npckillpay"))
-			Notify(ent, 1, 4, string.format(LANGUAGE.npc_killpay, CUR .. GetConVarNumber("npckillpay")))
+			Notify(ent, 0, 4, string.format(LANGUAGE.npc_killpay, CUR .. GetConVarNumber("npckillpay")))
 		end
 	end
 end
@@ -250,11 +250,11 @@ end
 
 function GM:CanPlayerSuicide(ply)
 	if ply.IsSleeping then
-		Notify(ply, 4, 4, string.format(LANGUAGE.unable, "suicide"))
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
 	if RPArrestedPlayers[ply:SteamID()] then
-		Notify(ply, 4, 4, string.format(LANGUAGE.unable, "suicide"))
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
 	return true

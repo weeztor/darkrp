@@ -40,7 +40,7 @@ if SERVER then
 			Notify(ply, 1, 5, string.format(LANGUAGE.need_sadmin, "rp_resetallsettings"))
 			return
 		end
-		Notify(ply, 1, 4, LANGUAGE.reset_settings)
+		Notify(ply, 0, 4, LANGUAGE.reset_settings)
 		local count = 0
 		for k,v in pairs(ToggleCmds) do
 			count = count + 1
@@ -448,7 +448,7 @@ function AddTeamCommands(CTeam, max)
 				return ""
 			end
 			if #player.GetAll() == 1 then
-				Notify(ply, 1, 4, LANGUAGE.vote_alone)
+				Notify(ply, 0, 4, LANGUAGE.vote_alone)
 				ply:ChangeTeam(k)
 				return ""
 			end

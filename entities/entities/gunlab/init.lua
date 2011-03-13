@@ -61,7 +61,7 @@ function ENT:Use(activator)
 	end
 	local diff = (self:SalePrice(activator) - self:SalePrice(owner))
 	if diff < 0 and not owner:CanAfford(math.abs(diff)) then
-		Notify(activator, 1, 3, "Gun Lab owner is too poor to subsidize this sale!")
+		Notify(activator, 2, 3, "Gun Lab owner is too poor to subsidize this sale!")
 		return ""
 	end
 	self.sparking = true
@@ -69,7 +69,7 @@ function ENT:Use(activator)
 	if not self.Once then
 		self.Once = true
 		activator:AddMoney(cash * -1)
-		Notify(activator, 1, 3, "You purchased a P228 for " .. CUR .. tostring(cash) .. "!")
+		Notify(activator, 0, 3, "You purchased a P228 for " .. CUR .. tostring(cash) .. "!")
 		
 		if activator ~= owner then
 			local gain = 0
@@ -79,12 +79,12 @@ function ENT:Use(activator)
 				gain = math.floor(self.dt.price - 185)
 			end
 			if gain == 0 then
-				Notify(owner, 1, 3, "You sold a P228 but made no profit!")
+				Notify(owner, 3, 3, "You sold a P228 but made no profit!")
 			else
 				owner:AddMoney(gain)
 				local word = "profit"
 				if gain < 0 then word = "loss" end
-				Notify(owner, 1, 3, "You made a " .. word .. " of " .. CUR .. tostring(math.abs(gain)) .. " by selling a P228 from a Gun Lab!")
+				Notify(owner, 0, 3, "You made a " .. word .. " of " .. CUR .. tostring(math.abs(gain)) .. " by selling a P228 from a Gun Lab!")
 			end
 		end
 	end

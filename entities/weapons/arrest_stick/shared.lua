@@ -99,7 +99,7 @@ function SWEP:PrimaryAttack()
 		else
 			if not trace.Entity.Babygod then
 				trace.Entity:Arrest()
-				Notify(trace.Entity, 1, 4, "You've been arrested by " .. self.Owner:Nick())
+				Notify(trace.Entity, 0, 20, "You've been arrested by " .. self.Owner:Nick())
 				
 				if self.Owner.SteamName then
 					DB.Log(self.Owner:SteamName().." ("..self.Owner:SteamID()..") arrested "..trace.Entity:Nick())

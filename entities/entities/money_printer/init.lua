@@ -43,7 +43,7 @@ function ENT:Destruct()
 end
 
 function ENT:BurstIntoFlames()
-	Notify(self.dt.owning_ent, 1, 4, "Your money printer is overheating!")
+	Notify(self.dt.owning_ent, 0, 4, "Your money printer is overheating!")
 	self.burningup = true
 	local burntime = math.random(8, 18)
 	self:Ignite(burntime, 0)

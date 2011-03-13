@@ -65,7 +65,7 @@ end
 local function DisplayNotify(msg)
 	local txt = msg:ReadString()
 	GAMEMODE:AddNotify(txt, msg:ReadShort(), msg:ReadLong())
-	surface.PlaySound("ambient/water/drip" .. math.random(1, 4) .. ".wav")
+	surface.PlaySound("buttons/lightswitch2.wav")
 
 	-- Log to client console
 	print(txt)

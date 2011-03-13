@@ -77,7 +77,7 @@ function ENT:OnPhysgunFreeze(weapon, phys, ent, ply)
 						.. "roll = " .. SQLStr(roll)
 						.. " WHERE id = "..v.id..";")
 						
-						Notify(ply, 1, 4, "CP console position updated!")
+						Notify(ply, 0, 4, "CP console position updated!")
 						return
 					end
 				end
@@ -105,7 +105,7 @@ function ENT:OnPhysgunFreeze(weapon, phys, ent, ply)
 			.. SQLStr(yaw)..", "
 			.. SQLStr(roll)
 			.. ");")
-			Notify(ply, 1, 4, "CP console position created!")
+			Notify(ply, 0, 4, "CP console position created!")
 		end)
 	end
 end
@@ -114,7 +114,7 @@ function ENT:CanTool(ply, trace, tool, ENT)
 	if ply:IsSuperAdmin() and tool == "remover" then
 		self.CanRemove = true
 		DB.Query("DELETE FROM darkrp_consolespawns WHERE id = "..self.ID..";") -- Remove from database if it's there
-		Notify(ply, 1, 4, "CP console successfully removed!")
+		Notify(ply, 0, 4, "CP console successfully removed!")
 		return true
 	end
 	return false
