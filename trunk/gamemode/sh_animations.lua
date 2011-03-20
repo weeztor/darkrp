@@ -143,7 +143,7 @@ Anims["Follow me!"] = ACT_GMOD_GESTURE_BECON
 
 local AnimFrame
 local function AnimationMenu()
-	local AnimFrame
+	if AnimFrame then return end
 
 	local Panel = vgui.Create("Panel")
 	Panel:SetPos(0,0)
@@ -151,7 +151,6 @@ local function AnimationMenu()
 	function Panel:OnMousePressed()
 		AnimFrame:Close()
 	end
-	//Panel:SetAlpha(0)
 	
 	AnimFrame = AnimFrame or vgui.Create("DFrame", Panel)
 	local Height = table.Count(Anims) * 110
@@ -163,6 +162,8 @@ local function AnimationMenu()
 
 	function AnimFrame:Close()
 		Panel:Remove()
+		AnimFrame:Remove()
+		AnimFrame = nil
 	end
 
 	local i = 0
