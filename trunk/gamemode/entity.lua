@@ -73,7 +73,126 @@ end
 /*---------------------------------------------------------
  Serverside part
  ---------------------------------------------------------*/
-if not SERVER then return end
+if CLIENT then 
+	function meta:DrawOwnableInfo()
+		local pos = {x = ScrW()/2, y = ScrH() / 2}
+		
+		local ownerstr = ""
+
+		if ValidEntity(self:GetDoorOwner()) and self:GetDoorOwner().Nick then
+			ownerstr = self:GetDoorOwner():Nick() .. "\n"
+		end
+
+		for k,v in pairs(player.GetAll()) do
+			if self:OwnedBy(v) and v ~= self:GetDoorOwner() then
+				ownerstr = ownerstr .. v:Nick() .. "\n"
+			end
+		end
+		
+		if type(self.DoorData.AllowedToOwn) == "string" and self.DoorData.AllowedToOwn ~= "" and self.DoorData.AllowedToOwn ~= ";" then
+			local names = {}
+			for a,b in pairs(string.Explode(";", self.DoorData.AllowedToOwn)) do
+				if ValidEntity(Player(b)) then
+					table.insert(names, Player(b):Nick())
+				end
+			end
+			ownerstr = ownerstr .. string.format(LANGUAGE.keys_other_allowed).. table.concat(names, "\n").."\n"
+		elseif type(self.DoorData.AllowedToOwn) == "number" and ValidEntity(Player(self.DoorData.AllowedToOwn)) then
+			ownerstr = ownerstr .. string.format(LANGUAGE.keys_other_allowed)..Player(self.DoorData.AllowedToOwn):Nick().."\n"
+		end
+
+		if not LocalPlayer():InVehicle() then
+			local blocked = self.DoorData.NonOwnable
+			local st = nil
+			local whiteText = false -- false for red, true for white text
+			
+			self.DoorData.title = self.DoorData.title or ""
+			
+			if self:IsOwned() then
+				whiteText = true
+				if superAdmin then
+					if blocked then
+						st = self.DoorData.title .. "\n"..LANGUAGE.keys_allow_ownership
+					else
+						if ownerstr == "" then
+							st = self.DoorData.title .. "\n"..LANGUAGE.keys_disallow_ownership .. "\n"
+						else
+							if self:OwnedBy(LocalPlayer()) and not self.DoorData.GroupOwn then
+								st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
+							elseif not self.DoorData.GroupOwn then
+								st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr .. LANGUAGE.keys_disallow_ownership .. "\n"
+							elseif not self:IsVehicle() then
+								st = self.DoorData.title .. "\n" .. self.DoorData.GroupOwn .. "\n" .. LANGUAGE.keys_disallow_ownership .. "\n"
+							end
+						end
+						if self.DoorData.GroupOwn and not self:IsVehicle() then
+							st = st .. LANGUAGE.keys_everyone
+						elseif not self:IsVehicle() and self.DoorData.GroupOwn then
+							st = st .. self.DoorData.GroupOwn
+						end
+					end
+				else
+					if blocked then
+						st = self.DoorData.title
+					else
+						if ownerstr == "" then
+							st = self.DoorData.title
+						else
+							if self.DoorData.GroupOwn then
+								whiteText = true
+								st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. self.DoorData.GroupOwn
+							else
+								st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
+							end
+						end
+					end
+				end
+			else
+				if superAdmin then
+					if blocked then
+						whiteText = true
+						st = self.DoorData.title .. "\n".. LANGUAGE.keys_allow_ownership
+					else
+						if self.DoorData.GroupOwn then
+							whiteText = true
+							st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. self.DoorData.GroupOwn
+							if not self:IsVehicle() then
+								st = st .. "\n".. LANGUAGE.keys_everyone
+							end
+						else
+							st = LANGUAGE.keys_unowned.."\n".. LANGUAGE.keys_disallow_ownership
+							if not self:IsVehicle() then
+								st = st .. "\n"..LANGUAGE.keys_cops
+							end
+						end
+					end
+				else
+					if blocked then
+						whiteText = true
+						st = self.DoorData.title
+					else
+						if self.DoorData.GroupOwn then
+							whiteText = true
+							st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. self.DoorData.GroupOwn
+						else
+							st = LANGUAGE.keys_unowned
+						end
+					end
+				end
+			end
+
+			if whiteText then
+				draw.DrawText(st, "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 200), 1)
+				draw.DrawText(st, "TargetID", pos.x, pos.y, Color(255, 255, 255, 200), 1)
+			else
+				draw.DrawText(st, "TargetID", pos.x , pos.y+1 , Color(0, 0, 0, 255), 1)
+				draw.DrawText(st, "TargetID", pos.x, pos.y, Color(128, 30, 30, 255), 1)
+			end
+		end
+	end
+
+	return 
+end
 
 local time = false
 local function SetDoorOwnable(ply)

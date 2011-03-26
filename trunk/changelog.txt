@@ -2,6 +2,7 @@ DarkRP 2.4.2 SVN
 [CHANGE] People need to be alive in order to be able to wanted/warrant
 [CHANGE] Updated Notifies to work better with the newer ones
 [CHANGE] Optimized setname
+[CHANGE] Remade HUD
 
 DarkRP 2.4.2
 [CHANGE Drakehawke] Fixed the default GMod admin cleanup from unowning/resetting doors.

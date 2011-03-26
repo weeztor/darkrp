@@ -85,7 +85,7 @@ function SWEP:PrimaryAttack()
 	end
 
 	if trace.Entity:IsPlayer() or trace.Entity:IsNPC() or trace.Entity:IsVehicle() then
-		timer.Simple(.3, self.DoFlash, self, trace.Entity)
+		self.DoFlash(self, trace.Entity)
 		self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 	else
 		self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
@@ -121,7 +121,7 @@ function SWEP:SecondaryAttack()
 		trace.Entity:TakeDamage(10, self.Owner, self)
 		
 		if trace.Entity:IsPlayer() or trace.Entity:IsVehicle() then
-			timer.Simple(.3, self.DoFlash, self, trace.Entity)
+			self.DoFlash(self, trace.Entity)
 			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 		elseif trace.Entity:IsNPC() then
 			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
@@ -143,4 +143,20 @@ function SWEP:Reload()
 	if self.LastReload and self.LastReload > CurTime() - 0.1 then self.LastReload = CurTime() return end
 	self.LastReload = CurTime()
 	self.Owner:EmitSound("weapons/stunstick/spark"..math.random(1,3)..".wav")
+end
+
+if CLIENT then
+	local function StunStickFlash()
+		local alpha = 255
+		hook.Add("HUDPaint", "RP_StunstickFlash", function()
+			alpha = Lerp(0.05, alpha, 0)
+			surface.SetDrawColor(255,255,255,alpha)
+			surface.DrawRect(0,0,ScrW(), ScrH())
+
+			if math.Round(alpha) == 0 then
+				hook.Remove("HUDPaint", "RP_StunstickFlash")
+			end
+		end)
+	end
+	usermessage.Hook("StunStickFlash", StunStickFlash)
 end
