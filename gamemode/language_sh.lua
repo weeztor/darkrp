@@ -241,7 +241,7 @@ rp_languages.english = {
 	/setspawn <team> - Enter teamname Ex. police, mayor, gangster
 	/adminhelp toggles this menu, /x closes it]],
 	
-	mobhelp = [[As the mob boss, you decide what you want the other Gangsters to do.
+	bosshelp = [[As the mob boss, you decide what you want the other Gangsters to do.
 	You get an Unarrest Stick which you can use to break people out of jail.
 	/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line.
 	Typing /mobbosshelp toggles this menu, /x closes it]],
@@ -537,7 +537,7 @@ rp_languages.dutch = {
 	/setspawn <team> - om een spawnpositie van een bepaalde baan te zetten
 	Typ /adminhelp om dit menu tevoorschijn te halen, /x om het te sluiten]],
 	
-	mobhelp = [[De mob boss bepaalt wat andere gangsters doen
+	bosshelp = [[De mob boss bepaalt wat andere gangsters doen
 	met de unarrest stick kun je anderen uit de gevangenis bevrijden
 	/agenda <bericht> (verandert de gangster agenda. Gebruik // of \n om naar de volgende lijn te gaan
 	Typ /mobboss help om dit menu tevoorschijn te halen, /x om het te sluiten]],
@@ -824,7 +824,7 @@ rp_languages.danish = {
 	Skriv /setspawn <team> - Indtast Hold navn Ex. politi, borgmester, gangster
 	Skriv /adminhelp åbner/lukker denne menu, /x lukker den]],
 
-	mobhelp = [[Som mafiabossen, beslutter du, hvad du ønsker, at andre gangstere skal gøre.
+	bosshelp = [[Som mafiabossen, beslutter du, hvad du ønsker, at andre gangstere skal gøre.
 	Du får en Unarrest Stick, som du kan bruge til at bryde folk ud af fængsel.
 	/agenda <Besked> (Sætter Gangsters 'dagsorden. Brug / / for at gå til den næste linje.
 	Typing /mobbosshelp toggles this menu, /x closes it]],
@@ -1116,7 +1116,7 @@ rp_languages.swedish = {
 	/setspawn <team> - Lägg till ett teamnamn, tex Police, Gangster...
 	/adminhelp för att "toggla" denna meny, /x för att stänga den.]],
 	
-	mobhelp = [[Som mob boss, bestämmer du vad alla gangstrar ska göra.
+	bosshelp = [[Som mob boss, bestämmer du vad alla gangstrar ska göra.
 	Du får en "unarrest stick" som du använder för att bryta andra ur fängelset.
 	/agenda <Message> Ändrar gangstrars agenda. Använd // för att gå till en ny rad.
 	Skriv /mobbosshelp för att "toggla" denna meny, /x för att stänga den.]],

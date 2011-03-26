@@ -57,6 +57,7 @@ AddCSLuaFile("DRPDermaSkin.lua")
 AddCSLuaFile("help.lua")
 AddCSLuaFile("sh_animations.lua")
 AddCSLuaFile("Workarounds.lua")
+AddCSLuaFile("cl_hud.lua")
 
 -- Earthquake Mod addon
 resource.AddFile("sound/earthquake.mp3")
