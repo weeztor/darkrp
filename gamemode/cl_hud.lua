@@ -133,7 +133,7 @@ local function DrawVoiceChat()
 	if LocalPlayer().DRPIsTalking then
 		local chbxX, chboxY = chat.GetChatBoxPos()
 
-		local Rotating = math.sin(CurrentTime*3)
+		local Rotating = math.sin(CurTime()*3)
 		local backwards = 0
 		if Rotating < 0 then
 			Rotating = 1-(1+Rotating)
