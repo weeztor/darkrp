@@ -148,7 +148,7 @@ end
 local function LockDown()
 	local chbxX, chboxY = chat.GetChatBoxPos()
 	if util.tobool(GetConVarNumber("DarkRP_LockDown")) then
-		local cin = (math.sin(CurrentTime) + 1) / 2
+		local cin = (math.sin(CurTime()) + 1) / 2
 		draw.DrawText(LANGUAGE.lockdown_started, "ScoreboardSubtitle", chbxX, chboxY + 260, Color(cin * 255, 0, 255 - (cin * 255), 255), TEXT_ALIGN_LEFT)
 	end
 end
