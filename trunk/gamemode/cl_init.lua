@@ -561,7 +561,7 @@ function GM:InitPostEntity()
 	end
 	
 	RunConsoleCommand("_sendDarkRPvars")
-	timer.Create("DarkRPCheckifitcamethrough", 2, 0, function()
+	timer.Create("DarkRPCheckifitcamethrough", 30, 0, function()
 		for k,v in pairs(player.GetAll()) do
 			v.DarkRPVars = v.DarkRPVars or {}
 			if not v.DarkRPVars.job or not v.DarkRPVars.salary or not v.DarkRPVars.money or not v.DarkRPVars.rpname then
