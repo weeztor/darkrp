@@ -262,7 +262,7 @@ local function DrawEntityDisplay()
 		ply.DarkRPVars = ply.DarkRPVars or {}
 		if ply.DarkRPVars.wanted then DrawWantedInfo(ply) end
 
-		if GetConVarNumber("globalshow") == 1 and ply ~= LocalPlayer() then fprint("yes?") DrawPlayerInfo(ply) end
+		if GetConVarNumber("globalshow") == 1 and ply ~= LocalPlayer() then DrawPlayerInfo(ply) end
 	end
 
 	local tr = LocalPlayer():GetEyeTrace()
