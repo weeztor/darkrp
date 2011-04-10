@@ -12,8 +12,8 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demotetime <time> - Sets the ti
 
 local function AFKDemote(ply)
 	local rpname = ply.DarkRPVars.rpname
-	if ply.DarkRPVars.AFK then return
-	elseif ply:Team() ~= TEAM_CITIZEN then
+	
+	if ply:Team() ~= TEAM_CITIZEN then
 		ply:ChangeTeam(TEAM_CITIZEN, true)
 		ply:SetDarkRPVar("AFKDemoted", true)
 		NotifyAll(0, 5, rpname .. " has been demoted for being AFK for too long.")
@@ -21,8 +21,59 @@ local function AFKDemote(ply)
 	ply:SetDarkRPVar("job", "AFK")
 end
 
+local function SetAFK(ply)
+	local rpname = ply.DarkRPVars.rpname
+	ply:SetDarkRPVar("AFK", not ply.DarkRPVars.AFK)
+
+	umsg.Start("DarkRPEffects", ply)
+		umsg.String("colormod")
+		umsg.String(ply.DarkRPVars.AFK and "1" or "0")
+	umsg.End()
+
+	for k, v in pairs(team.GetAllTeams()) do
+		ply.bannedfrom[k] = ply.DarkRPVars.AFK and 1 or 0
+	end
+
+	if ply.DarkRPVars.AFK then
+		DB.RetrieveSalary(ply, function(amount) ply.OldSalary = amount end)
+		ply.OldJob = ply.DarkRPVars.job
+		NotifyAll(0, 5, rpname .. " is now AFK.")
+		
+		-- NPC code partially by _Undefined
+		local npc = ents.Create("npc_citizen")
+		npc:SetPos(ply:GetPos())
+		npc:SetAngles(ply:GetAngles())
+		npc:SetModel(ply:GetModel())
+		npc:Spawn()
+		npc:Activate()
+		npc:SetNPCState(NPC_STATE_ALERT)
+		npc:IdleSound()
+		npc:CapabilitiesAdd(CAP_USE | CAP_OPEN_DOORS)
+		for _,v in pairs(ents.FindByClass("prop_physics")) do npc:AddEntityRelationship(v, D_LI, 99) end
+		for _,v in pairs(player.GetAll()) do if v == ply then npc:AddEntityRelationship(v, D_FR, 99) npc:SetEnemy(v) end end
+		ply.AFKNpc = npc
+		npc.Owner = ply
+		npc.AFKPly = ply
+		if ValidEntity(ply:GetActiveWeapon()) then npc:Give(ply:GetActiveWeapon():GetClass()) end
+		npc:SetHealth(ply:Health())
+		npc:SetNoDraw(false)
+		ply:SetNoDraw(true)
+		ply:SetPos(Vector(0,0,-5000))
+	else
+		NotifyAll(1, 5, rpname .. " is no longer AFK.")
+		Notify(ply, 0, 5, "Welcome back, your salary has now been restored.")
+		if ValidEntity(ply.AFKNpc) then
+			ply:SetEyeAngles(ply.AFKNpc:EyeAngles())
+			ply:SetPos(ply.AFKNpc:GetPos() + ply.AFKNpc:GetAimVector() * 10)
+			ply.AFKNpc:Remove()
+		end
+		ply:SetNoDraw(false)
+	end
+	ply:SetDarkRPVar("job", ply.DarkRPVars.AFK and "AFK" or ply.OldJob)
+	DB.StoreSalary(ply, ply.DarkRPVars.AFK and 0 or ply.OldSalary or 0)
+end
+
 local function StartAFKOnPlayer(ply)
-	ply:SetDarkRPVar("AFK", true)
 	local demotetime
 	if GetConVarNumber("afkdemote") == 0 then
 		demotetime = math.huge
@@ -38,35 +89,8 @@ local function ToggleAFK(ply)
 		Notify( ply, 1, 5, "AFK mode is disabled.")
 		return ""
 	end
-	local rpname = ply.DarkRPVars.rpname
-	if not ply.DarkRPVars.AFK then
-		ply:SetDarkRPVar("AFK", true)
-		DB.RetrieveSalary(ply, function(amount) ply.OldSalary = amount end)
-		ply.OldJob = ply.DarkRPVars.job
-		ply:SetDarkRPVar("job", "AFK")
-		DB.StoreSalary(ply, 0)
-		NotifyAll(0, 5, rpname .. " is now AFK.")
-		umsg.Start("DarkRPEffects", ply)
-			umsg.String("colormod")
-			umsg.String("1")
-		umsg.End()
-		for k, v in pairs(team.GetAllTeams()) do
-			ply.bannedfrom[k] = 1
-		end
-	else
-		ply:SetDarkRPVar("AFK", false)
-		DB.StoreSalary(ply, ply.OldSalary)
-		NotifyAll(1, 5, rpname .. " is no longer AFK.")
-		Notify(ply, 0, 5, "Welcome back, your salary has now been restored.")
-		ply:SetDarkRPVar("job", ply.OldJob)
-		umsg.Start("DarkRPEffects", ply)
-			umsg.String("colormod")
-			umsg.String("0")
-		umsg.End()
-		for k, v in pairs(team.GetAllTeams()) do
-			ply.bannedfrom[k] = 0
-		end
-	end
+	
+	SetAFK(ply)
 	return ""
 end
 AddChatCommand("/afk", ToggleAFK)
@@ -83,10 +107,18 @@ hook.Add("KeyPress", "DarkRPKeyReleasedCheck", AFKTimer)
 
 local function KillAFKTimer()
 	for id, ply in pairs(player.GetAll()) do 
-		if ply.AFKDemote and CurTime() > ply.AFKDemote then
+		if ply.AFKDemote and CurTime() > ply.AFKDemote and not ply.DarkRPVars.AFK then
+			SetAFK(ply)
 			AFKDemote(ply)
 			ply.AFKDemote = math.huge
 		end
 	end
 end
 hook.Add("Think", "DarkRPKeyPressedCheck", KillAFKTimer)
+
+local function DamagePlayer(target, inflictor, attacker, damage, DmgInfo)
+	if target:IsNPC() and ValidEntity(target.AFKPly) then
+		target.AFKPly:TakeDamageInfo(DmgInfo)
+	end
+end
+hook.Add("EntityTakeDamage", "AFKDamage", DamagePlayer)

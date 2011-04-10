@@ -30,7 +30,14 @@ end
 hook.Add("PlayerGiveSWEP", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Gave himself a "..class) end)
 hook.Add("PlayerSpawnSENT", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)  end)
 hook.Add("PlayerSpawnSWEP", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)  end)
-hook.Add("PlayerSpawnProp", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)  end)
+hook.Add("PlayerSpawnProp", "FAdmin_Log", function(ply, class) 
+	for k,v in pairs(player.GetAll()) do
+		if v:IsAdmin() then
+			v:PrintMessage(HUD_PRINTCONSOLE, ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)
+		end
+	end
+	FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)
+end)
 hook.Add("PlayerSpawnNPC", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)  end)
 hook.Add("PlayerSpawnVehicle", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)  end)
 hook.Add("PlayerSpawnEffect", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)  end)
