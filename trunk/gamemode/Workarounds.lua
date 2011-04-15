@@ -1,9 +1,3 @@
-local OldSetMaterial = _R.Entity.SetMaterial
-function _R.Entity:SetMaterial(mat, ...)
-	if mat and string.find(string.lower(mat or ""), "ar2_altfire") then return end
-	OldSetMaterial(self, mat, ...)
-end
-
 if CLIENT then
 	/*---------------------------------------------------------------------------
 	Vehicle fix for datastream from Tobba
