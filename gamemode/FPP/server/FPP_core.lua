@@ -682,11 +682,7 @@ function FPP.Protect.LeaveVehicle(ply, vehicle)
 end
 hook.Add("PlayerLeaveVehicle", "FPP.PlayerLeaveVehicle", FPP.Protect.LeaveVehicle)
 
-local function PreventNoclip(ent)
-	if ent:IsVehicle() then
-		if ValidEntity(ent:GetDriver()) then
-			ent:GetDriver():SetMoveType(MOVETYPE_WALK) -- Otherwise they could be in noclip
-		end
-	end
+local function PreventNoclip(vehicle,ply)
+	ply:ExitVehicle()
 end
-hook.Add("EntityRemoved", "FPP.Protect.PreventNoclipFromVehicle", PreventNoclip)
+hook.Add("CanExitVehicle", "PreventVehicleNoclip", PreventNoclip)
