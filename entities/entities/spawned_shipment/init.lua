@@ -91,16 +91,12 @@ function ENT:Destruct()
 	local class = nil
 	local model = nil
 	
-	local found = false
-	for k, v in pairs(CustomShipments) do
-		if k == contents then
-			found = true
-			class = v.entity
-			model = v.model
-			break
-		end
+	if CustomShipments[contents] then
+		class = v.entity
+		model = v.model
+	else
+		self.Entity:Remove() 
 	end
-	if not found then self.Entity:Remove() return end
 	
 	for i=1, count, 1 do
 		local weapon = ents.Create("spawned_weapon")
