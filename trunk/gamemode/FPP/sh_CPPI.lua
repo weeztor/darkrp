@@ -21,7 +21,17 @@ end
 
 local PLAYER = FindMetaTable("Player")
 function PLAYER:CPPIGetFriends()
-	return self.Buddies or CPPI.CPPI_DEFER
+	if not self.Buddies then return CPPI.CPPI_DEFER end
+	local FriendsTable = {}
+	for k,v in pairs(self.Buddies) do
+		for _,ply in pairs(player.GetAll()) do
+			if ply:SteamID() == k then
+				table.insert(FriendsTable, ply)
+				break
+			end
+		end
+	end
+	return FriendsTable
 end
 
 local ENTITY = FindMetaTable("Entity")
