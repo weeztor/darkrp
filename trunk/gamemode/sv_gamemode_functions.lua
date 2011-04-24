@@ -445,6 +445,9 @@ function GM:PlayerInitialSpawn(ply)
 	ply.SID = ply:UserID()
 	DB.RetrieveSalary(ply, function() end)
 	DB.RetrieveMoney(ply)
+	if GetConVarNumber("DarkRP_Lockdown") == 1 then
+		RunConsoleCommand("DarkRP_Lockdown", 1 ) -- so new players who join know there's a lockdown
+	end
 	timer.Simple(10, ply.CompleteSentence, ply)
 end
 

@@ -523,12 +523,12 @@ local function SearchWarrant(ply, args)
 					end
 				end
 				-- If we found the mayor
-				if m ~= nil then
+				if m ~= nil and not m.DarkRPVars.AFK then
 					-- Request a search warrent for player "p"
 					ques:Create(string.format(LANGUAGE.warrant_request.."\nReason: "..reason, ply:Nick(), p:Nick()), p:EntIndex() .. "warrant", m, 40, FinishWarrant, ply, p, reason)
 					Notify(ply, 0, 4, string.format(LANGUAGE.warrant_request2, m:Nick()))
 				else
-					-- There is no mayor, CPs can set warrants.
+					-- There is no mayor or the mayor is AFK, CPs can set warrants.
 					SetWarrant(ply, p, reason)
 				end
 			end
@@ -2094,7 +2094,7 @@ local function RequestLicense(ply)
 	local ischief-- then if there's a chief
 	local iscop-- and then if there's a cop to ask
 	for k,v in pairs(player.GetAll()) do
-		if v:Team() == TEAM_MAYOR then
+		if v:Team() == TEAM_MAYOR and not v.DarkRPVars.AFK then
 			ismayor = true
 			break
 		end
@@ -2102,7 +2102,7 @@ local function RequestLicense(ply)
 	
 	if not ismayor then
 		for k,v in pairs(player.GetAll()) do
-			if v:Team() == TEAM_CHIEF then
+			if v:Team() == TEAM_CHIEF and not v.DarkRPVars.AFK then
 				ischief = true
 				break
 			end
@@ -2150,7 +2150,7 @@ local function GiveLicense(ply)
 	local ischief-- then if there's a chief
 	local iscop-- and then if there's a cop to ask
 	for k,v in pairs(player.GetAll()) do
-		if v:Team() == TEAM_MAYOR then
+		if v:Team() == TEAM_MAYOR and not v.DarkRPVars.AFK then
 			ismayor = true
 			break
 		end
@@ -2158,7 +2158,7 @@ local function GiveLicense(ply)
 	
 	if not ismayor then
 		for k,v in pairs(player.GetAll()) do
-			if v:Team() == TEAM_CHIEF then
+			if v:Team() == TEAM_CHIEF and not v.DarkRPVars.AFK then
 				ischief = true
 				break
 			end
