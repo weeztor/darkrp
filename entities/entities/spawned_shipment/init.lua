@@ -1,7 +1,3 @@
--- ========================
--- =          Crate SENT by Mahalis
--- ========================
-
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
@@ -92,8 +88,8 @@ function ENT:Destruct()
 	local model = nil
 	
 	if CustomShipments[contents] then
-		class = v.entity
-		model = v.model
+		class = CustomShipments[contents].entity
+		model = CustomShipments[contents].model
 	else
 		self.Entity:Remove() 
 	end
