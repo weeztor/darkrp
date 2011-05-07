@@ -248,7 +248,10 @@ local function RetrieveBlocked()
 			"spawned_shipment", 
 			"spawned_weapon",  
 			"spawned_food",
-			"spawned_money"}
+			"spawned_money",
+			"ent_explosivegrenade",
+			"ent_mad_grenade",
+			"ent_flashgrenade"}
 		FPP.Blocked.Gravgun = {"func_breakable_surf", "vehicle_"}
 		FPP.Blocked.Toolgun = {"func_breakable_surf",
 			"player",

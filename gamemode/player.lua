@@ -280,7 +280,7 @@ function meta:ChangeTeam(t, force)
 		self:SetDarkRPVar("helpMayor", true)
 	end
 	
-	if GetConVarNumber("removeclassitems") == 1 then
+	if tobool(GetConVarNumber("removeclassitems")) then
 		for k, v in pairs(ents.FindByClass("microwave")) do
 			if TEAM.SID == self.SID then v:Remove() end
 		end
