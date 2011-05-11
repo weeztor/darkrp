@@ -9,10 +9,10 @@ end
 
 local function StopSounds(ply, cmd, args)
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "CleanUp") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
+
+	umsg.Start("FAdmin_StopSounds")
+	umsg.End()
 	
-	for k,v in pairs(player.GetAll()) do
-		v:ConCommand("stopsounds")
-	end
 	FAdmin.Messages.ActionMessage(ply, player.GetAll(), "You have stopped all sounds", "All sounds have been stopped", "Stopped all sounds")
 end
 

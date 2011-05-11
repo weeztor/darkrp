@@ -41,6 +41,20 @@ local function ReloadConVars()
 end
 ReloadConVars()
 
+local function formatNumber(n)
+	if (!n) then
+		return 0
+	end
+	if n >= 1e14 then return tostring(n) end
+    n = tostring(n)
+    sep = sep or ","
+    local dp = string.find(n, "%.") or #n+1
+	for i=dp-4, 1, -3 do
+		n = n:sub(1, i) .. sep .. n:sub(i+1)
+    end
+    return n
+end
+
 
 local Scrw, Scrh, RelativeX, RelativeY
 /*---------------------------------------------------------------------------
@@ -63,7 +77,7 @@ local function DrawInfo()
 
 	local JobWallet = 
 	LANGUAGE.job .. (LocalPlayer().DarkRPVars.job or "") .. "\n"..
-	LANGUAGE.wallet .. CUR .. (LocalPlayer().DarkRPVars.money or 0)
+	LANGUAGE.wallet .. CUR .. (formatNumber(LocalPlayer().DarkRPVars.money) or 0)
 
 	draw.DrawText(Salary, "TargetID", RelativeX + 5, RelativeY - HUDHeight + 6, ConVars.salary1, 0)
 	draw.DrawText(Salary, "TargetID", RelativeX + 4, RelativeY - HUDHeight + 5, ConVars.salary2, 0)
