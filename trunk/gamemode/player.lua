@@ -282,20 +282,20 @@ function meta:ChangeTeam(t, force)
 	
 	if tobool(GetConVarNumber("removeclassitems")) then
 		for k, v in pairs(ents.FindByClass("microwave")) do
-			if TEAM.SID == self.SID then v:Remove() end
+			if v.SID == self.SID then v:Remove() end
 		end
 		for k, v in pairs(ents.FindByClass("gunlab")) do
-			if TEAM.SID == self.SID then v:Remove() end
+			if v.SID == self.SID then v:Remove() end
 		end
 		
 		if t ~= TEAM_MOB and t ~= TEAM_GANG then
 			for k, v in pairs(ents.FindByClass("drug_lab")) do
-				if TEAM.SID == self.SID then v:Remove() end
+				if v.SID == self.SID then v:Remove() end
 			end
 		end
 		
 		for k,v in pairs(ents.FindByClass("spawned_shipment")) do
-			if TEAM.SID == self.SID then v:Remove() end
+			if v.SID == self.SID then v:Remove() end
 		end
 	end
 	
