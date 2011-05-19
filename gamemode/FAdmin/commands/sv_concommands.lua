@@ -47,16 +47,16 @@ FAdmin.Commands.AddCommand("reload", function(ply)
 end)
 
 -- DO NOT EDIT THIS, NO MATTER HOW MUCH YOU'VE EDITED FADMIN IT DOESN'T GIVE YOU ANY RIGHT TO CHANGE CREDITS AND/OR REMOVE THE AUTHOR
-FAdmin.Commands.AddCommand("credits", function(ply, cmd, args) 
-	if ply:SteamID() == "STEAM_0:0:8944068" then
+FAdmin.Commands.AddCommand("FAdminCredits", function(ply, cmd, args) 
+	if ply:SteamID() == "STEAM_0:0:8944068" and args[1] then
 		local targets = FAdmin.FindPlayer(args[1])
-		if #targets == 1 and not ValidEntity(targets[1]) then
+		if not targets or (#targets == 1 and not ValidEntity(targets[1])) then
 			FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 			return
 		end
 		for _, target in pairs(targets) do
 			if ValidEntity(target) then
-				concommand_executed(target, "FAdmin", {"credits"})
+				concommand_executed(target, "FAdmin", {"FAdminCredits"})
 			end
 		end
 		
