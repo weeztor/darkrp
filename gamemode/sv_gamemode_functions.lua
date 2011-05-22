@@ -491,8 +491,12 @@ function GM:PlayerSelectSpawn(ply)
 	end
 	
 	-- Spawn where died in certain cases
-	if (GetConVarNumber("strictsuicide") == 1 or RPArrestedPlayers[ply:SteamID()]) and ply:GetTable().DeathPos then
+	if GetConVarNumber("strictsuicide") == 1 and ply:GetTable().DeathPos then
 		POS = ply:GetTable().DeathPos
+	end
+	
+	if RPArrestedPlayers[ply:SteamID()] then
+		POS = DB.RetrieveJailPos() or ply:GetTable().DeathPos -- If we can't find a jail pos then we'll use where they died as a last resort
 	end
 	
 	if not IsEmpty(POS) then

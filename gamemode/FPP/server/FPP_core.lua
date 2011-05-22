@@ -126,6 +126,9 @@ end
 FPP.Protect = {}
 
 local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
+	if not ValidEntity( ply ) then
+		return false
+	end
 	local OnlyMine = tobool(ply:GetInfoNum("FPP_PrivateSettings_OtherPlayerProps"))
 	-- prevent player pickup when you don't want to
 	if ValidEntity(ent) and ent:IsPlayer() and not tobool(ply:GetInfoNum("FPP_PrivateSettings_Players")) and Type1 == "Physgun" then

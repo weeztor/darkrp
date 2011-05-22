@@ -39,7 +39,7 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 			if ply:IsAdmin() then ply:ChatPrint("WARNING: "..text) end end)		
 		return
 	end
-	if not util.IsValidModel(model) then
+	if SERVER and not util.IsValidModel(model) then
 		local text = "The model of shipment "..name.." is incorrect! can not create custom shipment!"
 		print(text) 
 		hook.Add("PlayerSpawn", "ShipmentError", function(ply)
