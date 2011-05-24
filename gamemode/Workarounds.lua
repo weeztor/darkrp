@@ -60,3 +60,20 @@ Generic InitPostEntity workarounds
 hook.Add("InitPostEntity", "DarkRP_Workarounds", function()
 	game.ConsoleCommand("durgz_witty_sayings 0\n") -- Deals with the cigarettes exploit. I'm fucking tired of them. I hate having to fix other people's mods, but this mod maker is retarded and refuses to update his mod.
 end)
+
+/*---------------------------------------------------------------------------
+Wire field generator exploit
+---------------------------------------------------------------------------*/
+hook.Add("OnEntityCreated", "DRP_WireFieldGenerator", function(ent)
+	timer.Simple(0, function(ent)
+		if ValidEntity(ent) and ent:GetClass() == "gmod_wire_field_device" then
+			local TriggerInput = ent.TriggerInput
+			function ent:TriggerInput(iname, value)
+				if value ~= nil and iname == "Distance" then
+					value=math.Min(value, 400);
+				end
+				TriggerInput(self, iname, value)
+			end
+		end
+	end, ent)
+end)
