@@ -251,7 +251,8 @@ local function RetrieveBlocked()
 			"spawned_money",
 			"ent_explosivegrenade",
 			"ent_mad_grenade",
-			"ent_flashgrenade"}
+			"ent_flashgrenade",
+			"gmod_wire_field_device"}
 		FPP.Blocked.Gravgun = {"func_breakable_surf", "vehicle_"}
 		FPP.Blocked.Toolgun = {"func_breakable_surf",
 			"player",
