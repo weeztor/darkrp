@@ -319,7 +319,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		Notify(ply, 4, 4, LANGUAGE.dead_in_jail)
 	else
 		-- Normal death, respawning.
-		ply.NextSpawnTime = CurTime() + GetConVarNumber("respawntime")
+		ply.NextSpawnTime = CurTime() + math.Clamp(GetConVarNumber("respawntime"), 0, 3)
 	end
 	ply.DeathPos = ply:GetPos()
 	
