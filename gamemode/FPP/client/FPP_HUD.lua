@@ -87,6 +87,8 @@ end
 usermessage.Hook("FPP_Notify", function(u) FPP.AddNotify(u:ReadString(), u:ReadBool()) end)
 
 
+local CheckOff = surface.GetTextureID("gui/silkicons/check_off")
+local CheckOn = surface.GetTextureID("gui/silkicons/check_on")
 local function DrawNotice( self, k, v, i )
 
 	local H = ScrH() / 1024
@@ -100,9 +102,9 @@ local function DrawNotice( self, k, v, i )
 	h = h + 16
 
 	local col = Color(100, 30, 30, v.a*0.4)
-	local mat = surface.GetTextureID( "gui/silkicons/check_off" )
+	local mat = CheckOff
 	if v.type then	col = Color(30, 100, 30, v.a*0.4) 
-	mat = surface.GetTextureID( "gui/silkicons/check_on" ) end
+	mat = CheckOn end
 	draw.RoundedBox( 4, x - w - h + 8, y - 8, w + h, h, col )
 	
 	// Draw Icon
@@ -111,11 +113,11 @@ local function DrawNotice( self, k, v, i )
 	surface.SetTexture( mat )
 	surface.DrawTexturedRect( x - w - h + 16, y - 4, h - 8, h - 8 ) 	
 	
-	draw.SimpleText( v.text, "GModNotify", x+1, y+1, Color(0,0,0,v.a*0.8), TEXT_ALIGN_RIGHT )
-	draw.SimpleText( v.text, "GModNotify", x-1, y-1, Color(0,0,0,v.a*0.5), TEXT_ALIGN_RIGHT )
-	draw.SimpleText( v.text, "GModNotify", x+1, y-1, Color(0,0,0,v.a*0.6), TEXT_ALIGN_RIGHT )
-	draw.SimpleText( v.text, "GModNotify", x-1, y+1, Color(0,0,0,v.a*0.6), TEXT_ALIGN_RIGHT )
-	draw.SimpleText( v.text, "GModNotify", x, y, Color(255,255,255,v.a), TEXT_ALIGN_RIGHT )
+	draw.SimpleText(v.text, "GModNotify", x+1, y+1, Color(0,0,0,v.a*0.8), TEXT_ALIGN_RIGHT)
+	draw.SimpleText(v.text, "GModNotify", x-1, y-1, Color(0,0,0,v.a*0.5), TEXT_ALIGN_RIGHT)
+	draw.SimpleText(v.text, "GModNotify", x+1, y-1, Color(0,0,0,v.a*0.6), TEXT_ALIGN_RIGHT)
+	draw.SimpleText(v.text, "GModNotify", x-1, y+1, Color(0,0,0,v.a*0.6), TEXT_ALIGN_RIGHT)
+	draw.SimpleText(v.text, "GModNotify", x, y, Color(255,255,255,v.a), TEXT_ALIGN_RIGHT)
 	
 	local ideal_y = ScrH() - (HUDNote_c - i) * h 
 	local ideal_x = ScrW() / 2 + w*0.5 + (ScrW()/20)
@@ -160,9 +162,9 @@ local function HUDPaint()
 		local QuadTable = {}  
 		
 		if CanTouchLookingAt then
-			QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_on" ) 
+			QuadTable.texture = CheckOn
 		else
-			QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_off" ) 
+			QuadTable.texture = CheckOff
 		end
 		QuadTable.color = Color( 255, 255, 255, 255 )  
 		
@@ -191,10 +193,10 @@ local function HUDPaint()
 			local QuadTable = {}  
 			
 			if CanTouchLookingAt then
-				QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_on" ) 
+				QuadTable.texture = CheckOn
 				col = Color(0,255,0,255)
 			else
-				QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_off" ) 
+				QuadTable.texture = CheckOff
 			end
 			QuadTable.color = Color( 255, 255, 255, 255 )  
 			
@@ -215,9 +217,9 @@ local function HUDPaint()
 		local QuadTable = {}  
 		
 		if cantouch then
-			QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_on" ) 
+			QuadTable.texture = CheckOn 
 		else
-			QuadTable.texture = surface.GetTextureID( "gui/silkicons/check_off" ) 
+			QuadTable.texture = CheckOff
 		end
 		QuadTable.color	= Color( 255, 255, 255, TouchAlpha )  
 		
@@ -245,7 +247,7 @@ local function HUDPaint()
 		end
 	end
 	
-	for k, v in pairs( HUDNotes ) do
+	for k, v in pairs(HUDNotes) do
 		if v ~= 0 and v.recv + 6 < SysTime() then
 			HUDNotes[ k ] = 0
 			HUDNote_c = HUDNote_c - 1

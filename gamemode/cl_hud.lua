@@ -89,11 +89,12 @@ local function DrawInfo()
 	draw.DrawText(JobWallet, "TargetID", RelativeX + 4, RelativeY - HUDHeight + h + 5, ConVars.Job2, 0)
 end
 
+local Page = surface.GetTextureID("gui/silkicons/page") 
 local function GunLicense()
 	if LocalPlayer().DarkRPVars.HasGunlicense then
 		local QuadTable = {}  
 		
-		QuadTable.texture 	= surface.GetTextureID( "gui/silkicons/page" ) 
+		QuadTable.texture 	= Page
 		QuadTable.color		= Color( 255, 255, 255, 100 )  
 		
 		QuadTable.x = RelativeX + HUDWidth + 31
@@ -143,6 +144,7 @@ local function Agenda()
 	end
 end
 
+local VoiceChatTexture = surface.GetTextureID("voice/icntlk_pl")
 local function DrawVoiceChat()
 	if LocalPlayer().DRPIsTalking then
 		local chbxX, chboxY = chat.GetChatBoxPos()
@@ -153,7 +155,7 @@ local function DrawVoiceChat()
 			Rotating = 1-(1+Rotating)
 			backwards = 180
 		end
-		surface.SetTexture(surface.GetTextureID( "voice/icntlk_pl" ))
+		surface.SetTexture(VoiceChatTexture)
 		surface.SetDrawColor(ConVars.Healthforeground)
 		surface.DrawTexturedRectRotated(ScrW() - 100, chboxY, Rotating*96, 96, backwards)
 	end
@@ -240,12 +242,6 @@ local function DrawPlayerInfo(ply)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
-	
-	if ply.DarkRPVars.HasGunlicense then
-		surface.SetTexture(surface.GetTextureID("gui/silkicons/page"))
-		surface.SetDrawColor(255,255,255,255)
-		surface.DrawTexturedRect(pos.x-16, pos.y + 60, 32, 32)
-	end
 end
 
 local function DrawWantedInfo(ply)
@@ -286,7 +282,7 @@ local function DrawEntityDisplay()
 		end
 	end
 
-	if tr.Entity:IsOwnable() then
+	if tr.Entity:IsOwnable() and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 200 then
 		tr.Entity:DrawOwnableInfo()
 	end
 end
