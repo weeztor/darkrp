@@ -744,12 +744,22 @@ local function LookPersonUp(ply, cmd, args)
 	end
 	local P = FindPlayer(args[1])
 	if not ValidEntity(P) then
-		ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
+		if ply:EntIndex() ~= 0 then
+			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
+		else
+			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
+		end
 		return
 	end
-	ply:PrintMessage(2, "Nick: ".. P:Nick())
-	ply:PrintMessage(2, "Steam name: "..P:SteamName())
-	ply:PrintMessage(2, "Steam ID: "..P:SteamID())
+	if ply:EntIndex() ~= 0 then
+		ply:PrintMessage(2, "Nick: ".. P:Nick())
+		ply:PrintMessage(2, "Steam name: "..P:SteamName())
+		ply:PrintMessage(2, "Steam ID: "..P:SteamID())
+	else
+		print("Nick: ".. P:Nick())
+		print("Steam name: "..P:SteamName())
+		print("Steam ID: "..P:SteamID())
+	end
 end
 concommand.Add("rp_lookup", LookPersonUp)
 
