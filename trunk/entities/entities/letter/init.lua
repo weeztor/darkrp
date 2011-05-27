@@ -27,6 +27,7 @@ end
 function ENT:Use(ply)
 	if not ply:KeyDown(IN_ATTACK) then
 		umsg.Start("ShowLetter", ply)
+			umsg.Entity(self)
 			umsg.Short(self.type)
 			umsg.Vector(self:GetPos())
 			local numParts = self.numPts
@@ -38,3 +39,14 @@ function ENT:Use(ply)
 		umsg.End()
 	end
 end
+
+function ENT:SignLetter(ply)
+	self.dt.signed = ply
+end
+
+concommand.Add("_DarkRP_SignLetter", function(ply, cmd, args)
+	if not args[1] then return end
+	local letter = ents.GetByIndex(tonumber(args[1]))
+
+	letter:SignLetter(ply)
+end)
