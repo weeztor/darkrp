@@ -149,7 +149,7 @@ end)
 
 local IP = ""
 if SERVER then
-	http.Get("http://www.whatismyip.com/automation/n09230945.asp", "", function(content, size)
+	http.Get("http://automation.whatismyip.com/n09230945.asp", "", function(content, size)
 		local ip = string.match(content, "([0-9.]+)")
 		IP = ip..":"..GetConVarString("hostport") 
 	end)
