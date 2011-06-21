@@ -350,8 +350,12 @@ function FPP.Protect.GravGunPunt(ply, ent)
 	
 	if type(ent.GravGunPunt) == "function" then
 		local val = ent:GravGunPunt(ply, ent)
-		if val ~= nil then return val end
+		if val ~= nil then
+			if val == false then DropEntityIfHeld(ent) end
+			return val
+		end
 	elseif ent.GravGunPunt ~= nil then
+		if ent.GravGunPunt == false then DropEntityIfHeld(ent) end
 		return ent.GravGunPunt
 	end
 	
