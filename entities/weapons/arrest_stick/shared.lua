@@ -83,7 +83,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	if FAdmin and trace.Entity:FAdmin_GetGlobal("fadmin_jailed") then
+	if FAdmin and trace.Entity:IsPlayer() and trace.Entity:FAdmin_GetGlobal("fadmin_jailed") then
 		Notify(self.Owner, 1, 5, "You cannot arrest a player who has been jailed by an admin.")
 		return
 	end
