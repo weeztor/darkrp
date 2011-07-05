@@ -348,7 +348,7 @@ local function EarthQuakeTest()
 	if GetConVarNumber("earthquakes") ~= 1 then return end
 
 	if CurTime() > (next_update_time or 0) then
-		if math.random(0, GetConVarNumber("quakechance")) < 1 then
+		if GetConVarNumber("quakechance") ~= 0 and math.random(0, GetConVarNumber("quakechance")) < 1 then
 			local en = ents.FindByClass("prop_physics")
 			local plys = ents.FindByClass("player") or {}
 			
