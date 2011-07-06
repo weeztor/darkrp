@@ -512,7 +512,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	
 	local ent = ENT or trace.Entity
 	
-	if type(ent.CanTool) == "function" then
+	if IsEntity(ent) and type(ent.CanTool) == "function" then
 		local val = ent:CanTool(ply, trace, tool, ENT)
 		if val ~= nil then return val end
 	elseif ent.CanTool ~= nil then
