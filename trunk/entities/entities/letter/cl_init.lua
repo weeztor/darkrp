@@ -37,6 +37,7 @@ local function ShowLetter(msg)
 	SignButton:SetDisabled(ValidEntity(Letter.dt.signed))
 
 	hook.Add("HUDPaint", "ShowLetter", function()
+		if not Letter.dt then KillLetter() return end
 		if LetterAlpha < 255 then
 			LetterAlpha = math.Clamp(LetterAlpha + 400 * FrameTime(), 0, 255)
 		end
