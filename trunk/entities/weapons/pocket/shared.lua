@@ -138,6 +138,7 @@ function SWEP:SecondaryAttack()
 	ent:SetNoDraw(false)
 	ent:SetCollisionGroup(4)
 	ent:SetPos(tr.HitPos)
+	ent:SetSolid(SOLID_VPHYSICS)
 	local phys = ent:GetPhysicsObject()
 	if phys:IsValid() then
 		phys:EnableCollisions(true)
@@ -280,6 +281,7 @@ elseif SERVER then
 			ent:SetNoDraw(false)
 			ent:SetCollisionGroup(4)
 			ent:SetPos(tr.HitPos)
+			ent:SetSolid(SOLID_VPHYSICS)
 			local phys = ent:GetPhysicsObject()
 			if phys:IsValid() then
 				phys:EnableCollisions(true)
