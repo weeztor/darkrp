@@ -234,7 +234,7 @@ usermessage.Hook("DoLetter", DoLetter)
 local F4Menu  
 local F4MenuTabs
 local F4Tabs
-local NoCloseF4 = CurTime()
+local hasReleasedF4 = false
 local function ChangeJobVGUI()
 	if not F4Menu or not F4Menu:IsValid() then
 		F4Menu = vgui.Create("DFrame")
@@ -255,12 +255,15 @@ local function ChangeJobVGUI()
 		F4Menu:SetVisible(true)
 		F4Menu:SetSkin("DarkRP")
 	end
-	NoCloseF4 = CurTime() + 0.6
+	
+	hasReleasedF4 = false
 	
 	function F4Menu:Think()
 		
-		if input.IsKeyDown(KEY_F4) and NoCloseF4 < CurTime() then
+		if input.IsKeyDown(KEY_F4) and hasReleasedF4 then
 			self:Close()
+		elseif not input.IsKeyDown(KEY_F4) then
+			hasReleasedF4 = true
 		end
 		if (!self.Dragging) then return end 
 		local x = gui.MouseX() - self.Dragging[1] 
