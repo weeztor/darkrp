@@ -62,7 +62,7 @@ HUD Seperate Elements
 ---------------------------------------------------------------------------*/
 local Health = 0
 local function DrawHealth()
-	Health = (Health == LocalPlayer():Health() and Health) or Lerp(0.1, Health, LocalPlayer():Health())
+	Health = math.min(100, (Health == LocalPlayer():Health() and Health) or Lerp(0.1, Health, LocalPlayer():Health()))
 	
 	local DrawHealth = Health / GetConVarNumber("startinghealth")
 	local Border = math.Min(6, math.pow(2, math.Round(3*DrawHealth)))
@@ -73,6 +73,7 @@ local function DrawHealth()
 end
 
 local function DrawInfo()
+	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 	local Salary = 	LANGUAGE.salary .. CUR .. (LocalPlayer().DarkRPVars.salary or 0)
 
 	local JobWallet = 
