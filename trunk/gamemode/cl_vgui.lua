@@ -356,7 +356,7 @@ local function KeysMenu(um)
 					menu:AddOption(v:Nick(), function() LocalPlayer():ConCommand("say /ao ".. v:UserID()) end)
 				end
 			end
-			if #menu.Panels == 0 then
+			if #menu.Items == 0 then
 				menu:AddOption("Noone available", function() end)
 			end
 			menu:Open()
@@ -373,7 +373,7 @@ local function KeysMenu(um)
 					menu:AddOption(v:Nick(), function() LocalPlayer():ConCommand("say /ro ".. v:UserID()) end)
 				end
 			end
-			if #menu.Panels == 0 then
+			if #menu.Items == 0 then
 				menu:AddOption("Noone available", function() end)
 			end
 			menu:Open()
