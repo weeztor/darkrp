@@ -456,6 +456,9 @@ local function SetWarrant(ply, target, reason)
 	timer.Simple(GetConVarNumber("searchtime"), UnWarrant, ply, target)
 	for a, b in pairs(player.GetAll()) do
 		b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.warrant_approved, target:Nick()).."\nReason: "..tostring(reason))
+		if b:IsAdmin() then
+			b:PrintMessage( HUD_PRINTCONSOLE, ply:Nick() .. " ordered a search warrant for " .. target:Nick() .. ", reason: " .. reason )
+		end
 	end
 	Notify(ply, 0, 4, LANGUAGE.warrant_approved2)
 end
@@ -531,6 +534,7 @@ local function SearchWarrant(ply, args)
 					-- There is no mayor or the mayor is AFK, CPs can set warrants.
 					SetWarrant(ply, p, reason)
 				end
+				
 			end
 		else
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
@@ -573,6 +577,9 @@ local function PlayerWanted(ply, args)
 			p:SetDarkRPVar("wantedReason", tostring(reason))
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_by_police, p:Nick()).."\nReason: "..tostring(reason))
+				if b:IsAdmin() then
+					b:PrintMessage( HUD_PRINTCONSOLE, ply:Nick() .. " has made " .. p:Nick() .. " wanted by police for " .. reason )
+				end
 			end
 			timer.Create(p:Nick() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, p)
 		else
@@ -2328,12 +2335,24 @@ end
 AddChatCommand("/demotelicense", VoteRemoveLicense)
 
 local function ReportAttacker(ply, cmd, args)
-	local target = FindPlayer((args and args[1]) or cmd)
+	
+	if cmd != "rp_reportattacker" then // It must be a chat command, so the arguments will be passed to the second argument (cmd)
+		args = string.Explode( " ", cmd )
+	end
+
+	local name = args[1]
+	args[1] = nil // Keep name/reason separate
+	
+	local reason = table.concat( args, " " )
+	
+	if reason and string.len( reason ) > 22 then Notify( ply, 1, 4, string.format( LANGUAGE.unable, "/911", "Reason >22" ) ) return "" end
+	
+	local target = FindPlayer( name )
 	if target then
 		for k, v in pairs(ents.FindByClass("darkrp_console")) do
 			v.dt.reporter = ply
 			v.dt.reported = target
-			v:SetNWString("reason", "(Being) attacked!")
+			v:SetNWString("reason", reason or "(Being) attacked!")
 			v:Alarm(30)
 			Notify(ply, 0, 4, "You have called 911!")
 		end
