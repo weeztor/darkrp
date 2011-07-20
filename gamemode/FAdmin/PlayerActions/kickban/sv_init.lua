@@ -151,7 +151,7 @@ local function Ban(ply, cmd, args)
 						break
 					end
 				end
-				SaveBan(target:SteamID(), target:Nick(), time, Reason, ply:Nick(), ply:SteamID())
+				SaveBan(target:SteamID(), target:Nick(), time, Reason, ply.Nick and ply:Nick() or "console", ply.SteamID and ply:SteamID() or "Console")
 				game.ConsoleCommand("banid " .. time.." ".. target:SteamID().."\n") -- Don't use banid in combination with RunConsoleCommand
 				RunConsoleCommand("kickid", target:UserID(), " banned for "..TimeText.." "..Reason) -- Also kicks someone if only a steam ID is entered
 			else
@@ -161,7 +161,7 @@ local function Ban(ply, cmd, args)
 						break
 					end
 				end
-				SaveBan(target, "UNKNOWN", time, (Reason ~= "" and Reason) or "Banned after Disconnect", ply:Nick(), ply:SteamID()) -- Again default to one hour
+				SaveBan(target, "UNKNOWN", time, (Reason ~= "" and Reason) or "Banned after Disconnect", ply.Nick and ply:Nick() or "console", ply.SteamID and ply:SteamID() or "Console") -- Again default to one hour
 				game.ConsoleCommand("banid ".. time.." ".. target.."\n")
 			end
 			ply.FAdminKickReason = nil
