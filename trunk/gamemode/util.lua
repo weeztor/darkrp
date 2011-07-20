@@ -62,7 +62,7 @@ function TalkToPerson(receiver, col1, text1, col2, text2, sender)
 end
 
 function FindPlayer(info)
-	if not info then return nil end
+	if not info or info == "" then return nil end
 	local pls = player.GetAll()
 
 	-- Find by Index Number (status in console)
