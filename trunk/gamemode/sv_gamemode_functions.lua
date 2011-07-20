@@ -634,9 +634,7 @@ function GM:PlayerLoadout(ply)
 		ply:Give("pocket")
 	end
 	
-	if GetConVarNumber("physgun") == 1 or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_phys")) or ply:IsAdmin() then
-		ply:Give("weapon_physgun")
-	end
+	ply:Give("weapon_physgun")
 	
 	if ply:HasPriv("rp_commands") and GetConVarNumber("AdminsCopWeapons") == 1 then
 		ply:Give("door_ram")

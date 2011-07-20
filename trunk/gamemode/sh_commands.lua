@@ -199,9 +199,6 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_noguns - Enabling this feature b
 AddToggleCommand("rp_chiefjailpos", "chiefjailpos", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_chiefjailpos - Allow the Chief to set the jail positions.")
 
-AddToggleCommand("rp_physgun", "physgun", 1)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_physgun - Enable/disable Players spawning with physguns.")
-
 AddToggleCommand("rp_enableshipments", "enableshipments", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_enableshipments - Turn /buyshipment on of off.")
 
