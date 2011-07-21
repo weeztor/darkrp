@@ -2341,7 +2341,7 @@ local function ReportAttacker(ply, cmd, args)
 	end
 
 	local name = args[1]
-	args[1] = nil // Keep name/reason separate
+	args[1] = "" // Keep name/reason separate
 	
 	local reason = table.concat( args, " " )
 	
