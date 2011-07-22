@@ -1,5 +1,6 @@
 include("shared.lua")
 
+local frame
 local SignButton
 
 function ENT:Draw()
@@ -8,6 +9,8 @@ end
 
 local function KillLetter(msg) 
 	hook.Remove("HUDPaint", "ShowLetter")
+	frame:Close()
+	print("frame close")
 end
 usermessage.Hook("KillLetter", KillLetter)
 
@@ -24,15 +27,23 @@ local function ShowLetter(msg)
 		LetterMsg = LetterMsg .. msg:ReadString()
 	end
 
-	SignButton = vgui.Create("DButton")
+	frame = vgui.Create("DFrame")
+	frame:SetTitle("")
+	frame:ShowCloseButton(false)
+
+	SignButton = vgui.Create("DButton", frame)
 	SignButton:SetText("Sign this letter")
-	SignButton:SetPos(ScrW()-256, ScrH()-256)
+	frame:SetPos(ScrW()-256, ScrH()-256)
 	SignButton:SetSize(256,256)
+	frame:SetSize(256,256)
 	SignButton:SetSkin("DarkRP")
-	gui.EnableScreenClicker(true)
+	frame:SizeToContents()
+	frame:MakePopup()
+	frame:SetKeyBoardInputEnabled(false)
 
 	function SignButton:DoClick()
 		RunConsoleCommand("_DarkRP_SignLetter", Letter:EntIndex())
+		SignButton:SetDisabled(true)
 	end
 	SignButton:SetDisabled(ValidEntity(Letter.dt.signed))
 
@@ -50,9 +61,7 @@ local function ShowLetter(msg)
 		if LocalPlayer():GetPos():Distance(LetterPos) > 100 then
 			LetterY = Lerp(0.1, LetterY, ScrH())
 			LetterAlpha = Lerp(0.1, LetterAlpha, 0)
-
-			SignButton:Remove()
-			gui.EnableScreenClicker(false)
+			if frame and frame.Close then frame:Close() end
 			if math.Round(LetterAlpha) <= 10 then
 				KillLetter()
 			end

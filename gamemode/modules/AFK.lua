@@ -65,7 +65,7 @@ local function SetAFK(ply)
 			hook.Remove("PlayerDeath", ply:EntIndex().."DRPNPCDeath")
 		end)
 		hook.Add("PlayerDisconnected", ply:EntIndex().."DRPNPCDisconnect", function(ply)
-			ply.AFKNpc:Remove()
+			SafeRemoveEntity(ply.AFKNpc)
 			hook.Remove("PlayerDisconnected", ply:EntIndex().."DRPNPCDisconnect")
 		end)
 	else
