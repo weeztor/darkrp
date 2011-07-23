@@ -59,6 +59,7 @@ function SWEP:Reload()
 		self.Weapon.reloading = true
 		self.Weapon:SetVar("reloadtimer", CurTime() + 0.3)
 		self.Weapon:SendWeaponAnim(ACT_VM_RELOAD)
+		self.Owner:SetAnimation(PLAYER_RELOAD)
 	end
 end
 
