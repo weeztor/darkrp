@@ -42,13 +42,19 @@ hook.Add("PlayerSpawnNPC", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nic
 hook.Add("PlayerSpawnVehicle", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)  end)
 hook.Add("PlayerSpawnEffect", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)  end)
 hook.Add("PlayerSpawnRagdoll", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned a "..class)  end)
-hook.Add("CanTool", "FAdmin_Log", function(ply, tr, toolclass) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Attempted to use "..toolclass)  end)
+hook.Add("CanTool", "FAdmin_Log", function(ply, tr, toolclass) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Attempted to use tool "..toolclass)  end)
 
 
 hook.Add("PlayerLeaveVehicle", "FAdmin_Log", function(ply, vehicle) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") exited a "..vehicle:GetClass())  end)
 hook.Add("OnNPCKilled", "FAdmin_Log", function(NPC, Killer, Weapon) FAdmin.Log(NPC:GetClass().. " was killed by ".. ((Killer:IsPlayer() and Killer:Nick()) or Killer:GetClass()).. " with a ".. Weapon:GetClass())  end)
 hook.Add("OnPlayerChangedTeam", "FAdmin_Log", function(ply, oldteam, newteam) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") changed from "..team.GetName(oldteam).. " to ".. team.GetName(newteam)) end)
-hook.Add("PlayerCanPickupWeapon", "FAdmin_Log", function(ply, weapon) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Attempted to pick up a "..weapon:GetClass()) end)
+hook.Add("WeaponEquip", "FAdmin_Log", function(weapon) 
+	timer.Simple(0, function() 
+		local ply = weapon:GetOwner()
+		FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Attempted to pick up a "..weapon:GetClass()) 
+	end)
+end)
+
 hook.Add("PlayerDeath", "FAdmin_Log", function(ply, inflictor, Killer)
 	local Nick, SteamID, KillerName, InflictorName = (ValidEntity(ply) and ply:Nick() or "N/A"), (ValidEntity(ply) and ply:SteamID() or "N/A"), 
 		(ValidEntity(Killer) and (Killer:IsPlayer() and Killer:Nick() or Killer:GetClass()) or "N/A"),
