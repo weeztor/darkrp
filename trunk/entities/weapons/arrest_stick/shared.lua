@@ -61,6 +61,12 @@ function SWEP:PrimaryAttack()
 	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
 	
 	local trace = self.Owner:GetEyeTrace()
+	
+	if ValidEntity(trace.Entity) and trace.Entity:IsPlayer() and trace.Entity:IsCP() and GetConVarNumber("cpcanarrestcp") == 0 then
+		Notify(self.Owner, 1, 5, "You can not arrest other CPs!")
+		return
+	end
+	
 	if trace.Entity:GetClass() == "prop_ragdoll" then
 		for k,v in pairs(player.GetAll()) do
 			if trace.Entity.OwnerINT and trace.Entity.OwnerINT == v:EntIndex() then

@@ -454,6 +454,12 @@ end)
 
 function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	-- Toolgun restrict
+	
+	if GravHull then // Compatability with the Gravity Hull Designator, the creator hasn't yet implemented an override for util.TraceLine (which CanTool uses)
+		trace = ply:GetEyeTrace() // However he has implemented one for player.GetEyeTrace, which for all intents and purposes will do the same thing.
+		ENT = trace.Entity
+	end
+	
 	local ignoreGeneralRestrictTool = false
 	local SteamID = ply:SteamID()
 	

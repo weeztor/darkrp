@@ -31,14 +31,28 @@ end
 /*---------------------------------------------------------------------------
 Fix the gmod cleanup
 ---------------------------------------------------------------------------*/
+
+local IsValidCleanup(class)
+	return table.HasValue(cleanup.GetTable(), class)
+end
+
 concommand.Add( "gmod_admin_cleanup", function( pl, command, args )
 	if not pl:IsAdmin() then return end
-	for k,v in pairs(ents.GetAll()) do
-		if v.Owner and not v:IsWeapon() then -- DarkRP entities have the Owner part of their table as nil.
-			v:Remove()
+	if not args[1] then
+		for k,v in pairs(ents.GetAll()) do
+			if v.Owner and not v:IsWeapon() then -- DarkRP entities have the Owner part of their table as nil.
+				v:Remove()
+			end
 		end
+		if NotifyAll then NotifyAll(0, 4, pl:Nick() .. " cleaned up everything.") end
 	end
-	if NotifyAll then NotifyAll(0, 4, pl:Nick() .. " cleaned up everything.") end
+	
+	if not IsValidCleanup(args[1]) then return end
+	
+	for k, v in pairs(ents.FindByClass(args[1])) do
+		v:Remove()
+	end
+	if NotifyAll then NotifyAll(0, 4, pl:Nick() .. " cleaned up all " .. args[1]) end
 end)
 
 /*---------------------------------------------------------------------------
