@@ -52,7 +52,7 @@ function SWEP:Reload()
 	self:SetIronsights(false)
 
 	-- Already reloading
-	if not self.Weapon.reloading then return end
+	if self.Weapon.reloading then return end
 
 	-- Start reloading if we can
 	if (self.Weapon:Clip1() < self.Primary.ClipSize and self.Owner:GetAmmoCount(self.Primary.Ammo) > 0) then
@@ -64,14 +64,25 @@ function SWEP:Reload()
 end
 
 function SWEP:Think()
-	if not self.Weapon.reloading then
+	if self.Weapon.reloading then
 		if (self.Weapon:GetVar("reloadtimer", 0) < CurTime()) then
 			-- Finsished reload -
 			if (self.Weapon:Clip1() >= self.Primary.ClipSize or self.Owner:GetAmmoCount(self.Primary.Ammo) <= 0) then
 				self.Weapon.reloading = false
 				return
 			end
-
+			
+			if self.queueattack then
+				self.Weapon:SendWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH)
+				self.Weapon.reloading = false
+				self.Weapon.queueattack = false
+				timer.Simple( 0.8, function()
+					if not ValidEntity( self ) then return end
+					self:PrimaryAttack()
+				end )
+				return
+			end
+			
 			-- Next cycle
 			self.Weapon:SetVar("reloadtimer", CurTime() + 0.3)
 			self.Weapon:SendWeaponAnim(ACT_VM_RELOAD)
@@ -86,4 +97,18 @@ function SWEP:Think()
 			end
 		end
 	end
+end
+
+function SWEP:PrimaryAttack()
+	
+	if self.queueattack then return end
+	
+	if self.Weapon.reloading then
+	
+		self.queueattack = true -- this way it doesn't interupt the reload animation
+		return
+	end
+
+	self.BaseClass.PrimaryAttack( self )
+	
 end
