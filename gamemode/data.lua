@@ -105,9 +105,6 @@ function DB.Init()
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_consolespawns(id INTEGER NOT NULL PRIMARY KEY, map char(30) NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL, pitch NUMERIC NOT NULL, yaw NUMERIC NOT NULL, roll NUMERIC NOT NULL);")
 	DB.Commit()
 
-	DB.CreateJailPos()
-	DB.CreateSpawnPos()
-	DB.CreateZombiePos()
 	DB.SetUpNonOwnableDoors()
 	DB.SetUpGroupOwnableDoors()
 	DB.LoadConsoles()
@@ -134,10 +131,37 @@ function DB.Init()
 	DB.Query("UPDATE darkrp_jailpositions SET lastused = 0;")
 	
 	DB.JailPos = {}
-	DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
+	DB.Query("SELECT COUNT(*) FROM darkrp_jailpositions;", function(num)
+		if num == 0 then
+			DB.CreateJailPos()
+			return
+		end
+		DB.Query("SELECT * FROM darkrp_jailpositions;", function(data)
+			DB.JailPos = data or {}
+		end)
+	end)
 	
 	DB.TeamSpawns = {}
-	DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end)
+	DB.Query("SELECT COUNT(*) FROM darkrp_tspawns;", function(num) 
+		if num == 0 then
+			DB.CreateSpawnPos()
+			return
+		end
+		DB.Query("SELECT * FROM darkrp_tspawns;", function(data)
+			DB.TeamSpawns = data or {}
+		end)
+	end)
+	
+	zombieSpawns = {}
+	DB.Query("SELECT COUNT(*) FROM darkrp_zspawns;", function(num)
+		if num == 0 then
+			DB.CreateZombiePos()
+			return
+		end
+		DB.Query("SELECT * FROM darkrp_zpawns;", function(data)
+			zombieSpawns = data or {}
+		end)
+	end)
 	
 	if CONNECTED_TO_MYSQL then -- In a listen server, the connection with the external database is often made AFTER the listen server host has joined, 
 								--so he walks around with the settings from the SQLite database

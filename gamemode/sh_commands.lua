@@ -283,6 +283,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_3dvoice - Enable/disable 3DVoice
 AddToggleCommand("rp_voiceradius_dynamic", "dynamicvoice", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_voiceradius_dynamic - Enable/disable whether only people in the same room as you can hear your mic.")
 
+AddToggleCommand("rp_cpcanarrestcp", "cpcanarrestcp", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_cpcanarrestcp - Allow/Disallow CPs to arrest other CPs." )
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
