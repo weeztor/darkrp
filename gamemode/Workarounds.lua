@@ -32,7 +32,7 @@ end
 Fix the gmod cleanup
 ---------------------------------------------------------------------------*/
 
-local IsValidCleanup(class)
+local function IsValidCleanup(class)
 	return table.HasValue(cleanup.GetTable(), class)
 end
 

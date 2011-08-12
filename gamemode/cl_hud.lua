@@ -244,6 +244,12 @@ local function DrawPlayerInfo(ply)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
+	
+	if ply.DarkRPVars.HasGunlicense then
+		surface.SetTexture(surface.GetTextureID("gui/silkicons/page"))
+		surface.SetDrawColor(255,255,255,255)
+		surface.DrawTexturedRect(pos.x-16, pos.y + 60, 32, 32)
+	end
 end
 
 local function DrawWantedInfo(ply)
