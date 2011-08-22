@@ -119,18 +119,38 @@ if CLIENT then
 						if ownerstr == "" then
 							st = self.DoorData.title .. "\n"..LANGUAGE.keys_disallow_ownership .. "\n"
 						else
-							if self:OwnedBy(LocalPlayer()) and not self.DoorData.GroupOwn then
+							if self:OwnedBy(LocalPlayer()) and not self.DoorData.GroupOwn and not self.DoorData.TeamOwn then
 								st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
-							elseif not self.DoorData.GroupOwn then
+							elseif not self.DoorData.GroupOwn and not self.DoorData.TeamOwn then
 								st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr .. LANGUAGE.keys_disallow_ownership .. "\n"
 							elseif not self:IsVehicle() then
-								st = self.DoorData.title .. "\n" .. self.DoorData.GroupOwn .. "\n" .. LANGUAGE.keys_disallow_ownership .. "\n"
+								local grouptext = ""
+								if self.DoorData.TeamOwn then
+									for k, v in pairs( self.DoorData.TeamOwn ) do
+										if v then
+											grouptext = grouptext .. RPExtraTeams[k].name .. "\n"
+										end
+									end
+								else
+									grouptext = self.DoorData.GroupOwn .. "\n"
+								end
+								st = self.DoorData.title .. "\n" .. grouptext .. LANGUAGE.keys_disallow_ownership .. "\n"
 							end
 						end
-						if self.DoorData.GroupOwn and not self:IsVehicle() then
+						if self.DoorData.GroupOwn or self.DoorData.TeamOwn and not self:IsVehicle() then
 							st = st .. LANGUAGE.keys_everyone
-						elseif not self:IsVehicle() and self.DoorData.GroupOwn then
-							st = st .. self.DoorData.GroupOwn
+						elseif not self:IsVehicle() and self.DoorData.GroupOwn or self.DoorData.TeamOwn then
+							local grouptext = ""
+							if self.DoorData.TeamOwn then
+								for k, v in pairs( self.DoorData.TeamOwn ) do
+									if v then
+										grouptext = grouptext .. RPExtraTeams[k].name .. "\n"
+									end
+								end
+							else
+								grouptext = self.DoorData.GroupOwn .. "\n"
+							end
+							st = st .. grouptext
 						end
 					end
 				else
@@ -143,6 +163,15 @@ if CLIENT then
 							if self.DoorData.GroupOwn then
 								whiteText = true
 								st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. self.DoorData.GroupOwn
+							elseif self.DoorData.TeamOwn then
+								whiteText = true
+								local grouptext = ""
+								for k, v in pairs( self.DoorData.TeamOwn ) do
+									if v then
+										grouptext = grouptext .. RPExtraTeams[k].name .. "\n"
+									end
+								end
+								st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. grouptext
 							else
 								st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. ownerstr
 							end
@@ -161,6 +190,18 @@ if CLIENT then
 							if not self:IsVehicle() then
 								st = st .. "\n".. LANGUAGE.keys_everyone
 							end
+						elseif self.DoorData.TeamOwn then
+							whiteText = true
+							local grouptext = ""
+							for k, v in pairs( self.DoorData.TeamOwn ) do
+								if v then
+									grouptext = grouptext .. RPExtraTeams[k].name .. "\n"
+								end
+							end
+							st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .. "\n" .. grouptext
+							if not self:IsVehicle() then
+								st = st .. "\n".. LANGUAGE.keys_everyone
+							end
 						else
 							st = LANGUAGE.keys_unowned.."\n".. LANGUAGE.keys_disallow_ownership
 							if not self:IsVehicle() then
@@ -176,6 +217,15 @@ if CLIENT then
 						if self.DoorData.GroupOwn then
 							whiteText = true
 							st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. self.DoorData.GroupOwn
+						elseif self.DoorData.TeamOwn then
+							whiteText = true
+							local grouptext = ""
+							for k, v in pairs( self.DoorData.TeamOwn ) do
+								if v then
+									grouptext = grouptext .. RPExtraTeams[k].name .. "\n"
+								end
+							end
+							st = self.DoorData.title .. "\n".. LANGUAGE.keys_owned_by .."\n" .. grouptext
 						else
 							st = LANGUAGE.keys_unowned
 						end
@@ -228,9 +278,10 @@ local function SetDoorGroupOwnable(ply, arg)
 	local ent = trace.Entity
 	if ply:IsSuperAdmin() and (ent:IsDoor() or ent:IsVehicle()) and ply:GetPos():Distance(ent:GetPos()) < 115 then
 		ent.DoorData = ent.DoorData or {}
+		ent.DoorData.TeamOwn = nil
 		ent.DoorData.GroupOwn = arg
-		if arg == "" then ent.DoorData.GroupOwn = nil end
-		Notify(ply, 0, 8, "Door group set succesfully")
+		if arg == "" then ent.DoorData.GroupOwn = nil ent.DoorData.TeamOwn = nil end
+		Notify(ply, 0, 8, "Door group set successfully")
 		-- Save it for future map loads
 		DB.StoreGroupDoorOwnability(ent)
 	end
@@ -239,6 +290,56 @@ local function SetDoorGroupOwnable(ply, arg)
 	return ""
 end
 AddChatCommand("/togglegroupownable", SetDoorGroupOwnable)
+
+local time4 = false
+local function SetDoorTeamOwnable(ply, arg)
+	if time4 then return "" end
+	time4 = true
+	timer.Simple( 0.1, function() time4 = false end )
+	local trace = ply:GetEyeTrace()
+	if not ValidEntity(trace.Entity) then return "" end
+	arg = tonumber( arg )
+	if not RPExtraTeams[arg] and arg ~= nil then Notify(ply, 1, 10, "Job does not exist!") return "" end
+	
+	local ent = trace.Entity
+	if ply:IsSuperAdmin() and (ent:IsDoor() or ent:IsVehicle() and ply:GetPos():Distance(ent:GetPos()) < 115) then
+		ent.DoorData = ent.DoorData or {}
+		ent.DoorData.GroupOwn = nil
+		local decoded = {}
+		if ent.DoorData.TeamOwn then 
+			for k, v in pairs(string.Explode("\n", ent.DoorData.TeamOwn)) do
+				if v and v != "" then
+					decoded[tonumber(v)] = true
+				end
+			end
+		end
+		if arg then
+			decoded[arg] = not decoded[arg]
+			if decoded[arg] == false then
+				decoded[arg] = nil
+			end
+			if table.Count( decoded ) == 0 then
+				ent.DoorData.TeamOwn = nil
+			else
+				local encoded = ""
+				for k, v in pairs(decoded) do
+					if v then
+						encoded = encoded .. k .. "\n"
+					end
+				end
+				ent.DoorData.TeamOwn = encoded -- So we can send it to the client, and store it easily
+			end
+		else
+			ent.DoorData.TeamOwn = nil
+		end
+		Notify(ply, 0, 8, "Door group set successfully")
+		DB.StoreTeamDoorOwnability(ent)
+	end
+	ent:UnOwn()
+	ply.LookingAtDoor = nil
+	return ""
+end
+AddChatCommand("/toggleteamownable", SetDoorTeamOwnable)
 
 local time2 = false
 local function OwnDoor(ply)
@@ -255,7 +356,7 @@ local function OwnDoor(ply)
 			return ""
 		end
 
-		if trace.Entity.DoorData.NonOwnable or (trace.Entity.DoorData.GroupOwn and not table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], ply:Team())) then
+		if trace.Entity.DoorData.NonOwnable and (trace.Entity.DoorData.GroupOwn and not table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], ply:Team())) or trace.Entity.DoorData.TeamOwn then
 			Notify(ply, 1, 5, LANGUAGE.door_unownable)
 			return ""
 		end
@@ -394,6 +495,15 @@ local function SetDoorTitle(ply, args)
 		if ply:IsSuperAdmin() then
 			if trace.Entity.DoorData.NonOwnable then
 				DB.StoreNonOwnableDoorTitle(trace.Entity, args)
+				ply.LookingAtDoor = nil
+				return ""
+			elseif trace.Entity.DoorData.GroupOwn then
+				DB.StoreGroupOwnableDoorTitle(trace.Entity, args)
+				ply.LookingAtDoor = nil
+				return ""
+			elseif trace.Entity.DoorData.TeamOwn then
+				DB.StoreTeamOwnableDoorTitle(trace.Entity, args)
+				ply.LookingAtDoor = nil
 				return ""
 			end
 		else

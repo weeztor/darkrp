@@ -479,6 +479,19 @@ local function RetrieveDoorData(handler, id, encoded, decoded)
 	-- decoded[1] = Entity you were looking at
 	-- Decoded[2] = table of that door
 	if not decoded[1] or not decoded[1].IsValid or not ValidEntity(decoded[1]) then return end
+	
+	if decoded[2].TeamOwn then
+		local tdata = {}
+		for k, v in pairs(string.Explode("\n", decoded[2].TeamOwn or "")) do
+			if v and v != "" then
+				tdata[tonumber(v)] = true
+			end
+		end
+		decoded[2].TeamOwn = tdata
+	else
+		decoded[2].TeamOwn = nil
+	end
+	
 	decoded[1].DoorData = decoded[2]
 	
 	local DoorString = "Data:\n"
@@ -506,6 +519,21 @@ local function UpdateDoorData(um)
 	if value == "true" or value == "false" then value = tobool(value) end
 	
 	if value == "nil" then value = nil end
+	
+	if var == "TeamOwn" then 
+		local decoded = {}
+		for k, v in pairs(string.Explode("\n", value or "")) do
+			if v and v != "" then
+				decoded[tonumber(v)] = true
+			end
+		end
+		if table.Count( decoded ) == 0 then
+			value = nil
+		else
+			value = decoded
+		end
+	end
+
 	door.DoorData[var] = value
 end
 usermessage.Hook("DRP_UpdateDoorData", UpdateDoorData)

@@ -102,11 +102,13 @@ function DB.Init()
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_zspawns(map char(30) NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL);")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_doors(map char(30) NOT NULL, idx INTEGER NOT NULL, title char(25), locked INTEGER(1), disabled INTEGER(1), PRIMARY KEY(map, idx));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_groupdoors(map char(30) NOT NULL, idx INTEGER NOT NULL, teams char(50) NOT NULL, title char(25) NOT NULL, PRIMARY KEY(map, idx));")
+		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_teamdoors(map char(30) NOT NULL, idx INTEGER NOT NULL, teams char(50) NOT NULL, title char(25) NOT NULL, PRIMARY KEY(map, idx));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_consolespawns(id INTEGER NOT NULL PRIMARY KEY, map char(30) NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL, pitch NUMERIC NOT NULL, yaw NUMERIC NOT NULL, roll NUMERIC NOT NULL);")
 	DB.Commit()
 
 	DB.SetUpNonOwnableDoors()
 	DB.SetUpGroupOwnableDoors()
+	DB.SetUpTeamOwnableDoors()
 	DB.LoadConsoles()
 	
 	DB.Query("SELECT * FROM darkrp_cvars;", function(settings)
@@ -584,7 +586,6 @@ function DB.StoreDoorOwnability(ent)
 	ent.DoorData = ent.DoorData or {}
 	local nonOwnable = ent.DoorData.NonOwnable
 	DB.QueryValue("SELECT locked FROM darkrp_doors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";", function(r)
-		print(r)
 		if r and not nonOwnable then
 			DB.Query("UPDATE darkrp_doors SET disabled = 0 WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";")
 		elseif nonOwnable then
@@ -633,12 +634,36 @@ function DB.StoreGroupDoorOwnability(ent)
 	end)
 end
 
+function DB.StoreTeamDoorOwnability(ent)
+	local map = string.lower(game.GetMap())
+	ent.DoorData = ent.DoorData or {}
+	
+	DB.QueryValue("SELECT COUNT(*) FROM darkrp_teamdoors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";", function(r)
+		r = tonumber(r)
+		if not r then return end
+		
+		if r > 0 and not ent.DoorData.TeamOwn then
+			DB.Query("DELETE FROM darkrp_teamdoors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() ..";")
+		elseif r == 0 and ent.DoorData.TeamOwn then
+			DB.Query("INSERT INTO darkrp_teamdoors VALUES(" .. sql.SQLStr(map) .. ", " .. ent:EntIndex() .. ", " .. sql.SQLStr(ent.DoorData.TeamOwn) .. ", " .. sql.SQLStr(ent.DoorData.Title or "") .. ");")
+		elseif r == 1 then
+			DB.Query("UPDATE darkrp_teamdoors SET teams = " .. sql.SQLStr(ent.DoorData.TeamOwn) .. " WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";")
+		end
+	end)
+end
+
 function DB.StoreGroupOwnableDoorTitle(ent, text)
 	DB.Query("UPDATE darkrp_groupdoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
-	e.DoorData = e.DoorData or {}
+	ent.DoorData = ent.DoorData or {}
 	ent.DoorData.title = text
 end
 
+function DB.StoreTeamOwnableDoorTitle(ent, text)
+	DB.Query("UPDATE darkrp_teamdoors SET title = " .. sql.SQLStr(text) .. " WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. " AND idx = " .. ent:EntIndex() .. ";")
+	ent.DoorData = ent.DoorData or {}
+	ent.DoorData.title = text
+end
+	
 function DB.SetUpGroupOwnableDoors()
 	DB.Query("SELECT idx, title, teams FROM darkrp_groupdoors WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";", function(r)
 		if not r then return end
@@ -649,6 +674,21 @@ function DB.SetUpGroupOwnableDoors()
 				e.DoorData = e.DoorData or {}
 				e.DoorData.title = row.title
 				e.DoorData.GroupOwn = row.teams
+			end
+		end
+	end)
+end
+
+function DB.SetUpTeamOwnableDoors()
+	DB.Query("SELECT idx, title, teams FROM darkrp_teamdoors WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";", function(r)
+		if not r then return end
+		
+		for _, row in pairs(r) do
+			local e = ents.GetByIndex(tonumber(row.idx))
+			if ValidEntity(e) then
+				e.DoorData = e.DoorData or {}
+				e.DoorData.title = row.title
+				e.DoorData.TeamOwn = row.teams
 			end
 		end
 	end)
