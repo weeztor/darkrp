@@ -28,6 +28,7 @@ SWEP.Spawnable = false
 SWEP.AdminSpawnable = false
 
 SWEP.HoldType = "normal"
+SWEP.CurHoldType = "normal"
 
 SWEP.Primary.Sound = Sound("Weapon_AK47.Single")
 SWEP.Primary.Recoil = 1.5
@@ -46,10 +47,13 @@ SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 
+SWEP.LastPrimaryAttack = 0
+
 /*---------------------------------------------------------
 ---------------------------------------------------------*/
 function SWEP:Initialize()
 	self:SetWeaponHoldType("normal")
+	self.CurHoldType = "normal"
 	if SERVER then
 		self:SetNPCMinBurst( 30 )
 		self:SetNPCMaxBurst( 30 )
@@ -63,7 +67,8 @@ end
 Deploy
 ---------------------------------------------------------*/
 function SWEP:Deploy()
-	if SERVER then self:SendHoldType("normal") end
+	self:SetWeaponHoldType("normal")
+	self.CurHoldType = "normal"
 	
 	self.LASTOWNER = self.Owner
 	
@@ -83,16 +88,38 @@ end
 Reload does nothing
 ---------------------------------------------------------*/
 function SWEP:Reload()
+	self.Reloading = true
 	self.Weapon:DefaultReload(ACT_VM_RELOAD)
 	self:SetIronsights(false)
+	self:SetWeaponHoldType(self.HoldType)
+	self.CurHoldType = self.HoldType
+	self.Owner:SetAnimation(PLAYER_RELOAD)
+	timer.Simple(2, function()
+		if not ValidEntity(self) then return end
+		self.Reloading = false
+		self:SetWeaponHoldType("normal")
+		self.CurHoldType = "normal"
+	end)
 end
 
 /*---------------------------------------------------------
 PrimaryAttack
 ---------------------------------------------------------*/
 function SWEP:PrimaryAttack()
+
+	if self.CurHoldType == "normal" then
+		self:SetWeaponHoldType(self.HoldType)
+		self.CurHoldType = self.HoldType
+	end
+	
 	self.Weapon:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
+	
+	if self:Clip1() <= 0 then
+		self:EmitSound("weapons/clipempty_rifle.wav")
+		self:SetNextPrimaryFire(CurTime() + 2)
+		return
+	end
 
 	if not self:CanPrimaryAttack() then self:SetIronsights(false) return end
 	if not self.Ironsights and GetConVarNumber("ironshoot") ~= 0 then return end
@@ -109,6 +136,8 @@ function SWEP:PrimaryAttack()
 
 	-- Punch the player's view
 	self.Owner:ViewPunch(Angle(math.Rand(-0.2,-0.1) * self.Primary.Recoil, math.Rand(-0.1,0.1) *self.Primary.Recoil, 0))
+	
+	self.LastPrimaryAttack = CurTime()
 end
 
 /*---------------------------------------------------------
@@ -253,34 +282,19 @@ end
 /*---------------------------------------------------------
 SetIronsights
 ---------------------------------------------------------*/
-if SERVER then
-	function SWEP:SendHoldType(holdtype)
-		self:SetWeaponHoldType(holdtype)
-		umsg.Start("Drp_SetWeaponHoldType")
-			umsg.Entity(self)
-			umsg.String(holdtype)
-		umsg.End()
-	end
-elseif CLIENT then
-	local function GetWeaponHoldType(um)
-		local weapon = um:ReadEntity()
-		if ValidEntity(weapon) and weapon.SetWeaponHoldType then
-			weapon:SetWeaponHoldType(um:ReadString())
-		end
-	end
-	usermessage.Hook("Drp_SetWeaponHoldType", GetWeaponHoldType)
-end
 
 function SWEP:SetIronsights(b)
 	if SinglePlayer() then -- Make ironsights work on SP
 		self.Owner:SendLua("LocalPlayer():GetActiveWeapon().Ironsights = "..tostring(b))
 	end
-	if b and SERVER then 
-		self:SendHoldType(self.HoldType)
-		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3)
-	elseif SERVER then
-		self:SendHoldType("normal")
-		GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
+	if b then 
+		self:SetWeaponHoldType(self.HoldType)
+		self.CurHoldType = self.HoldType
+		if SERVER then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3) end
+	else
+		self:SetWeaponHoldType("normal")
+		self.CurHoldType = "normal"
+		if SERVER then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd")) end
 	end
 	self.Ironsights = b
 end
@@ -332,3 +346,11 @@ function SWEP:Equip(NewOwner)
 		self:SetClip2(self.SecondaryClipLeft)
 	end
 end
+
+function SWEP:Think()
+	if not self.Reloading and not self.Ironsights and self.LastPrimaryAttack + 3 < CurTime() and self.CurHoldType == self.HoldType then
+		self.CurHoldType = "normal"
+		self:SetWeaponHoldType("normal")
+	end
+end
+
