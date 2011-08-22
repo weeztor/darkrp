@@ -14,6 +14,7 @@ local function KillLetter(msg)
 end
 usermessage.Hook("KillLetter", KillLetter)
 
+
 local function ShowLetter(msg)
 	local LetterMsg = ""
 	local Letter = msg:ReadEntity()
@@ -22,6 +23,8 @@ local function ShowLetter(msg)
 	local sectionCount = msg:ReadShort()
 	local LetterY = ScrH() / 2 - 300
 	local LetterAlpha = 255
+
+	Letter:CallOnRemove("Kill letter HUD on remove", KillLetter)
 
 	for k=1, sectionCount do
 		LetterMsg = LetterMsg .. msg:ReadString()
