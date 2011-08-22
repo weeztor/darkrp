@@ -54,8 +54,17 @@ function SWEP:PrimaryAttack()
 	trace.Entity.DoorData = trace.Entity.DoorData or {}
 	
 	local Team = self.Owner:Team()
-	
-	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity.DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], Team))  then
+	local DoorData = table.Copy( trace.Entity.DoorData or {} )
+	if SERVER and DoorData.TeamOwn then
+		local decoded = {}
+		for k, v in pairs(string.Explode("\n", DoorData.TeamOwn)) do
+			if v and v != "" then
+				decoded[tonumber(v)] = true
+			end
+		end
+		DoorData.TeamOwn = decoded
+	end
+	if trace.Entity:OwnedBy(self.Owner) or (DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[DoorData.GroupOwn], Team)) or (DoorData.TeamOwn and DoorData.TeamOwn[Team]) then
 		if SERVER then
 			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
 			trace.Entity:Fire("lock", "", 0) -- Lock the door immediately so it won't annoy people
@@ -97,7 +106,17 @@ function SWEP:SecondaryAttack()
 	end
 
 	local Team = self.Owner:Team()
-	if trace.Entity:OwnedBy(self.Owner) or (trace.Entity.DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], Team)) then
+	local DoorData = table.Copy( trace.Entity.DoorData or {} )
+	if SERVER and DoorData.TeamOwn then
+		local decoded = {}
+		for k, v in pairs(string.Explode("\n", DoorData.TeamOwn)) do
+			if v and v != "" then
+				decoded[tonumber(v)] = true
+			end
+		end
+		DoorData.TeamOwn = decoded
+	end
+	if trace.Entity:OwnedBy(self.Owner) or (DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[DoorData.GroupOwn], Team)) or (DoorData.TeamOwn and DoorData.TeamOwn[Team]) then
 		if SERVER then
 			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
 			trace.Entity:Fire("unlock", "", 0)-- Unlock the door immediately so it won't annoy people
