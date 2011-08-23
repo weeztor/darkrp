@@ -61,3 +61,24 @@ function(ply) return ply:GetNWString("usergroup") == "donator" or ply:IsAdmin() 
 )
 }}}
 
+==ULX==
+If you wish to use ULX instead of FAdmin, replace:
+
+{{{ply:GetNWString("usergroup") == "donator"}}}
+
+With:
+
+{{{ply:GetUserGroup() == "donator"}}}
+
+Or if you wish to allow any inherited groups too (eg admin/superadmin), replace it with:
+
+{{{ply:CheckGroup("donator")}}}
+
+==Evolve==
+If you wish to use Evolve instead of FAdmin, replace:
+
+{{{ply:GetNWString("usergroup")}}}
+
+With:
+
+{{{ply:GetNWString("EV_UserGroup")}}}
