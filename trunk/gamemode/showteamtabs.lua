@@ -565,6 +565,10 @@ function JobsTab()
 				if v.admin > 1 and not LocalPlayer():IsSuperAdmin() then
 					nodude = false
 				end
+				if TEAM.customCheck and not TEAM.customCheck(self) then
+					nodude = false
+				end
+				
 				if (type(v.NeedToChangeFrom) == "number" and LocalPlayer():Team() ~= v.NeedToChangeFrom) or (type(v.NeedToChangeFrom) == "table" and not table.HasValue(v.NeedToChangeFrom, LocalPlayer():Team())) then
 					nodude = false
 				end

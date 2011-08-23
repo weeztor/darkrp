@@ -215,7 +215,6 @@ function meta:ChangeTeam(t, force)
 	self:SetDarkRPVar("helpBoss",false)
 	self:SetDarkRPVar("helpCop",false)
 	self:SetDarkRPVar("helpMayor",false)
-
 	
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) and not force then
 		Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), "banned/demoted"))
@@ -241,6 +240,11 @@ function meta:ChangeTeam(t, force)
 
 	local TEAM = RPExtraTeams[t]
 	if not TEAM then return end
+
+	if TEAM.customCheck and not TEAM.customCheck(self) then
+		Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
+		return
+	end
 	
 	if not self.DarkRPVars["Priv"..TEAM.command] and not force  then
 		if type(TEAM.NeedToChangeFrom) == "number" and self:Team() ~= TEAM.NeedToChangeFrom then
