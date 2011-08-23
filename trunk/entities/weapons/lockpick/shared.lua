@@ -116,6 +116,7 @@ end
 
 function SWEP:Succeed()
 	self.IsLockPicking = false
+	self:SetWeaponHoldType("normal")
 	local trace = self.Owner:GetEyeTrace()
 	if trace.Entity.isFadingDoor and trace.Entity.fadeActivate then
 		if not trace.Entity.fadeActive then
