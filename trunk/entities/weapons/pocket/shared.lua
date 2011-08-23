@@ -64,11 +64,10 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	if CLIENT then return end
-	
-	self:SendHoldType("pistol")
-	
+	self:SetWeaponHoldType("pistol")
 	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
+	
+	if CLIENT then return end
 	
 	local phys = trace.Entity:GetPhysicsObject()
 	if not phys:IsValid() then return end
@@ -115,11 +114,12 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-	if CLIENT then return end
-	self:SendHoldType("pistol")
-	
-	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
+
+	self:SetWeaponHoldType("pistol")
+	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	self.Weapon:SetNextSecondaryFire(CurTime() + 0.2)
+	
+	if CLIENT then return end
 	
 	if not self.Owner:GetTable().Pocket or #self.Owner:GetTable().Pocket <= 0 then
 		Notify(self.Owner, 1, 4, "Your pocket contains no items.")
@@ -246,6 +246,8 @@ if CLIENT then
 					end
 					items = table.ClearKeys(items)
 					Reload()
+					LocalPlayer():GetActiveWeapon():SetWeaponHoldType("pistol")
+					timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, LocalPlayer():GetActiveWeapon())
 				end
 			end
 		end
@@ -269,8 +271,8 @@ elseif SERVER then
 			end
 			ply:GetTable().Pocket = table.ClearKeys(ply:GetTable().Pocket)
 			
-			ply:GetActiveWeapon():SendHoldType("pistol")
-			timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, ply:GetActiveWeapon())
+			ply:GetActiveWeapon():SetWeaponHoldType("pistol")
+			timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, ply:GetActiveWeapon())
 			
 			local trace = {}
 			trace.start = ply:EyePos()
