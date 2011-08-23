@@ -27,7 +27,7 @@ SWEP.AdminSpawnable = true
 
 SWEP.NextStrike = 0
 
-SWEP.ViewModel = Model("models/weapons/v_stunstick.mdl")
+SWEP.ViewModel = Model("models/weapons/v_stunbaton.mdl")
 SWEP.WorldModel = Model("models/weapons/w_stunbaton.mdl")
 
 SWEP.Sound = Sound("weapons/stunstick/stunstick_swing1.wav")
