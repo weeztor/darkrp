@@ -11,8 +11,8 @@ SWEP.Contact = ""
 SWEP.Purpose = ""
 SWEP.Instructions = "Left Click to heal player infront of user."
 
-SWEP.Spawnable = true       -- Change to false to make Admin only.
-SWEP.AdminSpawnable = true
+SWEP.Spawnable = false       -- Change to false to make Admin only.
+SWEP.AdminSpawnable = false
 
 SWEP.ViewModel = "models/weapons/v_c4.mdl"
 SWEP.WorldModel = "models/weapons/w_package.mdl"
