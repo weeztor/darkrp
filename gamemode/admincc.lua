@@ -300,23 +300,23 @@ local function ccTellAll(ply, cmd, args)
 		return
 	end
 
-	for k,v in pairs(player.GetAll()) do
-		local msg = ""
 
-		for n = 1, #args do
-			msg = msg .. args[n] .. " "
-		end
+	local msg = ""
 
-		umsg.Start("AdminTell", v)
-			umsg.String(msg)
-		umsg.End()
-		
-		if ply:EntIndex() == 0 then
-			DB.Log("Console did rp_tellall \""..msg .. "\"" )
-		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") did rp_tellall \""..msg .. "\"" )
-		end
+	for n = 1, #args do
+		msg = msg .. args[n] .. " "
 	end
+
+	umsg.Start("AdminTell")
+		umsg.String(msg)
+	umsg.End()
+	
+	if ply:EntIndex() == 0 then
+		DB.Log("Console did rp_tellall \""..msg .. "\"" )
+	else
+		DB.Log(ply:SteamName().." ("..ply:SteamID()..") did rp_tellall \""..msg .. "\"" )
+	end
+
 end
 concommand.Add("rp_tellall", ccTellAll)
 
