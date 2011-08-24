@@ -87,7 +87,7 @@ function SWEP:PrimaryAttack()
 	local b = trace.Entity:GetClass() == "prop_physics"
 	local c = true
 	if trace.Entity.Owner then
-		c = trace.Entity.Owner.warranted or trace.Entity.Owner.DarkRPVars.wanted
+		c = trace.Entity.Owner.warranted or (trace.Entity.Owner.DarkRPVars and trace.Entity.Owner.DarkRPVars.wanted)
 	end
 	if (trace.Entity:IsDoor()) then
 		local allowed = false
