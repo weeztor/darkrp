@@ -565,7 +565,7 @@ function JobsTab()
 				if v.admin > 1 and not LocalPlayer():IsSuperAdmin() then
 					nodude = false
 				end
-				if TEAM.customCheck and not TEAM.customCheck(self) then
+				if v.customCheck and not v.customCheck(self) then
 					nodude = false
 				end
 				
