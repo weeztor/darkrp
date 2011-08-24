@@ -70,12 +70,12 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
 
 	self.NextStrike = CurTime() + .3
+	
+	self:SetWeaponHoldType("melee")
+	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 
 	if CLIENT then return end
 	
-	self:SendHoldType("melee")
-	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
-
 	local trace = self.Owner:GetEyeTrace()
 
 	if not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100) then return end
@@ -103,12 +103,12 @@ function SWEP:SecondaryAttack()
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
 
 	self.NextStrike = CurTime() + .3
+	
+	self:SetWeaponHoldType("melee")
+	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 
 	if CLIENT then return end
 	
-	self:SendHoldType("melee")
-	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
-
 	local trace = self.Owner:GetEyeTrace()
 
 	if (not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100)) then return end
@@ -135,10 +135,11 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Reload()
-	if not SERVER then return end
-	self:SendHoldType("melee")
+	self:SetWeaponHoldType("melee")
 	timer.Destroy("rp_stunstick_threaten")
-	timer.Create("rp_stunstick_threaten", 1, 1, function() self:SendHoldType("normal") end)
+	timer.Create("rp_stunstick_threaten", 1, 1, function() self:SetWeaponHoldType("normal") end)
+	
+	if not SERVER then return end
 	
 	if self.LastReload and self.LastReload > CurTime() - 0.1 then self.LastReload = CurTime() return end
 	self.LastReload = CurTime()

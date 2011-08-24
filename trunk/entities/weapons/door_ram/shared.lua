@@ -158,10 +158,10 @@ end
 function SWEP:SecondaryAttack()
 	self.LastIron = CurTime()
 	self.Ready = not self.Ready
-	if self.Ready and SERVER then
-		self:SendHoldType("rpg")
-	elseif SERVER then
-		self:SendHoldType("normal")
+	if self.Ready then
+		self:SetWeaponHoldType("rpg")
+	else
+		self:SetWeaponHoldType("normal")
 	end
 end
 

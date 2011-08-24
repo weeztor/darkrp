@@ -65,7 +65,7 @@ function SWEP:PrimaryAttack()
 	end
 	
 	self:SetWeaponHoldType("pistol")
-	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
+	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	
 	if CLIENT then return end
 	

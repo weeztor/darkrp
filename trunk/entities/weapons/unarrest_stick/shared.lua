@@ -55,11 +55,11 @@ function SWEP:PrimaryAttack()
 
 	self.NextStrike = CurTime() + .4
 	
+	self:SetWeaponHoldType("melee")
+	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+
 	if CLIENT then return end
 	
-	self:SendHoldType("melee")
-	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SendHoldType("normal") end end, self)
-
 	local trace = self.Owner:GetEyeTrace()
 
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) or not trace.Entity.DarkRPVars.Arrested then
