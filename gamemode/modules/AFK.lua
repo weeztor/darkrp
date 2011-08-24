@@ -60,6 +60,7 @@ local function SetAFK(ply)
 		ply:SetNoDraw(true)
 		ply:SetPos(Vector(0,0,-5000))
 		hook.Add("PlayerDeath", ply:EntIndex().."DRPNPCDeath", function(ply)
+			if not ValidEntity( ply.AFKNpc ) then hook.Remove("PlayerDeath", ply:EntIndex().."DRPNPCDeath") return end
 			ply:SetEyeAngles(ply.AFKNpc:EyeAngles())
 			ply.AFKNpc:Remove()
 			hook.Remove("PlayerDeath", ply:EntIndex().."DRPNPCDeath")
