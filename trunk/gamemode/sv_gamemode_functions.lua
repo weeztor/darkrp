@@ -753,3 +753,10 @@ hook.Add("WeaponEquip", "AmmoHackFix", function( wep )
 		wep:TakePrimaryAmmo(clip)
 	end
 end)
+
+function GM:PlayerLeaveVehicle(ply, vehicle)
+	if GetConVarNumber("autovehiclelock") == 1 and vehicle.OwnedBy(ply) then
+		vehicle:Fire("lock", "", 0)
+	end
+	self.BaseClass:PlayerLeaveVehicle(ply, vehicle)
+end
