@@ -49,14 +49,14 @@ end
 function SWEP:PrimaryAttack()
 	if CurTime() < self.NextStrike then return end
 	
+	self:SetWeaponHoldType("melee")
+	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+	
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Weapon:EmitSound(self.Sound)
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
 
 	self.NextStrike = CurTime() + .4
-	
-	self:SetWeaponHoldType("melee")
-	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	
 	if CLIENT then return end
 	
