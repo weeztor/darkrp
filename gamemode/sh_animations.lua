@@ -72,7 +72,7 @@ end)
 if SERVER then 
 	local function CustomAnim(ply, cmd, args)
 		local Gesture = tonumber(args[1] or 0)
-		if Gesture < 1559 or Gesture > 1694 then return end
+		if Gesture < 1782 or Gesture > 1787 then return end
 		local RP = RecipientFilter()
 		RP:AddAllPlayers()
 

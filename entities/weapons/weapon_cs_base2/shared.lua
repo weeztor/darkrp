@@ -348,7 +348,7 @@ function SWEP:Equip(NewOwner)
 end
 
 function SWEP:Think()
-	if not self.Reloading and not self.Ironsights and self.LastPrimaryAttack + 3 < CurTime() and self.CurHoldType == self.HoldType then
+	if self.Primary.ClipSize ~= -1 and not self.Reloading and not self.Ironsights and self.LastPrimaryAttack + 3 < CurTime() and self.CurHoldType == self.HoldType then
 		self.CurHoldType = "normal"
 		self:SetWeaponHoldType("normal")
 	end
