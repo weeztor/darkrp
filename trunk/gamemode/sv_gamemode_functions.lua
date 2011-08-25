@@ -257,6 +257,12 @@ function GM:CanPlayerSuicide(ply)
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
+	if not tobool(GetConVarNumber("wantedsuicide")) and ply.DarkRPVars.wanted then
+		return true
+	else
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
+		return false
+	end
 	return true
 end
 

@@ -289,6 +289,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_cpcanarrestcp - Allow/Disallow C
 AddToggleCommand("rp_autovehiclelock", "autovehiclelock", 0)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_autovehiclelock - Enable/Disable automatic locking of a vehicle when a player exits it.")
 
+AddToggleCommand("rp_wantedsuicide", "wantedsuicide", 0)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_wantedsuicide - Enable/disable suiciding while you are wanted by the police.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
