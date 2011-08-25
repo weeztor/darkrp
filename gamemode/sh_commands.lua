@@ -286,6 +286,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_voiceradius_dynamic - Enable/dis
 AddToggleCommand("rp_cpcanarrestcp", "cpcanarrestcp", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_cpcanarrestcp - Allow/Disallow CPs to arrest other CPs." )
 
+AddToggleCommand("rp_autovehiclelock", "autovehiclelock", 0)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_autovehiclelock - Enable/Disable automatic locking of a vehicle when a player exits it.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
 -----------------------------------------------------------
