@@ -290,7 +290,10 @@ AddToggleCommand("rp_autovehiclelock", "autovehiclelock", 0)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_autovehiclelock - Enable/Disable automatic locking of a vehicle when a player exits it.")
 
 AddToggleCommand("rp_wantedsuicide", "wantedsuicide", 0)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_wantedsuicide - Enable/disable suiciding while you are wanted by the police.")
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_wantedsuicide - Enable/Disable suiciding while you are wanted by the police.")
+
+AddToggleCommand("rp_proplympics", "proplympics", 0)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_proplympics - Allow/Disallow the mayor to start proplympics races.")
 
 -----------------------------------------------------------
 -- VALUE COMMANDS -- 
