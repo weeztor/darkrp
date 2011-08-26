@@ -1,6 +1,7 @@
 DarkRP 2.4.2 SVN
 [ADD] AFK NPC
 [ADD] Signing of letters
+[ADD] Proplympics! Prop surf games :D
 [CHANGE] People need to be alive in order to be able to wanted/warrant
 [CHANGE] Updated Notifies to work better with the newer ones
 [CHANGE] Optimized setname

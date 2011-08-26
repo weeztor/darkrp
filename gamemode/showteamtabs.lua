@@ -94,6 +94,13 @@ local function MayorOptns()
 				LocalPlayer():ConCommand("say /givelicense")
 			end
 			maypanel:AddItem(GiveLicense)
+
+			local Proplympics = vgui.Create("DButton") 
+			Proplympics:SetText("Organize proplympics!")
+			Proplympics.DoClick = function()
+				LocalPlayer():ConCommand("say /proplympics")
+			end
+			maypanel:AddItem(Proplympics)
 	MayCat:SetContents(maypanel)
 	MayCat:SetSkin("DarkRP")
 	return MayCat
