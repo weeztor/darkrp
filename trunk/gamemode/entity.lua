@@ -253,6 +253,7 @@ local function SetDoorOwnable(ply)
 	timer.Simple(0.1, function()  time = false end)
 	local trace = ply:GetEyeTrace()
 	if not ValidEntity(trace.Entity) then return "" end
+	if(ValidEntity( trace.Entity:GetDoorOwner( ) ) && trace.Entity:GetDoorOwner( ) != ply ) then return "" end
 	local ent = trace.Entity
 	if ply:IsSuperAdmin() and (ent:IsDoor() or ent:IsVehicle()) and ply:GetPos():Distance(ent:GetPos()) < 115 then
 		ent.DoorData = ent.DoorData or {}
@@ -273,6 +274,7 @@ local function SetDoorGroupOwnable(ply, arg)
 	timer.Simple(0.1, function()  time3 = false end)
 	local trace = ply:GetEyeTrace()
 	if not ValidEntity(trace.Entity) then return "" end
+	if(ValidEntity( trace.Entity:GetDoorOwner( ) ) && trace.Entity:GetDoorOwner( ) != ply ) then return "" end
 	if not RPExtraTeamDoors[arg] and arg ~= "" then Notify(ply, 1, 10, "Door group does not exist!") return "" end
 	
 	local ent = trace.Entity
@@ -298,6 +300,7 @@ local function SetDoorTeamOwnable(ply, arg)
 	timer.Simple( 0.1, function() time4 = false end )
 	local trace = ply:GetEyeTrace()
 	if not ValidEntity(trace.Entity) then return "" end
+	if(ValidEntity( trace.Entity:GetDoorOwner( ) ) && trace.Entity:GetDoorOwner( ) != ply ) then return "" end
 	arg = tonumber( arg )
 	if not RPExtraTeams[arg] and arg ~= nil then Notify(ply, 1, 10, "Job does not exist!") return "" end
 	
