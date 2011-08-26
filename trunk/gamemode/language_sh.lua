@@ -225,7 +225,8 @@ rp_languages.english = {
 	Type /jailpos to set the jail position
 	Type /cophelp to toggle this menu, /x to close it]],
 	
-	mayorhelp = [[Type /warrant [Nick|SteamID|Status ID] to set a search warrant for a player.
+	mayorhelp = [[Organize proplympics with /proplympics!
+	Type /warrant [Nick|SteamID|Status ID] to set a search warrant for a player.
 	Type /wanted [Nick|SteamID|Status ID] to alert everyone to a wanted suspect.
 	Type /unwanted [Nick|SteamID|Status ID] to clear the suspect.
 	Type /lockdown to initiate a lockdown
@@ -248,7 +249,8 @@ rp_languages.english = {
 	
 	hints = 
 	-- English hints:
-	{"Roleplay according to the server rules!",
+	{"As mayor, organize proplympics with /proplympics in chat!",
+	"Roleplay according to the server rules!",
 	"You can be arrested for buying or owning an illegal weapon!",
 	"Type /sleep to fall asleep.",
 	"You may own a handgun, but use it only in self defence.",
