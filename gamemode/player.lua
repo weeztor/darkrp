@@ -212,9 +212,9 @@ function meta:ChangeTeam(t, force)
 		end
 	end
 	
-	self:SetDarkRPVar("helpBoss",false)
-	self:SetDarkRPVar("helpCop",false)
-	self:SetDarkRPVar("helpMayor",false)
+	self:SetSelfDarkRPVar("helpBoss",false)
+	self:SetSelfDarkRPVar("helpCop",false)
+	self:SetSelfDarkRPVar("helpMayor",false)
 	
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) and not force then
 		Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), "banned/demoted"))
@@ -277,11 +277,11 @@ function meta:ChangeTeam(t, force)
 	self.LastJob = CurTime()
 	
 	if t == TEAM_POLICE then	
-		self:SetDarkRPVar("helpCop", true)
+		self:SetSelfDarkRPVar("helpCop", true)
 	elseif t == TEAM_MOB then
-		self:SetDarkRPVar("helpBoss", true)
+		self:SetSelfDarkRPVar("helpBoss", true)
 	elseif t == TEAM_MAYOR then
-		self:SetDarkRPVar("helpMayor", true)
+		self:SetSelfDarkRPVar("helpMayor", true)
 	end
 	
 	if tobool(GetConVarNumber("removeclassitems")) then
@@ -399,8 +399,8 @@ AddChatCommand("/addjailpos", AddJailPos)
 function meta:Arrest(time, rejoin)
 	self:SetDarkRPVar("wanted", false)
 	self.warranted = false
-	self:SetDarkRPVar("HasGunlicense", false)
-	self:SetDarkRPVar("Arrested", true)
+	self:SetSelfDarkRPVar("HasGunlicense", false)
+	self:SetSelfDarkRPVar("Arrested", true)
 	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("aspd"), GetConVarNumber("aspd"))
 	self:StripWeapons()
 	

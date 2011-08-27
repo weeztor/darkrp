@@ -8,9 +8,11 @@ function Notify(ply, msgtype, len, msg)
 end
 
 function NotifyAll(msgtype, len, msg)
-	for k, v in pairs(player.GetAll()) do
-		Notify(v, msgtype, len, msg)
-	end
+	umsg.Start("_Notify")
+		umsg.String(msg)
+		umsg.Short(msgtype)
+		umsg.Long(len)
+	umsg.End()
 end
 
 function PrintMessageAll(msgtype, msg)
@@ -29,6 +31,8 @@ function TalkToRange(ply, PlayerName, Message, size)
 			filter:AddPlayer(v)
 		end
 	end
+	
+	if PlayerName == ply:Nick() then PlayerName = "" end -- If it's just normal chat, why not cut down on networking and get the name on the client
 	
 	umsg.Start("DarkRP_Chat", filter)
 		umsg.Short(col.r)

@@ -1,6 +1,6 @@
 GM.Version = "2.4.2"
 GM.Name = "DarkRP "..GM.Version
-GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco, Eusion"
+GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco, Eusion, Drakehawke"
 
 require("datastream")
 
@@ -129,6 +129,7 @@ function GM:HUDDrawTargetID()
 end
 
 function FindPlayer(info)
+	if not info or info == "" then return end
 	local pls = player.GetAll()
 
 	-- Find by Index Number (status in console)
@@ -451,6 +452,9 @@ local function AddToChat(msg)
 
 	local name = msg:ReadString()
 	local ply = msg:ReadEntity()
+	
+	if name == "" then name = ply.DarkRPVars.rpname end
+	
 	local col2 = Color(msg:ReadShort(), msg:ReadShort(), msg:ReadShort())
 
 	local text = msg:ReadString()
@@ -564,6 +568,29 @@ local function RetrievePlayerVar(um)
 end
 usermessage.Hook("DarkRP_PlayerVar", RetrievePlayerVar)
 
+local function RetrieveSelfVar(um)
+	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
+	
+	local var, value = um:ReadString(), um:ReadString()
+	local stringvalue = value
+	value = tonumber(value) or value
+	
+	if string.match(stringvalue, "Entity .([0-9]*)") then
+		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
+	end
+	
+	if string.match(stringvalue, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)") then 
+		local x,y,z = string.match(value, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)")
+		value = Vector(x,y,z)
+	end
+	
+	if stringvalue == "true" or stringvalue == "false" then value = tobool(value) end
+	
+	if stringvalue == "nil" then value = nil end
+	LocalPlayer().DarkRPVars[var] = value
+end
+usermessage.Hook("DarkRP_SelfPlayerVar", RetrieveSelfVar)
+
 local function InitializeDarkRPVars(handler, id, encoded, decoded)
 	if not decoded then return end
 	for ply,vars in pairs(decoded) do
@@ -592,7 +619,7 @@ function GM:InitPostEntity()
 	timer.Create("DarkRPCheckifitcamethrough", 30, 0, function()
 		for k,v in pairs(player.GetAll()) do
 			v.DarkRPVars = v.DarkRPVars or {}
-			if not v.DarkRPVars.job or not v.DarkRPVars.salary or not v.DarkRPVars.money or not v.DarkRPVars.rpname then
+			if not v.DarkRPVars.job or not v.DarkRPVars.money or not v.DarkRPVars.rpname then
 				RunConsoleCommand("_sendDarkRPvars")
 				break
 			end

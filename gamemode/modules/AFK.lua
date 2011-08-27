@@ -15,7 +15,7 @@ local function AFKDemote(ply)
 	
 	if ply:Team() ~= TEAM_CITIZEN then
 		ply:ChangeTeam(TEAM_CITIZEN, true)
-		ply:SetDarkRPVar("AFKDemoted", true)
+		ply:SetSelfDarkRPVar("AFKDemoted", true)
 		NotifyAll(0, 5, rpname .. " has been demoted for being AFK for too long.")
 	end
 	ply:SetDarkRPVar("job", "AFK")
@@ -23,7 +23,7 @@ end
 
 local function SetAFK(ply)
 	local rpname = ply.DarkRPVars.rpname
-	ply:SetDarkRPVar("AFK", not ply.DarkRPVars.AFK)
+	ply:SetSelfDarkRPVar("AFK", not ply.DarkRPVars.AFK)
 
 	umsg.Start("DarkRPEffects", ply)
 		umsg.String("colormod")
@@ -113,7 +113,7 @@ local function AFKTimer(ply, key)
 	ply.AFKDemote = CurTime() + GetConVarNumber("afkdemotetime")
 	if ply.DarkRPVars.AFKDemoted then
 		ply:SetDarkRPVar("job", "Citizen")
-		timer.Simple(3, function() ply:SetDarkRPVar("AFKDemoted", false) end)
+		timer.Simple(3, function() ply:SetSelfDarkRPVar("AFKDemoted", false) end)
 	end
 end
 hook.Add("KeyPress", "DarkRPKeyReleasedCheck", AFKTimer)

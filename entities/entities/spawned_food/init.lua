@@ -18,7 +18,7 @@ end
 
 function ENT:Use(activator,caller)
 	activator.DarkRPVars = activator.DarkRPVars or {}
-	activator:SetDarkRPVar("Energy", math.Clamp((activator.DarkRPVars.Energy or 100) + (self.Entity:GetTable().FoodEnergy or 1), 0, 100))
+	activator:SetSelfDarkRPVar("Energy", math.Clamp((activator.DarkRPVars.Energy or 100) + (self.Entity:GetTable().FoodEnergy or 1), 0, 100))
 	umsg.Start("AteFoodIcon", activator)
 	umsg.End()
 	if PooPee then PooPee.AteFood(activator, self.Entity:GetModel()) end

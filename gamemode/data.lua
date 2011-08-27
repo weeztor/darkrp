@@ -179,7 +179,7 @@ function DB.Init()
 					v:SetDarkRPVar("rpname", Data.name)
 				end
 				if Data.salary then
-					v:SetDarkRPVar("salary", Data.salary)
+					v:SetSelfDarkRPVar("salary", Data.salary)
 				end
 				if Data.amount then
 					v:SetDarkRPVar("money", Data.amount)
@@ -550,7 +550,7 @@ end
 
 function DB.StoreSalary(ply, amount)
 	local steamID = ply:SteamID()
-	ply:SetDarkRPVar("salary", math.floor(amount))
+	ply:SetSelfDarkRPVar("salary", math.floor(amount))
 	DB.QueryValue("SELECT COUNT(*) FROM darkrp_salaries WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(already)
 		if not already or already == 0 then
 			DB.Query("INSERT INTO darkrp_salaries VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
@@ -570,7 +570,7 @@ function DB.RetrieveSalary(ply, callback)
 
 	DB.QueryValue("SELECT salary FROM darkrp_salaries WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(r)
 		if not r then
-			ply:SetDarkRPVar("salary", normal)
+			ply:SetSelfDarkRPVar("salary", normal)
 			callback(normal)
 		else
 			callback(r)
@@ -762,5 +762,5 @@ function DB.Log(text, force)
 		file.Write(DB.File, os.date().. "\t".. text)
 		return
 	end
-	file.Write(DB.File, (file.Read(DB.File) or "").."\n"..os.date().. "\t"..(text or ""))
+	file.Append(DB.File, "\n"..os.date().. "\t"..(text or ""))
 end

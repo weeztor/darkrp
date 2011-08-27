@@ -501,7 +501,7 @@ local function ccSetSalary(ply, cmd, args)
 	if target then
 		local nick = ""
 		DB.StoreSalary(target, amount)
-		target:SetDarkRPVar("salary", amount)
+		target:SetSelfDarkRPVar("salary", amount)
 		if ply:EntIndex() == 0 then
 			print("Set " .. target:Nick() .. "'s Salary to: " .. CUR .. amount)
 			nick = "Console"
