@@ -24,7 +24,7 @@ function FAdmin.Log(text)
 		file.Write(LogFile, os.date().. "\t".. text)
 		return
 	end
-	file.Write(LogFile, (file.Read(LogFile) or "").."\n"..os.date().. "\t"..text)
+	file.Append(LogFile, "\n"..os.date().. "\t"..text)
 end
 
 hook.Add("PlayerGiveSWEP", "FAdmin_Log", function(ply, class) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Gave himself a "..class) end)

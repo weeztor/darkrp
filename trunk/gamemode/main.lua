@@ -50,10 +50,10 @@ ZombieEnd = function()
 end
 
 local function LoadTable(ply)
-	ply:SetDarkRPVar("numPoints", table.getn(zombieSpawns))
+	ply:SetSelfDarkRPVar("numPoints", table.getn(zombieSpawns))
 
 	for k, v in pairs(zombieSpawns) do
-		ply:SetDarkRPVar("zPoints" .. k, tostring(v))
+		ply:SetSelfDarkRPVar("zPoints" .. k, tostring(v))
 	end
 end
 
@@ -97,11 +97,11 @@ local function ToggleZombie(ply)
 	if ply:HasPriv("rp_commands") then
 		if not ply.DarkRPVars.zombieToggle then
 			DB.RetrieveZombies(function()
-				ply:SetDarkRPVar("zombieToggle", true)
+				ply:SetSelfDarkRPVar("zombieToggle", true)
 				LoadTable(ply)
 			end)
 		else
-			ply:SetDarkRPVar("zombieToggle", false)
+			ply:SetSelfDarkRPVar("zombieToggle", false)
 		end
 	else
 		Notify(ply, 1, 6, LANGUAGE.string.format(LANGUAGE.need_admin, "/showzombie"))
@@ -691,34 +691,34 @@ AddChatCommand("/removespawn", RemoveSpawnPos)
  Helps
  ---------------------------------------------------------*/
 local function HelpCop(ply)
-	ply:SetDarkRPVar("helpCop", not ply.DarkRPVars.helpCop)
+	ply:SetSelfDarkRPVar("helpCop", not ply.DarkRPVars.helpCop)
 	return ""
 end
 AddChatCommand("/cophelp", HelpCop)
 
 local function HelpMayor(ply)
-	ply:SetDarkRPVar("helpMayor", not ply.DarkRPVars.helpMayor)
+	ply:SetSelfDarkRPVar("helpMayor", not ply.DarkRPVars.helpMayor)
 	return ""
 end
 AddChatCommand("/mayorhelp", HelpMayor)
 
 local function HelpBoss(ply)
-	ply:SetDarkRPVar("helpBoss", not ply.DarkRPVars.helpBoss)
+	ply:SetSelfDarkRPVar("helpBoss", not ply.DarkRPVars.helpBoss)
 	return ""
 end
 AddChatCommand("/mobbosshelp", HelpBoss)
 
 local function HelpAdmin(ply)
-	ply:SetDarkRPVar("helpAdmin", not ply.DarkRPVars.helpAdmin)
+	ply:SetSelfDarkRPVar("helpAdmin", not ply.DarkRPVars.helpAdmin)
 	return ""
 end
 AddChatCommand("/adminhelp", HelpAdmin)
 
 local function closeHelp(ply)
-	ply:SetDarkRPVar("helpCop", false)
-	ply:SetDarkRPVar("helpBoss", false)
-	ply:SetDarkRPVar("helpMayor", false)
-	ply:SetDarkRPVar("helpAdmin", false)
+	ply:SetSelfDarkRPVar("helpCop", false)
+	ply:SetSelfDarkRPVar("helpBoss", false)
+	ply:SetSelfDarkRPVar("helpMayor", false)
+	ply:SetSelfDarkRPVar("helpAdmin", false)
 	return ""
 end
 AddChatCommand("/x", closeHelp)
@@ -1288,7 +1288,7 @@ hook.Add("KeyPress", "HangUpPhone", HangUp)
  ---------------------------------------------------------*/
 local function CreateAgenda(ply, args)
 	if DarkRPAgendas[ply:Team()] then
-		ply:SetDarkRPVar("agenda", args)
+		ply:SetSelfDarkRPVar("agenda", args)
 		
 		Notify(ply, 2, 4, LANGUAGE.agenda_updated)
 		for k,v in pairs(DarkRPAgendas[ply:Team()].Listeners) do
@@ -1739,7 +1739,7 @@ local function GetDarkRPAuthors(ply)
 	timer.Simple(60, function() CreditsWait = true end)--so people don't spam it
 	for k,v in pairs(player.GetAll()) do
 		TalkToPerson(v, Color(255,0,0,255), "CREDITS FOR DARKRP", Color(0,0,255,255),
-		"\nLightRP: Rick darkalonio\n\nDarkRP:\nRickster\nPicwizdan\nSibre\nPhilXYZ\n[GNC] Matt\nChromebolt A.K.A. unib5 (STEAM_0:1:19045957)\nFalco A.K.A. FPtje (STEAM_0:0:8944068)\nEusion (STEAM_0:0:20450406)", ply)
+		"\nLightRP: Rick darkalonio\n\nDarkRP:\nRickster\nPicwizdan\nSibre\nPhilXYZ\n[GNC] Matt\nChromebolt A.K.A. unib5 (STEAM_0:1:19045957)\nFalco A.K.A. FPtje (STEAM_0:0:8944068)\nEusion (STEAM_0:0:20450406)\nDrakehawke (STEAM_0:0:22342869)", ply)
 	end
 	return ""
 end

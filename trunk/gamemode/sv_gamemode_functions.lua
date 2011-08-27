@@ -470,6 +470,17 @@ function meta:SetDarkRPVar(var, value)
 	umsg.End()
 end
 
+function meta:SetSelfDarkRPVar(var, value)
+	if not ValidEntity(self) then return end
+	self.DarkRPVars = self.DarkRPVars or {}
+	self.DarkRPVars[var] = value
+	umsg.Start("DarkRP_SelfPlayerVar", self)
+		umsg.String(var)
+		if value == nil then value = "nil" end
+		umsg.String(tostring(value))
+	umsg.End()
+end
+
 local function SendDarkRPVars(ply)
 	if ply.DarkRPVarsSent and ply.DarkRPVarsSent > (CurTime() - 1) then return end --prevent spammers
 	ply.DarkRPVarsSent = CurTime()
