@@ -292,7 +292,7 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_autovehiclelock - Enable/Disable
 AddToggleCommand("rp_wantedsuicide", "wantedsuicide", 0)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_wantedsuicide - Enable/Disable suiciding while you are wanted by the police.")
 
-AddToggleCommand("rp_proplympics", "proplympics", 0)
+AddToggleCommand("rp_proplympics", "proplympics", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_proplympics - Allow/Disallow the mayor to start proplympics races.")
 
 -----------------------------------------------------------
