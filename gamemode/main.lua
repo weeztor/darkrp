@@ -1288,7 +1288,7 @@ hook.Add("KeyPress", "HangUpPhone", HangUp)
  ---------------------------------------------------------*/
 local function CreateAgenda(ply, args)
 	if DarkRPAgendas[ply:Team()] then
-		ply:SetSelfDarkRPVar("agenda", args)
+		ply:SetDarkRPVar("agenda", args)
 		
 		Notify(ply, 2, 4, LANGUAGE.agenda_updated)
 		for k,v in pairs(DarkRPAgendas[ply:Team()].Listeners) do
