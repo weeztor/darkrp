@@ -1,6 +1,6 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
- 
+
 include('shared.lua')
 
 --[[
@@ -23,6 +23,7 @@ function ENT:Initialize()
 		local surfProp = ents.Create("ent_surfprop")
 		surfProp:setSurfer(v)
 		surfProp:setLastCheckpoint(self.startPoint)
+		surfProp.raceGame = self
 		surfProp:Spawn()
 		table.insert(self.surfProps, surfProp)
 
@@ -39,6 +40,10 @@ end
 
 function ENT:setStart(ent_start)
 	self.startPoint = ent_start
+end
+
+function ENT:HasFinished(ply)
+	return table.HasValue(self.Finishers, ply)
 end
 
 function ENT:positionSurfers()
@@ -68,7 +73,7 @@ function ENT:CountDown()
 	local count = 5
 	timer.Create("CountDown", 1, 6, function()
 		for k,v in pairs(self.manager:getParticipants()) do
-			if count == 0 then 
+			if count == 0 then
 				v:Freeze(false)
 				v:ChatPrint("GO!")
 				v:GetNWEntity("SurfProp").StartingTime = CurTime()
@@ -82,7 +87,7 @@ function ENT:CountDown()
 				if ValidEntity(self) then
 					self:CalculateWinner()-- Some people will never make it to the finish... :)
 				end
-			end) 
+			end)
 		end
 		count = count - 1
 	end)

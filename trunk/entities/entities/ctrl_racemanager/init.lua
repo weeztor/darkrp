@@ -1,6 +1,6 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
- 
+
 include('shared.lua')
 
 --[[
@@ -29,8 +29,8 @@ function ENT:Initialize()
 	self.Player:GetWeapon("gmod_tool"):SetNWString("nextEntity", "start")
 end
 
-function ENT:UpdateTransmitState() 
-	return TRANSMIT_ALWAYS 
+function ENT:UpdateTransmitState()
+	return TRANSMIT_ALWAYS
 end
 
 function ENT:SetPlayer(ply)
@@ -47,7 +47,7 @@ function ENT:addCheckpoint(pos, angle)
 		checkpoint:setPreviousCheckpoint(self.CheckPoints[self.CurrentCheckPoint - 1])
 		self.CheckPoints[self.CurrentCheckPoint - 1]:setNextCheckpoint(checkpoint)
 	end
-	
+
 	checkpoint:SetPos(pos)
 	checkpoint:SetAngles(angle)
 	checkpoint.dt.manager = self
