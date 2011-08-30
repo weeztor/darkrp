@@ -303,6 +303,14 @@ function meta:ChangeTeam(t, force)
 		end
 	end
 	
+	if self:Team() == TEAM_MAYOR then
+		for _, ent in pairs(self.lawboards or {}) do
+			if ValidEntity(ent) then
+				ent:Remove()
+			end
+		end
+	end
+	
 	self:SetTeam(t)
 	DB.Log(self:SteamName().." ("..self:SteamID()..") changed to "..team.GetName(t))
 	if self:InVehicle() then self:ExitVehicle() end

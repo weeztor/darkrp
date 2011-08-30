@@ -101,6 +101,31 @@ local function MayorOptns()
 				LocalPlayer():ConCommand("say /proplympics")
 			end
 			maypanel:AddItem(Proplympics)
+			
+			local PlaceLaws = vgui.Create("DButton")
+			PlaceLaws:SetText("Place a screen containing the laws.")
+			PlaceLaws.DoClick = function()
+				LocalPlayer():ConCommand("say /placelaws")
+			end
+			maypanel:AddItem(PlaceLaws)
+			
+			local AddLaws = vgui.Create("DButton")
+			AddLaws:SetText("Add a law.")
+			AddLaws.DoClick = function()
+				Derma_StringRequest("Add a law", "Type the law you would like to add here.", "", function(law)
+					LocalPlayer():ConCommand("say /addlaw " .. law)
+				end)
+			end
+			maypanel:AddItem(AddLaws)
+			
+			local RemLaws = vgui.Create("DButton")
+			RemLaws:SetText("Remove a law.")
+			RemLaws.DoClick = function()
+				Derma_StringRequest("Remove a law", "Enter the number of the law you would like to remove here.", "", function(num)
+					LocalPlayer():ConCommand("say /removelaw " .. num)
+				end)
+			end
+			maypanel:AddItem(RemLaws)
 	MayCat:SetContents(maypanel)
 	MayCat:SetSkin("DarkRP")
 	return MayCat
