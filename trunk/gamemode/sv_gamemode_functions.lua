@@ -685,7 +685,15 @@ function GM:PlayerDisconnected(ply)
 			v:Remove()
 		end
 	end
-		
+	
+	if ply:Team() == TEAM_MAYOR then
+		for _, ent in pairs(ply.lawboards or {}) do
+			if ValidEntity(ent) then
+				ent:Remove()
+			end
+		end
+	end
+	
 	vote.DestroyVotesWithEnt(ply)
 	
 	if ply:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then -- Stop the lockdown

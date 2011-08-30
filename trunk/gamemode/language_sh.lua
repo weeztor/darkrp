@@ -216,36 +216,38 @@ rp_languages.english = {
 	
 	-- Help!
 	cophelp = [[Things Cops need to know
-	Please don't abuse your job
-	When you arrest someone they are auto transported to jail.
-	They are auto let out of jail after %d seconds
-	Type /warrant [Nick|SteamID|Status ID] to set a search warrant for a player.
-	Type /wanted [Nick|SteamID|Status ID] to alert everyone to a wanted suspect
-	Type /unwanted [Nick|SteamID|Status ID] to clear the suspect
-	Type /jailpos to set the jail position
-	Type /cophelp to toggle this menu, /x to close it]],
+Please don't abuse your job
+When you arrest someone they are auto transported to jail.
+They are auto let out of jail after %d seconds
+Type /warrant [Nick|SteamID|Status ID] to set a search warrant for a player.
+Type /wanted [Nick|SteamID|Status ID] to alert everyone to a wanted suspect
+Type /unwanted [Nick|SteamID|Status ID] to clear the suspect
+Type /jailpos to set the jail position
+Type /cophelp to toggle this menu, /x to close it]],
 	
-	mayorhelp = [[Organize proplympics with /proplympics!
-	Type /warrant [Nick|SteamID|Status ID] to set a search warrant for a player.
-	Type /wanted [Nick|SteamID|Status ID] to alert everyone to a wanted suspect.
-	Type /unwanted [Nick|SteamID|Status ID] to clear the suspect.
-	Type /lockdown to initiate a lockdown
-	Type /unlockdown to end a lockdown
-	Type /mayorhelp toggles this menu, /x closes it]],
+	mayorhelp = [[Type /proplympics to organise Propylympics!
+Type /warrant [Nick|SteamID|Status ID] to set a search warrant for a player.
+Type /wanted [Nick|SteamID|Status ID] to alert everyone to a wanted suspect.
+Type /unwanted [Nick|SteamID|Status ID] to clear the suspect.
+Type /lockdown to initiate a lockdown
+Type /unlockdown to end a lockdown
+Type /placelaws to place a screen containing the laws.
+Type /addlaw and /removelaw to edit the laws.
+Type /mayorhelp toggles this menu, /x closes it]],
 	
 	adminhelp = [[/enablestorm Enables meteor storms
-	/disablestorm Disables meteor storms
-	You can change the price of weapons, jailtime, max gangsters, etc.
-	To do this press F1 then scroll down and you will see all of the console commands
-	If you edit the init.lua file you can save the vars.
-	/jailpos sets the jailposition!
-	/setspawn <team> - Enter teamname Ex. police, mayor, gangster
-	/adminhelp toggles this menu, /x closes it]],
+/disablestorm Disables meteor storms
+You can change the price of weapons, jailtime, max gangsters, etc.
+To do this press F1 then scroll down and you will see all of the console commands
+If you edit the init.lua file you can save the vars.
+/jailpos sets the jailposition!
+/setspawn <team> - Enter teamname Ex. police, mayor, gangster
+/adminhelp toggles this menu, /x closes it]],
 	
 	bosshelp = [[As the mob boss, you decide what you want the other Gangsters to do.
-	You get an Unarrest Stick which you can use to break people out of jail.
-	/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line.
-	Typing /mobbosshelp toggles this menu, /x closes it]],
+You get an Unarrest Stick which you can use to break people out of jail.
+/agenda <Message> (Sets the Gangsters' agenda. Use // to go to the next line.
+Typing /mobbosshelp toggles this menu, /x closes it]],
 	
 	hints = 
 	-- English hints:

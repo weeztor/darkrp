@@ -569,6 +569,7 @@ end
 usermessage.Hook("DarkRP_PlayerVar", RetrievePlayerVar)
 
 local function RetrieveSelfVar(um)
+	if not ValidEntity(LocalPlayer()) then return end
 	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 	
 	local var, value = um:ReadString(), um:ReadString()
@@ -587,6 +588,7 @@ local function RetrieveSelfVar(um)
 	if stringvalue == "true" or stringvalue == "false" then value = tobool(value) end
 	
 	if stringvalue == "nil" then value = nil end
+	
 	LocalPlayer().DarkRPVars[var] = value
 end
 usermessage.Hook("DarkRP_SelfPlayerVar", RetrieveSelfVar)
