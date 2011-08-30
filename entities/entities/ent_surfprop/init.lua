@@ -1,6 +1,6 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
- 
+
 include('shared.lua')
 
 ENT.surfer = NULL
@@ -12,7 +12,7 @@ function ENT:Initialize()
 	self:SetSolid(SOLID_VPHYSICS)
 
 	local phys = self:GetPhysicsObject()
-	if phys:IsValid() then 
+	if phys:IsValid() then
 		phys:Wake()
 		phys:EnableMotion(false)
 	end
@@ -40,7 +40,7 @@ end
 
 function ENT:SpawnPlayer(pos, ang)
 	local found = false
-	repeat 
+	repeat
 		found = false
 		local find = ents.FindInSphere(pos, 20)
 		for k,v in pairs(find) do
@@ -67,7 +67,7 @@ end
 function ENT:Think()
 	if not ValidEntity(self.surfer) then return end
 	local ground = self.surfer:GetGroundEntity()
-	if ground ~= self and self.surfer:IsOnGround() then -- if not on the prop and not on something else
+	if ground ~= self and self.surfer:IsOnGround() and ValidEntity(self.raceGame) and not self.raceGame:HasFinished(self.surfer) then -- if not on the prop and not on something else
 		-- reset to last checkpoint :)
 		local checkpoint = self.dt.lastCheckpoint
 		local pos = checkpoint:GetPos() + Vector(0,0,20)
