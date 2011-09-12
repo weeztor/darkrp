@@ -44,6 +44,14 @@ function ENT:Think()
 	if not ValidEntity(self.dt.manager) or not self.dt.manager:getParticipants() or self.dt.manager.dt.stage ~= 3 then return end
 
 	for _, ply in pairs(self.dt.manager:getParticipants()) do
+		if not ValidEntity(ply) then 
+			for k,v in pairs(self.dt.manager.Participants) do
+				if v == ply then
+					self.dt.manager.Participants[k] = nil
+				end
+			end
+			continue
+		end
 		if ply:GetPos():Distance(self:GetPos()) < self.dt.radius then
 			if ValidEntity(self.dt.previousCheckpoint) and not self.dt.previousCheckpoint:getHasPassed(ply) then
 				-- You haven't passed the previous one yet!
