@@ -712,7 +712,7 @@ local function HelpAdmin(ply)
 	ply:SetSelfDarkRPVar("helpAdmin", not ply.DarkRPVars.helpAdmin)
 	return ""
 end
-AddChatCommand("/adminhelp", HelpAdmin)
+AddChatCommand("/adminhelpmenu", HelpAdmin)
 
 local function closeHelp(ply)
 	ply:SetSelfDarkRPVar("helpCop", false)
