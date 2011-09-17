@@ -242,7 +242,7 @@ To do this press F1 then scroll down and you will see all of the console command
 If you edit the init.lua file you can save the vars.
 /jailpos sets the jailposition!
 /setspawn <team> - Enter teamname Ex. police, mayor, gangster
-/adminhelp toggles this menu, /x closes it]],
+/adminhelpmenu toggles this menu, /x closes it]],
 	
 	bosshelp = [[As the mob boss, you decide what you want the other Gangsters to do.
 You get an Unarrest Stick which you can use to break people out of jail.
@@ -539,7 +539,7 @@ rp_languages.dutch = {
 	om dit te doen druk je F1 en scroll je naar beneden en je zult alle commandos zien
 	/jailpos zet de gevangenispositie!
 	/setspawn <team> - om een spawnpositie van een bepaalde baan te zetten
-	Typ /adminhelp om dit menu tevoorschijn te halen, /x om het te sluiten]],
+	Typ /adminhelpmenu om dit menu tevoorschijn te halen, /x om het te sluiten]],
 	
 	bosshelp = [[De mob boss bepaalt wat andere gangsters doen
 	met de unarrest stick kun je anderen uit de gevangenis bevrijden
@@ -826,7 +826,7 @@ rp_languages.danish = {
 	Hvis du redigerer init.lua fil, du kan gemme vars.
 	Skriv /jailpos sætter Fængsels Position
 	Skriv /setspawn <team> - Indtast Hold navn Ex. politi, borgmester, gangster
-	Skriv /adminhelp åbner/lukker denne menu, /x lukker den]],
+	Skriv /adminhelpmenu åbner/lukker denne menu, /x lukker den]],
 
 	bosshelp = [[Som mafiabossen, beslutter du, hvad du ønsker, at andre gangstere skal gøre.
 	Du får en Unarrest Stick, som du kan bruge til at bryde folk ud af fængsel.
@@ -1118,7 +1118,7 @@ rp_languages.swedish = {
 	Om du ändrar init.lua kan du spara "vars"
 	/jailpos ändrar jailpositionen!
 	/setspawn <team> - Lägg till ett teamnamn, tex Police, Gangster...
-	/adminhelp för att "toggla" denna meny, /x för att stänga den.]],
+	/adminhelpmenu för att "toggla" denna meny, /x för att stänga den.]],
 	
 	bosshelp = [[Som mob boss, bestämmer du vad alla gangstrar ska göra.
 	Du får en "unarrest stick" som du använder för att bryta andra ur fängelset.
