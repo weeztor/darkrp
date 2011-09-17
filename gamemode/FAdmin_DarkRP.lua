@@ -258,7 +258,9 @@ end
 	there will be a hook that is called when all plugins are loaded.
 	This way there will be no hassle with which plugin loads first, which one next etc.
 */
-for k,v in pairs(FAdmin.StartHooks) do if type(k) ~= "string" then FAdmin.StartHooks[k] = nil end end
-for k,v in SortedPairs(FAdmin.StartHooks) do
-	v()
-end
+timer.Simple(0, function()
+	for k,v in pairs(FAdmin.StartHooks) do if type(k) ~= "string" then FAdmin.StartHooks[k] = nil end end
+	for k,v in SortedPairs(FAdmin.StartHooks) do
+		v()
+	end
+end)
