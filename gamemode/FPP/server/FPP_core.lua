@@ -152,7 +152,7 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 	end
 
 	Returnal = Returnal and ValidEntity(ply) and not tobool(ply:GetInfoNum("FPP_PrivateSettings_BlockedProps"))
-	if Returnal ~= nil and (not ent.Owner or ent.Owner == ply) then return Returnal, "Blocked!" end
+	if Returnal ~= nil then return Returnal, "Blocked!" end
 	
 	-- Shared entity
 	if ent["Share"..Type1] then return not OnlyMine, ent.Owner end
