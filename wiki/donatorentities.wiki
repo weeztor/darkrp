@@ -1,0 +1,15 @@
+#Donator entities and shipments
+
+= Introduction =
+Just like donator jobs
+
+
+= Details =
+The eleventh argument of AddCustomShipment and the eighth argument of AddEntity can hold a custom function that defines whether a player can buy it or not.
+
+The setup is the same as the donator job thing. Here's a few examples though:
+{{{
+AddEntity("Money printer", "money_printer", "models/props_c17/consolebox01a.mdl", 1000, 2, "/buymoneyprinter", nil, function(ply) return ply:GetNWString("usergroup") == "Donator" end)
+}}}
+
+{{{AddCustomShipment("AK47", "models/weapons/w_rif_ak47.mdl", "weapon_ak472", 2450, 10, false, nil, false, {TEAM_GUN}, nil, function(ply) return ply:GetNWString("usergroup") == "Donator" end) }}}
