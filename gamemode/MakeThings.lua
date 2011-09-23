@@ -31,7 +31,7 @@ end
 
 CustomVehicles = {}
 CustomShipments = {}
-function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shipment, Sold_seperately, price_seperately, noshipment, classes, shipmodel)
+function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shipment, Sold_seperately, price_seperately, noshipment, classes, shipmodel, CustomCheck)
 	if not name or not model or not entity or not price or not Amount_of_guns_in_one_shipment or (Sold_seperately and not price_seperately) then
 		local text = "One of the custom shipments is wrongly made! Attempt to give name of the wrongly made shipment!(if it's nil then I failed):\n" .. tostring(name)
 		print(text)
@@ -54,7 +54,7 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 	end
 	local price = tonumber(price)
 	local shipmentmodel = shipmodel or "models/Items/item_item_crate.mdl"
-	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel})
+	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel, customCheck = CustomCheck})
 	util.PrecacheModel(model)
 end
 
@@ -83,7 +83,7 @@ function AddCustomVehicle(Name_of_vehicle, model, price, Jobs_that_can_buy_it)
 end
 
 DarkRPEntities = {}
-function AddEntity(name, entity, model, price, max, command, classes)
+function AddEntity(name, entity, model, price, max, command, classes, CustomCheck)
 	if not name or not entity or not price or not command then 
 		hook.Add("PlayerSpawn", "ItemError", function(ply)
 		if ply:IsAdmin() then ply:ChatPrint("WARNING: Item made incorrectly, failed to load!") end end) 
@@ -92,7 +92,7 @@ function AddEntity(name, entity, model, price, max, command, classes)
 	if type(classes) == "number" then
 		classes = {classes}
 	end
-	table.insert(DarkRPEntities, {name = name, ent = entity, model = model, price = price, max = max, cmd = command, allowed = classes})
+	table.insert(DarkRPEntities, {name = name, ent = entity, model = model, price = price, max = max, cmd = command, allowed = classes, customCheck = CustomCheck})
 	AddEntityCommands(name, entity, max, price)
 end
 

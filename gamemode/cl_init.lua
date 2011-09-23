@@ -631,9 +631,6 @@ end
 
 -- DarkRP plugin for FAdmin. It's this simple to make a plugin. If FAdmin isn't installed, this code won't bother anyone
 include("FAdmin_DarkRP.lua")
-MsgN("FADMIN DARKRP\n\n\n\n\n\n")
-MsgN(FAdmin)
-MsgN(FAdmin.StartHooks)
 
 if not FAdmin or not FAdmin.StartHooks then return end
 FAdmin.StartHooks["DarkRP"] = function()

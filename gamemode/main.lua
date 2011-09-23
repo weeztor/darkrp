@@ -933,6 +933,11 @@ local function BuyPistol(ply, args)
 			(RestrictBuyPistol == 1 and (not v.allowed[1] or table.HasValue(v.allowed, ply:Team()))) then
 				canbuy = true
 			end
+
+			if v.customCheck and not v.customCheck(ply) then
+				Notify(ply, 1, 4, "You're not allowed to purchase this item")
+				return ""
+			end
 			
 			if not canbuy then
 				Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buy"))
@@ -999,6 +1004,12 @@ local function BuyShipment(ply, args)
 					canbecome = true
 				end
 			end
+
+			if v.customCheck and not v.customCheck(ply) then
+				Notify(ply, 1, 4, "You're not allowed to purchase this item")
+				return ""
+			end
+
 			if not canbecome then
 				Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buyshipment"))
 				return "" 
@@ -1114,6 +1125,11 @@ for k,v in pairs(DarkRPEntities) do
 		if disabled then
 			Notify(ply, 1, 4, string.format(LANGUAGE.disabled, v.cmd, ""))
 			return "" 
+		end
+
+		if v.customCheck and not v.customCheck(ply) then
+			Notify(ply, 1, 4, "You're not allowed to purchase this item")
+			return ""
 		end
 		
 		local max = GetConVarNumber("max"..cmdname)
