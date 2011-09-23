@@ -650,9 +650,10 @@ function EntitiesTab()
 					end
 					
 					for k,v in pairs(CustomShipments) do
-						if v.seperate and (GetConVarNumber("restrictbuypistol") == 0 or 
-						(GetConVarNumber("restrictbuypistol") == 1 and (not v.allowed[1] or table.HasValue(v.allowed, LocalPlayer():Team())))) then
-							AddIcon(v.model, string.format(LANGUAGE.buy_a, "a "..v.name, CUR..v.pricesep), "/buy "..v.name)
+						if (v.seperate and (GetConVarNumber("restrictbuypistol") == 0 or 
+							(GetConVarNumber("restrictbuypistol") == 1 and (not v.allowed[1] or table.HasValue(v.allowed, LocalPlayer():Team())))))
+							and (not v.customCheck or v.customCheck and v.customCheck(LocalPlayer())) then
+							AddIcon(v.model, string.format(LANGUAGE.buy_a, "a "..v.name, CUR..(v.pricesep or "")), "/buy "..v.name)
 						end
 					end
 					
@@ -682,7 +683,8 @@ function EntitiesTab()
 					end
 					
 					for k,v in pairs(DarkRPEntities) do
-						if not v.allowed or (type(v.allowed) == "table" and table.HasValue(v.allowed, LocalPlayer():Team())) then
+						if not v.allowed or (type(v.allowed) == "table" and table.HasValue(v.allowed, LocalPlayer():Team())) 
+							and (not v.customCheck or (v.customCheck and v.customCheck(LocalPlayer()))) then
 							local cmdname = string.gsub(v.ent, " ", "_")
 							
 							if not tobool(GetConVarNumber("disable"..cmdname)) then
@@ -701,7 +703,8 @@ function EntitiesTab()
 						end
 					end
 					for k,v in pairs(CustomShipments) do
-						if not v.noship and table.HasValue(v.allowed, LocalPlayer():Team()) then
+						if not v.noship and table.HasValue(v.allowed, LocalPlayer():Team())
+							and (not v.customCheck or (v.customCheck and v.customCheck(LocalPlayer()))) then
 							AddEntIcon(v.model, string.format(LANGUAGE.buy_a, "a "..v.name .." shipment", CUR .. tostring(v.price)), "/buyshipment "..v.name)
 						end
 					end
