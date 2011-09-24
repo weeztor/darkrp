@@ -160,7 +160,7 @@ function DB.Init()
 			DB.CreateZombiePos()
 			return
 		end
-		DB.Query("SELECT * FROM darkrp_zpawns;", function(data)
+		DB.Query("SELECT * FROM darkrp_zspawns;", function(data)
 			zombieSpawns = data or {}
 		end)
 	end)
@@ -369,13 +369,7 @@ function DB.RetrieveJailPos()
 end
 
 function DB.SaveSetting(setting, value)
-	DB.Query("SELECT value FROM darkrp_cvars WHERE var = "..sql.SQLStr(setting)..";", function(Data)
-		if Data then
-			DB.Query("UPDATE darkrp_cvars set Value = " .. sql.SQLStr(value) .." WHERE var = " .. sql.SQLStr(setting)..";")
-		else
-			DB.Query("INSERT INTO darkrp_cvars VALUES("..sql.SQLStr(setting)..","..sql.SQLStr(value)..");")
-		end
-	end)
+	DB.Query("REPLACE INTO darkrp_cvars VALUES("..sql.SQLStr(setting)..","..sql.SQLStr(value)..");")
 end
 
 function DB.CountJailPos()
@@ -477,13 +471,7 @@ Players
 function DB.StoreRPName(ply, name)
 	if not name or string.len(name) < 2 then return end
 	ply:SetDarkRPVar("rpname", name)
-	DB.QueryValue("SELECT name FROM darkrp_rpnames WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";", function(r)
-		if r then
-			DB.Query("UPDATE darkrp_rpnames SET name = " .. sql.SQLStr(name) .. " WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";")
-		else
-			DB.Query("INSERT INTO darkrp_rpnames VALUES(" .. sql.SQLStr(ply:SteamID()) .. ", " .. sql.SQLStr(name) .. ");")
-		end
-	end)
+	DB.Query("REPLACE INTO darkrp_rpnames VALUES(" .. sql.SQLStr(ply:SteamID()) .. ", " .. sql.SQLStr(name) .. ");")
 end
 
 function DB.RetrieveRPNames(ply, name, callback)
@@ -504,13 +492,7 @@ function DB.StoreMoney(ply, amount)
 	ply:SetDarkRPVar("money", math.floor(amount))
 	
 	local steamID = ply:SteamID()
-	DB.QueryValue("SELECT amount FROM darkrp_wallets WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(r)
-		if r then
-			DB.Query("UPDATE darkrp_wallets SET amount = " .. math.floor(amount) .. " WHERE steam = " .. sql.SQLStr(steamID) .. ";")
-		else
-			DB.Query("INSERT INTO darkrp_wallets VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
-		end
-	end)
+	DB.Query("REPLACE INTO darkrp_wallets VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
 end
 
 function DB.RetrieveMoney(ply) -- This is only run once when the player joins, there's no need for a cache unless the player keeps rejoining.
@@ -551,13 +533,7 @@ end
 function DB.StoreSalary(ply, amount)
 	local steamID = ply:SteamID()
 	ply:SetSelfDarkRPVar("salary", math.floor(amount))
-	DB.QueryValue("SELECT COUNT(*) FROM darkrp_salaries WHERE steam = " .. sql.SQLStr(steamID) .. ";", function(already)
-		if not already or already == 0 then
-			DB.Query("INSERT INTO darkrp_salaries VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
-		else
-			DB.Query("UPDATE darkrp_salaries SET salary = " .. math.floor(amount) .. " WHERE steam = " .. sql.SQLStr(steamID) .. ";")
-		end
-	end)
+	DB.Query("REPLACE INTO darkrp_salaries VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
 	
 	return amount
 end
