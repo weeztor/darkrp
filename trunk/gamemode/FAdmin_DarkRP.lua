@@ -151,10 +151,11 @@ local IP = ""
 if SERVER then
 	http.Get("http://automation.whatismyip.com/n09230945.asp", "", function(content, size)
 		local ip = string.match(content, "([0-9.]+)")
+		if not ip then return end
 		IP = ip..":"..GetConVarString("hostport") 
 	end)
 	timer.Simple(5, function()
-		if not IP then -- if the other site is down?
+		if IP == "" then -- if the other site is down?
 			http.Get("http://checkip.dyndns.org/", "", function(content1, size1) -- check a different site
 				local ip1 = string.match(content1, "([0-9.]+)")
 				if not ip1 then return end -- nope.
