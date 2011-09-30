@@ -50,6 +50,13 @@ function _R.PhysObj.ApplyForceCenter(self, force, ...)
 		if not DebugLevel then break end
 		if DebugLevel and string.find(DebugLevel.short_src, "gmod_wire_expression2") and ValidEntity(self:GetEntity()) and tobool(FPP.Settings.FPP_GLOBALSETTINGS.antie2minge) then
 			self:GetEntity():SetCollisionGroup(COLLISION_GROUP_WEAPON)
+			local ConstrainedEnts = constraint.GetAllConstrainedEntities(self:GetEntity())
+
+			if ConstrainedEnts then -- All its constrained entities as well!
+				for k,v in pairs(ConstrainedEnts) do
+					v:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+				end
+			end
 		end
 	end
 	return FPP.ApplyForceCenter(self, force, ...)
