@@ -31,6 +31,95 @@ SWEP.Secondary.Automatic = true
 SWEP.Secondary.Delay = 0.3
 SWEP.Secondary.Ammo = "none"
 
+function SWEP:createViewModels()
+	local viewmodel = self:GetOwner():GetViewModel()
+
+	self.viewModels = {}
+	self.viewModels[1] = self.viewModels[1] or ents.Create("prop_physics")
+	self.viewModels[2] = self.viewModels[2] or ents.Create("prop_physics")
+
+	self.viewModels[1]:SetAngles(viewmodel:GetAngles())
+	self.viewModels[2]:SetAngles(viewmodel:GetAngles())
+
+	local ang1 = viewmodel:GetAngles()
+	local ang2 = viewmodel:GetAngles()
+	ang1:RotateAroundAxis(ang1:Up(), 90)
+	ang2:RotateAroundAxis(ang2:Right(), 90)
+
+	self.viewModels[1]:SetAngles(ang1)
+	self.viewModels[2]:SetAngles(ang2)
+	//self.viewModels[1]:SetAngles(Angle(0,90,0))
+	//self.viewModels[2]:SetAngles(Angle(90,0,0))
+
+	
+	viewmodel:SetNoDraw(true)
+
+	self:CallOnRemove("RemoveViewModels", function(a,b)
+		SafeRemoveEntity(self.viewModels[1])
+		SafeRemoveEntity(self.viewModels[2])
+	end)
+
+	for k,v in pairs(self.viewModels) do
+		
+		v:SetModel("models/Mechanics/roboticslarge/a2.mdl")
+		v:SetColor(255,0,0,255)
+		v:SetMaterial("models/debug/debugwhite")
+		
+		v:SetModelScale(Vector(0.1,0.1,0.1))
+		v:SetParent(viewmodel)
+		v:SetPos(viewmodel:GetPos() + viewmodel:GetAngles():Forward() * 13 + viewmodel:GetAngles():Right() * 8 - viewmodel:GetAngles():Up() * 6)
+		v:Spawn()
+		v:Activate()
+
+	end
+end
+
+function SWEP:Think()
+	if SERVER then return end
+	if not self.viewModels or not ValidEntity(self.viewModels[1]) then
+		self:createViewModels()
+	end
+
+	self:GetOwner():GetViewModel():SetNoDraw(true)
+	for k,v in pairs(self.viewModels) do
+		v:SetNoDraw(false)
+	end
+
+	if LocalPlayer():KeyDown(IN_ATTACK) or LocalPlayer():KeyDown(IN_ATTACK2) then
+		local angle = self.viewModels[1]:GetAngles()
+		angle:RotateAroundAxis(angle:Up(), 1)
+		self.viewModels[1]:SetAngles(angle)
+	end
+end
+
+function SWEP:Deploy()
+	if SERVER then
+		self.Owner:DrawViewModel(false)
+	end
+end
+
+function SWEP:Holster()
+	if SERVER then 
+		SendUserMessage("med_kit_model", self:GetOwner(), self)
+		return true
+	end
+end
+
+if CLIENT then
+	usermessage.Hook("med_kit_model", function(um)
+		local ent = um:ReadEntity()
+		MsgN("RECEIVE MESSAGE", ent)
+		print(ent)
+		if ValidEntity(ent) then
+			MsgN("VALID",ent.viewModels)
+			for k,v in pairs(ent.viewModels) do
+				MsgN("V", v)
+				v:Remove()
+			end
+		end
+	end)
+end
+
 function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 	trace = {}
