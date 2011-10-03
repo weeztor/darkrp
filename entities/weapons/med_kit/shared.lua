@@ -48,9 +48,6 @@ function SWEP:createViewModels()
 
 	self.viewModels[1]:SetAngles(ang1)
 	self.viewModels[2]:SetAngles(ang2)
-	//self.viewModels[1]:SetAngles(Angle(0,90,0))
-	//self.viewModels[2]:SetAngles(Angle(90,0,0))
-
 	
 	viewmodel:SetNoDraw(true)
 
