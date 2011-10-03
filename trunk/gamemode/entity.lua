@@ -8,8 +8,7 @@ function meta:IsOwnable()
 	local class = self:GetClass()
 
 	if ((class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") or
-			(tobool(GetConVarNumber("allowvehicleowning")) and self:IsVehicle()))
-		and ((SERVER and not self.DoorData.GroupOwn and not self.DoorData.TeamOwn) or CLIENT) then
+			(tobool(GetConVarNumber("allowvehicleowning")) and self:IsVehicle())) then
 			return true
 		end
 	return false
@@ -364,7 +363,7 @@ local function OwnDoor(ply)
 			return ""
 		end
 
-		if trace.Entity.DoorData.NonOwnable and (trace.Entity.DoorData.GroupOwn and not table.HasValue(RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn], ply:Team())) or trace.Entity.DoorData.TeamOwn then
+		if trace.Entity.DoorData.NonOwnable or trace.Entity.DoorData.GroupOwn or trace.Entity.DoorData.TeamOwn then
 			Notify(ply, 1, 5, LANGUAGE.door_unownable)
 			return ""
 		end
