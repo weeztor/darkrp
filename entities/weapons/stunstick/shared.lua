@@ -42,6 +42,26 @@ SWEP.Secondary.DefaultClip = 0
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
 
+function SWEP:Deploy()
+	if CLIENT then return end
+	SendUserMessage("StunStickColour", self:GetOwner(), 0,0,255, "models/shiny")
+	return true
+end
+
+function SWEP:Holster()
+	if CLIENT then return end
+	SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
+	return true
+end
+
+usermessage.Hook("StunStickColour", function(um)
+	local viewmodel = LocalPlayer():GetViewModel()
+	local r,g,b,a = um:ReadLong(), um:ReadLong(), um:ReadLong(), 255
+	print(r,g,b,a)
+	viewmodel:SetColor(r,g,b,a)
+	viewmodel:SetMaterial(um:ReadString())
+end)
+
 function SWEP:Initialize()
 	self:SetWeaponHoldType("normal")
 
