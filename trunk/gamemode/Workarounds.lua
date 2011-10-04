@@ -77,6 +77,19 @@ hook.Add("InitPostEntity", "DarkRP_Workarounds", function()
 end)
 
 /*---------------------------------------------------------------------------
+Anti map spawn kill (like in rp_downtown_v4c)
+this is the only way I could find.
+---------------------------------------------------------------------------*/
+hook.Add("PlayerSpawn", "AntiMapKill", function(ply)
+	timer.Simple(0, function()
+		if not ply:Alive() then
+			ply:Spawn()
+			ply:AddDeaths(-1)
+		end
+	end)
+end)
+
+/*---------------------------------------------------------------------------
 Wire field generator exploit
 ---------------------------------------------------------------------------*/
 hook.Add("OnEntityCreated", "DRP_WireFieldGenerator", function(ent)

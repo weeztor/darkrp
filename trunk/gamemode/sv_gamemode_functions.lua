@@ -257,9 +257,7 @@ function GM:CanPlayerSuicide(ply)
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
-	if not tobool(GetConVarNumber("wantedsuicide")) and ply.DarkRPVars.wanted then
-		return true
-	else
+	if tobool(GetConVarNumber("wantedsuicide")) and ply.DarkRPVars.wanted then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
@@ -626,7 +624,7 @@ function GM:PlayerSpawn(ply)
 	gamemode.Call("PlayerSetModel", ply)
 	gamemode.Call("PlayerLoadout", ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned")
-	
+
 	local _, pos = self:PlayerSelectSpawn(ply)
 	ply:SetPos(pos)
 end
@@ -785,3 +783,4 @@ function GM:PlayerLeaveVehicle(ply, vehicle)
 	end
 	self.BaseClass:PlayerLeaveVehicle(ply, vehicle)
 end
+
