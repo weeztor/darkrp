@@ -105,12 +105,8 @@ end
 if CLIENT then
 	usermessage.Hook("med_kit_model", function(um)
 		local ent = um:ReadEntity()
-		MsgN("RECEIVE MESSAGE", ent)
-		print(ent)
 		if ValidEntity(ent) then
-			MsgN("VALID",ent.viewModels)
 			for k,v in pairs(ent.viewModels) do
-				MsgN("V", v)
 				v:Remove()
 			end
 		end
@@ -141,5 +137,11 @@ function SWEP:SecondaryAttack()
 	if self.Owner:Health() < maxhealth and SERVER then
 		self.Owner:SetHealth(self.Owner:Health() + 1)
 		self.Owner:EmitSound("hl1/fvox/boop.wav", 150, self.Owner:Health())
+	end
+end
+
+function SWEP:OnRemove()
+	if SERVER then 
+		SendUserMessage("med_kit_model", self:GetOwner(), self)
 	end
 end
