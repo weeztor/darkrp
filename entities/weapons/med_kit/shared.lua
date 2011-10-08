@@ -107,7 +107,7 @@ if CLIENT then
 		local ent = um:ReadEntity()
 		if ValidEntity(ent) then
 			for k,v in pairs(ent.viewModels) do
-				v:Remove()
+				SafeRemoveEntity(v)
 			end
 		end
 	end)

@@ -9,13 +9,16 @@ end
 
 local function KillLetter(msg) 
 	hook.Remove("HUDPaint", "ShowLetter")
-	frame:Close()
-	print("frame close")
+	frame:Remove()
 end
 usermessage.Hook("KillLetter", KillLetter)
 
 
 local function ShowLetter(msg)
+	if frame then
+		frame:Remove()
+	end
+
 	local LetterMsg = ""
 	local Letter = msg:ReadEntity()
 	local LetterType = msg:ReadShort()
