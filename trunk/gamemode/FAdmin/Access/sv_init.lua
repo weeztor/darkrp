@@ -17,14 +17,18 @@ end
 sql.Query("CREATE TABLE IF NOT EXISTS FAdmin_PlayerGroups('steamid' TEXT NOT NULL, 'groupname' TEXT NOT NULL, PRIMARY KEY('steamid'));") 
 function FAdmin.Access.PlayerSetGroup(ply, group)
 	if not FAdmin.Access.Groups[group] then return end
-	ply:SetUserGroup(group)
-	local already_there = sql.QueryValue("SELECT groupname FROM FAdmin_PlayerGroups WHERE steamid = "..sql.SQLStr(ply:SteamID())..";")
+	local SteamID = type(ply) ~= "string" and ValidEntity(ply) and ply:SteamID() or ply
+	if type(ply) ~= "string" and ValidEntity(ply) then
+		ply:SetUserGroup(group)
+	end
+
+	local already_there = sql.QueryValue("SELECT groupname FROM FAdmin_PlayerGroups WHERE steamid = "..sql.SQLStr(SteamID)..";")
 
 	if already_there == group then return
 	elseif already_there then
-		sql.Query( "UPDATE FAdmin_PlayerGroups SET groupname = "..sql.SQLStr(group).." WHERE steamid = "..sql.SQLStr(ply:SteamID())..";")
+		sql.Query( "UPDATE FAdmin_PlayerGroups SET groupname = "..sql.SQLStr(group).." WHERE steamid = "..sql.SQLStr(SteamID)..";")
 	else
-		sql.Query( "INSERT INTO FAdmin_PlayerGroups VALUES("..sql.SQLStr(ply:SteamID())..", "..sql.SQLStr(group)..");")
+		sql.Query( "INSERT INTO FAdmin_PlayerGroups VALUES("..sql.SQLStr(SteamID)..", "..sql.SQLStr(group)..");")
 	end
 end
 
@@ -74,10 +78,6 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	
 	local targets = FAdmin.FindPlayer(args[1])
-	if #targets == 1 and not ValidEntity(targets[1]) then
-		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
-		return
-	end
 	
 	if not args[2] or (not FAdmin.Access.Groups[args[2]] and not tonumber(args[3])) then
 		FAdmin.Messages.SendMessage(ply, 1, "Group not found")
@@ -90,6 +90,15 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 		FAdmin.Access.AddGroup(args[2], tonumber(args[3]), Privs)-- Add new group
 		FAdmin.Messages.SendMessage(ply, 2, "Group created")
 		SendCustomGroups()
+	end
+
+	if not targets and string.find(args[1], "STEAM_") then
+		FAdmin.Access.PlayerSetGroup(args[1], args[2])
+		FAdmin.Messages.SendMessage(ply, 2, "User access set!")
+		return
+	elseif not targets then
+		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
+		return
 	end
 	
 	for _, target in pairs(targets) do
