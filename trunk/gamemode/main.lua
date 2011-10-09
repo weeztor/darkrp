@@ -1479,7 +1479,7 @@ local function DoTeamBan(ply, args, cmdargs)
 		return ""
 	end
 	
-	if (FAdmin and FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", target)) or not ply:IsAdmin() then 
+	if (not FAdmin or not FAdmin.Access.PlayerHasPrivilege(ply, "rp_commands", target)) and not ply:IsAdmin() then 
 		Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "/teamban"))
 		return ""
 	end
