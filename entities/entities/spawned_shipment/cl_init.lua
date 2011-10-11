@@ -1,7 +1,43 @@
 include("shared.lua")
 
 function ENT:Draw()
-	self.Entity:DrawModel()
+	
+	if not self.height then self.height = 0 end
+	if not self.colr then self.colr = 1 end
+	if not self.colg then self.colg = 0 end
+	if not self.StartTime then self.StartTime = CurTime() end
+	
+	if self.height < self:OBBMaxs().z then
+	
+		SetMaterialOverride( Material( "models/props_combine/tpballglow" ) )
+		
+		render.SetColorModulation( self.colr, self.colg, 0 )
+		
+		self.Entity:DrawModel()
+		
+		self.colr = 1 / ( ( CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime" ) )
+		self.colg = ( CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime" )
+		
+		render.SetColorModulation( 1, 1, 1 )
+		
+		SetMaterialOverride()
+	
+		local normal = - self:GetAngles():Up()
+		local pos = self:LocalToWorld( Vector( 0, 0, self:OBBMins().z + self.height ) )
+		local distance = normal:Dot( pos )
+		self.height = self:OBBMaxs().z * ( ( CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime" ) ) 
+		render.EnableClipping( true )
+		render.PushCustomClipPlane( normal, distance );
+		
+		self.Entity:DrawModel()
+		
+		render.PopCustomClipPlane()
+		
+	else
+	
+		self.Entity:DrawModel()
+		
+	end
 	
 	local Pos = self:GetPos()
 	local Ang = self:GetAngles()
@@ -29,4 +65,5 @@ function ENT:Draw()
 		draw.WordBox(2, -TextWidth*0.5 + 5, -150, "Amount left:", "HUDNumber5", Color(140, 0, 0, 100), Color(255,255,255,255))
 		draw.WordBox(2, -TextWidth2*0.5 + 0, -102, self.dt.count, "HUDNumber5", Color(140, 0, 0, 100), Color(255,255,255,255))
 	cam.End3D2D()
+	
 end

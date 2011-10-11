@@ -51,4 +51,4 @@ SWEP.Secondary.Ammo = "none"
 SWEP.IronSightsPos = Vector(5.95, -4.0283, 1.1023)
 SWEP.IronSightsAng = Vector(3.0803, 2.5, 3.674)
 
-
+SWEP.MultiMode = true
