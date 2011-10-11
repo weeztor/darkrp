@@ -49,6 +49,9 @@ SWEP.Secondary.Ammo = "none"
 
 SWEP.LastPrimaryAttack = 0
 
+SWEP.FireMode = "semi"
+SWEP.MultiMode = false
+
 /*---------------------------------------------------------
 ---------------------------------------------------------*/
 function SWEP:Initialize()
@@ -61,6 +64,12 @@ function SWEP:Initialize()
 	end
 
 	self.Ironsights = false
+	
+	if self.Primary.Automatic then
+	
+		self.FireMode = "auto"
+	
+	end
 end
 
 /*---------------------------------------------------------
@@ -105,15 +114,50 @@ end
 /*---------------------------------------------------------
 PrimaryAttack
 ---------------------------------------------------------*/
-function SWEP:PrimaryAttack()
+function SWEP:PrimaryAttack( partofburst )
+	
+	if not partofburst and ( self.LastNonBurst or 0 ) > CurTime() - 0.6 then return end
+	
+	if self.Weapon.MultiMode and self.Owner:KeyDown( IN_USE ) then
+	
+		if self.FireMode == "semi" then
+		
+			self.FireMode = "burst"
+			self.Primary.Automatic = false
+			self.Owner:PrintMessage( HUD_PRINTCENTER, "Switched to burst-fire mode." )
+			
+		elseif self.FireMode == "burst" then
+		
+			self.FireMode = "auto"
+			self.Primary.Automatic = true
+			self.Owner:PrintMessage( HUD_PRINTCENTER, "Switched to fully automatic fire mode." )
+			
+		elseif self.FireMode == "auto" then
+		
+			self.FireMode = "semi"
+			self.Primary.Automatic = false
+			self.Owner:PrintMessage( HUD_PRINTCENTER, "Switched to semi-automatic fire mode." )
+			
+		end
+		
+		self.Weapon:SetNextPrimaryFire( CurTime() + 0.5 )
+		self.Weapon:SetNextSecondaryFire( CurTime() + 0.5 )
+		
+		return
+	end
 
 	if self.CurHoldType == "normal" then
 		self:SetWeaponHoldType(self.HoldType)
 		self.CurHoldType = self.HoldType
 	end
 	
+	if self.FireMode != "burst" then
+	
+		self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
+		
+	end
+	
 	self.Weapon:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
-	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 	
 	if self:Clip1() <= 0 then
 		self:EmitSound("weapons/clipempty_rifle.wav")
@@ -128,7 +172,16 @@ function SWEP:PrimaryAttack()
 
 	-- Shoot the bullet
 	self:CSShootBullet(self.Primary.Damage, self.Primary.Recoil + 3, self.Primary.NumShots, self.Primary.Cone + .05)
-
+	
+	if self.FireMode == "burst" and not partofburst then
+	
+		timer.Simple( 0.1, self.PrimaryAttack, self, true )
+		timer.Simple( 0.2, self.PrimaryAttack, self, true )
+		
+		self.LastNonBurst = CurTime()
+		
+	end
+	
 	-- Remove 1 bullet from our clip
 	self:TakePrimaryAmmo(1)
 	
@@ -353,4 +406,3 @@ function SWEP:Think()
 		self:SetWeaponHoldType("normal")
 	end
 end
-

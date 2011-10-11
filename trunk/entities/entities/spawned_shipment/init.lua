@@ -9,7 +9,8 @@ function ENT:Initialize()
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	self.Entity:SetSolid(SOLID_VPHYSICS)
-	self.locked = false
+	self.locked = true
+	timer.Simple( GetConVarNumber( "shipmentspawntime" ), function() if ValidEntity( self ) then self.locked = false end end )
 	self.damage = 100
 	self.Entity.ShareGravgun = true
 	local phys = self.Entity:GetPhysicsObject()
@@ -17,9 +18,11 @@ function ENT:Initialize()
 end
 
 function ENT:OnTakeDamage(dmg)
-	self.damage = self.damage - dmg:GetDamage()
-	if self.damage <= 0 then
-		self.Entity:Destruct()
+	if not self.locked then
+		self.damage = self.damage - dmg:GetDamage()
+		if self.damage <= 0 then
+			self.Entity:Destruct()
+		end
 	end
 end
 
