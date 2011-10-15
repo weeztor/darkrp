@@ -112,15 +112,15 @@ include("FPP/server/FPP_Core.lua")
 include("FPP/server/FPP_Antispam.lua")
 include("FAdmin_DarkRP.lua")
 
-local files = file.Find("../gamemodes/"..GM.FolderName.."/gamemode/modules/*.lua")
+local files = file.Find("gamemodes/"..GM.FolderName.."/gamemode/modules/*.lua")
 for k, v in pairs(files) do
 	include("modules/" .. v)
 end
 
 local function RPVersion(ply)
-	local FindGameModes = file.FindDir("../gamemodes/*")
+	local FindGameModes = file.FindDir("gamemodes/*")
 	for _, folder in pairs(FindGameModes) do
-		local info_txt = file.Read("../gamemodes/"..folder.."/info.txt")
+		local info_txt = file.Read("gamemodes/"..folder.."/info.txt")
 		if not info_txt then info_txt = "" end
 		
 		local Gamemode = util.KeyValuesToTable(info_txt)
@@ -128,7 +128,7 @@ local function RPVersion(ply)
 			local version = Gamemode.version
 			local SVN = " non-SVN version"
 			
-			local entries = file.Read("../gamemodes/"..folder.."/.svn/entries")
+			local entries = file.Read("gamemodes/"..folder.."/.svn/entries")
 			if entries then
 				local _, dirFind = string.find(entries, "dir")
 				SVN = " revision " .. string.sub(entries, dirFind + 2, dirFind + 4)

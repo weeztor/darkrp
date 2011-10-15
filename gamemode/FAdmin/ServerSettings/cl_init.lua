@@ -14,7 +14,7 @@ local function SetLimits()
 	//Form:StretchToParent(5, 25, 5, 5)
 	Form:SetName("")
 	
-	local Settings = KeyValuesToTable(file.Read("../settings/server_settings/gmod.txt")) -- All SBox limits are in here :D
+	local Settings = KeyValuesToTable(file.Read("settings/server_settings/gmod.txt")) -- All SBox limits are in here :D
 	for k, v in SortedPairs(Settings.settings or {}) do
 		if v.type == "Numeric" then
 			local left, right = Form:NumberWang(v.text, nil, v.low or 0, v.high or 1000, v.decimals or 0 )

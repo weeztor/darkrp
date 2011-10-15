@@ -3,7 +3,7 @@ include("static_data.lua")
 /*---------------------------------------------------------------------------
 MySQL and SQLite connectivity
 ---------------------------------------------------------------------------*/
-if file.Exists("../lua/includes/modules/gmsv_mysqloo.dll") or file.Exists("../lua/includes/modules/gmsv_mysqloo_i486.dll") then
+if file.Exists("lua/includes/modules/gmsv_mysqloo.dll") or file.Exists("lua/includes/modules/gmsv_mysqloo_i486.dll") then
 	require("mysqloo")
 end
 
