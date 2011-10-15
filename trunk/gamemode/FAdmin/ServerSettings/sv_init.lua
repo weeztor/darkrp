@@ -1,7 +1,7 @@
 local Whitelist = {"sv_password"} -- Make sure people don't use FAdmin serversetting as easy RCON, only the SBOX commands are allowed
-local Settings = KeyValuesToTable(file.Read("../settings/server_settings/gmod.txt")) -- All SBox limits are in here :D
+local Settings = KeyValuesToTable(file.Read("settings/server_settings/gmod.txt") or "") -- All SBox limits are in here :D
 
-for k, v in SortedPairs(Settings.settings or {}) do
+for k, v in SortedPairs(Settings and Settings.settings or {}) do
 	table.insert(Whitelist, string.lower(k))
 end
 
