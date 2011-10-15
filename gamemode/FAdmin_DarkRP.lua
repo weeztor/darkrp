@@ -5,7 +5,7 @@ FAdmin.StartHooks = {}
 
 if SERVER then
 	local function AddDir(dir) // recursively adds everything in a directory to be downloaded by client
-		local List = file.FindDir(dir.."/*")
+		local List = file.FindDir(dir.."/*", true)
 
 		for _, fdir in pairs(List) do
 			if fdir != ".svn" then // don't spam people with useless .svn folders
@@ -13,7 +13,7 @@ if SERVER then
 			end
 		end
 	 
-		for k,v in pairs(file.Find(dir.."/*")) do
+		for k,v in pairs(file.Find(dir.."/*", true)) do
 			resource.AddFile(dir.."/"..v)
 		end
 	end
