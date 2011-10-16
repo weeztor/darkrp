@@ -106,7 +106,7 @@ if CLIENT then
 	usermessage.Hook("med_kit_model", function(um)
 		local ent = um:ReadEntity()
 		if ValidEntity(ent) then
-			for k,v in pairs(ent.viewModels) do
+			for k,v in pairs(ent.viewModels or {}) do
 				SafeRemoveEntity(v)
 			end
 		end
