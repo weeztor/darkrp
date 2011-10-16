@@ -7,7 +7,7 @@ function ENT:Draw()
 	if not self.colg then self.colg = 0 end
 	if not self.StartTime then self.StartTime = CurTime() end
 	
-	if self.height < self:OBBMaxs().z then
+	if GetConVarNumber( "shipmentspawntime" ) > 0 and self.height < self:OBBMaxs().z then
 	
 		SetMaterialOverride( Material( "models/props_combine/tpballglow" ) )
 		
