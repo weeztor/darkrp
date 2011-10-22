@@ -1,5 +1,6 @@
 include("shared.lua")
 
+local matBallGlow = Material("models/props_combine/tpballglow")
 function ENT:Draw()
 	
 	if not self.height then self.height = 0 end
@@ -7,9 +8,9 @@ function ENT:Draw()
 	if not self.colg then self.colg = 0 end
 	if not self.StartTime then self.StartTime = CurTime() end
 	
-	if GetConVarNumber( "shipmentspawntime" ) > 0 and self.height < self:OBBMaxs().z then
+	if GetConVarNumber("shipmentspawntime") > 0 and self.height < self:OBBMaxs().z then
 	
-		SetMaterialOverride( Material( "models/props_combine/tpballglow" ) )
+		SetMaterialOverride(matBallGlow)
 		
 		render.SetColorModulation( self.colr, self.colg, 0 )
 		
