@@ -2,42 +2,37 @@ include("shared.lua")
 
 local matBallGlow = Material("models/props_combine/tpballglow")
 function ENT:Draw()
-	
-	if not self.height then self.height = 0 end
-	if not self.colr then self.colr = 1 end
-	if not self.colg then self.colg = 0 end
-	if not self.StartTime then self.StartTime = CurTime() end
+	self.height = self.height or 0
+	self.colr = self.colr or 1
+	self.colg = self.colg or 0
+	self.StartTime = self.StartTime or CurTime()
 	
 	if GetConVarNumber("shipmentspawntime") > 0 and self.height < self:OBBMaxs().z then
-	
 		SetMaterialOverride(matBallGlow)
 		
-		render.SetColorModulation( self.colr, self.colg, 0 )
+		render.SetColorModulation(self.colr, self.colg, 0)
 		
 		self.Entity:DrawModel()
 		
-		self.colr = 1 / ( ( CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime" ) )
-		self.colg = ( CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime" )
+		self.colr = 1 / ((CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime"))
+		self.colg = (CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime")
 		
-		render.SetColorModulation( 1, 1, 1 )
+		render.SetColorModulation(1, 1, 1)
 		
 		SetMaterialOverride()
 	
 		local normal = - self:GetAngles():Up()
-		local pos = self:LocalToWorld( Vector( 0, 0, self:OBBMins().z + self.height ) )
-		local distance = normal:Dot( pos )
-		self.height = self:OBBMaxs().z * ( ( CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime" ) ) 
-		render.EnableClipping( true )
-		render.PushCustomClipPlane( normal, distance );
+		local pos = self:LocalToWorld(Vector(0, 0, self:OBBMins().z + self.height))
+		local distance = normal:Dot(pos)
+		self.height = self:OBBMaxs().z * ((CurTime() - self.StartTime) / GetConVarNumber("shipmentspawntime")) 
+		render.EnableClipping(true)
+		render.PushCustomClipPlane(normal, distance);
 		
 		self.Entity:DrawModel()
 		
 		render.PopCustomClipPlane()
-		
 	else
-	
 		self.Entity:DrawModel()
-		
 	end
 	
 	local Pos = self:GetPos()
