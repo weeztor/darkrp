@@ -56,7 +56,7 @@ function ccToggleCommand(ply, cmd, args)
 		return
 	end
 
-	if (ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands")) or (togglecmd.superadmin and not ply:IsSuperAdmin()) then
+	if (ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands")) or (togglecmd.superadmin and ply:EntIndex() ~= 0 and not ply:IsSuperAdmin()) then
 		ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, cmd))
 		return
 	end
