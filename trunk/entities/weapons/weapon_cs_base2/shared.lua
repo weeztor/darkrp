@@ -97,8 +97,8 @@ end
 Reload does nothing
 ---------------------------------------------------------*/
 function SWEP:Reload()
+	if not self.Weapon:DefaultReload(ACT_VM_RELOAD) then return end
 	self.Reloading = true
-	self.Weapon:DefaultReload(ACT_VM_RELOAD)
 	self:SetIronsights(false)
 	self:SetWeaponHoldType(self.HoldType)
 	self.CurHoldType = self.HoldType
