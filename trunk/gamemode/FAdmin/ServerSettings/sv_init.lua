@@ -1,9 +1,6 @@
 local Whitelist = {"sv_password"} -- Make sure people don't use FAdmin serversetting as easy RCON, only the SBOX commands are allowed
-local Settings = KeyValuesToTable(file.Read("settings/server_settings/gmod.txt") or "", true) -- All SBox limits are in here :D
-
-for k, v in SortedPairs(Settings and Settings.settings or {}) do
-	table.insert(Whitelist, string.lower(k))
-end
+table.insert(Whitelist, "sbox_.*")
+table.insert(Whitelist, "FAdmin_.*")
 
 sql.Query([[CREATE TABLE IF NOT EXISTS FAdmin_ServerSettings(setting STRING NOT NULL PRIMARY KEY, value STRING NOT NULL);]])
 for k,v in pairs(Whitelist) do
@@ -27,8 +24,17 @@ end)
 
 local function ServerSetting(ply, cmd, args)
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "ServerSetting") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-	if not args[2] or not table.HasValue(Whitelist, string.lower(args[1])) then FAdmin.Messages.SendMessage(ply, 5, "Incorrect argument") return end
-	
+	if not args[2] then FAdmin.Messages.SendMessage(ply, 5, "Incorrect argument") return end
+
+	found = false
+	for k,v in pairs(Whitelist) do
+		if string.match(args[1], v) then
+			found = true
+			break
+		end
+	end
+	if not found then return end
+
 	local CommandArgs = table.Copy(args)
 	CommandArgs[1] = nil
 	CommandArgs = table.ClearKeys(CommandArgs)
