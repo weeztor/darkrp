@@ -3,16 +3,8 @@ table.insert(Whitelist, "sbox_.*")
 table.insert(Whitelist, "_FAdmin_.*")
 
 sql.Query([[CREATE TABLE IF NOT EXISTS FAdmin_ServerSettings(setting STRING NOT NULL PRIMARY KEY, value STRING NOT NULL);]])
-for k,v in pairs(Whitelist) do
-	cvars.AddChangeCallback(v, function(CVar, oldval, newval)
-		local Value = sql.QueryValue([[SELECT value FROM FAdmin_ServerSettings WHERE setting = ]]..sql.SQLStr(v)..";")
-		if Value == tostring(newval) then return end
-		if not Value then
-			sql.Query([[INSERT INTO FAdmin_ServerSettings VALUES(]]..sql.SQLStr(v:lower())..[[, ]]..sql.SQLStr(newval)..");")
-		else
-			sql.Query([[UPDATE FAdmin_ServerSettings SET value = ]]..sql.SQLStr(newval)..[[ WHERE setting = ]]..sql.SQLStr(v:lower())..[[;]])
-		end
-	end)
+function FAdmin.SaveSetting(var, value)
+	sql.Query([[REPLACE INTO FAdmin_ServerSettings VALUES(]]..sql.SQLStr(var:lower())..[[, ]]..sql.SQLStr(value)..");")
 end
 
 hook.Add("InitPostEntity", "FAdmin_Settings", function()
@@ -39,6 +31,7 @@ local function ServerSetting(ply, cmd, args)
 	CommandArgs[1] = nil
 	CommandArgs = table.ClearKeys(CommandArgs)
 	RunConsoleCommand(args[1], unpack(CommandArgs))
+	FAdmin.SaveSetting(args[1], CommandArgs[1])
 	FAdmin.Messages.ActionMessage(ply, player.GetAll(), "You have set ".. args[1].. " to ".. unpack(CommandArgs),
 	args[1].. " was set to " .. unpack(CommandArgs), "Set ".. args[1].. " to ".. unpack(CommandArgs))
 end

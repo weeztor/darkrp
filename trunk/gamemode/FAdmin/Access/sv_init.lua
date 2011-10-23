@@ -1,6 +1,7 @@
 --Immunity
 cvars.AddChangeCallback("_FAdmin_immunity", function(Cvar, Previous, New)
 	FAdmin.SetGlobalSetting("Immunity", (tonumber(New) == 1 and true) or false)
+	FAdmin.SaveSetting("_FAdmin_immunity", tonumber(New))
 end)
 
 sql.Query("CREATE TABLE IF NOT EXISTS FADMIN_GROUPS('NAME' TEXT NOT NULL PRIMARY KEY, 'ADMIN_ACCESS' INTEGER NOT NULL, 'PRIVS' TEXT);")
