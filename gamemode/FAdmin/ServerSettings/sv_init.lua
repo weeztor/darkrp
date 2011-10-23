@@ -1,6 +1,6 @@
 local Whitelist = {"sv_password"} -- Make sure people don't use FAdmin serversetting as easy RCON, only the SBOX commands are allowed
 table.insert(Whitelist, "sbox_.*")
-table.insert(Whitelist, "FAdmin_.*")
+table.insert(Whitelist, "_FAdmin_.*")
 
 sql.Query([[CREATE TABLE IF NOT EXISTS FAdmin_ServerSettings(setting STRING NOT NULL PRIMARY KEY, value STRING NOT NULL);]])
 for k,v in pairs(Whitelist) do
