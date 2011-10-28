@@ -253,8 +253,8 @@ local function SetDoorOwnable(ply)
 	timer.Simple(0.1, function()  time = false end)
 	local trace = ply:GetEyeTrace()
 	if not ValidEntity(trace.Entity) then return "" end
-	if(ValidEntity( trace.Entity:GetDoorOwner( ) ) && trace.Entity:GetDoorOwner( ) != ply ) then
-		return ""
+	if ValidEntity( trace.Entity:GetDoorOwner() ) then
+		trace.Entity:UnOwn(trace.Entity:GetDoorOwner())
 	end
 	local ent = trace.Entity
 	if ply:IsSuperAdmin() and (ent:IsDoor() or ent:IsVehicle()) and ply:GetPos():Distance(ent:GetPos()) < 115 then
@@ -277,8 +277,8 @@ local function SetDoorGroupOwnable(ply, arg)
 	local trace = ply:GetEyeTrace()
 	if not ValidEntity(trace.Entity) then return "" end
 	if not RPExtraTeamDoors[arg] and arg ~= "" then Notify(ply, 1, 10, "Door group does not exist!") return "" end
-	if(ValidEntity( trace.Entity:GetDoorOwner( ) ) && trace.Entity:GetDoorOwner( ) != ply ) then
-		return ""
+	if ValidEntity( trace.Entity:GetDoorOwner() ) then
+		trace.Entity:UnOwn( trace.Entity:GetDoorOwner() )
 	end
 	local ent = trace.Entity
 	if ply:IsSuperAdmin() and (ent:IsDoor() or ent:IsVehicle()) and ply:GetPos():Distance(ent:GetPos()) < 115 then
@@ -305,8 +305,8 @@ local function SetDoorTeamOwnable(ply, arg)
 	if not ValidEntity(trace.Entity) then return "" end
 	arg = tonumber( arg )
 	if not RPExtraTeams[arg] and arg ~= nil then Notify(ply, 1, 10, "Job does not exist!") return "" end
-	if(ValidEntity( trace.Entity:GetDoorOwner( ) ) && trace.Entity:GetDoorOwner( ) != ply ) then
-		return ""
+	if ValidEntity( trace.Entity:GetDoorOwner( ) ) then
+		trace.Entity:UnOwn( trace.Entity:GetDoorOwner() )
 	end
 	local ent = trace.Entity
 	if ply:IsSuperAdmin() and (ent:IsDoor() or ent:IsVehicle() and ply:GetPos():Distance(ent:GetPos()) < 115) then
