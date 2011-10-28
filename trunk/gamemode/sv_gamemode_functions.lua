@@ -298,14 +298,17 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if weapon:IsVehicle() and weapon:GetDriver():IsPlayer() then killer = weapon:GetDriver() end
 	
 	local KillerName = (killer:IsPlayer() and killer:Nick()) or killer:GetClass()
-	ServerLog(ply:Nick().." was killed by "..KillerName.." with "..weapon:GetClass())
+	if KillerName == "prop_physics" then
+		KillerName = killer.Owner and killer.Owner:Nick() or "unknown"
+	end
+	ServerLog(ply:Nick().." was killed by "..KillerName.." with "..weapon:GetClass() .. " (" .. weapon:GetModel() or "unknown" .. ")")
 	
 	if GetConVarNumber("deathnotice") == 1 then
 		self.BaseClass:PlayerDeath(ply, weapon, killer)
 	else
 		for k,v in pairs(player.GetAll()) do
 			if v:IsAdmin() then
-				v:PrintMessage(HUD_PRINTCONSOLE, ply:Nick().." was killed by "..KillerName.." with "..weapon:GetClass())
+				v:PrintMessage(HUD_PRINTCONSOLE, ply:Nick().." was killed by "..KillerName.." with "..weapon:GetClass() .. " (" .. weapon:GetModel() or "unknown" .. ")")
 			end
 		end
 	end
@@ -385,8 +388,8 @@ function GM:PlayerDeath(ply, weapon, killer)
 end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
-	if RPArrestedPlayers[ply:SteamID()] then return false end
-	if ply:IsAdmin() and GetConVarNumber("AdminsCopWeapons") == 1 then return true end
+	if RPArrestedPlayers[ply:SteamID()] then return false end 
+	if ply:IsAdmin() and GetConVarNumber("AdminsCopWeapons") ==1 then return true end
 	if GetConVarNumber("license") == 1 and not ply.DarkRPVars.HasGunlicense and not ply:GetTable().RPLicenseSpawn then
 		if GetConVarNumber("licenseweapon_"..string.lower(weapon:GetClass())) == 1 or not weapon:IsWeapon() then
 			return true
