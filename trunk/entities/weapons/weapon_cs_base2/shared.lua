@@ -55,6 +55,10 @@ SWEP.MultiMode = false
 /*---------------------------------------------------------
 ---------------------------------------------------------*/
 function SWEP:Initialize()
+
+	self.OldSetWeaponHoldType = self.SetWeaponHoldType
+	self.SetWeaponHoldType = self.NewSetWeaponHoldType
+
 	self:SetWeaponHoldType("normal")
 	self.CurHoldType = "normal"
 	if SERVER then
@@ -405,4 +409,36 @@ function SWEP:Think()
 		self.CurHoldType = "normal"
 		self:SetWeaponHoldType("normal")
 	end
+end
+
+function SWEP:NewSetWeaponHoldType( holdtype )
+	
+	if SERVER then
+		
+		umsg.Start( "DRP_HoldType" )
+		
+			umsg.Entity( self )
+			umsg.String( holdtype )
+			
+		umsg.End()
+	
+	end
+	
+	self:OldSetWeaponHoldType( holdtype )
+	
+end
+
+if CLIENT then
+
+	usermessage.Hook( "DRP_HoldType", function( um )
+	
+		local wep = um:ReadEntity()
+		local holdtype = um:ReadString()
+		
+		if not ValidEntity( wep ) then return end
+		
+		wep:SetWeaponHoldType( holdtype )
+		
+	end )
+	
 end
