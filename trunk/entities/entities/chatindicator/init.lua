@@ -62,3 +62,4 @@ local function RemoveChatIndicator( ply )
 end
 hook.Add( "PlayerDisconnected", "Disc_RemoveIndicator", RemoveChatIndicator )
 hook.Add( "KeyPress", "Move_RemoveIndicator", RemoveChatIndicator ) -- so people can't abuse the command.
+hook.Add( "PlayerDeath", "Die_RemoveIndicator", RemoveChatIndicator )

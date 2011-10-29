@@ -301,14 +301,18 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if KillerName == "prop_physics" then
 		KillerName = killer.Owner and killer.Owner:Nick() or "unknown"
 	end
-	ServerLog(ply:Nick().." was killed by "..KillerName.." with "..weapon:GetClass() .. " (" .. weapon:GetModel() or "unknown" .. ")")
+	local WeaponName = (weapon:IsPlayer() and weapon:GetActiveWeapon():GetClass()) or weapon:GetClass()
+	if WeaponName == "prop_physics" then
+		WeaponName = weapon:GetClass() .. " (" .. weapon:GetModel() or "unknown" .. ")"
+	end
+	ServerLog(ply:Nick().." was killed by "..KillerName.." with " .. WeaponName)
 	
 	if GetConVarNumber("deathnotice") == 1 then
 		self.BaseClass:PlayerDeath(ply, weapon, killer)
 	else
 		for k,v in pairs(player.GetAll()) do
 			if v:IsAdmin() then
-				v:PrintMessage(HUD_PRINTCONSOLE, ply:Nick().." was killed by "..KillerName.." with "..weapon:GetClass() .. " (" .. weapon:GetModel() or "unknown" .. ")")
+				v:PrintMessage(HUD_PRINTCONSOLE, ply:Nick().." was killed by "..KillerName.." with ".. WeaponName)
 			end
 		end
 	end
