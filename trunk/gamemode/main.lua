@@ -964,10 +964,6 @@ local function BuyPistol(ply, args)
 		return ""
 	end
 	
-	ply:AddMoney(-price)
-	
-	Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, tostring(price)))
-	
 	local weapon = ents.Create("spawned_weapon")
 	weapon:SetModel(model)
 	weapon.weaponclass = class
@@ -976,6 +972,11 @@ local function BuyPistol(ply, args)
 	weapon.nodupe = true
 	weapon:Spawn()
 
+	if ValidEntity( weapon ) then 
+		ply:AddMoney(-price)
+		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, tostring(price)))
+	end
+	
 	return ""
 end
 AddChatCommand("/buy", BuyPistol)
@@ -1029,8 +1030,6 @@ local function BuyShipment(ply, args)
 		return ""
 	end
 	
-	ply:AddMoney(-cost)
-	Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
 	local crate = ents.Create("spawned_shipment")
 	crate.SID = ply.SID
 	crate.dt.owning_ent = ply
@@ -1047,6 +1046,12 @@ local function BuyShipment(ply, args)
 	end
 	local phys = crate:GetPhysicsObject()
 	if phys and phys:IsValid() then phys:Wake() end
+	
+	if ValidEntity( crate ) then
+		ply:AddMoney(-cost)
+		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
+	end
+	
 	return ""
 end
 AddChatCommand("/buyshipment", BuyShipment)
@@ -1069,8 +1074,6 @@ local function BuyVehicle(ply, args)
 	ply.Vehicles = ply.Vehicles + 1
 	
 	if not ply:CanAfford(found.price) then Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "vehicle")) return "" end
-	ply:AddMoney(-found.price)
-	Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, found.name, CUR .. found.price))
 	
 	local Vehicle = list.Get("Vehicles")[found.name]
 	if not Vehicle then Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "")) return "" end
@@ -1108,6 +1111,11 @@ local function BuyVehicle(ply, args)
 	end
 	ent:Own(ply)
 	gamemode.Call("PlayerSpawnedVehicle", ply, ent) -- VUMod compatability
+	
+	if ValidEntity( ent ) then
+		ply:AddMoney(-found.price)
+		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, found.name, CUR .. found.price))
+	end
 	
 	return ""
 end
@@ -1149,7 +1157,6 @@ for k,v in pairs(DarkRPEntities) do
 			Notify(ply, 1, 4,  string.format(LANGUAGE.cant_afford, v.cmd))
 			return ""
 		end
-		ply:AddMoney(-price)
 		
 		local trace = {}
 		trace.start = ply:EyePos()
@@ -1165,11 +1172,15 @@ for k,v in pairs(DarkRPEntities) do
 		item.SID = ply.SID
 		item.onlyremover = true
 		item:Spawn()
-		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, v.name, CUR..price))
-		if not ply["max"..cmdname] then
-			ply["max"..cmdname] = 0
+		
+		if ValidEntity( item ) then
+			ply:AddMoney(-price)
+			Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, v.name, CUR..price))
+			if not ply["max"..cmdname] then
+				ply["max"..cmdname] = 0
+			end
+			ply["max"..cmdname] = ply["max"..cmdname] + 1
 		end
-		ply["max"..cmdname] = ply["max"..cmdname] + 1
 		return ""
 	end
 	AddChatCommand(v.cmd, buythis)
@@ -1843,7 +1854,7 @@ local function DropMoney(ply, args)
 	umsg.End()
 	ply.anim_DroppingItem = true
 	
-	timer.Simple(1, function(ply) 
+	timer.Simple(1, function(ply, cost) 
 		if ValidEntity(ply) then
 			local trace = {}
 			trace.start = ply:EyePos()
@@ -1851,10 +1862,13 @@ local function DropMoney(ply, args)
 			trace.filter = ply
 
 			local tr = util.TraceLine(trace)
-			DarkRPCreateMoneyBag(tr.HitPos, amount)
+			local money = DarkRPCreateMoneyBag(tr.HitPos, amount)
+			if not ValidEntity( money ) then
+				ply:AddMoney( cost ) -- the money didn't spawn, so refund them.
+			end
 			DB.Log(ply:Nick().. " (" .. ply:SteamID() .. ") has dropped "..CUR .. tostring(amount))
 		end
-	end, ply)
+	end, ply, amount)
 	
 	return ""
 end
@@ -1890,7 +1904,7 @@ local function CreateCheque(ply, args)
 	umsg.End()
 	ply.anim_DroppingItem = true
 	
-	timer.Simple(1, function(ply) 
+	timer.Simple(1, function(ply, cost) 
 		if ValidEntity(ply) and ValidEntity(recipient) then
 			local trace = {}
 			trace.start = ply:EyePos()
@@ -1905,8 +1919,12 @@ local function CreateCheque(ply, args)
 			
 			Cheque.dt.amount = amount
 			Cheque:Spawn()
+			
+			if not ValidEntity( Cheque ) then
+				ply:AddMoney( cost ) -- The cheque didn't spawn, so refund them.
+			end
 		end
-	end, ply)
+	end, ply, amount)
 	return ""
 end
 AddChatCommand("/cheque", CreateCheque)
