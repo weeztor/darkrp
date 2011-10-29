@@ -33,4 +33,5 @@ function DarkRPCreateMoneyBag(pos, amount)
 	moneybag.dt.amount = amount
 	moneybag:Spawn()
 	moneybag:Activate()
+	return moneybag
 end
