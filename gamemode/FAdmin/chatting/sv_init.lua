@@ -2,7 +2,7 @@ local function PM(ply, cmd, args)
 	if not args[2] then return end
 	
 	local targets = FAdmin.FindPlayer(args[1])
-	if #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or ( #targets == 1 and not ValidEntity(targets[1]) ) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
