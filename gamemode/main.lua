@@ -1074,6 +1074,8 @@ local function BuyVehicle(ply, args)
 	ply.Vehicles = ply.Vehicles + 1
 
 	if not ply:CanAfford(found.price) then Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "vehicle")) return "" end
+	ply:AddMoney(-found.price)
+	Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, found.name, CUR .. found.price))
 
 	local Vehicle = list.Get("Vehicles")[found.name]
 	if not Vehicle then Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "")) return "" end
@@ -1111,11 +1113,6 @@ local function BuyVehicle(ply, args)
 	end
 	ent:Own(ply)
 	gamemode.Call("PlayerSpawnedVehicle", ply, ent) -- VUMod compatability
-
-	if ValidEntity( ent ) then
-		ply:AddMoney(-found.price)
-		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, found.name, CUR .. found.price))
-	end
 
 	return ""
 end
@@ -1854,7 +1851,7 @@ local function DropMoney(ply, args)
 	umsg.End()
 	ply.anim_DroppingItem = true
 
-	timer.Simple(1, function(ply, cost)
+	timer.Simple(1, function(ply)
 		if ValidEntity(ply) then
 			local trace = {}
 			trace.start = ply:EyePos()
@@ -1865,7 +1862,7 @@ local function DropMoney(ply, args)
 			local money = DarkRPCreateMoneyBag(tr.HitPos, amount)
 			DB.Log(ply:Nick().. " (" .. ply:SteamID() .. ") has dropped "..CUR .. tostring(amount))
 		end
-	end, ply, amount)
+	end, ply)
 
 	return ""
 end
@@ -1901,7 +1898,7 @@ local function CreateCheque(ply, args)
 	umsg.End()
 	ply.anim_DroppingItem = true
 
-	timer.Simple(1, function(ply, cost)
+	timer.Simple(1, function(ply)
 		if ValidEntity(ply) and ValidEntity(recipient) then
 			local trace = {}
 			trace.start = ply:EyePos()
@@ -1921,7 +1918,7 @@ local function CreateCheque(ply, args)
 				ply:AddMoney( cost ) -- The cheque didn't spawn, so refund them.
 			end
 		end
-	end, ply, amount)
+	end, ply)
 	return ""
 end
 AddChatCommand("/cheque", CreateCheque)
@@ -2266,9 +2263,9 @@ local function rp_GiveLicense(ply, cmd, args)
 		Notify(ply, 2, 4, string.format(LANGUAGE.gunlicense_granted, nick, target:Nick()))
 		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-gave "..target:Nick().." a gun license")
 		if ply:EntIndex() == 0 then
-			DB.Log("Console force-gave "..target:Nick().." a gun license" )
+			DB.Log("Console force-gave "..target:Nick().." a gun license", nil, Color(30, 30, 30))
 		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-gave "..target:Nick().." a gun license" )
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-gave "..target:Nick().." a gun license", nil, Color(30, 30, 30))
 		end
 	else
 		if ply:EntIndex() == 0 then
@@ -2302,9 +2299,9 @@ local function rp_RevokeLicense(ply, cmd, args)
 		Notify(ply, 1, 4, string.format(LANGUAGE.gunlicense_denied, nick, target:Nick()))
 		DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed "..target:Nick().."'s gun license")
 		if ply:EntIndex() == 0 then
-			DB.Log("Console force-removed "..target:Nick().."'s gun license" )
+			DB.Log("Console force-removed "..target:Nick().."'s gun license", nil, Color(30, 30, 30))
 		else
-			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed "..target:Nick().."'s gun license" )
+			DB.Log(ply:SteamName().." ("..ply:SteamID()..") force-removed "..target:Nick().."'s gun license", nil, Color(30, 30, 30))
 		end
 	else
 		if ply:EntIndex() == 0 then
