@@ -112,7 +112,7 @@ AddChatCommand("/showzombie", ToggleZombie)
 
 local function GetAliveZombie()
 	local zombieCount = 0
-	
+
 	local ZombieTypes = {"npc_zombie", "npc_fastzombie", "npc_antlion", "npc_headcrab_fast"}
 	for _, Type in pairs(ZombieTypes) do
 		for _, zombie in pairs(ents.FindByClass(Type)) do
@@ -129,7 +129,7 @@ local function SpawnZombie()
 		if table.getn(zombieSpawns) > 0 then
 			local zombieType = math.random(1, 4)
 			local ZombieTypes = {"npc_zombie", "npc_fastzombie", "npc_antlion", "npc_headcrab_fast"}
-			
+
 			local Zombie = ents.Create(ZombieTypes[zombieType])
 			Zombie.nodupe = true
 			Zombie:Spawn()
@@ -284,7 +284,7 @@ local function FireSpread(e)
 		end
 		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
 		local rand = math.random(0, 300)
-		
+
 		if rand <= 1 then
 			for k, v in pairs(en) do
 				if IsFlammable(v) then
@@ -312,7 +312,7 @@ end
 local function FlammablePropThink()
 	for k, v in ipairs(FlammableProps) do
 		local ens = ents.FindByClass(v)
-		
+
 		for a, b in pairs(ens) do
 			FireSpread(b)
 		end
@@ -351,7 +351,7 @@ local function EarthQuakeTest()
 		if GetConVarNumber("quakechance") ~= 0 and math.random(0, GetConVarNumber("quakechance")) < 1 then
 			local en = ents.FindByClass("prop_physics")
 			local plys = ents.FindByClass("player") or {}
-			
+
 			local force = math.random(10,1000)
 			tremor:SetKeyValue("magnitude",force/6)
 			for k,v in pairs(plys) do
@@ -384,7 +384,7 @@ local NoDrop = {} -- Drop blacklist
 local function DropWeapon(ply)
 	local ent = ply:GetActiveWeapon()
 	if not ValidEntity(ent) then return "" end
-	
+
 	if GetConVarNumber("RestrictDrop") == 1 then
 		local found = false
 		for k,v in pairs(CustomShipments) do
@@ -393,25 +393,25 @@ local function DropWeapon(ply)
 				break
 			end
 		end
-		
+
 		if not found then
 			Notify(ply, 1, 4, LANGUAGE.cannot_drop_weapon)
-			return "" 
+			return ""
 		end
 	end
-	
+
 	if table.HasValue(NoDrop, ent:GetClass()) then return "" end
-	
+
 	local RP = RecipientFilter()
 	RP:AddAllPlayers()
-	
-	umsg.Start("anim_dropitem", RP) 
+
+	umsg.Start("anim_dropitem", RP)
 		umsg.Entity(ply)
 	umsg.End()
 	ply.anim_DroppingItem = true
-	
-	timer.Simple(1, function(ply, ent) 
-		if ValidEntity(ply) and ValidEntity(ent) and ent:GetModel() then 
+
+	timer.Simple(1, function(ply, ent)
+		if ValidEntity(ply) and ValidEntity(ent) and ent:GetModel() then
 			local ammohax = false
 			local ammotype = ent:GetPrimaryAmmoType()
 			local ammo = ply:GetAmmoCount(ammotype)
@@ -422,7 +422,7 @@ local function DropWeapon(ply)
 			ply:DropWeapon(ent) -- Drop it so the model isn't the viewmodel
 			local weapon = ents.Create("spawned_weapon")
 			local model = (ent:GetModel() == "models/weapons/v_physcannon.mdl" and "models/weapons/w_physics.mdl") or ent:GetModel()
-			
+
 			weapon.ShareGravgun = true
 			weapon:SetPos(ply:GetShootPos() + ply:GetAimVector() * 30)
 			weapon:SetModel(model)
@@ -431,9 +431,9 @@ local function DropWeapon(ply)
 			weapon.nodupe = true
 			weapon.ammohacked = ammohax
 			weapon:Spawn()
-			
+
 			ent:Remove()
-		end 
+		end
 	end, ply, ent)
 	return ""
 end
@@ -448,7 +448,7 @@ local function UnWarrant(ply, target)
 	if not target.warranted then return end
 	target.warranted = false
 	Notify(ply, 2, 4, string.format(LANGUAGE.warrant_expired, target:Nick()))
-end 
+end
 
 local function SetWarrant(ply, target, reason)
 	if target.warranted then return end
@@ -491,7 +491,7 @@ local function SearchWarrant(ply, args)
 	else
 		local tableargs = string.Explode(" ", args)
 		local reason = ""
-		
+
 		if #tableargs == 1 then
 			Notify(ply, 1, 4, LANGUAGE.vote_specify_reason)
 			return ""
@@ -501,17 +501,17 @@ local function SearchWarrant(ply, args)
 			Notify(ply, 1, 4, "You must be alive in order to issue a warrant")
 			return ""
 		end
-		
+
 		for i = 2, #tableargs, 1 do
 			reason = reason .. " " .. tableargs[i]
-		end 
+		end
 		reason = string.sub(reason, 2)
 		if string.len(reason) > 25 then
 			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/warrant", "<25 chars"))
-			return "" 
+			return ""
 		end
 		local p = FindPlayer(tableargs[1])
-		
+
 		if p and p:Alive() then
 			-- If we're the Mayor, set the search warrant
 			if t == TEAM_MAYOR then
@@ -534,7 +534,7 @@ local function SearchWarrant(ply, args)
 					-- There is no mayor or the mayor is AFK, CPs can set warrants.
 					SetWarrant(ply, p, reason)
 				end
-				
+
 			end
 		else
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
@@ -551,7 +551,7 @@ local function PlayerWanted(ply, args)
 	else
 		local tableargs = string.Explode(" ", args)
 		local reason = ""
-		
+
 		if #tableargs == 1 then
 			Notify(ply, 1, 4, LANGUAGE.vote_specify_reason)
 			return ""
@@ -561,14 +561,14 @@ local function PlayerWanted(ply, args)
 			Notify(ply, 1, 4, "You must be alive in order to make someone wanted")
 			return ""
 		end
-		
+
 		for i = 2, #tableargs, 1 do
 			reason = reason .. " " .. tableargs[i]
-		end 
+		end
 		reason = string.sub(reason, 2)
 		if string.len(reason) > 22 then
 			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/wanted", "<23 chars"))
-			return "" 
+			return ""
 		end
 		local p = FindPlayer(tableargs[1])
 
@@ -589,7 +589,7 @@ local function PlayerWanted(ply, args)
 	return ""
 end
 AddChatCommand("/wanted", PlayerWanted)
-AddChatCommand("/wantid", PlayerWanted) -- Inspired by the /warrent for people not spelling write. You can rewrite so you can want like this: STEAM_0:0:29257121 stupid kid 
+AddChatCommand("/wantid", PlayerWanted) -- Inspired by the /warrent for people not spelling write. You can rewrite so you can want like this: STEAM_0:0:29257121 stupid kid
 
 local function PlayerUnWanted(ply, args)
 	if not ply:IsCP() then
@@ -613,7 +613,7 @@ AddChatCommand("/unwantid", PlayerUnWanted) -- Can also do like /wantid but for 
 
 
 /*---------------------------------------------------------
-Spawning 
+Spawning
  ---------------------------------------------------------*/
 local function SetSpawnPos(ply, args)
 	if not ply:HasPriv("rp_commands") then return "" end
@@ -621,7 +621,7 @@ local function SetSpawnPos(ply, args)
 	local pos = string.Explode(" ", tostring(ply:GetPos()))
 	local selection = "citizen"
 	local t
-	
+
 	for k,v in pairs(RPExtraTeams) do
 		if args == v.command then
 			t = k
@@ -645,7 +645,7 @@ local function AddSpawnPos(ply, args)
 	local pos = string.Explode(" ", tostring(ply:GetPos()))
 	local selection = "citizen"
 	local t
-	
+
 	for k,v in pairs(RPExtraTeams) do
 		if args == v.command then
 			t = k
@@ -669,7 +669,7 @@ local function RemoveSpawnPos(ply, args)
 	local pos = string.Explode(" ", tostring(ply:GetPos()))
 	local selection = "citizen"
 	local t
-	
+
 	for k,v in pairs(RPExtraTeams) do
 		if args == v.command then
 			t = k
@@ -745,9 +745,9 @@ function GM:ShowHelp(ply)
 end
 
 local function LookPersonUp(ply, cmd, args)
-	if not args[1] then 
+	if not args[1] then
 		ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "argument", ""))
-		return 
+		return
 	end
 	local P = FindPlayer(args[1])
 	if not ValidEntity(P) then
@@ -882,9 +882,9 @@ local function SetPrice(ply, args)
 	trace.filter = ply
 
 	local tr = util.TraceLine(trace)
-	
+
 	if not ValidEntity(tr.Entity) then Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "gunlab / druglab / microwave")) return "" end
-	
+
 	local class = tr.Entity:GetClass()
 	if ValidEntity(tr.Entity) and (class == "gunlab" or class == "microwave" or class == "drug_lab") and tr.Entity.SID == ply.SID then
 		tr.Entity.dt.price = b
@@ -915,10 +915,10 @@ local function BuyPistol(ply, args)
 	trace.filter = ply
 
 	local tr = util.TraceLine(trace)
-	
+
 	local class = nil
 	local model = nil
-	
+
 	local custom = false
 	local price = 0
 	for k,v in pairs(CustomShipments) do
@@ -927,9 +927,9 @@ local function BuyPistol(ply, args)
 			class = v.entity
 			model = v.model
 			price = v.pricesep
-			local canbuy = false			
+			local canbuy = false
 			local RestrictBuyPistol = tonumber(GetConVarNumber("restrictbuypistol"))
-			if RestrictBuyPistol == 0 or 
+			if RestrictBuyPistol == 0 or
 			(RestrictBuyPistol == 1 and (not v.allowed[1] or table.HasValue(v.allowed, ply:Team()))) then
 				canbuy = true
 			end
@@ -938,19 +938,19 @@ local function BuyPistol(ply, args)
 				Notify(ply, 1, 4, "You're not allowed to purchase this item")
 				return ""
 			end
-			
+
 			if not canbuy then
 				Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buy"))
 				return ""
 			end
 		end
 	end
-	
+
 	if not class then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unavailable, "weapon"))
 		return ""
 	end
-	
+
 	if not custom then
 		if ply:Team() == TEAM_GUN then
 			price = math.ceil(GetConVarNumber(args .. "cost") * 0.88)
@@ -958,12 +958,12 @@ local function BuyPistol(ply, args)
 			price = GetConVarNumber(args .. "cost")
 		end
 	end
-	
+
 	if not ply:CanAfford(price) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "/buy"))
 		return ""
 	end
-	
+
 	local weapon = ents.Create("spawned_weapon")
 	weapon:SetModel(model)
 	weapon.weaponclass = class
@@ -972,11 +972,11 @@ local function BuyPistol(ply, args)
 	weapon.nodupe = true
 	weapon:Spawn()
 
-	if ValidEntity( weapon ) then 
+	if ValidEntity( weapon ) then
 		ply:AddMoney(-price)
 		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, tostring(price)))
 	end
-	
+
 	return ""
 end
 AddChatCommand("/buy", BuyPistol)
@@ -992,7 +992,7 @@ local function BuyShipment(ply, args)
 	local tr = util.TraceLine(trace)
 
 	if RPArrestedPlayers[ply:SteamID()] then return "" end
-	
+
 	local found = false
 	local foundKey
 	for k,v in pairs(CustomShipments) do
@@ -1013,28 +1013,28 @@ local function BuyShipment(ply, args)
 
 			if not canbecome then
 				Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buyshipment"))
-				return "" 
+				return ""
 			end
 		end
 	end
-	
+
 	if not found then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyshipment", args))
 		return ""
 	end
-	
+
 	local cost = found.price
-	
+
 	if not ply:CanAfford(cost) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "shipment"))
 		return ""
 	end
-	
+
 	local crate = ents.Create("spawned_shipment")
 	crate.SID = ply.SID
 	crate.dt.owning_ent = ply
 	crate:SetContents(foundKey, found.amount, found.weight)
-	
+
 	crate:SetPos(Vector(tr.HitPos.x, tr.HitPos.y, tr.HitPos.z))
 	crate.nodupe = true
 	crate:Spawn()
@@ -1046,12 +1046,12 @@ local function BuyShipment(ply, args)
 	end
 	local phys = crate:GetPhysicsObject()
 	if phys and phys:IsValid() then phys:Wake() end
-	
+
 	if ValidEntity( crate ) then
 		ply:AddMoney(-cost)
 		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
 	end
-	
+
 	return ""
 end
 AddChatCommand("/buyshipment", BuyShipment)
@@ -1064,35 +1064,35 @@ local function BuyVehicle(ply, args)
 		if string.lower(v.name) == string.lower(args) then found = CustomVehicles[k] break end
 	end
 	if not found then return "" end
-	if found.allowed and not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buyvehicle")) return ""  end 
-	
+	if found.allowed and not table.HasValue(found.allowed, ply:Team()) then Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buyvehicle")) return ""  end
+
 	if not ply.Vehicles then ply.Vehicles = 0 end
 	if GetConVarNumber("maxvehicles") ~= 0 and ply.Vehicles >= GetConVarNumber("maxvehicles") then
 		Notify(ply, 1, 4, string.format(LANGUAGE.limit, "vehicle"))
 		return ""
 	end
 	ply.Vehicles = ply.Vehicles + 1
-	
+
 	if not ply:CanAfford(found.price) then Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "vehicle")) return "" end
-	
+
 	local Vehicle = list.Get("Vehicles")[found.name]
 	if not Vehicle then Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "")) return "" end
-	
+
 	local trace = {}
 	trace.start = ply:EyePos()
 	trace.endpos = trace.start + ply:GetAimVector() * 85
 	trace.filter = ply
 	local tr = util.TraceLine(trace)
-	
+
 	local ent = ents.Create(Vehicle.Class)
 	if not ent then return "" end
 	ent:SetModel(Vehicle.Model)
 	if Vehicle.KeyValues then
 		for k, v in pairs(Vehicle.KeyValues) do
 			ent:SetKeyValue(k, v)
-		end            
+		end
 	end
-	
+
 	local Angles = ply:GetAngles()
 	Angles.pitch = 0
 	Angles.roll = 0
@@ -1111,12 +1111,12 @@ local function BuyVehicle(ply, args)
 	end
 	ent:Own(ply)
 	gamemode.Call("PlayerSpawnedVehicle", ply, ent) -- VUMod compatability
-	
+
 	if ValidEntity( ent ) then
 		ply:AddMoney(-found.price)
 		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, found.name, CUR .. found.price))
 	end
-	
+
 	return ""
 end
 AddChatCommand("/buyvehicle", BuyVehicle)
@@ -1126,20 +1126,20 @@ for k,v in pairs(DarkRPEntities) do
 		if RPArrestedPlayers[ply:SteamID()] then return "" end
 		if type(v.allowed) == "table" and not table.HasValue(v.allowed, ply:Team()) then
 			Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, v.cmd))
-			return "" 
+			return ""
 		end
 		local cmdname = string.gsub(v.ent, " ", "_")
 		local disabled = tobool(GetConVarNumber("disable"..cmdname))
 		if disabled then
 			Notify(ply, 1, 4, string.format(LANGUAGE.disabled, v.cmd, ""))
-			return "" 
+			return ""
 		end
 
 		if v.customCheck and not v.customCheck(ply) then
 			Notify(ply, 1, 4, "You're not allowed to purchase this item")
 			return ""
 		end
-		
+
 		local max = GetConVarNumber("max"..cmdname)
 
 		if not max or max == 0 then max = tonumber(v.max) end
@@ -1147,24 +1147,24 @@ for k,v in pairs(DarkRPEntities) do
 			Notify(ply, 1, 4, string.format(LANGUAGE.limit, v.cmd))
 			return ""
 		end
-		
+
 		local price = GetConVarNumber(cmdname.."_price")
-		if price == 0 then 
+		if price == 0 then
 			price = v.price
 		end
-		
+
 		if not ply:CanAfford(price) then
 			Notify(ply, 1, 4,  string.format(LANGUAGE.cant_afford, v.cmd))
 			return ""
 		end
-		
+
 		local trace = {}
 		trace.start = ply:EyePos()
 		trace.endpos = trace.start + ply:GetAimVector() * 85
 		trace.filter = ply
-		
+
 		local tr = util.TraceLine(trace)
-		
+
 		local item = ents.Create(v.ent)
 		item.dt = item.dt or {}
 		item.dt.owning_ent = ply
@@ -1172,7 +1172,7 @@ for k,v in pairs(DarkRPEntities) do
 		item.SID = ply.SID
 		item.onlyremover = true
 		item:Spawn()
-		
+
 		if ValidEntity( item ) then
 			ply:AddMoney(-price)
 			Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, v.name, CUR..price))
@@ -1195,16 +1195,16 @@ local function BuyAmmo(ply, args)
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "ammo", ""))
 		return ""
 	end
-	
+
 	if args ~= "rifle" and args ~= "shotgun" and args ~= "pistol" then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unavailable, "ammo"))
 	end
-	
+
 	if not ply:CanAfford(GetConVarNumber("ammo" .. args .. "cost")) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "ammo"))
 		return ""
 	end
-	
+
 	if args == "rifle" then
 		ply:GiveAmmo(80, "smg1")
 	elseif args == "shotgun" then
@@ -1242,7 +1242,7 @@ local function BuyHealth(ply)
 	end
 	if ply.StartHealth and ply:Health() >= ply.StartHealth then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyhealth", ""))
-		return "" 
+		return ""
 	end
 	ply.StartHealth = ply.StartHealth or 100
 	ply:AddMoney(-cost)
@@ -1257,7 +1257,7 @@ local function MakeACall(ply,args)
 	if not ValidEntity(p) then return "" end
 	if ValidEntity(ply.DarkRPVars.phone) or ValidEntity(p.DarkRPVars.phone) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/call", "busy"))
-		return "" 
+		return ""
 	end
 	if not p:Alive() or p == ply or not ply:Alive() then return "" end
 	local trace = {}
@@ -1265,26 +1265,26 @@ local function MakeACall(ply,args)
 	trace.endpos = trace.start + p:GetAimVector() * 85
 	trace.filter = p
 	local tr = util.TraceLine(trace)
-	
+
 	local banana = ents.Create("phone")
-	
+
 	banana.dt.owning_ent = p
 	banana.ShareGravgun = true
 	banana.Caller = ply
-	
+
 	banana:SetPos(tr.HitPos)
 	banana.onlyremover = true
 	banana.SID = p.SID
 	banana:Spawn()
-	
-	
+
+
 	local ownphone = ents.Create("phone")
-	
+
 	ownphone.dt.owning_ent = ply
 	ownphone.ShareGravgun = true
 	ownphone.dt.IsBeingHeld = true
 	ply:SetDarkRPVar("phone", ownphone)
-	
+
 	ownphone:SetPos(ply:GetShootPos())
 	ownphone.onlyremover = true
 	ownphone.SID = ply.SID
@@ -1316,7 +1316,7 @@ hook.Add("KeyPress", "HangUpPhone", HangUp)
 local function CreateAgenda(ply, args)
 	if DarkRPAgendas[ply:Team()] then
 		ply:SetDarkRPVar("agenda", args)
-		
+
 		Notify(ply, 2, 4, LANGUAGE.agenda_updated)
 		for k,v in pairs(DarkRPAgendas[ply:Team()].Listeners) do
 			for a,b in pairs(team.GetPlayers(v)) do
@@ -1339,18 +1339,18 @@ AddChatCommand("/help", GetHelp)
 
 local function ChangeJob(ply, args)
 	if args == "" then return "" end
-	
+
 	if RPArrestedPlayers[ply:SteamID()] then
 		Notify(ply, 1, 5, string.format(LANGUAGE.unable, "/job", ">2"))
 		return ""
 	end
-	
+
 	if ply.LastJob and 10 - (CurTime() - ply.LastJob) >= 0 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(10 - (CurTime() - ply.LastJob)), "/job"))
 		return ""
 	end
 	ply.LastJob = CurTime()
-	
+
 	if not ply:Alive() then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/job", ""))
 		return ""
@@ -1415,11 +1415,11 @@ local function Demote(ply, args)
 	local reason = ""
 	for i = 2, #tableargs, 1 do
 		reason = reason .. " " .. tableargs[i]
-	end 
+	end
 	reason = string.sub(reason, 2)
 	if string.len(reason) > 22 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/demote", "<23"))
-		return "" 
+		return ""
 	end
 	local p = FindPlayer(tableargs[1])
 	if p then
@@ -1464,11 +1464,11 @@ end
 AddChatCommand("/switchjob", SwitchJob)
 AddChatCommand("/switchjobs", SwitchJob)
 AddChatCommand("/jobswitch", SwitchJob)
-	
+
 
 local function DoTeamBan(ply, args, cmdargs)
 	if not args or args == "" then return "" end
-	
+
 	local ent = args
 	local Team = args
 	if cmdargs then
@@ -1483,14 +1483,14 @@ local function DoTeamBan(ply, args, cmdargs)
 		ent = string.sub(args, 1, a - 1)
 		Team = string.sub(args,  a + 1)
 	end
-	
+
 	local target = FindPlayer(ent)
-	if not target or not ValidEntity(target) then 
+	if not target or not ValidEntity(target) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player!"))
 		return ""
 	end
-	
-	if (not FAdmin or not FAdmin.Access.PlayerHasPrivilege(ply, "rp_commands", target)) and not ply:IsAdmin() then 
+
+	if (not FAdmin or not FAdmin.Access.PlayerHasPrivilege(ply, "rp_commands", target)) and not ply:IsAdmin() then
 		Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "/teamban"))
 		return ""
 	end
@@ -1507,7 +1507,7 @@ local function DoTeamBan(ply, args, cmdargs)
 			break
 		end
 	end
-	
+
 	if not found then
 		Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "job!"))
 		return ""
@@ -1521,11 +1521,11 @@ AddChatCommand("/teamban", DoTeamBan)
 concommand.Add("rp_teamban", DoTeamBan)
 
 local function DoTeamUnBan(ply, args, cmdargs)
-	if not ply:IsAdmin() then 
+	if not ply:IsAdmin() then
 		Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "/teamunban"))
 		return ""
 	end
-	
+
 	local ent = args
 	local Team = args
 	if cmdargs then
@@ -1540,13 +1540,13 @@ local function DoTeamUnBan(ply, args, cmdargs)
 		ent = string.sub(args, 1, a - 1)
 		Team = string.sub(args,  a + 1)
 	end
-	
+
 	local target = FindPlayer(ent)
-	if not target or not ValidEntity(target) then 
+	if not target or not ValidEntity(target) then
 		Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player!"))
 		return ""
 	end
-	
+
 	local found = false
 	for k,v in pairs(team.GetAllTeams()) do
 		if string.lower(v.Name) == string.lower(Team) then
@@ -1559,7 +1559,7 @@ local function DoTeamUnBan(ply, args, cmdargs)
 			break
 		end
 	end
-	
+
 	if not found then
 		Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "job!"))
 		return ""
@@ -1574,7 +1574,7 @@ concommand.Add("rp_teamunban", DoTeamUnBan)
 
 
 /*---------------------------------------------------------
-Talking 
+Talking
  ---------------------------------------------------------*/
 local function PM(ply, args)
 	local namepos = string.find(args, " ")
@@ -1600,7 +1600,7 @@ AddChatCommand("/pm", PM)
 local function Whisper(ply, args)
 	local DoSay = function(text)
 		if text == "" then return "" end
-		TalkToRange(ply, "(".. LANGUAGE.whisper .. ") " .. ply:Nick(), text, 90) 
+		TalkToRange(ply, "(".. LANGUAGE.whisper .. ") " .. ply:Nick(), text, 90)
 	end
 	return args, DoSay
 end
@@ -1609,7 +1609,7 @@ AddChatCommand("/w", Whisper)
 local function Yell(ply, args)
 	local DoSay = function(text)
 		if text == "" then return "" end
-		TalkToRange(ply, "(".. LANGUAGE.yell .. ") " .. ply:Nick(), text, 550) 
+		TalkToRange(ply, "(".. LANGUAGE.yell .. ") " .. ply:Nick(), text, 550)
 	end
 	return args, DoSay
 end
@@ -1617,7 +1617,7 @@ AddChatCommand("/y", Yell)
 
 local function Me(ply, args)
 	if args == "" then return "" end
-	
+
 	local DoSay = function(text)
 		if text == "" then return "" end
 		if GetConVarNumber("alltalk") == 1 then
@@ -1715,7 +1715,7 @@ AddChatCommand("/radio", SayThroughRadio)
 local function CombineRequest(ply, args)
 	if args == "" then return "" end
 	local t = ply:Team()
-	
+
 	local DoSay = function(text)
 		if text == "" then return end
 		for k, v in pairs(player.GetAll()) do
@@ -1795,16 +1795,16 @@ local function GiveMoney(ply, args)
 			Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
 			return ""
 		end
-		
+
 		local RP = RecipientFilter()
 		RP:AddAllPlayers()
-		
-		umsg.Start("anim_giveitem", RP) 
+
+		umsg.Start("anim_giveitem", RP)
 			umsg.Entity(ply)
 		umsg.End()
 		ply.anim_GivingItem = true
-		
-		timer.Simple(1.2, function(ply) 
+
+		timer.Simple(1.2, function(ply)
 			if ValidEntity(ply) then
 				local trace2 = ply:GetEyeTrace()
 				if ValidEntity(trace2.Entity) and trace2.Entity:IsPlayer() and trace2.Entity:GetPos():Distance(ply:GetPos()) < 150 then
@@ -1829,7 +1829,7 @@ AddChatCommand("/give", GiveMoney)
 
 local function DropMoney(ply, args)
 	if args == "" then return "" end
-	
+
 	if not tonumber(args) then
 		return ""
 	end
@@ -1844,17 +1844,17 @@ local function DropMoney(ply, args)
 		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
 		return ""
 	end
-	
+
 	ply:AddMoney(-amount)
 	local RP = RecipientFilter()
 	RP:AddAllPlayers()
-	
-	umsg.Start("anim_dropitem", RP) 
+
+	umsg.Start("anim_dropitem", RP)
 		umsg.Entity(ply)
 	umsg.End()
 	ply.anim_DroppingItem = true
-	
-	timer.Simple(1, function(ply, cost) 
+
+	timer.Simple(1, function(ply, cost)
 		if ValidEntity(ply) then
 			local trace = {}
 			trace.start = ply:EyePos()
@@ -1863,13 +1863,10 @@ local function DropMoney(ply, args)
 
 			local tr = util.TraceLine(trace)
 			local money = DarkRPCreateMoneyBag(tr.HitPos, amount)
-			if not ValidEntity( money ) then
-				ply:AddMoney( cost ) -- the money didn't spawn, so refund them.
-			end
 			DB.Log(ply:Nick().. " (" .. ply:SteamID() .. ") has dropped "..CUR .. tostring(amount))
 		end
 	end, ply, amount)
-	
+
 	return ""
 end
 AddChatCommand("/dropmoney", DropMoney)
@@ -1879,7 +1876,7 @@ local function CreateCheque(ply, args)
 	local argt = string.Explode(" ", args)
 	local recipient = FindPlayer(argt[1])
 	local amount = tonumber(argt[2])
-	
+
 	if not recipient then
 		Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "recipient (1)"))
 		return ""
@@ -1894,17 +1891,17 @@ local function CreateCheque(ply, args)
 		Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
 		return ""
 	end
-	
+
 	if ValidEntity(ply) and ValidEntity(recipient) then
 		ply:AddMoney(-amount)
 	end
-	
-	umsg.Start("anim_dropitem", RecipientFilter():AddAllPlayers()) 
+
+	umsg.Start("anim_dropitem", RecipientFilter():AddAllPlayers())
 		umsg.Entity(ply)
 	umsg.End()
 	ply.anim_DroppingItem = true
-	
-	timer.Simple(1, function(ply, cost) 
+
+	timer.Simple(1, function(ply, cost)
 		if ValidEntity(ply) and ValidEntity(recipient) then
 			local trace = {}
 			trace.start = ply:EyePos()
@@ -1916,10 +1913,10 @@ local function CreateCheque(ply, args)
 			Cheque:SetPos(tr.HitPos)
 			Cheque.dt.owning_ent = ply
 			Cheque.dt.recipient = recipient
-			
+
 			Cheque.dt.amount = amount
 			Cheque:Spawn()
-			
+
 			if not ValidEntity( Cheque ) then
 				ply:AddMoney( cost ) -- The cheque didn't spawn, so refund them.
 			end
@@ -1931,7 +1928,7 @@ AddChatCommand("/cheque", CreateCheque)
 AddChatCommand("/check", CreateCheque) -- for those of you who can't spell
 
 local function MakeZombieSoundsAsHobo(ply)
-	if not ply.nospamtime then 
+	if not ply.nospamtime then
 		ply.nospamtime = CurTime() - 2
 	end
 	if not TEAM_HOBO or ply:Team() ~= TEAM_HOBO or CurTime() < (ply.nospamtime + 1.3) or (ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetClass() ~= "weapon_bugbait") then
@@ -1967,7 +1964,7 @@ local function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	elseif answer and not table.HasValue(LotteryPeople, target) then
 		Notify(target, 1,4, string.format(LANGUAGE.lottery_not_entered, target:Nick()))
 	end
-	
+
 	if TimeIsUp then
 		LotteryON = false
 		CanLottery = CurTime() + 60
@@ -1984,33 +1981,33 @@ end
 local function DoLottery(ply)
 	if ply:Team() ~= TEAM_MAYOR then
 		Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/lottery"))
-		return "" 
+		return ""
 	end
-	
+
 	if GetConVarNumber("lottery") ~= 1 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "/lottery", ""))
 		return ""
 	end
-	
+
 	if #player.GetAll() <= 2 or LotteryON then
 		Notify(ply, 1, 6, string.format(LANGUAGE.unable, "/lottery", ""))
-		return "" 
-	end 
+		return ""
+	end
 
 	if CanLottery > CurTime() then
 		Notify(ply, 1, 5, string.format(LANGUAGE.have_to_wait,  tostring(CanLottery - CurTime()), "/lottery"))
-		return "" 
+		return ""
 	end
-	
+
 	NotifyAll(0, 4, "A lottery has started!")
-	
+
 	LotteryON = true
 	LotteryPeople = {}
-	for k,v in pairs(player.GetAll()) do 
+	for k,v in pairs(player.GetAll()) do
 		if v ~= ply then
 			ques:Create("There is a lottery! Participate for " ..CUR.. tostring(GetConVarNumber("lotterycommitcost")) .. "?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
 		end
-	end	
+	end
 	timer.Create("Lottery", 30, 1, EnterLottery, nil, nil, nil, nil, true)
 	return ""
 end
@@ -2062,7 +2059,7 @@ local function MayorSetSalary(ply, cmd, args)
 	if GetConVarNumber("enablemayorsetsalary") == 0 then
 		ply:PrintMessage(2, string.format(LANGUAGE.disabled, "rp_setsalary", ""))
 		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "rp_setsalary", ""))
-		return 
+		return
 	end
 
 	if ply:Team() ~= TEAM_MAYOR then
@@ -2140,7 +2137,7 @@ local function RequestLicense(ply)
 		return ""
 	end
 	local LookingAt = ply:GetEyeTrace().Entity
-	
+
 	local ismayor--first look if there's a mayor
 	local ischief-- then if there's a chief
 	local iscop-- and then if there's a cop to ask
@@ -2150,7 +2147,7 @@ local function RequestLicense(ply)
 			break
 		end
 	end
-	
+
 	if not ismayor then
 		for k,v in pairs(player.GetAll()) do
 			if v:Team() == TEAM_CHIEF and not v.DarkRPVars.AFK then
@@ -2159,7 +2156,7 @@ local function RequestLicense(ply)
 			end
 		end
 	end
-	
+
 	if not ischief and not ismayor then
 		for k,v in pairs(player.GetAll()) do
 			if v:Team() == TEAM_POLICE then
@@ -2168,17 +2165,17 @@ local function RequestLicense(ply)
 			end
 		end
 	end
-	
+
 	if not ismayor and not ischief and not iscop then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/requestlicense", ""))
 		return ""
 	end
-	
+
 	if not ValidEntity(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "mayor/chief/cop"))
 		return ""
 	end
-	
+
 	if ismayor and LookingAt:Team() ~= TEAM_MAYOR then
 		Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "mayor"))
 		return ""
@@ -2189,7 +2186,7 @@ local function RequestLicense(ply)
 		Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "cop"))
 		return ""
 	end
-	
+
 	Notify(ply, 3, 4, string.format(LANGUAGE.gunlicense_requested, ply:Nick(), LookingAt:Nick()))
 	ques:Create(string.format(LANGUAGE.gunlicense_question_text, ply:Nick()), "Gunlicense"..ply:EntIndex(), LookingAt, 20, GrantLicense, ply, LookingAt)
 	return ""
@@ -2206,7 +2203,7 @@ local function GiveLicense(ply)
 			break
 		end
 	end
-	
+
 	if not ismayor then
 		for k,v in pairs(player.GetAll()) do
 			if v:Team() == TEAM_CHIEF and not v.DarkRPVars.AFK then
@@ -2215,7 +2212,7 @@ local function GiveLicense(ply)
 			end
 		end
 	end
-	
+
 	if not ischief and not ismayor then
 		for k,v in pairs(player.GetAll()) do
 			if v:Team() == TEAM_POLICE then
@@ -2224,7 +2221,7 @@ local function GiveLicense(ply)
 			end
 		end
 	end
-	
+
 	if ismayor and ply:Team() ~= TEAM_MAYOR then
 		Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/givelicense"))
 		return ""
@@ -2235,13 +2232,13 @@ local function GiveLicense(ply)
 		Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/givelicense"))
 		return ""
 	end
-	
+
 	local LookingAt = ply:GetEyeTrace().Entity
 	if not ValidEntity(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "player"))
 		return ""
 	end
-	Notify(LookingAt, 0, 4, string.format(LANGUAGE.gunlicense_granted, ply:Nick(), LookingAt:Nick())) 
+	Notify(LookingAt, 0, 4, string.format(LANGUAGE.gunlicense_granted, ply:Nick(), LookingAt:Nick()))
 	Notify(ply, 0, 4, string.format(LANGUAGE.gunlicense_granted, ply:Nick(), LookingAt:Nick()))
 	LookingAt:SetDarkRPVar("HasGunlicense", true)
 	return ""
@@ -2340,11 +2337,11 @@ local function VoteRemoveLicense(ply, args)
 	local reason = ""
 	for i = 2, #tableargs, 1 do
 		reason = reason .. " " .. tableargs[i]
-	end 
+	end
 	reason = string.sub(reason, 2)
 	if string.len(reason) > 22 then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/demotelicense", "<23"))
-		return "" 
+		return ""
 	end
 	local p = FindPlayer(tableargs[1])
 	if p then
@@ -2369,18 +2366,18 @@ end
 AddChatCommand("/demotelicense", VoteRemoveLicense)
 
 local function ReportAttacker(ply, cmd, args)
-	
+
 	if cmd != "rp_reportattacker" then // It must be a chat command, so the arguments will be passed to the second argument (cmd)
 		args = string.Explode( " ", cmd )
 	end
 
 	local name = args[1]
 	args[1] = "" // Keep name/reason separate
-	
+
 	local reason = table.concat( args, " " )
-	
+
 	if reason and string.len( reason ) > 22 then Notify( ply, 1, 4, string.format( LANGUAGE.unable, "/911", "Reason >22" ) ) return "" end
-	
+
 	local target = FindPlayer( name )
 	if target then
 		for k, v in pairs(ents.FindByClass("darkrp_console")) do
@@ -2403,8 +2400,8 @@ local function ReportEntity(ply, cmd, args)
 	tracedata.start = ply:GetShootPos()
 	tracedata.endpos = tracedata.start + ply:GetAimVector() * 1000
 	tracedata.filter = ply
-	tr = util.TraceLine(tracedata).Entity	
-	
+	tr = util.TraceLine(tracedata).Entity
+
 	local illegal = {"money_printer", "drug_lab", "drug"}
 	if ValidEntity(tr) and tr.dt and ValidEntity(tr.dt.owning_ent) and (table.HasValue(illegal, tr:GetClass()) or tr.Illegal) then
 		for k, v in pairs(ents.FindByClass("darkrp_console")) do
