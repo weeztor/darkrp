@@ -457,7 +457,7 @@ local function SetWarrant(ply, target, reason)
 	for a, b in pairs(player.GetAll()) do
 		b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.warrant_approved, target:Nick()).."\nReason: "..tostring(reason))
 		if b:IsAdmin() then
-			b:PrintMessage( HUD_PRINTCONSOLE, ply:Nick() .. " ordered a search warrant for " .. target:Nick() .. ", reason: " .. reason )
+			b:PrintMessage( HUD_PRINTCONSOLE, ply:Nick() .. " ordered a search warrant for " .. target:Nick() .. ", reason: " .. tostring(reason) )
 		end
 	end
 	Notify(ply, 0, 4, LANGUAGE.warrant_approved2)
