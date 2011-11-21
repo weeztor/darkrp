@@ -8,7 +8,7 @@ local function Spectate(ply, cmd, args)
 
 	ply.FAdminSpectating = target
 
-	umsg.Start("FAdminSpectate", Ply)
+	umsg.Start("FAdminSpectate", ply)
 		umsg.Entity(ply.FAdminSpectating)
 	umsg.End()
 
