@@ -541,7 +541,7 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 		if not cantouch then return false end	
 	end
 
-	if tool ~= "adv_duplicator" and tool ~= "duplicator" then return end
+	if tool ~= "adv_duplicator" and tool ~= "duplicator" and tool ~= "advdupe2" then return end
 	if not FPP.AntiSpam.DuplicatorSpam(ply) then return false end
 	if tool == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 		for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
@@ -569,6 +569,38 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 				if setspawning then
 					FPP.CanTouch(ply, "FPP_TOOLGUN", "Duplicating blocked entity", false)
 					ply:GetActiveWeapon():GetToolObject().Entities[k] = nil
+				end
+			end
+		end
+		return --No further questions sir!
+	end
+	
+	if tool == "advdupe2" and ply.AdvDupe2 and ply.AdvDupe2.Entities then
+		for k,v in pairs(ply.AdvDupe2.Entities) do
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) and (not ply:IsAdmin() or (ply:IsAdmin() and not tobool(FPP.Settings.FPP_TOOLGUN.spawnadmincanweapon))) then
+				for c, d in pairs(allweapons) do
+					if string.lower(v.Class) == string.lower(d) or string.find(v.Class:lower(), "ai_") == 1 or string.find(v.Class:lower(), "item_ammo_") == 1 then
+						FPP.CanTouch(ply, "FPP_TOOLGUN", "Duplicating blocked entity", false)
+						ply.AdvDupe2.Entities[k] = nil
+					end
+				end
+			end
+			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatorprotect) and (not ply:IsAdmin() or (ply:IsAdmin() and not tobool(FPP.Settings.FPP_TOOLGUN.spawnadmincanblocked))) then
+				local setspawning = tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist)
+				for c, d in pairs(FPP.Blocked.Spawning) do
+					if not tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then
+						FPP.CanTouch(ply, "FPP_TOOLGUN", "Duplicating blocked entity", false)
+						ply.AdvDupe2.Entities[k] = nil
+						break
+					end
+					if tobool(FPP.Settings.FPP_TOOLGUN.spawniswhitelist) and string.find(v.Class, d) then -- if the whitelist is on you can't spawn it unless it's found
+						setspawning = false
+						break
+					end
+				end
+				if setspawning then
+					FPP.CanTouch(ply, "FPP_TOOLGUN", "Duplicating blocked entity", false)
+					ply.AdvDupe2.Entities[k] = nil
 				end
 			end
 		end
