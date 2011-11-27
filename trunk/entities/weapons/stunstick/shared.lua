@@ -117,6 +117,10 @@ function SWEP:PrimaryAttack()
 	else
 		self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
 		if FPP and FPP.PlayerCanTouchEnt(self.Owner, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
+			if trace.Entity.SeizeReward then
+				self.Owner:AddMoney( trace.Entity.SeizeReward )
+				Notify( self.Owner, 1, 4, "You have recieved a $" .. trace.Entity.SeizeReward .. " bonus for destroying this illegal entity." )
+			end
 			trace.Entity:TakeDamage(1000, self.Owner, self) -- for illegal entities
 		end
 	end
@@ -155,6 +159,10 @@ function SWEP:SecondaryAttack()
 		else
 			self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
 			if FPP and FPP.PlayerCanTouchEnt(ply, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
+				if trace.Entity.SeizeReward then
+					self.Owner:AddMoney( trace.Entity.SeizeReward )
+					Notify( self.Owner, 1, 4, "You have recieved a $" .. trace.Entity.SeizeReward .. " bonus for destroying this illegal entity." )
+				end
 				trace.Entity:TakeDamage(990, self.Owner, self)
 			end
 		end
