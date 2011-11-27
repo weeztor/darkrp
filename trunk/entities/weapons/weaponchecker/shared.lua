@@ -76,7 +76,7 @@ function SWEP:PrimaryAttack()
 	local result = "" 
 	for k,v in pairs(trace.Entity:GetWeapons()) do
 		if v:IsValid() then
-			result = result..", "..v:GetClass()
+			result = result..", ".. (v:GetPrintName() or v:GetClass())
 		end
 	end
 	self.Owner:EmitSound("npc/combine_soldier/gear5.wav", 50, 100)
