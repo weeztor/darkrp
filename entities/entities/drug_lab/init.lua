@@ -3,6 +3,8 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+ENT.SeizeReward = 350
+
 function ENT:Initialize()
 	self:SetModel("models/props_lab/crematorcase.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)

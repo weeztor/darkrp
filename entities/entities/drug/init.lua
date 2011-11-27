@@ -57,6 +57,7 @@ function ENT:Initialize()
 
 	self.damage = 10
 	self.dt.price = self.dt.price or 100
+	self.SeizeReward = GetConVarNumber( "pricemin" ) or 35
 end
 
 function ENT:OnTakeDamage(dmg)
