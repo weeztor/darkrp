@@ -117,7 +117,7 @@ function SWEP:PrimaryAttack()
 	else
 		self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
 		if FPP and FPP.PlayerCanTouchEnt(self.Owner, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
-			if trace.Entity.SeizeReward and not ent.burningup then
+			if trace.Entity.SeizeReward and not trace.Entity.burningup then
 				self.Owner:AddMoney( trace.Entity.SeizeReward )
 				Notify( self.Owner, 1, 4, "You have recieved a $" .. trace.Entity.SeizeReward .. " bonus for destroying this illegal entity." )
 			end
