@@ -7,14 +7,14 @@ local meta = FindMetaTable("Player")
  RP names
  ---------------------------------------------------------*/
 local function RPName(ply, args)
-	
+
 	if ply.LastNameChange and ply.LastNameChange > (CurTime() - 5) then
 		Notify( ply, 1, 4, string.format( LANGUAGE.have_to_wait,  math.ceil(5 - (CurTime() - ply.LastNameChange)), "/rpname" ))
 		return ""
 	end
-	
+
 	if GetConVarNumber("allowrpnames") ~= 1 then
-		Notify(ply, 1, 6,  string.format(LANGUAGE.disabled, "RPname", "")) 
+		Notify(ply, 1, 6,  string.format(LANGUAGE.disabled, "RPname", ""))
 		return ""
 	end
 
@@ -28,29 +28,29 @@ local function RPName(ply, args)
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ">2"))
 		return ""
 	end
-	
+
  	if string.find(args, "\160") or string.find(args, " ") == 1 then -- No system spaces in your name bro!
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end
-	
+
 	if low == "ooc" or low == "shared" or low == "world" or low == "n/a" or low == "world prop" then
 		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end
-	
+
 	local allowed = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-	'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 
-	'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 
+	'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p',
+	'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
 	'z', 'x', 'c', 'v', 'b', 'n', 'm', ' ',
 	'(', ')', '[', ']', '!', '@', '#', '$', '%', '^', '&', '*', '-', '_', '=', '+', '|', '\\'}
-	
+
 	for k in string.gmatch(args, ".") do
 		if not table.HasValue(allowed, string.lower(k)) then
 			Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", k))
-			return "" 
+			return ""
 		end
-	end 
+	end
 	ply:SetRPName(args)
 	ply.LastNameChange = CurTime()
 	return ""
@@ -75,7 +75,7 @@ function meta:SetRPName(name, firstRun)
 				-- If we just connected and another player happens to be using our steam name as their RP name
 				-- Put a 1 after our steam name
 				DB.StoreRPName(self, name .. " 1")
-				Notify(self, 0, 12, "Someone is already using your Steam name as their RP name so we gave you a '1' after your name.") 
+				Notify(self, 0, 12, "Someone is already using your Steam name as their RP name so we gave you a '1' after your name.")
 			else
 				Notify(self, 1, 5, string.format(LANGUAGE.unable, "RPname", "it's been taken"))
 				return ""
@@ -92,6 +92,7 @@ end
 function meta:RestoreRPName()
 	if not ValidEntity(self) then return end
 	DB.RetrieveRPName(self, function(name)
+		if not ValidEntity(self) then return end
 		if not name or name == "" then name = string.gsub(self:SteamName(), "\\\"", "\"") end
 
 		self:SetDarkRPVar("rpname", name)
@@ -137,7 +138,7 @@ function meta:CompleteSentence()
 			timer.Simple(0, RunConsoleCommand, v.var, value)
 		end
 	end
-	
+
 	for k,v in pairs(ValueCmds) do
 		local value = GetConVarNumber(v.var)
 		if value ~= v.default then
@@ -145,7 +146,7 @@ function meta:CompleteSentence()
 			timer.Simple(0, RunConsoleCommand, v.var, value)
 		end
 	end
-	
+
 	local ID = self:SteamID()
 	if ValidEntity(self) and ID ~= nil and RPArrestedPlayers[ID] then
 		local time = GetConVarNumber("jailtimer")
@@ -211,28 +212,28 @@ function meta:ChangeTeam(t, force)
 			return
 		end
 	end
-	
+
 	self:SetSelfDarkRPVar("helpBoss",false)
 	self:SetSelfDarkRPVar("helpCop",false)
 	self:SetSelfDarkRPVar("helpMayor",false)
-	
+
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) and not force then
 		Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), "banned/demoted"))
 		return
 	end
-	
+
 	if self.LastJob and 10 - (CurTime() - self.LastJob) >= 0 and not force then
 		Notify(self, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(10 - (CurTime() - self.LastJob)), "/job"))
-		return 
+		return
 	end
-	
+
 	if self.IsBeingDemoted then
 		self:TeamBan()
 		vote.DestroyVotesWithEnt(self)
 		Notify(self, 1, 4, "You tried to escape demotion. You failed, and have been demoted.")
 	end
-	
-	
+
+
 	if self:Team() == t then
 		Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
 		return
@@ -245,7 +246,7 @@ function meta:ChangeTeam(t, force)
 		Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
 		return
 	end
-	
+
 	if not self.DarkRPVars["Priv"..TEAM.command] and not force  then
 		if type(TEAM.NeedToChangeFrom) == "number" and self:Team() ~= TEAM.NeedToChangeFrom then
 			Notify(self, 1,4, string.format(LANGUAGE.need_to_be_before, team.GetName(TEAM.NeedToChangeFrom), TEAM.name))
@@ -273,17 +274,17 @@ function meta:ChangeTeam(t, force)
 	if TEAM.Haslicense and GetConVarNumber("license") ~= 0 then
 		self:SetDarkRPVar("HasGunlicense", true)
 	end
-	
+
 	self.LastJob = CurTime()
-	
-	if t == TEAM_POLICE then	
+
+	if t == TEAM_POLICE then
 		self:SetSelfDarkRPVar("helpCop", true)
 	elseif t == TEAM_MOB then
 		self:SetSelfDarkRPVar("helpBoss", true)
 	elseif t == TEAM_MAYOR then
 		self:SetSelfDarkRPVar("helpMayor", true)
 	end
-	
+
 	if tobool(GetConVarNumber("removeclassitems")) then
 		for k, v in pairs(ents.FindByClass("microwave")) do
 			if v.SID == self.SID then v:Remove() end
@@ -291,18 +292,18 @@ function meta:ChangeTeam(t, force)
 		for k, v in pairs(ents.FindByClass("gunlab")) do
 			if v.SID == self.SID then v:Remove() end
 		end
-		
+
 		if t ~= TEAM_MOB and t ~= TEAM_GANG then
 			for k, v in pairs(ents.FindByClass("drug_lab")) do
 				if v.SID == self.SID then v:Remove() end
 			end
 		end
-		
+
 		for k,v in pairs(ents.FindByClass("spawned_shipment")) do
 			if v.SID == self.SID then v:Remove() end
 		end
 	end
-	
+
 	if self:Team() == TEAM_MAYOR then
 		for _, ent in pairs(self.lawboards or {}) do
 			if ValidEntity(ent) then
@@ -310,9 +311,9 @@ function meta:ChangeTeam(t, force)
 			end
 		end
 	end
-	
+
 	self:SetTeam(t)
-	DB.Log(self:SteamName().." ("..self:SteamID()..") changed to "..team.GetName(t))
+	DB.Log(self:SteamName().." ("..self:SteamID()..") changed to "..team.GetName(t), nil, Color(100, 0, 255))
 	if self:InVehicle() then self:ExitVehicle() end
 	if GetConVarNumber("norespawn") == 1 and self:Alive() then
 		self:StripWeapons()
@@ -398,7 +399,7 @@ local function AddJailPos(ply)
 			str = LANGUAGE.chief_or .. str
 		end
 
-		Notify(ply, 1, 4, str) 
+		Notify(ply, 1, 4, str)
 	end
 	return ""
 end
@@ -411,8 +412,8 @@ function meta:Arrest(time, rejoin)
 	self:SetSelfDarkRPVar("Arrested", true)
 	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("aspd"), GetConVarNumber("aspd"))
 	self:StripWeapons()
-	
-	if tobool(GetConVarNumber("droppocketarrest")) and self.Pocket then 
+
+	if tobool(GetConVarNumber("droppocketarrest")) and self.Pocket then
 		for k, v in pairs(self.Pocket) do
 			if ValidEntity(v) then
 				v:SetMoveType(MOVETYPE_VPHYSICS)
@@ -428,7 +429,7 @@ function meta:Arrest(time, rejoin)
 		end
 		self.Pocket = nil
 	end
-	
+
 	-- Always get sent to jail when Arrest() is called, even when already under arrest
 	if GetConVarNumber("teletojail") == 1 and DB.CountJailPos() and DB.CountJailPos() ~= 0 then
 		local jailpos = DB.RetrieveJailPos()
@@ -436,12 +437,12 @@ function meta:Arrest(time, rejoin)
 			self:SetPos(jailpos)
 		end
 	end
-	
+
 	if not RPArrestedPlayers[self:SteamID()] or rejoin then
 		local ID = self:SteamID()
 		RPArrestedPlayers[ID] = true
 		self.LastJailed = CurTime()
-		
+
 		-- If the player has no remaining jail time,
 		-- set it back to the max for this new sentence
 		if not time or time == 0 then
@@ -454,7 +455,7 @@ function meta:Arrest(time, rejoin)
 				v:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.hes_arrested, self:Name(), time))
 			end
 		end
-		
+
 		timer.Create(ID .. "jailtimer", time, 1, function() if ValidEntity(self) then self:Unarrest(ID) end end)
 		umsg.Start("GotArrested", self)
 			umsg.Float(time)
@@ -468,14 +469,14 @@ function meta:Unarrest(ID)
 		RPArrestedPlayers[ID] = nil
 		return
 	end
-	
+
 	if self.Sleeping then
 		KnockoutToggle(self, "force")
 	end
 
 	if RPArrestedPlayers[self:SteamID()] ~= nil then
 		RPArrestedPlayers[self:SteamID()] = nil
-		
+
 		GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 		GAMEMODE:PlayerLoadout(self)
 		if GetConVarNumber("telefromjail") == 1 and (not FAdmin or not self:FAdmin_GetGlobal("fadmin_jailed")) then
@@ -484,7 +485,7 @@ function meta:Unarrest(ID)
 		elseif FAdmin and self:FAdmin_GetGlobal("fadmin_jailed") then
 			self:SetPos(self.FAdminJailPos)
 		end
-		
+
 		timer.Destroy(self:SteamID() .. "jailtimer")
 		NotifyAll(0, 4, string.format(LANGUAGE.hes_unarrested, self:Name()))
 	end
