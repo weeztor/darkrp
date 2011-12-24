@@ -459,6 +459,15 @@ function GM:PlayerInitialSpawn(ply)
 	if GetConVarNumber("DarkRP_Lockdown") == 1 then
 		RunConsoleCommand("DarkRP_Lockdown", 1 ) -- so new players who join know there's a lockdown
 	end
+
+	for k,v in pairs(ents.GetAll()) do
+		if ValidEntity(v) and v.deleteSteamID == ply:SteamID() then
+			v.SID = ply.SID
+			v.deleteSteamID = nil
+			ply["max"..v:GetClass()] = (ply["max"..v:GetClass()] or 0) + 1
+			if v.dt then v.dt.owning_ent = ply end
+		end
+	end
 	timer.Simple(10, ply.CompleteSentence, ply)
 end
 
@@ -679,6 +688,23 @@ function GM:PlayerLoadout(ply)
 	end
 end
 
+local function removeDelayed(ent, ply)
+	local removedelay = GetConVarNumber("entremovedelay")
+
+	ent.deleteSteamID = ply:SteamID()
+	timer.Simple(removedelay, function()
+		for _, pl in pairs(player.GetAll()) do
+			if ValidEntity(pl) and ValidEntity(ent) and pl:SteamID() == ent.deleteSteamID then
+				ent.SID = pl.SID
+				ent.deleteSteamID = nil
+				return
+			end
+		end
+
+		SafeRemoveEntity(ent)
+	end)
+end
+
 function GM:PlayerDisconnected(ply)
 	self.BaseClass:PlayerDisconnected(ply)
 	timer.Destroy(ply:SteamID() .. "jobtimer")
@@ -688,19 +714,19 @@ function GM:PlayerDisconnected(ply)
 		local class = v:GetClass()
 		for _, customEnt in pairs(DarkRPEntities) do
 			if class == customEnt.ent and v.SID == ply.SID then
-				v:Remove()
+				removeDelayed(v, ply)
 				break
 			end
 		end
 		if v:IsVehicle() and v.SID == ply.SID then
-			v:Remove()
+			removeDelayed(v, ply)
 		end
 	end
 
 	if ply:Team() == TEAM_MAYOR then
 		for _, ent in pairs(ply.lawboards or {}) do
 			if ValidEntity(ent) then
-				ent:Remove()
+				removeDelayed(v, ply)
 			end
 		end
 	end

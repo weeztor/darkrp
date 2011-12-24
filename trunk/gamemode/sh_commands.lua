@@ -26,10 +26,10 @@ CreateConVar("DarkRP_LockDown", 0, {FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE})
 
 concommand.Add("rp_commands", function()
 	for k, v in SortedPairs(ToggleCmds) do
-		print(k) 
-	end 
-	for k,v in SortedPairs(ValueCmds) do 
-		print(k) 
+		print(k)
+	end
+	for k,v in SortedPairs(ValueCmds) do
+		print(k)
 	end
 end)
 
@@ -46,7 +46,7 @@ if SERVER then
 			count = count + 1
 			timer.Simple(count * 0.1, RunConsoleCommand, v.var, v.default)
 		end
-		
+
 		for k,v in pairs(ValueCmds) do
 			count = count + 1
 			timer.Simple(count * 0.1, RunConsoleCommand, v.var, v.default)
@@ -74,7 +74,7 @@ AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/disablezombie (disables zombiemode)")
 AddHelpLabel(-1, HELP_CATEGORY_ZOMBIE, "/enablestorm (enables meteor storms)")
 
 -----------------------------------------------------------
--- TOGGLE COMMANDS -- 
+-- TOGGLE COMMANDS --
 -----------------------------------------------------------
 -- Usage of AddToggleCommand
 -- (Command name,  Cfg variable name, Default value, Superadmin only)
@@ -91,7 +91,7 @@ timer.Simple(1, function()
 		local allowed = 0
 		if table.HasValue(Allowedweps, v.ClassName) then allowed = 1 end
 		AddToggleCommand("rp_licenseweapon_"..string.lower(v.ClassName), "licenseweapon_"..string.lower(v.ClassName), allowed, true)
-	end 
+	end
 end)
 
 AddToggleCommand("rp_propertytax", "propertytax", 0)
@@ -296,7 +296,7 @@ AddToggleCommand("rp_proplympics", "proplympics", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_proplympics - Allow/Disallow the mayor to start proplympics races.")
 
 -----------------------------------------------------------
--- VALUE COMMANDS -- 
+-- VALUE COMMANDS --
 -----------------------------------------------------------
 
 AddValueCommand("rp_ammopistolcost", "ammopistolcost", 0)
@@ -419,15 +419,18 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxlawboards <Number> - The maximum
 AddValueCommand("rp_shipmenttime", "shipmentspawntime", 10)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_shipmenttime <Number> - The number of seconds it takes for a shipment to spawn.")
 
+AddValueCommand("rp_EntityRemoveDelay", "entremovedelay", 0)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_EntityRemoveDelay <Number> - how long to wait before removing a bought entity after disconnect.")
+
 function AddEntityCommands(name, command, max, price)
 	local cmdname = string.gsub(command, " ", "_")
-	
+
 	AddToggleCommand("rp_disable"..cmdname, "disable"..cmdname, 0)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_disable"..cmdname.." - disable that people can buy the "..name..".")
 
 	AddValueCommand("rp_max"..cmdname, "max"..cmdname, max or 3)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..cmdname.." <Number> - Sets how many ".. name .. " one can buy.")
-	
+
 	AddValueCommand("rp_"..cmdname.."_price", cmdname.."_price", price or 30)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..cmdname.."_price <Number> - Sets the price of ".. name .. ".")
 end
@@ -445,7 +448,7 @@ function AddTeamCommands(CTeam, max)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allow"..CTeam.command.." - Enable/disable "..CTeam.name)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..CTeam.command.."s".." <Number> - Sets max "..CTeam.name.."s.")
 	if CLIENT then return end
-	
+
 	if CTeam.Vote then
 		AddChatCommand("/vote"..CTeam.command, function(ply)
 			if GetConVarNumber("allow"..CTeam.command) and GetConVarNumber("allow"..CTeam.command) ~= 1 then
@@ -454,7 +457,7 @@ function AddTeamCommands(CTeam, max)
 			end
 			if type(CTeam.NeedToChangeFrom) == "number" and ply:Team() ~= CTeam.NeedToChangeFrom then
 				Notify(ply, 1,4, string.format(LANGUAGE.need_to_be_before, team.GetName(CTeam.NeedToChangeFrom), CTeam.name))
-				return "" 
+				return ""
 			elseif type(CTeam.NeedToChangeFrom) == "table" and not table.HasValue(CTeam.NeedToChangeFrom, ply:Team()) then
 				local teamnames = ""
 				for a,b in pairs(CTeam.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
@@ -497,12 +500,12 @@ function AddTeamCommands(CTeam, max)
 				Notify(ply, 1, 4, string.format(LANGUAGE.disabled, CTeam.name, ""))
 				return ""
 			end
-			
+
 			if ply:HasPriv("rp_"..CTeam.command) then
 				ply:ChangeTeam(k, true)
 				return ""
 			end
-			
+
 			local a = CTeam.admin
 			if a > 0 and not ply:IsAdmin()
 			or a > 1 and not ply:IsSuperAdmin()
@@ -510,7 +513,7 @@ function AddTeamCommands(CTeam, max)
 				Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, CTeam.name))
 				return ""
 			end
-			
+
 			if a == 0 and not ply:IsAdmin()
 			or a == 1 and not ply:IsSuperAdmin()
 			or a == 2
@@ -540,18 +543,18 @@ function AddTeamCommands(CTeam, max)
 			return ""
 		end)
 	end
-	
+
 	concommand.Add("rp_"..CTeam.command, function(ply, cmd, args)
 		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
 			ply:PrintMessage(2, string.format(LANGUAGE.need_admin, cmd))
 			return
         end
-		
+
 		if CTeam.admin > 1 and not ply:IsSuperAdmin() then
 			ply:PrintMessage(2, string.format(LANGUAGE.need_sadmin, cmd))
 			return
 		end
-		
+
 		if CTeam.Vote then
 			if CTeam.admin >= 1 and ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 				ply:PrintMessage(2, string.format(LANGUAGE.need_admin, cmd))
@@ -561,10 +564,10 @@ function AddTeamCommands(CTeam, max)
 				return
 			end
 		end
-		
+
 		if not args[1] then return end
 		local target = FindPlayer(args[1])
-		
+
         if (target) then
 			target:ChangeTeam(k, true)
 			if (ply:EntIndex() ~= 0) then
