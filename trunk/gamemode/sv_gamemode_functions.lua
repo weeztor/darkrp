@@ -15,7 +15,7 @@ function GM:PlayerSpawnProp(ply, model)
 
 	if RPArrestedPlayers[ply:SteamID()] then return false end
 	model = string.gsub(tostring(model), "\\", "/")
-	if string.find(model,  "//") then Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model) 
+	if string.find(model,  "//") then Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with an invalid path "..model) return false end
 
 	if allowed then
@@ -79,7 +79,7 @@ function GM:EntityRemoved(ent)
 			found.Vehicles = found.Vehicles - 1
 		end
 	end
-	
+
 	for k,v in pairs(DarkRPEntities or {}) do
 		if ent:IsValid() and ent:GetClass() == v.ent and ent.dt and ValidEntity(ent.dt.owning_ent) and not ent.IsRemoved then
 			local ply = ent.dt.owning_ent
@@ -130,7 +130,7 @@ function GM:KeyPress(ply, code)
 		trace.endpos = trace.start + ply:GetAimVector() * 95
 		trace.filter = ply
 		local tr = util.TraceLine(trace)
-		
+
 		-- Begin trading server-side (Although this appears to be unstable, don't worry, I've planned the system out, I've just not implemented the update completely).
 		-- Note: Uncomplete; Please leave for Eusion to complete. :)
 		if ValidEntity(tr.Entity) and tr.Entity:IsPlayer() then
@@ -195,17 +195,17 @@ local function IsInRoom(listener, talker) -- IsInRoom function to see if the pla
 	tracedata.start = talker:GetShootPos()
 	tracedata.endpos = listener:GetShootPos()
 	local trace = util.TraceLine( tracedata )
-	
+
 	return not trace.HitWorld
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, talker, other)
-	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then 
+	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then
 		return true, tobool(GetConVarNumber("3dvoice"))
 	elseif talker.DarkRPVars and ValidEntity(talker.DarkRPVars.phone) then
 		return false, tobool(GetConVarNumber("3dvoice"))
 	end
-	
+
 	if GetConVarNumber("voiceradius") == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
 		if GetConVarNumber("dynamicvoice") == 1 then
 			if IsInRoom( listener, talker ) then
@@ -296,7 +296,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	UnDrugPlayer(ply)
 
 	if weapon:IsVehicle() and weapon:GetDriver():IsPlayer() then killer = weapon:GetDriver() end
-	
+
 	local KillerName = (killer:IsPlayer() and killer:Nick()) or killer:GetClass()
 	if KillerName == "prop_physics" then
 		KillerName = killer.Owner and killer.Owner:Nick() or "unknown"
@@ -306,7 +306,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		WeaponName = weapon:GetClass() .. " (" .. weapon:GetModel() or "unknown" .. ")"
 	end
 	ServerLog(ply:Nick().." was killed by "..KillerName.." with " .. WeaponName)
-	
+
 	if GetConVarNumber("deathnotice") == 1 then
 		self.BaseClass:PlayerDeath(ply, weapon, killer)
 	else
@@ -326,20 +326,20 @@ function GM:PlayerDeath(ply, weapon, killer)
 		ply.NextSpawnTime = CurTime() + math.ceil(GetConVarNumber("jailtimer") - (CurTime() - ply.LastJailed)) + 1
 		for a, b in pairs(player.GetAll()) do
 			b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.died_in_jail, ply:Nick()))
-		end 
+		end
 		Notify(ply, 4, 4, LANGUAGE.dead_in_jail)
 	else
 		-- Normal death, respawning.
 		ply.NextSpawnTime = CurTime() + math.Clamp(GetConVarNumber("respawntime"), 0, 3)
 	end
 	ply.DeathPos = ply:GetPos()
-	
+
 	if tobool(GetConVarNumber("dropmoneyondeath")) then
 		local amount = GetConVarNumber("deathfee")
 		if not ply:CanAfford(GetConVarNumber("deathfee")) then
 			amount = ply.DarkRPVars.money
 		end
-		
+
 		if amount > 0 then
 			ply:AddMoney(-amount)
 			DarkRPCreateMoneyBag(ply:GetPos(), amount)
@@ -366,10 +366,10 @@ function GM:PlayerDeath(ply, weapon, killer)
 		ply.DeathPos = nil
 		ply.Slayed = false
 	end
-	
+
 	ply:GetTable().ConfisquatedWeapons = nil
 	if tobool(GetConVarNumber("droppocketdeath")) then
-		if ply.Pocket then 
+		if ply.Pocket then
 			for k, v in pairs(ply.Pocket) do
 				if ValidEntity(v) then
 					v:SetMoveType(MOVETYPE_VPHYSICS)
@@ -392,7 +392,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
-	if RPArrestedPlayers[ply:SteamID()] then return false end 
+	if RPArrestedPlayers[ply:SteamID()] then return false end
 	if ply:IsAdmin() and GetConVarNumber("AdminsCopWeapons") ==1 then return true end
 	if GetConVarNumber("license") == 1 and not ply.DarkRPVars.HasGunlicense and not ply:GetTable().RPLicenseSpawn then
 		if GetConVarNumber("licenseweapon_"..string.lower(weapon:GetClass())) == 1 or not weapon:IsWeapon() then
@@ -403,9 +403,9 @@ function GM:PlayerCanPickupWeapon(ply, weapon)
 	return true
 end
 
-local function removelicense(ply) 
-	if not ValidEntity(ply) then return end 
-	ply:GetTable().RPLicenseSpawn = false 
+local function removelicense(ply)
+	if not ValidEntity(ply) then return end
+	ply:GetTable().RPLicenseSpawn = false
 end
 
 local function SetPlayerModel(ply, cmd, args)
@@ -418,11 +418,11 @@ function GM:PlayerSetModel(ply)
 	local EndModel = ""
 	if GetConVarNumber("enforceplayermodel") == 1 then
 		local TEAM = RPExtraTeams[ply:Team()]
-		
+
 		if type(TEAM.model) == "table" then
 			local ChosenModel = ply.rpChosenModel or ply:GetInfo("rp_playermodel")
 			ChosenModel = string.lower(ChosenModel)
-			
+
 			local found
 			for _,Models in pairs(TEAM.model) do
 				if ChosenModel == string.lower(Models) then
@@ -431,7 +431,7 @@ function GM:PlayerSetModel(ply)
 					break
 				end
 			end
-			
+
 			if not found then
 				EndModel = TEAM.model[math.random(#TEAM.model)]
 			end
@@ -489,7 +489,7 @@ end
 local function SendDarkRPVars(ply)
 	if ply.DarkRPVarsSent and ply.DarkRPVarsSent > (CurTime() - 1) then return end --prevent spammers
 	ply.DarkRPVarsSent = CurTime()
-	
+
 	local sendtable = {}
 	for k,v in pairs(player.GetAll()) do
 		sendtable[v] = v.DarkRPVars
@@ -500,27 +500,27 @@ concommand.Add("_sendDarkRPvars", SendDarkRPVars)
 
 function GM:PlayerSelectSpawn(ply)
 	local POS = self.BaseClass:PlayerSelectSpawn(ply)
-	if POS.GetPos then 
+	if POS.GetPos then
 		POS = POS:GetPos()
 	else
 		POS = ply:GetPos()
-	end 
-	
-	
+	end
+
+
 	local CustomSpawnPos = DB.RetrieveTeamSpawnPos(ply)
 	if GetConVarNumber("customspawns") == 1 and not RPArrestedPlayers[ply:SteamID()] and CustomSpawnPos then
 		POS = CustomSpawnPos[math.random(1, #CustomSpawnPos)]
 	end
-	
+
 	-- Spawn where died in certain cases
 	if GetConVarNumber("strictsuicide") == 1 and ply:GetTable().DeathPos then
 		POS = ply:GetTable().DeathPos
 	end
-	
+
 	if RPArrestedPlayers[ply:SteamID()] then
 		POS = DB.RetrieveJailPos() or ply:GetTable().DeathPos -- If we can't find a jail pos then we'll use where they died as a last resort
 	end
-	
+
 	if not IsEmpty(POS) then
 		local found = false
 		for i = 40, 300, 15 do
@@ -575,9 +575,9 @@ function GM:PlayerSpawn(ply)
 	if GetConVarNumber("xhair") == 0 then
 		ply:CrosshairDisable()
 	end
-	
+
 	SendUserMessage("DarkRPEffects", ply, "deathPOV", "0") -- No checks to prevent bugs
-	
+
 	-- Kill any colormod
 	local RP = RecipientFilter()
 	RP:RemoveAllPlayers()
@@ -603,12 +603,12 @@ function GM:PlayerSpawn(ply)
 		end)
 	end
 	ply.IsSleeping = false
-	
+
 	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 	if ply:Team() == TEAM_CHIEF or ply:Team() == TEAM_POLICE then
 		GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") + 10)
 	end
-	
+
 	if RPArrestedPlayers[ply:SteamID()] then
 		GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("aspd"), GetConVarNumber("aspd"))
 	end
@@ -617,7 +617,7 @@ function GM:PlayerSpawn(ply)
 	if ply:GetActiveWeapon() and ValidEntity(ply:GetActiveWeapon()) then
 		ply:GetActiveWeapon():Extinguish()
 	end
-	
+
 	for k,v in pairs(ents.FindByClass("predicted_viewmodel")) do -- Money printer ignite fix
 		v:Extinguish()
 	end
@@ -626,7 +626,7 @@ function GM:PlayerSpawn(ply)
 		ply.demotedWhileDead = nil
 		ply:ChangeTeam(TEAM_CITIZEN)
 	end
-	
+
 	ply:GetTable().StartHealth = ply:Health()
 	gamemode.Call("PlayerSetModel", ply)
 	gamemode.Call("PlayerLoadout", ply)
@@ -638,26 +638,26 @@ end
 
 function GM:PlayerLoadout(ply)
 	if RPArrestedPlayers[ply:SteamID()] then return end
-	
+
 	ply:GetTable().RPLicenseSpawn = true
 	timer.Simple(1, removelicense, ply)
-	
+
 	local Team = ply:Team() or 1
-	
+
 	ply:Give("keys")
 	ply:Give("weapon_physcannon")
 	ply:Give("gmod_camera")
-	
+
 	if GetConVarNumber("toolgun") == 1 or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_tool")) or ply:IsAdmin()  then
 		ply:Give("gmod_tool")
 	end
-	
+
 	if GetConVarNumber("pocket") == 1 then
 		ply:Give("pocket")
 	end
-	
+
 	ply:Give("weapon_physgun")
-	
+
 	if ply:HasPriv("rp_commands") and GetConVarNumber("AdminsCopWeapons") == 1 then
 		ply:Give("door_ram")
 		ply:Give("arrest_stick")
@@ -670,10 +670,10 @@ function GM:PlayerLoadout(ply)
 	for k,v in pairs(RPExtraTeams[Team].Weapons) do
 		ply:Give(v)
 	end
-	
+
 	-- Switch to prefered weapon if they have it
 	local cl_defaultweapon = ply:GetInfo( "cl_defaultweapon" )
-	
+
 	if ply:HasWeapon( cl_defaultweapon ) then
 		ply:SelectWeapon( cl_defaultweapon )
 	end
@@ -683,14 +683,20 @@ function GM:PlayerDisconnected(ply)
 	self.BaseClass:PlayerDisconnected(ply)
 	timer.Destroy(ply:SteamID() .. "jobtimer")
 	timer.Destroy(ply:SteamID() .. "propertytax")
-	
+
 	for k, v in pairs( ents.GetAll() ) do
 		local class = v:GetClass()
-		if (class == "money_printer" or class == "microwave" or class == "gunlab" or class == "letter" or class == "drug_lab" or class == "drug" or v:IsVehicle()) and v.SID == ply.SID then
+		for _, customEnt in pairs(DarkRPEntities) do
+			if class == customEnt.ent and v.SID == ply.SID then
+				v:Remove()
+				break
+			end
+		end
+		if v:IsVehicle() and v.SID == ply.SID then
 			v:Remove()
 		end
 	end
-	
+
 	if ply:Team() == TEAM_MAYOR then
 		for _, ent in pairs(ply.lawboards or {}) do
 			if ValidEntity(ent) then
@@ -698,17 +704,17 @@ function GM:PlayerDisconnected(ply)
 			end
 		end
 	end
-	
+
 	vote.DestroyVotesWithEnt(ply)
-	
+
 	if ply:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then -- Stop the lockdown
 		UnLockdown(ply)
 	end
-	
+
 	if ValidEntity(ply.SleepRagdoll) then
 		ply.SleepRagdoll:Remove()
 	end
-	
+
 	ply:UnownAll()
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") disconnected")
 end
@@ -718,14 +724,14 @@ local function PlayerDoorCheck()
 		local trace = ply:GetEyeTrace()
 		if ValidEntity(trace.Entity) and (trace.Entity:IsDoor() or trace.Entity:IsVehicle()) and ply.LookingAtDoor ~= trace.Entity and trace.HitPos:Distance(ply:GetShootPos()) < 410 then
 			ply.LookingAtDoor = trace.Entity -- Variable that prevents streaming to clients every frame
-			
+
 			trace.Entity.DoorData = trace.Entity.DoorData or {}
-			
+
 			local DoorString = "Data:\n"
 			for key, v in pairs(trace.Entity.DoorData) do
 				DoorString = DoorString .. key.."\t\t".. tostring(v) .. "\n"
 			end
-			
+
 			if not ply.DRP_DoorMemory or not ply.DRP_DoorMemory[trace.Entity] then
 				datastream.StreamToClients(ply, "DarkRP_DoorData", {trace.Entity, trace.Entity.DoorData})
 				ply.DRP_DoorMemory = ply.DRP_DoorMemory or {}
@@ -741,7 +747,7 @@ local function PlayerDoorCheck()
 						umsg.End()
 					end
 				end
-				
+
 				for key, v in pairs(ply.DRP_DoorMemory[trace.Entity]) do
 					if not trace.Entity.DoorData[key] then
 						ply.DRP_DoorMemory[trace.Entity][key] = nil
@@ -767,7 +773,7 @@ function GM:GetFallDamage( ply, flFallSpeed )
 	return 10
 end
 
-function GM:InitPostEntity() 
+function GM:InitPostEntity()
 	timer.Simple(2, function()
 		if RP_MySQLConfig and RP_MySQLConfig.EnableMySQL then
 			DB.ConnectToMySQL(RP_MySQLConfig.Host, RP_MySQLConfig.Username, RP_MySQLConfig.Password, RP_MySQLConfig.Database_name, RP_MySQLConfig.Database_port)
