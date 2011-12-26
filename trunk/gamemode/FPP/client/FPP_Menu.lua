@@ -211,7 +211,6 @@ function FPP.AdminMenu(Panel)
 	addsldr(20, {"FPP_ANTISPAM", "smallpropdenylimit"}, "How many props to spam before blocking", antispam)
 	addsldr(10, {"FPP_ANTISPAM", "duplicatorlimit"}, "How many duplications to spam before blocking", antispam)
 
-
 	local physcat, physgun = MakeOption("Physgun options")
 	addchk("Physgun protection enabled", {"FPP_PHYSGUN", "toggle"}, physgun)
 	addchk("Admins can physgun all entities", {"FPP_PHYSGUN", "adminall"}, physgun)
@@ -533,7 +532,9 @@ function FPP.AdminMenu(Panel)
 	end
 	GroupRestrict:AddItem(EditGroupBtn)
 
-	GroupRestrict:AddItem(Label("Group Members:"))
+	local lblGroupRestrict = Label("Group Members: NOTE: People who have the\nusergroup that matches with this group\nare automatically in this group!")
+	lblGroupRestrict:SizeToContents()
+	GroupRestrict:AddItem(lblGroupRestrict)
 	local GroupMembers = vgui.Create("DListView")
 	GroupMembers:AddColumn("SteamID")
 	GroupMembers:AddColumn("Name")
