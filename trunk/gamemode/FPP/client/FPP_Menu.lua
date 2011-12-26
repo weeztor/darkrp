@@ -307,6 +307,41 @@ function FPP.AdminMenu(Panel)
 	BlockedModelsList:SetToolTip("If there are no models in the list THIS BUTTON WON'T DO ANYTHING")
 	function BlockedModelsList:DoClick()
 		RunConsoleCommand("FPP_sendblockedmodels")
+
+		local frame = vgui.Create("DFrame")
+		frame:MakePopup()
+		frame:SetVisible(true)
+		frame:SetSize(math.Min(1280, ScrW() - 100), math.Min(720, ScrH() - 100))
+		frame:Center()
+		frame:SetTitle(((tobool(GetConVarNumber("_FPP_BLOCKMODELSETTINGS_iswhitelist")) and "Allowed") or "Blocked") .. " models list")
+		function frame:Close()
+			ShowBlockedModels = nil
+			self:Remove()
+		end
+
+		local Explanation = vgui.Create("DLabel", frame)
+		Explanation:SetPos(5, 25)
+		Explanation:SetText([[This is the list of props that are currently in the Blocked/Allowed props list.
+		If this is a whitelist (set in settings), only the entities with the models in this list can be spawned
+		If it's a blacklist, people will be able to spawn any model except for the ones in this list.
+
+		To remove a model from the list, click the model in this list and click remove.
+		To add a model to this list:
+		        - open your spawn menu (Q by default)
+		        - find the model in the props list
+		        - right click it
+		        - click "Add to blocked models"]])
+		Explanation:SizeToContents()
+
+		frame.pan = vgui.Create("DPanelList", frame)
+		frame.pan:SetPos(5, 160)
+		frame.pan:SetSize(frame:GetWide() - 10, frame:GetTall() - 165)
+		frame.pan:EnableHorizontal(true)
+		frame.pan:EnableVerticalScrollbar(true)
+		frame.pan:SetSpacing(0)
+		frame.pan:SetPadding(4)
+		frame.pan:SetAutoSize(false)
+		ShowBlockedModels = frame
 	end
 	blockedmodels:AddItem(BlockedModelsList)
 
@@ -582,43 +617,7 @@ end
 
 RetrieveBlockedModels = function(um)
 	local model = um:ReadString()
-	if not ShowBlockedModels then
-		local frame = vgui.Create("DFrame")
-		frame:MakePopup()
-		frame:SetVisible(true)
-		frame:SetSize(math.Min(1280, ScrW() - 100), math.Min(720, ScrH() - 100))
-		frame:Center()
-		frame:SetTitle(((tobool(GetConVarNumber("_FPP_BLOCKMODELSETTINGS_iswhitelist")) and "Allowed") or "Blocked") .. " models list")
-		function frame:Close()
-			ShowBlockedModels = nil
-			self:Remove()
-		end
-
-		local Explanation = vgui.Create("DLabel", frame)
-		Explanation:SetPos(5, 25)
-		Explanation:SetText([[This is the list of props that are currently in the Blocked/Allowed props list.
-		If this is a whitelist (set in settings), only the entities with the models in this list can be spawned
-		If it's a blacklist, people will be able to spawn any model except for the ones in this list.
-
-		To remove a model from the list, click the model in this list and click remove.
-		To add a model to this list:
-		        - open your spawn menu (Q by default)
-		        - find the model in the props list
-		        - right click it
-		        - click "Add to blocked models"]])
-		Explanation:SizeToContents()
-
-		frame.pan = vgui.Create("DPanelList", frame)
-		frame.pan:SetPos(5, 160)
-		frame.pan:SetSize(frame:GetWide() - 10, frame:GetTall() - 165)
-		frame.pan:EnableHorizontal(true)
-		frame.pan:EnableVerticalScrollbar(true)
-		frame.pan:SetSpacing(0)
-		frame.pan:SetPadding(4)
-		frame.pan:SetAutoSize(false)
-		ShowBlockedModels = frame
-	end
-	if not ShowBlockedModels.pan then return end
+	if not ShowBlockedModels then return end
 
 	local Icon = vgui.Create("SpawnIcon", ShowBlockedModels.pan)
 	Icon:SetModel(model, 1)
@@ -908,7 +907,6 @@ EditGroupTools = function(groupname)
 		end
 	end
 end
-
 
 local function retrieveblocked(um)
 	local Type = string.lower(um:ReadString())
