@@ -31,7 +31,7 @@ meta.Name = function(self)
 	if not ValidEntity(self) then return "" end
 	if GetConVarNumber("allowrpnames") == 1 then
 		self.DarkRPVars = self.DarkRPVars or {}
-		return self.DarkRPVars.rpname or self:SteamName()
+		return tostring(self.DarkRPVars.rpname) or self:SteamName()
 	else
 		return self:SteamName()
 	end
@@ -122,12 +122,12 @@ local function RPVersion(ply)
 	for _, folder in pairs(FindGameModes) do
 		local info_txt = file.Read("gamemodes/"..folder.."/info.txt", true)
 		if not info_txt then info_txt = "" end
-		
+
 		local Gamemode = util.KeyValuesToTable(info_txt)
-		if Gamemode.name and string.lower(Gamemode.name) == "darkrp" then 
+		if Gamemode.name and string.lower(Gamemode.name) == "darkrp" then
 			local version = Gamemode.version
 			local SVN = " non-SVN version"
-			
+
 			local entries = file.Read("gamemodes/"..folder.."/.svn/entries", true)
 			if entries then
 				local _, dirFind = string.find(entries, "dir")
