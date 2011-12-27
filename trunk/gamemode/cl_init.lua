@@ -18,12 +18,12 @@ local pmeta = FindMetaTable("Player")
 pmeta.SteamName = pmeta.Name
 function pmeta:Name()
 	if not self or not self.IsValid or not ValidEntity(self) then return "" end
-	
+
 	self.DarkRPVars = self.DarkRPVars or {}
 	if GetConVarNumber("allowrpnames") == 0 then
 		return self:SteamName()
 	end
-	return self.DarkRPVars.rpname or self:SteamName()
+	return tostring(self.DarkRPVars.rpname) or self:SteamName()
 end
 
 pmeta.GetName = pmeta.Name
@@ -36,9 +36,9 @@ ENT.OldIsVehicle = ENT.IsVehicle
 function ENT:IsVehicle()
 	if type(self) ~= "Entity" then return false end
 	local class = string.lower(self:GetClass())
-	return ENT:OldIsVehicle() or string.find(class, "vehicle") 
+	return ENT:OldIsVehicle() or string.find(class, "vehicle")
 	-- Ent:IsVehicle() doesn't work correctly clientside:
-	/*	
+	/*
 		] lua_run_cl print(LocalPlayer():GetEyeTrace().Entity)
 		> 		Entity [128][prop_vehicle_jeep_old]
 		] lua_run_cl print(LocalPlayer():GetEyeTrace().Entity:IsVehicle())
@@ -102,7 +102,7 @@ function vector:RPIsInSight(v, ply)
 	ply = ply or LocalPlayer()
 	local trace = {}
 	trace.start = ply:EyePos()
-	trace.endpos = self	
+	trace.endpos = self
 	trace.filter = v
 	trace.mask = -1
 	local TheTrace = util.TraceLine(trace)
@@ -177,7 +177,7 @@ local function ToggleClicker()
 	gui.EnableScreenClicker(GUIToggled)
 end
 usermessage.Hook("ToggleClicker", ToggleClicker)
-	
+
 include("sh_commands.lua")
 include("shared.lua")
 include("addentities.lua")
@@ -198,8 +198,8 @@ local function DoSpecialEffects(Type)
 			hook.Add("RenderScreenspaceEffects", thetype, function()
 				local settings = {}
 				settings[ "$pp_colour_addr" ] = 0
-			 	settings[ "$pp_colour_addg" ] = 0 
-			 	settings[ "$pp_colour_addb" ] = 0 
+			 	settings[ "$pp_colour_addg" ] = 0
+			 	settings[ "$pp_colour_addb" ] = 0
 			 	settings[ "$pp_colour_brightness" ] = -1
 			 	settings[ "$pp_colour_contrast" ] = 0
 			 	settings[ "$pp_colour_colour" ] =0
@@ -218,7 +218,7 @@ local function DoSpecialEffects(Type)
 			hook.Add("CalcView", "rp_deathPOV", function(ply, origin, angles, fov)
 				local Ragdoll = ply:GetRagdollEntity()
 				if not ValidEntity(Ragdoll) then return end
-				
+
 				local head = Ragdoll:LookupAttachment("eyes")
 				head = Ragdoll:GetAttachment(head)
 				if not head or not head.Pos then return end
@@ -235,7 +235,7 @@ local function DoSpecialEffects(Type)
 			DOF_Kill()
 			return
 		elseif thetype == "deathpov" then
-			if hook.GetTable().CalcView and hook.GetTable().CalcView.rp_deathPOV then 
+			if hook.GetTable().CalcView and hook.GetTable().CalcView.rp_deathPOV then
 				hook.Remove("CalcView", "rp_deathPOV")
 			end
 			return
@@ -262,7 +262,7 @@ local function CL_IsInRoom(listener) -- IsInRoom function to see if the player i
 	tracedata.start = LocalPlayer():GetShootPos()
 	tracedata.endpos = listener:GetShootPos()
 	local trace = util.TraceLine( tracedata )
-	
+
 	return not trace.HitWorld
 end
 
@@ -270,7 +270,7 @@ local PlayerColorsOn = CreateClientConVar("rp_showchatcolors", 1, true, false)
 local function RPSelectwhohearit()
 	if PlayerColorsOn:GetInt() == 0 then return end
 	Messagemode = true
-	
+
 	hook.Add("HUDPaint", "RPinstructionsOnSayColors", function()
 		local w, l = ScrW()/80, ScrH() /1.75
 		local h = l - (#playercolors * 20) - 20
@@ -282,16 +282,16 @@ local function RPSelectwhohearit()
 		elseif not AllTalk or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") then
 			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_certain_persons, HearMode), "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
 		end
-		
+
 		for k,v in pairs(playercolors) do
 			if v.Nick then
 				draw.WordBox(2, w, h + k*20, v:Nick(), "ScoreboardText", Color(0,0,0,120), Color(255,255,255,255))
 			end
 		end
 	end)
-	
-	hook.Add("Think", "RPGetRecipients", function() 
-		if not Messagemode then RPStopMessageMode() hook.Remove("Think", "RPGetRecipients") return end 
+
+	hook.Add("Think", "RPGetRecipients", function()
+		if not Messagemode then RPStopMessageMode() hook.Remove("Think", "RPGetRecipients") return end
 		if HearMode ~= "whisper" and HearMode ~= "yell" and HearMode ~= "talk" and HearMode ~= "speak" and HearMode ~= "me" then return end
 		playercolors = {}
 		for k,v in pairs(player.GetAll()) do
@@ -319,12 +319,12 @@ local function RPSelectwhohearit()
 	end)
 end
 hook.Add("StartChat", "RPDoSomethingWithChat", RPSelectwhohearit)
-hook.Add("FinishChat", "RPCloseRadiusDetection", function() 
-	if not isSpeaking then 
+hook.Add("FinishChat", "RPCloseRadiusDetection", function()
+	if not isSpeaking then
 		Messagemode = false
-		RPStopMessageMode() 
+		RPStopMessageMode()
 	else
-		HearMode = "speak" 
+		HearMode = "speak"
 	end
 end)
 
@@ -340,7 +340,7 @@ function GM:ChatTextChanged(text)
 			HearMode = "advert"
 		end
 	end
-	
+
 	if string.sub(string.lower(text), 1, 3) == "/pm" then
 		local plyname = string.sub(text, 5)
 		if string.find(plyname, " ") then
@@ -402,7 +402,7 @@ function GM:PlayerStartVoice(ply)
 		HearMode = "speak"
 		RPSelectwhohearit()
 	end
-	
+
 	if ply == LocalPlayer() then
 		ply.DRPIsTalking = true
 		return -- Not the original rectangle for yourself! ugh!
@@ -413,17 +413,17 @@ end
 function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
 	if LocalPlayer().DarkRPVars and ValidEntity(LocalPlayer().DarkRPVars.phone) then
 		ply.DRPIsTalking = false
-		timer.Simple(0.2, function() 
+		timer.Simple(0.2, function()
 			if ValidEntity(LocalPlayer().DarkRPVars.phone) then
-				LocalPlayer():ConCommand("+voicerecord") 
+				LocalPlayer():ConCommand("+voicerecord")
 			end
 		end)
 		self.BaseClass:PlayerEndVoice(ply)
 		return
 	end
-	
+
 	isSpeaking = false
-	
+
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 then
 		HearMode = "talk"
 		hook.Remove("Think", "RPGetRecipients")
@@ -431,11 +431,11 @@ function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
 		Messagemode = false
 		playercolors = {}
 	end
-	
+
 	if ply == LocalPlayer() then
 		ply.DRPIsTalking = false
 		return
-	end	
+	end
 	self.BaseClass:PlayerEndVoice(ply)
 end
 
@@ -452,9 +452,9 @@ local function AddToChat(msg)
 
 	local name = msg:ReadString()
 	local ply = msg:ReadEntity()
-	
+
 	if name == "" then name = ply.DarkRPVars.rpname end
-	
+
 	local col2 = Color(msg:ReadShort(), msg:ReadShort(), msg:ReadShort())
 
 	local text = msg:ReadString()
@@ -483,7 +483,7 @@ local function RetrieveDoorData(handler, id, encoded, decoded)
 	-- decoded[1] = Entity you were looking at
 	-- Decoded[2] = table of that door
 	if not decoded[1] or not decoded[1].IsValid or not ValidEntity(decoded[1]) then return end
-	
+
 	if decoded[2].TeamOwn then
 		local tdata = {}
 		for k, v in pairs(string.Explode("\n", decoded[2].TeamOwn or "")) do
@@ -495,9 +495,9 @@ local function RetrieveDoorData(handler, id, encoded, decoded)
 	else
 		decoded[2].TeamOwn = nil
 	end
-	
+
 	decoded[1].DoorData = decoded[2]
-	
+
 	local DoorString = "Data:\n"
 	for k,v in pairs(decoded[2]) do
 		DoorString = DoorString .. k.."\t\t".. tostring(v) .. "\n"
@@ -508,23 +508,23 @@ datastream.Hook("DarkRP_DoorData", RetrieveDoorData)
 local function UpdateDoorData(um)
 	local door = um:ReadEntity()
 	if not ValidEntity(door) then return end
-	
+
 	local var, value = um:ReadString(), um:ReadString()
 	value = tonumber(value) or value
-	
+
 	if string.match(tostring(value), "Entity .([0-9]*)") then
 		value = Entity(string.match(value, "Entity .([0-9]*)"))
 	end
-	
+
 	if string.match(tostring(value), "Player .([0-9]*)") then
 		value = Entity(string.match(value, "Player .([0-9]*)"))
 	end
-	
+
 	if value == "true" or value == "false" then value = tobool(value) end
-	
+
 	if value == "nil" then value = nil end
-	
-	if var == "TeamOwn" then 
+
+	if var == "TeamOwn" then
 		local decoded = {}
 		for k, v in pairs(string.Explode("\n", value or "")) do
 			if v and v != "" then
@@ -545,24 +545,24 @@ usermessage.Hook("DRP_UpdateDoorData", UpdateDoorData)
 local function RetrievePlayerVar(um)
 	local ply = um:ReadEntity()
 	if not ValidEntity(ply) then return end
-	
+
 	ply.DarkRPVars = ply.DarkRPVars or {}
-	
+
 	local var, value = um:ReadString(), um:ReadString()
 	local stringvalue = value
 	value = tonumber(value) or value
-	
+
 	if string.match(stringvalue, "Entity .([0-9]*)") then
 		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
 	end
-	
-	if string.match(stringvalue, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)") then 
+
+	if string.match(stringvalue, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)") then
 		local x,y,z = string.match(value, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)")
 		value = Vector(x,y,z)
 	end
-	
+
 	if stringvalue == "true" or stringvalue == "false" then value = tobool(value) end
-	
+
 	if stringvalue == "nil" then value = nil end
 	ply.DarkRPVars[var] = value
 end
@@ -571,24 +571,24 @@ usermessage.Hook("DarkRP_PlayerVar", RetrievePlayerVar)
 local function RetrieveSelfVar(um)
 	if not ValidEntity(LocalPlayer()) then return end
 	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
-	
+
 	local var, value = um:ReadString(), um:ReadString()
 	local stringvalue = value
 	value = tonumber(value) or value
-	
+
 	if string.match(stringvalue, "Entity .([0-9]*)") then
 		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
 	end
-	
-	if string.match(stringvalue, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)") then 
+
+	if string.match(stringvalue, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)") then
 		local x,y,z = string.match(value, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)")
 		value = Vector(x,y,z)
 	end
-	
+
 	if stringvalue == "true" or stringvalue == "false" then value = tobool(value) end
-	
+
 	if stringvalue == "nil" then value = nil end
-	
+
 	LocalPlayer().DarkRPVars[var] = value
 end
 usermessage.Hook("DarkRP_SelfPlayerVar", RetrieveSelfVar)
@@ -600,23 +600,23 @@ local function InitializeDarkRPVars(handler, id, encoded, decoded)
 	end
 end
 datastream.Hook("DarkRP_InitializeVars", InitializeDarkRPVars)
-	
+
 function GM:InitPostEntity()
 	function VoiceNotify:Init()
 		self.LabelName = vgui.Create( "DLabel", self )
 		self.Avatar = vgui.Create( "SpawnIcon", self )
 	end
-	
+
 	function VoiceNotify:Setup(ply)
 		self.LabelName:SetText( ply:Nick() )
 		self.Avatar:SetModel( ply:GetModel() )
 		self.Avatar:SetIconSize(32)
-		
+
 		self.Color = team.GetColor( ply:Team() )
-		
+
 		self:InvalidateLayout()
 	end
-	
+
 	RunConsoleCommand("_sendDarkRPvars")
 	timer.Create("DarkRPCheckifitcamethrough", 30, 0, function()
 		for k,v in pairs(player.GetAll()) do
@@ -638,23 +638,23 @@ FAdmin.StartHooks["DarkRP"] = function()
 	FAdmin.ScoreBoard.Player:AddInformation("Steam name", function(ply) return ply:SteamName() end, true)
 	FAdmin.ScoreBoard.Player:AddInformation("Money", function(ply) if LocalPlayer():IsAdmin() and ply.DarkRPVars and ply.DarkRPVars.money then return "$"..ply.DarkRPVars.money end end)
 	FAdmin.ScoreBoard.Player:AddInformation("Wanted", function(ply) if ply.DarkRPVars and ply.DarkRPVars.wanted then return tostring(ply.DarkRPVars["wantedReason"] or "N/A") end end)
-	
+
 	-- Warrant
-	FAdmin.ScoreBoard.Player:AddActionButton("Warrant", "FAdmin/icons/Message",	Color(0, 0, 200, 255), 
-		function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end, 
+	FAdmin.ScoreBoard.Player:AddActionButton("Warrant", "FAdmin/icons/Message",	Color(0, 0, 200, 255),
+		function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end,
 		function(ply, button)
 			Derma_StringRequest("Warrant reason", "Enter the reason for the warrant", "", function(Reason)
 				LocalPlayer():ConCommand("say /warrant ".. ply:UserID().." ".. Reason)
 			end)
 		end)
-		
+
 	--wanted
 	FAdmin.ScoreBoard.Player:AddActionButton(function(ply)
 			return ((ply.DarkRPVars.wanted and "Unw") or "W") .. "anted"
-		end, 
+		end,
 		function(ply) return "FAdmin/icons/jail", ply.DarkRPVars.wanted and "FAdmin/icons/disable" end,
-		Color(0, 0, 200, 255), 
-		function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end, 
+		Color(0, 0, 200, 255),
+		function(ply) local t = LocalPlayer():Team() return t == TEAM_POLICE or t == TEAM_MAYOR or t == TEAM_CHIEF end,
 		function(ply, button)
 			if not ply.DarkRPVars.wanted  then
 				Derma_StringRequest("wanted reason", "Enter the reason to arrest this player", "", function(Reason)
@@ -664,7 +664,7 @@ FAdmin.StartHooks["DarkRP"] = function()
 				LocalPlayer():ConCommand("say /unwanted ".. ply:UserID())
 			end
 		end)
-	
+
 	--Teamban
 	local function teamban(ply, button)
 
@@ -675,16 +675,16 @@ FAdmin.StartHooks["DarkRP"] = function()
 		Title:SizeToContents()
 		Title:SetTextColor(color_black)
 		local command = (button.TextLabel:GetText() == "Unban from job") and "rp_teamunban" or "rp_teamban"
-		
+
 		menu:AddPanel(Title)
 		for k,v in SortedPairsByMemberValue(RPExtraTeams, "name") do
 			menu:AddOption(v.name, function() RunConsoleCommand(command, ply:UserID(), v.command) end)
 		end
 		menu:Open()
 	end
-	FAdmin.ScoreBoard.Player:AddActionButton("Ban from job", "FAdmin/icons/changeteam", Color(200, 0, 0, 255), 
+	FAdmin.ScoreBoard.Player:AddActionButton("Ban from job", "FAdmin/icons/changeteam", Color(200, 0, 0, 255),
 	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", ply) end, teamban)
 
-	FAdmin.ScoreBoard.Player:AddActionButton("Unban from job", function() return "FAdmin/icons/changeteam", "FAdmin/icons/disable" end, Color(200, 0, 0, 255), 
+	FAdmin.ScoreBoard.Player:AddActionButton("Unban from job", function() return "FAdmin/icons/changeteam", "FAdmin/icons/disable" end, Color(200, 0, 0, 255),
 	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", ply) end, teamban)
 end
