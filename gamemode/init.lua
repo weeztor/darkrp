@@ -1,4 +1,4 @@
-GM.Version = "2.4.2"
+GM.Version = "2.4.3"
 GM.Name = "DarkRP "..GM.Version
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco, Eusion, Drakehawke"
 
@@ -63,6 +63,7 @@ AddCSLuaFile("cl_hud.lua")
 resource.AddFile("sound/earthquake.mp3")
 util.PrecacheSound("earthquake.mp3")
 
+resource.AddFile("materials/DarkRP/DarkRPSkin.png")
 
 DB = {}
 
@@ -150,19 +151,3 @@ local function GetAvailableVehicles(ply)
 	end
 end
 concommand.Add("rp_getvehicles_sv", GetAvailableVehicles)
-
--- Vehicle fix from tobba!
-function debug.getupvalues(f)
-	local t, i, k, v = {}, 1, debug.getupvalue(f, 1)
-	while k do
-		t[k] = v
-		i = i+1
-		k,v = debug.getupvalue(f, i)
-	end
-	return t
-end
-
-glon.encode_types = debug.getupvalues(glon.Write).encode_types
-glon.encode_types["Vehicle"] = glon.encode_types["Vehicle"] or {10, function(o)
-		return (ValidEntity(o) and o:EntIndex() or -1).."\1"
-	end}

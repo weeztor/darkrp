@@ -1,22 +1,19 @@
+/*net.WriteVars =
+{
+	[TYPE_NUMBER] = function ( t, v )	net.WriteByte( t )	net.WriteLong( v )			end,
+	[TYPE_ENTITY] = function ( t, v )	net.WriteByte( t )	net.WriteEntity( v )		end,
+	[TYPE_VECTOR] = function ( t, v )	net.WriteByte( t )	net.WriteVector( v )		end,
+	[TYPE_STRING] = function ( t, v )	net.WriteByte( t )	net.WriteString( v )		end,
+}
+net.ReadVars =
+{
+	[TYPE_NUMBER] = function ()	return net.ReadLong() end,
+	[TYPE_ENTITY] = function ()	return net.ReadEntity() end,
+	[TYPE_VECTOR] = function ()	return net.ReadVector() end,
+	[TYPE_STRING] = function ()	return net.ReadString() end,
+}*/
+
 if CLIENT then
-	/*---------------------------------------------------------------------------
-	Vehicle fix for datastream from Tobba
-	---------------------------------------------------------------------------*/
-	function debug.getupvalues(f)
-		local t, i, k, v = {}, 1, debug.getupvalue(f, 1)
-		while k do
-			t[k] = v
-			i = i+1
-			k,v = debug.getupvalue(f, i)
-		end
-		return t
-	end
-
-	glon.encode_types = debug.getupvalues(glon.Write).encode_types
-	glon.encode_types["Vehicle"] = glon.encode_types["Vehicle"] or {10, function(o)
-			return (ValidEntity(o) and o:EntIndex() or -1).."\1"
-		end}
-
 	/*---------------------------------------------------------------------------
 	Generic InitPostEntity workarounds
 	---------------------------------------------------------------------------*/
@@ -26,34 +23,6 @@ if CLIENT then
 
 	return
 end
-
-
-/*---------------------------------------------------------------------------
-Fix the gmod cleanup
----------------------------------------------------------------------------*/
-
-local function IsValidCleanup(class)
-	return table.HasValue(cleanup.GetTable(), class)
-end
-
-concommand.Add( "gmod_admin_cleanup", function( pl, command, args )
-	if not pl:IsAdmin() then return end
-	if not args[1] then
-		for k,v in pairs(ents.GetAll()) do
-			if v.Owner and not v:IsWeapon() then -- DarkRP entities have the Owner part of their table as nil.
-				v:Remove()
-			end
-		end
-		if NotifyAll then NotifyAll(0, 4, pl:Nick() .. " cleaned up everything.") end
-	end
-	
-	if not IsValidCleanup(args[1]) then return end
-	
-	for k, v in pairs(ents.FindByClass(args[1])) do
-		v:Remove()
-	end
-	if NotifyAll then NotifyAll(0, 4, pl:Nick() .. " cleaned up all " .. args[1]) end
-end)
 
 /*---------------------------------------------------------------------------
 Assmod makes previously banned people able to noclip. I say fuck you.

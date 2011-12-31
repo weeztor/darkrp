@@ -292,12 +292,12 @@ local function FireSpread(e)
 						v:Ignite(math.random(5,180), 0)
 						v.burned = true
 					else
-						local r, g, b, a = v:GetColor()
-						if (r - 51)>=0 then r = r - 51 end
-						if (g - 51)>=0 then g = g - 51 end
-						if (b - 51)>=0 then b = b - 51 end
-						v:SetColor(r, g, b, a)
-						if (r + g + b) < 103 and math.random(1, 100) < 35 then
+						local c = v:GetColor()
+						if (c.r - 51)>=0 then c.r = c.r - 51 end
+						if (c.g - 51)>=0 then c.g = c.g - 51 end
+						if (c.b - 51)>=0 then c.b = c.b - 51 end
+						v:SetColor(c)
+						if (c.r + c.g + c.b) < 103 and math.random(1, 100) < 35 then
 							v:Fire("enablemotion","",0)
 							constraint.RemoveAll(v)
 						end
@@ -578,7 +578,7 @@ local function PlayerWanted(ply, args)
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_by_police, p:Nick()).."\nReason: "..tostring(reason))
 				if b:IsAdmin() then
-					b:PrintMessage( HUD_PRINTCONSOLE, ply:Nick() .. " has made " .. p:Nick() .. " wanted by police for " .. reason )
+					b:PrintMessage( HUD_PRINTCONSOLE, ply:Nick() .. " has made " .. p:Nick() .. " wanted by police for " ..tostring(reason) )
 				end
 			end
 			timer.Create(p:Nick() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, p)
@@ -964,6 +964,10 @@ local function BuyPistol(ply, args)
 		return ""
 	end
 
+	ply:AddMoney(-price)
+
+	Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, tostring(price)))
+
 	local weapon = ents.Create("spawned_weapon")
 	weapon:SetModel(model)
 	weapon.weaponclass = class
@@ -971,11 +975,6 @@ local function BuyPistol(ply, args)
 	weapon:SetPos(tr.HitPos)
 	weapon.nodupe = true
 	weapon:Spawn()
-
-	if ValidEntity( weapon ) then
-		ply:AddMoney(-price)
-		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, tostring(price)))
-	end
 
 	return ""
 end
@@ -1030,6 +1029,8 @@ local function BuyShipment(ply, args)
 		return ""
 	end
 
+	ply:AddMoney(-cost)
+	Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
 	local crate = ents.Create("spawned_shipment")
 	crate.SID = ply.SID
 	crate.dt.owning_ent = ply
@@ -1046,12 +1047,6 @@ local function BuyShipment(ply, args)
 	end
 	local phys = crate:GetPhysicsObject()
 	if phys and phys:IsValid() then phys:Wake() end
-
-	if ValidEntity( crate ) then
-		ply:AddMoney(-cost)
-		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
-	end
-
 	return ""
 end
 AddChatCommand("/buyshipment", BuyShipment)
@@ -1154,6 +1149,7 @@ for k,v in pairs(DarkRPEntities) do
 			Notify(ply, 1, 4,  string.format(LANGUAGE.cant_afford, v.cmd))
 			return ""
 		end
+		ply:AddMoney(-price)
 
 		local trace = {}
 		trace.start = ply:EyePos()
@@ -1169,15 +1165,11 @@ for k,v in pairs(DarkRPEntities) do
 		item.SID = ply.SID
 		item.onlyremover = true
 		item:Spawn()
-
-		if ValidEntity( item ) then
-			ply:AddMoney(-price)
-			Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, v.name, CUR..price))
-			if not ply["max"..cmdname] then
-				ply["max"..cmdname] = 0
-			end
-			ply["max"..cmdname] = ply["max"..cmdname] + 1
+		Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, v.name, CUR..price))
+		if not ply["max"..cmdname] then
+			ply["max"..cmdname] = 0
 		end
+		ply["max"..cmdname] = ply["max"..cmdname] + 1
 		return ""
 	end
 	AddChatCommand(v.cmd, buythis)
@@ -1493,8 +1485,8 @@ local function DoTeamBan(ply, args, cmdargs)
 	end
 
 	local found = false
-	for k,v in pairs(team.GetAllTeams()) do
-		if string.lower(v.Name) == string.lower(Team) then
+	for k,v in pairs(RPExtraTeams) do
+		if string.lower(v.name) == string.lower(Team) or  string.lower(v.command) == string.lower(Team) then
 			Team = k
 			found = true
 			break
@@ -1545,8 +1537,8 @@ local function DoTeamUnBan(ply, args, cmdargs)
 	end
 
 	local found = false
-	for k,v in pairs(team.GetAllTeams()) do
-		if string.lower(v.Name) == string.lower(Team) then
+	for k,v in pairs(RPExtraTeams) do
+		if string.lower(v.name) == string.lower(Team) or  string.lower(v.command) == string.lower(Team) then
 			Team = k
 			found = true
 			break
@@ -1859,7 +1851,7 @@ local function DropMoney(ply, args)
 			trace.filter = ply
 
 			local tr = util.TraceLine(trace)
-			local money = DarkRPCreateMoneyBag(tr.HitPos, amount)
+			DarkRPCreateMoneyBag(tr.HitPos, amount)
 			DB.Log(ply:Nick().. " (" .. ply:SteamID() .. ") has dropped "..CUR .. tostring(amount))
 		end
 	end, ply)
@@ -1913,10 +1905,6 @@ local function CreateCheque(ply, args)
 
 			Cheque.dt.amount = amount
 			Cheque:Spawn()
-
-			if not ValidEntity( Cheque ) then
-				ply:AddMoney( cost ) -- The cheque didn't spawn, so refund them.
-			end
 		end
 	end, ply)
 	return ""

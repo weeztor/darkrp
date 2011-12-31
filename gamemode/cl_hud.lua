@@ -63,7 +63,7 @@ HUD Seperate Elements
 local Health = 0
 local function DrawHealth()
 	Health = math.min(100, (Health == LocalPlayer():Health() and Health) or Lerp(0.1, Health, LocalPlayer():Health()))
-	
+
 	local DrawHealth = Health / GetConVarNumber("startinghealth")
 	local Border = math.Min(6, math.pow(2, math.Round(3*DrawHealth)))
 	draw.RoundedBox(Border, RelativeX + 4, RelativeY - 30, HUDWidth - 8, 20, ConVars.Healthbackground)
@@ -76,13 +76,13 @@ local function DrawInfo()
 	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 	local Salary = 	LANGUAGE.salary .. CUR .. (LocalPlayer().DarkRPVars.salary or 0)
 
-	local JobWallet = 
+	local JobWallet =
 	LANGUAGE.job .. (LocalPlayer().DarkRPVars.job or "") .. "\n"..
 	LANGUAGE.wallet .. CUR .. (formatNumber(LocalPlayer().DarkRPVars.money) or 0)
 
 	draw.DrawText(Salary, "TargetID", RelativeX + 5, RelativeY - HUDHeight + 6, ConVars.salary1, 0)
 	draw.DrawText(Salary, "TargetID", RelativeX + 4, RelativeY - HUDHeight + 5, ConVars.salary2, 0)
-	
+
 	surface.SetFont("TargetID")
 	local w, h = surface.GetTextSize(Salary)
 
@@ -90,14 +90,14 @@ local function DrawInfo()
 	draw.DrawText(JobWallet, "TargetID", RelativeX + 4, RelativeY - HUDHeight + h + 5, ConVars.Job2, 0)
 end
 
-local Page = surface.GetTextureID("gui/silkicons/page") 
+local Page = surface.GetTextureID("icon16/page")
 local function GunLicense()
 	if LocalPlayer().DarkRPVars.HasGunlicense then
-		local QuadTable = {}  
-		
+		local QuadTable = {}
+
 		QuadTable.texture 	= Page
-		QuadTable.color		= Color( 255, 255, 255, 100 )  
-		
+		QuadTable.color		= Color( 255, 255, 255, 100 )
+
 		QuadTable.x = RelativeX + HUDWidth + 31
 		QuadTable.y = ScrH() - 32
 		QuadTable.w = 32
@@ -134,9 +134,9 @@ local function Agenda()
 		draw.RoundedBox(10, 10, 10, 460, 110, Color(0, 0, 0, 155))
 		draw.RoundedBox(10, 12, 12, 456, 106, Color(51, 58, 51,100))
 		draw.RoundedBox(10, 12, 12, 456, 20, Color(0, 0, 70, 100))
-		
+
 		draw.DrawText(DrawAgenda.Title, "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-		
+
 		local AgendaText = ""
 		for k,v in pairs(team.GetPlayers(AgendaManager)) do
 			AgendaText = AgendaText .. (v.DarkRPVars.agenda or "")
@@ -176,11 +176,11 @@ local Arrested = function() end
 usermessage.Hook("GotArrested", function(msg)
 	local StartArrested = CurTime()
 	local ArrestedUntil = msg:ReadFloat()
-	
+
 	Arrested = function()
 		if CurTime() - StartArrested <= ArrestedUntil and LocalPlayer().DarkRPVars.Arrested then
 		draw.DrawText(string.format(LANGUAGE.youre_arrested, math.ceil(ArrestedUntil - (CurTime() - StartArrested))), "ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
-		elseif not LocalPlayer().DarkRPVars.Arrested then 
+		elseif not LocalPlayer().DarkRPVars.Arrested then
 			Arrested = function() end
 		end
 	end
@@ -191,13 +191,13 @@ local AdminTell = function() end
 usermessage.Hook("AdminTell", function(msg)
 	local Message = msg:ReadString()
 
-	AdminTell = function() 
+	AdminTell = function()
 		draw.RoundedBox(4, 10, 10, ScrW() - 20, 100, Color(0, 0, 0, 255))
 		draw.DrawText(LANGUAGE.listen_up, "GModToolName", ScrW() / 2 + 10, 10, Color(255, 255, 255, 255), 1)
 		draw.DrawText(Message, "ChatFont", ScrW() / 2 + 10, 65, Color(200, 30, 30, 255), 1)
 	end
 
-	timer.Simple(10, function() 
+	timer.Simple(10, function()
 		AdminTell = function() end
 	end)
 end)
@@ -244,9 +244,9 @@ local function DrawPlayerInfo(ply)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
 		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
-	
+
 	if ply.DarkRPVars.HasGunlicense then
-		surface.SetTexture(surface.GetTextureID("gui/silkicons/page"))
+		surface.SetTexture(surface.GetTextureID("icon16/page"))
 		surface.SetDrawColor(255,255,255,255)
 		surface.DrawTexturedRect(pos.x-16, pos.y + 60, 32, 32)
 	end

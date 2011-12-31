@@ -53,7 +53,7 @@ function ENT:Draw()
 
 	if ValidEntity(self.Arrow) then
 
-		render.SetBlend(Color(self.Arrow:GetColor()).a/255)
+		render.SetBlend(self.Arrow:GetColor().a/255)
 		render.SetColorModulation(0,0,255)
 		self.Arrow:DrawModel()
 	end

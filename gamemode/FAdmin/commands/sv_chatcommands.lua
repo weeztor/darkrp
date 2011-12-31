@@ -4,12 +4,12 @@ hook.Add("PlayerSay", "FAdminChatCommands", function(ply, text, Team, dead)
 		local TExplode = string.Explode(" ", string.sub(text, 2))
 		for k,v in pairs(TExplode) do
 			if string.sub(v, -1) == "," then
-				TExplode[k] = TExplode[k] .. TExplode[k+1]
+				TExplode[k] = (TExplode[k] or "") .. (TExplode[k+1] or "")
 				table.remove(TExplode, k+1)
 			end
 		end
 		table.ClearKeys(TExplode, false)
-		
+
 		local Command = string.lower(TExplode[1])
 		local Args = table.Copy(TExplode)
 		Args[1] = nil

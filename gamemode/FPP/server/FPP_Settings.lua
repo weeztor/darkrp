@@ -1,7 +1,5 @@
 FPP = FPP or {}
 
-require("datastream")
-
 sql.Begin()
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKED('id' INTEGER NOT NULL, 'key' TEXT NOT NULL, 'value' TEXT NOT NULL, PRIMARY KEY('id'));")
 	sql.Query("CREATE TABLE IF NOT EXISTS FPP_PHYSGUN('key' TEXT NOT NULL, 'value' INTEGER NOT NULL, PRIMARY KEY('key'));")
@@ -534,14 +532,19 @@ concommand.Add("FPP_SetPlayerGroup", PlayerSetGroup)
 local function SendGroupData(ply, cmd, args)
 	-- Need superadmin so clients can't spam this on server
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
-	datastream.StreamToClients(ply, "FPP_Groups", FPP.Groups)
+	net.Start("FPP_Groups")
+		net.WriteTable(FPP.Groups)
+	net.Send(ply)
 end
 concommand.Add("FPP_SendGroups", SendGroupData)
 
 local function SendGroupMemberData(ply, cmd, args)
 	-- Need superadmin so clients can't spam this on server
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
-	datastream.StreamToClients(ply, "FPP_GroupMembers", FPP.GroupMembers)
+
+	net.Start("FPP_GroupMembers")
+		net.WriteTable(FPP.GroupMembers)
+	net.Send(ply)
 end
 concommand.Add("FPP_SendGroupMembers", SendGroupMemberData)
 

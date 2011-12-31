@@ -1,4 +1,3 @@
-require("datastream")
 /*---------------------------------------------------------
  Gamemode functions
  ---------------------------------------------------------*/
@@ -124,71 +123,7 @@ end
 function GM:KeyPress(ply, code)
 	self.BaseClass:KeyPress(ply, code)
 
-	/*if code == IN_USE then
-		local trace = { }
-		trace.start = ply:EyePos()
-		trace.endpos = trace.start + ply:GetAimVector() * 95
-		trace.filter = ply
-		local tr = util.TraceLine(trace)
-
-		-- Begin trading server-side (Although this appears to be unstable, don't worry, I've planned the system out, I've just not implemented the update completely).
-		-- Note: Uncomplete; Please leave for Eusion to complete. :)
-		if ValidEntity(tr.Entity) and tr.Entity:IsPlayer() then
-			ply.Trading = nil
-			local recipient = tr.Entity
-			local items = {}
-			for k, v in pairs(ents.GetAll()) do
-				local owner = (v.dt and v.dt.owning_ent) or nil
-				if owner and ValidEntity(owner) and owner == ply then
-					table.insert(items, v)
-				end
-			end
-			if #items > 0 then
-				datastream.StreamToClients(ply, "darkrp_trade", items)
-				items = {}
-				ply.Trading = recipient
-			else
-				Notify(ply, 1, 4, "You have no items that you can trade.")
-			end
-		end
-	end*/
 end
-/*
-local AllowedTrades = {"money_printer"}
-concommand.Add("rp_tradeitem", function(ply, cmd, args)
-	local ent = Entity(tonumber(args[1]))
-	local owner = (ent.dt and ent.dt.owning_ent) or nil
-	local recipient = ply.Trading or nil
-	if owner and owner == ply and ValidEntity(ent) and recipient and ValidEntity(recipient) then
-		if table.HasValue(AllowedTrades, ent:GetClass()) then
-			vote:Trade(tonumber(ply:EntIndex()), ply, recipient, ent)
-		else
-			Notify(ply, 1, 4, "An administrator has forbidden trades using this item!")
-		end
-	else
-		Notify(ply, 1, 4, "Can't trade at this time.")
-	end
-end)
-
-concommand.Add("rp_killtrade", function(ply, cmd, args)
-	local id = args[1]
-	if not Trades[id] then return end
-	local recipient = Trades[id].recipient
-	local client = Trades[id].client
-	if not recipient then return end
-	if not client then return end
-	if not id then return end
-	if (ply == client or ply == recipient) then
-		local rf = RecipientFilter()
-		rf:AddPlayer(client)
-		rf:AddPlayer(recipient)
-		umsg.Start("darkrp_killtrade", rf)
-			umsg.Entity(ply) -- Send the player who declined.
-		umsg.End()
-		Trades[id] = {}
-		table.remove(Trades, id)
-	end
-end)*/
 
 local function IsInRoom(listener, talker) -- IsInRoom function to see if the player is in the same room.
 	local tracedata = {}
@@ -199,26 +134,28 @@ local function IsInRoom(listener, talker) -- IsInRoom function to see if the pla
 	return not trace.HitWorld
 end
 
-function GM:PlayerCanHearPlayersVoice(listener, talker, other)
+function GM:PlayerCanHearPlayersVoice(listener, talker)
+	local surroundVoice = tobool(GetConVarNumber("3dvoice"))
+
 	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then
-		return true, tobool(GetConVarNumber("3dvoice"))
+		return true, surroundVoice
 	elseif talker.DarkRPVars and ValidEntity(talker.DarkRPVars.phone) then
-		return false, tobool(GetConVarNumber("3dvoice"))
+		return false, surroundVoice
 	end
 
 	if GetConVarNumber("voiceradius") == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
 		if GetConVarNumber("dynamicvoice") == 1 then
 			if IsInRoom( listener, talker ) then
-				return true, tobool(GetConVarNumber("3dvoice"))
+				return true, surroundVoice
 			else
-				return false, tobool(GetConVarNumber("3dvoice"))
+				return false, surroundVoice
 			end
 		end
-		return true, tobool(GetConVarNumber("3dvoice"))
+		return true, surroundVoice
 	elseif GetConVarNumber("voiceradius") == 1 then
-		return false, tobool(GetConVarNumber("3dvoice"))
+		return false, surroundVoice
 	end
-	return true, tobool(GetConVarNumber("3dvoice"))
+	return true, surroundVoice
 end
 
 function GM:CanTool(ply, trace, mode)
@@ -301,7 +238,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if KillerName == "prop_physics" then
 		KillerName = killer.Owner and killer.Owner:Nick() or "unknown"
 	end
-	local WeaponName = ValidEntity( weapon ) and ( (weapon:IsPlayer() and weapon:GetActiveWeapon():GetClass()) or weapon:GetClass() ) or "unknown"
+	local WeaponName = ValidEntity( weapon ) and ( (weapon:IsPlayer() and ValidEntity(weapon:GetActiveWeapon()) and weapon:GetActiveWeapon():GetClass()) or weapon:GetClass() ) or "unknown"
 	if WeaponName == "prop_physics" then
 		WeaponName = weapon:GetClass() .. " (" .. weapon:GetModel() or "unknown" .. ")"
 	end
@@ -309,12 +246,6 @@ function GM:PlayerDeath(ply, weapon, killer)
 
 	if GetConVarNumber("deathnotice") == 1 then
 		self.BaseClass:PlayerDeath(ply, weapon, killer)
-	else
-		for k,v in pairs(player.GetAll()) do
-			if v:IsAdmin() then
-				v:PrintMessage(HUD_PRINTCONSOLE, ply:Nick().." was killed by "..KillerName.." with ".. WeaponName)
-			end
-		end
 	end
 
 	ply:Extinguish()
@@ -367,7 +298,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		ply.Slayed = false
 	end
 
-	ply:GetTable().ConfisquatedWeapons = nil
+	ply:GetTable().ConfiscatedWeapons = nil
 	if tobool(GetConVarNumber("droppocketdeath")) then
 		if ply.Pocket then
 			for k, v in pairs(ply.Pocket) do
@@ -388,7 +319,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	end
 	if weapon:IsPlayer() then weapon = weapon:GetActiveWeapon() killer = killer:SteamName() if ( !weapon || weapon == NULL ) then weapon = killer else weapon = weapon:GetClass() end end
 	if killer == ply then killer = "Himself" weapon = "suicide trick" end
-	DB.Log(ply:SteamName() .. " was killed by "..tostring(killer) .. " with a "..tostring(weapon))
+	DB.Log(ply:SteamName() .. " was killed by "..tostring(killer) .. " with a "..tostring(weapon), nil, Color(255, 190, 0))
 end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
@@ -449,7 +380,7 @@ end
 
 function GM:PlayerInitialSpawn(ply)
 	self.BaseClass:PlayerInitialSpawn(ply)
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") has joined the game")
+	DB.Log(ply:SteamName().." ("..ply:SteamID()..") has joined the game", nil, Color(0, 130, 255))
 	ply.bannedfrom = {}
 	ply.DarkRPVars = {}
 	ply:NewData()
@@ -499,17 +430,18 @@ local function SendDarkRPVars(ply)
 	if ply.DarkRPVarsSent and ply.DarkRPVarsSent > (CurTime() - 1) then return end --prevent spammers
 	ply.DarkRPVarsSent = CurTime()
 
-	local sendtable = {}
 	for k,v in pairs(player.GetAll()) do
-		sendtable[v] = v.DarkRPVars
+		net.Start("DarkRP_InitializeVars")
+			net.WriteEntity(v)
+			net.WriteTable(v.DarkRPVars)
+		net.Send(ply)
 	end
-	datastream.StreamToClients(ply, "DarkRP_InitializeVars", sendtable)
 end
 concommand.Add("_sendDarkRPvars", SendDarkRPVars)
 
 function GM:PlayerSelectSpawn(ply)
 	local POS = self.BaseClass:PlayerSelectSpawn(ply)
-	if POS.GetPos then
+	if POS and POS.GetPos then
 		POS = POS:GetPos()
 	else
 		POS = ply:GetPos()
@@ -600,13 +532,13 @@ function GM:PlayerSpawn(ply)
 	if GetConVarNumber("babygod") == 1 and not ply.IsSleeping then
 		ply.Babygod = true
 		ply:GodEnable()
-		local r,g,b,a = ply:GetColor()
-		ply:SetColor(r, g, b, 100)
+		local c = ply:GetColor()
+		ply:SetColor(c.r, c.g, c.b, 100)
 		ply:SetCollisionGroup(  COLLISION_GROUP_WORLD )
 		timer.Simple(GetConVarNumber("babygodtime"), function()
 			if not ValidEntity(ply) then return end
 			ply.Babygod = false
-			ply:SetColor(r, g, b, a)
+			ply:SetColor(c.r, c.g, c.b, c.a)
 			ply:GodDisable()
 			ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
 		end)
@@ -742,7 +674,7 @@ function GM:PlayerDisconnected(ply)
 	end
 
 	ply:UnownAll()
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") disconnected")
+	DB.Log(ply:SteamName().." ("..ply:SteamID()..") disconnected", nil, Color(0, 130, 255))
 end
 
 local function PlayerDoorCheck()
@@ -759,12 +691,16 @@ local function PlayerDoorCheck()
 			end
 
 			if not ply.DRP_DoorMemory or not ply.DRP_DoorMemory[trace.Entity] then
-				datastream.StreamToClients(ply, "DarkRP_DoorData", {trace.Entity, trace.Entity.DoorData})
+				net.Start("DarkRP_DoorData")
+					net.WriteEntity(trace.Entity)
+					net.WriteTable(trace.Entity.DoorData)
+				net.Send(ply)
 				ply.DRP_DoorMemory = ply.DRP_DoorMemory or {}
 				ply.DRP_DoorMemory[trace.Entity] = table.Copy(trace.Entity.DoorData)
 			else
 				for key, v in pairs(trace.Entity.DoorData) do
 					if not ply.DRP_DoorMemory[trace.Entity][key] or ply.DRP_DoorMemory[trace.Entity][key] ~= v then
+						MsgN("Door update")
 						ply.DRP_DoorMemory[trace.Entity][key] = v
 						umsg.Start("DRP_UpdateDoorData", ply)
 							umsg.Entity(trace.Entity)
@@ -776,6 +712,7 @@ local function PlayerDoorCheck()
 
 				for key, v in pairs(ply.DRP_DoorMemory[trace.Entity]) do
 					if not trace.Entity.DoorData[key] then
+						MsgN("Door update")
 						ply.DRP_DoorMemory[trace.Entity][key] = nil
 						umsg.Start("DRP_UpdateDoorData", ply)
 							umsg.Entity(trace.Entity)

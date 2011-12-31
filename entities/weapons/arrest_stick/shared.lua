@@ -34,7 +34,7 @@ SWEP.Sound = Sound("weapons/stunstick/stunstick_swing1.wav")
 
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = 0
-SWEP.Primary.Automatic = false 
+SWEP.Primary.Automatic = false
 SWEP.Primary.Ammo = ""
 
 SWEP.Secondary.ClipSize = -1
@@ -61,7 +61,7 @@ function SWEP:Holster()
 end
 
 function SWEP:OnRemove()
-	if SERVER then 
+	if SERVER then
 		SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
 	end
 end
@@ -75,25 +75,25 @@ end)
 
 function SWEP:PrimaryAttack()
 	if CurTime() < self.NextStrike then return end
-	
+
 	self:SetWeaponHoldType("melee")
 	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
-	
+
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Weapon:EmitSound(self.Sound)
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
 
 	self.NextStrike = CurTime() + .4
-	
+
 	if CLIENT then return end
-	
+
 	local trace = self.Owner:GetEyeTrace()
-	
+
 	if ValidEntity(trace.Entity) and trace.Entity:IsPlayer() and trace.Entity:IsCP() and GetConVarNumber("cpcanarrestcp") == 0 then
 		Notify(self.Owner, 1, 5, "You can not arrest other CPs!")
 		return
 	end
-	
+
 	if trace.Entity:GetClass() == "prop_ragdoll" then
 		for k,v in pairs(player.GetAll()) do
 			if trace.Entity.OwnerINT and trace.Entity.OwnerINT == v:EntIndex() then
@@ -102,11 +102,11 @@ function SWEP:PrimaryAttack()
 			end
 		end
 	end
-		
+
 	if not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) or (not trace.Entity:IsPlayer() and not trace.Entity:IsNPC()) then
 		return
 	end
-	
+
 	if not tobool(GetConVarNumber("npcarrest")) and trace.Entity:IsNPC() then
 		return
 	end
@@ -115,12 +115,12 @@ function SWEP:PrimaryAttack()
 		Notify(self.Owner, 1, 5, "The player must be wanted in order to be able to arrest them.")
 		return
 	end
-	
+
 	if FAdmin and trace.Entity:IsPlayer() and trace.Entity:FAdmin_GetGlobal("fadmin_jailed") then
 		Notify(self.Owner, 1, 5, "You cannot arrest a player who has been jailed by an admin.")
 		return
 	end
-	
+
 	local jpc = DB.CountJailPos()
 
 	if not jpc or jpc == 0 then
@@ -133,9 +133,9 @@ function SWEP:PrimaryAttack()
 			if not trace.Entity.Babygod then
 				trace.Entity:Arrest()
 				Notify(trace.Entity, 0, 20, "You've been arrested by " .. self.Owner:Nick())
-				
+
 				if self.Owner.SteamName then
-					DB.Log(self.Owner:SteamName().." ("..self.Owner:SteamID()..") arrested "..trace.Entity:Nick())
+					DB.Log(self.Owner:SteamName().." ("..self.Owner:SteamID()..") arrested "..trace.Entity:Nick(), nil, Color(0, 255, 255))
 				end
 			else
 				Notify(self.Owner, 1, 4, "You can't arrest players who are spawning.")

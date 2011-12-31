@@ -24,16 +24,22 @@ end
 function TalkToRange(ply, PlayerName, Message, size)
 	local ents = ents.FindInSphere(ply:EyePos(), size)
 	local col = team.GetColor(ply:Team())
-	local filter = RecipientFilter() 
+	local filter = RecipientFilter()
 	filter:RemoveAllPlayers()
 	for k, v in pairs(ents) do
 		if v:IsPlayer() then
 			filter:AddPlayer(v)
+
+			for _, admin in pairs(player.GetAll()) do
+				if admin.FAdminSpectating == v then
+					filter:AddPlayer(admin)
+				end
+			end
 		end
 	end
-	
+
 	if PlayerName == ply:Nick() then PlayerName = "" end -- If it's just normal chat, why not cut down on networking and get the name on the client
-	
+
 	umsg.Start("DarkRP_Chat", filter)
 		umsg.Short(col.r)
 		umsg.Short(col.g)
@@ -79,11 +85,11 @@ function FindPlayer(info)
 		if info == v:SteamID() then
 			return v
 		end
-	
+
 		if string.find(string.lower(v:SteamName()), string.lower(tostring(info)), 1, true) ~= nil then
 			return v
 		end
-	
+
 		if string.find(string.lower(v:Name()), string.lower(tostring(info)), 1, true) ~= nil then
 			return v
 		end
@@ -93,17 +99,32 @@ end
 
 function IsEmpty(vector)
 	local point = util.PointContents(vector)
-	local a = point ~= CONTENTS_SOLID 
+	local a = point ~= CONTENTS_SOLID
 	and point ~= CONTENTS_MOVEABLE
-	and point ~= CONTENTS_LADDER 
-	and point ~= CONTENTS_PLAYERCLIP 
+	and point ~= CONTENTS_LADDER
+	and point ~= CONTENTS_PLAYERCLIP
 	and point ~= CONTENTS_MONSTERCLIP
 	local b = true
-	
+
 	for k,v in pairs(ents.FindInSphere(vector, 35)) do
 		if v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics" then
 			b = false
 		end
 	end
 	return a and b
+end
+
+function AdminLog(message, colour)
+	local RF = RecipientFilter()
+	for k,v in pairs(player.GetAll()) do
+		if v:IsAdmin() then
+			RF:AddPlayer(v)
+		end
+	end
+	umsg.Start("DRPLogMsg", RF)
+		umsg.Short(colour.r)
+		umsg.Short(colour.g)
+		umsg.Short(colour.b) -- Alpha is not needed
+		umsg.String(message)
+	umsg.End()
 end

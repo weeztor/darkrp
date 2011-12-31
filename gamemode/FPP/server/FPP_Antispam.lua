@@ -4,9 +4,9 @@ FPP.AntiSpam = {}
 function FPP.AntiSpam.GhostFreeze(ent, phys)
 	ent:SetRenderMode(RENDERMODE_TRANSALPHA)
 	ent:DrawShadow(false)
-	ent.OldColor = ent.OldColor or {ent:GetColor()}
+	ent.OldColor = ent.OldColor or ent:GetColor()
 	ent.StartPos = ent:GetPos()
-	ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4] - 155)
+	ent:SetColor(Color(ent.OldColor.r, ent.OldColor.g, ent.OldColor.b, ent.OldColor.a - 155))
 
 	ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
 	ent.CollisionGroup = COLLISION_GROUP_WORLD
@@ -24,7 +24,7 @@ function FPP.UnGhost(ply, ent)
 		if ent.OldCollisionGroup then ent:SetCollisionGroup(ent.OldCollisionGroup) ent.OldCollisionGroup = nil end
 
 		if ent.OldColor then
-			ent:SetColor(ent.OldColor[1], ent.OldColor[2], ent.OldColor[3], ent.OldColor[4])
+			ent:SetColor(Color(ent.OldColor.r, ent.OldColor.g, ent.OldColor.b, ent.OldColor.a))
 		end
 		ent.OldColor = nil
 
@@ -131,7 +131,7 @@ end)
 
 --More crash preventing:
 local function antiragdollcrash(ply)
-	local pos = ply:GetEyeTrace().HitPos
+	local pos = ply:GetEyeTraceNoCursor().HitPos
 	for k,v in pairs(ents.FindInSphere(pos, 30)) do
 		if v:GetClass() == "func_door" then
 			FPP.Notify(ply, "Can't spawn a ragdoll near doors", false)

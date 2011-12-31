@@ -12,16 +12,16 @@ if SERVER then
 				AddDir(dir.."/"..fdir)
 			end
 		end
-	 
+
 		for k,v in pairs(file.Find(dir.."/*", true)) do
 			resource.AddFile(dir.."/"..v)
 		end
 	end
-	
+
 	AddDir("materials/FAdmin")
-	
+
 	AddCSLuaFile("FAdmin.lua")
-	
+
 	local function AddCSLuaFolder(fol)
 		for _, folder in SortedPairs(file.FindInLua(fol.."*"), true) do
 			if folder ~= "." and folder ~= ".." then
@@ -29,11 +29,11 @@ if SERVER then
 					AddCSLuaFile(fol..folder .. "/" ..File)
 					include(fol.. folder .. "/" ..File)
 				end
-				
+
 				for _, File in SortedPairs(file.FindInLua(fol .. folder .."/sv_*.lua"), true) do
 					include(fol.. folder .. "/" ..File)
 				end
-				
+
 				for _, File in SortedPairs(file.FindInLua(fol .. folder .."/cl_*.lua"), true) do
 					AddCSLuaFile(fol.. folder .. "/" ..File)
 				end
@@ -47,9 +47,9 @@ elseif CLIENT then
 		for _, folder in SortedPairs(file.FindInLua(fol.."*"), true) do
 			if folder ~= "." and folder ~= ".." then
 				for _, File in SortedPairs(file.FindInLua(fol .. folder .."/sh_*.lua"), true) do
-					include(fol.. folder .. "/" ..File) 
+					include(fol.. folder .. "/" ..File)
 				end
-				
+
 				for _, File in SortedPairs(file.FindInLua(fol .. folder .."/cl_*.lua"), true) do
 					include(fol.. folder .. "/" ..File)
 				end
@@ -68,9 +68,9 @@ function FAdmin.FindPlayer(info)
 	if not info then return nil end
 	local pls = player.GetAll()
 	local PlayersFound = {}
-	
+
 	if string.lower(info) == "*" or string.lower(info) == "<all>" then return pls end
-	
+
 	local InfoPlayers = {}
 	for A in string.gmatch(info..";", "([a-zA-Z0-9:_.]*)[;(,%s)%c]") do
 		if A ~= "" then table.insert(InfoPlayers, A) end
@@ -82,17 +82,17 @@ function FAdmin.FindPlayer(info)
 			if tonumber(PlayerInfo) == v:UserID() and not table.HasValue(PlayersFound, v) then
 				table.insert(PlayersFound, v)
 			end
-			
+
 			-- Find by Steam ID
 			if (PlayerInfo == v:SteamID() or v:SteamID() == "UNKNOWN") and not table.HasValue(PlayersFound, v)  then
 				table.insert(PlayersFound, v)
 			end
-			
+
 			-- Find by Partial Nick
 			if string.find(string.lower(v:Name()), string.lower(tostring(PlayerInfo)), 1, true) ~= nil and not table.HasValue(PlayersFound, v)  then
 				table.insert(PlayersFound, v)
 			end
-			
+
 			if v.SteamName and string.find(string.lower(v:SteamName()), string.lower(tostring(PlayerInfo)), 1, true) ~= nil and not table.HasValue(PlayersFound, v)  then -- DarkRP
 				table.insert(PlayersFound, v)
 			end
@@ -104,13 +104,13 @@ end
 
 function FAdmin.IsEmpty(vector)
 	local point = util.PointContents(vector)
-	local a = point ~= CONTENTS_SOLID 
-	and point ~= CONTENTS_MOVEABLE 
-	and point ~= CONTENTS_LADDER 
-	and point ~= CONTENTS_PLAYERCLIP 
+	local a = point ~= CONTENTS_SOLID
+	and point ~= CONTENTS_MOVEABLE
+	and point ~= CONTENTS_LADDER
+	and point ~= CONTENTS_PLAYERCLIP
 	and point ~= CONTENTS_MONSTERCLIP
 	local b = true
-	
+
 	for k,v in pairs(ents.FindInSphere(vector, 35)) do
 		if v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics" then
 			b = false
@@ -152,14 +152,14 @@ if SERVER then
 	http.Get("http://automation.whatismyip.com/n09230945.asp", "", function(content, size)
 		local ip = string.match(content, "([0-9.]+)")
 		if not ip then return end
-		IP = ip..":"..GetConVarString("hostport") 
+		IP = ip..":"..GetConVarString("hostport")
 	end)
 	timer.Simple(5, function()
 		if IP == "" then -- if the other site is down?
 			http.Get("http://checkip.dyndns.org/", "", function(content1, size1) -- check a different site
 				local ip1 = string.match(content1, "([0-9.]+)")
 				if not ip1 then return end -- nope.
-				IP = ip1..":"..GetConVarString("hostport") 
+				IP = ip1..":"..GetConVarString("hostport")
 			end)
 			return
 		end
@@ -184,7 +184,7 @@ if SERVER then
 	Player = "Entity",
 	string = "String",
 	Vector = "Vector"}
-	
+
 	function FAdmin.SetGlobalSetting(setting, value)
 		if FAdmin.GlobalSetting[setting] == value then return end -- If the value didn't change, we don't need to resend it.
 		FAdmin.GlobalSetting[setting] = value
@@ -195,7 +195,7 @@ if SERVER then
 			umsg[SetTypes[type(value)]](value)
 		umsg.End()
 	end
-	
+
 	function _R.Player:FAdmin_SetGlobal(setting, value)
 		self.GlobalSetting = self.GlobalSetting or {}
 		if self.GlobalSetting[setting] == value then return end -- If the value didn't change, we don't need to resend it.
@@ -207,7 +207,7 @@ if SERVER then
 			umsg[SetTypes[type(value)]](value)
 		umsg.End()
 	end
-	
+
 	hook.Add("PlayerInitialSpawn", "FAdmin_GlobalSettings", function(ply)
 		for k, v in pairs(FAdmin.GlobalSetting) do
 			umsg.Start("FAdmin_GlobalSetting")
@@ -228,7 +228,7 @@ if SERVER then
 		end
 	end)
 	FAdmin.SetGlobalSetting("FAdmin", true)
-	
+
 	timer.Create("FAdmin_ServerInformation", 1, 0, function()
 		FAdmin.SetGlobalSetting("FAdmin_ServerFPS", math.floor(1/FrameTime()))
 		if IP ~= "" then FAdmin.SetGlobalSetting("FAdmin_ServerIP", IP) end
@@ -243,7 +243,8 @@ elseif CLIENT then
 	Vector = "ReadVector"}
 	usermessage.Hook("FAdmin_GlobalSetting", function(um)
 		FAdmin.GlobalSetting = FAdmin.GlobalSetting or {}
-		FAdmin.GlobalSetting[um:ReadString()] = um[GetTypes[um:ReadString()]](um)
+		local key, value = um:ReadString(), um:ReadString()
+		FAdmin.GlobalSetting[key] = um[GetTypes[value]](um)
 	end)
 	usermessage.Hook("FAdmin_PlayerSetting", function(um)
 		local ply = um:ReadEntity()

@@ -18,21 +18,21 @@ function DB.Commit()
 end
 
 function DB.Query(query, callback)
-	if CONNECTED_TO_MYSQL then 
+	if CONNECTED_TO_MYSQL then
 		if DB.MySQLDB and DB.MySQLDB:status() == mysqloo.DATABASE_NOT_CONNECTED then
 			DB.ConnectToMySQL(RP_MySQLConfig.Host, RP_MySQLConfig.Username, RP_MySQLConfig.Password, RP_MySQLConfig.Database_name, RP_MySQLConfig.Database_port)
 		end
-		
+
 		local query = DB.MySQLDB:query(query)
 		local data
 		query.onData = function(Q, D)
 			data = data or {}
 			data[#data + 1] = D
 		end
-		
+
 		query.onError = function(Q, E) Error(E) callback() DB.Log("MySQL Error: ".. E) end
 		query.onSuccess = function()
-			if callback then callback(data) end 
+			if callback then callback(data) end
 		end
 		query:start()
 		return
@@ -49,7 +49,7 @@ function DB.QueryValue(query, callback)
 		if DB.MySQLDB and DB.MySQLDB:status() == mysqloo.DATABASE_NOT_CONNECTED then
 			DB.ConnectToMySQL(RP_MySQLConfig.Host, RP_MySQLConfig.Username, RP_MySQLConfig.Password, RP_MySQLConfig.Database_name, RP_MySQLConfig.Database_port)
 		end
-		
+
 		local query = DB.MySQLDB:query(query)
 		local data
 		query.onData = function(Q, D)
@@ -72,19 +72,19 @@ end
 function DB.ConnectToMySQL(host, username, password, database_name, database_port)
 	if not mysqloo then Error("MySQL modules aren't installed properly!") DB.Log("MySQL Error: MySQL modules aren't installed properly!") end
 	local databaseObject = mysqloo.connect(host, username, password, database_name, database_port)
-	
+
 	databaseObject.onConnectionFailed = function(msg)
 		Error("Connection failed! " ..tostring(msg))
 		DB.Log("MySQL Error: Connection failed! "..tostring(msg))
 	end
-	
+
 	databaseObject.onConnected = function()
 		DB.Log("MySQL: Connection to external database "..host.." succeeded!")
 		CONNECTED_TO_MYSQL = true
-		
+
 		DB.Init() -- Initialize database
 	end
-	databaseObject:connect() 
+	databaseObject:connect()
 	DB.MySQLDB = databaseObject
 end
 
@@ -110,7 +110,7 @@ function DB.Init()
 	DB.SetUpGroupOwnableDoors()
 	DB.SetUpTeamOwnableDoors()
 	DB.LoadConsoles()
-	
+
 	DB.Query("SELECT * FROM darkrp_cvars;", function(settings)
 		if settings then
 			local reset = false -- For the old SQLite Databases that had the "key" column instead of "var"
@@ -128,10 +128,10 @@ function DB.Init()
 			end
 		end
 	end)
-	
+
 	-- Set the lastused of all jailpositions to 0 because the server just started
 	DB.Query("UPDATE darkrp_jailpositions SET lastused = 0;")
-	
+
 	DB.JailPos = {}
 	DB.Query("SELECT COUNT(*) FROM darkrp_jailpositions;", function(num)
 		if num == 0 then
@@ -142,9 +142,9 @@ function DB.Init()
 			DB.JailPos = data or {}
 		end)
 	end)
-	
+
 	DB.TeamSpawns = {}
-	DB.Query("SELECT COUNT(*) FROM darkrp_tspawns;", function(num) 
+	DB.Query("SELECT COUNT(*) FROM darkrp_tspawns;", function(num)
 		if num == 0 then
 			DB.CreateSpawnPos()
 			return
@@ -153,7 +153,7 @@ function DB.Init()
 			DB.TeamSpawns = data or {}
 		end)
 	end)
-	
+
 	zombieSpawns = {}
 	DB.Query("SELECT COUNT(*) FROM darkrp_zspawns;", function(num)
 		if num == 0 then
@@ -164,15 +164,15 @@ function DB.Init()
 			zombieSpawns = data or {}
 		end)
 	end)
-	
-	if CONNECTED_TO_MYSQL then -- In a listen server, the connection with the external database is often made AFTER the listen server host has joined, 
+
+	if CONNECTED_TO_MYSQL then -- In a listen server, the connection with the external database is often made AFTER the listen server host has joined,
 								--so he walks around with the settings from the SQLite database
 		for k,v in pairs(player.GetAll()) do
 			local SteamID = sql.SQLStr(v:SteamID())
-			DB.Query([[SELECT amount, salary, name FROM darkrp_wallets 
+			DB.Query([[SELECT amount, salary, name FROM darkrp_wallets
 				LEFT OUTER JOIN darkrp_salaries ON darkrp_wallets.steam = darkrp_salaries.steam
 				LEFT OUTER JOIN darkrp_rpnames ON darkrp_wallets.steam = darkrp_rpnames.steam
-				WHERE darkrp_wallets.steam = ]].. SteamID ..[[
+				WHERE darkrp_wallets.steam = ]].. sql.SQLStr(SteamID) ..[[
 			;]], function(data)
 				local Data = data[1]
 				if Data.name then
@@ -259,7 +259,7 @@ function DB.RetrieveRandomZombieSpawnPos()
 				return Vector(r.x, r.y, r.z) + Vector(i, 0, 0)
 			end
 		end
-		
+
 		if not found then
 			for i = 40, 200, 10 do
 				if IsEmpty(Vector(r.x, r.y, r.z) + Vector(0, i, 0)) then
@@ -268,7 +268,7 @@ function DB.RetrieveRandomZombieSpawnPos()
 				end
 			end
 		end
-		
+
 		if not found then
 			for i = 40, 200, 10 do
 				if IsEmpty(Vector(r.x, r.y, r.z) + Vector(-i, 0, 0)) then
@@ -277,7 +277,7 @@ function DB.RetrieveRandomZombieSpawnPos()
 				end
 			end
 		end
-		
+
 		if not found then
 			for i = 40, 200, 10 do
 				if IsEmpty(Vector(r.x, r.y, r.z) + Vector(0, -i, 0)) then
@@ -289,8 +289,8 @@ function DB.RetrieveRandomZombieSpawnPos()
 	else
 		return Vector(r.x, r.y, r.z)
 	end
-	
-	return Vector(r.x, r.y, r.z) + Vector(0,0,70)        
+
+	return Vector(r.x, r.y, r.z) + Vector(0,0,70)
 end
 
 function DB.CreateJailPos()
@@ -347,12 +347,12 @@ function DB.RetrieveJailPos()
 	local map = string.lower(game.GetMap())
 	local r = DB.JailPos
 	if not r then return Vector(0,0,0) end
-	
+
 	-- Retrieve the least recently used jail position
 	local now = CurTime()
 	local oldest = 0
 	local ret
-	
+
 	for k, row in pairs(r) do
 		if row.map == map and (now - tonumber(row.lastused)) > oldest then
 			oldest = (now - tonumber(row.lastused))
@@ -394,7 +394,7 @@ function DB.StoreTeamSpawnPos(t, pos)
 		already = tonumber(already)
 		local ID = 0
 		local found = false
-		for k,v in SortedPairs(DB.TeamSpawns or {}) do 
+		for k,v in SortedPairs(DB.TeamSpawns or {}) do
 			if tonumber(v.id) == ID + 1 then
 				ID = tonumber(v.id)
 				found = true
@@ -405,7 +405,7 @@ function DB.StoreTeamSpawnPos(t, pos)
 			end
 		end
 		if found or ID == 0 then ID = ID + 1 end
-		
+
 		if not already or already == 0 then
 			DB.Query("INSERT INTO darkrp_tspawns VALUES(".. ID .. ", ".. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");", function()
 				DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end) end)
@@ -425,7 +425,7 @@ function DB.AddTeamSpawnPos(t, pos)
 	local map = string.lower(game.GetMap())
 	local ID = 0
 	local found = false
-	for k,v in SortedPairs(DB.TeamSpawns or {}) do 
+	for k,v in SortedPairs(DB.TeamSpawns or {}) do
 		if tonumber(v.id) == ID + 1 then
 			ID = tonumber(v.id)
 			found = true
@@ -436,7 +436,7 @@ function DB.AddTeamSpawnPos(t, pos)
 		end
 	end
 	if found or ID == 0 then ID = ID + 1 end
-	
+
 	DB.Query("INSERT INTO darkrp_tspawns VALUES(".. ID .. ", " .. sql.SQLStr(map) .. ", " .. t .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ");", function()
 		DB.Query("SELECT * FROM darkrp_tspawns;", function(data) DB.TeamSpawns = data or {} end) end)
 end
@@ -448,13 +448,13 @@ function DB.RemoveTeamSpawnPos(t, callback)
 		if callback then callback() end
 	end)
 end
-	
+
 function DB.RetrieveTeamSpawnPos(ply)
 	local map = string.lower(game.GetMap())
 	local t = ply:Team()
-	
+
 	local returnal = {}
-	
+
 	if DB.TeamSpawns then
 		for k,v in pairs(DB.TeamSpawns) do
 			if v.map == map and tonumber(v.team) == t then
@@ -466,7 +466,7 @@ function DB.RetrieveTeamSpawnPos(ply)
 end
 
 /*---------------------------------------------------------
-Players 
+Players
  ---------------------------------------------------------*/
 function DB.StoreRPName(ply, name)
 	if not name or string.len(name) < 2 then return end
@@ -490,7 +490,7 @@ function DB.StoreMoney(ply, amount)
 	if not ValidEntity(ply) then return end
 	if amount < 0  then return end
 	ply:SetDarkRPVar("money", math.floor(amount))
-	
+
 	local steamID = ply:SteamID()
 	DB.Query("REPLACE INTO darkrp_wallets VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
 end
@@ -499,7 +499,7 @@ function DB.RetrieveMoney(ply) -- This is only run once when the player joins, t
 	if not ValidEntity(ply) then return 0 end
 	local steamID = ply:SteamID()
 	local startingAmount = GetConVarNumber("startingmoney") or 500
-		
+
 	DB.QueryValue("SELECT amount FROM darkrp_wallets WHERE steam = " .. sql.SQLStr(ply:SteamID()) .. ";", function(r)
 		if r then
 			ply:SetDarkRPVar("money", math.floor(r))
@@ -534,7 +534,7 @@ function DB.StoreSalary(ply, amount)
 	local steamID = ply:SteamID()
 	ply:SetSelfDarkRPVar("salary", math.floor(amount))
 	DB.Query("REPLACE INTO darkrp_salaries VALUES(" .. sql.SQLStr(steamID) .. ", " .. math.floor(amount) .. ");")
-	
+
 	return amount
 end
 
@@ -595,7 +595,7 @@ end
 function DB.StoreGroupDoorOwnability(ent)
 	local map = string.lower(game.GetMap())
 	ent.DoorData = ent.DoorData or {}
-	
+
 	DB.QueryValue("SELECT COUNT(*) FROM darkrp_groupdoors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";", function(r)
 		r = tonumber(r)
 		if not r then return end
@@ -613,11 +613,11 @@ end
 function DB.StoreTeamDoorOwnability(ent)
 	local map = string.lower(game.GetMap())
 	ent.DoorData = ent.DoorData or {}
-	
+
 	DB.QueryValue("SELECT COUNT(*) FROM darkrp_teamdoors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() .. ";", function(r)
 		r = tonumber(r)
 		if not r then return end
-		
+
 		if r > 0 and not ent.DoorData.TeamOwn then
 			DB.Query("DELETE FROM darkrp_teamdoors WHERE map = " .. sql.SQLStr(map) .. " AND idx = " .. ent:EntIndex() ..";")
 		elseif r == 0 and ent.DoorData.TeamOwn then
@@ -639,7 +639,7 @@ function DB.StoreTeamOwnableDoorTitle(ent, text)
 	ent.DoorData = ent.DoorData or {}
 	ent.DoorData.title = text
 end
-	
+
 function DB.SetUpGroupOwnableDoors()
 	DB.Query("SELECT idx, title, teams FROM darkrp_groupdoors WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";", function(r)
 		if not r then return end
@@ -658,7 +658,7 @@ end
 function DB.SetUpTeamOwnableDoors()
 	DB.Query("SELECT idx, title, teams FROM darkrp_teamdoors WHERE map = " .. sql.SQLStr(string.lower(game.GetMap())) .. ";", function(r)
 		if not r then return end
-		
+
 		for _, row in pairs(r) do
 			local e = ents.GetByIndex(tonumber(row.idx))
 			if ValidEntity(e) then
@@ -689,7 +689,7 @@ function DB.LoadConsoles()
 					console:SetAngles(Angle(RP_ConsolePositions[k][5], RP_ConsolePositions[k][6], RP_ConsolePositions[k][7]))
 					console:Spawn()
 					console:Activate()
-					
+
 					console.ID = "0"
 				end
 			end
@@ -699,22 +699,22 @@ end
 
 function DB.CreateConsole(ply, cmd, args)
 	if not ply:IsSuperAdmin() then return end
-	
+
 	local tr = {}
 	tr.start = ply:EyePos()
 	tr.endpos = ply:EyePos() + 95 * ply:GetAimVector()
 	tr.filter = ply
 	local trace = util.TraceLine(tr)
-	
+
 	local console = ents.Create("darkrp_console")
 	console:SetPos(trace.HitPos)
 	console:Spawn()
 	console:Activate()
-	
+
 	DB.QueryValue("SELECT MAX(id) FROM darkrp_consolespawns;", function(Data)
-		console.ID = (tonumber(Data) and tostring(tonumber(Data) + 1)) or "1"	
+		console.ID = (tonumber(Data) and tostring(tonumber(Data) + 1)) or "1"
 	end)
-	
+
 	ply:ChatPrint("Console spawned, move and freeze it to save it!")
 end
 concommand.Add("rp_CreateConsole", DB.CreateConsole)
@@ -728,7 +728,10 @@ concommand.Add("rp_removeallconsoles", DB.RemoveConsoles)
 /*---------------------------------------------------------
  Logging
  ---------------------------------------------------------*/
-function DB.Log(text, force)
+function DB.Log(text, force, colour)
+	if colour then
+		AdminLog(text, colour)
+	end
 	if (not util.tobool(GetConVarNumber("logging")) or not text) and not force then return end
 	if not DB.File then -- The log file of this session, if it's not there then make it!
 		if not file.IsDir("DarkRP_logs") then

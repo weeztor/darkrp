@@ -1,8 +1,6 @@
-GM.Version = "2.4.2"
+GM.Version = "2.4.3"
 GM.Name = "DarkRP "..GM.Version
 GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome Bolt, FPtje Falco, Eusion, Drakehawke"
-
-require("datastream")
 
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
@@ -453,7 +451,7 @@ local function AddToChat(msg)
 	local name = msg:ReadString()
 	local ply = msg:ReadEntity()
 
-	if name == "" then name = ply.DarkRPVars.rpname end
+	if name == "" then name = (ply.DarkRPVars and ply.DarkRPVars.rpname) or ply:Nick() end
 
 	local col2 = Color(msg:ReadShort(), msg:ReadShort(), msg:ReadShort())
 
@@ -479,31 +477,39 @@ local function GetAvailableVehicles()
 end
 concommand.Add("rp_getvehicles", GetAvailableVehicles)
 
-local function RetrieveDoorData(handler, id, encoded, decoded)
-	-- decoded[1] = Entity you were looking at
-	-- Decoded[2] = table of that door
-	if not decoded[1] or not decoded[1].IsValid or not ValidEntity(decoded[1]) then return end
+local function AdminLog(um)
+	local colour = Color(um:ReadShort(), um:ReadShort(), um:ReadShort())
+	local text = um:ReadString() .. "\n"
+	MsgC(Color(255,0,0), "[DarkRP] ")
+	MsgC(colour, text)
+end
+usermessage.Hook("DRPLogMsg", AdminLog)
 
-	if decoded[2].TeamOwn then
+local function RetrieveDoorData(len)
+	local door = net.ReadEntity()
+	local doorData = net.ReadTable()
+	if not door or not door.IsValid or not ValidEntity(door) then return end
+
+	if doorData.TeamOwn then
 		local tdata = {}
-		for k, v in pairs(string.Explode("\n", decoded[2].TeamOwn or "")) do
+		for k, v in pairs(string.Explode("\n", doorData.TeamOwn or "")) do
 			if v and v != "" then
 				tdata[tonumber(v)] = true
 			end
 		end
-		decoded[2].TeamOwn = tdata
+		doorData.TeamOwn = tdata
 	else
-		decoded[2].TeamOwn = nil
+		doorData.TeamOwn = nil
 	end
 
-	decoded[1].DoorData = decoded[2]
+	door.DoorData = doorData
 
 	local DoorString = "Data:\n"
-	for k,v in pairs(decoded[2]) do
+	for k,v in pairs(doorData) do
 		DoorString = DoorString .. k.."\t\t".. tostring(v) .. "\n"
 	end
 end
-datastream.Hook("DarkRP_DoorData", RetrieveDoorData)
+net.Receive("DarkRP_DoorData", RetrieveDoorData)
 
 local function UpdateDoorData(um)
 	local door = um:ReadEntity()
@@ -593,13 +599,13 @@ local function RetrieveSelfVar(um)
 end
 usermessage.Hook("DarkRP_SelfPlayerVar", RetrieveSelfVar)
 
-local function InitializeDarkRPVars(handler, id, encoded, decoded)
-	if not decoded then return end
-	for ply,vars in pairs(decoded) do
-		ply.DarkRPVars = vars
-	end
+local function InitializeDarkRPVars(len)
+	local ply = net.ReadEntity()
+	local vars = net.ReadTable()
+	if not vars then return end
+	ply.DarkRPVars = vars
 end
-datastream.Hook("DarkRP_InitializeVars", InitializeDarkRPVars)
+net.Receive("DarkRP_InitializeVars", InitializeDarkRPVars)
 
 function GM:InitPostEntity()
 	function VoiceNotify:Init()
