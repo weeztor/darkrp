@@ -428,9 +428,6 @@ function AddEntityCommands(name, command, max, price)
 	AddToggleCommand("rp_disable"..cmdname, "disable"..cmdname, 0)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_disable"..cmdname.." - disable that people can buy the "..name..".")
 
-	AddValueCommand("rp_max"..cmdname, "max"..cmdname, max or 3)
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..cmdname.." <Number> - Sets how many ".. name .. " one can buy.")
-
 	AddValueCommand("rp_"..cmdname.."_price", cmdname.."_price", price or 30)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..cmdname.."_price <Number> - Sets the price of ".. name .. ".")
 end
