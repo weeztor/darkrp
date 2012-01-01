@@ -68,7 +68,7 @@ TEAM_MEDIC = AddExtraTeam("Medic", Color(47, 79, 79, 255), "models/player/kleine
 health.
 Without a medic, people can not be healed.
 Left click with the Medical Kit to heal other players.
-Right click with the Medical Kit to heal yourself.]], {"med_kit"}, "medic", 0.5, 45, 0, false, false)
+Right click with the Medical Kit to heal yourself.]], {"med_kit"}, "medic", 3, 45, 0, false, false)
 
 TEAM_COOK = AddExtraTeam("Cook", Color(238, 99, 99, 255), "models/player/mossman.mdl", [[As a cook, it is your responsibility to feed the other members
 of your city.
