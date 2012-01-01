@@ -257,9 +257,10 @@ function meta:ChangeTeam(t, force)
 			Notify(self, 1,4, string.format(string.sub(teamnames, 5), team.GetName(TEAM.NeedToChangeFrom), TEAM.name))
 			return
 		end
-		if GetConVarNumber("max"..TEAM.command.."s") and GetConVarNumber("max"..TEAM.command.."s") ~= 0 and team.NumPlayers(t) >= GetConVarNumber("max"..TEAM.command.."s")then
-			Notify(self, 1, 4, string.format(LANGUAGE.team_limit_reached, TEAM.name))
-			return
+		local max = TEAM.max
+		if max ~= 0 and ((max % 1 == 0 and team.NumPlayers(t) >= max) or (max % 1 ~= 0 and (team.NumPlayers(t) + 1) / #player.GetAll() > max)) then
+			Notify(ply, 1, 4,  string.format(LANGUAGE.team_limit_reached, TEAM.name))
+			return ""
 		end
 	end
 	if self:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then

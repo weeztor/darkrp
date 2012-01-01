@@ -428,9 +428,6 @@ function AddEntityCommands(name, command, max, price)
 	AddToggleCommand("rp_disable"..cmdname, "disable"..cmdname, 0)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_disable"..cmdname.." - disable that people can buy the "..name..".")
 
-	AddValueCommand("rp_max"..cmdname, "max"..cmdname, max or 3)
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..cmdname.." <Number> - Sets how many ".. name .. " one can buy.")
-
 	AddValueCommand("rp_"..cmdname.."_price", cmdname.."_price", price or 30)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..cmdname.."_price <Number> - Sets the price of ".. name .. ".")
 end
@@ -442,11 +439,9 @@ function AddTeamCommands(CTeam, max)
 			k = num
 		end
 	end
-	AddValueCommand("rp_max"..CTeam.command.."s", "max"..CTeam.command.."s", max or 5)
 	AddToggleCommand("rp_allow"..CTeam.command, "allow"..CTeam.command, 1, true)
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_"..CTeam.command.. " [Nick|SteamID|UserID] - Make a player become a "..CTeam.name..".")
 	AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allow"..CTeam.command.." - Enable/disable "..CTeam.name)
-	AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_max"..CTeam.command.."s".." <Number> - Sets max "..CTeam.name.."s.")
 	if CLIENT then return end
 
 	if CTeam.Vote then
@@ -481,7 +476,8 @@ function AddTeamCommands(CTeam, max)
 				Notify(ply, 1, 4,  string.format(LANGUAGE.unable, CTeam.command, ""))
 				return ""
 			end
-			if team.NumPlayers(k) >= GetConVarNumber("max"..CTeam.command.."s") then
+			local max = CTeam.max
+			if max ~= 0 and ((max % 1 == 0 and team.NumPlayers(k) >= max) or (max % 1 ~= 0 and (team.NumPlayers(k) + 1) / #player.GetAll() > max)) then
 				Notify(ply, 1, 4,  string.format(LANGUAGE.team_limit_reached,CTeam.name))
 				return ""
 			end
