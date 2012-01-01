@@ -18,15 +18,15 @@ TEAM_CITIZEN = AddExtraTeam("Citizen", Color(20, 150, 20, 255), {
 	"models/player/Group01/Male_08.mdl",
 	"models/player/Group01/Male_09.mdl"},
 [[The Citizen is the most basic level of society you can hold
-besides being a hobo. 
+besides being a hobo.
 You have no specific role in city life.]], {}, "citizen", 0, 45, 0, false, false)
 
-TEAM_POLICE = AddExtraTeam("Civil Protection", Color(25, 25, 170, 255), "models/player/police.mdl", [[The protector of every citizen that lives in the city . 
-You have the power to arrest criminals and protect innocents. 
+TEAM_POLICE = AddExtraTeam("Civil Protection", Color(25, 25, 170, 255), "models/player/police.mdl", [[The protector of every citizen that lives in the city .
+You have the power to arrest criminals and protect innocents.
 Hit them with your arrest baton to put them in jail
-Bash them with a stunstick and they might learn better than to disobey 
+Bash them with a stunstick and they might learn better than to disobey
 the law.
-The Battering Ram can break down the door of a criminal with a warrant 
+The Battering Ram can break down the door of a criminal with a warrant
 for his/her arrest.
 The Battering Ram can also unfreeze frozen props(if enabled).
 Type /wanted <name> to alert the public to this criminal
@@ -47,51 +47,51 @@ TEAM_GANG = AddExtraTeam("Gangster", Color(75, 75, 75, 255), {
 	"models/player/Group03/Male_06.mdl",
 	"models/player/Group03/Male_07.mdl",
 	"models/player/Group03/Male_08.mdl",
-	"models/player/Group03/Male_09.mdl"}, [[The lowest person of crime. 
-A gangster generally works for the Mobboss who runs the crime family. 
+	"models/player/Group03/Male_09.mdl"}, [[The lowest person of crime.
+A gangster generally works for the Mobboss who runs the crime family.
 The Mobboss sets your agenda and you follow it or you might be punished.]], {}, "gangster", 3, 45, 0, false, false)
 
-TEAM_MOB = AddExtraTeam("Mob boss", Color(25, 25, 25, 255), "models/player/gman_high.mdl", [[The Mobboss is the boss of the criminals in the city. 
+TEAM_MOB = AddExtraTeam("Mob boss", Color(25, 25, 25, 255), "models/player/gman_high.mdl", [[The Mobboss is the boss of the criminals in the city.
 With his power he coordinates the gangsters and forms an efficent crime
-organization. 
-He has the ability to break into houses by using a lockpick. 
+organization.
+He has the ability to break into houses by using a lockpick.
 The Mobboss also can unarrest you.]], {"lockpick", "unarrest_stick"}, "mobboss", 1, 60, 0, false, false)
 
-TEAM_GUN = AddExtraTeam("Gun Dealer", Color(255, 140, 0, 255), "models/player/monk.mdl", [[A gun dealer is the only person who can sell guns to other 
-people. 
-However, make sure you aren't caught selling guns that are illegal to 
+TEAM_GUN = AddExtraTeam("Gun Dealer", Color(255, 140, 0, 255), "models/player/monk.mdl", [[A gun dealer is the only person who can sell guns to other
+people.
+However, make sure you aren't caught selling guns that are illegal to
 the public.
 /Buyshipment <name> to Buy a  weapon shipment
 /Buygunlab to Buy a gunlab that spawns P228 pistols]], {}, "gundealer", 2, 45, 0, false, false)
 
-TEAM_MEDIC = AddExtraTeam("Medic", Color(47, 79, 79, 255), "models/player/kleiner.mdl", [[With your medical knowledge, you heal players to proper 
-health. 
-Without a medic, people can not be healed. 
+TEAM_MEDIC = AddExtraTeam("Medic", Color(47, 79, 79, 255), "models/player/kleiner.mdl", [[With your medical knowledge, you heal players to proper
+health.
+Without a medic, people can not be healed.
 Left click with the Medical Kit to heal other players.
 Right click with the Medical Kit to heal yourself.]], {"med_kit"}, "medic", 3, 45, 0, false, false)
 
-TEAM_COOK = AddExtraTeam("Cook", Color(238, 99, 99, 255), "models/player/mossman.mdl", [[As a cook, it is your responsibility to feed the other members 
-of your city. 
+TEAM_COOK = AddExtraTeam("Cook", Color(238, 99, 99, 255), "models/player/mossman.mdl", [[As a cook, it is your responsibility to feed the other members
+of your city.
 You can spawn a microwave and sell the food you make:
 /Buymicrowave]], {}, "cook", 2, 45, 0, 0, false)
 
-TEAM_CHIEF = AddExtraTeam("Civil Protection Chief", Color(20, 20, 255, 255), "models/player/combine_soldier_prisonguard.mdl", [[The Chief is the leader of the Civil Protection unit. 
+TEAM_CHIEF = AddExtraTeam("Civil Protection Chief", Color(20, 20, 255, 255), "models/player/combine_soldier_prisonguard.mdl", [[The Chief is the leader of the Civil Protection unit.
 Coordinate the police forces to bring law to the city
 Hit them with arrest baton to put them in jail
-Bash them with a stunstick and they might learn better than to 
+Bash them with a stunstick and they might learn better than to
 disobey the law.
-The Battering Ram can break down the door of a criminal with a 
+The Battering Ram can break down the door of a criminal with a
 warrant for his/her arrest.
 Type /wanted <name> to alert the public to this criminal
 Type /jailpos to set the Jail Position]], {"arrest_stick", "unarrest_stick", "weapon_deagle2", "stunstick", "door_ram", "weaponchecker"}, "chief", 1, 75, 0, false, true, TEAM_POLICE)
 
-TEAM_MAYOR = AddExtraTeam("Mayor", Color(150, 20, 20, 255), "models/player/breen.mdl", [[The Mayor of the city creates laws to serve the greater good 
+TEAM_MAYOR = AddExtraTeam("Mayor", Color(150, 20, 20, 255), "models/player/breen.mdl", [[The Mayor of the city creates laws to serve the greater good
 of the people.
 If you are the mayor you may create and accept warrants.
 Type /wanted <name>  to warrant a player
 Type /jailpos to set the Jail Position
-Type /lockdown initiate a lockdown of the city. 
-Everyone must be inside during a lockdown. 
+Type /lockdown initiate a lockdown of the city.
+Everyone must be inside during a lockdown.
 The cops patrol the area
 /unlockdown to end a lockdown]], {}, "mayor", 1, 85, 0, true, false/*, {TEAM_CHIEF, TEAM_POLICE}*/)
 /*
@@ -108,11 +108,11 @@ AddExtraTeam( "<NAME OF THE CLASS>", Color(<red>, <Green>, <blue>, 255), "<Playe
 The real example is here: it's the Hobo:		*/
 
 --VAR without /!!!			The name    the color(what you see in tab)                   the player model					The description
-TEAM_HOBO = AddExtraTeam("Hobo", Color(80, 45, 0, 255), "models/player/corpse1.mdl", [[The lowest member of society. All people see you laugh. 
+TEAM_HOBO = AddExtraTeam("Hobo", Color(80, 45, 0, 255), "models/player/corpse1.mdl", [[The lowest member of society. All people see you laugh.
 You have no home.
 Beg for your food and money
 Sing for everyone who passes to get money
-Make your own wooden home somewhere in a corner or 
+Make your own wooden home somewhere in a corner or
 outside someone else's door]], {"weapon_bugbait"}, "hobo", 5, 0, 0, false)
 //No extra weapons           say /hobo to become hobo  Maximum hobo's = 5		his salary = 0 because hobo's don't earn money.          0 = everyone can become hobo ,      false = you don't have to vote to become hobo
 // MAKE SURE THAT THERE IS NO / IN THE TEAM NAME OR IN THE TEAM COMMAND:

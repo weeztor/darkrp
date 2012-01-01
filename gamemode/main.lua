@@ -1132,9 +1132,8 @@ for k,v in pairs(DarkRPEntities) do
 			return ""
 		end
 
-		local max = GetConVarNumber("max"..cmdname)
+		local max = tonumber(v.max or 3)
 
-		if not max or max == 0 then max = tonumber(v.max) end
 		if ply["max"..cmdname] and tonumber(ply["max"..cmdname]) >= tonumber(max) then
 			Notify(ply, 1, 4, string.format(LANGUAGE.limit, v.cmd))
 			return ""
