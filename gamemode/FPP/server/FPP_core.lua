@@ -20,7 +20,7 @@ if cleanup then
 
 				local found = false
 				for k,v in pairs(FPP.BlockedModels) do
-					if string.find(v, model) or string.find(model, v) then
+					if string.find(v, model, 0, true) or string.find(model, v, 0, true) then
 						found = true
 						break
 					end
