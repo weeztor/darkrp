@@ -8,8 +8,6 @@ function GM:Initialize()
 end
 
 function GM:PlayerSpawnProp(ply, model)
-	if not self.BaseClass:PlayerSpawnProp(ply, model) then return false end
-
 	-- If prop spawning is enabled or the user has admin or prop privileges
 	local allowed = ((GetConVarNumber("propspawning") == 1 or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_prop")) or ply:IsAdmin()) and true) or false
 
@@ -18,21 +16,19 @@ function GM:PlayerSpawnProp(ply, model)
 	if string.find(model,  "//") then Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with an invalid path "..model) return false end
 
-	if allowed then
-		if GetConVarNumber("proppaying") == 1 then
-			if ply:CanAfford(GetConVarNumber("propcost")) then
-				Notify(ply, 0, 4, "Deducted " .. CUR .. GetConVarNumber("propcost"))
-				ply:AddMoney(-GetConVarNumber("propcost"))
-				return true
-			else
-				Notify(ply, 1, 4, "Need " .. CUR .. GetConVarNumber("propcost"))
-				return false
-			end
+	if not allowed then return false end
+
+	if GetConVarNumber("proppaying") == 1 then
+		if ply:CanAfford(GetConVarNumber("propcost")) then
+			Notify(ply, 0, 4, "Deducted " .. CUR .. GetConVarNumber("propcost"))
+			ply:AddMoney(-GetConVarNumber("propcost"))
 		else
-			return true
+			Notify(ply, 1, 4, "Need " .. CUR .. GetConVarNumber("propcost"))
+			return false
 		end
 	end
-	return false
+
+	return self.BaseClass:PlayerSpawnProp(ply, model)
 end
 
 function GM:PlayerSpawnSENT(ply, model)
