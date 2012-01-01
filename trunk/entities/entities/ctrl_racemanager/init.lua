@@ -27,6 +27,9 @@ function ENT:Initialize()
 	self.Player:SendLua([[RunConsoleCommand("gmod_tool", "checkpoint_setter")]])
 	self.Player:GetWeapon("gmod_tool"):SetNWEntity("Game", self)
 	self.Player:GetWeapon("gmod_tool"):SetNWString("nextEntity", "start")
+
+	hook.Add("PlayerDisconnected", "ProplympicsDisconnect" .. self:EntIndex(),
+			function(ply) self:OnPlayerDisconnected(ply) end)
 end
 
 function ENT:UpdateTransmitState()
@@ -132,4 +135,19 @@ function ENT:OnRemove()
 		SafeRemoveEntity(v)
 	end
 	SafeRemoveEntity(self.raceGame)
+
+	hook.Remove("PlayerDisconnected", "ProplympicsDisconnect" .. self:EntIndex())
+end
+
+function ENT:OnPlayerDisconnected(ply)
+	if ply == self.Player then
+		SafeRemoveEntity(self)
+	else
+		for k,v in pairs(self.participants) do
+			if v == ply then
+				table.remove(self.participants, k)
+				break
+			end
+		end
+	end
 end

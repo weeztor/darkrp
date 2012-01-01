@@ -94,6 +94,13 @@ function ENT:CountDown()
 end
 
 function ENT:Finish(ply)
+	for k,v in pairs(self.surfProps) do
+		if not ValidEntity(v.Owner) then
+			SafeRemoveEntity(v)
+			table.remove(self.surfProps)
+		end
+	end
+
 	ply:GetNWEntity("SurfProp").EndingTime = CurTime()
 	if not table.HasValue(self.Finishers, ply) then
 		table.insert(self.Finishers, ply)
