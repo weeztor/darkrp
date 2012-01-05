@@ -93,7 +93,7 @@ end
  ---------------------------------------------------------*/
 function DB.Init()
 	DB.Begin()
-		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_cvars(var char(20) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
+		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_convars(var char(64) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_tspawns(id INTEGER NOT NULL, map char(30) NOT NULL, team INTEGER NOT NULL, x NUMERIC NOT NULL, y NUMERIC NOT NULL, z NUMERIC NOT NULL, PRIMARY KEY(id));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_salaries(steam char(20) NOT NULL, salary INTEGER NOT NULL, PRIMARY KEY(steam));")
 		DB.Query("CREATE TABLE IF NOT EXISTS darkrp_wallets(steam char(20) NOT NULL, amount INTEGER NOT NULL, PRIMARY KEY(steam));")
@@ -111,7 +111,7 @@ function DB.Init()
 	DB.SetUpTeamOwnableDoors()
 	DB.LoadConsoles()
 
-	DB.Query("SELECT * FROM darkrp_cvars;", function(settings)
+	DB.Query("SELECT * FROM darkrp_convars;", function(settings)
 		if settings then
 			local reset = false -- For the old SQLite Databases that had the "key" column instead of "var"
 			for k,v in pairs(settings) do
@@ -120,10 +120,10 @@ function DB.Init()
 			end
 			if reset then -- Renaming the column is impossible in SQLite, so do it the hard way
 				DB.Begin()
-					DB.Query("ALTER TABLE darkrp_cvars RENAME TO darkrp_cvars2;")
-					DB.Query("CREATE TABLE darkrp_cvars (var char(20) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
-					DB.Query("INSERT INTO darkrp_cvars SELECT * FROM darkrp_cvars2;")
-					DB.Query("DROP TABLE darkrp_cvars2;")
+					DB.Query("ALTER TABLE darkrp_convars RENAME TO darkrp_convars2;")
+					DB.Query("CREATE TABLE darkrp_convars (var char(20) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
+					DB.Query("INSERT INTO darkrp_convars SELECT * FROM darkrp_convars2;")
+					DB.Query("DROP TABLE darkrp_convars2;")
 				DB.Commit()
 			end
 		end
@@ -369,7 +369,7 @@ function DB.RetrieveJailPos()
 end
 
 function DB.SaveSetting(setting, value)
-	DB.Query("REPLACE INTO darkrp_cvars VALUES("..sql.SQLStr(setting)..","..sql.SQLStr(value)..");")
+	DB.Query("REPLACE INTO darkrp_convars VALUES("..sql.SQLStr(setting)..","..sql.SQLStr(value)..");")
 end
 
 function DB.CountJailPos()
