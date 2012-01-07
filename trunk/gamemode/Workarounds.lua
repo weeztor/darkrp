@@ -46,9 +46,9 @@ concommand.Add( "gmod_admin_cleanup", function( pl, command, args )
 		end
 		if NotifyAll then NotifyAll(0, 4, pl:Nick() .. " cleaned up everything.") end
 	end
-	
+
 	if not IsValidCleanup(args[1]) then return end
-	
+
 	for k, v in pairs(ents.FindByClass(args[1])) do
 		v:Remove()
 	end
@@ -104,4 +104,19 @@ hook.Add("OnEntityCreated", "DRP_WireFieldGenerator", function(ent)
 			end
 		end
 	end, ent)
+end)
+
+/*---------------------------------------------------------------------------
+Door tool is shitty
+Let's fix that huge class exploit
+---------------------------------------------------------------------------*/
+hook.Add("InitPostEntity", "FixDoorTool", function()
+	local oldFunc = makedoor
+	if oldFunc then
+		function makedoor(ply,trace,ang,model,open,close,autoclose,closetime,class,hardware, ...)
+			if class ~= "prop_dynamic" and class ~= "prop_door_rotating" then return end
+
+			oldFunc(ply,trace,ang,model,open,close,autoclose,closetime,class,hardware, ...)
+		end
+	end
 end)
