@@ -121,7 +121,7 @@ function DB.Init()
 			if reset then -- Renaming the column is impossible in SQLite, so do it the hard way
 				DB.Begin()
 					DB.Query("ALTER TABLE darkrp_convars RENAME TO darkrp_convars2;")
-					DB.Query("CREATE TABLE darkrp_convars (var char(20) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
+					DB.Query("CREATE TABLE darkrp_convars (var char(64) NOT NULL, value INTEGER NOT NULL, PRIMARY KEY(var));")
 					DB.Query("INSERT INTO darkrp_convars SELECT * FROM darkrp_convars2;")
 					DB.Query("DROP TABLE darkrp_convars2;")
 				DB.Commit()
