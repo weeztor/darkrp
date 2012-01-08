@@ -74,3 +74,18 @@ hook.Add("OnEntityCreated", "DRP_WireFieldGenerator", function(ent)
 		end
 	end, ent)
 end)
+
+/*---------------------------------------------------------------------------
+Door tool is shitty
+Let's fix that huge class exploit
+---------------------------------------------------------------------------*/
+hook.Add("InitPostEntity", "FixDoorTool", function()
+	local oldFunc = makedoor
+	if oldFunc then
+		function makedoor(ply,trace,ang,model,open,close,autoclose,closetime,class,hardware, ...)
+			if class ~= "prop_dynamic" and class ~= "prop_door_rotating" then return end
+
+			oldFunc(ply,trace,ang,model,open,close,autoclose,closetime,class,hardware, ...)
+		end
+	end
+end)
