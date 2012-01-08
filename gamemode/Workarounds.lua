@@ -1,3 +1,14 @@
+-- Shared part
+/*---------------------------------------------------------------------------
+Sound crash glitch
+---------------------------------------------------------------------------*/
+
+local entity = FindMetaTable("Entity")
+local EmitSound = entity.EmitSound
+function entity:EmitSound(sound, ...)
+	if string.find(sound, "??", 0, true) then return end
+	return EmitSound(self, sound, ...)
+end
 /*net.WriteVars =
 {
 	[TYPE_NUMBER] = function ( t, v )	net.WriteByte( t )	net.WriteLong( v )			end,
@@ -13,6 +24,7 @@ net.ReadVars =
 	[TYPE_STRING] = function ()	return net.ReadString() end,
 }*/
 
+-- Clientside part
 if CLIENT then
 	/*---------------------------------------------------------------------------
 	Generic InitPostEntity workarounds
@@ -24,6 +36,7 @@ if CLIENT then
 	return
 end
 
+-- Serverside part
 /*---------------------------------------------------------------------------
 Assmod makes previously banned people able to noclip. I say fuck you.
 ---------------------------------------------------------------------------*/
