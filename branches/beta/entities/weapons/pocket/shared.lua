@@ -55,7 +55,7 @@ function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + 0.2)
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) then
+	if not ValidEntity(trace.Entity) or (SERVER and trace.Entity:IsPlayerHolding()) then
 		return
 	end
 
