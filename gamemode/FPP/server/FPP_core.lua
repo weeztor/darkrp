@@ -522,14 +522,21 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	end
 
 	-- Anti model server crash
-	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon().GetToolObject and ply:GetActiveWeapon():GetToolObject() and
-	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("model"), "*") or
-	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("material"), "*") or
-	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("model"), "\\")
-	/*or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "tool" ), "/")*/) then
-		FPP.Notify(ply, "The material/model of the tool is invalid!", false)
-		FPP.CanTouch(ply, "FPP_TOOLGUN", "The material/model of the tool is invalid!", false)
-		return false
+	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon().GetToolObject and ply:GetActiveWeapon():GetToolObject() then
+		if (string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("model"), "*") or
+		string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("material"), "*") or
+		string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("model"), "\\")
+		/*or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "tool" ), "/")*/) then
+			FPP.Notify(ply, "The material/model of the tool is invalid!", false)
+			FPP.CanTouch(ply, "FPP_TOOLGUN", "The material/model of the tool is invalid!", false)
+			return false
+		end
+
+		if string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("sound"), "??", 0, true) then
+			FPP.Notify(ply, "The sound of the tool is invalid!", false)
+			FPP.CanTouch(ply, "FPP_TOOLGUN", "The sound of the tool is invalid!", false)
+			return false
+		end
 	end
 
 	local ent = ENT or trace.Entity
