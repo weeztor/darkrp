@@ -1,3 +1,16 @@
+-- Shared part
+/*---------------------------------------------------------------------------
+Sound crash glitch
+---------------------------------------------------------------------------*/
+
+local entity = FindMetaTable("Entity")
+local EmitSound = entity.EmitSound
+function entity:EmitSound(sound, ...)
+	if string.find(sound, "??", 0, true) then return end
+	return EmitSound(self, sound, ...)
+end
+
+-- Clientside part
 if CLIENT then
 	/*---------------------------------------------------------------------------
 	Vehicle fix for datastream from Tobba
@@ -27,7 +40,7 @@ if CLIENT then
 	return
 end
 
-
+-- Serverside part
 /*---------------------------------------------------------------------------
 Fix the gmod cleanup
 ---------------------------------------------------------------------------*/
