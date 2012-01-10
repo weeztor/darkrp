@@ -369,7 +369,7 @@ end
 
 function JobsTab()
 	local hordiv = vgui.Create("DHorizontalDivider")
-	hordiv:SetLeftWidth(370)
+	hordiv:SetLeftWidth(390)
 	function hordiv.m_DragBar:OnMousePressed() end
 	hordiv.m_DragBar:SetCursor("none")
 	local Panel
@@ -379,7 +379,7 @@ function JobsTab()
 			Panel:Remove()
 		end
 		Panel = vgui.Create( "DPanelList")
-		Panel:SetSize(370, 540)
+		Panel:SetSize(390, 540)
 		Panel:EnableHorizontal( true )
 		Panel:EnableVerticalScrollbar( true )
 		Panel:SetSkin("DarkRP")
@@ -462,7 +462,7 @@ function JobsTab()
 			end
 			icon:SetModel(IconModel)
 
-			icon:SetIconSize(120)
+			icon:SetSize(128, 128)
 			icon:SetToolTip()
 			icon.OnCursorEntered = function()
 				icon.PaintOverOld = icon.PaintOver
@@ -521,7 +521,7 @@ function JobsTab()
 						end
 						icon:SetPos((k-1-(CurLevel-1)*IconsPerLevel) * 64, 25+(64*(CurLevel-1)))
 						icon:SetModel(v)
-						icon:SetIconSize(64)
+						icon:SetSize(64, 64)
 						icon:SetToolTip()
 						icon.DoClick = function()
 							RunConsoleCommand("rp_playermodel", v)
@@ -594,7 +594,7 @@ function EntitiesTab()
 						local icon = vgui.Create("SpawnIcon")
 						icon:InvalidateLayout( true )
 						icon:SetModel(Model)
-						icon:SetIconSize(64)
+						icon:SetSize(64, 64)
 						icon:SetToolTip(description)
 						icon.DoClick = function() LocalPlayer():ConCommand("say "..command) end
 						WepPanel:AddItem(icon)
@@ -627,7 +627,7 @@ function EntitiesTab()
 						local icon = vgui.Create("SpawnIcon")
 						icon:InvalidateLayout( true )
 						icon:SetModel(Model)
-						icon:SetIconSize(64)
+						icon:SetSize(64, 64)
 						icon:SetToolTip(description)
 						icon.DoClick = function() LocalPlayer():ConCommand("say "..command) end
 						EntPanel:AddItem(icon)
@@ -678,7 +678,7 @@ function EntitiesTab()
 					icon:InvalidateLayout( true )
 					icon:SetModel(Model)
 					icon:SetSkin(skin)
-					icon:SetIconSize(64)
+					icon:SetSize(64, 64)
 					icon:SetToolTip(description)
 					icon.DoClick = function() LocalPlayer():ConCommand("say "..command) end
 					VehiclePanel:AddItem(icon)
