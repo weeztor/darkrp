@@ -420,9 +420,8 @@ function FPP.AdminMenu(Panel)
 
 	local GroupRestrictCat, GroupRestrict = MakeOption("Group tool restriction")
 
-	local lblGroupRestrict = Label("Group Members: NOTE: People who have the\nusergroup that matches with this group\nare automatically in this group!")
-	lblGroupRestrict:SizeToContents()
-	GroupRestrict:AddItem(lblGroupRestrict)
+	GroupRestrict:Add(Label("Group Members: NOTE: People who have the\nusergroup that matches with this group\nare automatically in this group!"))
+
 	local LoadGroups = GroupRestrict:Add("DButton")
 	LoadGroups:SetText("Load groups and members")
 	LoadGroups.DoClick = function()

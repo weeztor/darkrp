@@ -57,7 +57,7 @@ function SWEP:Holster()
 end
 
 function SWEP:OnRemove()
-	if SERVER then 
+	if SERVER then
 		SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
 	end
 end
@@ -91,10 +91,10 @@ end
 
 function SWEP:PrimaryAttack()
 	if CurTime() < self.NextStrike then return end
-	
+
 	self:SetWeaponHoldType("melee")
 	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
-	
+
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Weapon:EmitSound(self.Sound)
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
@@ -102,7 +102,7 @@ function SWEP:PrimaryAttack()
 	self.NextStrike = CurTime() + .3
 
 	if CLIENT then return end
-	
+
 	local trace = self.Owner:GetEyeTrace()
 
 	if not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100) then return end
@@ -117,7 +117,7 @@ function SWEP:PrimaryAttack()
 	else
 		self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
 		if FPP and FPP.PlayerCanTouchEnt(self.Owner, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
-			if trace.Entity.SeizeReward and not trace.Entity.burningup then
+			if trace.Entity.SeizeReward and not trace.Entity.burningup and self.Owner:IsCP() then
 				self.Owner:AddMoney( trace.Entity.SeizeReward )
 				Notify( self.Owner, 1, 4, "You have recieved a $" .. trace.Entity.SeizeReward .. " bonus for destroying this illegal entity." )
 			end
@@ -134,12 +134,12 @@ function SWEP:SecondaryAttack()
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
 
 	self.NextStrike = CurTime() + .3
-	
+
 	self:SetWeaponHoldType("melee")
 	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 
 	if CLIENT then return end
-	
+
 	local trace = self.Owner:GetEyeTrace()
 
 	if (not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100)) then return end
@@ -148,9 +148,9 @@ function SWEP:SecondaryAttack()
 		if not trace.Entity:IsDoor() then
 			trace.Entity:SetVelocity((trace.Entity:GetPos() - self.Owner:GetPos()) * 7)
 		end
-		
+
 		trace.Entity:TakeDamage(10, self.Owner, self)
-		
+
 		if trace.Entity:IsPlayer() or trace.Entity:IsVehicle() then
 			self.DoFlash(self, trace.Entity)
 			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
@@ -173,9 +173,9 @@ function SWEP:Reload()
 	self:SetWeaponHoldType("melee")
 	timer.Destroy("rp_stunstick_threaten")
 	timer.Create("rp_stunstick_threaten", 1, 1, function() self:SetWeaponHoldType("normal") end)
-	
+
 	if not SERVER then return end
-	
+
 	if self.LastReload and self.LastReload > CurTime() - 0.1 then self.LastReload = CurTime() return end
 	self.LastReload = CurTime()
 	self.Owner:EmitSound("weapons/stunstick/spark"..math.random(1,3)..".wav")
