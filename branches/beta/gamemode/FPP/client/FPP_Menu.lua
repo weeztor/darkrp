@@ -240,9 +240,7 @@ function FPP.AdminMenu(Panel)
 	addblock(playeruse, "PlayerUse")
 
 	local damagecat, damage = MakeOption("Entity damage options")
-	local descr = Label("Prevents players from damaging other players' props")
-	other:SizeToContents()
-	damage:AddItem(descr)
+	damage:Add(Label("Prevents players from damaging other players' props"))
 
 	addchk("Damage protection enabled", {"FPP_ENTITYDAMAGE", "toggle"}, damage)
 	addchk("Prop damage protection", {"FPP_ENTITYDAMAGE", "protectpropdamage"}, damage)

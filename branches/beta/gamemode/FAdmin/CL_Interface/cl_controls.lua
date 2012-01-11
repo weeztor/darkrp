@@ -85,7 +85,7 @@ function PANEL4:Init()
 
 
 	self.animPress = Derma_Anim("Press", self.Icon, self.Icon.PressedAnim)
-	self.Icon:SetIconSize(96)
+	self.Icon:SetSize(96, 96)
 	self.NameLabel = vgui.Create("DLabel", self)
 	self.NameLabel:SetText("PlayerName")
 	self.NameLabel:SetTextColor(Color(255, 255, 255, 250))
@@ -93,7 +93,7 @@ function PANEL4:Init()
 end
 
 function PANEL4:PerformLayout()
-	self.Icon:SetIconSize(94)
+	self.Icon:SetSize(94, 94)
 	self.NameLabel:SetPos(10, self:GetTall() - self.NameLabel:GetTall())
 	self.NameLabel:SetWide(self:GetWide() - 20)
 	self.NameLabel:SetContentAlignment(5)
