@@ -247,7 +247,7 @@ function meta:ChangeTeam(t, force)
 		return
 	end
 
-	if not self.DarkRPVars["Priv"..TEAM.command] and not force  then
+	if not self.DarkRPVars["Priv"..TEAM.command] and not force then
 		if type(TEAM.NeedToChangeFrom) == "number" and self:Team() ~= TEAM.NeedToChangeFrom then
 			Notify(self, 1,4, string.format(LANGUAGE.need_to_be_before, team.GetName(TEAM.NeedToChangeFrom), TEAM.name))
 			return
@@ -259,7 +259,7 @@ function meta:ChangeTeam(t, force)
 		end
 		local max = TEAM.max
 		if max ~= 0 and ((max % 1 == 0 and team.NumPlayers(t) >= max) or (max % 1 ~= 0 and (team.NumPlayers(t) + 1) / #player.GetAll() > max)) then
-			Notify(ply, 1, 4,  string.format(LANGUAGE.team_limit_reached, TEAM.name))
+			Notify(self, 1, 4,  string.format(LANGUAGE.team_limit_reached, TEAM.name))
 			return ""
 		end
 	end
