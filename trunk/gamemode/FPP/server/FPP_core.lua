@@ -38,7 +38,8 @@ if cleanup then
 				end
 			end
 
-			if FPP.AntiSpam and Type ~= "constraints" and Type ~= "stacks" and (not ent.IsVehicle() or not ent:IsVehicle()) then
+			print(Type)
+			if FPP.AntiSpam and Type ~= "constraints" and Type ~= "stacks" and Type ~= "AdvDupe2" and (not ent.IsVehicle() or not ent:IsVehicle()) then
 				FPP.AntiSpam.CreateEntity(ply, ent, Type == "duplicates")
 			end
 
@@ -557,8 +558,10 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 		if not cantouch then return false end
 	end
 
+	print(ply, trace, tool, ENT)
 	if tool ~= "adv_duplicator" and tool ~= "duplicator" and tool ~= "advdupe2" then return end
-	if not FPP.AntiSpam.DuplicatorSpam(ply) then return false end
+	if not ENT and not FPP.AntiSpam.DuplicatorSpam(ply) then return false end
+
 	if tool == "adv_duplicator" and ply:GetActiveWeapon():GetToolObject().Entities then
 		for k,v in pairs(ply:GetActiveWeapon():GetToolObject().Entities) do
 			if tobool(FPP.Settings.FPP_TOOLGUN.duplicatenoweapons) and (not ply:IsAdmin() or (ply:IsAdmin() and not tobool(FPP.Settings.FPP_TOOLGUN.spawnadmincanweapon))) then

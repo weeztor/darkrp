@@ -1413,8 +1413,8 @@ local function Demote(ply, args)
 		reason = reason .. " " .. tableargs[i]
 	end
 	reason = string.sub(reason, 2)
-	if string.len(reason) > 22 then
-		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/demote", "<23"))
+	if string.len(reason) > 99 then
+		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/demote", "<100"))
 		return ""
 	end
 	local p = FindPlayer(tableargs[1])
