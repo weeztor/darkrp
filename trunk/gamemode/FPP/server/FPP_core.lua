@@ -38,7 +38,6 @@ if cleanup then
 				end
 			end
 
-			print(Type)
 			if FPP.AntiSpam and Type ~= "constraints" and Type ~= "stacks" and Type ~= "AdvDupe2" and (not ent.IsVehicle() or not ent:IsVehicle()) then
 				FPP.AntiSpam.CreateEntity(ply, ent, Type == "duplicates")
 			end
