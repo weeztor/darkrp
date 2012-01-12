@@ -49,22 +49,31 @@ local function MsgDoVote(msg)
 	panel:SetMouseInputEnabled(true)
 	panel:SetVisible(true)
 
+	for i = 22, string.len(question), 22 do
+		if not string.find(string.sub(question, i - 20, i), "\n", 1, true) then
+			question = string.sub(question, 1, i) .. "\n".. string.sub(question, i + 1, string.len(question))
+		end
+	end
+
 	local label = vgui.Create("Label")
 	label:SetParent(panel)
-	label:SetPos(5, 30)
-	label:SetSize(180, 40)
+	label:SetPos(5, 25)
 	label:SetText(question)
+	label:SizeToContents()
 	label:SetVisible(true)
+
+	local nextHeight = label:GetTall() > 78 and label:GetTall() - 78 or 0 // make panel taller for divider and buttons
+	panel:SetTall(panel:GetTall() + nextHeight)
 
 	local divider = vgui.Create("Divider")
 	divider:SetParent(panel)
-	divider:SetPos(2, 80)
+	divider:SetPos(2, panel:GetTall() - 30)
 	divider:SetSize(180, 2)
 	divider:SetVisible(true)
 
 	local ybutton = vgui.Create("Button")
 	ybutton:SetParent(panel)
-	ybutton:SetPos(25, 100)
+	ybutton:SetPos(25, panel:GetTall() - 25)
 	ybutton:SetSize(40, 20)
 	ybutton:SetCommand("!")
 	ybutton:SetText("Yes")
@@ -76,7 +85,7 @@ local function MsgDoVote(msg)
 
 	local nbutton = vgui.Create("Button")
 	nbutton:SetParent(panel)
-	nbutton:SetPos(70, 100)
+	nbutton:SetPos(70, panel:GetTall() - 25)
 	nbutton:SetSize(40, 20)
 	nbutton:SetCommand("!")
 	nbutton:SetText("No")
@@ -159,7 +168,7 @@ local function MsgDoQuestion(msg)
 
 	local ybutton = vgui.Create("DButton")
 	ybutton:SetParent(panel)
-	ybutton:SetPos(/*147*/105, 100)
+	ybutton:SetPos(105, 100)
 	ybutton:SetSize(40, 20)
 	ybutton:SetText("Yes")
 	ybutton:SetVisible(true)

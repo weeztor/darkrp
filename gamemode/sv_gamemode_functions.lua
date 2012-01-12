@@ -654,7 +654,7 @@ function GM:PlayerDisconnected(ply)
 	if ply:Team() == TEAM_MAYOR then
 		for _, ent in pairs(ply.lawboards or {}) do
 			if ValidEntity(ent) then
-				removeDelayed(v, ply)
+				removeDelayed(ent, ply)
 			end
 		end
 	end
