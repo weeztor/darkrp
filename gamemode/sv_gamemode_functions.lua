@@ -119,72 +119,7 @@ end
 
 function GM:KeyPress(ply, code)
 	self.BaseClass:KeyPress(ply, code)
-
-	/*if code == IN_USE then
-		local trace = { }
-		trace.start = ply:EyePos()
-		trace.endpos = trace.start + ply:GetAimVector() * 95
-		trace.filter = ply
-		local tr = util.TraceLine(trace)
-
-		-- Begin trading server-side (Although this appears to be unstable, don't worry, I've planned the system out, I've just not implemented the update completely).
-		-- Note: Uncomplete; Please leave for Eusion to complete. :)
-		if ValidEntity(tr.Entity) and tr.Entity:IsPlayer() then
-			ply.Trading = nil
-			local recipient = tr.Entity
-			local items = {}
-			for k, v in pairs(ents.GetAll()) do
-				local owner = (v.dt and v.dt.owning_ent) or nil
-				if owner and ValidEntity(owner) and owner == ply then
-					table.insert(items, v)
-				end
-			end
-			if #items > 0 then
-				datastream.StreamToClients(ply, "darkrp_trade", items)
-				items = {}
-				ply.Trading = recipient
-			else
-				Notify(ply, 1, 4, "You have no items that you can trade.")
-			end
-		end
-	end*/
 end
-/*
-local AllowedTrades = {"money_printer"}
-concommand.Add("rp_tradeitem", function(ply, cmd, args)
-	local ent = Entity(tonumber(args[1]))
-	local owner = (ent.dt and ent.dt.owning_ent) or nil
-	local recipient = ply.Trading or nil
-	if owner and owner == ply and ValidEntity(ent) and recipient and ValidEntity(recipient) then
-		if table.HasValue(AllowedTrades, ent:GetClass()) then
-			vote:Trade(tonumber(ply:EntIndex()), ply, recipient, ent)
-		else
-			Notify(ply, 1, 4, "An administrator has forbidden trades using this item!")
-		end
-	else
-		Notify(ply, 1, 4, "Can't trade at this time.")
-	end
-end)
-
-concommand.Add("rp_killtrade", function(ply, cmd, args)
-	local id = args[1]
-	if not Trades[id] then return end
-	local recipient = Trades[id].recipient
-	local client = Trades[id].client
-	if not recipient then return end
-	if not client then return end
-	if not id then return end
-	if (ply == client or ply == recipient) then
-		local rf = RecipientFilter()
-		rf:AddPlayer(client)
-		rf:AddPlayer(recipient)
-		umsg.Start("darkrp_killtrade", rf)
-			umsg.Entity(ply) -- Send the player who declined.
-		umsg.End()
-		Trades[id] = {}
-		table.remove(Trades, id)
-	end
-end)*/
 
 local function IsInRoom(listener, talker) -- IsInRoom function to see if the player is in the same room.
 	local tracedata = {}
@@ -459,7 +394,9 @@ function GM:PlayerInitialSpawn(ply)
 	for k,v in pairs(ents.GetAll()) do
 		if ValidEntity(v) and v.deleteSteamID == ply:SteamID() then
 			v.SID = ply.SID
+			v.dt.owning_ent = ply
 			v.deleteSteamID = nil
+			timer.Destroy("Remove"..v:EntIndex())
 			ply["max"..v:GetClass()] = (ply["max"..v:GetClass()] or 0) + 1
 			if v.dt then v.dt.owning_ent = ply end
 		end
@@ -688,7 +625,7 @@ local function removeDelayed(ent, ply)
 	local removedelay = GetConVarNumber("entremovedelay")
 
 	ent.deleteSteamID = ply:SteamID()
-	timer.Simple(removedelay, function()
+	timer.Create("Remove"..ent:EntIndex(), removedelay, 1, function()
 		for _, pl in pairs(player.GetAll()) do
 			if ValidEntity(pl) and ValidEntity(ent) and pl:SteamID() == ent.deleteSteamID then
 				ent.SID = pl.SID
