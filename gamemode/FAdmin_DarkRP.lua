@@ -119,7 +119,7 @@ function FAdmin.IsEmpty(vector)
 	return a and b
 end
 
-function FAdmin.SteamToProfile( steamid ) -- Thanks decodaman
+function FAdmin.SteamToProfile(steamid) -- Thanks decodaman
 		local x, y, z = string.match( steamid, "STEAM_(%d+):(%d+):(%d+)" )
 	if ( x and y and z ) then
 		local friendid = string.format( "765%0.f", z * 2 + 61197960265728 + y )

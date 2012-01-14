@@ -118,7 +118,6 @@ end
 
 function GM:KeyPress(ply, code)
 	self.BaseClass:KeyPress(ply, code)
-
 end
 
 local function IsInRoom(listener, talker) -- IsInRoom function to see if the player is in the same room.
@@ -390,7 +389,9 @@ function GM:PlayerInitialSpawn(ply)
 	for k,v in pairs(ents.GetAll()) do
 		if ValidEntity(v) and v.deleteSteamID == ply:SteamID() then
 			v.SID = ply.SID
+			v.dt.owning_ent = ply
 			v.deleteSteamID = nil
+			timer.Destroy("Remove"..v:EntIndex())
 			ply["max"..v:GetClass()] = (ply["max"..v:GetClass()] or 0) + 1
 			if v.dt then v.dt.owning_ent = ply end
 		end
@@ -620,7 +621,7 @@ local function removeDelayed(ent, ply)
 	local removedelay = GetConVarNumber("entremovedelay")
 
 	ent.deleteSteamID = ply:SteamID()
-	timer.Simple(removedelay, function()
+	timer.Create("Remove"..ent:EntIndex(), removedelay, 1, function()
 		for _, pl in pairs(player.GetAll()) do
 			if ValidEntity(pl) and ValidEntity(ent) and pl:SteamID() == ent.deleteSteamID then
 				ent.SID = pl.SID
