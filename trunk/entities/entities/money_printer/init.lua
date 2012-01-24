@@ -16,7 +16,7 @@ function ENT:Initialize()
 	self.sparking = false
 	self.damage = 100
 	self.IsMoneyPrinter = true
-	timer.Simple(27, PrintMore, self)
+	timer.Simple(math.random(100, 350), PrintMore, self)
 end
 
 function ENT:OnTakeDamage(dmg)
