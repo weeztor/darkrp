@@ -2,9 +2,12 @@ include( "shared.lua" )
 
 function ENT:Draw()
 	
-	self:SetModelScale( Vector( 0.5, 0.5, 0.5 ) )
+	self:SetModelScale( Vector( 0.6, 0.6, 0.6 ) )
 	self:DrawModel()
 
+	--Going to let the client handle the rotations, less server strain. (Feel free to change back). ~Eusion.
+	local angles = self:GetAngles()
+	self:SetAngles( Angle( angles.p, angles.y + 5, angles.r ) )
 end
 
 local function ToggleChat()
