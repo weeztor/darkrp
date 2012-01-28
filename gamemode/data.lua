@@ -174,7 +174,7 @@ function DB.Init()
 				LEFT OUTER JOIN darkrp_rpnames ON darkrp_wallets.steam = darkrp_rpnames.steam
 				WHERE darkrp_wallets.steam = ]].. sql.SQLStr(SteamID) ..[[
 			;]], function(data)
-				local Data = data[1]
+				local Data = data[1] or {}
 				if Data.name then
 					v:SetDarkRPVar("rpname", Data.name)
 				end
