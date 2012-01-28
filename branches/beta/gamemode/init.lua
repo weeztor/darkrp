@@ -5,15 +5,7 @@ GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome 
 CUR = "$"
 
 -- Checking if counterstrike is installed correctly
-local foundCSS = false
-for k,v in pairs(GetMountedContent()) do
-	if v == "cstrike" then
-		foundCSS = true
-		break
-	end
-end
-
-if not foundCSS then
+if not table.Count(file.Find("*", "cstrike")) > 0 then
 	timer.Create("TheresNoCSS", 10, 0, function()
 		for k,v in pairs(player.GetAll()) do
 			v:ChatPrint("Counter Strike: Source is incorrectly installed!")
@@ -113,13 +105,13 @@ include("FPP/server/FPP_Core.lua")
 include("FPP/server/FPP_Antispam.lua")
 include("FAdmin_DarkRP.lua")
 
-local files = file.Find("gamemodes/"..GM.FolderName.."/gamemode/modules/*.lua", true)
+local files = file.Find(GM.FolderName.."/gamemode/modules/*.lua", LUA_PATH)
 for k, v in pairs(files) do
 	include("modules/" .. v)
 end
 
 local function RPVersion(ply)
-	local FindGameModes = file.FindDir("gamemodes/*", true)
+	local FindGameModes = file.FindDir("gamemodes/*", "GAME")
 	for _, folder in pairs(FindGameModes) do
 		local info_txt = file.Read("gamemodes/"..folder.."/info.txt", true)
 		if not info_txt then info_txt = "" end

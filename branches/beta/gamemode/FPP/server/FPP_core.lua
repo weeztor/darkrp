@@ -118,7 +118,6 @@ end
 function FPP.CanTouch(ply, Type, Owner, Toggle)
 	if not ValidEntity(ply) or not FPP.Settings[Type] or not tobool(FPP.Settings[Type].shownocross) or tobool(ply:GetInfoNum("FPP_PrivateSettings_ShowIcon")) then return false end
 	if ply.FPP_LastCanTouch and ply.FPP_LastCanTouch > CurTime() - 1 then return end
-	ply:ChatPrint("CanTouch")
 	ply.FPP_LastCanTouch = CurTime()
 
 	umsg.Start("FPP_CanTouch", ply)

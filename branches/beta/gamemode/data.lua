@@ -3,7 +3,7 @@ include("static_data.lua")
 /*---------------------------------------------------------------------------
 MySQL and SQLite connectivity
 ---------------------------------------------------------------------------*/
-if file.Exists("lua/includes/modules/gmsv_mysqloo.dll", true) or file.Exists("lua/includes/modules/gmsv_mysqloo_i486.dll", true) then
+if file.Exists("lua/includes/modules/gmsv_mysqloo.dll", "GAME") or file.Exists("lua/includes/modules/gmsv_mysqloo_i486.dll", "GAME") then
 	require("mysqloo")
 end
 
@@ -734,7 +734,7 @@ function DB.Log(text, force, colour)
 	end
 	if (not util.tobool(GetConVarNumber("logging")) or not text) and not force then return end
 	if not DB.File then -- The log file of this session, if it's not there then make it!
-		if not file.IsDir("DarkRP_logs") then
+		if not file.IsDir("DarkRP_logs", "DATA") then
 			file.CreateDir("DarkRP_logs")
 		end
 		DB.File = "DarkRP_logs/"..os.date("%m_%d_%Y %I_%M %p")..".txt"
