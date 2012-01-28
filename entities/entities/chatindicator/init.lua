@@ -7,7 +7,6 @@ function ENT:Initialize()
 	
 	self:SetModel( "models/extras/info_speech.mdl" )
 	
---	self:PhysicsInit( SOLID_NONE )
 	self:SetMoveType( MOVETYPE_NOCLIP )
 	self:SetSolid( SOLID_NONE )
 	
@@ -17,10 +16,6 @@ function ENT:Initialize()
 end
 
 function ENT:Think()
-	
-	local angles = self:GetAngles()
-	self:SetAngles( Angle( angles.p + 5, angles.y + 5, angles.r + 5 ) )
-	
 	if not ValidEntity( self.ply ) then -- just in case
 	
 		self:Remove()

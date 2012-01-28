@@ -1490,7 +1490,7 @@ local function DoTeamBan(ply, args, cmdargs)
 			found = true
 			break
 		end
-		if k == Team then
+		if k == tonumber(Team or -1) then
 			found = true
 			break
 		end
@@ -1501,8 +1501,8 @@ local function DoTeamBan(ply, args, cmdargs)
 		return ""
 	end
 	if not target.bannedfrom then target.bannedfrom = {} end
-	target.bannedfrom[Team] = 1
-	NotifyAll(0, 5, ply:Nick() .. " has banned " ..target:Nick() .. " from being a " .. team.GetName(Team))
+	target.bannedfrom[tonumber(Team)] = 1
+	NotifyAll(0, 5, ply:Nick() .. " has banned " ..target:Nick() .. " from being a " .. team.GetName(tonumber(Team)))
 	return ""
 end
 AddChatCommand("/teamban", DoTeamBan)

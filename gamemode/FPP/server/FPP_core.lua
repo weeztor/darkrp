@@ -558,7 +558,6 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 		if not cantouch then return false end
 	end
 
-	print(ply, trace, tool, ENT)
 	if tool ~= "adv_duplicator" and tool ~= "duplicator" and tool ~= "advdupe2" then return end
 	if not ENT and not FPP.AntiSpam.DuplicatorSpam(ply) then return false end
 

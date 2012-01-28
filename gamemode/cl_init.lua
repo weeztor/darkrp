@@ -685,7 +685,7 @@ FAdmin.StartHooks["DarkRP"] = function()
 
 		menu:AddPanel(Title)
 		for k,v in SortedPairsByMemberValue(RPExtraTeams, "name") do
-			menu:AddOption(v.name, function() RunConsoleCommand(command, ply:UserID(), v.command) end)
+			menu:AddOption(v.name, function() RunConsoleCommand(command, ply:UserID(), k) end)
 		end
 		menu:Open()
 	end
