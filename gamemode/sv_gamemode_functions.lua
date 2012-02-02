@@ -742,13 +742,6 @@ function GM:InitPostEntity()
 	end)
 end
 
-hook.Add("WeaponEquip", "AmmoHackFix", function( wep )
-	if wep.ammohacked and wep.Primary then
-		local clip = wep.Primary.ClipSize
-		wep:TakePrimaryAmmo(clip)
-	end
-end)
-
 function GM:PlayerLeaveVehicle(ply, vehicle)
 	if GetConVarNumber("autovehiclelock") == 1 and vehicle.OwnedBy(ply) then
 		vehicle:Fire("lock", "", 0)
