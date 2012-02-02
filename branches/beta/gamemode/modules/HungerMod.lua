@@ -1,4 +1,4 @@
-includeCS("HungerMod/cl_init.lua")
+AddCSLuaFile("HungerMod/cl_init.lua")
 
 include("HungerMod/player.lua")
 
@@ -99,7 +99,7 @@ local function BuyFood(ply, args)
 
 	for k,v in pairs(FoodItems) do
 		if string.lower(args) == k then
-			local cost = GetConVarNumber("foodcost")		
+			local cost = GetConVarNumber("foodcost")
 			if ply:CanAfford(cost) then
 				ply:AddMoney(-cost)
 			else

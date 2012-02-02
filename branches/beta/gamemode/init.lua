@@ -5,7 +5,7 @@ GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome 
 CUR = "$"
 
 -- Checking if counterstrike is installed correctly
-if not table.Count(file.Find("*", "cstrike")) > 0 then
+if table.Count(file.Find("*", "cstrike")) == 0 then
 	timer.Create("TheresNoCSS", 10, 0, function()
 		for k,v in pairs(player.GetAll()) do
 			v:ChatPrint("Counter Strike: Source is incorrectly installed!")
