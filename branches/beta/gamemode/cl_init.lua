@@ -66,6 +66,9 @@ local function LoadModules()
 		for _, File in SortedPairs(file.Find(root .. folder .."/cl_*.lua", LUA_PATH), true) do
 			include(root.. folder .. "/" ..File)
 		end
+		for _, File in SortedPairs(file.Find(root .. folder .."/sh_*.lua", LUA_PATH), true) do
+			include(root.. folder .. "/" ..File)
+		end
 	end
 end
 

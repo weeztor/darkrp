@@ -105,11 +105,30 @@ include("FPP/server/FPP_Core.lua")
 include("FPP/server/FPP_Antispam.lua")
 include("FAdmin_DarkRP.lua")
 
-local files = file.Find(GM.FolderName.."/gamemode/modules/*.lua", LUA_PATH)
-for k, v in pairs(files) do
-	include("modules/" .. v)
+/*---------------------------------------------------------------------------
+Loading modules
+---------------------------------------------------------------------------*/
+local fol = GM.FolderName.."/gamemode/modules/"
+for _, folder in SortedPairs(file.Find(fol .. "*", LUA_PATH), true) do
+	if folder ~= "." and folder ~= ".." then
+		for _, File in SortedPairs(file.Find(fol .. folder .."/sh_*.lua", LUA_PATH)) do
+			AddCSLuaFile(fol..folder .. "/" ..File)
+			include(fol.. folder .. "/" ..File)
+		end
+
+		for _, File in SortedPairs(file.Find(fol .. folder .."/sv_*.lua", LUA_PATH), true) do
+			include(fol.. folder .. "/" ..File)
+		end
+
+		for _, File in SortedPairs(file.Find(fol .. folder .."/cl_*.lua", LUA_PATH), true) do
+			AddCSLuaFile(fol.. folder .. "/" ..File)
+		end
+	end
 end
 
+/*---------------------------------------------------------------------------
+Get the RP version
+---------------------------------------------------------------------------*/
 local function RPVersion(ply)
 	local FindGameModes = file.FindDir("gamemodes/*", "GAME")
 	for _, folder in pairs(FindGameModes) do
