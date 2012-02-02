@@ -11,25 +11,26 @@ function ENT:Initialize()
 	local phys = self.Entity:GetPhysicsObject()
 
 	if phys and phys:IsValid() then phys:Wake() end
-	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS) 
+	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
 end
 
 
-function ENT:Use(activator,caller)
+function ENT:Use(activator, caller)
 	local class = self.Entity.weaponclass
-	local ammohax = self.Entity.ammohacked
 	local weapon = ents.Create(class)
 
 	if not weapon:IsValid() then return false end
-	
-	local CanPickup = hook.Call("PlayerCanPickupWeapon", GAMEMODE, activator, weapon)
-	if not CanPickup then weapon:Remove() return end
 
-	weapon:SetAngles(self.Entity:GetAngles())
-	weapon:SetPos(self.Entity:GetPos())
-	weapon.ShareGravgun = true
-	weapon.nodupe = true
-	weapon.ammohacked = ammohax
-	weapon:Spawn()
+	local CanPickup = hook.Call("PlayerCanPickupWeapon", GAMEMODE, activator, weapon)
+	weapon:Remove()
+	if not CanPickup then return end
+
+	activator:Give(class)
+	weapon = activator:GetWeapon(class)
+
+	weapon:SetClip1(self.clip1 or 0)
+	weapon:SetClip2(self.clip2 or -1)
+	activator:SetAmmo(self.ammo or 0, weapon:GetPrimaryAmmoType())
+
 	self.Entity:Remove()
 end
