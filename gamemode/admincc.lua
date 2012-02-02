@@ -630,3 +630,20 @@ local function ccSetRPName(ply, cmd, args)
 	end
 end
 concommand.Add("rp_setname", ccSetRPName)
+
+local function ccCancelVote(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands") then
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_cancelvote"))
+		return
+	end
+
+	vote.DestroyLast()
+	if ply:EntIndex() == 0 then
+		nick = "Console"
+	else
+		nick = ply:Nick()
+	end
+
+	NotifyAll(0, 4, nick .. " canceled the last vote")
+end
+concommand.Add("rp_cancelvote", ccCancelVote)
