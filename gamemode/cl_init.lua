@@ -59,14 +59,15 @@ local function DisplayNotify(msg)
 end
 usermessage.Hook("_Notify", DisplayNotify)
 
-local function LoadModules(msg)
-	local num = msg:ReadShort()
+local function LoadModules()
+	local root = GAMEMODE.FolderName.."/gamemode/modules/"
 
-	for n = 1, num do
-		include(GAMEMODE.FolderName.."/gamemode/modules/" .. msg:ReadString())
+	for _, folder in SortedPairs(file.Find(root.."*", LUA_PATH), true) do
+		for _, File in SortedPairs(file.Find(root .. folder .."/cl_*.lua", LUA_PATH), true) do
+			include(root.. folder .. "/" ..File)
+		end
 	end
 end
-usermessage.Hook("LoadModules", LoadModules)
 
 LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
 for k,v in pairs(player.GetAll()) do
@@ -608,6 +609,7 @@ end
 net.Receive("DarkRP_InitializeVars", InitializeDarkRPVars)
 
 function GM:InitPostEntity()
+	LoadModules()
 	function VoiceNotify:Init()
 		self.LabelName = vgui.Create( "DLabel", self )
 		self.Avatar = vgui.Create( "SpawnIcon", self )

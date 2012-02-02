@@ -155,24 +155,8 @@ function meta:CompleteSentence()
 	end
 end
 
-local CSFiles = {}
-function includeCS(dir)
-	AddCSLuaFile(dir)
-	table.insert(CSFiles, dir)
-end
-
 function meta:NewData()
 	if not ValidEntity(self) then return end
-	local function ModuleDelay(ply)
-		umsg.Start("LoadModules", ply)
-			umsg.Short(#CSFiles)
-			for n = 1, #CSFiles do
-				umsg.String(CSFiles[n])
-			end
-		umsg.End()
-	end
-
-	timer.Simple(.01, ModuleDelay, self)
 
 	self:RestoreRPName()
 
