@@ -91,7 +91,9 @@ stopSpectating = function()
 	hook.Remove("PlayerBindPress", "FAdminSpectate")
 	hook.Remove("ShouldDrawLocalPlayer", "FAdminSpectate")
 
-	specEnt:SetNoDraw(false)
+	if ValidEntity(specEnt) then
+		specEnt:SetNoDraw(false)
+	end
 
 	RunConsoleCommand("_FAdmin_StopSpectating")
 end
