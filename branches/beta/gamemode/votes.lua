@@ -5,10 +5,10 @@ vote = { }
 local function ccDoVote(ply, cmd, args)
 	if not Votes[args[1]] then return end
 	if not Votes[args[1]][tonumber(args[2])] then return end
-	
+
 	-- If the player has never voted for anything then he doesn't have a table of things he has voted for. so create it.
 	ply.VotesVoted = ply.VotesVoted or {}
-	
+
 	if ply:GetTable().VotesVoted[args[1]] then
 		Notify(ply, 1, 4, "You cannot vote!")
 		return
@@ -33,18 +33,18 @@ function vote:Create(question, voteid, ent, delay, callback, special)
 		callback(1, ent)
 		return
 	end
-	
+
 	if special and #player.GetAll() <= 2 then
 		Notify(ent, 0, 4, LANGUAGE.vote_alone)
 		callback(1, ent)
 		return
-	end 
-	
+	end
+
 	-- If the player has never voted for anything then he doesn't have a table of things he has voted for. So create it.
 	if not ent:GetTable().VotesVoted then
 		ent:GetTable().VotesVoted = {}
 	end
-	
+
 	ent:GetTable().VotesVoted[voteid] = true
 	local newvote = { }
 	for k, v in pairs(Vote) do newvote[k] = v end
@@ -53,7 +53,7 @@ function vote:Create(question, voteid, ent, delay, callback, special)
 	newvote.Callback = callback
 	newvote.Ent = ent
 	newvote.special = special
-	
+
 
 	newvote[1] = 0
 	newvote[2] = 0
@@ -88,6 +88,24 @@ function vote.DestroyVotesWithEnt(ent)
 	end
 end
 
+function vote.DestroyLast()
+	local lastVote = table.ClearKeys(table.Copy(Votes))
+	lastVote = lastVote[#lastVote]
+
+	if not lastVote then return end
+
+	timer.Destroy(lastVote.ID .. "timer")
+	umsg.Start("KillVoteVGUI")
+		umsg.String(lastVote.ID)
+	umsg.End()
+	for a, b in pairs(player.GetAll()) do
+		b.VotesVoted = b.VotesVoted or {}
+		b.VotesVoted[lastVote.ID] = nil
+	end
+
+	Votes[#Votes] = nil
+end
+
 function vote.HandleVoteEnd(id, OnePlayer)
 	if not Votes[id] then return end
 
@@ -96,7 +114,7 @@ function vote.HandleVoteEnd(id, OnePlayer)
 	if Votes[id][2] >= Votes[id][1] then choice = 2 end
 
 	Votes[id].Callback(choice, Votes[id].Ent)
-	
+
 	for a, b in pairs(player.GetAll()) do
 		if not b:GetTable().VotesVoted then
 			b:GetTable().VotesVoted = {}
