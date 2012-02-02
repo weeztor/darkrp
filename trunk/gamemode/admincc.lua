@@ -277,7 +277,7 @@ local function ccTell(ply, cmd, args)
 		umsg.Start("AdminTell", target)
 			umsg.String(msg)
 		umsg.End()
-		
+
 		if ply:EntIndex() == 0 then
 			DB.Log("Console did rp_tell \""..msg .. "\" on "..target:SteamName() )
 		else
@@ -310,7 +310,7 @@ local function ccTellAll(ply, cmd, args)
 	umsg.Start("AdminTell")
 		umsg.String(msg)
 	umsg.End()
-	
+
 	if ply:EntIndex() == 0 then
 		DB.Log("Console did rp_tellall \""..msg .. "\"" )
 	else
@@ -341,7 +341,7 @@ local function ccRemoveLetters(ply, cmd, args)
 			v:Remove()
 		end
 	end
-	
+
 	if ply:EntIndex() == 0 then
 		DB.Log("Console force-removed all letters" )
 	else
@@ -374,7 +374,7 @@ local function ccArrest(ply, cmd, args)
 		else
 			target:Arrest()
 		end
-		
+
 		if ply:EntIndex() == 0 then
 			DB.Log("Console force-arrested "..target:SteamName())
 		else
@@ -387,7 +387,7 @@ local function ccArrest(ply, cmd, args)
 			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 	end
-	
+
 end
 concommand.Add("rp_arrest", ccArrest)
 
@@ -403,7 +403,7 @@ local function ccUnarrest(ply, cmd, args)
 	if target then
 		target:Unarrest()
 		if not target:Alive() then target:Spawn() end
-		
+
 		if ply:EntIndex() == 0 then
 			DB.Log("Console force-unarrested "..target:SteamName())
 		else
@@ -417,7 +417,7 @@ local function ccUnarrest(ply, cmd, args)
 		end
 		return
 	end
-	
+
 end
 concommand.Add("rp_unarrest", ccUnarrest)
 
@@ -435,7 +435,7 @@ local function ccSetMoney(ply, cmd, args)
 			print(string.format(LANGUAGE.invalid_x, "argument", args[2]))
 		else
 			ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "argument", args[2]))
-		end 
+		end
 		return
 	end
 
@@ -481,7 +481,7 @@ local function ccSetSalary(ply, cmd, args)
 	if not amount or amount < 0 then
 		if ply:EntIndex() == 0 then
 			print(string.format(LANGUAGE.invalid_x, "argument", args[2]))
-		else 
+		else
 			ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "argument", args[2]))
 		end
 		return
@@ -518,7 +518,7 @@ local function ccSetSalary(ply, cmd, args)
 	else
 		if ply:EntIndex() == 0 then
 			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
-		else 
+		else
 			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 		return
@@ -594,7 +594,7 @@ local function ccSetRPName(ply, cmd, args)
 	end
 
 	local target = FindPlayer(args[1])
-	
+
 	if not args[2] or string.len(args[2]) < 2 or string.len(args[2]) > 30 then
 		if ply:EntIndex() == 0 then
 			print(string.format(LANGUAGE.invalid_x, "argument", args[2]))
@@ -602,7 +602,7 @@ local function ccSetRPName(ply, cmd, args)
 			ply:PrintMessage(2, string.format(LANGUAGE.invalid_x, "argument", args[2]))
 		end
 	end
-	
+
 	if target then
 		local oldname = target:Nick()
 		local nick = ""
@@ -624,9 +624,26 @@ local function ccSetRPName(ply, cmd, args)
 	else
 		if ply:EntIndex() == 0 then
 			print(string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
-		else 
+		else
 			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		end
 	end
 end
 concommand.Add("rp_setname", ccSetRPName)
+
+local function ccCancelVote(ply, cmd, args)
+	if ply:EntIndex() ~= 0 and not ply:HasPriv("rp_commands") then
+		ply:PrintMessage(2, string.format(LANGUAGE.need_admin, "rp_cancelvote"))
+		return
+	end
+
+	vote.DestroyLast()
+	if ply:EntIndex() == 0 then
+		nick = "Console"
+	else
+		nick = ply:Nick()
+	end
+
+	NotifyAll(0, 4, nick .. " canceled the last vote")
+end
+concommand.Add("rp_cancelvote", ccCancelVote)
