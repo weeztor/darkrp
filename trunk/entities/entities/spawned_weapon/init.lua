@@ -32,7 +32,12 @@ function ENT:Use(activator, caller)
 		weapon:SetClip1(self.clip1)
 		weapon:SetClip2(self.clip2 or -1)
 	end
-	activator:GiveAmmo(self.ammo or 0, weapon:GetPrimaryAmmoType())
+	if self.ammo then
+		activator:SetAmmo(self.ammo, weapon:GetPrimaryAmmoType())
+	end
+
+	-- The ammo bullshit gets as bad as having four variables to handle ammo exploits
+	activator:GiveAmmo(self.ammoadd or 0, weapon:GetPrimaryAmmoType())
 
 	self.Entity:Remove()
 end
