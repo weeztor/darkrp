@@ -31,8 +31,8 @@ function ENT:Use(activator, caller)
 	if self.clip1 then
 		weapon:SetClip1(self.clip1)
 		weapon:SetClip2(self.clip2 or -1)
-		activator:SetAmmo(self.ammo or 0, weapon:GetPrimaryAmmoType())
 	end
+	activator:GiveAmmo(self.ammo or 0, weapon:GetPrimaryAmmoType())
 
 	self.Entity:Remove()
 end
