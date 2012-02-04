@@ -23,7 +23,8 @@ if SERVER then
 	AddCSLuaFile("FAdmin.lua")
 
 	local function AddCSLuaFolder(fol)
-		for _, folder in SortedPairs(file.Find(fol.."*", LUA_PATH), true) do
+		local files, folders = file.Find(fol.."*", LUA_PATH)
+		for _, folder in SortedPairs(folders, true) do
 			if folder ~= "." and folder ~= ".." then
 				for _, File in SortedPairs(file.Find(fol .. folder .."/sh_*.lua", LUA_PATH)) do
 					AddCSLuaFile(fol..folder .. "/" ..File)
@@ -44,7 +45,8 @@ if SERVER then
 	AddCSLuaFolder(GM.FolderName.."/gamemode/FAdmin/PlayerActions/")
 elseif CLIENT then
 	local function IncludeFolder(fol)
-		for _, folder in SortedPairs(file.Find(fol.."*", LUA_PATH), true) do
+		local files, folders = file.Find(fol.."*", LUA_PATH)
+		for _, folder in SortedPairs(folders, true) do
 			if folder ~= "." and folder ~= ".." then
 				for _, File in SortedPairs(file.Find(fol .. folder .."/sh_*.lua", LUA_PATH), true) do
 					include(fol.. folder .. "/" ..File)
