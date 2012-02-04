@@ -971,7 +971,7 @@ local function BuyPistol(ply, args)
 	weapon.weaponclass = class
 	weapon.ShareGravgun = true
 	weapon:SetPos(tr.HitPos)
-	weapon.ammo = weapons.Get(class) and weapons.Get(class).Primary.DefaultClip
+	weapon.ammoadd = weapons.Get(class) and weapons.Get(class).Primary.DefaultClip
 	weapon.nodupe = true
 	weapon:Spawn()
 
