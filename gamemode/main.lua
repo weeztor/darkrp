@@ -431,6 +431,7 @@ local function DropWeapon(ply)
 			weapon.clip2 = ent:Clip2()
 
 			weapon.ammo = ammo
+			ply:RemoveAmmo(ammo, ammotype)
 			weapon:Spawn()
 
 			ent:Remove()
@@ -974,6 +975,7 @@ local function BuyPistol(ply, args)
 	weapon.weaponclass = class
 	weapon.ShareGravgun = true
 	weapon:SetPos(tr.HitPos)
+	weapon.ammoadd = weapons.Get(class) and weapons.Get(class).Primary.DefaultClip
 	weapon.nodupe = true
 	weapon:Spawn()
 
