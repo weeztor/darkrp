@@ -13,6 +13,7 @@ DB.MySQLDB = nil
 function DB.Begin()
 	if not CONNECTED_TO_MYSQL then sql.Begin() end
 end
+
 function DB.Commit()
 	if not CONNECTED_TO_MYSQL then sql.Commit() end
 end
@@ -173,7 +174,9 @@ function DB.Init()
 				LEFT OUTER JOIN darkrp_salaries ON darkrp_wallets.steam = darkrp_salaries.steam
 				LEFT OUTER JOIN darkrp_rpnames ON darkrp_wallets.steam = darkrp_rpnames.steam
 				WHERE darkrp_wallets.steam = ]].. SteamID ..[[
-			;]], function(data)
+			;]],
+			function(data)
+				if not data then return end
 				local Data = data[1]
 				if Data.name then
 					v:SetDarkRPVar("rpname", Data.name)
