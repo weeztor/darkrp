@@ -40,25 +40,25 @@ function FPP.UnGhost(ply, ent)
 end
 
 function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
-	if not tobool(FPP.Settings.FPP_ANTISPAM.toggle) then return end
+	if not tobool(FPP.Settings.FPP_ANTISPAM1.toggle) then return end
 	local phys = ent:GetPhysicsObject()
 	if not phys:IsValid() then return end
 
 	local class = ent:GetClass()
 	-- I power by ten because the volume of a prop can vary between 65 and like a few billion
-	if phys:GetVolume() and phys:GetVolume() > math.pow(10, FPP.Settings.FPP_ANTISPAM.bigpropsize) and not string.find(class, "constraint") and not string.find(class, "hinge")
+	if phys:GetVolume() and phys:GetVolume() > math.pow(10, FPP.Settings.FPP_ANTISPAM1.bigpropsize) and not string.find(class, "constraint") and not string.find(class, "hinge")
 	and not string.find(class, "magnet") and not string.find(class, "collision") then
 		if not IsDuplicate then
 			ply.FPPAntispamBigProp = (ply.FPPAntispamBigProp or 0) + 1
-			timer.Simple(10*FPP.Settings.FPP_ANTISPAM.bigpropwait, function(ply)
+			timer.Simple(10*FPP.Settings.FPP_ANTISPAM1.bigpropwait, function(ply)
 				if not ply:IsValid() then return end
 				ply.FPPAntispamBigProp = ply.FPPAntispamBigProp or 0
 				ply.FPPAntispamBigProp = math.Max(ply.FPPAntispamBigProp - 1, 0)
 			end, ply)
 		end
 
-		if ply.FPPAntiSpamLastBigProp and ply.FPPAntiSpamLastBigProp > (CurTime() - (FPP.Settings.FPP_ANTISPAM.bigpropwait * ply.FPPAntispamBigProp)) then
-			FPP.Notify(ply, "Please wait " .. FPP.Settings.FPP_ANTISPAM.bigpropwait * ply.FPPAntispamBigProp .. " Seconds before spawning a big prop again", false)
+		if ply.FPPAntiSpamLastBigProp and ply.FPPAntiSpamLastBigProp > (CurTime() - (FPP.Settings.FPP_ANTISPAM1.bigpropwait * ply.FPPAntispamBigProp)) then
+			FPP.Notify(ply, "Please wait " .. FPP.Settings.FPP_ANTISPAM1.bigpropwait * ply.FPPAntispamBigProp .. " Seconds before spawning a big prop again", false)
 			ply.FPPAntiSpamLastBigProp = CurTime()
 			ent:Remove()
 			return
@@ -74,13 +74,13 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 
 	if not IsDuplicate then
 		ply.FPPAntiSpamCount = (ply.FPPAntiSpamCount or 0) + 1
-		timer.Simple(ply.FPPAntiSpamCount / FPP.Settings.FPP_ANTISPAM.smallpropdowngradecount, function(ply) if ValidEntity(ply) then ply.FPPAntiSpamCount = ply.FPPAntiSpamCount - 1 end end, ply)
-		if ply.FPPAntiSpamCount >= FPP.Settings.FPP_ANTISPAM.smallpropghostlimit and ply.FPPAntiSpamCount <= FPP.Settings.FPP_ANTISPAM.smallpropdenylimit
+		timer.Simple(ply.FPPAntiSpamCount / FPP.Settings.FPP_ANTISPAM1.smallpropdowngradecount, function(ply) if ValidEntity(ply) then ply.FPPAntiSpamCount = ply.FPPAntiSpamCount - 1 end end, ply)
+		if ply.FPPAntiSpamCount >= FPP.Settings.FPP_ANTISPAM1.smallpropghostlimit and ply.FPPAntiSpamCount <= FPP.Settings.FPP_ANTISPAM1.smallpropdenylimit
 			and not ent:IsVehicle()--[[Vehicles don't like being ghosted, they tend to crash the server]] then
 			FPP.AntiSpam.GhostFreeze(ent, phys)
 			FPP.Notify(ply, "Your prop is ghosted for antispam, interract with it to unghost it.", true)
 			return
-		elseif ply.FPPAntiSpamCount > FPP.Settings.FPP_ANTISPAM.smallpropdenylimit then
+		elseif ply.FPPAntiSpamCount > FPP.Settings.FPP_ANTISPAM1.smallpropdenylimit then
 			ent:Remove()
 			FPP.Notify(ply, "Prop removed due to spam", false)
 			return
@@ -89,13 +89,13 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 end
 
 function FPP.AntiSpam.DuplicatorSpam(ply)
-	if not tobool(FPP.Settings.FPP_ANTISPAM.toggle) then return true end
+	if not tobool(FPP.Settings.FPP_ANTISPAM1.toggle) then return true end
 	ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate or 0
 	ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate + 1
 
-	timer.Simple(ply.FPPAntiSpamLastDuplicate / FPP.Settings.FPP_ANTISPAM.duplicatorlimit, function(ply) if ValidEntity(ply) then ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate - 1 end end, ply)
+	timer.Simple(ply.FPPAntiSpamLastDuplicate / FPP.Settings.FPP_ANTISPAM1.duplicatorlimit, function(ply) if ValidEntity(ply) then ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate - 1 end end, ply)
 
-	if ply.FPPAntiSpamLastDuplicate >= FPP.Settings.FPP_ANTISPAM.duplicatorlimit then
+	if ply.FPPAntiSpamLastDuplicate >= FPP.Settings.FPP_ANTISPAM1.duplicatorlimit then
 		FPP.Notify(ply, "Can't duplicate due to spam", false)
 		return false
 	end
@@ -119,7 +119,7 @@ hook.Add("InitPostEntity", "FPP.InitializePreventSpawnInProp", function()
 	local backupPropSpawn = DoPlayerEntitySpawn
 	function DoPlayerEntitySpawn(ply, ...)
 		local ent = backupPropSpawn(ply, ...)
-		if not tobool(FPP.Settings.FPP_ANTISPAM.antispawninprop) then return ent end
+		if not tobool(FPP.Settings.FPP_ANTISPAM1.antispawninprop) then return ent end
 
 		local PropInProp = IsEmpty(ent)
 		if not PropInProp:IsValid() then return ent end
