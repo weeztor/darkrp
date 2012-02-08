@@ -61,23 +61,23 @@ if SERVER then
 		end
 		return false
 	end
-	
+
 	function ENTITY:CPPICanTool(ply, tool)
 		local trace = ply:GetEyeTrace()
 		local Value = FPP.Protect.CanTool(ply, trace, tool, self)
 		if Value ~= false and Value ~= true then Value = true end
 		return  Value-- fourth argument is entity, to avoid traces.
 	end
-	
+
 	function ENTITY:CPPICanPhysgun(ply)
-		return FPP.PlayerCanTouchEnt(ply, self, "Physgun", "FPP_PHYSGUN")
+		return FPP.PlayerCanTouchEnt(ply, self, "Physgun1", "FPP_PHYSGUN")
 	end
-	
+
 	function ENTITY:CPPICanPickup(ply)
-		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun", "FPP_GRAVGUN")
+		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun1", "FPP_GRAVGUN")
 	end
-	
+
 	function ENTITY:CPPICanPunt(ply)
-		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun", "FPP_GRAVGUN")
-	end 
+		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun1", "FPP_GRAVGUN")
+	end
 end
