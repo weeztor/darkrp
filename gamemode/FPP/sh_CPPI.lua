@@ -69,14 +69,14 @@ if SERVER then
 	end
 
 	function ENTITY:CPPICanPhysgun(ply)
-		return FPP.PlayerCanTouchEnt(ply, self, "Physgun", "FPP_PHYSGUN")
+		return FPP.PlayerCanTouchEnt(ply, self, "Physgun1", "FPP_PHYSGUN1")
 	end
 
 	function ENTITY:CPPICanPickup(ply)
-		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun", "FPP_GRAVGUN")
+		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun1", "FPP_GRAVGUN1")
 	end
 
 	function ENTITY:CPPICanPunt(ply)
-		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun", "FPP_GRAVGUN")
+		return FPP.PlayerCanTouchEnt(ply, self, "Gravgun1", "FPP_GRAVGUN1")
 	end
 end
