@@ -64,12 +64,12 @@ local Health = 0
 local function DrawHealth()
 	Health = math.min(100, (Health == LocalPlayer():Health() and Health) or Lerp(0.1, Health, LocalPlayer():Health()))
 
-	local DrawHealth = Health / GetConVarNumber("startinghealth")
+	local DrawHealth = math.Min(Health / GetConVarNumber("startinghealth"), 1)
 	local Border = math.Min(6, math.pow(2, math.Round(3*DrawHealth)))
 	draw.RoundedBox(Border, RelativeX + 4, RelativeY - 30, HUDWidth - 8, 20, ConVars.Healthbackground)
 	draw.RoundedBox(Border, RelativeX + 5, RelativeY - 29, (HUDWidth - 9) * DrawHealth, 18, ConVars.Healthforeground)
 
-	draw.DrawText(math.Max(0, math.Round(Health)), "TargetID", RelativeX + 4 + (HUDWidth - 8)/2, RelativeY - 32, ConVars.HealthText, 1)
+	draw.DrawText(math.Max(0, math.Round(LocalPlayer():Health())), "TargetID", RelativeX + 4 + (HUDWidth - 8)/2, RelativeY - 32, ConVars.HealthText, 1)
 end
 
 local function DrawInfo()
