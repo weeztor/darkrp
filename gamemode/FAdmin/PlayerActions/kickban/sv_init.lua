@@ -47,44 +47,50 @@ hook.Add("PlayerAuthed", "FAdmin_LeavingBeforeBan", function(ply, SteamID, ...)
 end)
 
 -- Banning
-local BANS = {}
+FAdmin.BANS = FAdmin.BANS or {}
 
 local function RequestBans(ply, cmd, args)
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "UnBan") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	net.Start("FAdmin_retrievebans")
-		net.WriteTable(BANS)
+		net.WriteTable(FAdmin.BANS)
 	net.Send(ply)
 end
 
 timer.Create("FAdminCheckBans", 60, 0, function()
 	local changed = false
-	for k,v in pairs(BANS) do
+	for k,v in pairs(FAdmin.BANS) do
 		if v.time and tonumber(v.time) < os.time() and v.time ~= 0 then
-			BANS[k] = nil
+			FAdmin.BANS[k] = nil
 			changed = true
 		end
 	end
 
 	if changed then
-		file.Write("FAdmin/Bans.txt", util.TableToKeyValues(BANS))
+		file.Write("FAdmin/Bans.txt", util.TableToKeyValues(FAdmin.BANS))
 	end
 end)
 
 local function SaveBan(SteamID, Nick, Duration, Reason, AdminName, Admin_steam)
 	local StoreBans = hook.Call("FAdmin_StoreBan", nil, SteamID, Nick, Duration, Reason, AdminName, Admin_steam)
 
-	if StoreBans == true then return end
 	if tonumber(Duration) == 0 then
-		BANS[SteamID] = {}
-		BANS[SteamID].time = 0
-		BANS[SteamID].name = Nick
+		FAdmin.BANS[SteamID] = {}
+		FAdmin.BANS[SteamID].time = 0
+		FAdmin.BANS[SteamID].name = Nick
+		FAdmin.BANS[SteamID].reason = Reason
+		FAdmin.BANS[SteamID].adminname = AdminName
+		FAdmin.BANS[SteamID].adminsteam = Admin_steam
 	else
-		BANS[SteamID] = {}
-		BANS[SteamID].time = os.time() + Duration*60--in minutes, so *60
-		BANS[SteamID].name = Nick
+		FAdmin.BANS[SteamID] = {}
+		FAdmin.BANS[SteamID].time = os.time() + Duration*60--in minutes, so *60
+		FAdmin.BANS[SteamID].name = Nick
+		FAdmin.BANS[SteamID].reason = Reason
+		FAdmin.BANS[SteamID].adminname = AdminName
+		FAdmin.BANS[SteamID].adminsteam = Admin_steam
 	end
 
-	file.Write("FAdmin/Bans.txt", util.TableToKeyValues(BANS))
+	if StoreBans == true then return end
+	file.Write("FAdmin/Bans.txt", util.TableToKeyValues(FAdmin.BANS))
 end
 
 local function Ban(ply, cmd, args)
@@ -163,8 +169,10 @@ local function Ban(ply, cmd, args)
 						break
 					end
 				end
-				SaveBan(target, "UNKNOWN", time, (Reason ~= "" and Reason) or "Banned after Disconnect", ply.Nick and ply:Nick() or "console", ply.SteamID and ply:SteamID() or "Console") -- Again default to one hour
+
+				SaveBan(target, nil, time, Reason ~= "" and Reason, ply.Nick and ply:Nick() or "console", ply.SteamID and ply:SteamID() or "Console") -- Again default to one hour
 				game.ConsoleCommand("banid ".. time.." ".. target.."\n")
+				FAdmin.Messages.SendMessage(ply, 4, "Ban successful")
 			end
 			ply.FAdminKickReason = nil
 		end
@@ -176,9 +184,11 @@ local function UnBan(ply, cmd, args)
 	if not args[1] then return end
 	local SteamID = string.upper(args[1])
 
-	for k,v in pairs(BANS) do
+	hook.Call("FAdmin_UnBan", nil, ply, SteamID)
+
+	for k,v in pairs(FAdmin.BANS) do
 		if string.upper(k) == SteamID then
-			BANS[k] = nil
+			FAdmin.BANS[string.upper(k)] = nil
 			break
 		end
 	end
@@ -190,7 +200,7 @@ local function UnBan(ply, cmd, args)
 		end
 	end
 
-	file.Write("FAdmin/Bans.txt", util.TableToKeyValues(BANS))
+	file.Write("FAdmin/Bans.txt", util.TableToKeyValues(FAdmin.BANS))
 	game.ConsoleCommand("removeid ".. SteamID .. "\n")
 	FAdmin.Messages.SendMessage(ply, 4, "Unban successful!")
 end
@@ -210,13 +220,20 @@ end
 hook.Add("InitPostEntity", "FAdmin_Retrievebans", function()
 	local RetrieveBans = hook.Call("FAdmin_RetrieveBans", nil)
 
-	if RetrieveBans == true then return end
+	if RetrieveBans then
+		for k,v in pairs(RetrieveBans) do
+			FAdmin.BANS[string.upper(k)] = v
+		end
+		return
+	end
+	if file.Exists("FAdmin/Bans.txt", "DATA") then		local bans = util.KeyValuesToTable(file.Read("FAdmin/Bans.txt"))
+		for k,v in pairs(bans) do
+			FAdmin.BANS[string.upper(k)] = v
+		end
 
-	if file.Exists("FAdmin/Bans.txt", "DATA") then
-		BANS = util.KeyValuesToTable(file.Read("FAdmin/Bans.txt"))
-		for k,v in pairs(BANS) do
+		for k,v in pairs(FAdmin.BANS) do
 			if tonumber(v.time) < os.time() and v ~= 0 then
-				BANS[k] = nil
+				FAdmin.BANS[string.upper(k)] = nil
 			end
 			if v.time == 0 then
 				game.ConsoleCommand("banid 0 "..k.. "\n")
@@ -224,6 +241,6 @@ hook.Add("InitPostEntity", "FAdmin_Retrievebans", function()
 				game.ConsoleCommand("banid ".. (v.time - os.time())/60 .." " .. k.. "\n")
 			end
 		end
-		file.Write("FAdmin/Bans.txt", util.TableToKeyValues(BANS))
+		file.Write("FAdmin/Bans.txt", util.TableToKeyValues(FAdmin.BANS))
 	end
 end)
