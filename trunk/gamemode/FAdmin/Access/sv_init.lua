@@ -4,18 +4,29 @@ cvars.AddChangeCallback("_FAdmin_immunity", function(Cvar, Previous, New)
 	FAdmin.SaveSetting("_FAdmin_immunity", tonumber(New))
 end)
 
-sql.Query("CREATE TABLE IF NOT EXISTS FADMIN_GROUPS('NAME' TEXT NOT NULL PRIMARY KEY, 'ADMIN_ACCESS' INTEGER NOT NULL, 'PRIVS' TEXT);")
+hook.Add("InitPostEntity", "InitializeFAdminGroups", function()
+	timer.Simple(3, function()
+		DB.Query("CREATE TABLE IF NOT EXISTS FADMIN_GROUP(NAME VARCHAR(40) NOT NULL PRIMARY KEY, ADMIN_ACCESS INTEGER NOT NULL, PRIVS VARCHAR(100));")
+		DB.Query("CREATE TABLE IF NOT EXISTS FAdmin_PlayerGroup(steamid VARCHAR(40) NOT NULL, groupname VARCHAR(40) NOT NULL, PRIMARY KEY(steamid));")
 
-local SavedGroups = sql.Query("SELECT * FROM FADMIN_GROUPS")
-if SavedGroups then
-	for k,v in pairs(SavedGroups) do
-		if v.PRIVS == "NULL" then v.PRIVS = nil else v.PRIVS = string.Explode(";", v.PRIVS) end
-		//FAdmin.Access.AddGroup(v.NAME, v.ADMIN_ACCESS, v.PRIVS)
-		FAdmin.Access.Groups[v.NAME] = {ADMIN = tonumber(v.ADMIN_ACCESS), PRIVS = v.PRIVS or {}}
+		DB.Query("SELECT * FROM FADMIN_GROUP", function(data)
+			if not data then return end
+			for k,v in pairs(data) do
+				if v.PRIVS == "NULL" then v.PRIVS = nil else v.PRIVS = string.Explode(";", v.PRIVS) end
+				FAdmin.Access.Groups[v.NAME] = {ADMIN = tonumber(v.ADMIN_ACCESS), PRIVS = v.PRIVS or {}}
+			end
+		end)
+	end)
+
+	if ULib and ULib.ucl then -- Make the root user have superadmin access in ULX.
+		if not ULib.ucl.groups["root_user"] then
+			ULib.ucl.addGroup("root_user", nil, "superadmin")
+		else
+			ULib.ucl.setGroupInheritance("root_user", "superadmin")
+		end
 	end
-end
+end)
 
-sql.Query("CREATE TABLE IF NOT EXISTS FAdmin_PlayerGroups('steamid' TEXT NOT NULL, 'groupname' TEXT NOT NULL, PRIMARY KEY('steamid'));") 
 function FAdmin.Access.PlayerSetGroup(ply, group)
 	if not FAdmin.Access.Groups[group] then return end
 	local SteamID = type(ply) ~= "string" and ValidEntity(ply) and ply:SteamID() or ply
@@ -23,25 +34,18 @@ function FAdmin.Access.PlayerSetGroup(ply, group)
 		ply:SetUserGroup(group)
 	end
 
-	local already_there = sql.QueryValue("SELECT groupname FROM FAdmin_PlayerGroups WHERE steamid = "..sql.SQLStr(SteamID)..";")
-
-	if already_there == group then return
-	elseif already_there then
-		sql.Query( "UPDATE FAdmin_PlayerGroups SET groupname = "..sql.SQLStr(group).." WHERE steamid = "..sql.SQLStr(SteamID)..";")
-	else
-		sql.Query( "INSERT INTO FAdmin_PlayerGroups VALUES("..sql.SQLStr(SteamID)..", "..sql.SQLStr(group)..");")
-	end
+	DB.Query("REPLACE INTO FAdmin_PlayerGroup VALUES("..sql.SQLStr(SteamID)..", "..sql.SQLStr(group)..");")
 end
 
 function FAdmin.Access.SetRoot(ply, cmd, args) -- FAdmin setroot player
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-	
+
 	local targets = FAdmin.FindPlayer(args[1])
 	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
-	
+
 	for _, target in pairs(targets) do
 		if ValidEntity(target) then
 			FAdmin.Access.PlayerSetGroup(target, "root_user")
@@ -77,9 +81,9 @@ end
 
 function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> groupname [new_groupadmin, new_groupprivs]
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-	
+
 	local targets = FAdmin.FindPlayer(args[1])
-	
+
 	if not args[2] or (not FAdmin.Access.Groups[args[2]] and not tonumber(args[3])) then
 		FAdmin.Messages.SendMessage(ply, 1, "Group not found")
 		return
@@ -87,7 +91,7 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 		local Privs = table.Copy(args)
 		Privs[1], Privs[2], Privs[3] = nil, nil, nil, nil
 		Privs = table.ClearKeys(Privs)
-		
+
 		FAdmin.Access.AddGroup(args[2], tonumber(args[3]), Privs)-- Add new group
 		FAdmin.Messages.SendMessage(ply, 2, "Group created")
 		SendCustomGroups()
@@ -101,7 +105,7 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
-	
+
 	for _, target in pairs(targets) do
 		if ValidEntity(target) then
 			FAdmin.Access.PlayerSetGroup(target, args[2])
@@ -113,19 +117,19 @@ end
 --hooks and stuff
 
 hook.Add("PlayerInitialSpawn", "FAdmin_SetAccess", function(ply)
-	local Group = sql.QueryValue("SELECT groupname FROM FAdmin_PlayerGroups WHERE steamid = "..sql.SQLStr(ply:SteamID())..";")
-	if Group then
+	DB.QueryValue("SELECT groupname FROM FAdmin_PlayerGroup WHERE steamid = "..sql.SQLStr(ply:SteamID())..";", function(Group)
+		if not Group then return end
 		ply:SetUserGroup(Group)
-		
+
 		if FAdmin.Access.Groups[Group] then
 			ply:FAdmin_SetGlobal("FAdmin_admin", FAdmin.Access.Groups[Group].ADMIN_ACCESS)
-			
+
 			for k,v in pairs(FAdmin.Access.Groups[Group].PRIVS) do
 				SendUserMessage("FADMIN_RetrievePrivs", ply, tostring(v))
 			end
 		end
-	end
-	SendCustomGroups(ply)
+		SendCustomGroups(ply)
+	end)
 end)
 
 local function SetImmunity(ply, cmd, args)
@@ -138,24 +142,14 @@ end
 FAdmin.StartHooks["Access"] = function() --Run all functions that depend on other plugins
 	FAdmin.Commands.AddCommand("setroot", FAdmin.Access.SetRoot)
 	FAdmin.Commands.AddCommand("setaccess", FAdmin.Access.SetAccess)
-	
+
 	FAdmin.Commands.AddCommand("immunity", SetImmunity)
-	
+
 	FAdmin.SetGlobalSetting("Immunity", (GetConVarNumber("_FAdmin_immunity") == 1 and true) or false)
 end
 
 concommand.Add("_FAdmin_SendUserGroups", function(ply)
 	for k,v in SortedPairsByMemberValue(FAdmin.Access.Groups, "ADMIN", true) do
 		SendUserMessage("FADMIN_RetrieveGroup", ply, k)
-	end
-end)
-
-hook.Add("InitPostEntity", "HookIntoULX", function()
-	if ULib and ULib.ucl then -- Make the root user have superadmin access in ULX.
-		if not ULib.ucl.groups["root_user"] then
-			ULib.ucl.addGroup("root_user", nil, "superadmin")
-		else
-			ULib.ucl.setGroupInheritance("root_user", "superadmin")
-		end
 	end
 end)
