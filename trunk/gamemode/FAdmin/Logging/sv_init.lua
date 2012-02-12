@@ -12,10 +12,10 @@ FAdmin.StartHooks["Logging"] = function()
 end
 
 local LogFile
-function FAdmin.Log(text)
+function FAdmin.Log(text, preventServerLog)
 	if not text or text == "" then return end
 	if not tobool(GetConVarNumber("FAdmin_logging")) then return end
-	ServerLog(text)
+	if not preventServerLog then ServerLog(text) end
 	if not LogFile then -- The log file of this session, if it's not there then make it!
 		if not file.IsDir("FAdmin_logs") then
 			file.CreateDir("FAdmin_logs")
@@ -64,7 +64,7 @@ end)
 hook.Add("PlayerSilentDeath", "FAdmin_Log", function(ply) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Got killed silently") end)
 hook.Add("PlayerDisconnected", "FAdmin_Log", function(ply) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Disconnected") end)
 hook.Add("PlayerInitialSpawn", "FAdmin_Log", function(ply) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned for the first time") end)
-hook.Add("PlayerSay", "FAdmin_Log", function(ply, text, teamonly, dead) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") [".. ((dead and "dead, ") or "")..(( not teamonly and "team only") or "all") .."] "..text) end)
+hook.Add("PlayerSay", "FAdmin_Log", function(ply, text, teamonly, dead) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") [".. ((dead and "dead, ") or "")..(( not teamonly and "team only") or "all") .."] "..text, preventServerLog) end)
 hook.Add("PlayerSpawn", "FAdmin_Log", function(ply) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Spawned") end)
 hook.Add("PlayerSpray", "FAdmin_Log", function(ply) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Sprayed his spray") end)
 hook.Add("PlayerEnteredVehicle", "FAdmin_Log", function(ply, vehicle) FAdmin.Log(ply:Nick().." ("..ply:SteamID()..") Entered ".. vehicle:GetClass()) end)
