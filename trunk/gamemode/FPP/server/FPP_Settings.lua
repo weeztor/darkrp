@@ -660,7 +660,7 @@ concommand.Add("FPP_restricttoolplayer", RestrictToolPerson)
 Load all FPP settings
 ---------------------------------------------------------------------------*/
 hook.Add("InitPostEntity", "FPP_LoadSQL", function()
-	timer.Simple(4, function()
+	timer.Simple(0, function()
 		DB.Begin()
 			DB.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKED1(id INTEGER NOT NULL, var VARCHAR(40) NOT NULL, setting VARCHAR(100) NOT NULL, PRIMARY KEY(id));")
 			DB.Query("CREATE TABLE IF NOT EXISTS FPP_PHYSGUN1(var VARCHAR(40) NOT NULL, setting INTEGER NOT NULL, PRIMARY KEY(var));")
