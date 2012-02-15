@@ -152,6 +152,10 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 	end
 	-- Blocked entity
 	local Returnal
+	if not FPP.Blocked[Type1] then
+		debug.Trace()
+		Error(Type1.." Is not a valid settings type!")
+	end
 	for k,v in pairs(FPP.Blocked[Type1]) do
 		if tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), string.lower(v)) then --If it's a whitelist and the entity is found in the whitelist
 			return true
