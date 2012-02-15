@@ -17,14 +17,6 @@ hook.Add("InitPostEntity", "InitializeFAdminGroups", function()
 			end
 		end)
 	end)
-
-	if ULib and ULib.ucl then -- Make the root user have superadmin access in ULX.
-		if not ULib.ucl.groups["root_user"] then
-			ULib.ucl.addGroup("root_user", nil, "superadmin")
-		else
-			ULib.ucl.setGroupInheritance("root_user", "superadmin")
-		end
-	end
 end)
 
 function FAdmin.Access.PlayerSetGroup(ply, group)
@@ -37,7 +29,7 @@ function FAdmin.Access.PlayerSetGroup(ply, group)
 	DB.Query("REPLACE INTO FAdmin_PlayerGroup VALUES("..sql.SQLStr(SteamID)..", "..sql.SQLStr(group)..");")
 end
 
-function FAdmin.Access.SetRoot(ply, cmd, args) -- FAdmin setroot player
+function FAdmin.Access.SetRoot(ply, cmd, args) -- FAdmin setroot player. Sets the player to superadmin
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 
 	local targets = FAdmin.FindPlayer(args[1])
@@ -48,16 +40,16 @@ function FAdmin.Access.SetRoot(ply, cmd, args) -- FAdmin setroot player
 
 	for _, target in pairs(targets) do
 		if ValidEntity(target) then
-			FAdmin.Access.PlayerSetGroup(target, "root_user")
-			if ULib and ULib.ucl and ULib.ucl.groups and ULib.ucl.groups["root_user"] then --Add to ULX' root user
-				ULib.ucl.addUser(target:SteamID(), nil, nil, "root_user")
+			FAdmin.Access.PlayerSetGroup(target, "superadmin")
+			if ULib and ULib.ucl and ULib.ucl.groups and ULib.ucl.groups["superadmin"] then --Add to ULX
+				ULib.ucl.addUser(target:SteamID(), nil, nil, "superadmin")
 			end
-			FAdmin.Messages.SendMessage(ply, 2, "User set to root!")
+			FAdmin.Messages.SendMessage(ply, 2, "User set to superadmin!")
 		end
 	end
 end
 
-local nosend = {"user", "admin", "superadmin", "root_user", "noaccess"}
+local nosend = {"user", "admin", "superadmin", "noaccess"}
 local function SendCustomGroups(ply)
 	for k,v in pairs(FAdmin.Access.Groups) do
 		if not table.HasValue(nosend, k) then

@@ -1,13 +1,13 @@
-CreateConVar("_FAdmin_immunity", 0, {FCVAR_GAMEDLL, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE})
+CreateConVar("_FAdmin_immunity", 1, {FCVAR_GAMEDLL, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE})
 
 FAdmin.Access = {}
-FAdmin.Access.ADMIN = {"user", "admin", "superadmin", "superadmin"} -- Superadmin is there twice because root_user is based on superadmin
+FAdmin.Access.ADMIN = {"user", "admin", "superadmin"}
 FAdmin.Access.ADMIN[0] = "noaccess"
 
 FAdmin.Access.Groups = {}
 FAdmin.Access.Privileges = {}
 
-function FAdmin.Access.AddGroup(name, admin_access/*0 = not admin, 1 = admin, 2 = superadmin, 3 = root_user*/, privs)
+function FAdmin.Access.AddGroup(name, admin_access/*0 = not admin, 1 = admin, 2 = superadmin*/, privs)
 	FAdmin.Access.Groups[name] = {ADMIN = admin_access, PRIVS = privs or {}}
 	if SERVER then
 		if privs then
@@ -18,7 +18,6 @@ function FAdmin.Access.AddGroup(name, admin_access/*0 = not admin, 1 = admin, 2 
 	end
 end
 
-FAdmin.Access.AddGroup("root_user", 3)
 FAdmin.Access.AddGroup("superadmin", 2)
 FAdmin.Access.AddGroup("admin", 1)
 FAdmin.Access.AddGroup("user", 0)
@@ -28,7 +27,7 @@ function FAdmin.Access.RemoveGroup(ply, cmd, args)
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	if not args[1] then return end
 
-	if FAdmin.Access.Groups[args[1]] and not table.HasValue({"root_user", "superadmin", "admin", "user", "noaccess"}, string.lower(args[1])) then
+	if FAdmin.Access.Groups[args[1]] and not table.HasValue({"superadmin", "admin", "user", "noaccess"}, string.lower(args[1])) then
 		DB.Query("DELETE FROM FADMIN_GROUP WHERE NAME = "..sql.SQLStr(args[1])..";")
 		FAdmin.Access.Groups[args[1]] = nil
 		FAdmin.Messages.SendMessage(ply, 4, "Group succesfully removed")
@@ -85,8 +84,7 @@ function FAdmin.Access.PlayerHasPrivilege(ply, priv, target)
 
 	if FAdmin.Access.Privileges[priv] == 1 and ply:GetNWString("usergroup") ~= "noaccess" then return true -- 0 = no admin access needed
 	elseif FAdmin.Access.Privileges[priv] == 2 and ply:IsAdmin() then return true -- Admin access needed
-	elseif FAdmin.Access.Privileges[priv] == 3 and ply:IsSuperAdmin() then return true --SuperAdmin access required
-	elseif FAdmin.Access.Privileges[priv] == 4 and ply:GetNWString("usergroup") == "root_user" then return true end -- only root user can do this
+	elseif FAdmin.Access.Privileges[priv] >= 3 and ply:IsSuperAdmin() then return true end --SuperAdmin access required
 
 	if CLIENT and ply.FADMIN_PRIVS and table.HasValue(ply.FADMIN_PRIVS, priv) then return true end
 
@@ -94,6 +92,6 @@ function FAdmin.Access.PlayerHasPrivilege(ply, priv, target)
 end
 
 FAdmin.StartHooks["AccessFunctions"] = function()
-	FAdmin.Access.AddPrivilege("SetAccess", 4) -- AddPrivilege is shared, run on both client and server
+	FAdmin.Access.AddPrivilege("SetAccess", 3) -- AddPrivilege is shared, run on both client and server
 	FAdmin.Commands.AddCommand("RemoveGroup", FAdmin.Access.RemoveGroup)
 end

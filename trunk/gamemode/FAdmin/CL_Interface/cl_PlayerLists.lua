@@ -1,22 +1,22 @@
 local function ScoreboardAddTeam(Name, color)
 	local ScreenWidth, ScreenHeight = ScrW(), ScrH()
-	
+
 	local cat = vgui.Create("FAdminPlayerCatagory")
 	cat:SetLabel("  "..Name)
 	cat.CatagoryColor = color
 	cat:SetWide((FAdmin.ScoreBoard.Width - 40)/2)
-	
+
 	function cat:Toggle()
 	end
-	
+
 	local pan = vgui.Create("FAdminPanelList")
 	pan:SetSpacing(2)
 	pan:EnableHorizontal(true)
 	pan:EnableVerticalScrollbar(true)
 	pan:SizeToContents()
-	
+
 	cat:SetContents(pan)
-	
+
 	FAdmin.ScoreBoard.Main.Controls.FAdminPanelList:AddItem(cat)
 	return cat, pan
 end
@@ -26,31 +26,29 @@ function FAdmin.ScoreBoard.Main.PlayerIconView()
 	if GAMEMODE.Name == "Sandbox" then
 		local cats = {}
 		for k, ply in pairs(player.GetAll()) do
-			local root_user, rootColor = ply:GetNWString("usergroup") == "root_user", Color(130, 0, 0, 255)
 			local superadmin, sadminColor = ply:IsSuperAdmin(), Color(30, 200, 50)
 			local admin, adminColor = ply:IsAdmin() and not ply:IsSuperAdmin(), Color(0, 120, 130)
 			local status, statusColor
-			
+
 			if admin then status, statusColor = "admin", adminColor
-			elseif superadmin and not root_user then status, statusColor = "superadmin", sadminColor
-			elseif root_user then status, statusColor = "root user", rootColor
+			elseif superadmin then status, statusColor = "superadmin", sadminColor
 			else status, statusColor = "user", Color(100, 150, 245) end
-			
+
 			local icon = vgui.Create("FAdminPlayerIcon")
 			icon:SetPlayer(ply)
 			icon:SetSize(96, 116)
-			
+
 			function icon:OnMouseReleased()
 				FAdmin.ScoreBoard.ChangeView("Player", self.Player)
 			end
-			
+
 			local cat
 			if not cats[status] then
 				cat, cats[status] = ScoreboardAddTeam(status, statusColor)
 			end
 			cats[status]:AddItem(icon)
 			cats[status]:SizeToContents()
-			
+
 			local x, y, w, h, xtop = 5, 201, 96, 116, 20
 			for k,v in pairs(cats[status].Items) do -- Special invalidate layout
 				if x + w  > (FAdmin.ScoreBoard.Width - 40)/2 then
@@ -60,11 +58,11 @@ function FAdmin.ScoreBoard.Main.PlayerIconView()
 				end
 				cat.Header:SizeToContents()
 				cat.Header:SetTall(25)
-				
+
 				xtop = math.Min(xtop + w + cats[status].Spacing, (FAdmin.ScoreBoard.Width - 40)/2 - cats[status].Spacing)//+ cats[status].Spacing)
 				x = x + w + cats[status].Spacing
 			end
-			
+
 			if cat then
 				surface.SetFont("Trebuchet24")
 				local HeaderSize = surface.GetTextSize(cat.Header:GetValue())
@@ -89,21 +87,21 @@ function FAdmin.ScoreBoard.Main.PlayerIconView()
 					pan:AddItem(icon)
 					pan:SizeToContents()
 				end
-				
+
 				local x, y, w, h, xtop = 5, 201, 96, 116, 20
 				for k,v in pairs(pan.Items) do -- Special invalidate layout
 					if x + w  > (FAdmin.ScoreBoard.Width - 40)/2 then
-						xtop = (FAdmin.ScoreBoard.Width - 40)/2 
+						xtop = (FAdmin.ScoreBoard.Width - 40)/2
 						x = 5
 						y = y + h + pan.Spacing
 					end
 					cat.Header:SizeToContents()
 					cat.Header:SetTall(25)
-					
+
 					xtop = math.Min(xtop + w + pan.Spacing, (FAdmin.ScoreBoard.Width - 40)/2 - pan.Spacing)
 					x = x + w + pan.Spacing
 				end
-				
+
 				if cat then
 					surface.SetFont("Trebuchet24")
 					local HeaderSize = surface.GetTextSize(cat.Header:GetValue())
@@ -122,19 +120,19 @@ local function SortedPairsByFunction(Table, Sorted, SortDown)
 		table.insert(CopyTable, {NAME = v:Nick(), PLY = v})
 	end
 	table.SortByMember(CopyTable, "NAME", SortDown)
-	
+
 	local SortedTable = {}
 	for k,v in ipairs(CopyTable) do
 		local SortBy = (Sorted ~= "Team" and v.PLY[Sorted](v.PLY)) or team.GetName(v.PLY[Sorted](v.PLY))
 		SortedTable[SortBy] = SortedTable[SortBy] or {}
 		table.insert(SortedTable[SortBy], v.PLY)
 	end
-	
+
 	local SecondSort = {}
 	for k,v in SortedPairs(SortedTable, SortDown) do
 		table.insert(SecondSort, v)
 	end
-	
+
 	CopyTable = {}
 	for k,v in pairs(SecondSort) do
 		for a,b in pairs(v) do
