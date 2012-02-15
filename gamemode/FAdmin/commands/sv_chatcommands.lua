@@ -2,6 +2,8 @@ local prefix = "/"
 hook.Add("PlayerSay", "FAdminChatCommands", function(ply, text, Team, dead)
 	if string.sub(text, 1, 1) == prefix then
 		local TExplode = string.Explode(" ", string.sub(text, 2))
+		if not TExplode then return end
+
 		for k,v in pairs(TExplode) do
 			if string.sub(v, -1) == "," then
 				TExplode[k] = TExplode[k] .. TExplode[k+1]
@@ -9,7 +11,7 @@ hook.Add("PlayerSay", "FAdminChatCommands", function(ply, text, Team, dead)
 			end
 		end
 		table.ClearKeys(TExplode, false)
-		
+
 		local Command = string.lower(TExplode[1])
 		local Args = table.Copy(TExplode)
 		Args[1] = nil
