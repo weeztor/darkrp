@@ -732,12 +732,14 @@ function GM:GetFallDamage( ply, flFallSpeed )
 	return 10
 end
 
-function GM:PostGamemodeLoaded()
-	if RP_MySQLConfig and RP_MySQLConfig.EnableMySQL then
-		DB.ConnectToMySQL(RP_MySQLConfig.Host, RP_MySQLConfig.Username, RP_MySQLConfig.Password, RP_MySQLConfig.Database_name, RP_MySQLConfig.Database_port)
-		return
-	end
-	DB.Init()
+function GM:InitPostEntity()
+	timer.Simple(1, function()
+		if RP_MySQLConfig and RP_MySQLConfig.EnableMySQL then
+			DB.ConnectToMySQL(RP_MySQLConfig.Host, RP_MySQLConfig.Username, RP_MySQLConfig.Password, RP_MySQLConfig.Database_name, RP_MySQLConfig.Database_port)
+			return
+		end
+		DB.Init()
+	end)
 end
 
 function GM:PlayerLeaveVehicle(ply, vehicle)
