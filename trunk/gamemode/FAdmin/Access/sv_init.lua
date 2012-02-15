@@ -5,7 +5,7 @@ cvars.AddChangeCallback("_FAdmin_immunity", function(Cvar, Previous, New)
 end)
 
 hook.Add("InitPostEntity", "InitializeFAdminGroups", function()
-	timer.Simple(0, function()
+	timer.Simple(2, function()
 		DB.Query("CREATE TABLE IF NOT EXISTS FADMIN_GROUP(NAME VARCHAR(40) NOT NULL PRIMARY KEY, ADMIN_ACCESS INTEGER NOT NULL, PRIVS VARCHAR(100));")
 		DB.Query("CREATE TABLE IF NOT EXISTS FAdmin_PlayerGroup(steamid VARCHAR(40) NOT NULL, groupname VARCHAR(40) NOT NULL, PRIMARY KEY(steamid));")
 
