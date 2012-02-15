@@ -156,11 +156,10 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 		debug.Trace()
 		Error(Type1.." Is not a valid settings type!")
 	end
+
+	-- Blacklist checks
 	for k,v in pairs(FPP.Blocked[Type1]) do
-		if tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), string.lower(v)) then --If it's a whitelist and the entity is found in the whitelist
-			return true
-		elseif (not tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), string.lower(v))) or -- if it's a banned prop( and the blocked list is not a whitlist)
-		(tobool(FPP.Settings[Type2].iswhitelist) and not string.find(string.lower(ent:GetClass()), string.lower(v))) then -- or if it's a white list and that entity is NOT in the whitelist
+		if (not tobool(FPP.Settings[Type2].iswhitelist) and string.find(string.lower(ent:GetClass()), string.lower(v))) then
 			if ply:IsAdmin() and tobool(FPP.Settings[Type2].admincanblocked) then
 				Returnal = true
 			elseif tobool(FPP.Settings[Type2].canblocked) then
@@ -181,15 +180,34 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 		return not OnlyMine, ent.Owner
 	end
 
+	-- Whitelist checks
+	if tobool(FPP.Settings[Type2].iswhitelist) then
+		for k,v in pairs(FPP.Blocked[Type1]) do
+			if string.find(string.lower(ent:GetClass()), string.lower(v)) then --If it's a whitelist and the entity is found in the whitelist
+				Returnal = true
+				break
+			end
+		end
+		-- If the whitelist says you can't touch it, then you can't
+		if not Returnal and (not tobool(FPP.Settings[Type2].canblocked) and (not ply:IsAdmin() or not tobool(FPP.Settings[Type2].admincanblocked))) then
+			return false, "Blocked!"
+		end
+		-- if the whitelist says you can, then we'll look further.
+	end
+
 	-- Misc.
 	if ent.Owner ~= ply and ValidEntity(ply) then
+		-- A buddy's prop
 		if not TryingToShare and ValidEntity(ent.Owner) and ent.Owner.Buddies and ent.Owner.Buddies[ply] and ent.Owner.Buddies[ply][string.lower(Type1)] then
 			return not OnlyMine, ent.Owner
+		-- An admin touching it
 		elseif ent.Owner and ply:IsAdmin() and tobool(FPP.Settings[Type2].adminall) then -- if not world prop AND admin allowed
 			return not OnlyMine, ent.Owner
+		-- Misc entities
 		elseif ent == GetWorldEntity() or ent:GetClass() == "gmod_anchor" then
 			return true
-		elseif not ValidEntity(ent.Owner) then --If world prop or a prop belonging to someone who left
+		--If world prop or a prop belonging to someone who left
+		elseif not ValidEntity(ent.Owner) then
 			local world = "World prop"
 			local Restrict = "WorldProps"
 			if ent.Owner then
@@ -206,6 +224,7 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 			return false, ent.Owner
 		end
 	end
+
 	return true and not tobool(ply:GetInfoNum("FPP_PrivateSettings_OwnProps"))
 end
 
