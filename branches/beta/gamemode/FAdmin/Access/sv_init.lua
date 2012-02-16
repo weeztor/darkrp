@@ -15,7 +15,7 @@ if SavedGroups then
 	end
 end
 
-sql.Query("CREATE TABLE IF NOT EXISTS FAdmin_PlayerGroups('steamid' TEXT NOT NULL, 'groupname' TEXT NOT NULL, PRIMARY KEY('steamid'));") 
+sql.Query("CREATE TABLE IF NOT EXISTS FAdmin_PlayerGroups('steamid' TEXT NOT NULL, 'groupname' TEXT NOT NULL, PRIMARY KEY('steamid'));")
 function FAdmin.Access.PlayerSetGroup(ply, group)
 	if not FAdmin.Access.Groups[group] then return end
 	local SteamID = type(ply) ~= "string" and ValidEntity(ply) and ply:SteamID() or ply
@@ -35,13 +35,13 @@ end
 
 function FAdmin.Access.SetRoot(ply, cmd, args) -- FAdmin setroot player
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-	
+
 	local targets = FAdmin.FindPlayer(args[1])
 	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
-	
+
 	for _, target in pairs(targets) do
 		if ValidEntity(target) then
 			FAdmin.Access.PlayerSetGroup(target, "root_user")
@@ -77,9 +77,9 @@ end
 
 function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> groupname [new_groupadmin, new_groupprivs]
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "SetAccess") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-	
+
 	local targets = FAdmin.FindPlayer(args[1])
-	
+
 	if not args[2] or (not FAdmin.Access.Groups[args[2]] and not tonumber(args[3])) then
 		FAdmin.Messages.SendMessage(ply, 1, "Group not found")
 		return
@@ -87,7 +87,7 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 		local Privs = table.Copy(args)
 		Privs[1], Privs[2], Privs[3] = nil, nil, nil, nil
 		Privs = table.ClearKeys(Privs)
-		
+
 		FAdmin.Access.AddGroup(args[2], tonumber(args[3]), Privs)-- Add new group
 		FAdmin.Messages.SendMessage(ply, 2, "Group created")
 		SendCustomGroups()
@@ -101,7 +101,7 @@ function FAdmin.Access.SetAccess(ply, cmd, args) -- FAdmin SetAccess <player> gr
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
-	
+
 	for _, target in pairs(targets) do
 		if ValidEntity(target) then
 			FAdmin.Access.PlayerSetGroup(target, args[2])
@@ -116,10 +116,10 @@ hook.Add("PlayerInitialSpawn", "FAdmin_SetAccess", function(ply)
 	local Group = sql.QueryValue("SELECT groupname FROM FAdmin_PlayerGroups WHERE steamid = "..sql.SQLStr(ply:SteamID())..";")
 	if Group then
 		ply:SetUserGroup(Group)
-		
+
 		if FAdmin.Access.Groups[Group] then
 			ply:FAdmin_SetGlobal("FAdmin_admin", FAdmin.Access.Groups[Group].ADMIN_ACCESS)
-			
+
 			for k,v in pairs(FAdmin.Access.Groups[Group].PRIVS) do
 				SendUserMessage("FADMIN_RetrievePrivs", ply, tostring(v))
 			end
@@ -138,9 +138,9 @@ end
 FAdmin.StartHooks["Access"] = function() --Run all functions that depend on other plugins
 	FAdmin.Commands.AddCommand("setroot", FAdmin.Access.SetRoot)
 	FAdmin.Commands.AddCommand("setaccess", FAdmin.Access.SetAccess)
-	
+
 	FAdmin.Commands.AddCommand("immunity", SetImmunity)
-	
+
 	FAdmin.SetGlobalSetting("Immunity", (GetConVarNumber("_FAdmin_immunity") == 1 and true) or false)
 end
 
