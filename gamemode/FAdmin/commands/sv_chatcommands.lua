@@ -2,6 +2,8 @@ local prefix = "/"
 hook.Add("PlayerSay", "FAdminChatCommands", function(ply, text, Team, dead)
 	if string.sub(text, 1, 1) == prefix then
 		local TExplode = string.Explode(" ", string.sub(text, 2))
+		if not TExplode then return end
+
 		for k,v in pairs(TExplode) do
 			if string.sub(v, -1) == "," then
 				TExplode[k] = (TExplode[k] or "") .. (TExplode[k+1] or "")

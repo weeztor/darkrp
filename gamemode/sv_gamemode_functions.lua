@@ -734,7 +734,7 @@ function GM:GetFallDamage( ply, flFallSpeed )
 end
 
 function GM:InitPostEntity()
-	timer.Simple(2, function()
+	timer.Simple(1, function()
 		if RP_MySQLConfig and RP_MySQLConfig.EnableMySQL then
 			DB.ConnectToMySQL(RP_MySQLConfig.Host, RP_MySQLConfig.Username, RP_MySQLConfig.Password, RP_MySQLConfig.Database_name, RP_MySQLConfig.Database_port)
 			return

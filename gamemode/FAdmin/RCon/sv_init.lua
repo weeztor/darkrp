@@ -1,6 +1,6 @@
 local function RCon(ply, cmd, args)
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "RCon") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-	
+
 	local CommandArgs = table.Copy(args)
 	CommandArgs[1] = nil
 	CommandArgs = table.ClearKeys(CommandArgs)
@@ -9,6 +9,6 @@ end
 
 FAdmin.StartHooks["RCon"] = function()
 	FAdmin.Commands.AddCommand("RCon", RCon)
-	
-	FAdmin.Access.AddPrivilege("RCon", 4) -- Root only
+
+	FAdmin.Access.AddPrivilege("RCon", 3) -- Root only
 end

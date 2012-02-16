@@ -22,14 +22,12 @@ function FAdmin.ScoreBoard.Main.PlayerIconView()
 	if GAMEMODE.Name == "Sandbox" then
 		local cats = {}
 		for k, ply in pairs(player.GetAll()) do
-			local root_user, rootColor = ply:GetNWString("usergroup") == "root_user", Color(130, 0, 0, 255)
 			local superadmin, sadminColor = ply:IsSuperAdmin(), Color(30, 200, 50)
 			local admin, adminColor = ply:IsAdmin() and not ply:IsSuperAdmin(), Color(0, 120, 130)
 			local status, statusColor
 
 			if admin then status, statusColor = "admin", adminColor
-			elseif superadmin and not root_user then status, statusColor = "superadmin", sadminColor
-			elseif root_user then status, statusColor = "root user", rootColor
+			elseif superadmin then status, statusColor = "superadmin", sadminColor
 			else status, statusColor = "user", Color(100, 150, 245) end
 
 			local cat

@@ -3,7 +3,7 @@ Create the tables used for banning
 ---------------------------------------------------------------------------*/
 hook.Add("InitPostEntity", "FAdmin_CreateMySQLTables", function()
 	if not RP_MySQLConfig.EnableMySQL then return end
-	timer.Simple(10, function()
+	timer.Simple(2, function()
 		DB.Query("CREATE TABLE IF NOT EXISTS FAdminBans(SteamID VARCHAR(25) NOT NULL PRIMARY KEY, Nick VARCHAR(40), BanDate DATETIME, UnbanDate DATETIME, Reason VARCHAR(100), AdminName VARCHAR(40), Admin_steam VARCHAR(25));")
 
 		hook.Call("FAdmin_RetrieveBans", nil)
@@ -62,11 +62,7 @@ hook.Add("FAdmin_RetrieveBans", "getMySQLBans", function()
 			}
 
 			game.ConsoleCommand("banid ".. (v.duration or 0) * 60 .." " .. v.SteamID.. "\n")
-			for _, ply in pairs(player.GetAll()) do
-				if ply:SteamID() == v.SteamID then
-					ply:Kick("BANNED!")
-				end
-			end
+			game.ConsoleCommand("kickid2 " .. v.SteamID .. " bannedzors\n")
 		end
 	end)
 end)
