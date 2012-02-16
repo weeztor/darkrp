@@ -116,7 +116,7 @@ function SWEP:PrimaryAttack()
 		self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 	else
 		self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
-		if FPP and FPP.PlayerCanTouchEnt(self.Owner, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
+		if FPP and FPP.PlayerCanTouchEnt(self.Owner, self, "EntityDamage1", "FPP_ENTITYDAMAGE1") then
 			if trace.Entity.SeizeReward and not trace.Entity.burningup and self.Owner:IsCP() then
 				self.Owner:AddMoney( trace.Entity.SeizeReward )
 				Notify( self.Owner, 1, 4, "You have recieved a $" .. trace.Entity.SeizeReward .. " bonus for destroying this illegal entity." )
@@ -158,7 +158,7 @@ function SWEP:SecondaryAttack()
 			self.Owner:EmitSound(self.FleshHit[math.random(1,#self.FleshHit)])
 		else
 			self.Owner:EmitSound(self.Hit[math.random(1,#self.Hit)])
-			if FPP and FPP.PlayerCanTouchEnt(ply, self, "EntityDamage", "FPP_ENTITYDAMAGE") then
+			if FPP and FPP.PlayerCanTouchEnt(ply, self, "EntityDamage1", "FPP_ENTITYDAMAGE1") then
 				if trace.Entity.SeizeReward then
 					self.Owner:AddMoney( trace.Entity.SeizeReward )
 					Notify( self.Owner, 1, 4, "You have recieved a $" .. trace.Entity.SeizeReward .. " bonus for destroying this illegal entity." )
