@@ -49,11 +49,11 @@ FAdmin.StartHooks["1SetAccess"] = function() -- 1 in hook name so it will be exe
 		local NoOthers = Other:AddOption("Loading/no other groups")
 		local function ReceiveGroup(um)
 			local GroupName = um:ReadString()
-			if not FAdmin.Access.Groups[GroupName] then
+			if not table.HasValue(StarterGroups, GroupName) then
 				Other:AddOption(GroupName, function() RunConsoleCommand("_FAdmin", "setaccess", ply:UserID(), GroupName) end)
 
-				for k,v in pairs(Other.Panels) do
-					if v:GetValue() == "Loading/no other groups" then Other.Panels[k] = nil v:Remove() break end
+				for k,v in pairs(Other.Items or {}) do
+					if v:GetValue() == "Loading/no other groups" then Other.Items[k] = nil v:Remove() break end
 				end
 			end
 		end
