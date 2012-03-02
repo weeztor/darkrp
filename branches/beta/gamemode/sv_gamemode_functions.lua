@@ -214,15 +214,7 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
 	if tobool(GetConVarNumber("dropweapondeath")) and ValidEntity(ply:GetActiveWeapon()) then
 		ply:DropWeapon(ply:GetActiveWeapon())
 	end
-	ply:CreateRagdoll()
-	ply:AddDeaths( 1 )
-	if ValidEntity(attacker) and attacker:IsPlayer() then
-		if attacker == ply then
-			attacker:AddFrags(-1)
-		else
-			attacker:AddFrags(1)
-		end
-	end
+	self.BaseClass:DoPlayerDeath(ply, attacker, dmginfo, ...)
 end
 
 function GM:PlayerDeath(ply, weapon, killer)

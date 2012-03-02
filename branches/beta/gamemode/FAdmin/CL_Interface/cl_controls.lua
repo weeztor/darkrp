@@ -176,11 +176,11 @@ CreateClientConVar("FAdmin_PlayerRowSize", 30, true, false)
 function PANEL:Init()
 	self.Size = GetConVarNumber("FAdmin_PlayerRowSize")
 
-	self.lblName 	= vgui.Create("Label", self)
-	self.lblFrags 	= vgui.Create("Label", self)
-	self.lblTeam	= vgui.Create("Label", self)
-	self.lblDeaths 	= vgui.Create("Label", self)
-	self.lblPing 	= vgui.Create("Label", self)
+	self.lblName 	= vgui.Create("DLabel", self)
+	self.lblFrags 	= vgui.Create("DLabel", self)
+	self.lblTeam	= vgui.Create("DLabel", self)
+	self.lblDeaths 	= vgui.Create("DLabel", self)
+	self.lblPing 	= vgui.Create("DLabel", self)
 
 	// If you don't do this it'll block your clicks
 	self.lblName:SetMouseInputEnabled(false)

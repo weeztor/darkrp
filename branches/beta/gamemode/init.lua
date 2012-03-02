@@ -35,6 +35,14 @@ meta.GetName = meta.Name
 RPArrestedPlayers = {}
 
 DeriveGamemode("sandbox")
+
+util.AddNetworkString("DarkRP_InitializeVars")
+util.AddNetworkString("DarkRP_DoorData")
+util.AddNetworkString("FAdmin_retrievebans")
+util.AddNetworkString("FPP_Groups")
+util.AddNetworkString("FPP_GroupMembers")
+
+
 AddCSLuaFile("language_sh.lua")
 AddCSLuaFile("MakeThings.lua")
 AddCSLuaFile("addentities.lua")
@@ -125,32 +133,6 @@ for _, folder in SortedPairs(file.Find(fol .. "*", LUA_PATH), true) do
 		end
 	end
 end
-
-/*---------------------------------------------------------------------------
-Get the RP version
----------------------------------------------------------------------------*/
-local function RPVersion(ply)
-	local FindGameModes = file.FindDir("gamemodes/*", "GAME")
-	for _, folder in pairs(FindGameModes) do
-		local info_txt = file.Read("gamemodes/"..folder.."/info.txt", true)
-		if not info_txt then info_txt = "" end
-
-		local Gamemode = util.KeyValuesToTable(info_txt)
-		if Gamemode.name and string.lower(Gamemode.name) == "darkrp" then
-			local version = Gamemode.version
-			local SVN = " non-SVN version"
-
-			local entries = file.Read("gamemodes/"..folder.."/.svn/entries", true)
-			if entries then
-				local _, dirFind = string.find(entries, "dir")
-				SVN = " revision " .. string.sub(entries, dirFind + 2, dirFind + 4)
-			end
-			TalkToPerson(ply, Color(0,0,255,255), "This server is running "..folder, Color(1,255, 1), version .. SVN, ply)
-			break
-		end
-	end
-end
-concommand.Add("rp_version", RPVersion)
 
 local function GetAvailableVehicles(ply)
 	if not ply:IsAdmin() then return end

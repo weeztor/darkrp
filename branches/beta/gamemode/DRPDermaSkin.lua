@@ -62,6 +62,18 @@ SKIN.tex.Window.Close_Hover			= GWEN.CreateTextureNormal( 32, 224, 24, 24 );
 SKIN.tex.Window.Close_Down			= GWEN.CreateTextureNormal( 64, 224, 24, 24 );
 SKIN.tex.Window.Close_Disabled		= GWEN.CreateTextureNormal( 96, 224, 24, 24 );
 
+SKIN.tex.Window.Maxi				= GWEN.CreateTextureNormal( 32 + 96*2, 448, 31, 31 );
+SKIN.tex.Window.Maxi_Hover			= GWEN.CreateTextureNormal( 64 + 96*2, 448, 31, 31 );
+SKIN.tex.Window.Maxi_Down			= GWEN.CreateTextureNormal( 96 + 96*2, 448, 31, 31 );
+
+SKIN.tex.Window.Restore				= GWEN.CreateTextureNormal( 32 + 96*2, 448+32, 31, 31 );
+SKIN.tex.Window.Restore_Hover		= GWEN.CreateTextureNormal( 64 + 96*2, 448+32, 31, 31 );
+SKIN.tex.Window.Restore_Down		= GWEN.CreateTextureNormal( 96 + 96*2, 448+32, 31, 31 );
+
+SKIN.tex.Window.Mini				= GWEN.CreateTextureNormal( 32 + 96, 448, 31, 31 );
+SKIN.tex.Window.Mini_Hover			= GWEN.CreateTextureNormal( 64 + 96, 448, 31, 31 );
+SKIN.tex.Window.Mini_Down			= GWEN.CreateTextureNormal( 96 + 96, 448, 31, 31 );
+
 SKIN.tex.Scroller = {}
 SKIN.tex.Scroller.TrackV				= GWEN.CreateTextureBorder( 384,				208, 15, 127, 4, 4, 4, 4 );
 SKIN.tex.Scroller.ButtonV_Normal		= GWEN.CreateTextureBorder( 384 + 16,		208, 15, 127, 4, 4, 4, 4 );
@@ -224,81 +236,5 @@ SKIN.Colours.Category.LineAlt.Text_Selected		= GWEN.TextureColor( 4 + 8 * 24, 50
 SKIN.Colours.Category.LineAlt.Button			= GWEN.TextureColor( 4 + 8 * 25, 508 );
 SKIN.Colours.Category.LineAlt.Button_Hover		= GWEN.TextureColor( 4 + 8 * 24, 500 );
 SKIN.Colours.Category.LineAlt.Button_Selected	= GWEN.TextureColor( 4 + 8 * 25, 500 );
-/*
 
--- Collapsible catagory header
-SKIN.colCollapsibleCategory = Color(GetConVarNumber("salary11"), GetConVarNumber("salary12"), GetConVarNumber("salary13"), GetConVarNumber("salary14"))
-SKIN.fontCategoryHeader = "TargetID"
-
-SKIN.text_normal = Color(255, 255, 255, 255)
-SKIN.text_dark = SKIN.text_normal
-
--- tab
-SKIN.colTab = Color(0, 0, 0, 50)
-SKIN.colTabInactive = Color(SKIN.colTab.r + 70, SKIN.colTab.g + 70, SKIN.colTab.b + 70, SKIN.colTab.a)
-SKIN.colPropertySheet = SKIN.colTab
-
-SKIN.bg_color_bright = Color( 220, 220, 220, 255 )
-
-
-function SKIN:PaintFrame(frame)
-	local w, h = frame:GetSize()
-	local color = Color(GetConVarNumber("background1"), GetConVarNumber("background2"), GetConVarNumber("background3"), GetConVarNumber("background4"))//self.bg_color
-	draw.RoundedBox(8, 0, 0, w, h, color)
-
-	surface.SetDrawColor(GetConVarNumber("Healthforeground1"), GetConVarNumber("Healthforeground2"), GetConVarNumber("Healthforeground3"), GetConVarNumber("Healthforeground4"))
-	surface.DrawLine(0, 20, w, 20)
-end
-
-
-function SKIN:PaintButton(button)
-	local w, h = button:GetSize()
-	local x, y = 0,0
-
-	local bordersize = 8
-	if w <= 32 or h <= 32 then bordersize = 4 end -- This is so small buttons don't look messed up
-
-	if button.m_bBackground then
-		local color1 = Color(GetConVarNumber("Healthbackground1"), GetConVarNumber("Healthbackground2"), GetConVarNumber("Healthbackground3"), GetConVarNumber("Healthbackground4"))
-		local color2 = Color(GetConVarNumber("Healthforeground1"), GetConVarNumber("Healthforeground2"), GetConVarNumber("Healthforeground3"), GetConVarNumber("Healthforeground4"))
-
-		if button:GetDisabled() then
-			color2 = Color(80, 80, 80, 255)
-		elseif button.Depressed then
-			x, y = w*0.15, h*0.15
-			w = w *0.7
-			h = h * 0.7
-		elseif button.Hovered then
-			//color1 = Color(color1.r + 40, color1.g + 40, color1.b + 40, color1.a + 40)
-			color2 = Color(color2.r + 40, color2.g + 40, color2.b + 40, color2.a + 40)
-		end
-		draw.RoundedBox(bordersize, x, y, w, h, color1)
-		draw.RoundedBox(bordersize, x + 2, y + 2, w-4, h-4, color2)
-
-	end
-end
-
-function SKIN:PaintOverButton( panel ) end
-
-
-function SKIN:PaintVScrollBar(scrollbar)
-	local color = Color(GetConVarNumber("Healthbackground1"), GetConVarNumber("Healthbackground2"), GetConVarNumber("Healthbackground3"), GetConVarNumber("Healthbackground4"))
-	local w, h = scrollbar:GetSize()
-	draw.RoundedBox(8, 0, 0, w, h, color)
-end
-
-function SKIN:PaintScrollBarGrip(scrollbar)
-	local color = Color(GetConVarNumber("Healthforeground1"), GetConVarNumber("Healthforeground2"), GetConVarNumber("Healthforeground3"), GetConVarNumber("Healthforeground4"))
-	local w, h = scrollbar:GetSize()
-	draw.RoundedBox(8, 0, 0, w, h, color)
-end
-
-function SKIN:PaintPanelList(panellist)
-	if panellist.m_bBackground then
-		local w, h = panellist:GetSize()
-		local color = Color(GetConVarNumber("Healthbackground1"), GetConVarNumber("Healthbackground2"), GetConVarNumber("Healthbackground3"), GetConVarNumber("Healthbackground4"))
-		draw.RoundedBox( 4, 0, 0, w, h, color)
-	end
-end
-*/
 derma.DefineSkin("DarkRP", "The official SKIN for DarkRP", SKIN)
