@@ -5,7 +5,6 @@ local function GetTextHeight(font, str)
 end
 
 local HelpPanel = {}
-local LastChatPrefix = ""
 
 function HelpPanel:Init()
 	self.StartHelpX = -ScrW()
@@ -27,7 +26,7 @@ function HelpPanel:Init()
 	self.Scroll = 0
 end
 
-function HelpPanel:FillHelpInfo(force)	
+function HelpPanel:FillHelpInfo(force)
 	self.Filled = true
 	local maxpertable = 11
 	local helptable = 1
