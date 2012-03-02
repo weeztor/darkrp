@@ -574,7 +574,7 @@ local function SetBuddy(ply, cmd, args)
 
 	ply.Buddies = ply.Buddies or {}
 	for k,v in pairs(args) do args[k] = tonumber(v) end
-	ply.Buddies[buddy] = {physgun = util.tobool(args[2]), gravgun = util.tobool(args[3]), toolgun = util.tobool(args[4]), playeruse = util.tobool(args[5]), entitydamage = util.tobool(args[6])}
+	ply.Buddies[buddy] = {physgun1 = util.tobool(args[2]), gravgun1 = util.tobool(args[3]), toolgun1 = util.tobool(args[4]), playeruse1 = util.tobool(args[5]), entitydamage1 = util.tobool(args[6])}
 end
 concommand.Add("FPP_SetBuddy", SetBuddy)
 
