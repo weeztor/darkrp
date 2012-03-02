@@ -35,8 +35,22 @@ function GM:PlayerSpawnSENT(ply, model)
 	return self.BaseClass:PlayerSpawnSENT(ply, model) and not RPArrestedPlayers[ply:SteamID()]
 end
 
-function GM:PlayerSpawnSWEP(ply, model)
-	return self.BaseClass:PlayerSpawnSWEP(ply, model) and not RPArrestedPlayers[ply:SteamID()]
+local function canSpawnWeapon(ply, class)
+	if (GetConVarNumber("adminweapons") == 0 and ply:IsAdmin()) or
+	(GetConVarNumber("adminweapons") == 1 and ply:IsSuperAdmin()) then
+		return true
+	end
+	Notify(ply, 1, 4, "You can't spawn weapons")
+
+	return false
+end
+
+function GM:PlayerSpawnSWEP(ply, class, model)
+	return canSpawnWeapon(ply, class) and self.BaseClass:PlayerSpawnSWEP(ply, class, model) and not RPArrestedPlayers[ply:SteamID()]
+end
+
+function GM:PlayerGiveSWEP(ply, class, model)
+	return canSpawnWeapon(ply, class) and self.BaseClass:PlayerGiveSWEP(ply, class, model) and not RPArrestedPlayers[ply:SteamID()]
 end
 
 function GM:PlayerSpawnEffect(ply, model)

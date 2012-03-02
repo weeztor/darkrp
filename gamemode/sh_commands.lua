@@ -422,6 +422,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_shipmenttime <Number> - The number 
 AddValueCommand("rp_EntityRemoveDelay", "entremovedelay", 0)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_EntityRemoveDelay <Number> - how long to wait before removing a bought entity after disconnect.")
 
+AddValueCommand("rp_adminweapons", "adminweapons", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_adminweapons - Who can spawn weapons: 0: admins only, 1: supadmins only, 2: no one")
+
 function AddEntityCommands(name, command, max, price)
 	local cmdname = string.gsub(command, " ", "_")
 
