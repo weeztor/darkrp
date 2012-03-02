@@ -8,6 +8,7 @@ GO TO Q>UTILITIES>FPP ADMIN SETTINGS > BLOCKED MODEL OPTIONS TO ADD OR REMOVE BL
 */
 
 local defaultblocked = {
+"models/props_industrial/bridge.mdl",
 "models/props_combine/combinetrain02b.mdl",
 "models/props_combine/combinetrain02a.mdl",
 "models/props_combine/combinetrain01.mdl",
