@@ -608,6 +608,10 @@ function GM:PlayerLoadout(ply)
 		ply:Give("gmod_tool")
 	end
 
+	if (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_tool")) or ply:IsAdmin() then
+		ply:Give("weapon_keypadchecker")
+	end
+
 	if GetConVarNumber("pocket") == 1 then
 		ply:Give("pocket")
 	end
