@@ -41,6 +41,7 @@ util.AddNetworkString("DarkRP_DoorData")
 util.AddNetworkString("FAdmin_retrievebans")
 util.AddNetworkString("FPP_Groups")
 util.AddNetworkString("FPP_GroupMembers")
+util.AddNetworkString("DarkRP_keypadData")
 
 
 AddCSLuaFile("language_sh.lua")
@@ -144,3 +145,23 @@ local function GetAvailableVehicles(ply)
 	end
 end
 concommand.Add("rp_getvehicles_sv", GetAvailableVehicles)
+
+/*---------------------------------------------------------------------------
+Registering numpad data
+---------------------------------------------------------------------------*/
+local oldNumpadUp = numpad.OnUp
+local oldNumpadDown = numpad.OnDown
+
+function numpad.OnUp(ply, key, name, ent, ...)
+	numpad.OnUpItems = numpad.OnUpItems or {}
+	table.insert(numpad.OnUpItems, {ply = ply, key = key, name = name, ent = ent, arg = {...}})
+
+	return oldNumpadUp(ply, key, name, ent, ...)
+end
+
+function numpad.OnDown(ply, key, name, ent, ...)
+	numpad.OnDownItems = numpad.OnDownItems or {}
+	table.insert(numpad.OnDownItems, {ply = ply, key = key, name = name, ent = ent, arg = {...}})
+
+	return oldNumpadDown(ply, key, name, ent, ...)
+end
