@@ -767,3 +767,11 @@ function GM:PlayerLeaveVehicle(ply, vehicle)
 	self.BaseClass:PlayerLeaveVehicle(ply, vehicle)
 end
 
+local function ClearDecals()
+	if GetConVarNumber("decalcleaner") == 1 then
+		for _, p in pairs( player.GetAll() ) do
+			p:ConCommand("r_cleardecals")		
+		end
+	end
+end
+timer.Create("RP_DecalCleaner", GetConVarNumber("decaltimer"), 0, ClearDecals)

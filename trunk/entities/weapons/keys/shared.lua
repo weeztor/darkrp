@@ -15,6 +15,8 @@ SWEP.Instructions = "Left click to lock. Right click to unlock"
 SWEP.Contact = ""
 SWEP.Purpose = ""
 
+SWEP.ViewModel = Model("models/weapons/v_hands.mdl")
+
 SWEP.ViewModelFOV = 62
 SWEP.ViewModelFlip = false
 SWEP.AnimPrefix	 = "rpg"
@@ -38,7 +40,6 @@ end
 
 function SWEP:Deploy()
 	if SERVER then
-		self.Owner:DrawViewModel(false)
 		self.Owner:DrawWorldModel(false)
 	end
 end
