@@ -295,6 +295,12 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_wantedsuicide - Enable/Disable s
 AddToggleCommand("rp_proplympics", "proplympics", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_proplympics - Allow/Disallow the mayor to start proplympics races.")
 
+AddToggleCommand("rp_decalcleaner", "decalcleaner", 0)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_decalcleaner - Enable/Disable clearing ever players decals.")
+
+AddToggleCommand("rp_hobownership", "hobownership", 1)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_hobownership - Enable/Disable hobos being able to buy doors | 1 = Allowed to buy doors, 0 = Not allowed to buy doors")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS --
 -----------------------------------------------------------
@@ -424,6 +430,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_EntityRemoveDelay <Number> - how lo
 
 AddValueCommand("rp_adminweapons", "adminweapons", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_adminweapons - Who can spawn weapons: 0: admins only, 1: supadmins only, 2: no one")
+
+AddValueCommand("rp_decaltimer", "decaltimer", 120)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_decaltimer <Number> - Sets the time to clear clientside decals. (seconds)")
 
 function AddEntityCommands(name, command, max, price)
 	local cmdname = string.gsub(command, " ", "_")

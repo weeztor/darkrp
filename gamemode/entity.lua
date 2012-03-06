@@ -358,13 +358,18 @@ local function OwnDoor(ply)
 	if time2 then return "" end
 	time2 = true
 	timer.Simple(0.1, function()  time2 = false end)
-
+	local team = ply:Team()
 	local trace = ply:GetEyeTrace()
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 200 then
 		trace.Entity.DoorData = trace.Entity.DoorData or {}
 		if RPArrestedPlayers[ply:SteamID()] then
 			Notify(ply, 1, 5, LANGUAGE.door_unown_arrested)
+			return ""
+		end
+		
+		if GetConVarNumber("hobownership") == 0 and team == TEAM_HOBO then
+			Notify(ply, 1, 5, LANGUAGE.door_hobo_unable)
 			return ""
 		end
 
