@@ -301,6 +301,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_decalcleaner - Enable/Disable cl
 AddToggleCommand("rp_hobownership", "hobownership", 1)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_hobownership - Enable/Disable hobos being able to buy doors | 1 = Allowed to buy doors, 0 = Not allowed to buy doors")
 
+AddToggleCommand("rp_unlockdoorsonstart", "unlockdoorsonstart", 0)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_unlockdoorsonstart - Enable/Disable unlocking all doors on map start.")
+
 -----------------------------------------------------------
 -- VALUE COMMANDS --
 -----------------------------------------------------------
