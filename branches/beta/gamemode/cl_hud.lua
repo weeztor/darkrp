@@ -5,6 +5,8 @@ local ConVars = {}
 local HUDWidth
 local HUDHeight
 
+CreateClientConVar("weaponhud", 0, true, false)
+
 local function ReloadConVars()
 	ConVars = {
 		background = {0,0,0,100},
@@ -79,6 +81,13 @@ local function DrawInfo()
 	local JobWallet =
 	LANGUAGE.job .. (LocalPlayer().DarkRPVars.job or "") .. "\n"..
 	LANGUAGE.wallet .. CUR .. (formatNumber(LocalPlayer().DarkRPVars.money) or 0)
+
+	local wep = LocalPlayer( ):GetActiveWeapon( );
+
+	if ValidEntity( wep ) and GetConVarNumber("weaponhud") == 1 then
+        local name = wep:GetPrintName();
+		draw.DrawText("Weapon: "..name, "UiBold", RelativeX + 5, RelativeY - HUDHeight - 18, Color(255, 255, 255, 255), 0)
+	end
 
 	draw.DrawText(Salary, "TargetID", RelativeX + 5, RelativeY - HUDHeight + 6, ConVars.salary1, 0)
 	draw.DrawText(Salary, "TargetID", RelativeX + 4, RelativeY - HUDHeight + 5, ConVars.salary2, 0)

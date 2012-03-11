@@ -453,7 +453,7 @@ local function AddToChat(msg)
 	local col1 = Color(msg:ReadShort(), msg:ReadShort(), msg:ReadShort())
 
 	local name = msg:ReadString()
-	local ply = msg:ReadEntity()
+	local ply = msg:ReadEntity() and LocalPlayer()
 
 	if name == "" then name = (ply.DarkRPVars and ply.DarkRPVars.rpname) or ply:Nick() end
 

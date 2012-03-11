@@ -139,8 +139,8 @@ WARNING: THE DOOR GROUPS HAVE TO BE UNDER THE TEAMS IN SHARED.LUA. IF THEY ARE N
 
 The default door groups, can also be used as examples:
 */
-AddDoorGroup("cops and mayor only", TEAM_CHIEF, TEAM_POLICE, TEAM_MAYOR)
-AddDoorGroup("gundealer only", TEAM_GUN)
+AddDoorGroup("Cops and Mayor only", TEAM_CHIEF, TEAM_POLICE, TEAM_MAYOR)
+AddDoorGroup("Gundealer only", TEAM_GUN)
 
 
 /*
