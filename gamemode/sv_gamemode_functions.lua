@@ -751,6 +751,12 @@ function GM:InitPostEntity()
 		end
 		DB.Init()
 	end)
+	for k, v in pairs( ents.GetAll() ) do
+		local class = v:GetClass()
+		if GetConVarNumber("unlockdoorsonstart") == 1 and v:IsDoor() then
+			v:Fire("unlock", "", 0)
+		end
+    end
 end
 
 function GM:PlayerLeaveVehicle(ply, vehicle)
@@ -760,3 +766,11 @@ function GM:PlayerLeaveVehicle(ply, vehicle)
 	self.BaseClass:PlayerLeaveVehicle(ply, vehicle)
 end
 
+local function ClearDecals()
+	if GetConVarNumber("decalcleaner") == 1 then
+		for _, p in pairs( player.GetAll() ) do
+			p:ConCommand("r_cleardecals")
+		end
+	end
+end
+timer.Create("RP_DecalCleaner", GetConVarNumber("decaltimer"), 0, ClearDecals)

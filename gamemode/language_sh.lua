@@ -83,6 +83,7 @@ rp_languages.english = {
 	door_sold = "You have sold this for %s",
 	door_already_owned = "This door is already owned by someone!",
 	door_cannot_afford = "You can not afford this door!",
+	door_hobo_unable = "You can not buy a door if you are a hobo!",
 	vehicle_cannot_afford = "You can not afford this vehicle!",
 	door_bought = "You've bought this door for %s",
 	vehicle_bought = "You've bought this vehicle for %s",
