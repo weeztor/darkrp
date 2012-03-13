@@ -37,7 +37,9 @@ function ENT:Use(activator, caller)
 	end
 
 	-- The ammo bullshit gets as bad as having four variables to handle ammo exploits
-	activator:GiveAmmo(self.ammoadd or 0, weapon:GetPrimaryAmmoType())
+	if weapon:IsWeapon() then
+		activator:GiveAmmo(self.ammoadd or 0, weapon:GetPrimaryAmmoType())
+	end
 
 	self.Entity:Remove()
 end
