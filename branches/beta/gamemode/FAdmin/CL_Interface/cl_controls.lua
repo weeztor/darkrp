@@ -189,6 +189,12 @@ function PANEL:Init()
 	self.lblDeaths:SetMouseInputEnabled(false)
 	self.lblPing:SetMouseInputEnabled(false)
 
+	self.lblName:SetColor(Color(255,255,255,200))
+	self.lblTeam:SetColor(Color(255,255,255,200))
+	self.lblFrags:SetColor(Color(255,255,255,200))
+	self.lblDeaths:SetColor(Color(255,255,255,200))
+	self.lblPing:SetColor(Color(255,255,255,200))
+
 	self.imgAvatar = vgui.Create("AvatarImage", self)
 
 	self:SetCursor("hand")
@@ -325,6 +331,7 @@ function PANEL6:Init()
 	self:SetSize(120, 40)
 
 	self.TextLabel = vgui.Create("DLabel", self)
+	self.TextLabel:SetColor(Color(200,200,200,200))
 	self.TextLabel:SetFont("ChatFont")
 
 	self.m_Image2 = vgui.Create("DImage", self)

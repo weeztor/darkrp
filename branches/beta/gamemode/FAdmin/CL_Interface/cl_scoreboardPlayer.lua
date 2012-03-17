@@ -87,11 +87,12 @@ function FAdmin.ScoreBoard.Player.Show(ply)
 		--if not Value or Value == "" then return --[[ Value = "N/A" ]] end
 		if Value and Value ~= "" then
 
-			local Text = vgui.Create("Label")
+			local Text = vgui.Create("DLabel")
 			Text:Dock(LEFT)
 			Text:SetFont("TabLarge")
 			Text:SetText(v.name .. ":  ".. Value)
 			Text:SizeToContents()
+			Text:SetColor(Color(200,200,200,200))
 			Text:SetToolTip("Click to copy "..v.name.." to clipboard")
 			Text:SetMouseInputEnabled(true)
 			function Text:OnMousePressed(mcode)
