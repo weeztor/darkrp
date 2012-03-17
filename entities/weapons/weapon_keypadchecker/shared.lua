@@ -3,7 +3,7 @@ if SERVER then
 	AddCSLuaFile("cl_init.lua")
 end
 
-SWEP.Base = "weapon_cs_base"
+SWEP.Base = "weapon_base"
 
 SWEP.PrintName = "Admin keypad checker"
 SWEP.Author = "FPtje"

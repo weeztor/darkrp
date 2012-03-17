@@ -112,8 +112,9 @@ function FAdmin.ScoreBoard.Server.Show(ply)
 	local SelectedPanel = AddInfoPanel() -- Make first panel to put the first things in
 
 	for k, v in pairs(FAdmin.ScoreBoard.Server.Information) do
-		local Text = vgui.Create("Label")
+		local Text = vgui.Create("DLabel")
 		Text:SetFont("TabLarge")
+		Text:SetColor(Color(255,255,255,200))
 
 		local EndText
 		local function RefreshText()
