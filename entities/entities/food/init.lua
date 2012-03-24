@@ -30,14 +30,13 @@ function ENT:OnTakeDamage(dmg)
 end
 
 function ENT:Use(activator,caller)
-	if PooPee then PooPee.AteFood(caller, "models/props_junk/garbage_takeoutcarton001a.mdl") end
-	if GetConVarNumber("hungermod") == 0 then		
-		caller:SetHealth(caller:Health() + (100 - caller:Health()))		
-	else		
-		caller:SetSelfDarkRPVar("Energy", math.Clamp(caller.DarkRPVars.Energy + 100, 0, 100))		
-		umsg.Start("AteFoodIcon", caller)		
-		umsg.End()		
-	end	
+	if GetConVarNumber("hungermod") == 0 then
+		caller:SetHealth(caller:Health() + (100 - caller:Health()))
+	else
+		caller:SetSelfDarkRPVar("Energy", math.Clamp(caller.DarkRPVars.Energy + 100, 0, 100))
+		umsg.Start("AteFoodIcon", caller)
+		umsg.End()
+	end
 	self.Entity:Remove()
 end
 

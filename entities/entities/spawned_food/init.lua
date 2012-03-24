@@ -21,7 +21,6 @@ function ENT:Use(activator,caller)
 	activator:SetSelfDarkRPVar("Energy", math.Clamp((activator.DarkRPVars.Energy or 100) + (self.Entity:GetTable().FoodEnergy or 1), 0, 100))
 	umsg.Start("AteFoodIcon", activator)
 	umsg.End()
-	if PooPee then PooPee.AteFood(activator, self.Entity:GetModel()) end
 	self.Entity:Remove()
 	activator:EmitSound("vo/sandwicheat09.wav", 100, 100)
 end
