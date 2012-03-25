@@ -987,6 +987,12 @@ AddChatCommand("/buy", BuyPistol)
 local function BuyShipment(ply, args)
 	if args == "" then return "" end
 
+	if ply.LastShipmentSpawn and ply.LastShipmentSpawn > (CurTime() - GetConVarNumber("ShipmentSpamTime")) then
+		Notify(ply, 1, 4, "Please wait before spawning another shipment.")
+		return ""
+	end
+	ply.LastShipmentSpawn = CurTime()
+
 	local trace = {}
 	trace.start = ply:EyePos()
 	trace.endpos = trace.start + ply:GetAimVector() * 85

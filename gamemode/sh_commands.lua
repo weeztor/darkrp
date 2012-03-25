@@ -428,6 +428,9 @@ AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxlawboards <Number> - The maximum
 AddValueCommand("rp_shipmenttime", "shipmentspawntime", 10)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_shipmenttime <Number> - The number of seconds it takes for a shipment to spawn.")
 
+AddValueCommand("rp_ShipmentSpawnTime", "ShipmentSpamTime", 3)
+AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_ShipmentSpawnTime <Number> - Antispam time between spawning shipments.")
+
 AddValueCommand("rp_EntityRemoveDelay", "entremovedelay", 0)
 AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_EntityRemoveDelay <Number> - how long to wait before removing a bought entity after disconnect.")
 
