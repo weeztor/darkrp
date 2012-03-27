@@ -11,18 +11,18 @@ local function DrugPlayer(ply)
 		umsg.String("Drugged")
 		umsg.String("1")
 	umsg.End()
-	
+
 	RP:AddAllPlayers()
-	
+
 	ply:SetJumpPower(300)
 	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd") * 2, GetConVarNumber("rspd") * 2)
-	
-	local IDSteam = string.gsub(ply:SteamID(), ":", "")
+
+	local IDSteam = ply:UniqueID()
 	if not timer.IsTimer(IDSteam.."DruggedHealth") and not timer.IsTimer(IDSteam) then
 		ply:SetHealth(ply:Health() + 100)
-		timer.Create(IDSteam.."DruggedHealth", 60/(100 + 5), 100 + 5, function() 
-			if ValidEntity(ply) then ply:SetHealth(ply:Health() - 1) end 
-			if ply:Health() <= 0 then ply:Kill() end 
+		timer.Create(IDSteam.."DruggedHealth", 60/(100 + 5), 100 + 5, function()
+			if ValidEntity(ply) then ply:SetHealth(ply:Health() - 1) end
+			if ply:Health() <= 0 then ply:Kill() end
 		end)
 		timer.Create(IDSteam, 60, 1, UnDrugPlayer, ply)
 	end
@@ -33,7 +33,7 @@ function UnDrugPlayer(ply) -- Global function, used in sv_gamemode_functions
 	local RP = RecipientFilter()
 	RP:RemoveAllPlayers()
 	RP:AddPlayer(ply)
-	local IDSteam = string.gsub(ply:SteamID(), ":", "")
+	local IDSteam = ply:UniqueID()
 	timer.Remove(IDSteam.."DruggedHealth")
 	timer.Remove(IDSteam)
 	umsg.Start("DarkRPEffects", RP)
@@ -42,11 +42,11 @@ function UnDrugPlayer(ply) -- Global function, used in sv_gamemode_functions
 	umsg.End()
 	RP:AddAllPlayers()
 	ply:SetJumpPower(190)
-	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") )	
+	GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") )
 end
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props_lab/jar01a.mdl") 
+	self.Entity:SetModel("models/props_lab/jar01a.mdl")
 	self.Entity:PhysicsInit(SOLID_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	self.Entity:SetSolid(SOLID_VPHYSICS)

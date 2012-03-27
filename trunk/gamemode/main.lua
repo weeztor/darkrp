@@ -583,7 +583,7 @@ local function PlayerWanted(ply, args)
 					b:PrintMessage( HUD_PRINTCONSOLE, ply:Nick() .. " has made " .. p:Nick() .. " wanted by police for " .. reason )
 				end
 			end
-			timer.Create(p:Nick() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, p)
+			timer.Create(p:UniqueID() .. "wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, p)
 		else
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
 		end
@@ -603,7 +603,7 @@ local function PlayerUnWanted(ply, args)
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_expired, p:Nick()))
 			end
-			timer.Destroy(p:Nick() .. " wantedtimer")
+			timer.Destroy(p:UniqueID() .. " wantedtimer")
 		else
 			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "Player: "..tostring(args)))
 		end
