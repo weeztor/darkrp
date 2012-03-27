@@ -337,7 +337,7 @@ function meta:UpdateJob(job)
 	self:GetTable().Pay = 1
 	self:GetTable().LastPayDay = CurTime()
 
-	timer.Create(self:SteamID() .. "jobtimer", GetConVarNumber("paydelay"), 0, self.PayDay, self)
+	timer.Create(self:UniqueID() .. "jobtimer", GetConVarNumber("paydelay"), 0, self.PayDay, self)
 end
 
 /*---------------------------------------------------------
@@ -457,17 +457,16 @@ function meta:Arrest(time, rejoin)
 			end
 		end
 
-		timer.Create(ID .. "jailtimer", time, 1, function() if ValidEntity(self) then self:Unarrest(ID) end end)
+		timer.Create(self:UniqueID() .. "jailtimer", time, 1, function() if ValidEntity(self) then self:Unarrest() end end)
 		umsg.Start("GotArrested", self)
 			umsg.Float(time)
 		umsg.End()
 	end
 end
 
-function meta:Unarrest(ID)
+function meta:Unarrest()
 	self:SetDarkRPVar("Arrested", false)
 	if not ValidEntity(self) then
-		RPArrestedPlayers[ID] = nil
 		return
 	end
 
