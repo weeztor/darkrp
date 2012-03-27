@@ -1453,8 +1453,12 @@ local function ExecSwitchJob(answer, ent, ply, target)
 	if answer ~= 1 then return end
 	local Pteam = ply:Team()
 	local Tteam = target:Team()
-	ply:ChangeTeam(Tteam, true)
-	target:ChangeTeam(Pteam, true)
+
+	if not ply:ChangeTeam(Tteam) then return end
+	if not target:ChangeTeam(Pteam) then
+		ply:ChangeTeam(Pteam, true) -- revert job change
+		return
+	end
 	Notify(ply, 2, 4, LANGUAGE.team_switch)
 	Notify(target, 2, 4, LANGUAGE.team_switch)
 end

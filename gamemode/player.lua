@@ -260,9 +260,10 @@ function meta:ChangeTeam(t, force)
 		local max = TEAM.max
 		if max ~= 0 and ((max % 1 == 0 and team.NumPlayers(t) >= max) or (max % 1 ~= 0 and (team.NumPlayers(t) + 1) / #player.GetAll() > max)) then
 			Notify(self, 1, 4,  string.format(LANGUAGE.team_limit_reached, TEAM.name))
-			return ""
+			return
 		end
 	end
+
 	if self:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then
 		UnLockdown(self)
 	end
@@ -330,6 +331,7 @@ function meta:ChangeTeam(t, force)
 	else
 		self:KillSilent()
 	end
+	return true
 end
 
 function meta:UpdateJob(job)
