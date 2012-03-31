@@ -367,7 +367,7 @@ local function OwnDoor(ply)
 			Notify(ply, 1, 5, LANGUAGE.door_unown_arrested)
 			return ""
 		end
-		
+
 		if GetConVarNumber("hobownership") == 0 and team == TEAM_HOBO then
 			Notify(ply, 1, 5, LANGUAGE.door_hobo_unable)
 			return ""
@@ -415,7 +415,7 @@ local function OwnDoor(ply)
 			trace.Entity:Own(ply)
 
 			if ply:GetTable().OwnedNumz == 0 then
-				timer.Create(ply:SteamID() .. "propertytax", 270, 0, ply.DoPropertyTax, ply)
+				timer.Create(ply:UniqueID() .. "propertytax", 270, 0, ply.DoPropertyTax, ply)
 			end
 
 			ply:GetTable().OwnedNumz = ply:GetTable().OwnedNumz + 1

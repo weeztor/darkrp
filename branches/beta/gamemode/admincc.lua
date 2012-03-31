@@ -526,30 +526,6 @@ local function ccSetSalary(ply, cmd, args)
 end
 concommand.Add("rp_setsalary", ccSetSalary)
 
-local function ccSWEPSpawn(ply, cmd, args)
-	if GetConVarNumber("adminsweps") == 1 then
-		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
-			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_giveswep"))
-			return
-		end
-	end
-	CCGiveSWEP(ply, cmd, args)
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned SWEP "..args[1], nil, Color(255, 255, 0))
-end
-concommand.Add("gm_giveswep", ccSWEPSpawn)
-
-local function ccSWEPGive(ply, cmd, args)
-	if GetConVarNumber("adminsweps") == 1 then
-		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
-			Notify(ply, 1, 5, string.format(LANGUAGE.need_admin, "gm_spawnswep"))
-			return
-		end
-	end
-	CCSpawnSWEP(ply, cmd, args)
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned SWEP "..args[1], nil, Color(255, 255, 0))
-end
-concommand.Add("gm_spawnswep", ccSWEPGive)
-
 local function ccSENTSPawn(ply, cmd, args)
 	if GetConVarNumber("adminsents") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
