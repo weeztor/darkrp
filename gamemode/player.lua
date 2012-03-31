@@ -244,9 +244,10 @@ function meta:ChangeTeam(t, force)
 		local max = TEAM.max
 		if max ~= 0 and ((max % 1 == 0 and team.NumPlayers(t) >= max) or (max % 1 ~= 0 and (team.NumPlayers(t) + 1) / #player.GetAll() > max)) then
 			Notify(self, 1, 4,  string.format(LANGUAGE.team_limit_reached, TEAM.name))
-			return ""
+			return
 		end
 	end
+
 	if self:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then
 		UnLockdown(self)
 	end
@@ -314,6 +315,7 @@ function meta:ChangeTeam(t, force)
 	else
 		self:KillSilent()
 	end
+	return true
 end
 
 function meta:UpdateJob(job)
@@ -321,7 +323,7 @@ function meta:UpdateJob(job)
 	self:GetTable().Pay = 1
 	self:GetTable().LastPayDay = CurTime()
 
-	timer.Create(self:SteamID() .. "jobtimer", GetConVarNumber("paydelay"), 0, self.PayDay, self)
+	timer.Create(self:UniqueID() .. "jobtimer", GetConVarNumber("paydelay"), 0, self.PayDay, self)
 end
 
 /*---------------------------------------------------------
@@ -441,17 +443,16 @@ function meta:Arrest(time, rejoin)
 			end
 		end
 
-		timer.Create(ID .. "jailtimer", time, 1, function() if ValidEntity(self) then self:Unarrest(ID) end end)
+		timer.Create(self:UniqueID() .. "jailtimer", time, 1, function() if ValidEntity(self) then self:Unarrest() end end)
 		umsg.Start("GotArrested", self)
 			umsg.Float(time)
 		umsg.End()
 	end
 end
 
-function meta:Unarrest(ID)
+function meta:Unarrest()
 	self:SetDarkRPVar("Arrested", false)
 	if not ValidEntity(self) then
-		RPArrestedPlayers[ID] = nil
 		return
 	end
 
