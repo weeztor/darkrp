@@ -111,9 +111,9 @@ hook.Add("OnEntityCreated", "DRP_WireFieldGenerator", function(ent)
 			local TriggerInput = ent.TriggerInput
 			function ent:TriggerInput(iname, value)
 				if value ~= nil and iname == "Distance" then
-					value=math.Min(value, 400);
+					value = math.Min(value, 400);
 				end
-				TriggerInput(self, iname, value)
+				pcall(TriggerInput(self, iname, value)) -- Don't let wiremod errors ruin my beautiful hook.
 			end
 		end
 	end, ent)
