@@ -75,17 +75,23 @@ for k,v in pairs(player.GetAll()) do
 	v.DarkRPVars = v.DarkRPVars or {}
 end
 
-include("help.lua")
-include("language_sh.lua")
-include("MakeThings.lua")
-include("cl_vgui.lua")
-include("entity.lua")
-include("cl_helpvgui.lua")
-include("showteamtabs.lua")
-include("DRPDermaSkin.lua")
-include("sh_animations.lua")
-include("cl_hud.lua")
-include("Workarounds.lua")
+include("client/help.lua")
+
+include("client/DRPDermaSkin.lua")
+include("client/helpvgui.lua")
+include("client/hud.lua")
+include("client/showteamtabs.lua")
+include("client/vgui.lua")
+
+include("shared/animations.lua")
+include("shared/commands.lua")
+include("shared/entity.lua")
+include("shared/language.lua")
+include("shared/MakeThings.lua")
+include("shared/Workarounds.lua")
+
+include("shared.lua")
+include("addentities.lua")
 
 include("FPP/sh_settings.lua")
 include("FPP/client/FPP_Menu.lua")
@@ -177,10 +183,6 @@ local function ToggleClicker()
 	gui.EnableScreenClicker(GUIToggled)
 end
 usermessage.Hook("ToggleClicker", ToggleClicker)
-
-include("sh_commands.lua")
-include("shared.lua")
-include("addentities.lua")
 
 local function DoSpecialEffects(Type)
 	local thetype = string.lower(Type:ReadString())
@@ -630,7 +632,7 @@ function GM:InitPostEntity()
 end
 
 -- DarkRP plugin for FAdmin. It's this simple to make a plugin. If FAdmin isn't installed, this code won't bother anyone
-include("FAdmin_DarkRP.lua")
+include(GM.FolderName.."/gamemode/shared/FAdmin_DarkRP.lua")
 
 if not FAdmin or not FAdmin.StartHooks then return end
 FAdmin.StartHooks["DarkRP"] = function()

@@ -7,12 +7,10 @@
 includeCS("AFK/cl_afk.lua")
 AddToggleCommand("rp_afk_demote", "afkdemote", 0)
 AddValueCommand("rp_afk_demotetime", "afkdemotetime", 600)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demote <1/0> - If set to 1, players who don't do anything for ".. GetConVarNumber("afkdemotetime") .." seconds will be demoted if they do not use AFK mode.")
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demotetime <time> - Sets the time a player has to be AFK for before they are demoted (in seconds).")
 
 local function AFKDemote(ply)
 	local rpname = ply.DarkRPVars.rpname
-	
+
 	if ply:Team() ~= TEAM_CITIZEN then
 		ply:ChangeTeam(TEAM_CITIZEN, true)
 		ply:SetSelfDarkRPVar("AFKDemoted", true)
@@ -38,7 +36,7 @@ local function SetAFK(ply)
 		DB.RetrieveSalary(ply, function(amount) ply.OldSalary = amount end)
 		ply.OldJob = ply.DarkRPVars.job
 		NotifyAll(0, 5, rpname .. " is now AFK.")
-		
+
 		-- NPC code partially by _Undefined
 		local npc = ents.Create("npc_citizen")
 		npc:SetPos(ply:GetPos())
@@ -102,7 +100,7 @@ local function ToggleAFK(ply)
 		Notify( ply, 1, 5, "AFK mode is disabled.")
 		return ""
 	end
-	
+
 	SetAFK(ply)
 	return ""
 end
@@ -119,7 +117,7 @@ end
 hook.Add("KeyPress", "DarkRPKeyReleasedCheck", AFKTimer)
 
 local function KillAFKTimer()
-	for id, ply in pairs(player.GetAll()) do 
+	for id, ply in pairs(player.GetAll()) do
 		if ply.AFKDemote and CurTime() > ply.AFKDemote and not ply.DarkRPVars.AFK then
 			SetAFK(ply)
 			AFKDemote(ply)

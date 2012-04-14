@@ -16,28 +16,24 @@ AddFoodItem("bottle2", "models/props_junk/garbage_glassbottle002a.mdl", 10)
 AddFoodItem("bottle3", "models/props_junk/garbage_glassbottle003a.mdl", 10)
 AddFoodItem("orange", "models/props/cs_italy/orange.mdl", 20)
 
-HELP_CATEGORY_HUNGERMOD = 4
+local HELP_CATEGORY_HUNGERMOD = 4
 
-AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
+GAMEMODE:AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
 
 AddToggleCommand("rp_hungermod", "hungermod", 0)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungermod <1 or 0> - Enable/disable hunger mod")
-
 AddToggleCommand("rp_foodspawn", "foodspawn", 1)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_foodspawn - Whether players(non-cooks) can spawn food props or not")
-
 AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodspecialcost <1 or 0> - Enable/disable whether spawning food props have a special cost")
-
 AddValueCommand("rp_foodcost", "foodcost", 15)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodcost <Amount> - Set food cost")
-
 AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungerspeed <Amount> - Set the rate at which players will become hungry (2 is the default)")
-
 AddValueCommand("rp_starverate", "starverate", 3)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_starverate <Amount> - How much health that is taken away every second the player is starving  (3 is the default)")
 
+
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungermod <1 or 0> - Enable/disable hunger mod")
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_foodspawn - Whether players(non-cooks) can spawn food props or not")
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodspecialcost <1 or 0> - Enable/disable whether spawning food props have a special cost")
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodcost <Amount> - Set food cost")
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungerspeed <Amount> - Set the rate at which players will become hungry (2 is the default)")
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_starverate <Amount> - How much health that is taken away every second the player is starving  (3 is the default)")
 
 local HM = { }
 
