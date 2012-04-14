@@ -42,29 +42,6 @@ for k, v in pairs(player.GetAll()) do
 	v:NewHungerData()
 end
 
-HELP_CATEGORY_HUNGERMOD = 4
-
-AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
-
-AddToggleCommand("rp_hungermod", "hungermod", 0)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungermod <1 or 0> - Enable/disable hunger mod")
-
-AddToggleCommand("rp_foodspawn", "foodspawn", 1)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_foodspawn - Whether players(non-cooks) can spawn food props or not")
-
-AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodspecialcost <1 or 0> - Enable/disable whether spawning food props have a special cost")
-
-AddValueCommand("rp_foodcost", "foodcost", 15)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodcost <Amount> - Set food cost")
-
-AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungerspeed <Amount> - Set the rate at which players will become hungry (2 is the default)")
-
-AddValueCommand("rp_starverate", "starverate", 3)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_starverate <Amount> - How much health that is taken away every second the player is starving  (3 is the default)")
-
-
 AddFoodItem("banana", "models/props/cs_italy/bananna.mdl", 10)
 AddFoodItem("bananabunch", "models/props/cs_italy/bananna_bunch.mdl", 20)
 AddFoodItem("melon", "models/props_junk/watermelon01.mdl", 20)
@@ -99,7 +76,7 @@ local function BuyFood(ply, args)
 
 	for k,v in pairs(FoodItems) do
 		if string.lower(args) == k then
-			local cost = GetConVarNumber("foodcost")		
+			local cost = GetConVarNumber("foodcost")
 			if ply:CanAfford(cost) then
 				ply:AddMoney(-cost)
 			else
