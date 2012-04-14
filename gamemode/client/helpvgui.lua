@@ -43,7 +43,7 @@ function HelpPanel:FillHelpInfo(force)
 		end
 	end
 
-	for k, v in SortedPairsByMemberValue(HelpCategories, "id") do
+	for k, v in SortedPairsByMemberValue(GAMEMODE:getHelpCategories(), "id") do
 		if not self.vguiHelpCategories[v.id] or force then
 			local helptext = ""
 			local Labels = {}
@@ -56,7 +56,7 @@ function HelpPanel:FillHelpInfo(force)
 			self.vguiHelpCategories[v.id]:SetColor(Color(140, 0, 0, 200))
 			self.vguiHelpCategories[v.id]:SetExpensiveShadow(2, Color(0,0,0,255))
 
-			for n, m in pairs(HelpLabels) do
+			for n, m in pairs(GAMEMODE:getHelpLabels()) do
 				if m.category == v.id then
 					table.insert(Labels, m.text)
 				end
@@ -133,7 +133,7 @@ end
 
 function HelpPanel:OnMouseWheeled(delta)
 	local scroll = math.Max(self.Scroll - delta * FrameTime() * 2000, 0)
-	scroll = math.Min(scroll, #HelpCategories * 20 + #HelpLabels * 17)
+	scroll = math.Min(scroll, #GAMEMODE:getHelpCategories() * 20 + #GAMEMODE:getHelpLabels() * 17)
 	self.Scroll = scroll
 	self:InvalidateLayout()
 end

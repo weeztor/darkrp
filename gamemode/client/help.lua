@@ -1,5 +1,5 @@
-HelpCategories = { }
-HelpLabels = { }
+local HelpCategories = {}
+local HelpLabels = {}
 
 local function addCategory(id, name)
 	table.insert(HelpCategories, {id = id, name = name})
@@ -16,6 +16,14 @@ end
 
 function GM:AddHelpCategory(id, name)
 	addCategory(id, name)
+end
+
+function GM:getHelpCategories()
+	return HelpCategories
+end
+
+function GM:getHelpLabels()
+	return HelpLabels
 end
 
 local HELP_CATEGORY_CHATCMD = 1
