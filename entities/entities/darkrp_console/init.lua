@@ -7,13 +7,13 @@ function ENT:Initialize()
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
-	
+
 	self:SetUseType(SIMPLE_USE)
-	
+
 	local phys = self:GetPhysicsObject()
-	if phys:IsValid() then 
-		phys:Wake() 
-		phys:EnableMotion(false) 
+	if phys:IsValid() then
+		phys:Wake()
+		phys:EnableMotion(false)
 	end
 end
 
@@ -31,14 +31,14 @@ function ENT:Use(activator, caller)
 			umsg.Short(memory)
 		umsg.End()
 	elseif not activator:IsCP() then
-		Notify(activator, 1, 4, "You're not a cop")
+		GAMEMODE:Notify(activator, 1, 4, "You're not a cop")
 	end
 end
 
 function ENT:Alarm()
 	self.Sound = CreateSound(self, "ambient/alarms/alarm_citizen_loop1.wav")
 	self.Sound:Play()
-	
+
 	self.dt.alarm = true
 	timer.Simple(30, function()
 		if self.Sound then self.Sound:Stop() end
@@ -58,12 +58,12 @@ function ENT:OnPhysgunFreeze(weapon, phys, ent, ply)
 	if ply:IsSuperAdmin() then
 		local pos = self:GetPos()
 		local ang = self:GetAngles()
-		
-		local map, x, y, z, pitch, yaw, roll = 
+
+		local map, x, y, z, pitch, yaw, roll =
 			string.lower(game.GetMap()),
 			pos.x, pos.y, pos.z,
 			ang.p, ang.y, ang.r
-			
+
 		DB.Query("SELECT id FROM darkrp_consolespawns WHERE map = " .. sql.SQLStr(map) .. ";", function(data)
 			if data then
 				for k,v in pairs(data) do
@@ -76,13 +76,13 @@ function ENT:OnPhysgunFreeze(weapon, phys, ent, ply)
 						.. "yaw = " .. SQLStr(yaw)..", "
 						.. "roll = " .. SQLStr(roll)
 						.. " WHERE id = "..v.id..";")
-						
-						Notify(ply, 0, 4, "CP console position updated!")
+
+						GAMEMODE:Notify(ply, 0, 4, "CP console position updated!")
 						return
 					end
 				end
 			end
-			
+
 			local ID = 0
 			local found = false
 			for k,v in SortedPairs(data or {}) do
@@ -105,7 +105,7 @@ function ENT:OnPhysgunFreeze(weapon, phys, ent, ply)
 			.. SQLStr(yaw)..", "
 			.. SQLStr(roll)
 			.. ");")
-			Notify(ply, 0, 4, "CP console position created!")
+			GAMEMODE:Notify(ply, 0, 4, "CP console position created!")
 		end)
 	end
 end
@@ -114,7 +114,7 @@ function ENT:CanTool(ply, trace, tool, ENT)
 	if ply:IsSuperAdmin() and tool == "remover" then
 		self.CanRemove = true
 		DB.Query("DELETE FROM darkrp_consolespawns WHERE id = "..self.ID..";") -- Remove from database if it's there
-		Notify(ply, 0, 4, "CP console successfully removed!")
+		GAMEMODE:Notify(ply, 0, 4, "CP console successfully removed!")
 		return true
 	end
 	return false

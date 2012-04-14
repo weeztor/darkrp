@@ -40,14 +40,14 @@ if CLIENT then
 	usermessage.Hook("weaponcheck_time", function(um)
 		local wep = um:ReadEntity()
 		local time = um:ReadLong()
-		
+
 		wep.IsWeaponChecking = true
 		wep.StartCheck = CurTime()
 		wep.WeaponCheckTime = time
 		wep.EndCheck = CurTime() + time
-		
+
 		wep.Dots = wep.Dots or ""
-		timer.Create("WeaponCheckDots", 0.5, 0, function(wep) 
+		timer.Create("WeaponCheckDots", 0.5, 0, function(wep)
 			if not wep:IsValid() then timer.Destroy("WeaponCheckDots") return end
 			local len = string.len(wep.Dots)
 			local dots = {[0]=".", [1]="..", [2]="...", [3]=""}
@@ -72,8 +72,8 @@ function SWEP:PrimaryAttack()
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
 		return
 	end
-	
-	local result = "" 
+
+	local result = ""
 	for k,v in pairs(trace.Entity:GetWeapons()) do
 		if v:IsValid() then
 			result = result..", ".. v:GetClass()
@@ -91,7 +91,7 @@ function SWEP:PrimaryAttack()
 			for i = 1, amount, 1 do
 				self.Owner:ChatPrint(string.sub(endresult, (i-1) * 126, i * 126 - 1))
 			end
-		else		
+		else
 			self.Owner:ChatPrint(string.sub(result, 3))
 		end
 	end
@@ -106,10 +106,10 @@ function SWEP:SecondaryAttack()
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
 		return
 	end
-	
+
 	self.IsWeaponChecking = true
 	self.StartCheck = CurTime()
-	
+
 	if SERVER then
 		self.WeaponCheckTime = math.Rand(5, 10)
 		umsg.Start("weaponcheck_time", self.Owner)
@@ -135,9 +135,9 @@ function SWEP:Reload()
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
 		return
 	end
-	
+
 	if not trace.Entity:GetTable().ConfisquatedWeapons then
-		Notify(self.Owner, 1, 4, trace.Entity:Nick() .. " had no weapons confisquated!")
+		GAMEMODE:Notify(self.Owner, 1, 4, trace.Entity:Nick() .. " had no weapons confisquated!")
 		return
 	else
 		--[[ for k,v in pairs(trace.Entity:GetTable().ConfisquatedWeapons) do
@@ -148,12 +148,12 @@ function SWEP:Reload()
 			trace.Entity:RemoveAllAmmo()
 			trace.Entity:SetAmmo(v[2], v[3], false)
 			trace.Entity:SetAmmo(v[4], v[5], false)
-			
+
 			wep:SetClip1(v[6])
 			wep:SetClip2(v[7])
-			
+
 		end
-		Notify(self.Owner, 2, 4, "Returned "..trace.Entity:Nick() .. "'s confisquated weapons!")
+		GAMEMODE:Notify(self.Owner, 2, 4, "Returned "..trace.Entity:Nick() .. "'s confisquated weapons!")
 		trace.Entity:GetTable().ConfisquatedWeapons = nil
 	end
 end
@@ -168,9 +168,9 @@ end
 function SWEP:Succeed()
 	if not ValidEntity(self.Owner) then return end
 	self.IsWeaponChecking = false
-	
+
 	if CLIENT then return end
-	local result = "" 
+	local result = ""
 	local stripped = {}
 	local trace = self.Owner:GetEyeTrace()
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() then return end
@@ -178,16 +178,16 @@ function SWEP:Succeed()
 		if not table.HasValue(NoStripWeapons, string.lower(v:GetClass())) then
 			trace.Entity:StripWeapon(v:GetClass())
 			result = result..", "..v:GetClass()
-			table.insert(stripped, {v:GetClass(), trace.Entity:GetAmmoCount(v:GetPrimaryAmmoType()), 
+			table.insert(stripped, {v:GetClass(), trace.Entity:GetAmmoCount(v:GetPrimaryAmmoType()),
 			v:GetPrimaryAmmoType(), trace.Entity:GetAmmoCount(v:GetSecondaryAmmoType()), v:GetSecondaryAmmoType(),
 			v:Clip1(), v:Clip2()})
 		end
 	end
-	
+
 	if not trace.Entity:GetTable().ConfisquatedWeapons then
 		trace.Entity:GetTable().ConfisquatedWeapons = stripped
 	else
-		for k,v in pairs(stripped) do 
+		for k,v in pairs(stripped) do
 			local found = false
 			for a,b in pairs(trace.Entity:GetTable().ConfisquatedWeapons) do
 				if b[1] == v[1] then
@@ -195,15 +195,15 @@ function SWEP:Succeed()
 					break
 				end
 			end
-			if not found then 
-				table.insert(trace.Entity:GetTable().ConfisquatedWeapons, v) 
+			if not found then
+				table.insert(trace.Entity:GetTable().ConfisquatedWeapons, v)
 			end
-			--[[ if not table.HasValue(trace.Entity:GetTable().ConfisquatedWeapons, v) then 
-				table.insert(trace.Entity:GetTable().ConfisquatedWeapons, v) 
+			--[[ if not table.HasValue(trace.Entity:GetTable().ConfisquatedWeapons, v) then
+				table.insert(trace.Entity:GetTable().ConfisquatedWeapons, v)
 			end ]]
 		end
 	end
-	
+
 	if result == "" then
 		self.Owner:ChatPrint(trace.Entity:Nick() .. " has no illegal weapons")
 		self.Owner:EmitSound("npc/combine_soldier/gear5.wav", 50, 100)
@@ -217,7 +217,7 @@ function SWEP:Succeed()
 			for i = 1, amount, 1 do
 				self.Owner:ChatPrint(string.sub(endresult, (i-1) * 126, i * 126 - 1))
 			end
-		else		
+		else
 			self.Owner:ChatPrint(string.sub(result, 3))
 		end
 	end
@@ -233,7 +233,7 @@ end
 function SWEP:Think()
 	if self.IsWeaponChecking then
 		local trace = self.Owner:GetEyeTrace()
-		if not ValidEntity(trace.Entity) then 
+		if not ValidEntity(trace.Entity) then
 			self:Fail()
 		end
 		if trace.HitPos:Distance(self.Owner:GetShootPos()) > 100 or not trace.Entity:IsPlayer() then
@@ -252,13 +252,13 @@ function SWEP:DrawHUD()
 		local h = ScrH()
 		local x,y,width,height = w/2-w/10, h/ 2, w/5, h/15
 		draw.RoundedBox(8, x, y, width, height, Color(10,10,10,120))
-		
+
 		local time = self.EndCheck - self.StartCheck
 		local curtime = CurTime() - self.StartCheck
 		local status = curtime/time
 		local BarWidth = status * (width - 16) + 8
 		draw.RoundedBox(8, x+8, y+8, BarWidth, height - 16, Color(0, 0+(status*255), 255-(status*255), 255))
-		
+
 		draw.SimpleText("Checking weapons"..self.Dots, "Trebuchet24", w/2, h/2 + height/2, Color(255,255,255,255), 1, 1)
 	end
 end

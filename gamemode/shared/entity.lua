@@ -279,7 +279,7 @@ local function SetDoorGroupOwnable(ply, arg)
 	local ent = trace.Entity
 	if not ply:IsSuperAdmin() or (not ent:IsDoor() and not ent:IsVehicle()) or ply:GetPos():Distance(ent:GetPos()) > 115 then return end
 
-	if not RPExtraTeamDoors[arg] and arg ~= "" then Notify(ply, 1, 10, "Door group does not exist!") return "" end
+	if not RPExtraTeamDoors[arg] and arg ~= "" then GAMEMODE:Notify(ply, 1, 10, "Door group does not exist!") return "" end
 	if ValidEntity( trace.Entity:GetDoorOwner() ) then
 		trace.Entity:UnOwn( trace.Entity:GetDoorOwner() )
 	end
@@ -288,7 +288,7 @@ local function SetDoorGroupOwnable(ply, arg)
 	ent.DoorData.TeamOwn = nil
 	ent.DoorData.GroupOwn = arg
 	if arg == "" then ent.DoorData.GroupOwn = nil ent.DoorData.TeamOwn = nil end
-	Notify(ply, 0, 8, "Door group set successfully")
+	GAMEMODE:Notify(ply, 0, 8, "Door group set successfully")
 	-- Save it for future map loads
 	DB.StoreGroupDoorOwnability(ent)
 
@@ -310,7 +310,7 @@ local function SetDoorTeamOwnable(ply, arg)
 	if not ply:IsSuperAdmin() or (not ent:IsDoor() and not ent:IsVehicle()) or ply:GetPos():Distance(ent:GetPos()) > 115 then return end
 
 	arg = tonumber( arg )
-	if not RPExtraTeams[arg] and arg ~= nil then Notify(ply, 1, 10, "Job does not exist!") return "" end
+	if not RPExtraTeams[arg] and arg ~= nil then GAMEMODE:Notify(ply, 1, 10, "Job does not exist!") return "" end
 	if ValidEntity( trace.Entity:GetDoorOwner( ) ) then
 		trace.Entity:UnOwn( trace.Entity:GetDoorOwner() )
 	end
@@ -344,7 +344,7 @@ local function SetDoorTeamOwnable(ply, arg)
 	else
 		ent.DoorData.TeamOwn = nil
 	end
-	Notify(ply, 0, 8, "Door group set successfully")
+	GAMEMODE:Notify(ply, 0, 8, "Door group set successfully")
 	DB.StoreTeamDoorOwnability(ent)
 
 	ent:UnOwn()
@@ -363,18 +363,18 @@ local function OwnDoor(ply)
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 200 then
 		trace.Entity.DoorData = trace.Entity.DoorData or {}
-		if RPArrestedPlayers[ply:SteamID()] then
-			Notify(ply, 1, 5, LANGUAGE.door_unown_arrested)
+		if ply:isArrested() then
+			GAMEMODE:Notify(ply, 1, 5, LANGUAGE.door_unown_arrested)
 			return ""
 		end
 
 		if GetConVarNumber("hobownership") == 0 and team == TEAM_HOBO then
-			Notify(ply, 1, 5, LANGUAGE.door_hobo_unable)
+			GAMEMODE:Notify(ply, 1, 5, LANGUAGE.door_hobo_unable)
 			return ""
 		end
 
 		if trace.Entity.DoorData.NonOwnable or trace.Entity.DoorData.GroupOwn or trace.Entity.DoorData.TeamOwn then
-			Notify(ply, 1, 5, LANGUAGE.door_unownable)
+			GAMEMODE:Notify(ply, 1, 5, LANGUAGE.door_unownable)
 			return ""
 		end
 
@@ -386,31 +386,31 @@ local function OwnDoor(ply)
 			ply:GetTable().OwnedNumz = math.abs(ply:GetTable().OwnedNumz - 1)
 			local GiveMoneyBack = (((trace.Entity:IsVehicle() and GetConVarNumber("vehiclecost")) or GetConVarNumber("doorcost")) * 0.666) + 0.5
 			ply:AddMoney(math.floor(GiveMoneyBack))
-			Notify(ply, 0, 4, string.format(LANGUAGE.door_sold,  CUR .. math.floor(math.floor(GiveMoneyBack))))
+			GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.door_sold,  CUR .. math.floor(math.floor(GiveMoneyBack))))
 			ply.LookingAtDoor = nil
 		else
 			if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
-				Notify(ply, 1, 4, LANGUAGE.door_already_owned)
+				GAMEMODE:Notify(ply, 1, 4, LANGUAGE.door_already_owned)
 				return ""
 			end
 			if trace.Entity:IsVehicle() then
 				if not ply:CanAfford(GetConVarNumber("vehiclecost")) then
-					Notify(ply, 1, 4, LANGUAGE.vehicle_cannot_afford)
+					GAMEMODE:Notify(ply, 1, 4, LANGUAGE.vehicle_cannot_afford)
 					return ""
 				end
 			else
 				if not ply:CanAfford(GetConVarNumber("doorcost")) then
-					Notify(ply, 1, 4, LANGUAGE.door_cannot_afford)
+					GAMEMODE:Notify(ply, 1, 4, LANGUAGE.door_cannot_afford)
 					return ""
 				end
 			end
 
 			if trace.Entity:IsVehicle() then
 				ply:AddMoney(-GetConVarNumber("vehiclecost"))
-				Notify(ply, 0, 4, string.format(LANGUAGE.vehicle_bought, CUR .. math.floor(GetConVarNumber("vehiclecost"))))
+				GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.vehicle_bought, CUR .. math.floor(GetConVarNumber("vehiclecost"))))
 			else
 				ply:AddMoney(-GetConVarNumber("doorcost"))
-				Notify(ply, 0, 4, string.format(LANGUAGE.door_bought, CUR .. math.floor(GetConVarNumber("doorcost"))))
+				GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.door_bought, CUR .. math.floor(GetConVarNumber("doorcost"))))
 			end
 			trace.Entity:Own(ply)
 
@@ -425,7 +425,7 @@ local function OwnDoor(ply)
 		ply.LookingAtDoor = nil
 		return ""
 	end
-	Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "vehicle/door"))
+	GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "vehicle/door"))
 	return ""
 end
 AddChatCommand("/toggleown", OwnDoor)
@@ -442,7 +442,7 @@ local function UnOwnAll(ply, cmd, args)
 		end
 	end
 	ply:GetTable().OwnedNumz = 0
-	Notify(ply, 2, 4, string.format("You have sold "..amount.." doors for " .. CUR .. amount * math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5)) .. "!"))
+	GAMEMODE:Notify(ply, 2, 4, string.format("You have sold "..amount.." doors for " .. CUR .. amount * math.floor(((GetConVarNumber("doorcost") * 0.66666666666666)+0.5)) .. "!"))
 	return ""
 end
 AddChatCommand("/unownalldoors", UnOwnAll)
@@ -525,14 +525,14 @@ local function SetDoorTitle(ply, args)
 			end
 		else
 			if trace.Entity.DoorData.NonOwnable then
-				Notify(ply, 1, 6, string.format(LANGUAGE.need_admin, "/title"))
+				GAMEMODE:Notify(ply, 1, 6, string.format(LANGUAGE.need_admin, "/title"))
 			end
 		end
 
 		if trace.Entity:OwnedBy(ply) then
 			trace.Entity.DoorData.title = args
 		else
-			Notify(ply, 1, 6, string.format(LANGUAGE.door_need_to_own, "/title"))
+			GAMEMODE:Notify(ply, 1, 6, string.format(LANGUAGE.door_need_to_own, "/title"))
 		end
 	end
 
@@ -546,10 +546,10 @@ local function RemoveDoorOwner(ply, args)
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
 		trace.Entity.DoorData = trace.Entity.DoorData or {}
-		target = FindPlayer(args)
+		target = GAMEMODE:FindPlayer(args)
 
 		if trace.Entity.DoorData.NonOwnable then
-			Notify(ply, 1, 4, LANGUAGE.door_rem_owners_unownable)
+			GAMEMODE:Notify(ply, 1, 4, LANGUAGE.door_rem_owners_unownable)
 		end
 
 		if target then
@@ -562,10 +562,10 @@ local function RemoveDoorOwner(ply, args)
 					trace.Entity:RemoveOwner(target)
 				end
 			else
-				Notify(ply, 1, 4, LANGUAGE.do_not_own_ent)
+				GAMEMODE:Notify(ply, 1, 4, LANGUAGE.do_not_own_ent)
 			end
 		else
-			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
+			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
 		end
 	end
 
@@ -580,10 +580,10 @@ local function AddDoorOwner(ply, args)
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
 		trace.Entity.DoorData = trace.Entity.DoorData or {}
-		target = FindPlayer(args)
+		target = GAMEMODE:FindPlayer(args)
 		if target then
 			if trace.Entity.DoorData.NonOwnable then
-				Notify(ply, 1, 4, LANGUAGE.door_add_owners_unownable)
+				GAMEMODE:Notify(ply, 1, 4, LANGUAGE.door_add_owners_unownable)
 				return ""
 			end
 
@@ -591,13 +591,13 @@ local function AddDoorOwner(ply, args)
 				if not trace.Entity:OwnedBy(target) and not trace.Entity:AllowedToOwn(target) then
 					trace.Entity:AddAllowed(target)
 				else
-					Notify(ply, 1, 4, string.format(LANGUAGE.rp_addowner_already_owns_door, ply:Nick()))
+					GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.rp_addowner_already_owns_door, ply:Nick()))
 				end
 			else
-				Notify(ply, 1, 4, LANGUAGE.do_not_own_ent)
+				GAMEMODE:Notify(ply, 1, 4, LANGUAGE.do_not_own_ent)
 			end
 		else
-			Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
+			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
 		end
 	end
 

@@ -40,8 +40,6 @@ meta.Nick = meta.Name
 meta.GetName = meta.Name
 -- End
 
-RPArrestedPlayers = {}
-
 DeriveGamemode("sandbox")
 
 AddCSLuaFile("addentities.lua")

@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------
 Concommands to change DarkRP ConVars
 ---------------------------------------------------------------------------*/
-function ccValueCommand(ply, cmd, args)
+function GM:ccValueCommand(ply, cmd, args)
 	local valuecmd = ValueCmds[cmd]
 
 	if not valuecmd then return end
@@ -33,7 +33,7 @@ function ccValueCommand(ply, cmd, args)
 		nick = ply:Nick()
 	end
 
-	NotifyAll(0, 4, nick .. " set " .. cmd .. " to " .. amount)
+	self:NotifyAll(0, 4, nick .. " set " .. cmd .. " to " .. amount)
 	if ply.SteamName then
 		DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..cmd.." to "..amount )
 	else
@@ -41,7 +41,7 @@ function ccValueCommand(ply, cmd, args)
 	end
 end
 
-function ccToggleCommand(ply, cmd, args)
+function GM:ccToggleCommand(ply, cmd, args)
 	local togglecmd = ToggleCmds[cmd]
 
 	if not togglecmd then return end
@@ -84,7 +84,7 @@ function ccToggleCommand(ply, cmd, args)
 		nick = ply:Nick()
 	end
 
-	NotifyAll(0, 3, nick .. " set " .. cmd .. " to " .. toggle)
+	self:NotifyAll(0, 3, nick .. " set " .. cmd .. " to " .. toggle)
 	if ply.SteamName then
 		DB.Log(ply:SteamName().." ("..ply:SteamID()..") set "..cmd.." to "..toggle )
 	else
@@ -156,7 +156,7 @@ local function ccAddOwner(ply, cmd, args)
 		return
 	end
 
-	target = FindPlayer(args[1])
+	target = GAMEMODE:FindPlayer(args[1])
 
 	if target then
 		if trace.Entity:IsOwned() then
@@ -191,7 +191,7 @@ local function ccRemoveOwner(ply, cmd, args)
 		return
 	end
 
-	target = FindPlayer(args[1])
+	target = GAMEMODE:FindPlayer(args[1])
 
 	if target then
 		if trace.Entity:AllowedToOwn(target) then
@@ -265,7 +265,7 @@ local function ccTell(ply, cmd, args)
 		return
 	end
 
-	local target = FindPlayer(args[1])
+	local target = GAMEMODE:FindPlayer(args[1])
 
 	if target then
 		local msg = ""
@@ -329,7 +329,7 @@ local function ccRemoveLetters(ply, cmd, args)
 		return
 	end
 
-	local target = FindPlayer(args[1])
+	local target = GAMEMODE:FindPlayer(args[1])
 
 	if target then
 		for k, v in pairs(ents.FindByClass("letter")) do
@@ -366,7 +366,7 @@ local function ccArrest(ply, cmd, args)
 		return
 	end
 
-	local target = FindPlayer(args[1])
+	local target = GAMEMODE:FindPlayer(args[1])
 	if target then
 		local length = tonumber(args[2])
 		if length then
@@ -398,7 +398,7 @@ local function ccUnarrest(ply, cmd, args)
 		return
 	end
 
-	local target = FindPlayer(args[1])
+	local target = GAMEMODE:FindPlayer(args[1])
 
 	if target then
 		target:Unarrest()
@@ -439,7 +439,7 @@ local function ccSetMoney(ply, cmd, args)
 		return
 	end
 
-	local target = FindPlayer(args[1])
+	local target = GAMEMODE:FindPlayer(args[1])
 
 	if target then
 		local nick = ""
@@ -496,7 +496,7 @@ local function ccSetSalary(ply, cmd, args)
 		return
 	end
 
-	local target = FindPlayer(args[1])
+	local target = GAMEMODE:FindPlayer(args[1])
 
 	if target then
 		local nick = ""
@@ -529,7 +529,7 @@ concommand.Add("rp_setsalary", ccSetSalary)
 local function ccSENTSPawn(ply, cmd, args)
 	if GetConVarNumber("adminsents") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
-			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnsent"))
+			GAMEMODE:Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnsent"))
 			return
 		end
 	end
@@ -541,7 +541,7 @@ concommand.Add("gm_spawnsent", ccSENTSPawn)
 local function ccVehicleSpawn(ply, cmd, args)
 	if GetConVarNumber("adminvehicles") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
-			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnvehicle"))
+			GAMEMODE:Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnvehicle"))
 			return
 		end
 	end
@@ -553,7 +553,7 @@ concommand.Add("gm_spawnvehicle", ccVehicleSpawn)
 local function ccNPCSpawn(ply, cmd, args)
 	if GetConVarNumber("adminnpc") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
-			Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnnpc"))
+			GAMEMODE:Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnnpc"))
 			return
 		end
 	end
@@ -569,7 +569,7 @@ local function ccSetRPName(ply, cmd, args)
 		return
 	end
 
-	local target = FindPlayer(args[1])
+	local target = GAMEMODE:FindPlayer(args[1])
 
 	if not args[2] or string.len(args[2]) < 2 or string.len(args[2]) > 30 then
 		if ply:EntIndex() == 0 then
@@ -613,13 +613,13 @@ local function ccCancelVote(ply, cmd, args)
 		return
 	end
 
-	vote.DestroyLast()
+	GAMEMODE.vote.DestroyLast()
 	if ply:EntIndex() == 0 then
 		nick = "Console"
 	else
 		nick = ply:Nick()
 	end
 
-	NotifyAll(0, 4, nick .. " canceled the last vote")
+	GAMEMODE:NotifyAll(0, 4, nick .. " canceled the last vote")
 end
 concommand.Add("rp_cancelvote", ccCancelVote)

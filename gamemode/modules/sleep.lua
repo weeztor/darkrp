@@ -1,4 +1,4 @@
-KnockoutTime = 5
+local KnockoutTime = 5
 
 local function ResetKnockouts(player)
 	player.SleepRagdoll = nil
@@ -7,11 +7,11 @@ end
 hook.Add("PlayerSpawn", "Knockout", ResetKnockouts)
 
 
-function KnockoutToggle(player, command, args, caller)
+local function KnockoutToggle(player, command, args, caller)
 	if not player.SleepSound then
 		player.SleepSound = CreateSound(player, "npc/ichthyosaur/water_breath.wav")
 	end
-	
+
 	if player:Alive() then
 		if (player.KnockoutTimer and player.KnockoutTimer + KnockoutTime < CurTime()) or command == "force" then
 			if (player.Sleeping and ValidEntity(player.SleepRagdoll)) then
@@ -33,19 +33,19 @@ function KnockoutToggle(player, command, args, caller)
 						player:RemoveAllAmmo()
 						player:SetAmmo(v[2], v[3], false)
 						player:SetAmmo(v[4], v[5], false)
-						
+
 						wep:SetClip1(v[6])
 						wep:SetClip2(v[7])
-						
+
 					end
 					local cl_defaultweapon = player:GetInfo( "cl_defaultweapon" )
 					if ( player:HasWeapon( cl_defaultweapon )  ) then
-						player:SelectWeapon( cl_defaultweapon ) 
+						player:SelectWeapon( cl_defaultweapon )
 					end
 					player:GetTable().BeforeSleepTeam = nil
 				else
 					GAMEMODE:PlayerLoadout(player)
-				end 
+				end
 				player.WeaponsForSleep = {}
 				local RP = RecipientFilter()
 				RP:RemoveAllPlayers()
@@ -61,21 +61,21 @@ function KnockoutToggle(player, command, args, caller)
 				player.Sleeping = false
 				player:SetSelfDarkRPVar("Energy", player.OldHunger)
 				player.OldHunger = nil
-				
+
 				if player.DarkRPVars.Arrested then
 					GAMEMODE:SetPlayerSpeed(player, GetConVarNumber("aspd"), GetConVarNumber("aspd") )
 				end
 			else
-				for k,v in pairs(ents.FindInSphere(player:GetPos(), 30)) do 
+				for k,v in pairs(ents.FindInSphere(player:GetPos(), 30)) do
 					if v:GetClass() == "func_door" then
-						Notify(player, 1, 4, string.format(LANGUAGE.unable, "sleep", "func_door exploit"))
+						GAMEMODE:Notify(player, 1, 4, string.format(LANGUAGE.unable, "sleep", "func_door exploit"))
 						return ""
 					end
 				end
 
 				player.WeaponsForSleep = {}
 				for k,v in pairs(player:GetWeapons( )) do
-					player.WeaponsForSleep[k] = {v:GetClass(), player:GetAmmoCount(v:GetPrimaryAmmoType()), 
+					player.WeaponsForSleep[k] = {v:GetClass(), player:GetAmmoCount(v:GetPrimaryAmmoType()),
 					v:GetPrimaryAmmoType(), player:GetAmmoCount(v:GetSecondaryAmmoType()), v:GetSecondaryAmmoType(),
 					v:Clip1(), v:Clip2()}
 					/*{class, ammocount primary, type primary, ammo count secondary, type secondary, clip primary, clip secondary*/
@@ -114,7 +114,7 @@ function KnockoutToggle(player, command, args, caller)
 		end
 		return ""
 	else
-		Notify(player, 1, 4, string.format(LANGUAGE.disabled, "/sleep", ""))
+		GAMEMODE:Notify(player, 1, 4, string.format(LANGUAGE.disabled, "/sleep", ""))
 		return ""
 	end
 end
@@ -122,10 +122,14 @@ AddChatCommand("/sleep", KnockoutToggle)
 AddChatCommand("/wake", KnockoutToggle)
 AddChatCommand("/wakeup", KnockoutToggle)
 
+function GM:KnockoutToggle(player, command, args, caller)
+	return KnockoutToggle(player, command, args, caller)
+end
+
 local function DamageSleepers(ent, inflictor, attacker, amount, dmginfo)
 	local ownerint = ent.OwnerINT
 	if ownerint and ownerint ~= 0 then
-		for k,v in pairs(player.GetAll()) do 
+		for k,v in pairs(player.GetAll()) do
 			if v:EntIndex() == ownerint then
 				if attacker == GetWorldEntity() then
 					amount = 10

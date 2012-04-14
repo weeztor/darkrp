@@ -49,7 +49,7 @@ local function IsValidCleanup(class)
 	return table.HasValue(cleanup.GetTable(), class)
 end
 
-concommand.Add( "gmod_admin_cleanup", function( pl, command, args )
+concommand.Add("gmod_admin_cleanup", function(pl, command, args)
 	if not pl:IsAdmin() then return end
 	if not args[1] then
 		for k,v in pairs(ents.GetAll()) do
@@ -57,7 +57,7 @@ concommand.Add( "gmod_admin_cleanup", function( pl, command, args )
 				v:Remove()
 			end
 		end
-		if NotifyAll then NotifyAll(0, 4, pl:Nick() .. " cleaned up everything.") end
+		if GAMEMODE.NotifyAll then GAMEMODE:NotifyAll(0, 4, pl:Nick() .. " cleaned up everything.") end
 	end
 
 	if not IsValidCleanup(args[1]) then return end
@@ -65,7 +65,7 @@ concommand.Add( "gmod_admin_cleanup", function( pl, command, args )
 	for k, v in pairs(ents.FindByClass(args[1])) do
 		v:Remove()
 	end
-	if NotifyAll then NotifyAll(0, 4, pl:Nick() .. " cleaned up all " .. args[1]) end
+	if GAMEMODE.NotifyAll then GAMEMODE:NotifyAll(0, 4, pl:Nick() .. " cleaned up all " .. args[1]) end
 end)
 
 /*---------------------------------------------------------------------------
@@ -75,7 +75,7 @@ hook.Add("PlayerNoClip", "DarkRP_FuckAss", function(ply)
 	if LevelToString and string.lower(LevelToString(ply:GetNWInt("ASS_isAdmin"))) == "banned" then -- Assmod's bullshit
 		for k, v in pairs(player.GetAll()) do
 			if v:IsAdmin() then
-				TalkToPerson(v, Color(255,0,0,255), "WARNING", Color(0,0,255,255), "If DarkRP didn't intervene, assmod would have given a banned user noclip access.\nGet rid of assmod, it's a piece of shit.", ply)
+				GAMEMODE:TalkToPerson(v, Color(255,0,0,255), "WARNING", Color(0,0,255,255), "If DarkRP didn't intervene, assmod would have given a banned user noclip access.\nGet rid of assmod, it's a piece of shit.", ply)
 			end
 		end
 		return false

@@ -82,8 +82,8 @@ function ENT:Use(activator,caller)
 			return false
 		end
 		DB.PayPlayer(activator, Owner, self.dt.price)
-		Notify(activator, 0, 4, "You have paid " .. CUR .. self.dt.price .. " for using drugs.")
-		Notify(Owner, 0, 4, "You have received " .. CUR .. self.dt.price .. " for selling drugs.")
+		GAMEMODE:Notify(activator, 0, 4, "You have paid " .. CUR .. self.dt.price .. " for using drugs.")
+		GAMEMODE:Notify(Owner, 0, 4, "You have received " .. CUR .. self.dt.price .. " for selling drugs.")
 	end
 	DrugPlayer(caller)
 	self.CanUse = false
