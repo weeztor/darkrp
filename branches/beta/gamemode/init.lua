@@ -43,22 +43,23 @@ util.AddNetworkString("FPP_Groups")
 util.AddNetworkString("FPP_GroupMembers")
 util.AddNetworkString("DarkRP_keypadData")
 
-
-AddCSLuaFile("language_sh.lua")
-AddCSLuaFile("MakeThings.lua")
 AddCSLuaFile("addentities.lua")
-AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
-AddCSLuaFile("cl_vgui.lua")
-AddCSLuaFile("entity.lua")
-AddCSLuaFile("cl_helpvgui.lua")
-AddCSLuaFile("showteamtabs.lua")
-AddCSLuaFile("sh_commands.lua")
-AddCSLuaFile("DRPDermaSkin.lua")
-AddCSLuaFile("help.lua")
-AddCSLuaFile("sh_animations.lua")
-AddCSLuaFile("Workarounds.lua")
-AddCSLuaFile("cl_hud.lua")
+AddCSLuaFile("cl_init.lua")
+
+AddCSLuaFile("client/DRPDermaSkin.lua")
+AddCSLuaFile("client/helpvgui.lua")
+AddCSLuaFile("client/hud.lua")
+AddCSLuaFile("client/vgui.lua")
+AddCSLuaFile("client/showteamtabs.lua")
+
+AddCSLuaFile("shared/animations.lua")
+AddCSLuaFile("shared/commands.lua")
+AddCSLuaFile("shared/entity.lua")
+AddCSLuaFile("shared/help.lua")
+AddCSLuaFile("shared/language.lua")
+AddCSLuaFile("shared/MakeThings.lua")
+AddCSLuaFile("shared/Workarounds.lua")
 
 -- Earthquake Mod addon
 resource.AddFile("sound/earthquake.mp3")
@@ -74,24 +75,28 @@ DB = {}
 game.ConsoleCommand("sv_alltalk 0\n")
 
 include("_MySQL.lua")
-include("language_sh.lua")
-include("MakeThings.lua")
-include("shared.lua")
-include("help.lua")
-include("data.lua")
-include("admincc.lua")
-include("sh_commands.lua")
-include("chat.lua")
-include("player.lua")
-include("sv_gamemode_functions.lua")
-include("util.lua")
-include("votes.lua")
-include("questions.lua")
-include("entity.lua")
+
+include("server/chat.lua")
+include("server/admincc.lua")
+
+include("shared/animations.lua")
+include("shared/commands.lua")
+include("shared/entity.lua")
+
+include("shared/language.lua")
+include("shared/MakeThings.lua")
+include("shared/Workarounds.lua")
+
 include("addentities.lua")
-include("main.lua")
-include("sh_animations.lua")
-include("Workarounds.lua")
+include("shared.lua")
+
+include("server/data.lua")
+include("server/gamemode_functions.lua")
+include("server/main.lua")
+include("server/player.lua")
+include("server/questions.lua")
+include("server/util.lua")
+include("server/votes.lua")
 
 
 -- Falco's prop protection
@@ -105,14 +110,14 @@ AddCSLuaFile("FPP/sh_settings.lua")
 AddCSLuaFile("FPP/client/FPP_Menu.lua")
 AddCSLuaFile("FPP/client/FPP_HUD.lua")
 AddCSLuaFile("FPP/client/FPP_Buddies.lua")
-AddCSLuaFile("FAdmin_DarkRP.lua")
+AddCSLuaFile("shared/FAdmin_DarkRP.lua")
 
 include("FPP/sh_settings.lua")
 include("FPP/sh_CPPI.lua")
 include("FPP/server/FPP_Settings.lua")
 include("FPP/server/FPP_Core.lua")
 include("FPP/server/FPP_Antispam.lua")
-include("FAdmin_DarkRP.lua")
+include("shared/FAdmin_DarkRP.lua")
 
 /*---------------------------------------------------------------------------
 Loading modules
