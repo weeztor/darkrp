@@ -36,10 +36,10 @@ local function RP_ActualDoSay(ply, text, callback)
 
 	if GetConVarNumber("alltalk") == 1 then
 		for k,v in pairs(player.GetAll()) do
-			TalkToPerson(v, col, callback..ply:Name(), col2, text, ply)
+			GAMEMODE:TalkToPerson(v, col, callback..ply:Name(), col2, text, ply)
 		end
 	else
-		TalkToRange(ply, callback..ply:Name(), text, 250)
+		GAMEMODE:TalkToRange(ply, callback..ply:Name(), text, 250)
 	end
 	return ""
 end

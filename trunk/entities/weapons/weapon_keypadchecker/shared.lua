@@ -92,10 +92,10 @@ function SWEP:PrimaryAttack()
 
 	if class == "sent_keypad" then
 		data = getKeypadInfo(ent)
-		Notify(self.Owner, 1, 4, "This keypad controls "..#data / 2 .. " entities")
+		GAMEMODE:Notify(self.Owner, 1, 4, "This keypad controls "..#data / 2 .. " entities")
 	else
 		data = getEntityKeypad(ent)
-		Notify(self.Owner, 1, 4, "This entity is controlled by "..#data .. " keypads")
+		GAMEMODE:Notify(self.Owner, 1, 4, "This entity is controlled by "..#data .. " keypads")
 	end
 
 	datastream.StreamToClients(self.Owner, "DarkRP_keypadData", data)

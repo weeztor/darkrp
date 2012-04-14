@@ -139,6 +139,7 @@ function DB.Init()
 			DB.CreateJailPos()
 			return
 		end
+		jail_positions = nil
 		DB.Query("SELECT * FROM darkrp_jailpositions;", function(data)
 			DB.JailPos = data or {}
 		end)
@@ -150,6 +151,9 @@ function DB.Init()
 			DB.CreateSpawnPos()
 			return
 		end
+
+		team_spawn_positions = nil
+
 		DB.Query("SELECT * FROM darkrp_tspawns;", function(data)
 			DB.TeamSpawns = data or {}
 		end)
@@ -204,6 +208,7 @@ function DB.CreateSpawnPos()
 			DB.StoreTeamSpawnPos(v[2], Vector(v[3], v[4], v[5]))
 		end
 	end
+	team_spawn_positions = nil -- We're done with this now.
 end
 
 function DB.CreateZombiePos()
@@ -254,10 +259,10 @@ function DB.RetrieveRandomZombieSpawnPos()
 	if #zombieSpawns < 1 then return end
 	local r = string.Explode(" ", table.Random(zombieSpawns))
 	r = Vector(r[1], r[2], r[3])
-	if not IsEmpty(Vector(r.x, r.y, r.z)) then
+	if not GAMEMODE:IsEmpty(Vector(r.x, r.y, r.z)) then
 		local found = false
 		for i = 40, 200, 10 do
-			if IsEmpty(Vector(r.x, r.y, r.z) + Vector(i, 0, 0)) then
+			if GAMEMODE:IsEmpty(Vector(r.x, r.y, r.z) + Vector(i, 0, 0)) then
 				found = true
 				return Vector(r.x, r.y, r.z) + Vector(i, 0, 0)
 			end
@@ -265,7 +270,7 @@ function DB.RetrieveRandomZombieSpawnPos()
 
 		if not found then
 			for i = 40, 200, 10 do
-				if IsEmpty(Vector(r.x, r.y, r.z) + Vector(0, i, 0)) then
+				if GAMEMODE:IsEmpty(Vector(r.x, r.y, r.z) + Vector(0, i, 0)) then
 					found = true
 					return Vector(r.x, r.y, r.z) + Vector(0, i, 0)
 				end
@@ -274,7 +279,7 @@ function DB.RetrieveRandomZombieSpawnPos()
 
 		if not found then
 			for i = 40, 200, 10 do
-				if IsEmpty(Vector(r.x, r.y, r.z) + Vector(-i, 0, 0)) then
+				if GAMEMODE:IsEmpty(Vector(r.x, r.y, r.z) + Vector(-i, 0, 0)) then
 					found = true
 					return Vector(r.x, r.y, r.z) + Vector(-i, 0, 0)
 				end
@@ -283,7 +288,7 @@ function DB.RetrieveRandomZombieSpawnPos()
 
 		if not found then
 			for i = 40, 200, 10 do
-				if IsEmpty(Vector(r.x, r.y, r.z) + Vector(0, -i, 0)) then
+				if GAMEMODE:IsEmpty(Vector(r.x, r.y, r.z) + Vector(0, -i, 0)) then
 					found = true
 					return Vector(r.x, r.y, r.z) + Vector(0, -i, 0)
 				end
@@ -326,13 +331,13 @@ function DB.StoreJailPos(ply, addingPos)
 			DB.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");", function()
 				DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
 			end)
-			Notify(ply, 0, 4,  LANGUAGE.created_first_jailpos)
+			GAMEMODE:Notify(ply, 0, 4,  LANGUAGE.created_first_jailpos)
 		else
 			if addingPos then
 				DB.Query("INSERT INTO darkrp_jailpositions VALUES(" .. sql.SQLStr(map) .. ", " .. pos[1] .. ", " .. pos[2] .. ", " .. pos[3] .. ", " .. 0 .. ");", function()
 					DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
 				end)
-				Notify(ply, 0, 4,  LANGUAGE.added_jailpos)
+				GAMEMODE:Notify(ply, 0, 4,  LANGUAGE.added_jailpos)
 			else
 				DB.Begin()
 				DB.Query("DELETE FROM darkrp_jailpositions WHERE map = " .. sql.SQLStr(map) .. ";")
@@ -340,7 +345,7 @@ function DB.StoreJailPos(ply, addingPos)
 					DB.Query("SELECT * FROM darkrp_jailpositions;", function(jailpos) DB.JailPos = jailpos end)
 				end)
 				DB.Commit()
-				Notify(ply, 0, 5,  LANGUAGE.reset_add_jailpos)
+				GAMEMODE:Notify(ply, 0, 5,  LANGUAGE.reset_add_jailpos)
 			end
 		end
 	end)
@@ -520,9 +525,9 @@ function DB.ResetAllMoney(ply,cmd,args)
 		v:SetDarkRPVar("money", GetConVarNumber("startingmoney") or 500)
 	end
 	if ply:IsPlayer() then
-		NotifyAll(0,4, string.format(LANGUAGE.reset_money, ply:Nick()))
+		GAMEMODE:NotifyAll(0,4, string.format(LANGUAGE.reset_money, ply:Nick()))
 	else
-		NotifyAll(0,4, string.format(LANGUAGE.reset_money, "Console"))
+		GAMEMODE:NotifyAll(0,4, string.format(LANGUAGE.reset_money, "Console"))
 	end
 end
 concommand.Add("rp_resetallmoney", DB.ResetAllMoney)
@@ -697,6 +702,7 @@ function DB.LoadConsoles()
 				end
 			end
 		end
+		RP_ConsolePositions = nil
 	end)
 end
 

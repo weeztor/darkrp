@@ -134,27 +134,25 @@ function GM:HUDDrawTargetID()
     return false
 end
 
-function FindPlayer(info)
-	if not info or info == "" then return end
+function GM:FindPlayer(info)
+	if not info or info == "" then return nil end
 	local pls = player.GetAll()
 
-	-- Find by Index Number (status in console)
-	for k, v in pairs(pls) do
+	for k = 1, #pls do -- Proven to be faster than pairs loop.
+		local v = pls[k]
 		if tonumber(info) == v:UserID() then
 			return v
 		end
-	end
 
-	-- Find by RP Name
-	for k, v in pairs(pls) do
-		if string.find(string.lower(v.DarkRPVars.rpname or ""), string.lower(tostring(info))) ~= nil then
+		if info == v:SteamID() then
 			return v
 		end
-	end
 
-	-- Find by Partial Nick
-	for k, v in pairs(pls) do
-		if string.find(string.lower(v:Name()), string.lower(tostring(info))) ~= nil then
+		if string.find(string.lower(v:SteamName()), string.lower(tostring(info)), 1, true) ~= nil then
+			return v
+		end
+
+		if string.find(string.lower(v:Name()), string.lower(tostring(info)), 1, true) ~= nil then
 			return v
 		end
 	end
@@ -350,8 +348,8 @@ function GM:ChatTextChanged(text)
 		end
 		HearMode = "pm"
 		playercolors = {}
-		if plyname ~= "" and FindPlayer(plyname) then
-			playercolors = {FindPlayer(plyname)}
+		if plyname ~= "" and self:FindPlayer(plyname) then
+			playercolors = {self:FindPlayer(plyname)}
 		end
 	elseif string.sub(string.lower(text), 1, 5) == "/call" then
 		local plyname = string.sub(text, 7)
@@ -360,8 +358,8 @@ function GM:ChatTextChanged(text)
 		end
 		HearMode = "call"
 		playercolors = {}
-		if plyname ~= "" and FindPlayer(plyname) then
-			playercolors = {FindPlayer(plyname)}
+		if plyname ~= "" and self:FindPlayer(plyname) then
+			playercolors = {self:FindPlayer(plyname)}
 		end
 	elseif string.sub(string.lower(text), 1, 3) == "/g " then
 		HearMode = "group chat"

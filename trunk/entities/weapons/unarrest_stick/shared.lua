@@ -34,7 +34,7 @@ SWEP.Sound = Sound("weapons/stunstick/stunstick_swing1.wav")
 
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = 0
-SWEP.Primary.Automatic = false 
+SWEP.Primary.Automatic = false
 SWEP.Primary.Ammo = ""
 
 SWEP.Secondary.ClipSize = -1
@@ -61,7 +61,7 @@ function SWEP:Holster()
 end
 
 function SWEP:OnRemove()
-	if SERVER then 
+	if SERVER then
 		SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
 	end
 end
@@ -75,10 +75,10 @@ end)
 
 function SWEP:PrimaryAttack()
 	if CurTime() < self.NextStrike then return end
-	
+
 	self:SetWeaponHoldType("melee")
 	timer.Simple(0.3, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
-	
+
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Weapon:EmitSound(self.Sound)
 	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
@@ -86,7 +86,7 @@ function SWEP:PrimaryAttack()
 	self.NextStrike = CurTime() + .4
 
 	if CLIENT then return end
-	
+
 	local trace = self.Owner:GetEyeTrace()
 
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) or not trace.Entity.DarkRPVars.Arrested then
@@ -94,8 +94,8 @@ function SWEP:PrimaryAttack()
 	end
 
 	trace.Entity:Unarrest()
-	Notify(trace.Entity, 0, 4, "You were unarrested by " .. self.Owner:Nick())
-	
+	GAMEMODE:Notify(trace.Entity, 0, 4, "You were unarrested by " .. self.Owner:Nick())
+
 	if self.Owner.SteamName then
 		DB.Log(self.Owner:SteamName().." ("..self.Owner:SteamID()..") unarrested "..trace.Entity:Nick())
 	end

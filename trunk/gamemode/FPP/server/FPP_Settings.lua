@@ -688,10 +688,12 @@ hook.Add("InitPostEntity", "FPP_LoadSQL", function()
 	end)
 end)
 
-local assbackup = ASS_RegisterPlugin or function() end-- Suddenly after witing this code, ASS spamprotection and propprotection broke. I have no clue why. I guess you should use FPP then
-function ASS_RegisterPlugin(plugin, ...)
-	if plugin.Name == "Sandbox Spam Protection" or plugin.Name == "Sandbox Prop Protection" then
-		return
+local assbackup = ASS_RegisterPlugin -- Suddenly after witing this code, ASS spamprotection and propprotection broke. I have no clue why. I guess you should use FPP then
+if assbackup then
+	function ASS_RegisterPlugin(plugin, ...)
+		if plugin.Name == "Sandbox Spam Protection" or plugin.Name == "Sandbox Prop Protection" then
+			return
+		end
+		return assbackup(plugin, ...)
 	end
-	return assbackup(plugin, ...)
 end

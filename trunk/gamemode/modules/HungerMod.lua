@@ -1,17 +1,17 @@
-includeCS("HungerMod/cl_init.lua")
+GM:includeCS("HungerMod/cl_init.lua")
 
 include("HungerMod/player.lua")
 
 local HM = { }
-FoodItems = { }
+local FoodItems = { }
 
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
-	if not ply:IsAdmin() then Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "rp_hungerspeed")) return end
-	if not tonumber(args[1]) then Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "")) return end
+	if not ply:IsAdmin() then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "rp_hungerspeed")) return end
+	if not tonumber(args[1]) then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "")) return end
 	DB.SaveSetting("hungerspeed", tonumber(args[1]) / 10)
 end)
 
-function AddFoodItem(name, mdl, amount)
+local function AddFoodItem(name, mdl, amount)
 	FoodItems[name] = { model = mdl, amount = amount }
 end
 
@@ -65,12 +65,12 @@ local function BuyFood(ply, args)
 	local tr = util.TraceLine(trace)
 
 	if GetConVarNumber("hungermod") == 0 and ply:Team() ~= TEAM_COOK then
-		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "hungermod", ""))
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "hungermod", ""))
 		return ""
 	end
 
 	if ply:Team() ~= TEAM_COOK and team.NumPlayers(TEAM_COOK) > 0 then
-		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyfood", "cooks"))
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyfood", "cooks"))
 		return ""
 	end
 
@@ -80,10 +80,10 @@ local function BuyFood(ply, args)
 			if ply:CanAfford(cost) then
 				ply:AddMoney(-cost)
 			else
-				Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
+				GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
 				return ""
 			end
-			Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, k, tostring(cost)))
+			GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, k, tostring(cost)))
 			local SpawnedFood = ents.Create("spawned_food")
 			SpawnedFood.dt.owning_ent = ply
 			SpawnedFood.ShareGravgun = true

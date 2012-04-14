@@ -3,7 +3,6 @@ HelpLabels = { }
 
 local function addCategory(id, name)
 	table.insert(HelpCategories, {id = id, name = name})
-	print("Add category", name)
 	return id
 end
 
