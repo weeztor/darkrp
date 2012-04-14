@@ -1,18 +1,18 @@
 local HELP_CATEGORY_ADMINTOGGLE = 5
 local HELP_CATEGORY_ADMINCMD = 6
 
-ValueCmds = {}
+GM.ValueCmds = {}
 function GM:AddValueCommand(cmd, cfgvar, default)
-	ValueCmds[cmd] = {var = cfgvar, default = default}
+	self.ValueCmds[cmd] = {var = cfgvar, default = default}
 	CreateConVar(cfgvar, default, {FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE})
 	if SERVER then
 		concommand.Add(cmd, function(p, c, a) GAMEMODE:ccValueCommand(p, c, a) end)
 	end
 end
 
-ToggleCmds = {}
+GM.ToggleCmds = {}
 function GM:AddToggleCommand(cmd, cfgvar, default, superadmin)
-	ToggleCmds[cmd] = {var = cfgvar, superadmin = superadmin, default = default}
+	self.ToggleCmds[cmd] = {var = cfgvar, superadmin = superadmin, default = default}
 	CreateConVar(cfgvar, default, {FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE})
 	if SERVER then
 		concommand.Add(cmd, function(p, c, a) GAMEMODE:ccToggleCommand(p, c, a) end)
@@ -21,10 +21,10 @@ end
 CreateConVar("DarkRP_LockDown", 0, {FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}) -- Don't save this one!
 
 concommand.Add("rp_commands", function()
-	for k, v in SortedPairs(ToggleCmds) do
+	for k, v in SortedPairs(GAMEMODE.ToggleCmds) do
 		print(k)
 	end
-	for k,v in SortedPairs(ValueCmds) do
+	for k,v in SortedPairs(GAMEMODE.ValueCmds) do
 		print(k)
 	end
 end)
@@ -38,12 +38,12 @@ if SERVER then
 		end
 		GAMEMODE:Notify(ply, 0, 4, LANGUAGE.reset_settings)
 		local count = 0
-		for k,v in pairs(ToggleCmds) do
+		for k,v in pairs(GAMEMODE.ToggleCmds) do
 			count = count + 1
 			timer.Simple(count * 0.1, RunConsoleCommand, v.var, v.default)
 		end
 
-		for k,v in pairs(ValueCmds) do
+		for k,v in pairs(GAMEMODE.ValueCmds) do
 			count = count + 1
 			timer.Simple(count * 0.1, RunConsoleCommand, v.var, v.default)
 		end

@@ -2,7 +2,7 @@
 Concommands to change DarkRP ConVars
 ---------------------------------------------------------------------------*/
 function GM:ccValueCommand(ply, cmd, args)
-	local valuecmd = ValueCmds[cmd]
+	local valuecmd = self.ValueCmds[cmd]
 
 	if not valuecmd then return end
 
@@ -42,7 +42,7 @@ function GM:ccValueCommand(ply, cmd, args)
 end
 
 function GM:ccToggleCommand(ply, cmd, args)
-	local togglecmd = ToggleCmds[cmd]
+	local togglecmd = GAMEMODE.ToggleCmds[cmd]
 
 	if not togglecmd then return end
 

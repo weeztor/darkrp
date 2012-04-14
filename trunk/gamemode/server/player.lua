@@ -131,7 +131,7 @@ end
 
 function meta:CompleteSentence()
 	if not ValidEntity(self) then return end
-	for k,v in pairs(ToggleCmds) do
+	for k,v in pairs(GAMEMODE.ToggleCmds) do
 		local value = GetConVarNumber(v.var)
 		if value ~= v.default then
 			RunConsoleCommand(v.var, v.default)
@@ -139,7 +139,7 @@ function meta:CompleteSentence()
 		end
 	end
 
-	for k,v in pairs(ValueCmds) do
+	for k,v in pairs(GAMEMODE.ValueCmds) do
 		local value = GetConVarNumber(v.var)
 		if value ~= v.default then
 			RunConsoleCommand(v.var, v.default)
