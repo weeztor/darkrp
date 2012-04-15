@@ -20,7 +20,7 @@ function pmeta:Name()
 	if GetConVarNumber("allowrpnames") == 0 then
 		return self:SteamName()
 	end
-	return tostring(self.DarkRPVars.rpname) or self:SteamName()
+	return self.DarkRPVars.rpname and tostring(self.DarkRPVars.rpname) or self:SteamName()
 end
 
 pmeta.GetName = pmeta.Name
