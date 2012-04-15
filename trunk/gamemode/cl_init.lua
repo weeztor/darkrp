@@ -6,7 +6,6 @@ require("datastream")
 
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
-local LEFT = table.Copy(_G)
 CUR = "$"
 
 -- Make sure the client sees the RP name where they expect to see the name
@@ -686,12 +685,3 @@ FAdmin.StartHooks["DarkRP"] = function()
 	FAdmin.ScoreBoard.Player:AddActionButton("Unban from job", function() return "FAdmin/icons/changeteam", "FAdmin/icons/disable" end, Color(200, 0, 0, 255),
 	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", ply) end, teamban)
 end
-
-MsgN("GLOBAL VARIABLES!")
-	local RIGHT = table.Copy(_G)
-	for k,v in pairs(RIGHT) do
-		if LEFT[k] == nil then
-			print(k,v)
-		end
-	end
-MsgN("END OF GLOBAL VARIABLES")
