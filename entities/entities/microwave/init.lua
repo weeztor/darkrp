@@ -54,25 +54,25 @@ function ENT:Use(activator,caller)
 	local owner = self.Entity.dt.owning_ent
 	self.user = activator
 	if not activator:CanAfford(self:SalePrice(activator)) then
-		Notify(activator, 1, 3, "You do not have enough money to purchase food!")
+		GAMEMODE:Notify(activator, 1, 3, "You do not have enough money to purchase food!")
 		return ""
 	end
 	local diff = (self:SalePrice(activator) - self:SalePrice(owner))
 	if diff < 0 and not owner:CanAfford(math.abs(diff)) then
-		Notify(activator, 2, 3, "Microwave owner is too poor to subsidize this sale!")
+		GAMEMODE:Notify(activator, 2, 3, "Microwave owner is too poor to subsidize this sale!")
 		return ""
 	end
 	if activator.maxFoods and activator.maxFoods >= GetConVarNumber("maxfoods") then
-		Notify(activator, 1, 3, "You have reached the food limit.")
+		GAMEMODE:Notify(activator, 1, 3, "You have reached the food limit.")
 	elseif not self.Once then
 		self.Once = true
 		self.sparking = true
-		
+
 		local discounted = math.ceil(GetConVarNumber("microwavefoodcost") * 0.82)
 		local cash = self:SalePrice(activator)
 
 		activator:AddMoney(cash * -1)
-		Notify(activator, 0, 3, "You have purchased food for " .. CUR .. tostring(cash) .. "!")
+		GAMEMODE:Notify(activator, 0, 3, "You have purchased food for " .. CUR .. tostring(cash) .. "!")
 
 		if activator ~= owner then
 			local gain = 0
@@ -82,12 +82,12 @@ function ENT:Use(activator,caller)
 				gain = math.floor(self.dt.price - GetConVarNumber("microwavefoodcost"))
 			end
 			if gain == 0 then
-				Notify(owner, 2, 3, "You sold some food but made no profit!")
+				GAMEMODE:Notify(owner, 2, 3, "You sold some food but made no profit!")
 			else
 				owner:AddMoney(gain)
 				local word = "profit"
 				if gain < 0 then word = "loss" end
-				Notify(owner, 0, 3, "You made a " .. word .. " of " .. CUR .. tostring(math.abs(gain)) .. " by selling food!")
+				GAMEMODE:Notify(owner, 0, 3, "You made a " .. word .. " of " .. CUR .. tostring(math.abs(gain)) .. " by selling food!")
 			end
 		end
 		timer.Create(self.Entity:EntIndex() .. "food", 1, 1, self.createFood, self)
