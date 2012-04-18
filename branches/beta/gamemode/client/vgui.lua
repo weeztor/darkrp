@@ -252,12 +252,12 @@ local function ChangeJobVGUI()
 		F4Menu:SetVisible( true )
 		F4Menu:MakePopup( )
 		F4Menu:SetTitle("Options menu")
-		F4Tabs = {MoneyTab(), JobsTab(), EntitiesTab(), RPHUDTab()}
+		F4Tabs = {GAMEMODE:MoneyTab(), GAMEMODE:JobsTab(), GAMEMODE:EntitiesTab(), GAMEMODE:RPHUDTab()}
 		if LocalPlayer():IsAdmin() then
-			table.insert(F4Tabs, RPAdminTab())
+			table.insert(F4Tabs, GAMEMODE:RPAdminTab())
 		end
 		if LocalPlayer():IsSuperAdmin() then
-			table.insert(F4Tabs, RPLicenseWeaponsTab())
+			table.insert(F4Tabs, GAMEMODE:RPLicenseWeaponsTab())
 		end
 		F4Menu:SetSkin("DarkRP")
 	else

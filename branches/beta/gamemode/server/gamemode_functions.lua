@@ -10,19 +10,19 @@ function GM:PlayerSpawnProp(ply, model)
 	-- If prop spawning is enabled or the user has admin or prop privileges
 	local allowed = ((GetConVarNumber("propspawning") == 1 or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_prop")) or ply:IsAdmin()) and true) or false
 
-	if RPArrestedPlayers[ply:SteamID()] then return false end
+	if ply:isArrested() then return false end
 	model = string.gsub(tostring(model), "\\", "/")
-	if string.find(model,  "//") then Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model)
+	if string.find(model,  "//") then GAMEMODE:Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with an invalid path "..model) return false end
 
 	if not allowed then return false end
 
 	if GetConVarNumber("proppaying") == 1 then
 		if ply:CanAfford(GetConVarNumber("propcost")) then
-			Notify(ply, 0, 4, "Deducted " .. CUR .. GetConVarNumber("propcost"))
+			GAMEMODE:Notify(ply, 0, 4, "Deducted " .. CUR .. GetConVarNumber("propcost"))
 			ply:AddMoney(-GetConVarNumber("propcost"))
 		else
-			Notify(ply, 1, 4, "Need " .. CUR .. GetConVarNumber("propcost"))
+			GAMEMODE:Notify(ply, 1, 4, "Need " .. CUR .. GetConVarNumber("propcost"))
 			return false
 		end
 	end
@@ -31,7 +31,7 @@ function GM:PlayerSpawnProp(ply, model)
 end
 
 function GM:PlayerSpawnSENT(ply, model)
-	return self.BaseClass:PlayerSpawnSENT(ply, model) and not RPArrestedPlayers[ply:SteamID()]
+	return self.BaseClass:PlayerSpawnSENT(ply, model) and not ply:isArrested()
 end
 
 local function canSpawnWeapon(ply, class)
@@ -39,33 +39,33 @@ local function canSpawnWeapon(ply, class)
 	(GetConVarNumber("adminweapons") == 1 and ply:IsSuperAdmin()) then
 		return true
 	end
-	Notify(ply, 1, 4, "You can't spawn weapons")
+	GAMEMODE:Notify(ply, 1, 4, "You can't spawn weapons")
 
 	return false
 end
 
 function GM:PlayerSpawnSWEP(ply, class, model)
-	return canSpawnWeapon(ply, class) and self.BaseClass:PlayerSpawnSWEP(ply, class, model) and not RPArrestedPlayers[ply:SteamID()]
+	return canSpawnWeapon(ply, class) and self.BaseClass:PlayerSpawnSWEP(ply, class, model) and not ply:isArrested()
 end
 
 function GM:PlayerGiveSWEP(ply, class, model)
-	return canSpawnWeapon(ply, class) and self.BaseClass:PlayerGiveSWEP(ply, class, model) and not RPArrestedPlayers[ply:SteamID()]
+	return canSpawnWeapon(ply, class) and self.BaseClass:PlayerGiveSWEP(ply, class, model) and not ply:isArrested()
 end
 
 function GM:PlayerSpawnEffect(ply, model)
-	return self.BaseClass:PlayerSpawnEffect(ply, model) and not RPArrestedPlayers[ply:SteamID()]
+	return self.BaseClass:PlayerSpawnEffect(ply, model) and not ply:isArrested()
 end
 
 function GM:PlayerSpawnVehicle(ply, model)
-	return self.BaseClass:PlayerSpawnVehicle(ply, model) and not RPArrestedPlayers[ply:SteamID()]
+	return self.BaseClass:PlayerSpawnVehicle(ply, model) and not ply:isArrested()
 end
 
 function GM:PlayerSpawnNPC(ply, model)
-	return self.BaseClass:PlayerSpawnNPC(ply, model) and not RPArrestedPlayers[ply:SteamID()]
+	return self.BaseClass:PlayerSpawnNPC(ply, model) and not ply:isArrested()
 end
 
 function GM:PlayerSpawnRagdoll(ply, model)
-	return self.BaseClass:PlayerSpawnRagdoll(ply, model) and not RPArrestedPlayers[ply:SteamID()]
+	return self.BaseClass:PlayerSpawnRagdoll(ply, model) and not ply:isArrested()
 end
 
 function GM:PlayerSpawnedProp(ply, model, ent)
@@ -125,7 +125,7 @@ function GM:OnNPCKilled(victim, ent, weapon)
 		-- If we know by now who killed the NPC, pay them.
 		if ValidEntity(ent) and GetConVarNumber("npckillpay") > 0 then
 			ent:AddMoney(GetConVarNumber("npckillpay"))
-			Notify(ent, 0, 4, string.format(LANGUAGE.npc_killpay, CUR .. GetConVarNumber("npckillpay")))
+			GAMEMODE:Notify(ent, 0, 4, string.format(LANGUAGE.npc_killpay, CUR .. GetConVarNumber("npckillpay")))
 		end
 	end
 end
@@ -196,15 +196,15 @@ end
 
 function GM:CanPlayerSuicide(ply)
 	if ply.IsSleeping then
-		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
-	if RPArrestedPlayers[ply:SteamID()] then
-		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
+	if ply:isArrested() then
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
 	if tobool(GetConVarNumber("wantedsuicide")) and ply.DarkRPVars.wanted then
-		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "suicide"))
 		return false
 	end
 	return true
@@ -253,13 +253,13 @@ function GM:PlayerDeath(ply, weapon, killer)
 
 	if ply:InVehicle() then ply:ExitVehicle() end
 
-	if RPArrestedPlayers[ply:SteamID()] and not tobool(GetConVarNumber("respawninjail"))  then
+	if ply:isArrested() and not tobool(GetConVarNumber("respawninjail"))  then
 		-- If the player died in jail, make sure they can't respawn until their jail sentance is over
 		ply.NextSpawnTime = CurTime() + math.ceil(GetConVarNumber("jailtimer") - (CurTime() - ply.LastJailed)) + 1
 		for a, b in pairs(player.GetAll()) do
 			b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.died_in_jail, ply:Nick()))
 		end
-		Notify(ply, 4, 4, LANGUAGE.dead_in_jail)
+		GAMEMODE:Notify(ply, 4, 4, LANGUAGE.dead_in_jail)
 	else
 		-- Normal death, respawning.
 		ply.NextSpawnTime = CurTime() + math.Clamp(GetConVarNumber("respawntime"), 0, 3)
@@ -293,7 +293,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		end
 	end
 
-	if ValidEntity(ply) and (ply ~= killer or ply.Slayed) and not RPArrestedPlayers[ply:SteamID()] then
+	if ValidEntity(ply) and (ply ~= killer or ply.Slayed) and not ply:isArrested() then
 		ply:SetDarkRPVar("wanted", false)
 		ply.DeathPos = nil
 		ply.Slayed = false
@@ -324,7 +324,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
-	if RPArrestedPlayers[ply:SteamID()] then return false end
+	if ply:isArrested() then return false end
 	if ply:IsAdmin() and GetConVarNumber("AdminsCopWeapons") ==1 then return true end
 	if GetConVarNumber("license") == 1 and not ply.DarkRPVars.HasGunlicense and not ply:GetTable().RPLicenseSpawn then
 		if GetConVarNumber("licenseweapon_"..string.lower(weapon:GetClass())) == 1 or not weapon:IsWeapon() then
@@ -452,7 +452,7 @@ function GM:PlayerSelectSpawn(ply)
 
 
 	local CustomSpawnPos = DB.RetrieveTeamSpawnPos(ply)
-	if GetConVarNumber("customspawns") == 1 and not RPArrestedPlayers[ply:SteamID()] and CustomSpawnPos then
+	if GetConVarNumber("customspawns") == 1 and not ply:isArrested() and CustomSpawnPos then
 		POS = CustomSpawnPos[math.random(1, #CustomSpawnPos)]
 	end
 
@@ -461,14 +461,14 @@ function GM:PlayerSelectSpawn(ply)
 		POS = ply:GetTable().DeathPos
 	end
 
-	if RPArrestedPlayers[ply:SteamID()] then
+	if ply:isArrested() then
 		POS = DB.RetrieveJailPos() or ply:GetTable().DeathPos -- If we can't find a jail pos then we'll use where they died as a last resort
 	end
 
-	if not IsEmpty(POS) then
+	if not GAMEMODE:IsEmpty(POS) then
 		local found = false
 		for i = 40, 300, 15 do
-			if IsEmpty(POS + Vector(i, 0, 0)) then
+			if GAMEMODE:IsEmpty(POS + Vector(i, 0, 0)) then
 				POS = POS + Vector(i, 0, 0)
 				-- Yeah I found a nice position to put the player in!
 				found = true
@@ -477,7 +477,7 @@ function GM:PlayerSelectSpawn(ply)
 		end
 		if not found then
 			for i = 40, 300, 15 do
-				if IsEmpty(POS + Vector(0, i, 0)) then
+				if GAMEMODE:IsEmpty(POS + Vector(0, i, 0)) then
 					POS = POS + Vector(0, i, 0)
 					found = true
 					break
@@ -486,7 +486,7 @@ function GM:PlayerSelectSpawn(ply)
 		end
 		if not found then
 			for i = 40, 300, 15 do
-				if IsEmpty(POS + Vector(0, -i, 0)) then
+				if GAMEMODE:IsEmpty(POS + Vector(0, -i, 0)) then
 					POS = POS + Vector(0, -i, 0)
 					found = true
 					break
@@ -495,7 +495,7 @@ function GM:PlayerSelectSpawn(ply)
 		end
 		if not found then
 			for i = 40, 300, 15 do
-				if IsEmpty(POS + Vector(-i, 0, 0)) then
+				if GAMEMODE:IsEmpty(POS + Vector(-i, 0, 0)) then
 					POS = POS + Vector(-i, 0, 0)
 					-- Yeah I found a nice position to put the player in!
 					found = true
@@ -553,7 +553,7 @@ function GM:PlayerSpawn(ply)
 		GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("wspd"), GetConVarNumber("rspd") + 10)
 	end
 
-	if RPArrestedPlayers[ply:SteamID()] then
+	if ply:isArrested() then
 		GAMEMODE:SetPlayerSpeed(ply, GetConVarNumber("aspd"), GetConVarNumber("aspd"))
 	end
 
@@ -581,7 +581,7 @@ function GM:PlayerSpawn(ply)
 end
 
 function GM:PlayerLoadout(ply)
-	if RPArrestedPlayers[ply:SteamID()] then return end
+	if ply:isArrested() then return end
 
 	ply:GetTable().RPLicenseSpawn = true
 	timer.Simple(1, removelicense, ply)
@@ -670,10 +670,10 @@ function GM:PlayerDisconnected(ply)
 		end
 	end
 
-	vote.DestroyVotesWithEnt(ply)
+	GAMEMODE.vote.DestroyVotesWithEnt(ply)
 
 	if ply:Team() == TEAM_MAYOR and tobool(GetConVarNumber("DarkRP_LockDown")) then -- Stop the lockdown
-		UnLockdown(ply)
+		GAMEMODE:UnLockdown(ply)
 	end
 
 	if ValidEntity(ply.SleepRagdoll) then

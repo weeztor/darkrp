@@ -1,4 +1,4 @@
-function Notify(ply, msgtype, len, msg)
+function GM:Notify(ply, msgtype, len, msg)
 	if not ValidEntity(ply) then return end
 	umsg.Start("_Notify", ply)
 		umsg.String(msg)
@@ -7,7 +7,7 @@ function Notify(ply, msgtype, len, msg)
 	umsg.End()
 end
 
-function NotifyAll(msgtype, len, msg)
+function GM:NotifyAll(msgtype, len, msg)
 	umsg.Start("_Notify")
 		umsg.String(msg)
 		umsg.Short(msgtype)
@@ -15,13 +15,13 @@ function NotifyAll(msgtype, len, msg)
 	umsg.End()
 end
 
-function PrintMessageAll(msgtype, msg)
+function GM:PrintMessageAll(msgtype, msg)
 	for k, v in pairs(player.GetAll()) do
 		v:PrintMessage(msgtype, msg)
 	end
 end
 
-function TalkToRange(ply, PlayerName, Message, size)
+function GM:TalkToRange(ply, PlayerName, Message, size)
 	local ents = ents.FindInSphere(ply:EyePos(), size)
 	local col = team.GetColor(ply:Team())
 	local filter = RecipientFilter()
@@ -53,7 +53,7 @@ function TalkToRange(ply, PlayerName, Message, size)
 	umsg.End()
 end
 
-function TalkToPerson(receiver, col1, text1, col2, text2, sender)
+function GM:TalkToPerson(receiver, col1, text1, col2, text2, sender)
 	umsg.Start("DarkRP_Chat", receiver)
 		umsg.Short(col1.r)
 		umsg.Short(col1.g)
@@ -71,11 +71,10 @@ function TalkToPerson(receiver, col1, text1, col2, text2, sender)
 	umsg.End()
 end
 
-function FindPlayer(info)
+function GM:FindPlayer(info)
 	if not info or info == "" then return nil end
 	local pls = player.GetAll()
 
-	-- Find by Index Number (status in console)
 	for k = 1, #pls do -- Proven to be faster than pairs loop.
 		local v = pls[k]
 		if tonumber(info) == v:UserID() then
@@ -97,7 +96,7 @@ function FindPlayer(info)
 	return nil
 end
 
-function IsEmpty(vector)
+function GM:IsEmpty(vector)
 	local point = util.PointContents(vector)
 	local a = point ~= CONTENTS_SOLID
 	and point ~= CONTENTS_MOVEABLE

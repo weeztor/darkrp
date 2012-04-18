@@ -4,11 +4,8 @@ GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome 
 
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
-
+local LEFT = table.Copy(_G)
 CUR = "$"
-
-HelpLabels = { }
-HelpCategories = { }
 
 -- Make sure the client sees the RP name where they expect to see the name
 local pmeta = FindMetaTable("Player")
@@ -136,27 +133,25 @@ function GM:HUDDrawTargetID()
     return false
 end
 
-function FindPlayer(info)
-	if not info or info == "" then return end
+function GM:FindPlayer(info)
+	if not info or info == "" then return nil end
 	local pls = player.GetAll()
 
-	-- Find by Index Number (status in console)
-	for k, v in pairs(pls) do
+	for k = 1, #pls do -- Proven to be faster than pairs loop.
+		local v = pls[k]
 		if tonumber(info) == v:UserID() then
 			return v
 		end
-	end
 
-	-- Find by RP Name
-	for k, v in pairs(pls) do
-		if string.find(string.lower(v.DarkRPVars.rpname or ""), string.lower(tostring(info))) ~= nil then
+		if info == v:SteamID() then
 			return v
 		end
-	end
 
-	-- Find by Partial Nick
-	for k, v in pairs(pls) do
-		if string.find(string.lower(v:Name()), string.lower(tostring(info))) ~= nil then
+		if string.find(string.lower(v:SteamName()), string.lower(tostring(info)), 1, true) ~= nil then
+			return v
+		end
+
+		if string.find(string.lower(v:Name()), string.lower(tostring(info)), 1, true) ~= nil then
 			return v
 		end
 	end
@@ -352,8 +347,8 @@ function GM:ChatTextChanged(text)
 		end
 		HearMode = "pm"
 		playercolors = {}
-		if plyname ~= "" and FindPlayer(plyname) then
-			playercolors = {FindPlayer(plyname)}
+		if plyname ~= "" and self:FindPlayer(plyname) then
+			playercolors = {self:FindPlayer(plyname)}
 		end
 	elseif string.sub(string.lower(text), 1, 5) == "/call" then
 		local plyname = string.sub(text, 7)
@@ -362,8 +357,8 @@ function GM:ChatTextChanged(text)
 		end
 		HearMode = "call"
 		playercolors = {}
-		if plyname ~= "" and FindPlayer(plyname) then
-			playercolors = {FindPlayer(plyname)}
+		if plyname ~= "" and self:FindPlayer(plyname) then
+			playercolors = {self:FindPlayer(plyname)}
 		end
 	elseif string.sub(string.lower(text), 1, 3) == "/g " then
 		HearMode = "group chat"
@@ -702,3 +697,12 @@ FAdmin.StartHooks["DarkRP"] = function()
 	FAdmin.ScoreBoard.Player:AddActionButton("Unban from job", function() return "FAdmin/icons/changeteam", "FAdmin/icons/disable" end, Color(200, 0, 0, 255),
 	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", ply) end, teamban)
 end
+
+MsgN("GLOBAL VARIABLES!")
+	local RIGHT = table.Copy(_G)
+	for k,v in pairs(RIGHT) do
+		if LEFT[k] == nil then
+			print(k,v)
+		end
+	end
+MsgN("END OF GLOBAL VARIABLES")

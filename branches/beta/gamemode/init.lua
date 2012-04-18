@@ -32,8 +32,6 @@ meta.Nick = meta.Name
 meta.GetName = meta.Name
 -- End
 
-RPArrestedPlayers = {}
-
 DeriveGamemode("sandbox")
 
 util.AddNetworkString("DarkRP_InitializeVars")
@@ -87,8 +85,8 @@ include("shared/language.lua")
 include("shared/MakeThings.lua")
 include("shared/Workarounds.lua")
 
-include("addentities.lua")
 include("shared.lua")
+include("addentities.lua")
 
 include("server/data.lua")
 include("server/gamemode_functions.lua")
