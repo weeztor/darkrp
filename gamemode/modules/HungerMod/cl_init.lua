@@ -1,6 +1,6 @@
 -- copied from serverside
 FoodItems = { }
-function AddFoodItem(name, mdl, amount)
+local function AddFoodItem(name, mdl, amount)
 	FoodItems[name] = { model = mdl, amount = amount }
 end
 
@@ -20,12 +20,12 @@ local HELP_CATEGORY_HUNGERMOD = 4
 
 GAMEMODE:AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
 
-AddToggleCommand("rp_hungermod", "hungermod", 0)
-AddToggleCommand("rp_foodspawn", "foodspawn", 1)
-AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
-AddValueCommand("rp_foodcost", "foodcost", 15)
-AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
-AddValueCommand("rp_starverate", "starverate", 3)
+GAMEMODE:AddToggleCommand("rp_hungermod", "hungermod", 0)
+GAMEMODE:AddToggleCommand("rp_foodspawn", "foodspawn", 1)
+GAMEMODE:AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
+GAMEMODE:AddValueCommand("rp_foodcost", "foodcost", 15)
+GAMEMODE:AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
+GAMEMODE:AddValueCommand("rp_starverate", "starverate", 3)
 
 
 GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungermod <1 or 0> - Enable/disable hunger mod")
