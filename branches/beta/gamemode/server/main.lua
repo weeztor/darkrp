@@ -1762,14 +1762,26 @@ AddChatCommand("/g", GroupMsg)
 -- You can edit DarkRP but you HAVE to credit the original authors!
 -- You even have to credit all the previous authors when you rename the gamemode.
 local CreditsWait = true
-local function GetDarkRPAuthors(ply)
+local function GetDarkRPAuthors(ply, args)
+	local target = GAMEMODE:FindPlayer(args); -- Only send to one player. Prevents spamming
+	if not ValidEntity(target) then
+		GAMEMODE:Notify(ply, 1, 4, "Player does not exist")
+		return ""
+	end
+
 	if not CreditsWait then GAMEMODE:Notify(ply, 1, 4, "Wait with that") return "" end
 	CreditsWait = false
 	timer.Simple(60, function() CreditsWait = true end)--so people don't spam it
-	for k,v in pairs(player.GetAll()) do
-		GAMEMODE:TalkToPerson(v, Color(255,0,0,255), "CREDITS FOR DARKRP", Color(0,0,255,255),
-		"\nLightRP: Rick darkalonio\n\nDarkRP:\nRickster\nPicwizdan\nSibre\nPhilXYZ\n[GNC] Matt\nChromebolt A.K.A. unib5 (STEAM_0:1:19045957)\nFalco A.K.A. FPtje (STEAM_0:0:8944068)\nEusion (STEAM_0:0:20450406)\nDrakehawke (STEAM_0:0:22342869)", ply)
+
+	local rf = RecipientFilter()
+	rf:AddPlayer(target)
+	if ply ~= target then
+		rf:AddPlayer(ply)
 	end
+
+	umsg.Start("DarkRP_Credits", rf)
+	umsg.End()
+
 	return ""
 end
 AddChatCommand("/credits", GetDarkRPAuthors)
