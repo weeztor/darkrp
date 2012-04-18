@@ -147,7 +147,7 @@ GM:AddToggleCommand("rp_wantedsuicide", "wantedsuicide", 0)
 -- VALUE COMMANDS --
 -----------------------------------------------------------
 
-GM:AddValueCommand("rp_ammopistolcost", "ammopistolcost", 0)
+GM:AddValueCommand("rp_ammopistolcost", "ammopistolcost", 50)
 GM:AddValueCommand("rp_ammoriflecost", "ammoriflecost", 60)
 GM:AddValueCommand("rp_ammoshotguncost", "ammoshotguncost", 70)
 GM:AddValueCommand("rp_arrestspeed", "aspd", 120)
