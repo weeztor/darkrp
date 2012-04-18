@@ -1,5 +1,5 @@
-AddToggleCommand("rp_afk_demote", "afkdemote", 0)
-AddValueCommand("rp_afk_demotetime", "afkdemotetime", 120)
+GAMEMODE:AddToggleCommand("rp_afk_demote", "afkdemote", 0)
+GAMEMODE:AddValueCommand("rp_afk_demotetime", "afkdemotetime", 120)
 GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demote <1/0> - If set to 1, players who don't do anything for ".. GetConVarNumber("afkdemotetime") .." seconds will be demoted if they do not use AFK mode.")
 GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demotetime <time> - Sets the time a player has to be AFK for before they are demoted (in seconds).")
 
