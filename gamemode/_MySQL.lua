@@ -2,7 +2,7 @@ RP_MySQLConfig = {} -- Ignore this line
 --[[
 Welcome to MySQL for DarkRP!
 In this file you can find a manual for MySQL configuration and the MySQL config settings.
-]]
+ ]]
 
 
 RP_MySQLConfig.EnableMySQL = false -- Set to true if you want to use an external MySQL database, false if you want to use the built in SQLite database (garrysmod/sv.db) of Garry's mod.

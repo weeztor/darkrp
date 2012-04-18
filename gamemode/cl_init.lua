@@ -4,7 +4,6 @@ GM.Author = "By Rickster, Updated: Pcwizdan, Sibre, philxyz, [GNC] Matt, Chrome 
 
 DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
-local LEFT = table.Copy(_G)
 CUR = "$"
 
 -- Make sure the client sees the RP name where they expect to see the name
@@ -18,7 +17,7 @@ function pmeta:Name()
 	if GetConVarNumber("allowrpnames") == 0 then
 		return self:SteamName()
 	end
-	return tostring(self.DarkRPVars.rpname) or self:SteamName()
+	return self.DarkRPVars.rpname and tostring(self.DarkRPVars.rpname) or self:SteamName()
 end
 
 pmeta.GetName = pmeta.Name
@@ -637,6 +636,28 @@ function GM:InitPostEntity()
 	end)
 end
 
+-- Please only ADD to the credits
+-- Removing people from the credits will make at least one person very angry.
+local creds =
+[[LightRP:
+Rick darkalonio
+
+DarkRP:
+Rickster
+Picwizdan
+Sibre
+PhilXYZ
+[GNC] Matt
+Chromebolt A.K.A. unib5 (STEAM_0:1:19045957)
+Falco A.K.A. FPtje (STEAM_0:0:8944068)
+Eusion (STEAM_0:0:20450406)
+Drakehawke (STEAM_0:0:22342869)]]
+
+local function credits(um)
+	chat.AddText(Color(255,0,0,255), "CREDITS FOR DARKRP", Color(0,0,255,255), creds)
+end
+usermessage.Hook("DarkRP_Credits", credits)
+
 -- DarkRP plugin for FAdmin. It's this simple to make a plugin. If FAdmin isn't installed, this code won't bother anyone
 include(GM.FolderName.."/gamemode/shared/FAdmin_DarkRP.lua")
 
@@ -697,12 +718,3 @@ FAdmin.StartHooks["DarkRP"] = function()
 	FAdmin.ScoreBoard.Player:AddActionButton("Unban from job", function() return "FAdmin/icons/changeteam", "FAdmin/icons/disable" end, Color(200, 0, 0, 255),
 	function(ply) return FAdmin.Access.PlayerHasPrivilege(LocalPlayer(), "rp_commands", ply) end, teamban)
 end
-
-MsgN("GLOBAL VARIABLES!")
-	local RIGHT = table.Copy(_G)
-	for k,v in pairs(RIGHT) do
-		if LEFT[k] == nil then
-			print(k,v)
-		end
-	end
-MsgN("END OF GLOBAL VARIABLES")
