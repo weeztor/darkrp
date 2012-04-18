@@ -80,8 +80,8 @@ function SWEP:PrimaryAttack()
 	end
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.Owner:EmitSound(self.Sound)
-	
-	
+
+
 	local a = GetConVarNumber("copscanunfreeze") == 1
 	local d = GetConVarNumber("copscanunweld") == 1
 	local b = trace.Entity:GetClass() == "prop_physics"
@@ -106,7 +106,7 @@ function SWEP:PrimaryAttack()
 			-- rp_doorwarrants 0, allow warrantless entry
 			allowed = true
 		end
-		
+
 		if GetConVarNumber("doorwarrants") == 1 and trace.Entity.DoorData.GroupOwn and RPExtraTeamDoors[trace.Entity.DoorData.GroupOwn] then -- Be able to open the door if anyone is warranted
 			allowed = false
 			for k,v in pairs(player.GetAll()) do
@@ -122,7 +122,7 @@ function SWEP:PrimaryAttack()
 			trace.Entity:Fire("open", "", .6)
 			trace.Entity:Fire("setanimation", "open", .6)
 		else
-			Notify(self.Owner, 1, 5, "You need a warrant in order to be able to unlock this door.")
+			GAMEMODE:Notify(self.Owner, 1, 5, "You need a warrant in order to be able to unlock this door.")
 		end
 	elseif (trace.Entity:IsVehicle()) then
 		trace.Entity:Fire("unlock", "", .5)
@@ -138,18 +138,18 @@ function SWEP:PrimaryAttack()
 					timer.Simple(5, function() if trace.Entity.fadeActive then trace.Entity:fadeDeactivate() end end)
 				end
 			else
-				trace.Entity:GetPhysicsObject( ):EnableMotion( true ) 
+				trace.Entity:GetPhysicsObject( ):EnableMotion( true )
 			end
 		else
 			local FadingProp = (trace.Entity.isFadingDoor and "open fading door.") or "unfreeze this prop"
-			Notify(self.Owner, 1, 5,"You need a warrant in order to be able to "..FadingProp)
+			GAMEMODE:Notify(self.Owner, 1, 5,"You need a warrant in order to be able to "..FadingProp)
 		end
 	end
 	if d and b and self.Owner:EyePos():Distance(trace.HitPos) < 100 then
 		if c then
 			constraint.RemoveConstraints( trace.Entity, "Weld" )
-		else 
-			Notify(self.Owner, 1, 5,"You need a warrant in order to be able to unweld this prop.")
+		else
+			GAMEMODE:Notify(self.Owner, 1, 5,"You need a warrant in order to be able to unweld this prop.")
 		end
 	end
 	self.Owner:ViewPunch(Angle(-10, math.random(-5, 5), 0))

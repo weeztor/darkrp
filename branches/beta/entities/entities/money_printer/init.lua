@@ -41,11 +41,11 @@ function ENT:Destruct()
 	effectdata:SetOrigin(vPoint)
 	effectdata:SetScale(1)
 	util.Effect("Explosion", effectdata)
-	Notify(self.dt.owning_ent, 1, 4, "Your money printer has exploded!")
+	GAMEMODE:Notify(self.dt.owning_ent, 1, 4, "Your money printer has exploded!")
 end
 
 function ENT:BurstIntoFlames()
-	Notify(self.dt.owning_ent, 0, 4, "Your money printer is overheating!")
+	GAMEMODE:Notify(self.dt.owning_ent, 0, 4, "Your money printer is overheating!")
 	self.burningup = true
 	local burntime = math.random(8, 18)
 	self:Ignite(burntime, 0)
@@ -75,7 +75,7 @@ function ENT:CreateMoneybag()
 	local MoneyPos = self:GetPos()
 
 	if math.random(1, 22) == 3 then self:BurstIntoFlames() end
-	
+
 	local amount = GetConVarNumber("mprintamount")
 	if amount == 0 then
 		amount = 250

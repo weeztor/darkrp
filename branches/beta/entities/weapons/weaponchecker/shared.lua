@@ -137,7 +137,7 @@ function SWEP:Reload()
 	end
 
 	if not trace.Entity:GetTable().ConfiscatedWeapons then
-		Notify(self.Owner, 1, 4, trace.Entity:Nick() .. " had no weapons confisquated!")
+		GAMEMODE:Notify(self.Owner, 1, 4, trace.Entity:Nick() .. " had no weapons confisquated!")
 		return
 	else
 		for k,v in pairs(trace.Entity.ConfiscatedWeapons) do
@@ -150,7 +150,7 @@ function SWEP:Reload()
 			wep:SetClip2(v[7])
 
 		end
-		Notify(self.Owner, 2, 4, "Returned "..trace.Entity:Nick() .. "'s confisquated weapons!")
+		GAMEMODE:Notify(self.Owner, 2, 4, "Returned "..trace.Entity:Nick() .. "'s confisquated weapons!")
 		trace.Entity:GetTable().ConfiscatedWeapons = nil
 	end
 end

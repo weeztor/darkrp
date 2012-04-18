@@ -90,14 +90,14 @@ function SWEP:PrimaryAttack()
 	local trace = self.Owner:GetEyeTrace()
 
 	if ValidEntity(trace.Entity) and trace.Entity:IsPlayer() and trace.Entity:IsCP() and GetConVarNumber("cpcanarrestcp") == 0 then
-		Notify(self.Owner, 1, 5, "You can not arrest other CPs!")
+		GAMEMODE:Notify(self.Owner, 1, 5, "You can not arrest other CPs!")
 		return
 	end
 
 	if trace.Entity:GetClass() == "prop_ragdoll" then
 		for k,v in pairs(player.GetAll()) do
-			if trace.Entity.OwnerINT and trace.Entity.OwnerINT == v:EntIndex() then
-				KnockoutToggle(v, true)
+			if trace.Entity.OwnerINT and trace.Entity.OwnerINT == v:EntIndex() and GAMEMODE.KnockoutToggle then
+				GAMEMODE:KnockoutToggle(v, true)
 				return
 			end
 		end
@@ -112,19 +112,19 @@ function SWEP:PrimaryAttack()
 	end
 
 	if GetConVarNumber("needwantedforarrest") == 1 and not trace.Entity:IsNPC() and not trace.Entity.DarkRPVars.wanted then
-		Notify(self.Owner, 1, 5, "The player must be wanted in order to be able to arrest them.")
+		GAMEMODE:Notify(self.Owner, 1, 5, "The player must be wanted in order to be able to arrest them.")
 		return
 	end
 
 	if FAdmin and trace.Entity:IsPlayer() and trace.Entity:FAdmin_GetGlobal("fadmin_jailed") then
-		Notify(self.Owner, 1, 5, "You cannot arrest a player who has been jailed by an admin.")
+		GAMEMODE:Notify(self.Owner, 1, 5, "You cannot arrest a player who has been jailed by an admin.")
 		return
 	end
 
 	local jpc = DB.CountJailPos()
 
 	if not jpc or jpc == 0 then
-		Notify(self.Owner, 1, 4, "You cannot arrest people since there are no jail positions set!")
+		GAMEMODE:Notify(self.Owner, 1, 4, "You cannot arrest people since there are no jail positions set!")
 	else
 		-- Send NPCs to Jail
 		if trace.Entity:IsNPC() then
@@ -132,13 +132,13 @@ function SWEP:PrimaryAttack()
 		else
 			if not trace.Entity.Babygod then
 				trace.Entity:Arrest()
-				Notify(trace.Entity, 0, 20, "You've been arrested by " .. self.Owner:Nick())
+				GAMEMODE:Notify(trace.Entity, 0, 20, "You've been arrested by " .. self.Owner:Nick())
 
 				if self.Owner.SteamName then
 					DB.Log(self.Owner:SteamName().." ("..self.Owner:SteamID()..") arrested "..trace.Entity:Nick(), nil, Color(0, 255, 255))
 				end
 			else
-				Notify(self.Owner, 1, 4, "You can't arrest players who are spawning.")
+				GAMEMODE:Notify(self.Owner, 1, 4, "You can't arrest players who are spawning.")
 			end
 		end
 	end
