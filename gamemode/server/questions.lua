@@ -1,6 +1,6 @@
 local Question = { }
 local Questions = { }
-ques = { }
+GM.ques = {}
 
 local function ccDoQuestion(ply, cmd, args)
 	if not Questions[args[1]] then return end
@@ -15,10 +15,10 @@ function Question:HandleNewQuestion(ply, response)
 		self.yn = response
 	end
 
-	ques.HandleQuestionEnd(self.ID, false)
+	GAMEMODE.ques.HandleQuestionEnd(self.ID, false)
 end
 
-function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly, ...)
+function GM.ques:Create(question, quesid, ent, delay, callback, fromPly, toPly, ...)
 	local newques = { }
 	for k, v in pairs(Question) do newques[k] = v end
 
@@ -39,10 +39,10 @@ function ques:Create(question, quesid, ent, delay, callback, fromPly, toPly, ...
 		umsg.Float(delay)
 	umsg.End()
 
-	timer.Create(quesid .. "timer", delay, 1, ques.HandleQuestionEnd, quesid, true)
+	timer.Create(quesid .. "timer", delay, 1, GAMEMODE.ques.HandleQuestionEnd, quesid, true)
 end
 
-function ques.DestroyQuestionsWithEnt(ent)
+function GM.ques.DestroyQuestionsWithEnt(ent)
 	for k, v in pairs(Questions) do
 		if v.Ent == ent then
 			umsg.Start("KillQuestionVGUI", v.Ent)
@@ -53,9 +53,9 @@ function ques.DestroyQuestionsWithEnt(ent)
 	end
 end
 
-function ques.HandleQuestionEnd(id, TimeIsUp)
+function GM.ques.HandleQuestionEnd(id, TimeIsUp)
 	if not Questions[id] then return end
-	local q = Questions[id]	
+	local q = Questions[id]
 	q.Callback(q.yn, q.Ent, q.Initiator, q.Target, unpack(q.Args))
 	Questions[id] = nil
 end
