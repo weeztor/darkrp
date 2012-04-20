@@ -443,13 +443,13 @@ end
 concommand.Add("_sendDarkRPvars", SendDarkRPVars)
 
 function GM:PlayerSelectSpawn(ply)
-	local POS = self.BaseClass:PlayerSelectSpawn(ply)
-	if POS and POS.GetPos then
-		POS = POS:GetPos()
+	local spawn = self.BaseClass:PlayerSelectSpawn(ply)
+	local POS
+	if spawn.GetPos then
+		POS = spawn:GetPos()
 	else
 		POS = ply:GetPos()
 	end
-
 
 	local CustomSpawnPos = DB.RetrieveTeamSpawnPos(ply)
 	if GetConVarNumber("customspawns") == 1 and not ply:isArrested() and CustomSpawnPos then
@@ -465,50 +465,39 @@ function GM:PlayerSelectSpawn(ply)
 		POS = DB.RetrieveJailPos() or ply:GetTable().DeathPos -- If we can't find a jail pos then we'll use where they died as a last resort
 	end
 
-	if not GAMEMODE:IsEmpty(POS) then
-		local found = false
-		for i = 40, 300, 15 do
-			if GAMEMODE:IsEmpty(POS + Vector(i, 0, 0)) then
-				POS = POS + Vector(i, 0, 0)
-				-- Yeah I found a nice position to put the player in!
-				found = true
-				break
+	if not GAMEMODE:IsEmpty(POS, {ply}) then
+		for i = 40, 600, 30 do
+			if GAMEMODE:IsEmpty(POS + Vector(i, 0, 0), {ply}) and GAMEMODE:IsEmpty(POS + Vector(i + 20, 0, 0), {ply}) then
+				return spawn, POS + Vector(i, 0, 0)
 			end
 		end
-		if not found then
-			for i = 40, 300, 15 do
-				if GAMEMODE:IsEmpty(POS + Vector(0, i, 0)) then
-					POS = POS + Vector(0, i, 0)
-					found = true
-					break
-				end
+
+
+		for i = 40, 600, 30 do
+			if GAMEMODE:IsEmpty(POS + Vector(0, i, 0), {ply}) and GAMEMODE:IsEmpty(POS + Vector(0, i + 20, 0), {ply}) then
+				return spawn, POS + Vector(0, i, 0)
 			end
 		end
-		if not found then
-			for i = 40, 300, 15 do
-				if GAMEMODE:IsEmpty(POS + Vector(0, -i, 0)) then
-					POS = POS + Vector(0, -i, 0)
-					found = true
-					break
-				end
+
+
+		for i = 40, 600, 30 do
+			if GAMEMODE:IsEmpty(POS + Vector(0, -i, 0), {ply}) and GAMEMODE:IsEmpty(POS + Vector(0, -i - 20, 0), {ply}) then
+				return spawn, POS + Vector(0, -i, 0)
 			end
 		end
-		if not found then
-			for i = 40, 300, 15 do
-				if GAMEMODE:IsEmpty(POS + Vector(-i, 0, 0)) then
-					POS = POS + Vector(-i, 0, 0)
-					-- Yeah I found a nice position to put the player in!
-					found = true
-					break
-				end
+
+
+		for i = 40, 600, 30 do
+			if GAMEMODE:IsEmpty(POS + Vector(-i, 0, 0), {ply}) and GAMEMODE:IsEmpty(POS + Vector(-i - 20, 0, 0), {ply}) then
+				return spawn, POS + Vector(-i, 0, 0)
 			end
 		end
-		-- If you STILL can't find it, you'll just put him on top of the other player lol
-		if not found then
-			POS = POS + Vector(0,0,70)
-		end
+
+		-- last resort
+		return spawn, POS + Vector(0,0,70)
 	end
-	return self.BaseClass:PlayerSelectSpawn(ply), POS
+
+	return spawn, POS
 end
 
 function GM:PlayerSpawn(ply)
@@ -537,13 +526,13 @@ function GM:PlayerSpawn(ply)
 		ply:GodEnable()
 		local c = ply:GetColor()
 		ply:SetColor(c.r, c.g, c.b, 100)
-		ply:SetCollisionGroup(  COLLISION_GROUP_WORLD )
+		ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
 		timer.Simple(GetConVarNumber("babygodtime"), function()
 			if not ValidEntity(ply) then return end
 			ply.Babygod = false
 			ply:SetColor(c.r, c.g, c.b, c.a)
 			ply:GodDisable()
-			ply:SetCollisionGroup( COLLISION_GROUP_PLAYER )
+			ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
 		end)
 	end
 	ply.IsSleeping = false
@@ -571,13 +560,13 @@ function GM:PlayerSpawn(ply)
 		ply:ChangeTeam(TEAM_CITIZEN)
 	end
 
+	local _, pos = self:PlayerSelectSpawn(ply)
+	ply:SetPos(pos)
+
 	ply:GetTable().StartHealth = ply:Health()
 	gamemode.Call("PlayerSetModel", ply)
 	gamemode.Call("PlayerLoadout", ply)
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned")
-
-	local _, pos = self:PlayerSelectSpawn(ply)
-	ply:SetPos(pos)
 end
 
 function GM:PlayerLoadout(ply)
