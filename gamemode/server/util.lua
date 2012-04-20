@@ -90,18 +90,22 @@ function GM:FindPlayer(info)
 	return nil
 end
 
-function GM:IsEmpty(vector)
+function GM:IsEmpty(vector, ignore)
+	ignore = ignore or {}
+
 	local point = util.PointContents(vector)
 	local a = point ~= CONTENTS_SOLID
-	and point ~= CONTENTS_MOVEABLE
-	and point ~= CONTENTS_LADDER
-	and point ~= CONTENTS_PLAYERCLIP
-	and point ~= CONTENTS_MONSTERCLIP
+		and point ~= CONTENTS_MOVEABLE
+		and point ~= CONTENTS_LADDER
+		and point ~= CONTENTS_PLAYERCLIP
+		and point ~= CONTENTS_MONSTERCLIP
+
 	local b = true
 
 	for k,v in pairs(ents.FindInSphere(vector, 35)) do
-		if v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics" then
+		if (v:IsNPC() or v:IsPlayer() or v:GetClass() == "prop_physics") and not table.HasValue(ignore, v) then
 			b = false
+			break
 		end
 	end
 	return a and b
