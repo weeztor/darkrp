@@ -5,7 +5,7 @@ hook.Add("PlayerSay", "FAdminChatCommands", function(ply, text, Team, dead)
 		if not TExplode then return end
 
 		for k,v in pairs(TExplode) do
-			if string.sub(v, -1) == "," then
+			if string.sub(v, -1) == "," and TExplode[k+1] then
 				TExplode[k] = TExplode[k] .. TExplode[k+1]
 				table.remove(TExplode, k+1)
 			end
