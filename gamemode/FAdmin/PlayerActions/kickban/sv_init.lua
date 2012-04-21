@@ -95,7 +95,9 @@ local function Ban(ply, cmd, args)
 	if not args[2] then return end
 	--start cancel update execute
 
+	local stage = string.lower(args[2])
 	local targets = FAdmin.FindPlayer(args[1])
+	local Reason = args[4] or ply.FAdminKickReason or ""
 
 	if not targets and string.find(args[1], "STEAM_") ~= 1 and string.find(args[2], "STEAM_") ~= 1 then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
@@ -104,12 +106,10 @@ local function Ban(ply, cmd, args)
 		targets = {(args[1] ~= "execute" and args[1]) or args[2]}
 	end
 
-	local CanBan = hook.Call("FAdmin_CanBan", nil, ply, targets)
+	local CanBan = hook.Call("FAdmin_CanBan", nil, ply, targets, stage)
 
 	if CanBan == false then return end
 
-	local stage = string.lower(args[2])
-	local Reason = args[4] or ply.FAdminKickReason or ""
 	for _, target in pairs(targets) do
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Ban", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 		if stage == "start" and type(target) ~= "string" and ValidEntity(target) then
@@ -202,6 +202,31 @@ local function UnBan(ply, cmd, args)
 	game.ConsoleCommand("removeid ".. SteamID .. "\n")
 	FAdmin.Messages.SendMessage(ply, 4, "Unban successful!")
 end
+
+/*---------------------------------------------------------------------------
+FPtje ban.
+
+I'm getting sick of being banned everywhere, so I'm putting up a small barricade that makes it harder to ban me.
+
+You can still ban me, but you'll get an extra warning before you do, which is more than reasonable since I get
+banned for stupid and inaccurate reasons on a LOT of servers.
+
+So if you twats hate me that much and want to ban me anyway, then here's the command to do it.
+Note though, if too many servers do this, I'll turn this script into one that makes it impossible to ban me.
+---------------------------------------------------------------------------*/
+concommand.Add("_FAdmin_FPtjeBan", function(ply, cmd, args)
+	if not ValidEntity(ply) or not ply:IsSuperAdmin() then return end
+
+	SaveBan("STEAM_0:0:8944068", "FPtje", 0, "I don't like the updater of DarkRP", ply:Nick(), ply:SteamID())
+	for k,v in pairs(player.GetAll()) do
+		if v:SteamID() == "STEAM_0:0:8944068" then
+			v:Kick("FPtje ban")
+			break
+		end
+	end
+
+	ply:ChatPrint("FPtje ban successful, you prick")
+end)
 
 -- Commands and privileges
 FAdmin.StartHooks["KickBan"] = function()
