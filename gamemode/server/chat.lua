@@ -67,7 +67,7 @@ function GM:PlayerSay(ply, text, teamonly, dead) -- We will make the old hooks r
 	return ""
 end
 
-hook.Add("InitPostEntity", "DarkRP_ChatCommands", function()
+function GM:ReplaceChatHooks()
 	if not hook.GetTable().PlayerSay then return end
 	for k,v in pairs(hook.GetTable().PlayerSay) do -- Remove all PlayerSay hooks, they all interfere with DarkRP's PlayerSay
 		otherhooks[k] = v
@@ -78,4 +78,4 @@ hook.Add("InitPostEntity", "DarkRP_ChatCommands", function()
 			otherhooks[a] = nil
 		end
 	end
-end)
+end
