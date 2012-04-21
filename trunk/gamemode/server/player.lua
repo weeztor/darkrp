@@ -117,6 +117,37 @@ function meta:ResetDMCounter()
 	return true
 end
 
+function meta:InitiateTax()
+	local taxtime = GetConVarNumber("wallettaxtime")
+	timer.Create("rp_tax_"..self:UniqueID(), taxtime ~= 0 and taxtime or 600, 0, function(ply, timerName)
+		if not ValidEntity(ply) then
+			timer.Destroy(timerName)
+			return
+		end
+
+		if not tobool(GetConVarNumber("wallettax")) then
+			return -- Don't remove the hook in case it's turned on afterwards.
+		end
+
+		local money = ply.DarkRPVars.money
+		local mintax = GetConVarNumber("wallettaxmin") / 100
+		local maxtax = GetConVarNumber("wallettaxmax") / 100 -- convert to decimals for percentage calculations
+		local startMoney = GetConVarNumber("startingmoney")
+
+		if money < (startMoney * 2) then
+			return -- Don't tax players if they have less than twice the starting amount
+		end
+
+		-- Variate the taxes between twice the starting money ($1000 by default) and 200 - 2 times the starting money (100.000 by default)
+		local tax = (money - (startMoney * 2)) / (startMoney * 198)
+			  tax = mathx.Min(maxtax, mintax + (maxtax - mintax) * tax)
+
+		ply:AddMoney(-tax * money)
+		GAMEMODE:Notify(ply, 3, 7, "Tax day! "..math.Round(tax * 100, 3) .. "% of your income was taken!")
+
+	end, self, "rp_tax_"..self:UniqueID())
+end
+
 function meta:TeamUnBan(Team)
 	if not ValidEntity(self) then return end
 	if not self.bannedfrom then self.bannedfrom = {} end
@@ -174,6 +205,8 @@ function meta:NewData()
 	timer.Simple(.01, ModuleDelay, self)
 
 	self:RestoreRPName()
+
+	self:InitiateTax()
 
 	DB.StoreSalary(self, GetConVarNumber("normalsalary"))
 
