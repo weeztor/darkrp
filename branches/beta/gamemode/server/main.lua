@@ -1301,13 +1301,6 @@ local function MakeACall(ply,args)
 end
 AddChatCommand("/call", MakeACall)
 
-local function HangUp(ply, code)
-	if code == IN_USE and ValidEntity(ply.DarkRPVars.phone) then
-		ply.DarkRPVars.phone:HangUp()
-	end
-end
-hook.Add("KeyPress", "HangUpPhone", HangUp)
-
 /*---------------------------------------------------------
  Jobs
  ---------------------------------------------------------*/

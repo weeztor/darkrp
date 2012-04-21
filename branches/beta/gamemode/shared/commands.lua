@@ -135,6 +135,7 @@ GM:AddToggleCommand("rp_showdeaths", "deathnotice", 1)
 GM:AddToggleCommand("rp_showjob", "jobtag", 1)
 GM:AddToggleCommand("rp_showname", "nametag", 1)
 GM:AddToggleCommand("rp_strictsuicide", "strictsuicide", 0)
+GM:AddToggleCommand("rp_tax", "wallettax", 0)
 GM:AddToggleCommand("rp_telefromjail", "telefromjail", 1)
 GM:AddToggleCommand("rp_teletojail", "teletojail", 1)
 GM:AddToggleCommand("rp_toolgun", "toolgun", 1)
@@ -187,6 +188,9 @@ GM:AddValueCommand("rp_ShipmentSpawnTime", "ShipmentSpamTime", 3)
 GM:AddValueCommand("rp_shipmenttime", "shipmentspawntime", 10)
 GM:AddValueCommand("rp_startinghealth", "startinghealth", 100)
 GM:AddValueCommand("rp_startingmoney", "startingmoney", 500)
+GM:AddValueCommand("rp_taxtime", "wallettaxtime", 600)
+GM:AddValueCommand("rp_taxmin", "wallettaxmin", 1)
+GM:AddValueCommand("rp_taxmax", "wallettaxmax", 5)
 GM:AddValueCommand("rp_vehiclecost", "vehiclecost", 40)
 GM:AddValueCommand("rp_walkspeed", "wspd", 160)
 GM:AddValueCommand("rp_wantedtime", "wantedtime", 120)
@@ -356,16 +360,3 @@ function GM:AddTeamCommands(CTeam, max)
         end
 	end)
 end
-
-hook.Add("InitPostEntity", "FAdmin_DarkRP_privs", function()
-	if not FAdmin or not FAdmin.StartHooks then return end
-	FAdmin.Access.AddPrivilege("rp_commands", 2)
-	FAdmin.Access.AddPrivilege("rp_tool", 2)
-	FAdmin.Access.AddPrivilege("rp_phys", 2)
-	FAdmin.Access.AddPrivilege("rp_prop", 2)
-	for k,v in pairs(RPExtraTeams) do
-		if v.Vote then
-			FAdmin.Access.AddPrivilege("rp_"..v.command, (v.admin or 0) + 2) -- Add privileges for the teams that are voted for
-		end
-	end
-end)

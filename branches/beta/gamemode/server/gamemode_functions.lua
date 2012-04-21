@@ -132,6 +132,11 @@ end
 
 function GM:KeyPress(ply, code)
 	self.BaseClass:KeyPress(ply, code)
+
+	-- Hanging up from a call
+	if code == IN_USE and ValidEntity(ply.DarkRPVars.phone) then
+		ply.DarkRPVars.phone:HangUp()
+	end
 end
 
 local function IsInRoom(listener, talker) -- IsInRoom function to see if the player is in the same room.
@@ -740,12 +745,15 @@ function GM:InitPostEntity()
 		end
 		DB.Init()
 	end)
+
 	for k, v in pairs( ents.GetAll() ) do
 		local class = v:GetClass()
 		if GetConVarNumber("unlockdoorsonstart") == 1 and v:IsDoor() then
 			v:Fire("unlock", "", 0)
 		end
     end
+
+    self:ReplaceChatHooks()
 end
 
 function GM:PlayerLeaveVehicle(ply, vehicle)
