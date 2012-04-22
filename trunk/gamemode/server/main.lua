@@ -1191,24 +1191,19 @@ local function BuyAmmo(ply, args)
 		return ""
 	end
 
-	if args ~= "rifle" and args ~= "shotgun" and args ~= "pistol" then
+	if not table.HasValue(GAMEMODE:GetAmmoTypes(), args) then
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unavailable, "ammo"))
 	end
 
-	if not ply:CanAfford(GetConVarNumber("ammo" .. args .. "cost")) then
+	if not ply:CanAfford(GetConVarNumber("ammocost")) then
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "ammo"))
 		return ""
 	end
 
-	if args == "rifle" then
-		ply:GiveAmmo(80, "smg1")
-	elseif args == "shotgun" then
-		ply:GiveAmmo(50, "buckshot")
-	elseif args == "pistol" then
-		ply:GiveAmmo(50, "pistol")
-	end
+	ply:GiveAmmo(50, args)
 
-	local cost = GetConVarNumber("ammo" .. args .. "cost")
+
+	local cost = GetConVarNumber("ammocost")
 
 	GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR..tostring(cost)))
 	ply:AddMoney(-cost)

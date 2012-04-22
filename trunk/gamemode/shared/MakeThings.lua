@@ -56,6 +56,8 @@ function AddCustomShipment(name, model, entity, price, Amount_of_guns_in_one_shi
 	local shipmentmodel = shipmodel or "models/Items/item_item_crate.mdl"
 	table.insert(CustomShipments, {name = name, model = model, entity = entity, price = price, weight = 5, amount = Amount_of_guns_in_one_shipment, seperate = Sold_seperately, pricesep = price_seperately, noship = noshipment, allowed = AllowedClasses, shipmodel = shipmentmodel, customCheck = CustomCheck})
 	util.PrecacheModel(model)
+
+	GM:AddAmmoType(entity)
 end
 
 function AddCustomVehicle(Name_of_vehicle, model, price, Jobs_that_can_buy_it)
@@ -93,7 +95,7 @@ function AddEntity(name, entity, model, price, max, command, classes, CustomChec
 		classes = {classes}
 	end
 	table.insert(DarkRPEntities, {name = name, ent = entity, model = model, price = price, max = max, cmd = command, allowed = classes, customCheck = CustomCheck})
-	AddEntityCommands(name, entity, max, price)
+	GM:AddEntityCommands(name, entity, max, price)
 end
 
 DarkRPAgendas = {}
