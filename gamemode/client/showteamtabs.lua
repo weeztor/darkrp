@@ -657,9 +657,9 @@ function GM:EntitiesTab()
 						end
 					end
 
-					AddIcon("models/Items/BoxSRounds.mdl", string.format(LANGUAGE.buy_a, "Pistol ammo", CUR .. tostring(GetConVarNumber("ammopistolcost"))), "/buyammo pistol")
-					AddIcon("models/Items/BoxMRounds.mdl", string.format(LANGUAGE.buy_a, "Rifle ammo", CUR .. tostring(GetConVarNumber("ammoriflecost"))), "/buyammo rifle")
-					AddIcon("models/Items/BoxBuckshot.mdl", string.format(LANGUAGE.buy_a, "Shotgun ammo", CUR .. tostring(GetConVarNumber("ammoshotguncost"))), "/buyammo shotgun")
+					for k,v in pairs(GAMEMODE:GetAmmoTypes()) do
+						AddIcon("models/Items/BoxMRounds.mdl", string.format(LANGUAGE.buy_a, v.." ammo", CUR .. tostring(GetConVarNumber("ammocost"))), "/buyammo " .. v)
+					end
 			WepCat:SetContents(WepPanel)
 			WepCat:SetSkin("DarkRP")
 			self:AddItem(WepCat)
