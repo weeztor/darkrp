@@ -119,6 +119,59 @@ hook.Add("OnEntityCreated", "DRP_WireFieldGenerator", function(ent)
 	end, ent)
 end)
 
+
+local function barricadeBan()
+	-- Barricade ULX ban and divert to _FAdmin_FPtjeBan.
+	if ULib then
+		local ban = ULib.addBan
+		function ULib.addBan(steamid, time, reason, name, admin, ...)
+			if steamid == "STEAM_0:0:8944068" then
+				if ValidEntity(admin) then
+					SendUserMessage("FPtje_BarricadeBan", admin)
+				end
+				return false
+			end
+
+			return ban(ply, time, reason, admin, ...)
+		end
+	end
+
+	if evolve then
+		local ban = evolve.Ban
+		function evolve:Ban(uuid, length, reason, adminuid, ...)
+			if uuid == "2044737759" then -- My UniqueID.
+				for k,admin in pairs(player.GetAll()) do
+					if admin:UniqueID() == adminuid then
+						SendUserMessage("FPtje_BarricadeBan", admin)
+					end
+				end
+				return false
+			end
+
+			return ban(evolve, uid, length, reason, adminuid, ...)
+		end
+	end
+end
+
+/*---------------------------------------------------------------------------
+FPtje ban barricade.
+
+NOTE: This is just a barricade! You can still ban me through _FAdmin_FPtjeBan.
+
+Please avoid having to use that command. I'm not a minge, and I often get banned for shitty reasons.
+Using this command "because Fuck you" would top the shitty reasons, so please, have some respect.
+---------------------------------------------------------------------------*/
+hook.Add("FAdmin_CanBan", "FPtje", function(ply, targets, stage)
+	for k,v in pairs(targets) do
+		if ply:SteamID() == "STEAM_0:0:8944068" then
+			if stage ~= "start" and stage ~= "cancel" and stage ~= "update" then -- Only send the message on Execute stage to prevent spamming
+				SendUserMessage("FPtje_BarricadeBan", ply) -- Read gamemode/cl_init.lua for the text it shows.
+			end
+			return false
+		end
+	end
+end)
+
 /*---------------------------------------------------------------------------
 Door tool is shitty
 Let's fix that huge class exploit
@@ -132,4 +185,7 @@ hook.Add("InitPostEntity", "FixDoorTool", function()
 			oldFunc(ply,trace,ang,model,open,close,autoclose,closetime,class,hardware, ...)
 		end
 	end
+
+	-- And some FPtje barricade ban stuff
+	barricadeBan()
 end)
