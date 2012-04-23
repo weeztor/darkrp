@@ -647,6 +647,23 @@ local function credits(um)
 end
 usermessage.Hook("DarkRP_Credits", credits)
 
+local barricadeFPtjeBanMessage =
+[[You're trying to ban the official updater of DarkRP.
+You are most likely to be mistaken about me.
+I am not a MingeBag. I am not a malevolent player.
+The worst thing I might do is fly around or killing real minges.
+Please try to talk to me first about the issue.
+If you REALLY want to ban me, which I (obviously) highly disrecommend,
+have a superadmin enter _FAdmin_FPtjeBan in console. It'll make me really sad though...]]
+
+local function barricadeBan()
+	chat.AddText(Color(0,0,255), "Banning FPtje ", Color(255,0,0), "Failed.")
+	chat.AddText(Color(0,0,255), "Please read the ", Color(255,0,0), "console.")
+
+	print("\n\n\n\n\n" .. barricadeFPtjeBanMessage .. "\n\n\n\n\n") -- The enters make it easier to find.
+end
+usermessage.Hook("FPtje_BarricadeBan", barricadeBan)
+
 -- DarkRP plugin for FAdmin. It's this simple to make a plugin. If FAdmin isn't installed, this code won't bother anyone
 include(GM.FolderName.."/gamemode/shared/FAdmin_DarkRP.lua")
 
