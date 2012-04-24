@@ -16,7 +16,7 @@ function SWEP:DrawHUD()
 
 	local entMessages = {}
 	for k,v in pairs(DrawData or {}) do
-		if not ValidEntity(v.ent) then continue end
+		if not ValidEntity(v.ent) or not ValidEntity(v.original) then continue end
 		entMessages[v.ent] = (entMessages[v.ent] or 0) + 1
 		local pos = v.ent:LocalToWorld(v.ent:OBBCenter()):ToScreen()
 
