@@ -43,7 +43,7 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
 
 function SWEP:Deploy()
-	if CLIENT then return end
+	if CLIENT or not ValidEntity(self:GetOwner()) then return end
 	self:SetColor(0,0,255,255)
 	self:SetMaterial("models/shiny")
 	SendUserMessage("StunStickColour", self:GetOwner(), 0,0,255, "models/shiny")
@@ -51,13 +51,13 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
-	if CLIENT then return end
+	if CLIENT or not ValidEntity(self:GetOwner()) then return end
 	SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
 	return true
 end
 
 function SWEP:OnRemove()
-	if SERVER then
+	if SERVER and ValidEntity(self:GetOwner()) then
 		SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
 	end
 end
