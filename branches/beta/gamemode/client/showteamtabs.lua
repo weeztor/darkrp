@@ -269,7 +269,7 @@ local function MobOptns()
 	return MobCat
 end
 
-function MoneyTab()
+function GM:MoneyTab()
 	local FirstTabPanel = vgui.Create("DPanelList")
 	FirstTabPanel:EnableVerticalScrollbar( true )
 		function FirstTabPanel:Update()
@@ -367,7 +367,7 @@ function MoneyTab()
 	return FirstTabPanel
 end
 
-function JobsTab()
+function GM:JobsTab()
 	local hordiv = vgui.Create("DHorizontalDivider")
 	hordiv:SetLeftWidth(390)
 	function hordiv.m_DragBar:OnMousePressed() end
@@ -577,7 +577,7 @@ function JobsTab()
 	return hordiv
 end
 
-function EntitiesTab()
+function GM:EntitiesTab()
 	local EntitiesPanel = vgui.Create("DPanelList")
 	EntitiesPanel:EnableVerticalScrollbar( true )
 		function EntitiesPanel:Update()
@@ -608,9 +608,9 @@ function EntitiesTab()
 						end
 					end
 
-					AddIcon("models/Items/BoxSRounds.mdl", string.format(LANGUAGE.buy_a, "Pistol ammo", CUR .. tostring(GetConVarNumber("ammopistolcost"))), "/buyammo pistol")
-					AddIcon("models/Items/BoxMRounds.mdl", string.format(LANGUAGE.buy_a, "Rifle ammo", CUR .. tostring(GetConVarNumber("ammoriflecost"))), "/buyammo rifle")
-					AddIcon("models/Items/BoxBuckshot.mdl", string.format(LANGUAGE.buy_a, "Shotgun ammo", CUR .. tostring(GetConVarNumber("ammoshotguncost"))), "/buyammo shotgun")
+					for k,v in pairs(GAMEMODE:GetAmmoTypes()) do
+						AddIcon("models/Items/BoxMRounds.mdl", string.format(LANGUAGE.buy_a, v.." ammo", CUR .. tostring(GetConVarNumber("ammocost"))), "/buyammo " .. v)
+					end
 			WepCat:SetContents(WepPanel)
 			WepCat:SetSkin("DarkRP")
 			self:AddItem(WepCat)
@@ -706,7 +706,7 @@ function EntitiesTab()
 	return EntitiesPanel
 end
 
-function RPHUDTab()
+function GM:RPHUDTab()
 	local HUDTABpanel = vgui.Create("DIconLayout")
 	HUDTABpanel:SetSize(750, 550)
 	function HUDTABpanel:Update()
@@ -948,7 +948,7 @@ function RPHUDTab()
 	return HUDTABpanel
 end
 
-function RPAdminTab()
+function GM:RPAdminTab()
 	local AdminPanel = vgui.Create("DPanelList")
 	AdminPanel:SetSpacing(1)
 	AdminPanel:EnableHorizontal( false	)
@@ -965,9 +965,9 @@ function RPAdminTab()
 				local ValuePanel = vgui.Create("DListLayout")
 				ValuePanel:SetSize(470, 230)
 
-				for k, v in SortedPairsByMemberValue(ToggleCmds, "var") do
+				for k, v in SortedPairsByMemberValue(GAMEMODE.ToggleCmds, "var") do
 					local found = false
-					for a,b in pairs(HelpLabels) do
+					for a,b in pairs(GAMEMODE:getHelpLabels()) do
 						if string.find(b.text, k) then
 							found = b.text
 							break
@@ -1031,9 +1031,9 @@ function RPAdminTab()
 				if ( !self:GetExpanded() ) then cookie = '0' end
 				self:SetCookie( "Open", cookie )
 			end
-				for k, v in SortedPairsByMemberValue(ValueCmds, "var") do
+				for k, v in SortedPairsByMemberValue(GAMEMODE.ValueCmds, "var") do
 					local found = false
-					for a,b in pairs(HelpLabels) do
+					for a,b in pairs(GAMEMODE:getHelpLabels()) do
 						if string.find(b.text, k) then
 							found = b.text
 							break
@@ -1083,7 +1083,7 @@ local DefaultWeapons = {
 {name = "RPG", class = "weapon_rpg"}
 }
 
-function RPLicenseWeaponsTab()
+function GM:RPLicenseWeaponsTab()
 	local weaponspanel = vgui.Create("DPanelList")
 	weaponspanel:SetSpacing(1)
 	weaponspanel:EnableHorizontal(false)
