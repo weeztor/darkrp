@@ -73,7 +73,7 @@ function SWEP:PrimaryAttack()
 	local mass = phys:GetMass()
 
 	self.Owner:GetTable().Pocket = self.Owner:GetTable().Pocket or {}
-	if not FPP.PlayerCanTouchEnt(self.Owner, trace.Entity, "Gravgun1", "FPP_GRAVGUN1") or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) or trace.Entity.jailWall then
+	if not trace.Entity:CPPICanPickup(self.Owner) or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) or trace.Entity.jailWall then
 		GAMEMODE:Notify(self.Owner, 1, 4, "You can not put this object in your pocket!")
 		return
 	end

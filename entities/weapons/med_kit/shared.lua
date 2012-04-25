@@ -48,7 +48,7 @@ function SWEP:createViewModels()
 
 	self.viewModels[1]:SetAngles(ang1)
 	self.viewModels[2]:SetAngles(ang2)
-	
+
 	viewmodel:SetNoDraw(true)
 
 	self:CallOnRemove("RemoveViewModels", function(a,b)
@@ -57,11 +57,11 @@ function SWEP:createViewModels()
 	end)
 
 	for k,v in pairs(self.viewModels) do
-		
+
 		v:SetModel("models/Mechanics/roboticslarge/a2.mdl")
 		v:SetColor(255,0,0,255)
 		v:SetMaterial("models/debug/debugwhite")
-		
+
 		v:SetModelScale(Vector(0.1,0.1,0.1))
 		v:SetParent(viewmodel)
 		v:SetPos(viewmodel:GetPos() + viewmodel:GetAngles():Forward() * 13 + viewmodel:GetAngles():Right() * 8 - viewmodel:GetAngles():Up() * 6)
@@ -96,7 +96,7 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
-	if SERVER then 
+	if SERVER and ValidEntity(self:GetOwner()) then
 		SendUserMessage("med_kit_model", self:GetOwner(), self)
 		return true
 	end
@@ -141,7 +141,7 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:OnRemove()
-	if SERVER then 
+	if SERVER and ValidEntity(self:GetOwner()) then
 		SendUserMessage("med_kit_model", self:GetOwner(), self)
 	end
 end
