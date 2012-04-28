@@ -577,12 +577,13 @@ function GM:PlayerSpawn(ply)
 		ply:ChangeTeam(TEAM_CITIZEN)
 	end
 
-	local _, pos = self:PlayerSelectSpawn(ply)
-	ply:SetPos(pos)
-
 	ply:GetTable().StartHealth = ply:Health()
 	gamemode.Call("PlayerSetModel", ply)
 	gamemode.Call("PlayerLoadout", ply)
+
+	local _, pos = self:PlayerSelectSpawn(ply)
+	ply:SetPos(pos)
+
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned")
 end
 
