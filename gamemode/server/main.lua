@@ -285,26 +285,26 @@ local function FireSpread(e)
 		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
 		local rand = math.random(0, 300)
 
-		if rand <= 1 then
-			for k, v in pairs(en) do
-				if IsFlammable(v) then
-					if not v.burned then
-						v:Ignite(math.random(5,180), 0)
-						v.burned = true
-					else
-						local r, g, b, a = v:GetColor()
-						if (r - 51)>=0 then r = r - 51 end
-						if (g - 51)>=0 then g = g - 51 end
-						if (b - 51)>=0 then b = b - 51 end
-						v:SetColor(r, g, b, a)
-						if (r + g + b) < 103 and math.random(1, 100) < 35 then
-							v:Fire("enablemotion","",0)
-							constraint.RemoveAll(v)
-						end
-					end
-					break -- Don't ignite all entities in sphere at once, just one at a time
+		if rand > 1 then return end
+
+		for k, v in pairs(en) do
+			if not IsFlammable(v) then continue end
+
+			if not v.burned then
+				v:Ignite(math.random(5,180), 0)
+				v.burned = true
+			else
+				local r, g, b, a = v:GetColor()
+				if (r - 51)>=0 then r = r - 51 end
+				if (g - 51)>=0 then g = g - 51 end
+				if (b - 51)>=0 then b = b - 51 end
+				v:SetColor(r, g, b, a)
+				if (r + g + b) < 103 and math.random(1, 100) < 35 then
+					v:Fire("enablemotion","",0)
+					constraint.RemoveAll(v)
 				end
 			end
+			break -- Don't ignite all entities in sphere at once, just one at a time
 		end
 	end
 end
@@ -448,12 +448,17 @@ AddChatCommand("/weapondrop", DropWeapon)
  ---------------------------------------------------------*/
 local function UnWarrant(ply, target)
 	if not target.warranted then return end
+
+	hook.Call("PlayerUnWarranted", GAMEMODE, ply, target)
+
 	target.warranted = false
 	GAMEMODE:Notify(ply, 2, 4, string.format(LANGUAGE.warrant_expired, target:Nick()))
 end
 
 local function SetWarrant(ply, target, reason)
 	if target.warranted then return end
+	hook.Call("PlayerWarranted", GAMEMODE, ply, target, reason)
+
 	target.warranted = true
 	timer.Simple(GetConVarNumber("searchtime"), UnWarrant, ply, target)
 	for a, b in pairs(player.GetAll()) do
@@ -575,6 +580,8 @@ local function PlayerWanted(ply, args)
 		local p = GAMEMODE:FindPlayer(tableargs[1])
 
 		if p and p:Alive() and not p:isArrested() and not p.DarkRPVars.wanted then
+			hook.Call("PlayerWanted", GAMEMODE, ply, p, reason)
+
 			p:SetDarkRPVar("wanted", true)
 			p:SetDarkRPVar("wantedReason", tostring(reason))
 			for a, b in pairs(player.GetAll()) do
@@ -599,6 +606,7 @@ local function PlayerUnWanted(ply, args)
 	else
 		local p = GAMEMODE:FindPlayer(args)
 		if p and p:Alive() and p.DarkRPVars.wanted then
+			hook.Call("PlayerUnWanted", GAMEMODE, ply, p)
 			p:SetDarkRPVar("wanted", false)
 			for a, b in pairs(player.GetAll()) do
 				b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_expired, p:Nick()))
