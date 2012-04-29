@@ -1,8 +1,8 @@
 require("datastream")
-/*---------------------------------------------------------
- Gamemode functions
- ---------------------------------------------------------*/
--- Grammar corrections by Eusion
+
+/*---------------------------------------------------------------------------
+DarkRP hooks
+---------------------------------------------------------------------------*/
 function GM:Initialize()
 	self.BaseClass:Initialize()
 end
@@ -16,12 +16,58 @@ function GM:PlayerSellDoor( objPl, objEnt )
 end
 
 function GM:GetDoorCost( objPl, objEnt )
-	return GetConVarNumber( "doorcost" ) || 30;
+	return GetConVarNumber("doorcost") ~= 0 and  GetConVarNumber("doorcost") or 30;
 end
 
 function GM:GetVehicleCost( objPl, objEnt )
-	return GetConVarNumber( "vehiclecost" ) || 40;
+	return GetConVarNumber("vehiclecost") ~= 0 and  GetConVarNumber("vehiclecost") or 40;
 end
+
+function GM:CanChangeRPName(ply, RPname)
+	if string.find(RPname, "\160") or string.find(RPname, " ") == 1 then -- disallow system spaces
+		return false
+	end
+
+	if table.HasValue({"ooc", "shared", "world", "n/a", "world prop"}, RPname) then
+		return false
+	end
+end
+
+function GM:PlayerArrested(ply, time)
+
+end
+
+function GM:PlayerUnarrested(ply)
+
+end
+
+function GM:PlayerWanted(ply, target, reason)
+
+end
+
+function GM:PlayerUnWanted(ply, target)
+
+end
+
+function GM:PlayerWarranted(ply, target, reason)
+
+end
+
+function GM:PlayerUnWarranted(ply, target)
+
+end
+
+function GM:PlayerWalletChanged(ply, amount)
+
+end
+
+function GM:PlayerGetSalary(ply, amount)
+
+end
+
+/*---------------------------------------------------------
+ Gamemode functions
+ ---------------------------------------------------------*/
 
 function GM:PlayerSpawnProp(ply, model)
 	-- If prop spawning is enabled or the user has admin or prop privileges
