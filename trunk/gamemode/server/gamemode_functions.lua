@@ -7,6 +7,22 @@ function GM:Initialize()
 	self.BaseClass:Initialize()
 end
 
+function GM:PlayerBuyDoor( objPl, objEnt )
+	return true;
+end
+
+function GM:PlayerSellDoor( objPl, objEnt )
+	return false;
+end
+
+function GM:GetDoorCost( objPl, objEnt )
+	return GetConVarNumber( "doorcost" ) || 30;
+end
+
+function GM:GetVehicleCost( objPl, objEnt )
+	return GetConVarNumber( "vehiclecost" ) || 40;
+end
+
 function GM:PlayerSpawnProp(ply, model)
 	-- If prop spawning is enabled or the user has admin or prop privileges
 	local allowed = ((GetConVarNumber("propspawning") == 1 or (FAdmin and FAdmin.Access.PlayerHasPrivilege(ply, "rp_prop")) or ply:IsAdmin()) and true) or false

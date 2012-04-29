@@ -379,40 +379,47 @@ local function OwnDoor(ply)
 		end
 
 		if trace.Entity:OwnedBy(ply) then
-
 			trace.Entity:Fire("unlock", "", 0)
 			trace.Entity:UnOwn(ply)
 			ply:GetTable().Ownedz[trace.Entity:EntIndex()] = nil
 			ply:GetTable().OwnedNumz = math.abs(ply:GetTable().OwnedNumz - 1)
-			local GiveMoneyBack = (((trace.Entity:IsVehicle() and GetConVarNumber("vehiclecost")) or GetConVarNumber("doorcost")) * 0.666) + 0.5
-			ply:AddMoney(math.floor(GiveMoneyBack))
-			GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.door_sold,  CUR .. math.floor(math.floor(GiveMoneyBack))))
+			local GiveMoneyBack = math.floor((((trace.Entity:IsVehicle() and GetConVarNumber("vehiclecost")) or GetConVarNumber("doorcost")) * 0.666) + 0.5)
+			hook.Call( "PlayerSoldDoor", GAMEMODE, ply, trace.Entity, GiveMoneyBack );
+			ply:AddMoney(GiveMoneyBack)
+			local bSuppress = hook.Call( "HideSellDoorMessage", GAMEMODE, ply, trace.Entity );
+			if( !bSuppress ) then
+				GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.door_sold,  CUR..(GiveMoneyBack)))
+			end
 			ply.LookingAtDoor = nil
 		else
 			if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
 				GAMEMODE:Notify(ply, 1, 4, LANGUAGE.door_already_owned)
 				return ""
 			end
-			if trace.Entity:IsVehicle() then
-				if not ply:CanAfford(GetConVarNumber("vehiclecost")) then
-					GAMEMODE:Notify(ply, 1, 4, LANGUAGE.vehicle_cannot_afford)
-					return ""
-				end
-			else
-				if not ply:CanAfford(GetConVarNumber("doorcost")) then
-					GAMEMODE:Notify(ply, 1, 4, LANGUAGE.door_cannot_afford)
-					return ""
-				end
+
+			local iCost = hook.Call( "Get"..( trace.Entity:IsVehicle( ) && "Vehicle" || "Door" ).."Cost", GAMEMODE, ply, trace.Entity );
+			if( !ply:CanAfford( iCost ) ) then
+				GAMEMODE:Notify( ply, 1, 4, trace.Entity:IsVehicle( ) && LANGUAGE.vehicle_cannot_afford || LANGUAGE.door_cannot_afford );
+				return "";
 			end
 
-			if trace.Entity:IsVehicle() then
-				ply:AddMoney(-GetConVarNumber("vehiclecost"))
-				GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.vehicle_bought, CUR .. math.floor(GetConVarNumber("vehiclecost"))))
-			else
-				ply:AddMoney(-GetConVarNumber("doorcost"))
-				GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.door_bought, CUR .. math.floor(GetConVarNumber("doorcost"))))
+			local bAllowed, strReason, bSuppress = hook.Call( "PlayerBuy"..( trace.Entity:IsVehicle( ) && "Vehicle" || "Door" ), GAMEMODE, ply, trace.Entity );
+			if( bAllowed == false ) then
+				if( strReason && strReason != "" ) then
+					GAMEMODE:Notify( ply, 1, 4, strReason );
+				end
+				return "";
 			end
+
+			local bVehicle = trace.Entity:IsVehicle( );
+
+			ply:AddMoney( -( bVehicle && GetConVarNumber( "vehiclecost" ) || GetConVarNumber( "doorcost" ) ) );
+			if( !bSuppress ) then
+				GAMEMODE:Notify( ply, 0, 4, string.format( bVehicle && LANGUAGE.vehicle_bought || LANGUAGE.door_bought, CUR..math.floor( GetConVarNumber( ( bVehicle && "vehicle" || "door" ).."cost" ) ) ) );
+			end
+
 			trace.Entity:Own(ply)
+			hook.Call( "PlayerBoughtDoor", GAMEMODE, ply, trace.Entity, iCost );
 
 			if ply:GetTable().OwnedNumz == 0 then
 				timer.Create(ply:UniqueID() .. "propertytax", 270, 0, ply.DoPropertyTax, ply)
