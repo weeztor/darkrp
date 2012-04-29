@@ -419,7 +419,7 @@ local function OwnDoor(ply)
 			end
 
 			trace.Entity:Own(ply)
-			hook.Call( "PlayerBoughtDoor", GAMEMODE, ply, trace.Entity, iCost );
+			hook.Call( "PlayerBought"..( bVehicle && "Vehicle" || "Door" ), GAMEMODE, ply, trace.Entity, iCost );
 
 			if ply:GetTable().OwnedNumz == 0 then
 				timer.Create(ply:UniqueID() .. "propertytax", 270, 0, ply.DoPropertyTax, ply)
