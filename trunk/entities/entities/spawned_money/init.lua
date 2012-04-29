@@ -36,13 +36,10 @@ function DarkRPCreateMoneyBag(pos, amount)
 end
 
 function ENT:Touch(ent)
-	if ent:GetClass() ~= "spawned_money" or ent.hasMerged or self.hasMerged then return end
+	if ent:GetClass( ) ~= "spawned_money" or self.hasMerged or ent.hasMerged then return end
 
-	ent.hasMerged, self.hasMerged = true, true
-	local amount = self.dt.amount + ent.dt.amount
-	self:Remove()
+	ent.hasMerged = true
+
 	ent:Remove()
-
-	-- spawn a new money bag with the proper merged amount
-	DarkRPCreateMoneyBag(self:GetPos(), amount)
+	self.dt.amount = self.dt.amount + ent.dt.amount
 end
