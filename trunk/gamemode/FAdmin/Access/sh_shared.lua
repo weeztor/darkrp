@@ -46,7 +46,7 @@ function PLAYER:IsAdmin(...)
 		return true
 	end
 
-	if CLIENT and tonumber(self:FAdmin_GetGlobal("FAdmin_admin")) and self:FAdmin_GetGlobal("FAdmin_admin")>= 1 then return true end
+	if CLIENT and tonumber(self:FAdmin_GetGlobal("FAdmin_admin")) and self:FAdmin_GetGlobal("FAdmin_admin") >= 1 then return true end
 
 	return oldplyIsAdmin(self, ...) or SinglePlayer()
 end
