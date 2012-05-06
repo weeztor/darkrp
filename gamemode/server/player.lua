@@ -451,7 +451,7 @@ function meta:Arrest(time, rejoin)
 	self:SetDarkRPVar("wanted", false)
 	self.warranted = false
 	self:SetSelfDarkRPVar("HasGunlicense", false)
-	self:SetSelfDarkRPVar("Arrested", true)
+	self:SetDarkRPVar("Arrested", true)
 	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("aspd"), GetConVarNumber("aspd"))
 	self:StripWeapons()
 
