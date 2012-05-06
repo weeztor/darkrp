@@ -65,6 +65,10 @@ function GM:PlayerGetSalary(ply, amount)
 
 end
 
+function GM:DarkRPVarChanged(ply, var, oldvar, newvalue)
+
+end
+
 /*---------------------------------------------------------
  Gamemode functions
  ---------------------------------------------------------*/
@@ -486,11 +490,16 @@ function GM:PlayerInitialSpawn(ply)
 end
 
 local meta = FindMetaTable("Player")
-function meta:SetDarkRPVar(var, value)
+function meta:SetDarkRPVar(var, value, target)
 	if not ValidEntity(self) then return end
+	target = target or RecipientFilter():AddAllPlayers()
+
+	hook.Call("DarkRPVarChanged", nil, self, var, (self.DarkRPVars and self.DarkRPVars[var]) or nil, value)
+
 	self.DarkRPVars = self.DarkRPVars or {}
 	self.DarkRPVars[var] = value
-	umsg.Start("DarkRP_PlayerVar")
+
+	umsg.Start("DarkRP_PlayerVar", target)
 		umsg.Entity(self)
 		umsg.String(var)
 		if value == nil then value = "nil" end
@@ -499,14 +508,10 @@ function meta:SetDarkRPVar(var, value)
 end
 
 function meta:SetSelfDarkRPVar(var, value)
-	if not ValidEntity(self) then return end
-	self.DarkRPVars = self.DarkRPVars or {}
-	self.DarkRPVars[var] = value
-	umsg.Start("DarkRP_SelfPlayerVar", self)
-		umsg.String(var)
-		if value == nil then value = "nil" end
-		umsg.String(tostring(value))
-	umsg.End()
+	self.privateDRPVars = self.privateDRPVars or {}
+	table.insert(self.privateDRPVars, var)
+
+	self:SetDarkRPVar(var, value, self)
 end
 
 local function SendDarkRPVars(ply)
@@ -515,7 +520,12 @@ local function SendDarkRPVars(ply)
 
 	local sendtable = {}
 	for k,v in pairs(player.GetAll()) do
-		sendtable[v] = v.DarkRPVars
+		sendtable[v] = {}
+		for a,b in pairs(v.DarkRPVars) do
+			if not table.HasValue(v.privateDRPVars, a) or ply == v then
+				sendtable[v][a] = b
+			end
+		end
 	end
 	datastream.StreamToClients(ply, "DarkRP_InitializeVars", sendtable)
 end
