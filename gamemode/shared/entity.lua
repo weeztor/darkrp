@@ -8,7 +8,7 @@ function meta:IsOwnable()
 	local class = self:GetClass()
 
 	if ((class == "func_door" or class == "func_door_rotating" or class == "prop_door_rotating") or
-			(tobool(GetConVarNumber("allowvehicleowning")) and self:IsVehicle())) then
+			(tobool(GetConVarNumber("allowvehicleowning")) and self:IsVehicle() and (not ValidEntity(self:GetParent()) or not self:GetParent():IsVehicle()))) then
 			return true
 		end
 	return false
@@ -73,7 +73,7 @@ function meta:AllowedToOwn(ply)
 end
 
 /*---------------------------------------------------------
- Serverside part
+ Clientside part
  ---------------------------------------------------------*/
 if CLIENT then
 	function meta:DrawOwnableInfo()
@@ -244,6 +244,43 @@ if CLIENT then
 	end
 
 	return
+end
+
+/*---------------------------------------------------------
+ Serverside part
+ ---------------------------------------------------------*/
+
+function meta:KeysLock()
+	self:Fire("lock", "", 0)
+
+	-- VUMod compatibility
+	-- Locks passenger seats when the vehicle is locked.
+	if self:IsVehicle() and self.VehicleTable and self.VehicleTable.Passengers then
+		for k,v in pairs(self.VehicleTable.Passengers) do
+			v.Ent:Fire("lock", "", 0)
+		end
+	end
+
+	-- Locks the vehicle if you're unlocking a passenger seat:
+	if ValidEntity(self:GetParent()) and self:GetParent():IsVehicle() then
+		self:GetParent():KeysLock()
+	end
+end
+
+function meta:KeysUnLock()
+	self:Fire("unlock", "", 0)
+
+	-- VUMod
+	if self:IsVehicle() and self.VehicleTable and self.VehicleTable.Passengers then
+		for k,v in pairs(self.VehicleTable.Passengers) do
+			v.Ent:Fire("unlock", "", 0)
+		end
+	end
+
+	-- Unlocks the vehicle if you're unlocking a passenger seat:
+	if ValidEntity(self:GetParent()) and self:GetParent():IsVehicle() then
+		self:GetParent():KeysUnLock()
+	end
 end
 
 local time = false
