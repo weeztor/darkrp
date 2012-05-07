@@ -4,24 +4,29 @@ function AddChatCommand(cmd, callback, prefixconst)
 	for k,v in pairs(ChatCommands) do
 		if cmd == v.cmd then return end
 	end
-	table.insert(ChatCommands, { cmd = cmd, callback = callback, prefixconst = prefixconst })
+	ChatCommands[string.lower( cmd )] = {
+		cmd = cmd,
+		callback = callback,
+		prefixconst = prefixconst,
+	}
 end
 
 local function RP_PlayerChat(ply, text)
 	DB.Log(ply:SteamName().." ("..ply:SteamID().."): "..text )
 	local callback = ""
 	local DoSayFunc
-	for k, v in pairs(ChatCommands) do
-		if string.lower(v.cmd) == string.Explode(" ", string.lower(text))[1] then
-			callback, DoSayFunc = v.callback(ply, string.sub(text, string.len(v.cmd) + 2, string.len(text)))
-			if callback == "" then
-				return "", "" , DoSayFunc
-			end
-			text = string.sub(text, string.len(v.cmd) + 2, string.len(text)).. " "
+	local tblCmd = ChatCommands[string.lower( string.Explode( " ", text )[1] )];
+	if tblCmd then
+		callback, DoSayFunc = tblCmd.callback( ply, string.sub( text, string.len( tblCmd.cmd ) + 2, string.len( text ) ) );
+		if( callback == "" ) then
+			return "", "", DoSayFunc;
 		end
+		text = string.sub(text, string.len(tblCmd.cmd) + 2, string.len(text))
 	end
-	if callback ~= "" then callback = (callback or "").." " end
-	return text, callback, DoSayFunc
+	if( callback != "" ) then
+		callback = ( callback || "" ).." "
+	end
+	return text, callback, DoSayFunc;
 end
 
 local function RP_ActualDoSay(ply, text, callback)
