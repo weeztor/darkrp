@@ -29,12 +29,8 @@ local function RPName(ply, args)
 		return ""
 	end
 
- 	if string.find(args, "\160") or string.find(args, " ") == 1 then -- No system spaces in your name bro!
-		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
-		return ""
-	end
-
-	if low == "ooc" or low == "shared" or low == "world" or low == "n/a" or low == "world prop" then
+	local canChangeName = hook.Call("CanChangeRPName", GAMEMODE, ply, low)
+	if canChangeName == false then
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "RPname", ""))
 		return ""
 	end
@@ -374,24 +370,25 @@ end
 
 function meta:AddMoney(amount)
 	if not amount then return false end
+	hook.Call("PlayerWalletChanged", GAMEMODE, ply, amount)
 	DB.StoreMoney(self, self.DarkRPVars.money + math.floor(amount))
 end
 
 function meta:PayDay()
-	if ValidEntity(self) and self:GetTable().Pay == 1 then
-		if not self:isArrested() then
-			DB.RetrieveSalary(self, function(amount)
-				amount = math.floor(amount or GetConVarNumber("normalsalary"))
-				if amount == 0 or not amount then
-					GAMEMODE:Notify(self, 4, 4, LANGUAGE.payday_unemployed)
-				else
-					self:AddMoney(amount)
-					GAMEMODE:Notify(self, 4, 4, string.format(LANGUAGE.payday_message, CUR .. amount))
-				end
-			end)
-		else
-			GAMEMODE:Notify(self, 4, 4, LANGUAGE.payday_missed)
-		end
+	if not ValidEntity(self) or self:GetTable().Pay ~= 1 then return end
+	if not self:isArrested() then
+		DB.RetrieveSalary(self, function(amount)
+			amount = math.floor(amount or GetConVarNumber("normalsalary"))
+			hook.Call("PlayerGetSalary", GAMEMODE, self, amount)
+			if amount == 0 or not amount then
+				GAMEMODE:Notify(self, 4, 4, LANGUAGE.payday_unemployed)
+			else
+				self:AddMoney(amount)
+				GAMEMODE:Notify(self, 4, 4, string.format(LANGUAGE.payday_message, CUR .. amount))
+			end
+		end)
+	else
+		GAMEMODE:Notify(self, 4, 4, LANGUAGE.payday_missed)
 	end
 end
 
@@ -440,6 +437,7 @@ function meta:setArrested(bool)
 end
 
 function meta:Arrest(time, rejoin)
+	hook.Call("PlayerArrested", GAMEMODE, self, time)
 	self:SetDarkRPVar("wanted", false)
 	self.warranted = false
 	self:SetSelfDarkRPVar("HasGunlicense", false)
@@ -497,6 +495,8 @@ function meta:Arrest(time, rejoin)
 end
 
 function meta:Unarrest()
+	hook.Call("PlayerUnarrested", GAMEMODE, self)
+
 	self:SetDarkRPVar("Arrested", false)
 	if not ValidEntity(self) then
 		return

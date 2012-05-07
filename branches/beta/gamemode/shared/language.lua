@@ -171,7 +171,7 @@ rp_languages.english = {
 
 	-- F4menu
 	-- Tab 1
-	give_money = "Give money at the player you're looking at",
+	give_money = "Give money to the player you're looking at",
 	drop_money = "Drop money",
 	change_name = "Change your DarkRP name",
 	go_to_sleep = "Go to sleep/wake up",
