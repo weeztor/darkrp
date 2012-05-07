@@ -838,7 +838,7 @@ end
 
 function GM:PlayerLeaveVehicle(ply, vehicle)
 	if GetConVarNumber("autovehiclelock") == 1 and vehicle.OwnedBy(ply) then
-		vehicle:Fire("lock", "", 0)
+		vehicle:KeysLock()
 	end
 	self.BaseClass:PlayerLeaveVehicle(ply, vehicle)
 end

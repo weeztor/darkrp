@@ -68,7 +68,8 @@ function SWEP:PrimaryAttack()
 	if trace.Entity:OwnedBy(self.Owner) or (DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[DoorData.GroupOwn], Team)) or (DoorData.TeamOwn and DoorData.TeamOwn[Team]) then
 		if SERVER then
 			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
-			trace.Entity:Fire("lock", "", 0) -- Lock the door immediately so it won't annoy people
+			trace.Entity:KeysLock() -- Lock the door immediately so it won't annoy people
+
 			timer.Simple(0.9, function(ply, sound) if ValidEntity(ply) then ply:EmitSound(sound) end end, self.Owner, self.Sound)
 
 			local RP = RecipientFilter()
@@ -120,7 +121,7 @@ function SWEP:SecondaryAttack()
 	if trace.Entity:OwnedBy(self.Owner) or (DoorData.GroupOwn and table.HasValue(RPExtraTeamDoors[DoorData.GroupOwn], Team)) or (DoorData.TeamOwn and DoorData.TeamOwn[Team]) then
 		if SERVER then
 			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
-			trace.Entity:Fire("unlock", "", 0)-- Unlock the door immediately so it won't annoy people
+			trace.Entity:KeysUnLock() -- Unlock the door immediately so it won't annoy people
 			timer.Simple(0.9, function(ply, sound) if ValidEntity(ply) then ply:EmitSound(sound) end end, self.Owner, self.Sound)
 
 			umsg.Start("anim_keys", RP)
