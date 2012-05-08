@@ -201,7 +201,7 @@ function GM:AddAmmoType(class)
 			return
 		end
 
-		if weapon.Primary.Ammo and not table.HasValue(ammoTypes, weapon.Primary.Ammo) then
+		if weapon.Primary.Ammo and weapon.Secondary.Ammo ~= "none" and not table.HasValue(ammoTypes, weapon.Primary.Ammo) then
 			table.insert(ammoTypes, weapon.Primary.Ammo)
 		end
 
