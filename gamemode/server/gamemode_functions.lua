@@ -837,7 +837,7 @@ function GM:InitPostEntity()
 end
 
 function GM:PlayerLeaveVehicle(ply, vehicle)
-	if GetConVarNumber("autovehiclelock") == 1 and vehicle.OwnedBy(ply) then
+	if GetConVarNumber("autovehiclelock") == 1 and vehicle:OwnedBy(ply) then
 		vehicle:KeysLock()
 	end
 	self.BaseClass:PlayerLeaveVehicle(ply, vehicle)

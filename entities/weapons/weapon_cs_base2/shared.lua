@@ -55,10 +55,6 @@ SWEP.MultiMode = false
 /*---------------------------------------------------------
 ---------------------------------------------------------*/
 function SWEP:Initialize()
-
-	self.OldSetWeaponHoldType = self.SetWeaponHoldType
-	self.SetWeaponHoldType = self.NewSetWeaponHoldType
-
 	self:SetWeaponHoldType("normal")
 	self.CurHoldType = "normal"
 	if SERVER then
@@ -68,11 +64,11 @@ function SWEP:Initialize()
 	end
 
 	self.Ironsights = false
-	
+
 	if self.Primary.Automatic then
-	
+
 		self.FireMode = "auto"
-	
+
 	end
 end
 
@@ -80,11 +76,11 @@ end
 Deploy
 ---------------------------------------------------------*/
 function SWEP:Deploy()
-	self:SetWeaponHoldType("normal")
+	self:NewSetWeaponHoldType("normal")
 	self.CurHoldType = "normal"
-	
+
 	self.LASTOWNER = self.Owner
-	
+
 	self:SetIronsights(self:GetIronsights())
 	return true
 end
@@ -104,13 +100,13 @@ function SWEP:Reload()
 	if not self.Weapon:DefaultReload(ACT_VM_RELOAD) then return end
 	self.Reloading = true
 	self:SetIronsights(false)
-	self:SetWeaponHoldType(self.HoldType)
+	self:NewSetWeaponHoldType(self.HoldType)
 	self.CurHoldType = self.HoldType
 	self.Owner:SetAnimation(PLAYER_RELOAD)
 	timer.Simple(2, function()
 		if not ValidEntity(self) then return end
 		self.Reloading = false
-		self:SetWeaponHoldType("normal")
+		self:NewSetWeaponHoldType("normal")
 		self.CurHoldType = "normal"
 	end)
 end
@@ -119,50 +115,50 @@ end
 PrimaryAttack
 ---------------------------------------------------------*/
 function SWEP:PrimaryAttack( partofburst )
-	
+
 	if not partofburst and ( self.LastNonBurst or 0 ) > CurTime() - 0.6 then return end
-	
+
 	if self.Weapon.MultiMode and self.Owner:KeyDown( IN_USE ) then
-	
+
 		if self.FireMode == "semi" then
-		
+
 			self.FireMode = "burst"
 			self.Primary.Automatic = false
 			self.Owner:PrintMessage( HUD_PRINTCENTER, "Switched to burst-fire mode." )
-			
+
 		elseif self.FireMode == "burst" then
-		
+
 			self.FireMode = "auto"
 			self.Primary.Automatic = true
 			self.Owner:PrintMessage( HUD_PRINTCENTER, "Switched to fully automatic fire mode." )
-			
+
 		elseif self.FireMode == "auto" then
-		
+
 			self.FireMode = "semi"
 			self.Primary.Automatic = false
 			self.Owner:PrintMessage( HUD_PRINTCENTER, "Switched to semi-automatic fire mode." )
-			
+
 		end
-		
+
 		self.Weapon:SetNextPrimaryFire( CurTime() + 0.5 )
 		self.Weapon:SetNextSecondaryFire( CurTime() + 0.5 )
-		
+
 		return
 	end
 
 	if self.CurHoldType == "normal" then
-		self:SetWeaponHoldType(self.HoldType)
+		self:NewSetWeaponHoldType(self.HoldType)
 		self.CurHoldType = self.HoldType
 	end
-	
+
 	if self.FireMode != "burst" then
-	
+
 		self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-		
+
 	end
-	
+
 	self.Weapon:SetNextSecondaryFire(CurTime() + self.Primary.Delay)
-	
+
 	if self:Clip1() <= 0 then
 		self:EmitSound("weapons/clipempty_rifle.wav")
 		self:SetNextPrimaryFire(CurTime() + 2)
@@ -176,24 +172,24 @@ function SWEP:PrimaryAttack( partofburst )
 
 	-- Shoot the bullet
 	self:CSShootBullet(self.Primary.Damage, self.Primary.Recoil + 3, self.Primary.NumShots, self.Primary.Cone + .05)
-	
+
 	if self.FireMode == "burst" and not partofburst then
-	
+
 		timer.Simple( 0.1, self.PrimaryAttack, self, true )
 		timer.Simple( 0.2, self.PrimaryAttack, self, true )
-		
+
 		self.LastNonBurst = CurTime()
-		
+
 	end
-	
+
 	-- Remove 1 bullet from our clip
 	self:TakePrimaryAmmo(1)
-	
+
 	if ( self.Owner:IsNPC() ) then return end
 
 	-- Punch the player's view
 	self.Owner:ViewPunch(Angle(math.Rand(-0.2,-0.1) * self.Primary.Recoil, math.Rand(-0.1,0.1) *self.Primary.Recoil, 0))
-	
+
 	self.LastPrimaryAttack = CurTime()
 end
 
@@ -219,7 +215,7 @@ function SWEP:CSShootBullet(dmg, recoil, numbul, cone)
 	self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)      -- View model animation
 	self.Owner:MuzzleFlash()        -- Crappy muzzle light
 	self.Owner:SetAnimation(PLAYER_ATTACK1)       -- 3rd Person Animation
-	
+
 	if ( self.Owner:IsNPC() ) then return end
 
 	// CUSTOM RECOIL !
@@ -246,22 +242,22 @@ function SWEP:DrawWeaponSelection(x, y, wide, tall, alpha)
 		// Set us up the texture
 		surface.SetDrawColor( 255, 255, 255, alpha )
 		surface.SetTexture( self.WepSelectIcon )
-		
+
 		// Lets get a sin wave to make it bounce
 		local fsin = 0
-		
+
 		if self.BounceWeaponIcon then
 			fsin = math.sin( CurTime() * 10 ) * 5
 		end
-		
+
 		// Borders
 		y = y + 10
 		x = x + 10
 		wide = wide - 20
-		
+
 		// Draw that motherfucker
 		surface.DrawTexturedRect( x + (fsin), y - (fsin),  wide-fsin*2 , ( wide / 2 ) + (fsin) )
-		
+
 		// Draw weapon info box
 		self:PrintWeaponInfo( x + wide + 20, y + tall * 0.95, alpha )
 	end
@@ -292,12 +288,12 @@ function SWEP:GetViewModelPosition(pos, ang)
 	end
 
 	local fIronTime = self.fIronTime or 0
-	
+
 	if GetConVarNumber("ironshoot") ~= 0 then
 		ang:RotateAroundAxis(ang:Right(), -15)
 	end
-	
-	if (not bIron and fIronTime < CurTime() - IRONSIGHT_TIME) then	
+
+	if (not bIron and fIronTime < CurTime() - IRONSIGHT_TIME) then
 		return pos, ang
 	end
 
@@ -317,7 +313,7 @@ function SWEP:GetViewModelPosition(pos, ang)
 		ang:RotateAroundAxis(ang:Up(), 		self.IronSightsAng.y * Mul)
 		ang:RotateAroundAxis(ang:Forward(), 	self.IronSightsAng.z * Mul)
 	end
-	
+
 	if GetConVarNumber("ironshoot") ~= 0 then
 		ang:RotateAroundAxis(ang:Right(), Mul * 15)
 	else
@@ -344,12 +340,12 @@ function SWEP:SetIronsights(b)
 	if SinglePlayer() then -- Make ironsights work on SP
 		self.Owner:SendLua("LocalPlayer():GetActiveWeapon().Ironsights = "..tostring(b))
 	end
-	if b then 
-		self:SetWeaponHoldType(self.HoldType)
+	if b then
+		self:NewSetWeaponHoldType(self.HoldType)
 		self.CurHoldType = self.HoldType
 		if SERVER then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3) end
 	else
-		self:SetWeaponHoldType("normal")
+		self:NewSetWeaponHoldType("normal")
 		self.CurHoldType = "normal"
 		if SERVER then GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd")) end
 	end
@@ -370,7 +366,7 @@ function SWEP:SecondaryAttack()
 	if (self.NextSecondaryAttack > CurTime()) then return end
 
 	bIronsights = not self.Ironsights
-	
+
 	self:SetIronsights(bIronsights)
 	self.NextSecondaryAttack = CurTime() + 0.3
 end
@@ -387,18 +383,18 @@ end
 function SWEP:OnDrop()
 	self.PrimaryClipLeft = self:Clip1()
 	self.SecondaryClipLeft = self:Clip2()
-	
+
 	if not self.LASTOWNER then return end
 	self.PrimaryAmmoLeft = self.LASTOWNER:GetAmmoCount(self:GetPrimaryAmmoType())
 	self.SecondaryAmmoLeft = self.LASTOWNER:GetAmmoCount(self:GetSecondaryAmmoType())
-	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS) 
+	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
 end
 
 function SWEP:Equip(NewOwner)
 	if self.PrimaryClipLeft and self.SecondaryClipLeft and self.PrimaryAmmoLeft and self.SecondaryAmmoLeft then
 		NewOwner:SetAmmo(self.PrimaryAmmoLeft, self:GetPrimaryAmmoType())
 		NewOwner:SetAmmo(self.SecondaryAmmoLeft, self:GetSecondaryAmmoType())
-		
+
 		self:SetClip1(self.PrimaryClipLeft)
 		self:SetClip2(self.SecondaryClipLeft)
 	end
@@ -407,38 +403,29 @@ end
 function SWEP:Think()
 	if self.Primary.ClipSize ~= -1 and not self.Reloading and not self.Ironsights and self.LastPrimaryAttack + 3 < CurTime() and self.CurHoldType == self.HoldType then
 		self.CurHoldType = "normal"
-		self:SetWeaponHoldType("normal")
+		self:NewSetWeaponHoldType("normal")
 	end
 end
 
-function SWEP:NewSetWeaponHoldType( holdtype )
-	
+function SWEP:NewSetWeaponHoldType(holdtype)
 	if SERVER then
-		
-		umsg.Start( "DRP_HoldType" )
-		
-			umsg.Entity( self )
-			umsg.String( holdtype )
-			
+		umsg.Start("DRP_HoldType")
+			umsg.Entity(self)
+			umsg.String(holdtype)
 		umsg.End()
-	
 	end
-	
-	self:OldSetWeaponHoldType( holdtype )
-	
+
+	self:SetWeaponHoldType(holdtype)
+
 end
 
 if CLIENT then
-
-	usermessage.Hook( "DRP_HoldType", function( um )
-	
+	usermessage.Hook("DRP_HoldType", function(um)
 		local wep = um:ReadEntity()
 		local holdtype = um:ReadString()
-		
-		if not ValidEntity( wep ) then return end
-		
-		wep:SetWeaponHoldType( holdtype )
-		
-	end )
-	
+
+		if not ValidEntity(wep) then return end
+
+		wep:SetWeaponHoldType(holdtype)
+	end)
 end

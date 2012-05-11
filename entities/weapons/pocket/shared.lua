@@ -114,9 +114,6 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-
-	self:SetWeaponHoldType("pistol")
-	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
 	self.Weapon:SetNextSecondaryFire(CurTime() + 0.2)
 
 	if CLIENT then return end
@@ -125,6 +122,10 @@ function SWEP:SecondaryAttack()
 		GAMEMODE:Notify(self.Owner, 1, 4, "Your pocket contains no items.")
 		return
 	end
+
+	self:NewSetWeaponHoldType("pistol")
+	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:NewSetWeaponHoldType("normal") end end, self)
+
 	local ent = self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket]
 	self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket] = nil
 	if not ValidEntity(ent) then GAMEMODE:Notify(self.Owner, 1, 4, "Your pocket contains no items.") return end
