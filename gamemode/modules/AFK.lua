@@ -28,10 +28,6 @@ local function SetAFK(ply)
 		umsg.String(ply.DarkRPVars.AFK and "1" or "0")
 	umsg.End()
 
-	for k, v in pairs(team.GetAllTeams()) do
-		ply.bannedfrom[k] = ply.DarkRPVars.AFK and 1 or 0
-	end
-
 	if ply.DarkRPVars.AFK then
 		DB.RetrieveSalary(ply, function(amount) ply.OldSalary = amount end)
 		ply.OldJob = ply.DarkRPVars.job
