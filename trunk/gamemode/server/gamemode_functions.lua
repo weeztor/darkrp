@@ -282,7 +282,7 @@ end
 
 function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
 	if tobool(GetConVarNumber("dropweapondeath")) and ValidEntity(ply:GetActiveWeapon()) then
-		ply:DropWeapon(ply:GetActiveWeapon())
+		ply:DropDRPWeapon(ply:GetActiveWeapon())
 	end
 	ply:CreateRagdoll()
 	ply:AddDeaths( 1 )

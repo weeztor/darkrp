@@ -7,7 +7,6 @@ local meta = FindMetaTable("Player")
  RP names
  ---------------------------------------------------------*/
 local function RPName(ply, args)
-
 	if ply.LastNameChange and ply.LastNameChange > (CurTime() - 5) then
 		GAMEMODE:Notify( ply, 1, 4, string.format( LANGUAGE.have_to_wait,  math.ceil(5 - (CurTime() - ply.LastNameChange)), "/rpname" ))
 		return ""
@@ -583,4 +582,26 @@ function meta:DoPropertyTax()
 		GAMEMODE:Notify(self, 1, 8, LANGUAGE.property_tax_cant_afford)
 		self:UnownAll()
 	end
+end
+
+function meta:DropDRPWeapon(weapon)
+	self:DropWeapon(weapon) -- Drop it so the model isn't the viewmodel
+
+	local ent = ents.Create("spawned_weapon")
+	local model = (weapon:GetModel() == "models/weapons/v_physcannon.mdl" and "models/weapons/w_physics.mdl") or weapon:GetModel()
+
+	ent.ShareGravgun = true
+	ent:SetPos(self:GetShootPos() + self:GetAimVector() * 30)
+	ent:SetModel(model)
+	ent:SetSkin(weapon:GetSkin())
+	ent.weaponclass = weapon:GetClass()
+	ent.nodupe = true
+	ent.clip1 = weapon:Clip1()
+	ent.clip2 = weapon:Clip2()
+
+	ent.ammo = ammo
+	self:RemoveAmmo(ammo, ammotype)
+	ent:Spawn()
+
+	weapon:Remove()
 end

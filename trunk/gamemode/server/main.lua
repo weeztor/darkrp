@@ -417,24 +417,7 @@ local function DropWeapon(ply)
 			local ammo = ply:GetAmmoCount(ammotype)
 			local clip = (ent.Primary and ent.Primary.ClipSize) or 0
 
-			ply:DropWeapon(ent) -- Drop it so the model isn't the viewmodel
-			local weapon = ents.Create("spawned_weapon")
-			local model = (ent:GetModel() == "models/weapons/v_physcannon.mdl" and "models/weapons/w_physics.mdl") or ent:GetModel()
-
-			weapon.ShareGravgun = true
-			weapon:SetPos(ply:GetShootPos() + ply:GetAimVector() * 30)
-			weapon:SetModel(model)
-			weapon:SetSkin(ent:GetSkin())
-			weapon.weaponclass = ent:GetClass()
-			weapon.nodupe = true
-			weapon.clip1 = ent:Clip1()
-			weapon.clip2 = ent:Clip2()
-
-			weapon.ammo = ammo
-			ply:RemoveAmmo(ammo, ammotype)
-			weapon:Spawn()
-
-			ent:Remove()
+			ply:DropDRPWeapon(ent)
 		end
 	end, ply, ent)
 	return ""

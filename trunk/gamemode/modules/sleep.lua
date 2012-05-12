@@ -137,10 +137,9 @@ local function DamageSleepers(ent, inflictor, attacker, amount, dmginfo)
 				end
 				v:SetHealth(v:Health() - amount)
 				if v:Health() <= 0 and v:Alive() then
-					v:Spawn()
+					v:Kill()
 					v:UnSpectate()
 					v:SetPos(ent:GetPos())
-					v:SetHealth(1)
 					v:TakeDamage(1, inflictor, attacker)
 					if v.SleepSound then
 						v.SleepSound:Stop()
