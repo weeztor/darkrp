@@ -585,6 +585,18 @@ function meta:DoPropertyTax()
 end
 
 function meta:DropDRPWeapon(weapon)
+	if GetConVarNumber("RestrictDrop") == 1 then
+		local found = false
+		for k,v in pairs(CustomShipments) do
+			if v.entity == weapon:GetClass() then
+				found = true
+				break
+			end
+		end
+
+		if not found then return end
+	end
+
 	self:DropWeapon(weapon) -- Drop it so the model isn't the viewmodel
 
 	local ent = ents.Create("spawned_weapon")
