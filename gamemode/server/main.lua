@@ -1396,6 +1396,11 @@ local function Demote(ply, args)
 		return ""
 	end
 	local p = GAMEMODE:FindPlayer(tableargs[1])
+	if p == ply then
+		GAMEMODE:Notify(ply, 1, 4, "Can't demote yourself.")
+		return ""
+	end
+
 	if p then
 		if CurTime() - ply.LastVoteCop < 80 then
 			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait, math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)), "/demote"))
