@@ -44,7 +44,7 @@ SWEP.Secondary.Ammo = ""
 
 function SWEP:Deploy()
 	if CLIENT or not ValidEntity(self:GetOwner()) then return end
-	self:SetColor(0,0,255,255)
+	self:SetColor(Color(0,0,255,255))
 	self:SetMaterial("models/shiny")
 	SendUserMessage("StunStickColour", self:GetOwner(), 0,0,255, "models/shiny")
 	return true
@@ -65,7 +65,7 @@ end
 usermessage.Hook("StunStickColour", function(um)
 	local viewmodel = LocalPlayer():GetViewModel()
 	local r,g,b,a = um:ReadLong(), um:ReadLong(), um:ReadLong(), 255
-	viewmodel:SetColor(r,g,b,a)
+	viewmodel:SetColor(Color(r,g,b,a))
 	viewmodel:SetMaterial(um:ReadString())
 end)
 
