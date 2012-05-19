@@ -31,11 +31,11 @@ end)
 
 if SERVER then
 	concommand.Add("rp_ResetAllSettings", function(ply, cmd, args)
-		DB.Query("DELETE FROM darkrp_cvars;")
 		if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then
 			GAMEMODE:Notify(ply, 1, 5, string.format(LANGUAGE.need_sadmin, "rp_resetallsettings"))
 			return
 		end
+		DB.Query("DELETE FROM darkrp_cvars;")
 		GAMEMODE:Notify(ply, 0, 4, LANGUAGE.reset_settings)
 		local count = 0
 		for k,v in pairs(GAMEMODE.ToggleCmds) do
