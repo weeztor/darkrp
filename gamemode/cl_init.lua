@@ -570,34 +570,11 @@ local function RetrievePlayerVar(um)
 	if stringvalue == "true" or stringvalue == "false" then value = tobool(value) end
 
 	if stringvalue == "nil" then value = nil end
+
+	hook.Call("DarkRPVarChanged", nil, ply, var, ply.DarkRPVars[var], value)
 	ply.DarkRPVars[var] = value
 end
 usermessage.Hook("DarkRP_PlayerVar", RetrievePlayerVar)
-
-local function RetrieveSelfVar(um)
-	if not ValidEntity(LocalPlayer()) then return end
-	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
-
-	local var, value = um:ReadString(), um:ReadString()
-	local stringvalue = value
-	value = tonumber(value) or value
-
-	if string.match(stringvalue, "Entity .([0-9]*)") then
-		value = Entity(string.match(stringvalue, "Entity .([0-9]*)"))
-	end
-
-	if string.match(stringvalue, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)") then
-		local x,y,z = string.match(value, "(-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+) (-?[0-9]+\.[0-9]+)")
-		value = Vector(x,y,z)
-	end
-
-	if stringvalue == "true" or stringvalue == "false" then value = tobool(value) end
-
-	if stringvalue == "nil" then value = nil end
-
-	LocalPlayer().DarkRPVars[var] = value
-end
-usermessage.Hook("DarkRP_SelfPlayerVar", RetrieveSelfVar)
 
 local function InitializeDarkRPVars(len)
 	local ply = net.ReadEntity()

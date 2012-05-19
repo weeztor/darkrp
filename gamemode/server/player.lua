@@ -7,7 +7,6 @@ local meta = FindMetaTable("Player")
  RP names
  ---------------------------------------------------------*/
 local function RPName(ply, args)
-
 	if ply.LastNameChange and ply.LastNameChange > (CurTime() - 5) then
 		GAMEMODE:Notify( ply, 1, 4, string.format( LANGUAGE.have_to_wait,  math.ceil(5 - (CurTime() - ply.LastNameChange)), "/rpname" ))
 		return ""
@@ -441,7 +440,7 @@ function meta:Arrest(time, rejoin)
 	self:SetDarkRPVar("wanted", false)
 	self.warranted = false
 	self:SetSelfDarkRPVar("HasGunlicense", false)
-	self:SetSelfDarkRPVar("Arrested", true)
+	self:SetDarkRPVar("Arrested", true)
 	GAMEMODE:SetPlayerSpeed(self, GetConVarNumber("aspd"), GetConVarNumber("aspd"))
 	self:StripWeapons()
 
@@ -573,4 +572,38 @@ function meta:DoPropertyTax()
 		GAMEMODE:Notify(self, 1, 8, LANGUAGE.property_tax_cant_afford)
 		self:UnownAll()
 	end
+end
+
+function meta:DropDRPWeapon(weapon)
+	if GetConVarNumber("RestrictDrop") == 1 then
+		local found = false
+		for k,v in pairs(CustomShipments) do
+			if v.entity == weapon:GetClass() then
+				found = true
+				break
+			end
+		end
+
+		if not found then return end
+	end
+
+	self:DropWeapon(weapon) -- Drop it so the model isn't the viewmodel
+
+	local ent = ents.Create("spawned_weapon")
+	local model = (weapon:GetModel() == "models/weapons/v_physcannon.mdl" and "models/weapons/w_physics.mdl") or weapon:GetModel()
+
+	ent.ShareGravgun = true
+	ent:SetPos(self:GetShootPos() + self:GetAimVector() * 30)
+	ent:SetModel(model)
+	ent:SetSkin(weapon:GetSkin())
+	ent.weaponclass = weapon:GetClass()
+	ent.nodupe = true
+	ent.clip1 = weapon:Clip1()
+	ent.clip2 = weapon:Clip2()
+
+	ent.ammo = ammo
+	self:RemoveAmmo(ammo, ammotype)
+	ent:Spawn()
+
+	weapon:Remove()
 end

@@ -64,6 +64,10 @@ function GM:PlayerGetSalary(ply, amount)
 
 end
 
+function GM:DarkRPVarChanged(ply, var, oldvar, newvalue)
+
+end
+
 /*---------------------------------------------------------
  Gamemode functions
  ---------------------------------------------------------*/
@@ -279,7 +283,7 @@ end
 
 function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
 	if tobool(GetConVarNumber("dropweapondeath")) and ValidEntity(ply:GetActiveWeapon()) then
-		ply:DropWeapon(ply:GetActiveWeapon())
+		ply:DropDRPWeapon(ply:GetActiveWeapon())
 	end
 	self.BaseClass:DoPlayerDeath(ply, attacker, dmginfo, ...)
 end
@@ -329,7 +333,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		GAMEMODE:Notify(ply, 4, 4, LANGUAGE.dead_in_jail)
 	else
 		-- Normal death, respawning.
-		ply.NextSpawnTime = CurTime() + math.Clamp(GetConVarNumber("respawntime"), 0, 3)
+		ply.NextSpawnTime = CurTime() + math.Clamp(GetConVarNumber("respawntime"), 0, 10)
 	end
 	ply.DeathPos = ply:GetPos()
 
@@ -473,11 +477,16 @@ function GM:PlayerInitialSpawn(ply)
 end
 
 local meta = FindMetaTable("Player")
-function meta:SetDarkRPVar(var, value)
+function meta:SetDarkRPVar(var, value, target)
 	if not ValidEntity(self) then return end
+	target = target or RecipientFilter():AddAllPlayers()
+
+	hook.Call("DarkRPVarChanged", nil, self, var, (self.DarkRPVars and self.DarkRPVars[var]) or nil, value)
+
 	self.DarkRPVars = self.DarkRPVars or {}
 	self.DarkRPVars[var] = value
-	umsg.Start("DarkRP_PlayerVar")
+
+	umsg.Start("DarkRP_PlayerVar", target)
 		umsg.Entity(self)
 		umsg.String(var)
 		if value == nil then value = "nil" end
@@ -486,24 +495,27 @@ function meta:SetDarkRPVar(var, value)
 end
 
 function meta:SetSelfDarkRPVar(var, value)
-	if not ValidEntity(self) then return end
-	self.DarkRPVars = self.DarkRPVars or {}
-	self.DarkRPVars[var] = value
-	umsg.Start("DarkRP_SelfPlayerVar", self)
-		umsg.String(var)
-		if value == nil then value = "nil" end
-		umsg.String(tostring(value))
-	umsg.End()
+	self.privateDRPVars = self.privateDRPVars or {}
+	table.insert(self.privateDRPVars, var)
+
+	self:SetDarkRPVar(var, value, self)
 end
 
 local function SendDarkRPVars(ply)
 	if ply.DarkRPVarsSent and ply.DarkRPVarsSent > (CurTime() - 1) then return end --prevent spammers
 	ply.DarkRPVarsSent = CurTime()
 
+	local sendtable = {}
 	for k,v in pairs(player.GetAll()) do
+		sendtable[v] = {}
+		for a,b in pairs(v.DarkRPVars) do
+			if not table.HasValue(v.privateDRPVars, a) or ply == v then
+				sendtable[v][a] = b
+			end
+		end
 		net.Start("DarkRP_InitializeVars")
 			net.WriteEntity(v)
-			net.WriteTable(v.DarkRPVars)
+			net.WriteTable(sendtable[v])
 		net.Send(ply)
 	end
 end
@@ -820,8 +832,8 @@ function GM:InitPostEntity()
 end
 
 function GM:PlayerLeaveVehicle(ply, vehicle)
-	if GetConVarNumber("autovehiclelock") == 1 and vehicle.OwnedBy(ply) then
-		vehicle:Fire("lock", "", 0)
+	if GetConVarNumber("autovehiclelock") == 1 and vehicle:OwnedBy(ply) then
+		vehicle:KeysLock()
 	end
 	self.BaseClass:PlayerLeaveVehicle(ply, vehicle)
 end

@@ -416,24 +416,7 @@ local function DropWeapon(ply)
 			local ammo = ply:GetAmmoCount(ammotype)
 			local clip = (ent.Primary and ent.Primary.ClipSize) or 0
 
-			ply:DropWeapon(ent) -- Drop it so the model isn't the viewmodel
-			local weapon = ents.Create("spawned_weapon")
-			local model = (ent:GetModel() == "models/weapons/v_physcannon.mdl" and "models/weapons/w_physics.mdl") or ent:GetModel()
-
-			weapon.ShareGravgun = true
-			weapon:SetPos(ply:GetShootPos() + ply:GetAimVector() * 30)
-			weapon:SetModel(model)
-			weapon:SetSkin(ent:GetSkin())
-			weapon.weaponclass = ent:GetClass()
-			weapon.nodupe = true
-			weapon.clip1 = ent:Clip1()
-			weapon.clip2 = ent:Clip2()
-
-			weapon.ammo = ammo
-			ply:RemoveAmmo(ammo, ammotype)
-			weapon:Spawn()
-
-			ent:Remove()
+			ply:DropDRPWeapon(ent)
 		end
 	end, ply, ent)
 	return ""
@@ -1415,6 +1398,11 @@ local function Demote(ply, args)
 		return ""
 	end
 	local p = GAMEMODE:FindPlayer(tableargs[1])
+	if p == ply then
+		GAMEMODE:Notify(ply, 1, 4, "Can't demote yourself.")
+		return ""
+	end
+
 	if p then
 		if CurTime() - ply.LastVoteCop < 80 then
 			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait, math.ceil(80 - (CurTime() - ply:GetTable().LastVoteCop)), "/demote"))
