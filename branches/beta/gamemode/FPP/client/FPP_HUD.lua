@@ -9,18 +9,11 @@ local function CanTouch(um)
 	if TouchAlpha > 0 then return end
 	CantTouchOwner = um:ReadString()
 	cantouch = um:ReadBool()
-	timer.Simple(1, function()
+
+	TouchAlpha = 255
+	timer.Simple(1, function(i)
 		TouchAlpha = 0
 	end)
-	for i = 1, 511, 1 do
-		timer.Simple(i/510, function(i)
-			if i <= 255 then
-				TouchAlpha = i
-			else
-				TouchAlpha = 255 - (i-255)
-			end
-		end, i)
-	end
 end
 usermessage.Hook("FPP_CanTouch", CanTouch)
 
@@ -180,16 +173,14 @@ local function HUDPaint()
 		end
 	end
 	-- Messsage when you can't touch something
-	if TouchAlpha > 0 then
+	if TouchAlpha > 0 and CantTouchOwner and CantTouchOwner ~= "" then
 		surface.SetDrawColor(255,255,255,TouchAlpha)
 
-		if CantTouchOwner and CantTouchOwner ~= "" then
-			surface.SetFont("Default")
-			local w,h = surface.GetTextSize(CantTouchOwner)
-			local col = Color(255,0,0,255)
-			if cantouch then col = Color(0,255,0,255) end
-			draw.WordBox(4, ScrW()/2 - 0.51*w, ScrH()/2 + h, CantTouchOwner, "Default", Color(50,50,50,100), col)
-		end
+		surface.SetFont("Default")
+		local w,h = surface.GetTextSize(CantTouchOwner)
+		local col = cantouch and Color(0,255,0,255) or Color(255,0,0,255)
+
+		draw.WordBox(4, ScrW()/2 - 0.51*w, ScrH()/2 + h, CantTouchOwner, "Default", Color(50,50,50,100), col)
 	end
 
 	if not HUDNotes then return end
