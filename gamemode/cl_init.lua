@@ -247,6 +247,7 @@ local Messagemode = false
 local playercolors = {}
 local HearMode = "talk"
 local isSpeaking = false
+local GroupChat = false
 
 local function RPStopMessageMode()
 	Messagemode = false
@@ -265,10 +266,10 @@ local function CL_IsInRoom(listener) -- IsInRoom function to see if the player i
 end
 
 local PlayerColorsOn = CreateClientConVar("rp_showchatcolors", 1, true, false)
-local function RPSelectwhohearit()
+local function RPSelectwhohearit(group)
 	if PlayerColorsOn:GetInt() == 0 then return end
 	Messagemode = true
-
+	GroupChat = group
 	hook.Add("HUDPaint", "RPinstructionsOnSayColors", function()
 		local w, l = ScrW()/80, ScrH() /1.75
 		local h = l - (#playercolors * 20) - 20
@@ -359,7 +360,7 @@ function GM:ChatTextChanged(text)
 		if plyname ~= "" and self:FindPlayer(plyname) then
 			playercolors = {self:FindPlayer(plyname)}
 		end
-	elseif string.sub(string.lower(text), 1, 3) == "/g " then
+	elseif string.sub(string.lower(text), 1, 3) == "/g " or GroupChat then
 		HearMode = "group chat"
 		local t = LocalPlayer():Team()
 		playercolors = {}
