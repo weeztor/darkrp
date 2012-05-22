@@ -233,10 +233,10 @@ function meta:ChangeTeam(t, force)
 	if self:isArrested() and not force then
 		if not self:Alive() then
 			GAMEMODE:Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
-			return
+			return false
 		else
 			GAMEMODE:Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
-			return
+			return false
 		end
 	end
 
@@ -246,24 +246,28 @@ function meta:ChangeTeam(t, force)
 
 	if t ~= TEAM_CITIZEN and not self:ChangeAllowed(t) and not force then
 		GAMEMODE:Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), "banned/demoted"))
-		return
+		return false
 	end
 
 	if self.LastJob and 10 - (CurTime() - self.LastJob) >= 0 and not force then
 		GAMEMODE:Notify(self, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(10 - (CurTime() - self.LastJob)), "/job"))
-		return
+		return false
 	end
 
 	if self.IsBeingDemoted then
 		self:TeamBan()
+		self.IsBeingDemoted = false
+		self:ChangeTeam(1, true)
 		GAMEMODE.vote.DestroyVotesWithEnt(self)
 		GAMEMODE:Notify(self, 1, 4, "You tried to escape demotion. You failed, and have been demoted.")
+
+		return false
 	end
 
 
 	if self:Team() == t then
 		GAMEMODE:Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
-		return
+		return false
 	end
 
 	local TEAM = RPExtraTeams[t]
@@ -271,23 +275,23 @@ function meta:ChangeTeam(t, force)
 
 	if TEAM.customCheck and not TEAM.customCheck(self) then
 		GAMEMODE:Notify(self, 1, 4, string.format(LANGUAGE.unable, team.GetName(t), ""))
-		return
+		return false
 	end
 
 	if not self.DarkRPVars["Priv"..TEAM.command] and not force then
 		if type(TEAM.NeedToChangeFrom) == "number" and self:Team() ~= TEAM.NeedToChangeFrom then
 			GAMEMODE:Notify(self, 1,4, string.format(LANGUAGE.need_to_be_before, team.GetName(TEAM.NeedToChangeFrom), TEAM.name))
-			return
+			return false
 		elseif type(TEAM.NeedToChangeFrom) == "table" and not table.HasValue(TEAM.NeedToChangeFrom, self:Team()) then
 			local teamnames = ""
 			for a,b in pairs(TEAM.NeedToChangeFrom) do teamnames = teamnames.." or "..team.GetName(b) end
 			GAMEMODE:Notify(self, 1,4, string.format(string.sub(teamnames, 5), team.GetName(TEAM.NeedToChangeFrom), TEAM.name))
-			return
+			return false
 		end
 		local max = TEAM.max
 		if max ~= 0 and ((max % 1 == 0 and team.NumPlayers(t) >= max) or (max % 1 ~= 0 and (team.NumPlayers(t) + 1) / #player.GetAll() > max)) then
 			GAMEMODE:Notify(self, 1, 4,  string.format(LANGUAGE.team_limit_reached, TEAM.name))
-			return
+			return false
 		end
 	end
 
