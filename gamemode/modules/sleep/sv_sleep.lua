@@ -68,7 +68,7 @@ function KnockoutToggle(player, command, args, caller)
 			else
 				for k,v in pairs(ents.FindInSphere(player:GetPos(), 30)) do 
 					if v:GetClass() == "func_door" then
-						Notify(player, 1, 4, string.format(LANGUAGE.unable, "sleep", "func_door exploit"))
+						GAMEMODE:Notify(player, 1, 4, string.format(LANGUAGE.unable, "sleep", "func_door exploit"))
 						return ""
 					end
 				end
@@ -114,7 +114,7 @@ function KnockoutToggle(player, command, args, caller)
 		end
 		return ""
 	else
-		Notify(player, 1, 4, string.format(LANGUAGE.disabled, "/sleep", ""))
+		GAMEMODE:Notify(player, 1, 4, string.format(LANGUAGE.disabled, "/sleep", ""))
 		return ""
 	end
 end

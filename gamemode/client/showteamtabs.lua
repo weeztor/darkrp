@@ -59,7 +59,6 @@ local function MayorOptns()
 				end
 				menu:Open()
 			end
-			maypanel:AddItem(UnWarrant)
 
 			local Lockdown = maypanel:Add("DButton")
 			Lockdown:SetText(LANGUAGE.initiate_lockdown)

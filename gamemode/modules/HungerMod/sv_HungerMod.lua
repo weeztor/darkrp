@@ -2,8 +2,8 @@ local HM = { }
 FoodItems = { }
 
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
-	if not ply:IsAdmin() then Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "rp_hungerspeed")) return end
-	if not tonumber(args[1]) then Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "")) return end
+	if not ply:IsAdmin() then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "rp_hungerspeed")) return end
+	if not tonumber(args[1]) then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "")) return end
 	DB.SaveSetting("hungerspeed", tonumber(args[1]) / 10)
 end)
 
@@ -40,25 +40,25 @@ end
 
 HELP_CATEGORY_HUNGERMOD = 4
 
-AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
+GAMEMODE:AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
 
-AddToggleCommand("rp_hungermod", "hungermod", 0)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungermod <1 or 0> - Enable/disable hunger mod")
+GAMEMODE:AddToggleCommand("rp_hungermod", "hungermod", 0)
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungermod <1 or 0> - Enable/disable hunger mod")
 
-AddToggleCommand("rp_foodspawn", "foodspawn", 1)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_foodspawn - Whether players(non-cooks) can spawn food props or not")
+GAMEMODE:AddToggleCommand("rp_foodspawn", "foodspawn", 1)
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_foodspawn - Whether players(non-cooks) can spawn food props or not")
 
-AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodspecialcost <1 or 0> - Enable/disable whether spawning food props have a special cost")
+GAMEMODE:AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodspecialcost <1 or 0> - Enable/disable whether spawning food props have a special cost")
 
-AddValueCommand("rp_foodcost", "foodcost", 15)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodcost <Amount> - Set food cost")
+GAMEMODE:AddValueCommand("rp_foodcost", "foodcost", 15)
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodcost <Amount> - Set food cost")
 
-AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungerspeed <Amount> - Set the rate at which players will become hungry (2 is the default)")
+GAMEMODE:AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungerspeed <Amount> - Set the rate at which players will become hungry (2 is the default)")
 
-AddValueCommand("rp_starverate", "starverate", 3)
-AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_starverate <Amount> - How much health that is taken away every second the player is starving  (3 is the default)")
+GAMEMODE:AddValueCommand("rp_starverate", "starverate", 3)
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_starverate <Amount> - How much health that is taken away every second the player is starving  (3 is the default)")
 
 
 AddFoodItem("banana", "models/props/cs_italy/bananna.mdl", 10)
@@ -84,12 +84,12 @@ local function BuyFood(ply, args)
 	local tr = util.TraceLine(trace)
 
 	if GetConVarNumber("hungermod") == 0 and ply:Team() ~= TEAM_COOK then
-		Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "hungermod", ""))
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.disabled, "hungermod", ""))
 		return ""
 	end
 
 	if ply:Team() ~= TEAM_COOK and team.NumPlayers(TEAM_COOK) > 0 then
-		Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyfood", "cooks"))
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/buyfood", "cooks"))
 		return ""
 	end
 
@@ -99,10 +99,10 @@ local function BuyFood(ply, args)
 			if ply:CanAfford(cost) then
 				ply:AddMoney(-cost)
 			else
-				Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
+				GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
 				return ""
 			end
-			Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, k, tostring(cost)))
+			GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, k, tostring(cost)))
 			local SpawnedFood = ents.Create("spawned_food")
 			SpawnedFood.dt.owning_ent = ply
 			SpawnedFood.ShareGravgun = true

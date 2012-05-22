@@ -533,7 +533,7 @@ local function ccSENTSPawn(ply, cmd, args)
 			return
 		end
 	end
-	CCSpawnSENT(ply, cmd, args)
+	Spawn_SENT(ply, args[1])
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned SENT "..args[1], nil, Color(255, 255, 0))
 end
 concommand.Add("gm_spawnsent", ccSENTSPawn)
@@ -545,7 +545,7 @@ local function ccVehicleSpawn(ply, cmd, args)
 			return
 		end
 	end
-	CCSpawnVehicle(ply, cmd, args)
+	Spawn_Vehicle(ply, args[1])
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned Vehicle "..args[1], nil, Color(255, 255, 0))
 end
 concommand.Add("gm_spawnvehicle", ccVehicleSpawn)
@@ -557,7 +557,7 @@ local function ccNPCSpawn(ply, cmd, args)
 			return
 		end
 	end
-	CCSpawnNPC(ply, cmd, args)
+	Spawn_NPC(ply, args[1])
 	DB.Log(ply:SteamName().." ("..ply:SteamID()..") spawned NPC "..args[1], nil, Color(255, 255, 0))
 end
 concommand.Add("gm_spawnnpc", ccNPCSpawn)
