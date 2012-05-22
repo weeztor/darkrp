@@ -214,28 +214,29 @@ local function IsInRoom(listener, talker) -- IsInRoom function to see if the pla
 	return not trace.HitWorld
 end
 
-function GM:PlayerCanHearPlayersVoice(listener, talker)
-	local surroundVoice = tobool(GetConVarNumber("3dvoice"))
-
+local threed = GetConVar( "3dvoice" )
+local vrad = GetConVar( "voiceradius" )
+local dynv = GetConVar( "dynamicvoice" )
+function GM:PlayerCanHearPlayersVoice(listener, talker, other)
 	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then
-		return true, surroundVoice
+		return true, threed:GetBool()
 	elseif talker.DarkRPVars and ValidEntity(talker.DarkRPVars.phone) then
-		return false, surroundVoice
+		return false, threed:GetBool()
 	end
 
-	if GetConVarNumber("voiceradius") == 1 and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
-		if GetConVarNumber("dynamicvoice") == 1 then
+	if vrad:GetBool() and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
+		if dynv:GetBool() then
 			if IsInRoom( listener, talker ) then
-				return true, surroundVoice
+				return true, threed:GetBool()
 			else
-				return false, surroundVoice
+				return false, threed:GetBool()
 			end
 		end
-		return true, surroundVoice
-	elseif GetConVarNumber("voiceradius") == 1 then
-		return false, surroundVoice
+		return true, threed:GetBool()
+	elseif vrad:GetBool() then
+		return false, threed:GetBool()
 	end
-	return true, surroundVoice
+	return true, threed:GetBool()
 end
 
 function GM:CanTool(ply, trace, mode)
