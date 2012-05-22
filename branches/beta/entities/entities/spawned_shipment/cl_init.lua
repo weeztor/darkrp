@@ -8,7 +8,7 @@ function ENT:Draw()
 	self.StartTime = self.StartTime or CurTime()
 
 	if GetConVarNumber("shipmentspawntime") > 0 and self.height < self:OBBMaxs().z then
-		SetMaterialOverride(matBallGlow)
+		render.SetMaterialOverride(matBallGlow)
 
 		render.SetColorModulation(self.colr, self.colg, 0)
 
@@ -19,7 +19,7 @@ function ENT:Draw()
 
 		render.SetColorModulation(1, 1, 1)
 
-		SetMaterialOverride()
+		render.SetMaterialOverride()
 
 		local normal = - self:GetAngles():Up()
 		local pos = self:LocalToWorld(Vector(0, 0, self:OBBMins().z + self.height))

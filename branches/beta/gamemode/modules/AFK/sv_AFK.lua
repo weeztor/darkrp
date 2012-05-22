@@ -4,10 +4,10 @@
 -- If a player uses /afk, they go into AFK mode, they will not be autodemoted and their salary is set to $0 (you can still be killed/vote demoted though!).
 -- If a player does not use /afk, and they don't do anything for the demote time specified, they will be automatically demoted to hobo.
 
-AddToggleCommand("rp_afk_demote", "afkdemote", 0)
-AddValueCommand("rp_afk_demotetime", "afkdemotetime", 600)
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demote <1/0> - If set to 1, players who don't do anything for ".. GetConVarNumber("afkdemotetime") .." seconds will be demoted if they do not use AFK mode.")
-AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demotetime <time> - Sets the time a player has to be AFK for before they are demoted (in seconds).")
+GAMEMODE:AddToggleCommand("rp_afk_demote", "afkdemote", 0)
+GAMEMODE:AddValueCommand("rp_afk_demotetime", "afkdemotetime", 600)
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demote <1/0> - If set to 1, players who don't do anything for ".. GetConVarNumber("afkdemotetime") .." seconds will be demoted if they do not use AFK mode.")
+GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demotetime <time> - Sets the time a player has to be AFK for before they are demoted (in seconds).")
 
 local function AFKDemote(ply)
 	local rpname = ply.DarkRPVars.rpname
@@ -15,7 +15,7 @@ local function AFKDemote(ply)
 	if ply:Team() ~= TEAM_CITIZEN then
 		ply:ChangeTeam(TEAM_CITIZEN, true)
 		ply:SetSelfDarkRPVar("AFKDemoted", true)
-		NotifyAll(0, 5, rpname .. " has been demoted for being AFK for too long.")
+		GAMEMODE:NotifyAll(0, 5, rpname .. " has been demoted for being AFK for too long.")
 	end
 	ply:SetDarkRPVar("job", "AFK")
 end
@@ -36,7 +36,7 @@ local function SetAFK(ply)
 	if ply.DarkRPVars.AFK then
 		DB.RetrieveSalary(ply, function(amount) ply.OldSalary = amount end)
 		ply.OldJob = ply.DarkRPVars.job
-		NotifyAll(0, 5, rpname .. " is now AFK.")
+		GAMEMODE:NotifyAll(0, 5, rpname .. " is now AFK.")
 
 		-- NPC code partially by _Undefined
 		local npc = ents.Create("npc_citizen")
@@ -69,8 +69,8 @@ local function SetAFK(ply)
 			hook.Remove("PlayerDisconnected", ply:EntIndex().."DRPNPCDisconnect")
 		end)
 	else
-		NotifyAll(1, 5, rpname .. " is no longer AFK.")
-		Notify(ply, 0, 5, "Welcome back, your salary has now been restored.")
+		GAMEMODE:NotifyAll(1, 5, rpname .. " is no longer AFK.")
+		GAMEMODE:Notify(ply, 0, 5, "Welcome back, your salary has now been restored.")
 		if ValidEntity(ply.AFKNpc) then
 			ply:SetEyeAngles(ply.AFKNpc:EyeAngles())
 			ply:SetPos(ply.AFKNpc:GetPos() + ply.AFKNpc:GetAimVector() * 10)
@@ -98,7 +98,7 @@ hook.Add("PlayerInitialSpawn", "StartAFKOnPlayer", StartAFKOnPlayer)
 
 local function ToggleAFK(ply)
 	if GetConVarNumber("afkdemote") == 0 then
-		Notify( ply, 1, 5, "AFK mode is disabled.")
+		GAMEMODE:Notify( ply, 1, 5, "AFK mode is disabled.")
 		return ""
 	end
 

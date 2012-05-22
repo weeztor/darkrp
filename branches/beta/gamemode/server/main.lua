@@ -945,11 +945,7 @@ local function BuyPistol(ply, args)
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "/buy"))
 		return ""
 	end
-
-	ply:AddMoney(-price)
-
-	Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, tostring(price)))
-
+	
 	local weapon = ents.Create("spawned_weapon")
 	weapon:SetModel(model)
 	weapon.weaponclass = class
@@ -1023,8 +1019,6 @@ local function BuyShipment(ply, args)
 		return ""
 	end
 
-	ply:AddMoney(-cost)
-	Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
 	local crate = ents.Create("spawned_shipment")
 	crate.SID = ply.SID
 	crate.dt.owning_ent = ply

@@ -58,11 +58,11 @@ usermessage.Hook("_Notify", DisplayNotify)
 local function LoadModules()
 	local root = GAMEMODE.FolderName.."/gamemode/modules/"
 
-	for _, folder in SortedPairs(file.Find(root.."*", LUA_PATH), true) do
-		for _, File in SortedPairs(file.Find(root .. folder .."/cl_*.lua", LUA_PATH), true) do
+	for _, folder in SortedPairs(table.Add(file.Find(root.."*", LUA_PATH)), true) do
+		for _, File in SortedPairs(table.Add(file.Find(root .. folder .."/cl_*.lua", LUA_PATH)), true) do
 			include(root.. folder .. "/" ..File)
 		end
-		for _, File in SortedPairs(file.Find(root .. folder .."/sh_*.lua", LUA_PATH), true) do
+		for _, File in SortedPairs(table.Add(file.Find(root .. folder .."/sh_*.lua", LUA_PATH)), true) do
 			include(root.. folder .. "/" ..File)
 		end
 	end

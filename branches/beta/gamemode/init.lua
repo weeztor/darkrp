@@ -123,16 +123,16 @@ Loading modules
 local fol = GM.FolderName.."/gamemode/modules/"
 for _, folder in SortedPairs(file.Find(fol .. "*", LUA_PATH), true) do
 	if folder ~= "." and folder ~= ".." then
-		for _, File in SortedPairs(file.Find(fol .. folder .."/sh_*.lua", LUA_PATH)) do
+		for _, File in SortedPairs(table.Add(file.Find(fol .. folder .."/sh_*.lua", LUA_PATH))) do
 			AddCSLuaFile(fol..folder .. "/" ..File)
 			include(fol.. folder .. "/" ..File)
 		end
 
-		for _, File in SortedPairs(file.Find(fol .. folder .."/sv_*.lua", LUA_PATH), true) do
+		for _, File in SortedPairs(table.Add(file.Find(fol .. folder .."/sv_*.lua", LUA_PATH)), true) do
 			include(fol.. folder .. "/" ..File)
 		end
 
-		for _, File in SortedPairs(file.Find(fol .. folder .."/cl_*.lua", LUA_PATH), true) do
+		for _, File in SortedPairs(table.Add(file.Find(fol .. folder .."/cl_*.lua", LUA_PATH)), true) do
 			AddCSLuaFile(fol.. folder .. "/" ..File)
 		end
 	end

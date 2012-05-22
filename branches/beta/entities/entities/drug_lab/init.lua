@@ -43,17 +43,17 @@ function ENT:Use(activator,caller)
 	self.Entity.CanUse = false
 	self.drug_user = activator
 	if activator.maxDrugs and activator.maxDrugs >= GetConVarNumber("maxdrugs") then
-		Notify(activator, 1, 3, "You can't make anymore drugs as the limit is reached.")
+		GAMEMODE:Notify(activator, 1, 3, "You can't make anymore drugs as the limit is reached.")
 		timer.Simple(0.5, function() self.Entity.CanUse = true end)
 	else
 		
 		local productioncost = math.random(self.Entity.dt.price / 8, self.Entity.dt.price / 4)
 		if not activator:CanAfford(productioncost) then
-			Notify(activator, 1, 4, "You do not have enough money to produce drugs.")
+			GAMEMODE:Notify(activator, 1, 4, "You do not have enough money to produce drugs.")
 			return false
 		end
 		activator:AddMoney(-productioncost)
-		Notify(activator, 0, 4, "You have made drugs! production cost: " .. CUR .. tostring(productioncost).."!")
+		GAMEMODE:Notify(activator, 0, 4, "You have made drugs! production cost: " .. CUR .. tostring(productioncost).."!")
 		self.sparking = true
 		timer.Create(self:EntIndex() .. "drug", 1, 1, self.createDrug, self)
 	end
