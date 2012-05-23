@@ -157,7 +157,9 @@ end
 
 function meta:CompleteSentence()
 	if not ValidEntity(self) then return end
-	for k,v in pairs(GAMEMODE.ToggleCmds) do
+
+-- See the commit log for r1167 for more information as to why this is commented out.
+--[[	for k,v in pairs(GAMEMODE.ToggleCmds) do
 		local value = GetConVarNumber(v.var)
 		if value ~= v.default then
 			RunConsoleCommand(v.var, v.default)
@@ -171,7 +173,7 @@ function meta:CompleteSentence()
 			RunConsoleCommand(v.var, v.default)
 			timer.Simple(0, RunConsoleCommand, v.var, value)
 		end
-	end
+	end]]--
 
 	if ValidEntity(self) and self:isArrested() then
 		local time = GetConVarNumber("jailtimer")
