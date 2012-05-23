@@ -49,17 +49,17 @@ function ENT:SpawnItem()
 	local contents = self.Entity.dt.contents
 	local weapon = ents.Create("spawned_weapon")
 	
-	local found = false
-	for k,v in pairs(CustomShipments) do
-		if k == contents then
-			found = true
-			weapon.weaponclass = v.entity
-			weapon:SetModel(v.model)
-			break
-		end
+	if CustomShipments[contents] then
+		class = CustomShipments[contents].entity
+		model = CustomShipments[contents].model
+	else
+		weapon:Remove()
+		self:Remove() 
 	end
-	if not found then weapon:Remove() end
-
+	
+	weapon.weaponclass = class
+	weapon:SetModel( model )
+	weapon.ammoadd = weapons.Get(class) and weapons.Get(class).Primary.DefaultClip
 	weapon.ShareGravgun = true
 	weapon:SetPos(pos + Vector(0,0,35))
 	weapon.nodupe = true
