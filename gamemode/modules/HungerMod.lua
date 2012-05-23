@@ -5,6 +5,13 @@ include("HungerMod/player.lua")
 local HM = { }
 local FoodItems = { }
 
+GM:AddToggleCommand("rp_hungermod", "hungermod", 0)
+GM:AddToggleCommand("rp_foodspawn", "foodspawn", 1)
+GM:AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
+GM:AddValueCommand("rp_foodcost", "foodcost", 15)
+GM:AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
+GM:AddValueCommand("rp_starverate", "starverate", 3)
+
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
 	if not ply:IsAdmin() then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "rp_hungerspeed")) return end
 	if not tonumber(args[1]) then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.invalid_x, "argument", "")) return end
