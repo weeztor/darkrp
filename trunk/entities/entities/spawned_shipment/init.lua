@@ -54,7 +54,8 @@ function ENT:SpawnItem()
 		model = CustomShipments[contents].model
 	else
 		weapon:Remove()
-		self:Remove() 
+		self:Remove()
+		return
 	end
 	
 	weapon.weaponclass = class
@@ -94,7 +95,8 @@ function ENT:Destruct()
 		class = CustomShipments[contents].entity
 		model = CustomShipments[contents].model
 	else
-		self.Entity:Remove() 
+		self:Remove()
+		return
 	end
 	
 	for i=1, count, 1 do
