@@ -412,7 +412,7 @@ end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
 	if ply:isArrested() then return false end
-	if ply:IsAdmin() and GetConVarNumber("AdminsCopWeapons") ==1 then return true end
+	if ply:IsAdmin() and GetConVarNumber("AdminsCopWeapons") == 1 then return true end
 	if GetConVarNumber("license") == 1 and not ply.DarkRPVars.HasGunlicense and not ply:GetTable().RPLicenseSpawn then
 		if GetConVarNumber("licenseweapon_"..string.lower(weapon:GetClass())) == 1 or not weapon:IsWeapon() then
 			return true
