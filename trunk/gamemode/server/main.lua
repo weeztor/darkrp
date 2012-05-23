@@ -127,8 +127,8 @@ local function SpawnZombie()
 	timer.Start("move")
 	if GetAliveZombie() < maxZombie then
 		if table.getn(zombieSpawns) > 0 then
-			local zombieType = math.random(1, 4)
 			local ZombieTypes = {"npc_zombie", "npc_fastzombie", "npc_antlion", "npc_headcrab_fast"}
+			local zombieType = math.random(1, #ZombieTypes)
 
 			local Zombie = ents.Create(ZombieTypes[zombieType])
 			Zombie.nodupe = true
