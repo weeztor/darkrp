@@ -334,8 +334,6 @@ local function RetrieveGroups()
 	end)
 end
 
--- See the DarkRP commit log for r1167 for more information as to why this is commented out.
---[[
 local function SendSettings(ply)
 	timer.Simple(10, function(ply)
 		local i = 0
@@ -351,7 +349,6 @@ local function SendSettings(ply)
 	end, ply)
 end
 hook.Add("PlayerInitialSpawn", "FPP_SendSettings", SendSettings)
-]]--
 
 local function AddGroup(ply, cmd, args)
 	if ply:EntIndex() ~= 0 and not ply:IsSuperAdmin() then FPP.Notify(ply, "You need superadmin privileges in order to be able to use this command", false) return end
