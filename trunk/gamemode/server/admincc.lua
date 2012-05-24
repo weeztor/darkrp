@@ -551,7 +551,7 @@ end
 concommand.Add("gm_spawnvehicle", ccVehicleSpawn)
 
 local function ccNPCSpawn(ply, cmd, args)
-	if GetConVarNumber("adminnpc") == 1 then
+	if GetConVarNumber("adminnpcs") == 1 then
 		if ply:EntIndex() ~= 0 and not ply:IsAdmin() then
 			GAMEMODE:Notify(ply, 1, 2, string.format(LANGUAGE.need_admin, "gm_spawnnpc"))
 			return
