@@ -128,6 +128,8 @@ function GM:PlayerSpawnVehicle(ply, model)
 end
 
 function GM:PlayerSpawnNPC(ply, model)
+	if tobool(GetConVarNumber("adminnpcs")) and not ply:IsAdmin() then return false end
+
 	return self.BaseClass:PlayerSpawnNPC(ply, model) and not ply:isArrested()
 end
 
