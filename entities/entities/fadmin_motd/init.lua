@@ -10,7 +10,8 @@ function ENT:Initialize()
 	self:SetSolid(SOLID_VPHYSICS)
 	local phys = self:GetPhysicsObject()
 
-	if phys and phys:IsValid() then phys:Wake() phys:EnableMotion(false) end
+	phys:Wake()
+	phys:EnableMotion(false)
 	self.SolidPos = self:GetPos()
 	self.SolidAng = self:GetAngles()
 	self:SetMaterial("models/props_lab/warp_sheet")
@@ -19,7 +20,7 @@ end
 function ENT:OnRemove()
 	if not self.CanRemove and ValidEntity(self.target) then
 		local Replace = ents.Create("fadmin_motd")
-		
+
 		Replace:SetPos(self.SolidPos)
 		Replace:SetAngles(self.SolidAng)
 		Replace:Spawn()
@@ -31,20 +32,20 @@ function ENT:OnPhysgunFreeze(Weapon, PhysObj, ent, ply)
 	FAdmin.MOTD.SaveMOTD(ent, ply)
 end
 
-function ENT:SpawnFunction( ply, tr )
+function ENT:SpawnFunction(ply, tr)
 	if not tr.Hit then return end
-	for k,v in pairs(ents.FindByClass("fadmin_motd")) do	
+	for k,v in pairs(ents.FindByClass("fadmin_motd")) do
 		v.CanRemove = true
 		v:Remove() --There can only be one motd per level
 	end
-	
+
 	local SpawnPos = tr.HitPos + tr.HitNormal * 16 + Vector(0,0,50)
-	
+
 	local ent = ents.Create( "fadmin_motd" )
 	ent:SetPos(SpawnPos)
 	local Ang = ply:EyeAngles()
 	ent:SetAngles(Angle(0, Ang.y-180, Ang.r))
-	
+
 	ent:Spawn()
 	ent:Activate()
 end

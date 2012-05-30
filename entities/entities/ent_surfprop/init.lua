@@ -12,10 +12,8 @@ function ENT:Initialize()
 	self:SetSolid(SOLID_VPHYSICS)
 
 	local phys = self:GetPhysicsObject()
-	if phys:IsValid() then
-		phys:Wake()
-		phys:EnableMotion(false)
-	end
+	phys:Wake()
+	phys:EnableMotion(false)
 
 	self:SetMaterial("phoenix_storms/wire/pcb_blue")
 	self:SetColor(math.random(0,255), math.random(0,255), math.random(0,255), 255) -- Nice random colour per contestant

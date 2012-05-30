@@ -1035,7 +1035,7 @@ local function BuyShipment(ply, args)
 		crate:SetSolid(SOLID_VPHYSICS)
 	end
 	local phys = crate:GetPhysicsObject()
-	if phys and phys:IsValid() then phys:Wake() end
+	phys:Wake()
 
 	if ValidEntity( crate ) then
 		ply:AddMoney(-cost)

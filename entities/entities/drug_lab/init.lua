@@ -11,14 +11,14 @@ function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
 	local phys = self:GetPhysicsObject()
-	if phys and phys:IsValid() then phys:Wake() end
+	phys:Wake()
 	self.sparking = false
 	self.damage = 100
 	local ply = self.dt.owning_ent
-	self.Entity.SID = ply.SID
 	self.SID = ply.SID
-	self.Entity.dt.price = math.Clamp((GetConVarNumber("pricemin") ~= 0 and GetConVarNumber("pricemin")) or 100, (GetConVarNumber("pricecap") ~= 0 and GetConVarNumber("pricecap")) or 100)
-	self.Entity.CanUse = true
+	self.SID = ply.SID
+	self.dt.price = math.Clamp((GetConVarNumber("pricemin") ~= 0 and GetConVarNumber("pricemin")) or 100, (GetConVarNumber("pricecap") ~= 0 and GetConVarNumber("pricecap")) or 100)
+	self.CanUse = true
 	self.ShareGravgun = true
 end
 
@@ -39,15 +39,15 @@ function ENT:Destruct()
 end
 
 function ENT:Use(activator,caller)
-	if not self.Entity.CanUse then return false end
-	self.Entity.CanUse = false
+	if not self.CanUse then return false end
+	self.CanUse = false
 	self.drug_user = activator
 	if activator.maxDrugs and activator.maxDrugs >= GetConVarNumber("maxdrugs") then
 		GAMEMODE:Notify(activator, 1, 3, "You can't make anymore drugs as the limit is reached.")
-		timer.Simple(0.5, function() self.Entity.CanUse = true end)
+		timer.Simple(0.5, function() self.CanUse = true end)
 	else
 
-		local productioncost = math.random(self.Entity.dt.price / 8, self.Entity.dt.price / 4)
+		local productioncost = math.random(self.dt.price / 8, self.dt.price / 4)
 		if not activator:CanAfford(productioncost) then
 			GAMEMODE:Notify(activator, 1, 4, "You do not have enough money to produce drugs.")
 			return false
@@ -60,7 +60,7 @@ function ENT:Use(activator,caller)
 end
 
 function ENT:createDrug()
-	self.Entity.CanUse = true
+	self.CanUse = true
 	local userb = self.drug_user
 	local drugPos = self:GetPos()
 	drug = ents.Create("drug")
@@ -69,7 +69,7 @@ function ENT:createDrug()
 	drug.SID = userb.SID
 	drug.ShareGravgun = true
 	drug.nodupe = true
-	drug.dt.price = self.Entity.dt.price or 100
+	drug.dt.price = self.dt.price or 100
 	drug:Spawn()
 	if not userb.maxDrugs then
 		userb.maxDrugs = 0

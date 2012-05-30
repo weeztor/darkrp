@@ -4,10 +4,10 @@ local frame
 local SignButton
 
 function ENT:Draw()
-	self.Entity:DrawModel()
+	self:DrawModel()
 end
 
-local function KillLetter(msg) 
+local function KillLetter(msg)
 	hook.Remove("HUDPaint", "ShowLetter")
 	frame:Remove()
 end

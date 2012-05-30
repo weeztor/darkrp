@@ -4,19 +4,19 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props_c17/paper01.mdl")
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self:SetModel("models/props_c17/paper01.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
 	self:SetUseType(SIMPLE_USE)
-	local phys = self.Entity:GetPhysicsObject()
+	local phys = self:GetPhysicsObject()
 
-	if phys and phys:IsValid() then phys:Wake() end
-	local ply = self.Entity.dt.owning_ent
+	phys:Wake()
+	local ply = self.dt.owning_ent
 end
 
 function ENT:OnRemove()
-	local ply = self.Entity.dt.owning_ent
+	local ply = self.dt.owning_ent
 	if not ValidEntity(ply) then return end
 	if not ply.maxletters then
 		ply.maxletters = 0
