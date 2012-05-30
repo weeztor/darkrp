@@ -149,7 +149,6 @@ GM:AddToggleCommand("rp_allowsprays", "allowsprays", 1)
 -- VALUE COMMANDS --
 -----------------------------------------------------------
 
-GM:AddValueCommand("rp_ammocost", "ammocost", 70)
 GM:AddValueCommand("rp_arrestspeed", "aspd", 120)
 GM:AddValueCommand("rp_babygodtime", "babygodtime", 5)
 GM:AddValueCommand("rp_deathfee", "deathfee", 30)
@@ -193,28 +192,6 @@ GM:AddValueCommand("rp_taxmax", "wallettaxmax", 5)
 GM:AddValueCommand("rp_vehiclecost", "vehiclecost", 40)
 GM:AddValueCommand("rp_walkspeed", "wspd", 160)
 GM:AddValueCommand("rp_wantedtime", "wantedtime", 120)
-
-local ammoTypes = {}
-function GM:AddAmmoType(class)
-	timer.Simple(0, function() -- Weapons start existing after gamemode init.
-		local weapon = weapons.Get(class)
-		if not weapon or not weapon.Primary then
-			return
-		end
-
-		if weapon.Primary.Ammo and weapon.Primary.Ammo ~= "none" and not table.HasValue(ammoTypes, weapon.Primary.Ammo) then
-			table.insert(ammoTypes, weapon.Primary.Ammo)
-		end
-
-		if weapon.Secondary.Ammo and weapon.Secondary.Ammo ~= "none" and not table.HasValue(ammoTypes, weapon.Secondary.Ammo) then
-			table.insert(ammoTypes, weapon.Secondary.Ammo)
-		end
-	end)
-end
-
-function GM:GetAmmoTypes()
-	return ammoTypes
-end
 
 function GM:AddEntityCommands(name, command, max, price)
 	local cmdname = string.gsub(command, " ", "_")
