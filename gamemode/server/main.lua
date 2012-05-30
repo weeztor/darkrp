@@ -1182,22 +1182,28 @@ local function BuyAmmo(ply, args)
 		return ""
 	end
 
-	if not table.HasValue(GAMEMODE:GetAmmoTypes(), args) then
-		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unavailable, "ammo"))
+	local found
+	for k,v in pairs(GAMEMODE.AmmoTypes) do
+		if v.ammoType == args then
+			found = v
+			break
+		end
 	end
 
-	if not ply:CanAfford(GetConVarNumber("ammocost")) then
+	if not found or (found.customCheck and not found.customCheck(ply)) then
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unavailable, "ammo"))
+		return ""
+	end
+
+	if not ply:CanAfford(found.price) then
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "ammo"))
 		return ""
 	end
 
-	ply:GiveAmmo(50, args)
+	GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, found.name, CUR..tostring(found.price)))
+	ply:AddMoney(-found.price)
 
-
-	local cost = GetConVarNumber("ammocost")
-
-	GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR..tostring(cost)))
-	ply:AddMoney(-cost)
+	ply:GiveAmmo(found.amountGiven, args)
 
 	return ""
 end

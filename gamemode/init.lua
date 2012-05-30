@@ -44,6 +44,7 @@ DeriveGamemode("sandbox")
 
 AddCSLuaFile("addentities.lua")
 AddCSLuaFile("shared.lua")
+AddCSLuaFile("ammotypes.lua")
 AddCSLuaFile("cl_init.lua")
 
 AddCSLuaFile("client/DRPDermaSkin.lua")
@@ -87,6 +88,7 @@ include("shared/Workarounds.lua")
 
 include("shared.lua")
 include("addentities.lua")
+include("ammotypes.lua")
 
 include("server/data.lua")
 include("server/gamemode_functions.lua")

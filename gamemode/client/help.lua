@@ -172,7 +172,6 @@ addLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_voiceradius_dynamic - Enable/disable
 addLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_wantedsuicide - Enable/Disable suiciding while you are wanted by the police.")
 addLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowsprays - Enable/disable the use of sprays on the server.")
 
-addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_ammocost <Number> - Sets the cost of ammo.")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_arrestspeed <Number> - Sets the max arrest speed.")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_babygodtime <Number> - How long the babygod lasts")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_deathfee <Number> - the amount of money someone drops when dead.")
