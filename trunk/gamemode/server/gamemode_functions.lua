@@ -855,3 +855,8 @@ local function ClearDecals()
 	end
 end
 timer.Create("RP_DecalCleaner", GetConVarNumber("decaltimer"), 0, ClearDecals)
+
+function GM:PlayerSpray()
+
+	return( GetConVarNumber( "allowsprays" ) == 0 )
+end
