@@ -143,6 +143,7 @@ GM:AddToggleCommand("rp_unlockdoorsonstart", "unlockdoorsonstart", 0)
 GM:AddToggleCommand("rp_voiceradius", "voiceradius", 0)
 GM:AddToggleCommand("rp_voiceradius_dynamic", "dynamicvoice", 1)
 GM:AddToggleCommand("rp_wantedsuicide", "wantedsuicide", 0)
+GM:AddToggleCommand("rp_allowsprays", "allowsprays", 1)
 
 -----------------------------------------------------------
 -- VALUE COMMANDS --

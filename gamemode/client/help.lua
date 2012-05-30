@@ -170,6 +170,7 @@ addLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_unlockdoorsonstart - Enable/Disable 
 addLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_voiceradius - Enable/disable local voice chat.")
 addLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_voiceradius_dynamic - Enable/disable whether only people in the same room as you can hear your mic.")
 addLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_wantedsuicide - Enable/Disable suiciding while you are wanted by the police.")
+addLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_allowsprays - Enable/disable the use of sprays on the server.")
 
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_ammocost <Number> - Sets the cost of ammo.")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_arrestspeed <Number> - Sets the max arrest speed.")
