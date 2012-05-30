@@ -46,14 +46,14 @@ function UnDrugPlayer(ply) -- Global function, used in sv_gamemode_functions
 end
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props_lab/jar01a.mdl")
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self:SetModel("models/props_lab/jar01a.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
 	self.CanUse = true
-	local phys = self.Entity:GetPhysicsObject()
+	local phys = self:GetPhysicsObject()
 
-	if phys and phys:IsValid() then phys:Wake() end
+	phys:Wake()
 
 	self.damage = 10
 	self.dt.price = self.dt.price or 100
@@ -65,12 +65,12 @@ function ENT:OnTakeDamage(dmg)
 
 	if (self.damage <= 0) then
 		local effectdata = EffectData()
-		effectdata:SetOrigin(self.Entity:GetPos())
+		effectdata:SetOrigin(self:GetPos())
 		effectdata:SetMagnitude(2)
 		effectdata:SetScale(2)
 		effectdata:SetRadius(3)
 		util.Effect("Sparks", effectdata)
-		self.Entity:Remove()
+		self:Remove()
 	end
 end
 
@@ -87,7 +87,7 @@ function ENT:Use(activator,caller)
 	end
 	DrugPlayer(caller)
 	self.CanUse = false
-	self.Entity:Remove()
+	self:Remove()
 end
 
 function ENT:OnRemove()

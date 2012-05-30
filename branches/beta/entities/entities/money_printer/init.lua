@@ -12,7 +12,8 @@ function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
 	local phys = self:GetPhysicsObject()
-	if phys:IsValid() then phys:Wake() end
+	phys:Wake()
+
 	self.sparking = false
 	self.damage = 100
 	self.IsMoneyPrinter = true

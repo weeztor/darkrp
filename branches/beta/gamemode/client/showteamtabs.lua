@@ -607,8 +607,10 @@ function GM:EntitiesTab()
 						end
 					end
 
-					for k,v in pairs(GAMEMODE:GetAmmoTypes()) do
-						AddIcon("models/Items/BoxMRounds.mdl", string.format(LANGUAGE.buy_a, v.." ammo", CUR .. tostring(GetConVarNumber("ammocost"))), "/buyammo " .. v)
+					for k,v in pairs(GAMEMODE.AmmoTypes) do
+						if not v.customCheck or v.customCheck(LocalPlayer()) then
+							AddIcon(v.model, string.format(LANGUAGE.buy_a, v.name, CUR .. v.price), "/buyammo " .. v.ammoType)
+						end
 					end
 			WepCat:SetContents(WepPanel)
 			WepCat:SetSkin("DarkRP")

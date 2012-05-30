@@ -4,13 +4,13 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props_junk/garbage_takeoutcarton001a.mdl")
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
-	local phys = self.Entity:GetPhysicsObject()
+	self:SetModel("models/props_junk/garbage_takeoutcarton001a.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
+	local phys = self:GetPhysicsObject()
 
-	if phys and phys:IsValid() then phys:Wake() end
+	phys:Wake()
 
 	self.damage = 10
 end
@@ -20,12 +20,12 @@ function ENT:OnTakeDamage(dmg)
 
 	if (self.damage <= 0) then
 		local effectdata = EffectData()
-		effectdata:SetOrigin(self.Entity:GetPos())
+		effectdata:SetOrigin(self:GetPos())
 		effectdata:SetMagnitude(2)
 		effectdata:SetScale(2)
 		effectdata:SetRadius(3)
 		util.Effect("Sparks", effectdata)
-		self.Entity:Remove()
+		self:Remove()
 	end
 end
 
@@ -37,10 +37,10 @@ function ENT:Use(activator,caller)
 		umsg.Start("AteFoodIcon", caller)
 		umsg.End()
 	end
-	self.Entity:Remove()
+	self:Remove()
 end
 
 function ENT:OnRemove()
-	local ply = self.Entity.dt.owning_ent
+	local ply = self.dt.owning_ent
 	ply.maxFoods = ply.maxFoods and ply.maxFoods - 1 or 0
 end
