@@ -8,8 +8,9 @@ function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
 	local phys = self:GetPhysicsObject()
-	if phys:IsValid() then phys:Wake() phys:EnableMotion(false) end
-	
+	phys:Wake()
+	phys:EnableMotion(false)
+
 	self.SolidPos = self:GetPos()
 	self.SolidAng = self:GetAngles()
 end
@@ -21,20 +22,20 @@ end
 function ENT:OnRemove()
 	if not self.CanRemove and ValidEntity(self.target) then
 		local Replace = ents.Create("fadmin_jail")
-		
+
 		Replace:SetPos(self.SolidPos)
 		Replace:SetAngles(self.SolidAng)
 		Replace:SetModel(self:GetModel())
 		Replace:Spawn()
 		Replace:Activate()
-		
+
 		Replace.target = self.target
 		Replace.targetPos = self.targetPos
-		
+
 		self.target.FAdminJailProps = self.target.FAdminJailProps or {}
 		self.target.FAdminJailProps[self] = nil
 		self.target.FAdminJailProps[Replace] = true
-		
+
 		if self.targetPos then self.target:SetPos(self.targetPos) end -- Back in jail you! :V
 	end
 end
@@ -45,7 +46,7 @@ function ENT:Think()
 		self:Remove()
 		return
 	end
-	
+
 	/*if self:GetPos() ~= self.SolidPos or self:GetSolid() ~= SOLID_VPHYSICS then
 		self:Remove()
 	end*/

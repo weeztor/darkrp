@@ -4,19 +4,19 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
-	self.Entity:SetUseType(SIMPLE_USE)
-	local phys = self.Entity:GetPhysicsObject()
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
+	self:SetUseType(SIMPLE_USE)
+	local phys = self:GetPhysicsObject()
 
-	if phys and phys:IsValid() then phys:Wake() end
+	phys:Wake()
 	self:SetCollisionGroup(COLLISION_GROUP_INTERACTIVE_DEBRIS)
 end
 
 
 function ENT:Use(activator, caller)
-	local class = self.Entity.weaponclass
+	local class = self.weaponclass
 	local weapon = ents.Create(class)
 
 	if not weapon:IsValid() then return false end
@@ -41,5 +41,5 @@ function ENT:Use(activator, caller)
 		activator:GiveAmmo(self.ammoadd or 0, weapon:GetPrimaryAmmoType())
 	end
 
-	self.Entity:Remove()
+	self:Remove()
 end

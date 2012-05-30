@@ -46,9 +46,9 @@ end
 local gripTexture = surface.GetTextureID( "sprites/grip" )
 local ArrowTexture = surface.GetTextureID("gui/arrow")
 function ENT:Draw()
-	self.Entity:DrawModel()
+	self:DrawModel()
 
-	local pos = self.Entity:GetPos()
+	local pos = self:GetPos()
 	if pos:Distance(LocalPlayer():GetShootPos()) > 300 then return end
 
 	if CurTime() - self.LastDrawn > 0.5 then

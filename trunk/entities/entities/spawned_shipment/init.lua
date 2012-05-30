@@ -4,51 +4,51 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self.Entity.Destructed = false
-	self.Entity:SetModel("models/Items/item_item_crate.mdl")
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self.Destructed = false
+	self:SetModel("models/Items/item_item_crate.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
 	self.locked = true
 	timer.Simple( GetConVarNumber( "shipmentspawntime" ), function() if ValidEntity( self ) then self.locked = false end end )
 	self.damage = 100
-	self.Entity.ShareGravgun = true
-	local phys = self.Entity:GetPhysicsObject()
-	if phys and phys:IsValid() then phys:Wake() end
+	self.ShareGravgun = true
+	local phys = self:GetPhysicsObject()
+	phys:Wake()
 end
 
 function ENT:OnTakeDamage(dmg)
 	if not self.locked then
 		self.damage = self.damage - dmg:GetDamage()
 		if self.damage <= 0 then
-			self.Entity:Destruct()
+			self:Destruct()
 		end
 	end
 end
 
 function ENT:SetContents(s, c, w)
-	self.Entity.dt.contents = s
-	self.Entity.dt.count = c
+	self.dt.contents = s
+	self.dt.count = c
 end
 
 function ENT:Use()
 	if not self.locked then
 		self.locked = true -- One activation per second
 		self.sparking = true
-		timer.Create(self.Entity:EntIndex() .. "crate", 1, 1, self.SpawnItem, self)
+		timer.Create(self:EntIndex() .. "crate", 1, 1, self.SpawnItem, self)
 	end
 end
 
 function ENT:SpawnItem()
-	if not ValidEntity(self.Entity) then return end
-	timer.Destroy(self.Entity:EntIndex() .. "crate")
+	if not ValidEntity(self) then return end
+	timer.Destroy(self:EntIndex() .. "crate")
 	self.sparking = false
-	local count = self.Entity.dt.count
+	local count = self.dt.count
 	local pos = self:GetPos()
-	if count <= 1 then self.Entity:Remove() end
-	local contents = self.Entity.dt.contents
+	if count <= 1 then self:Remove() end
+	local contents = self.dt.contents
 	local weapon = ents.Create("spawned_weapon")
-	
+
 	if CustomShipments[contents] then
 		class = CustomShipments[contents].entity
 		model = CustomShipments[contents].model
@@ -57,7 +57,7 @@ function ENT:SpawnItem()
 		self:Remove()
 		return
 	end
-	
+
 	weapon.weaponclass = class
 	weapon:SetModel( model )
 	weapon.ammoadd = weapons.Get(class) and weapons.Get(class).Primary.DefaultClip
@@ -66,14 +66,14 @@ function ENT:SpawnItem()
 	weapon.nodupe = true
 	weapon:Spawn()
 	count = count - 1
-	self.Entity.dt.count = count
+	self.dt.count = count
 	self.locked = false
 end
 
 function ENT:Think()
 	if self.sparking then
 		local effectdata = EffectData()
-		effectdata:SetOrigin(self.Entity:GetPos())
+		effectdata:SetOrigin(self:GetPos())
 		effectdata:SetMagnitude(1)
 		effectdata:SetScale(1)
 		effectdata:SetRadius(2)
@@ -83,14 +83,14 @@ end
 
 
 function ENT:Destruct()
-	if self.Entity.Destructed then return end
-	self.Entity.Destructed = true
-	local vPoint = self.Entity:GetPos()
-	local contents = self.Entity.dt.contents
-	local count = self.Entity.dt.count
+	if self.Destructed then return end
+	self.Destructed = true
+	local vPoint = self:GetPos()
+	local contents = self.dt.contents
+	local count = self.dt.count
 	local class = nil
 	local model = nil
-	
+
 	if CustomShipments[contents] then
 		class = CustomShipments[contents].entity
 		model = CustomShipments[contents].model
@@ -98,7 +98,7 @@ function ENT:Destruct()
 		self:Remove()
 		return
 	end
-	
+
 	for i=1, count, 1 do
 		local weapon = ents.Create("spawned_weapon")
 		weapon:SetModel(model)
@@ -108,5 +108,5 @@ function ENT:Destruct()
 		weapon.nodupe = true
 		weapon:Spawn()
 	end
-	self.Entity:Remove()
+	self:Remove()
 end
