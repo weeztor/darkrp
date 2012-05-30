@@ -4,12 +4,12 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props_junk/Rock001a.mdl")
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
-	self.Entity:Ignite(20,0)
-	local phys = self.Entity:GetPhysicsObject()
+	self:SetModel("models/props_junk/Rock001a.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
+	self:Ignite(20,0)
+	local phys = self:GetPhysicsObject()
 	if phys and phys:IsValid() then
 		phys:Wake()
 	end
@@ -32,34 +32,34 @@ function ENT:SetMeteorTarget(ent)
 		end
 	end
 
-	self.Entity:SetPos(Vector(ent:GetPos().x + math.random(-4000,4000),ent:GetPos().y + math.random(-4000,4000), zPos))
+	self:SetPos(Vector(ent:GetPos().x + math.random(-4000,4000),ent:GetPos().y + math.random(-4000,4000), zPos))
 	local speed = 100000000
-	local VNormal = (Vector(ent:GetPos().x + math.random(-500,500),ent:GetPos().y + math.random(-500,500),ent:GetPos().z) - self.Entity:GetPos()):GetNormal()
+	local VNormal = (Vector(ent:GetPos().x + math.random(-500,500),ent:GetPos().y + math.random(-500,500),ent:GetPos().z) - self:GetPos()):GetNormal()
 	self:GetPhysicsObject():ApplyForceCenter(VNormal * speed)
 end
 
 function ENT:Destruct(notexplode)
 	if not notexplode then
-		util.BlastDamage(self.Entity, self.Entity, self.Entity:GetPos(), 200, 60)
+		util.BlastDamage(self, self, self:GetPos(), 200, 60)
 	end
 
 	self:Extinguish()
-	local vPoint = self.Entity:GetPos()
+	local vPoint = self:GetPos()
 	local effectdata = EffectData()
 	effectdata:SetStart(vPoint)
 	effectdata:SetOrigin(vPoint)
 	effectdata:SetScale(1)
 	util.Effect("Explosion", effectdata)
-	self.Entity:Remove()
+	self:Remove()
 end
 
 function ENT:OnTakeDamage(dmg)
 	if (dmg:GetDamage() > 5) then
-		self.Entity:Destruct(true)
+		self:Destruct(true)
 	end
 end
 
 function ENT:PhysicsCollide(data, physobj)
 	if data.HitEntity:GetClass() == "func_breakable_surf" then self:Remove() return end
-	self.Entity:Destruct()
+	self:Destruct()
 end

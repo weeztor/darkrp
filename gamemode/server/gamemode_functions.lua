@@ -127,6 +127,8 @@ function GM:PlayerSpawnVehicle(ply, model)
 end
 
 function GM:PlayerSpawnNPC(ply, model)
+	if tobool(GetConVarNumber("adminnpcs")) and not ply:IsAdmin() then return false end
+
 	return self.BaseClass:PlayerSpawnNPC(ply, model) and not ply:isArrested()
 end
 
@@ -380,11 +382,10 @@ function GM:PlayerDeath(ply, weapon, killer)
 					v:SetNoDraw(false)
 					v:SetCollisionGroup(4)
 					v:SetPos(ply:GetPos() + Vector(0,0,10))
+
 					local phys = v:GetPhysicsObject()
-					if phys:IsValid() then
-						phys:EnableCollisions(true)
-						phys:Wake()
-					end
+					phys:EnableCollisions(true)
+					phys:Wake()
 				end
 			end
 		end
@@ -397,7 +398,7 @@ end
 
 function GM:PlayerCanPickupWeapon(ply, weapon)
 	if ply:isArrested() then return false end
-	if ply:IsAdmin() and GetConVarNumber("AdminsCopWeapons") ==1 then return true end
+	if ply:IsAdmin() and GetConVarNumber("AdminsCopWeapons") == 1 then return true end
 	if GetConVarNumber("license") == 1 and not ply.DarkRPVars.HasGunlicense and not ply:GetTable().RPLicenseSpawn then
 		if GetConVarNumber("licenseweapon_"..string.lower(weapon:GetClass())) == 1 or not weapon:IsWeapon() then
 			return true
@@ -847,3 +848,8 @@ local function ClearDecals()
 	end
 end
 timer.Create("RP_DecalCleaner", GetConVarNumber("decaltimer"), 0, ClearDecals)
+
+function GM:PlayerSpray()
+
+	return( GetConVarNumber( "allowsprays" ) == 0 )
+end

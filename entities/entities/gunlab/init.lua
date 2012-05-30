@@ -4,14 +4,14 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props_c17/TrapPropeller_Engine.mdl")
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
-	local phys = self.Entity:GetPhysicsObject()
+	self:SetModel("models/props_c17/TrapPropeller_Engine.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
+	local phys = self:GetPhysicsObject()
 
-	self.Entity.dt.price = 200
-	if phys and phys:IsValid() then phys:Wake() end
+	self.dt.price = 200
+	phys:Wake()
 
 	self.sparking = false
 	self.damage = 100
@@ -20,13 +20,13 @@ end
 function ENT:OnTakeDamage(dmg)
 	self.damage = self.damage - dmg:GetDamage()
 	if (self.damage <= 0) then
-		self.Entity:Destruct()
-		self.Entity:Remove()
+		self:Destruct()
+		self:Remove()
 	end
 end
 
 function ENT:Destruct()
-	local vPoint = self.Entity:GetPos()
+	local vPoint = self:GetPos()
 	local effectdata = EffectData()
 	effectdata:SetStart(vPoint)
 	effectdata:SetOrigin(vPoint)
@@ -35,7 +35,7 @@ function ENT:Destruct()
 end
 
 function ENT:SalePrice(activator)
-	local owner = self.Entity.dt.owning_ent
+	local owner = self.dt.owning_ent
 	local discounted = math.ceil(185 * 0.88)
 
 	if activator == owner then
@@ -51,7 +51,7 @@ end
 
 ENT.Once = false
 function ENT:Use(activator)
-	local owner = self.Entity.dt.owning_ent
+	local owner = self.dt.owning_ent
 	local discounted = math.ceil(185 * 0.88)
 	local cash = self:SalePrice(activator)
 
@@ -88,7 +88,7 @@ function ENT:Use(activator)
 			end
 		end
 	end
-	timer.Create(self.Entity:EntIndex() .. "spawned_weapon", 1, 1, self.createGun, self)
+	timer.Create(self:EntIndex() .. "spawned_weapon", 1, 1, self.createGun, self)
 end
 
 function ENT:createGun()
@@ -97,7 +97,7 @@ function ENT:createGun()
 	gun = ents.Create("spawned_weapon")
 	gun:SetModel("models/weapons/w_pist_p228.mdl")
 	gun.weaponclass = "weapon_p2282"
-	local gunPos = self.Entity:GetPos()
+	local gunPos = self:GetPos()
 	gun:SetPos(Vector(gunPos.x, gunPos.y, gunPos.z + 27))
 	gun.ShareGravgun = true
 	gun.nodupe = true
@@ -108,7 +108,7 @@ end
 function ENT:Think()
 	if self.sparking then
 		local effectdata = EffectData()
-		effectdata:SetOrigin(self.Entity:GetPos())
+		effectdata:SetOrigin(self:GetPos())
 		effectdata:SetMagnitude(1)
 		effectdata:SetScale(1)
 		effectdata:SetRadius(2)
@@ -117,5 +117,5 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
-	timer.Destroy(self.Entity)
+	timer.Destroy(self)
 end

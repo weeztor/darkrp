@@ -6,13 +6,13 @@ include("shared.lua")
 language.Add("meteor", "meteor")
 
 function ENT:Initialize()
-	mx, mn = self.Entity:GetRenderBounds()
-	self.Entity:SetRenderBounds(mn + Vector(0,0,128), mx, 0)
+	mx, mn = self:GetRenderBounds()
+	self:SetRenderBounds(mn + Vector(0,0,128), mx, 0)
 end
 
 function ENT:Think()
-	local vOffset = self.Entity:LocalToWorld(Vector(math.Rand(-3, 3), math.Rand(-3, 3), math.Rand(-3, 3))) + Vector(math.Rand(-3, 3), math.Rand(-3, 3), math.Rand(-3, 3))
-	local vNormal = (vOffset - self.Entity:GetPos()):GetNormalized()
+	local vOffset = self:LocalToWorld(Vector(math.Rand(-3, 3), math.Rand(-3, 3), math.Rand(-3, 3))) + Vector(math.Rand(-3, 3), math.Rand(-3, 3), math.Rand(-3, 3))
+	local vNormal = (vOffset - self:GetPos()):GetNormalized()
 	self.emitter = self.emitter or ParticleEmitter(vOffset)
 	if not self.emitter then return end
 	local particle = self.emitter:Add("particles/smokey", vOffset)

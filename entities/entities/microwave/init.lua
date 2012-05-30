@@ -4,28 +4,28 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props/cs_office/microwave.mdl")
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
-	self.Entity:SetUseType(SIMPLE_USE)
-	local phys = self.Entity:GetPhysicsObject()
-	if phys and phys:IsValid() then phys:Wake() end
+	self:SetModel("models/props/cs_office/microwave.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
+	self:SetUseType(SIMPLE_USE)
+	local phys = self:GetPhysicsObject()
+	phys:Wake()
 	self.sparking = false
 	self.damage = 100
-	self.Entity.dt.price = math.Clamp((GetConVarNumber("pricemin") ~= 0 and GetConVarNumber("pricemin")) or 30, (GetConVarNumber("pricecap") ~= 0 and GetConVarNumber("pricecap")) or 30)
+	self.dt.price = math.Clamp((GetConVarNumber("pricemin") ~= 0 and GetConVarNumber("pricemin")) or 30, (GetConVarNumber("pricecap") ~= 0 and GetConVarNumber("pricecap")) or 30)
 end
 
 function ENT:OnTakeDamage(dmg)
 	self.damage = self.damage - dmg:GetDamage()
 	if (self.damage <= 0) then
-		self.Entity:Destruct()
-		self.Entity:Remove()
+		self:Destruct()
+		self:Remove()
 	end
 end
 
 function ENT:Destruct()
-	local vPoint = self.Entity:GetPos()
+	local vPoint = self:GetPos()
 	local effectdata = EffectData()
 	effectdata:SetStart(vPoint)
 	effectdata:SetOrigin(vPoint)
@@ -34,7 +34,7 @@ function ENT:Destruct()
 end
 
 function ENT:SalePrice(activator)
-	local owner = self.Entity.dt.owning_ent
+	local owner = self.dt.owning_ent
 	local discounted = math.ceil(GetConVarNumber("microwavefoodcost") * 0.82)
 
 	if activator == owner then
@@ -51,7 +51,7 @@ end
 
 ENT.Once = false
 function ENT:Use(activator,caller)
-	local owner = self.Entity.dt.owning_ent
+	local owner = self.dt.owning_ent
 	self.user = activator
 	if not activator:CanAfford(self:SalePrice(activator)) then
 		GAMEMODE:Notify(activator, 1, 3, "You do not have enough money to purchase food!")
@@ -90,14 +90,14 @@ function ENT:Use(activator,caller)
 				GAMEMODE:Notify(owner, 0, 3, "You made a " .. word .. " of " .. CUR .. tostring(math.abs(gain)) .. " by selling food!")
 			end
 		end
-		timer.Create(self.Entity:EntIndex() .. "food", 1, 1, self.createFood, self)
+		timer.Create(self:EntIndex() .. "food", 1, 1, self.createFood, self)
 	end
 end
 
 function ENT:createFood()
 	activator = self.user
 	self.Once = false
-	local foodPos = self.Entity:GetPos()
+	local foodPos = self:GetPos()
 	food = ents.Create("food")
 	food:SetPos(Vector(foodPos.x,foodPos.y,foodPos.z + 23))
 	food.dt.owning_ent = activator
@@ -114,7 +114,7 @@ end
 function ENT:Think()
 	if self.sparking then
 		local effectdata = EffectData()
-		effectdata:SetOrigin(self.Entity:GetPos())
+		effectdata:SetOrigin(self:GetPos())
 		effectdata:SetMagnitude(1)
 		effectdata:SetScale(1)
 		effectdata:SetRadius(2)
@@ -123,7 +123,7 @@ function ENT:Think()
 end
 
 function ENT:OnRemove()
-	timer.Destroy(self.Entity:EntIndex())
-	local ply = self.Entity.dt.owning_ent
+	timer.Destroy(self:EntIndex())
+	local ply = self.dt.owning_ent
 	if not ValidEntity(ply) then return end
 end

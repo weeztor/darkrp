@@ -12,7 +12,7 @@ function ENT:Draw()
 
 		render.SetColorModulation(self.colr, self.colg, 0)
 
-		self.Entity:DrawModel()
+		self:DrawModel()
 
 		self.colr = 1 / ((CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime"))
 		self.colg = (CurTime() - self.StartTime ) / GetConVarNumber( "shipmentspawntime")
@@ -26,13 +26,13 @@ function ENT:Draw()
 		local distance = normal:Dot(pos)
 		self.height = self:OBBMaxs().z * ((CurTime() - self.StartTime) / GetConVarNumber("shipmentspawntime"))
 		render.EnableClipping(true)
-		render.PushCustomClipPlane(normal, distance)
+		render.PushCustomClipPlane(normal, distance);
 
-		self.Entity:DrawModel()
+		self:DrawModel()
 
 		render.PopCustomClipPlane()
 	else
-		self.Entity:DrawModel()
+		self:DrawModel()
 	end
 
 	local Pos = self:GetPos()

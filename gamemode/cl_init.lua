@@ -90,6 +90,7 @@ include("shared/Workarounds.lua")
 
 include("shared.lua")
 include("addentities.lua")
+include("ammotypes.lua")
 
 include("FPP/sh_settings.lua")
 include("FPP/client/FPP_Menu.lua")
