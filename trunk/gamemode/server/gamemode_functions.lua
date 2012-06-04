@@ -614,15 +614,17 @@ function GM:PlayerSpawn(ply)
 	umsg.End()
 	RP:AddAllPlayers()
 
-	if GetConVarNumber("babygod") == 1 and not ply.IsSleeping then
+	if GetConVarNumber("babygod") == 1 and not ply.IsSleeping and not ply.Babygod then
+		timer.Destroy(ply:EntIndex() .. "babygod")
+
 		ply.Babygod = true
 		ply:GodEnable()
 		local r,g,b,a = ply:GetColor()
 		ply:SetColor(r, g, b, 100)
 		ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
-		timer.Simple(GetConVarNumber("babygodtime"), function()
-			if not ValidEntity(ply) then return end
-			ply.Babygod = false
+		timer.Create(ply:EntIndex() .. "babygod", GetConVarNumber("babygodtime"), 1, function()
+			if not ValidEntity(ply) or not ply.Babygod then return end
+			ply.Babygod = nil
 			ply:SetColor(r, g, b, a)
 			ply:GodDisable()
 			ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
