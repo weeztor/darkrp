@@ -5,11 +5,11 @@ function FAdmin.ScoreBoard.ChangeView(newView, ...)
 	for k,v in pairs(FAdmin.ScoreBoard[FAdmin.ScoreBoard.CurrentView].Controls) do
 		v:SetVisible(false)
 	end
-	
+
 	FAdmin.ScoreBoard.CurrentView = newView
 	FAdmin.ScoreBoard[newView].Show(...)
 	FAdmin.ScoreBoard.ChangeGmodLogo(FAdmin.ScoreBoard[newView].Logo)
-	
+
 	FAdmin.ScoreBoard.Controls.BackButton = FAdmin.ScoreBoard.Controls.BackButton or vgui.Create("DButton")
 	FAdmin.ScoreBoard.Controls.BackButton:SetVisible(true)
 	FAdmin.ScoreBoard.Controls.BackButton:SetPos(FAdmin.ScoreBoard.X, FAdmin.ScoreBoard.Y)
@@ -17,7 +17,7 @@ function FAdmin.ScoreBoard.ChangeView(newView, ...)
 	FAdmin.ScoreBoard.Controls.BackButton:SetToolTip("Click me to go back!")
 	FAdmin.ScoreBoard.Controls.BackButton:SetCursor("hand")
 	FAdmin.ScoreBoard.Controls.BackButton:SetSize(100,90)
-	
+
 	function FAdmin.ScoreBoard.Controls.BackButton:DoClick()
 		FAdmin.ScoreBoard.ChangeView("Main")
 	end
@@ -44,10 +44,10 @@ function FAdmin.ScoreBoard.Background()
 	surface.SetDrawColor(255,255,255,100)
 	surface.SetTexture(BackgroundTexture)
 	surface.DrawTexturedRect(FAdmin.ScoreBoard.X, FAdmin.ScoreBoard.Y, FAdmin.ScoreBoard.Width, FAdmin.ScoreBoard.Height)
-	
+
 	surface.SetDrawColor(0,0,0,200)
 	surface.DrawRect(FAdmin.ScoreBoard.X, FAdmin.ScoreBoard.Y, FAdmin.ScoreBoard.Width, FAdmin.ScoreBoard.Height)
-	
+
 	surface.SetTexture(GmodLogo)
 	surface.SetDrawColor(255,255,255,GmodLogoColor.a)
 	surface.DrawTexturedRect(FAdmin.ScoreBoard.X - 20, FAdmin.ScoreBoard.Y, 128, 128)
@@ -67,14 +67,14 @@ function FAdmin.ScoreBoard.ShowScoreBoard()
 	FAdmin.ScoreBoard.Visible = true
 	FAdmin.ScoreBoard.DontGoBack = input.IsMouseDown(MOUSE_4) or input.IsKeyDown(KEY_BACKSPACE)
 	local ScreenWidth, ScreenHeight = ScrW(), ScrH()
-	
+
 	FAdmin.ScoreBoard.Controls.Hostname = FAdmin.ScoreBoard.Controls.Hostname or vgui.Create( "Label", self )
 	FAdmin.ScoreBoard.Controls.Hostname:SetText(GetHostName())
 	FAdmin.ScoreBoard.Controls.Hostname:SetFont("ScoreboardHeader")
 	FAdmin.ScoreBoard.Controls.Hostname:SetPos(FAdmin.ScoreBoard.X + 90, FAdmin.ScoreBoard.Y + 20)
 	FAdmin.ScoreBoard.Controls.Hostname:SizeToContents()
 	FAdmin.ScoreBoard.Controls.Hostname:SetVisible(true)
-	
+
 	FAdmin.ScoreBoard.Controls.Description = FAdmin.ScoreBoard.Controls.Description or vgui.Create( "Label" )
 	FAdmin.ScoreBoard.Controls.Description:SetText(GAMEMODE.Name .. "\n\t"..GAMEMODE.Author)
 	FAdmin.ScoreBoard.Controls.Description:SetFont("ScoreboardSubtitle")
@@ -85,38 +85,28 @@ function FAdmin.ScoreBoard.ShowScoreBoard()
 		FAdmin.ScoreBoard.Controls.Description:SetPos(FAdmin.ScoreBoard.X + 90, FAdmin.ScoreBoard.Y + 50)
 	end
 	FAdmin.ScoreBoard.Controls.Description:SetVisible(true)
-	
+
 	FAdmin.ScoreBoard.Controls.ServerSettingsLabel = FAdmin.ScoreBoard.Controls.ServerSettingsLabel or vgui.Create("Label")
 	FAdmin.ScoreBoard.Controls.ServerSettingsLabel:SetFont("ScoreboardSubtitle")
 	FAdmin.ScoreBoard.Controls.ServerSettingsLabel:SetText("Server settings")
 	FAdmin.ScoreBoard.Controls.ServerSettingsLabel:SizeToContents()
 	FAdmin.ScoreBoard.Controls.ServerSettingsLabel:SetPos(FAdmin.ScoreBoard.Width-150, FAdmin.ScoreBoard.Y + 68)
 	FAdmin.ScoreBoard.Controls.ServerSettingsLabel:SetVisible(true)
-	
+
 	FAdmin.ScoreBoard.Controls.ServerSettings = FAdmin.ScoreBoard.Controls.ServerSettings or vgui.Create("DImageButton")
 	FAdmin.ScoreBoard.Controls.ServerSettings:SetMaterial("vgui/gmod_tool")
 	FAdmin.ScoreBoard.Controls.ServerSettings:SetPos(FAdmin.ScoreBoard.Width-200, FAdmin.ScoreBoard.Y - 20)
 	FAdmin.ScoreBoard.Controls.ServerSettings:SizeToContents()
 	FAdmin.ScoreBoard.Controls.ServerSettings:SetVisible(true)
 
-	FAdmin.ScoreBoard.Controls.HelpButton = FAdmin.ScoreBoard.Controls.HelpButton or vgui.Create("DImageButton")
-	FAdmin.ScoreBoard.Controls.HelpButton:SetMaterial("FAdmin/Help")
-	FAdmin.ScoreBoard.Controls.HelpButton:SetPos(FAdmin.ScoreBoard.Width-330, FAdmin.ScoreBoard.Y + 5)
-	FAdmin.ScoreBoard.Controls.HelpButton:SizeToContents()
-	FAdmin.ScoreBoard.Controls.HelpButton:SetVisible(true)
-	
 	function FAdmin.ScoreBoard.Controls.ServerSettings:DoClick()
 		FAdmin.ScoreBoard.ChangeView("Server")
 	end
 
-	function FAdmin.ScoreBoard.Controls.HelpButton:DoClick()
-		FAdmin.ScoreBoard.ChangeView("Help")
-	end
-	
 	if FAdmin.ScoreBoard.Controls.BackButton then FAdmin.ScoreBoard.Controls.BackButton:SetVisible(true) end
-	
+
 	FAdmin.ScoreBoard[FAdmin.ScoreBoard.CurrentView].Show()
-	
+
 	gui.EnableScreenClicker(true)
 	hook.Add("HUDPaint", "FAdmin_ScoreBoard", FAdmin.ScoreBoard.DrawScoreBoard)
 	return true
@@ -124,7 +114,7 @@ end
 concommand.Add("+FAdmin_menu", FAdmin.ScoreBoard.ShowScoreBoard)
 
 hook.Add("ScoreboardShow", "FAdmin_scoreboard", function()
-	if GAMEMODE and tobool(GetConVarNumber("FAdmin_IsScoreboard")) and FAdmin.GlobalSetting.FAdmin then -- Don't show scoreboard when FAdmin is not installed on server 
+	if GAMEMODE and tobool(GetConVarNumber("FAdmin_IsScoreboard")) and FAdmin.GlobalSetting.FAdmin then -- Don't show scoreboard when FAdmin is not installed on server
 		return FAdmin.ScoreBoard.ShowScoreBoard()
 	end
 end)
@@ -133,14 +123,14 @@ function FAdmin.ScoreBoard.HideScoreBoard()
 	if not FAdmin.GlobalSetting.FAdmin then return end
 	FAdmin.ScoreBoard.Visible = false
 	CloseDermaMenus()
-	
+
 	gui.EnableScreenClicker(false)
 	hook.Remove("HUDPaint", "FAdmin_ScoreBoard")
-	
+
 	for k,v in pairs(FAdmin.ScoreBoard[FAdmin.ScoreBoard.CurrentView].Controls) do
 		v:SetVisible(false)
 	end
-	
+
 	for k,v in pairs(FAdmin.ScoreBoard.Controls) do
 		v:SetVisible(false)
 	end
@@ -149,7 +139,7 @@ end
 concommand.Add("-FAdmin_menu", FAdmin.ScoreBoard.HideScoreBoard)
 
 hook.Add("ScoreboardHide", "FAdmin_scoreboard", function()
-	if tobool(GetConVarNumber("FAdmin_IsScoreboard")) and FAdmin.GlobalSetting.FAdmin and FAdmin.ScoreBoard.CurrentView ~= "Help" then -- Don't show scoreboard when FAdmin is not installed on server 
+	if tobool(GetConVarNumber("FAdmin_IsScoreboard")) and FAdmin.GlobalSetting.FAdmin and FAdmin.ScoreBoard.CurrentView ~= "Help" then -- Don't show scoreboard when FAdmin is not installed on server
 		return FAdmin.ScoreBoard.HideScoreBoard()
 	end
 end)
