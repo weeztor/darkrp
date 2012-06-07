@@ -504,7 +504,7 @@ local function SearchWarrant(ply, args)
 		if p and p:Alive() then
 			-- If we're the Mayor, set the search warrant
 			if t == TEAM_MAYOR then
-				SetWarrant(ply, p)
+				SetWarrant(ply, p, reason)
 			else -- If we're CP or Chief
 				-- Find the mayor
 				local m = nil

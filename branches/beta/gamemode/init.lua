@@ -23,7 +23,7 @@ meta.Name = function(self)
 	if not ValidEntity(self) then return "" end
 	if GetConVarNumber("allowrpnames") == 1 then
 		self.DarkRPVars = self.DarkRPVars or {}
-		return tostring(self.DarkRPVars.rpname) or self:SteamName()
+		return self.DarkRPVars.rpname and tostring(self.DarkRPVars.rpname) or self:SteamName()
 	else
 		return self:SteamName()
 	end

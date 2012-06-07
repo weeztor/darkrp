@@ -41,6 +41,9 @@ local BackgroundTexture = surface.GetTextureID("pp/blurx")
 function FAdmin.ScoreBoard.Background()
 	//DrawMotionBlur(0.05,1,0)
 	local ScreenWidth, ScreenHeight = ScrW(), ScrH()
+	surface.SetDrawColor(255,255,255,100)
+	surface.SetTexture(BackgroundTexture)
+	surface.DrawTexturedRect(FAdmin.ScoreBoard.X, FAdmin.ScoreBoard.Y, FAdmin.ScoreBoard.Width, FAdmin.ScoreBoard.Height)
 
 	surface.SetDrawColor(0,0,0,200)
 	surface.DrawRect(FAdmin.ScoreBoard.X, FAdmin.ScoreBoard.Y, FAdmin.ScoreBoard.Width, FAdmin.ScoreBoard.Height)
@@ -99,18 +102,8 @@ function FAdmin.ScoreBoard.ShowScoreBoard()
 	FAdmin.ScoreBoard.Controls.ServerSettings:SizeToContents()
 	FAdmin.ScoreBoard.Controls.ServerSettings:SetVisible(true)
 
-	FAdmin.ScoreBoard.Controls.HelpButton = FAdmin.ScoreBoard.Controls.HelpButton or vgui.Create("DImageButton")
-	FAdmin.ScoreBoard.Controls.HelpButton:SetMaterial("FAdmin/Help")
-	FAdmin.ScoreBoard.Controls.HelpButton:SetPos(FAdmin.ScoreBoard.Width-330, FAdmin.ScoreBoard.Y + 5)
-	FAdmin.ScoreBoard.Controls.HelpButton:SizeToContents()
-	FAdmin.ScoreBoard.Controls.HelpButton:SetVisible(true)
-
 	function FAdmin.ScoreBoard.Controls.ServerSettings:DoClick()
 		FAdmin.ScoreBoard.ChangeView("Server")
-	end
-
-	function FAdmin.ScoreBoard.Controls.HelpButton:DoClick()
-		FAdmin.ScoreBoard.ChangeView("Help")
 	end
 
 	if FAdmin.ScoreBoard.Controls.BackButton then FAdmin.ScoreBoard.Controls.BackButton:SetVisible(true) end
