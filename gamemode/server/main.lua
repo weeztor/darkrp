@@ -81,7 +81,7 @@ AddChatCommand("/removezombie", ReMoveZombie)
 local function AddZombie(ply)
 	if ply:HasPriv("rp_commands") then
 		DB.RetrieveZombies(function()
-			table.insert(zombieSpawns, tostring(ply:GetPos()))
+			table.insert(zombieSpawns, ply:GetPos())
 			DB.StoreZombies()
 			if ply.DarkRPVars.zombieToggle then LoadTable(ply) end
 			GAMEMODE:Notify(ply, 0, 4, LANGUAGE.zombie_spawn_added)

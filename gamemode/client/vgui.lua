@@ -407,14 +407,9 @@ local function KeysMenu(um)
 			SetCopsOnly:SetText("Edit Door Group")
 			SetCopsOnly.DoClick = function()
 				local menu = DermaMenu()
-				local groups = menu:AddSubMenu("Door Groups")
 				local teams = menu:AddSubMenu("Jobs")
 				local add = teams:AddSubMenu("Add")
 				local remove = teams:AddSubMenu("Remove")
-				menu:AddOption("None", function() RunConsoleCommand("say", "/togglegroupownable") Frame:Close() end)
-				for k,v in pairs(RPExtraTeamDoors) do
-					groups:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) Frame:Close() end)
-				end
 				if not trace.Entity.DoorData then return end
 				for k,v in pairs(RPExtraTeams) do
 					if not trace.Entity.DoorData.TeamOwn or not trace.Entity.DoorData.TeamOwn[k] then
@@ -428,22 +423,16 @@ local function KeysMenu(um)
 			end
 		end
 	elseif not trace.Entity:OwnedBy(LocalPlayer()) and trace.Entity:IsOwnable() and not trace.Entity:IsOwned() and not trace.Entity.DoorData.NonOwnable then
-		if not trace.Entity.DoorData.GroupOwn then
-			Frame:SetSize(200, 140)
-			local Owndoor = vgui.Create("DButton", Frame)
-			Owndoor:SetPos(10, 30)
-			Owndoor:SetSize(180, 100)
-			Owndoor:SetText("Buy " .. Entiteh)
-			Owndoor.DoClick = function() RunConsoleCommand("say", "/toggleown") Frame:Close() end
-		elseif not LocalPlayer():IsSuperAdmin() then
-			Frame:Close()
-		end
+		Frame:SetSize(200, 140)
+		local Owndoor = vgui.Create("DButton", Frame)
+		Owndoor:SetPos(10, 30)
+		Owndoor:SetSize(180, 100)
+		Owndoor:SetText("Buy " .. Entiteh)
+		Owndoor.DoClick = function() RunConsoleCommand("say", "/toggleown") Frame:Close() end
+
 		if LocalPlayer():IsSuperAdmin() then
-			if trace.Entity.DoorData.GroupOwn then
-				Frame:SetSize(200, 250)
-			else
-				Frame:SetSize(200, 360)
-			end
+			Frame:SetSize(200, 360)
+
 			local DisableOwnage = vgui.Create("DButton", Frame)
 			DisableOwnage:SetPos(10, Frame:GetTall() - 220)
 			DisableOwnage:SetSize(180, 100)
@@ -456,26 +445,21 @@ local function KeysMenu(um)
 			SetCopsOnly:SetText("Edit Door Group")
 			SetCopsOnly.DoClick = function()
 				local menu = DermaMenu()
-				local groups = menu:AddSubMenu("Door Groups")
 				local teams = menu:AddSubMenu("Jobs")
 				local add = teams:AddSubMenu("Add")
 				local remove = teams:AddSubMenu("Remove")
-				menu:AddOption("None", function() RunConsoleCommand("say", "/togglegroupownable") Frame:Close() end)
-				for k,v in pairs(RPExtraTeamDoors) do
-					groups:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) Frame:Close() end)
-				end
 				if not trace.Entity.DoorData then return end
 				for k,v in pairs(RPExtraTeams) do
 					if not trace.Entity.DoorData.TeamOwn or not trace.Entity.DoorData.TeamOwn[k] then
-						add:AddOption( v.name, function() RunConsoleCommand("say", "/toggleteamownable " ..k) if Frame.Close then Frame:Close() end end )
+						add:AddOption(v.name, function() RunConsoleCommand("say", "/toggleteamownable " .. k) if Frame.Close then Frame:Close() end end)
 					else
-						remove:AddOption( v.name, function() RunConsoleCommand("say", "/toggleteamownable " ..k) Frame:Close() end )
+						remove:AddOption(v.name, function() RunConsoleCommand("say", "/toggleteamownable " .. k) Frame:Close() end)
 					end
 				end
 
 				menu:Open()
 			end
-		elseif not trace.Entity.DoorData.GroupOwn then
+		else
 			RunConsoleCommand("say", "/toggleown")
 			Frame:Close()
 			KeyFrameVisible = true
@@ -497,14 +481,10 @@ local function KeysMenu(um)
 			SetCopsOnly:SetText("Edit Door Group")
 			SetCopsOnly.DoClick = function()
 				local menu = DermaMenu()
-				local groups = menu:AddSubMenu("Door Groups")
 				local teams = menu:AddSubMenu("Jobs")
 				local add = teams:AddSubMenu("Add")
 				local remove = teams:AddSubMenu("Remove")
-				menu:AddOption("None", function() RunConsoleCommand("say", "/togglegroupownable") Frame:Close() end)
-				for k,v in pairs(RPExtraTeamDoors) do
-					groups:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) Frame:Close() end)
-				end
+
 				if not trace.Entity.DoorData then return end
 				for k,v in pairs(RPExtraTeams) do
 					if not trace.Entity.DoorData.TeamOwn or not trace.Entity.DoorData.TeamOwn[k] then
@@ -552,13 +532,8 @@ local function KeysMenu(um)
 			SetCopsOnly.DoClick = function()
 				local menu = DermaMenu()
 				local groups = menu:AddSubMenu("Door Groups")
-				local teams = menu:AddSubMenu("Jobs")
 				local add = teams:AddSubMenu("Add")
 				local remove = teams:AddSubMenu("Remove")
-				menu:AddOption("None", function() RunConsoleCommand("say", "/togglegroupownable") Frame:Close() end)
-				for k,v in pairs(RPExtraTeamDoors) do
-					groups:AddOption(k, function() RunConsoleCommand("say", "/togglegroupownable "..k) Frame:Close() end)
-				end
 				if not trace.Entity.DoorData then return end
 				for k,v in pairs(RPExtraTeams) do
 					if not trace.Entity.DoorData.TeamOwn or not trace.Entity.DoorData.TeamOwn[k] then
