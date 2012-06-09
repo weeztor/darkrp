@@ -365,7 +365,7 @@ local function AddGroup(ply, cmd, args)
 	FPP.Groups[name].allowdefault = util.tobool(allowdefault)
 	FPP.Groups[name].tools = {}
 
-	DB.Query("INSERT INTO FPP_GROUPS2 VALUES("..sql.SQLStr(name)..", "..sql.SQLStr(allowdefault)..", \"\");")
+	DB.Query("REPLACE INTO FPP_GROUPS2 VALUES("..sql.SQLStr(name)..", "..sql.SQLStr(allowdefault)..", \"\");")
 	FPP.Notify(ply, "Group added succesfully", true)
 end
 concommand.Add("FPP_AddGroup", AddGroup)

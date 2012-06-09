@@ -84,13 +84,18 @@ function meta:SetRPName(name, firstRun)
 	end)
 end
 
-function meta:RestoreRPName()
+function meta:RestorePlayerData()
 	if not ValidEntity(self) then return end
-	DB.RetrieveRPName(self, function(name)
+	DB.RetrievePlayerData(self, function(data)
 		if not ValidEntity(self) then return end
-		if not name or name == "" then name = string.gsub(self:SteamName(), "\\\"", "\"") end
 
-		self:SetDarkRPVar("rpname", name)
+		local info = data and data[1] or {}
+		if not info.rpname or info.rpname == "NULL" then info.rpname = string.gsub(self:SteamName(), "\\\"", "\"") end
+
+		self:SetDarkRPVar("money", info.wallet or GetConVarNumber("startingmoney"))
+		self:SetDarkRPVar("salary", info.salary or GetConVarNumber("normalsalary"))
+
+		self:SetDarkRPVar("rpname", info.rpname)
 	end)
 end
 
@@ -200,11 +205,9 @@ function meta:NewData()
 
 	timer.Simple(.01, ModuleDelay, self)
 
-	self:RestoreRPName()
+	self:RestorePlayerData()
 
 	self:InitiateTax()
-
-	DB.StoreSalary(self, GetConVarNumber("normalsalary"))
 
 	self:UpdateJob(team.GetName(1))
 
