@@ -39,7 +39,14 @@ function DB.Query(query, callback)
 			data[#data + 1] = D
 		end
 
-		query.onError = function(Q, E) Error(E) callback() DB.Log("MySQL Error: ".. E) end
+		query.onError = function(Q, E)
+			ErrorNoHalt(E)
+			if callback then
+				callback()
+			end
+			DB.Log("MySQL Error: ".. E)
+		end
+
 		query.onSuccess = function()
 			if callback then callback(data) end
 		end
@@ -372,7 +379,7 @@ function DB.UpdateDatabase()
 
 	-- Separate transaction for the player data
 	DB.Query([[SELECT darkrp_wallets.steam, amount, salary, name FROM darkrp_wallets
-		NATURAL JOIN darkrp_salaries
+		LEFT OUTER JOIN darkrp_salaries ON darkrp_salaries.steam = darkrp_wallets.steam
 		LEFT OUTER JOIN darkrp_rpnames ON darkrp_rpnames.steam = darkrp_wallets.steam]], function(data)
 
 		DB.Begin()
@@ -382,8 +389,8 @@ function DB.UpdateDatabase()
 
 			DB.Query([[INSERT INTO darkrp_player VALUES(]]
 				..uniqueID..[[,]]
-				..(v.name == "NULL" and "NULL" or sql.SQLStr(v.name))..[[,]]
-				..v.salary..[[,]]
+				..((v.name == "NULL" or not v.name) and "NULL" or sql.SQLStr(v.name))..[[,]]
+				..((v.salary == "NULL" or not v.salary) and GetConVarNumber("normalsalary") or v.salary)..[[,]]
 				..v.amount..[[);]])
 		end
 
