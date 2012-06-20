@@ -322,12 +322,12 @@ local function SetDoorTeamOwnable(ply, arg)
 	if not ValidEntity(trace.Entity) then return "" end
 
 	local ent = trace.Entity
-	if not ply:IsSuperAdmin() or (not ent:IsDoor() and not ent:IsVehicle()) or ply:GetPos():Distance(ent:GetPos()) > 115 then return end
+	if not ply:IsSuperAdmin() or (not ent:IsDoor() and not ent:IsVehicle()) or ply:GetPos():Distance(ent:GetPos()) > 115 then return "" end
 
-	arg = tonumber( arg )
+	arg = tonumber(arg)
 	if not RPExtraTeams[arg] and arg ~= nil then GAMEMODE:Notify(ply, 1, 10, "Job does not exist!") return "" end
-	if ValidEntity( trace.Entity:GetDoorOwner( ) ) then
-		trace.Entity:UnOwn( trace.Entity:GetDoorOwner() )
+	if ValidEntity(trace.Entity:GetDoorOwner()) then
+		trace.Entity:UnOwn(trace.Entity:GetDoorOwner())
 	end
 
 	ent.DoorData = ent.DoorData or {}
@@ -345,7 +345,7 @@ local function SetDoorTeamOwnable(ply, arg)
 		if decoded[arg] == false then
 			decoded[arg] = nil
 		end
-		if table.Count( decoded ) == 0 then
+		if table.Count(decoded) == 0 then
 			ent.DoorData.TeamOwn = nil
 		else
 			local encoded = ""
