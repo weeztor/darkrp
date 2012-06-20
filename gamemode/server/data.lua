@@ -775,7 +775,7 @@ function DB.StoreTeamDoorOwnability(ent)
 	ent.DoorData = ent.DoorData or {}
 
 	DB.Query("DELETE FROM darkrp_jobown WHERE idx = " .. ent:DoorIndex() .. " AND map = " .. sql.SQLStr(map) .. ";")
-	for k,v in pairs(string.Explode("\n", ent.DoorData.TeamOwn)) do
+	for k,v in pairs(string.Explode("\n", ent.DoorData.TeamOwn or "")) do
 		if v == "" then continue end
 
 		DB.Query("INSERT INTO darkrp_jobown VALUES("..ent:DoorIndex() .. ", "..sql.SQLStr(map) .. ", " .. v .. ");")
