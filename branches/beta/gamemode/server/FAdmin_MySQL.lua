@@ -43,7 +43,7 @@ Note: Must be called more than two seconds after InitPostEntity, because
 that's when the database initializes
 ---------------------------------------------------------------------------*/
 hook.Add("FAdmin_RetrieveBans", "getMySQLBans", function()
-	if not RP_MySQLConfig.EnableMySQL then return end
+	if not RP_MySQLConfig.EnableMySQL or not CONNECTED_TO_MYSQL then return end
 
 	FAdmin.BANS = FAdmin.BANS or {}
 

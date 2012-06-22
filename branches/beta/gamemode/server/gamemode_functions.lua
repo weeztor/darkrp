@@ -511,7 +511,7 @@ local function SendDarkRPVars(ply)
 	for k,v in pairs(player.GetAll()) do
 		sendtable[v] = {}
 		for a,b in pairs(v.DarkRPVars) do
-			if not table.HasValue(v.privateDRPVars, a) or ply == v then
+			if not table.HasValue(v.privateDRPVars or {}, a) or ply == v then
 				sendtable[v][a] = b
 			end
 		end

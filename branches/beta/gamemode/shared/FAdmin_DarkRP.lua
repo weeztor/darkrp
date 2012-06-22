@@ -153,7 +153,8 @@ end)
 
 local IP = ""
 if SERVER then
-	http.Get("http://automation.whatismyip.com/n09230945.asp", "", function(content, size)
+	-- Temporarily commented out because HTTP is broken
+	/*http.Get("http://automation.whatismyip.com/n09230945.asp", "", function(content, size)
 		local ip = string.match(content, "([0-9.]+)")
 		if not ip then return end
 		IP = ip..":"..GetConVarString("hostport")
@@ -167,7 +168,7 @@ if SERVER then
 			end)
 			return
 		end
-	end)
+	end)*/
 end
 
 /*

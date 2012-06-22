@@ -27,6 +27,14 @@ function meta:IsDoor()
 	return false
 end
 
+function meta:DoorIndex()
+	return self:EntIndex() - MaxPlayers()
+end
+
+function GM:DoorToEntIndex(num)
+	return num + MaxPlayers()
+end
+
 function meta:IsOwned()
 	self.DoorData = self.DoorData or {}
 
@@ -305,36 +313,6 @@ local function SetDoorOwnable(ply)
 end
 AddChatCommand("/toggleownable", SetDoorOwnable)
 
-local time3 = false
-local function SetDoorGroupOwnable(ply, arg)
-	if time3 then return "" end
-	time3 = true
-	timer.Simple(0.1, function()  time3 = false end)
-	local trace = ply:GetEyeTrace()
-	if not ValidEntity(trace.Entity) then return "" end
-
-	local ent = trace.Entity
-	if not ply:IsSuperAdmin() or (not ent:IsDoor() and not ent:IsVehicle()) or ply:GetPos():Distance(ent:GetPos()) > 115 then return end
-
-	if not RPExtraTeamDoors[arg] and arg ~= "" then GAMEMODE:Notify(ply, 1, 10, "Door group does not exist!") return "" end
-	if ValidEntity( trace.Entity:GetDoorOwner() ) then
-		trace.Entity:UnOwn( trace.Entity:GetDoorOwner() )
-	end
-
-	ent.DoorData = ent.DoorData or {}
-	ent.DoorData.TeamOwn = nil
-	ent.DoorData.GroupOwn = arg
-	if arg == "" then ent.DoorData.GroupOwn = nil ent.DoorData.TeamOwn = nil end
-	GAMEMODE:Notify(ply, 0, 8, "Door group set successfully")
-	-- Save it for future map loads
-	DB.StoreGroupDoorOwnability(ent)
-
-	ent:UnOwn()
-	ply.LookingAtDoor = nil
-	return ""
-end
-AddChatCommand("/togglegroupownable", SetDoorGroupOwnable)
-
 local time4 = false
 local function SetDoorTeamOwnable(ply, arg)
 	if time4 then return "" end
@@ -344,12 +322,12 @@ local function SetDoorTeamOwnable(ply, arg)
 	if not ValidEntity(trace.Entity) then return "" end
 
 	local ent = trace.Entity
-	if not ply:IsSuperAdmin() or (not ent:IsDoor() and not ent:IsVehicle()) or ply:GetPos():Distance(ent:GetPos()) > 115 then return end
+	if not ply:IsSuperAdmin() or (not ent:IsDoor() and not ent:IsVehicle()) or ply:GetPos():Distance(ent:GetPos()) > 115 then return "" end
 
-	arg = tonumber( arg )
+	arg = tonumber(arg)
 	if not RPExtraTeams[arg] and arg ~= nil then GAMEMODE:Notify(ply, 1, 10, "Job does not exist!") return "" end
-	if ValidEntity( trace.Entity:GetDoorOwner( ) ) then
-		trace.Entity:UnOwn( trace.Entity:GetDoorOwner() )
+	if ValidEntity(trace.Entity:GetDoorOwner()) then
+		trace.Entity:UnOwn(trace.Entity:GetDoorOwner())
 	end
 
 	ent.DoorData = ent.DoorData or {}
@@ -367,7 +345,7 @@ local function SetDoorTeamOwnable(ply, arg)
 		if decoded[arg] == false then
 			decoded[arg] = nil
 		end
-		if table.Count( decoded ) == 0 then
+		if table.Count(decoded) == 0 then
 			ent.DoorData.TeamOwn = nil
 		else
 			local encoded = ""
@@ -554,23 +532,13 @@ local function SetDoorTitle(ply, args)
 	if ValidEntity(trace.Entity) and trace.Entity:IsOwnable() and ply:GetPos():Distance(trace.Entity:GetPos()) < 110 then
 		trace.Entity.DoorData = trace.Entity.DoorData or {}
 		if ply:IsSuperAdmin() then
-			if trace.Entity.DoorData.NonOwnable then
-				DB.StoreNonOwnableDoorTitle(trace.Entity, args)
-				ply.LookingAtDoor = nil
-				return ""
-			elseif trace.Entity.DoorData.GroupOwn then
-				DB.StoreGroupOwnableDoorTitle(trace.Entity, args)
-				ply.LookingAtDoor = nil
-				return ""
-			elseif trace.Entity.DoorData.TeamOwn then
-				DB.StoreTeamOwnableDoorTitle(trace.Entity, args)
+			if trace.Entity.DoorData.NonOwnable or trace.Entity.DoorData.GroupOwn or trace.Entity.DoorData.TeamOwn then
+				DB.StoreDoorTitle(trace.Entity, args)
 				ply.LookingAtDoor = nil
 				return ""
 			end
-		else
-			if trace.Entity.DoorData.NonOwnable then
-				GAMEMODE:Notify(ply, 1, 6, string.format(LANGUAGE.need_admin, "/title"))
-			end
+		elseif trace.Entity.DoorData.NonOwnable then
+			GAMEMODE:Notify(ply, 1, 6, string.format(LANGUAGE.need_admin, "/title"))
 		end
 
 		if trace.Entity:OwnedBy(ply) then
