@@ -23,10 +23,8 @@ function AddExtraTeam( Name, color, model, Description, Weapons, command, maximu
 	return Team
 end
 
-RPExtraTeamDoors = {}
-
-function AddDoorGroup(name, ...)
-	RPExtraTeamDoors[name] = {...}
+function AddDoorGroup()
+	-- In for compatibility
 end
 
 CustomVehicles = {}
