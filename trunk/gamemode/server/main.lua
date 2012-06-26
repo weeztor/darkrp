@@ -1,4 +1,3 @@
-
 /*---------------------------------------------------------
  Flammable
  ---------------------------------------------------------*/
@@ -733,7 +732,7 @@ local function BuyVehicle(ply, args)
 		if string.lower(v.name) == string.lower(args) then found = CustomVehicles[k] break end
 	end
 	if not found then return "" end
-	if found.allowed and not table.HasValue(found.allowed, ply:Team()) then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buyvehicle")) return ""  end
+	if found.allowed and not table.HasValue(found.allowed, ply:Team()) then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/buyvehicle")) return "" end
 
 	if not ply.Vehicles then ply.Vehicles = 0 end
 	if GetConVarNumber("maxvehicles") ~= 0 and ply.Vehicles >= GetConVarNumber("maxvehicles") then
@@ -819,7 +818,7 @@ for k,v in pairs(DarkRPEntities) do
 		end
 
 		if not ply:CanAfford(price) then
-			GAMEMODE:Notify(ply, 1, 4,  string.format(LANGUAGE.cant_afford, v.cmd))
+			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, v.cmd))
 			return ""
 		end
 
@@ -912,7 +911,7 @@ local function BuyHealth(ply)
 	end
 	ply.StartHealth = ply.StartHealth or 100
 	ply:AddMoney(-cost)
-	GAMEMODE:Notify(ply, 0, 4,  string.format(LANGUAGE.you_bought_x, "health",  CUR .. tostring(cost)))
+	GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, "health", CUR .. tostring(cost)))
 	ply:SetHealth(ply.StartHealth)
 	return ""
 end
@@ -1005,7 +1004,7 @@ local function ChangeJob(ply, args)
 	end
 
 	if ply.LastJob and 10 - (CurTime() - ply.LastJob) >= 0 then
-		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait,  math.ceil(10 - (CurTime() - ply.LastJob)), "/job"))
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.have_to_wait, math.ceil(10 - (CurTime() - ply.LastJob)), "/job"))
 		return ""
 	end
 	ply.LastJob = CurTime()
@@ -1092,7 +1091,7 @@ local function Demote(ply, args)
 			return ""
 		end
 		if p:Team() == TEAM_CITIZEN then
-			GAMEMODE:Notify(ply, 1, 4,  string.format(LANGUAGE.unable, "/demote", ""))
+			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/demote", ""))
 		else
 			GAMEMODE:TalkToPerson(p, team.GetColor(ply:Team()), "(DEMOTE) "..ply:Nick(),Color(255,0,0,255), "I want to demote you. Reason: "..reason, p)
 			GAMEMODE:NotifyAll(0, 4, string.format(LANGUAGE.demote_vote_started, ply:Nick(), p:Nick()))
@@ -1149,7 +1148,7 @@ local function DoTeamBan(ply, args, cmdargs)
 	else
 		local a,b = string.find(args, " ")
 		ent = string.sub(args, 1, a - 1)
-		Team = string.sub(args,  a + 1)
+		Team = string.sub(args, a + 1)
 	end
 
 	local target = GAMEMODE:FindPlayer(ent)
@@ -1206,7 +1205,7 @@ local function DoTeamUnBan(ply, args, cmdargs)
 	else
 		local a,b = string.find(args, " ")
 		ent = string.sub(args, 1, a - 1)
-		Team = string.sub(args,  a + 1)
+		Team = string.sub(args, a + 1)
 	end
 
 	local target = GAMEMODE:FindPlayer(ent)
@@ -1675,7 +1674,7 @@ local function DoLottery(ply)
 	end
 
 	if CanLottery > CurTime() then
-		GAMEMODE:Notify(ply, 1, 5, string.format(LANGUAGE.have_to_wait,  tostring(CanLottery - CurTime()), "/lottery"))
+		GAMEMODE:Notify(ply, 1, 5, string.format(LANGUAGE.have_to_wait, tostring(CanLottery - CurTime()), "/lottery"))
 		return ""
 	end
 
@@ -2030,7 +2029,7 @@ local function VoteRemoveLicense(ply, args)
 			return ""
 		end
 		if ply.DarkRPVars.HasGunlicense then
-			GAMEMODE:Notify(ply, 1, 4,  string.format(LANGUAGE.unable, "/demotelicense", ""))
+			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/demotelicense", ""))
 		else
 			GAMEMODE:NotifyAll(0, 4, string.format(LANGUAGE.gunlicense_remove_vote_text, ply:Nick(), p:Nick()))
 			GAMEMODE.vote:Create(p:Nick() .. ":\n"..string.format(LANGUAGE.gunlicense_remove_vote_text2, reason), p:EntIndex() .. "votecop"..ply:EntIndex(), p, 20, FinishRevokeLicense, true)
@@ -2068,7 +2067,7 @@ local function ReportAttacker(ply, cmd, args)
 			GAMEMODE:Notify(ply, 0, 4, "You have called 911!")
 		end
 	else
-		GAMEMODE:Notify(ply, 1, 4,  string.format(LANGUAGE.unable, "/911", "Enter a player's name"))
+		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/911", "Enter a player's name"))
 	end
 	return ""
 end
