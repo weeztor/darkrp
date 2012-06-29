@@ -83,7 +83,10 @@ function DB.QueryValue(query, callback)
 		query:start()
 		return
 	end
-	callback(sql.QueryValue(query))
+	local val = sql.QueryValue(query)
+
+	if callback then callback(val) end
+	return val
 end
 
 function DB.ConnectToMySQL(host, username, password, database_name, database_port)
