@@ -272,53 +272,58 @@ local function RetrieveBlockedModels()
 end
 
 local function RetrieveRestrictedTools()
-	DB.Query("SELECT * FROM FPP_TOOLRESTRICT2;", function(data)
-
+	DB.Query("SELECT * FROM FPP_TOOLADMINONLY;", function(data)
 		if type(data) == "table" then
 			for k,v in pairs(data) do
 				FPP.RestrictedTools[v.toolname] = {}
 				FPP.RestrictedTools[v.toolname]["admin"] = tonumber(v.adminonly)
-
-				FPP.RestrictedTools[v.toolname]["team"] = FPP.RestrictedTools[v.toolname]["team"] or {}
-
-				if v.teamrestrict ~= "nil" then
-					local teamrestrict = string.Explode(";", v.teamrestrict)
-					for a, b in pairs(teamrestrict) do
-						table.insert(FPP.RestrictedTools[v.toolname]["team"], tonumber(b))
-					end
-				end
-
 			end
 		end
+	end)
 
-		local perplayerData = DB.Query("SELECT * FROM FPP_TOOLRESTRICTPERSON1;")
-		if type(perplayerData) == "table" then
-			for k,v in pairs(perplayerData) do
-				FPP.RestrictedToolsPlayers[v.toolname] = FPP.RestrictedToolsPlayers[v.toolname] or {}
-				local convert = {}
-				convert["1"] = true
-				convert["0"] = false
-				FPP.RestrictedToolsPlayers[v.toolname][v.steamid] = convert[v.allow]
-			end
+	DB.Query("SELECT * FROM FPP_TOOLRESTRICTPERSON1;", function(perplayerData)
+		if type(perplayerData) ~= "table" then return end
+		for k,v in pairs(perplayerData) do
+			FPP.RestrictedToolsPlayers[v.toolname] = FPP.RestrictedToolsPlayers[v.toolname] or {}
+			local convert = {}
+			convert["1"] = true
+			convert["0"] = false
+			FPP.RestrictedToolsPlayers[v.toolname][v.steamid] = convert[v.allow]
+		end
+	end)
+
+	DB.Query("SELECT * FROM FPP_TOOLTEAMRESTRICT;", function(data)
+		if not data then return end
+
+		for k,v in pairs(data) do
+			FPP.RestrictedTools[v.toolname] = FPP.RestrictedTools[v.toolname] or {}
+			FPP.RestrictedTools[v.toolname]["team"] = FPP.RestrictedTools[v.toolname]["team"] or {}
+
+			table.insert(FPP.RestrictedTools[v.toolname]["team"], tonumber(data.team))
 		end
 	end)
 end
 
 local function RetrieveGroups()
-	DB.Query("SELECT * FROM FPP_GROUPS2;", function(data)
+	DB.Query("SELECT * FROM FPP_GROUPS3;", function(data)
 		if type(data) ~= "table" then
-			DB.Query("INSERT INTO FPP_GROUPS2 VALUES('default', 1, '');")
+			DB.Query("INSERT INTO FPP_GROUPS3 VALUES('default', 1);")
 			return
 		end -- if there are no groups then there isn't much to load
 		for k,v in pairs(data) do
 			FPP.Groups[v.groupname] = {}
-			FPP.Groups[v.groupname].tools = string.Explode(";", v.tools)
 			FPP.Groups[v.groupname].allowdefault = util.tobool(v.allowdefault)
-			for num,tool in pairs(FPP.Groups[v.groupname].tools) do
-				if tool == "" then
-					table.remove(FPP.Groups[v.groupname].tools, num)
-				end
-			end
+		end
+	end)
+
+	DB.Query("SELECT * FROM FPP_GROUPTOOL;", function(data)
+		if not data then return end
+
+		for k,v in pairs(data) do
+			FPP.Groups[v.groupname] = FPP.Groups[v.groupname] or {}
+			FPP.Groups[v.groupname].tools = FPP.Groups[v.groupname].tools or {}
+
+			table.insert(FPP.Groups[v.groupname].tools, v.tool)
 		end
 	end)
 
@@ -365,7 +370,7 @@ local function AddGroup(ply, cmd, args)
 	FPP.Groups[name].allowdefault = util.tobool(allowdefault)
 	FPP.Groups[name].tools = {}
 
-	DB.Query("REPLACE INTO FPP_GROUPS2 VALUES("..sql.SQLStr(name)..", "..sql.SQLStr(allowdefault)..", \"\");")
+	DB.Query("REPLACE INTO FPP_GROUPS3 VALUES("..sql.SQLStr(name)..", "..sql.SQLStr(allowdefault)..");")
 	FPP.Notify(ply, "Group added succesfully", true)
 end
 concommand.Add("FPP_AddGroup", AddGroup)
@@ -394,7 +399,8 @@ local function RemoveGroup(ply, cmd, args)
 	end
 
 	FPP.Groups[name] = nil
-	DB.Query("DELETE FROM FPP_GROUPS2 WHERE groupname = "..sql.SQLStr(name)..";")
+	DB.Query("DELETE FROM FPP_GROUPS3 WHERE groupname = "..sql.SQLStr(name)..";")
+	DB.Query("DELETE FROM FPP_GROUPTOOL WHERE groupname = "..sql.SQLStr(name)..";")
 
 	for k,v in pairs(FPP.GroupMembers) do
 		if v == name then
@@ -418,7 +424,7 @@ local function GroupChangeAllowDefault(ply, cmd, args)
 	end
 
 	FPP.Groups[name].allowdefault = util.tobool(newval)
-	DB.Query("UPDATE FPP_GROUPS2 SET allowdefault = "..sql.SQLStr(newval).." WHERE groupname = "..sql.SQLStr(name)..";")
+	DB.Query("UPDATE FPP_GROUPS3 SET allowdefault = "..sql.SQLStr(newval).." WHERE groupname = "..sql.SQLStr(name)..";")
 	FPP.Notify(ply, "Group status changed succesfully", true)
 end
 concommand.Add("FPP_ChangeGroupStatus", GroupChangeAllowDefault)
@@ -435,14 +441,16 @@ local function GroupAddTool(ply, cmd, args)
 		return
 	end
 
+	FPP.Groups[name].tools = FPP.Groups[name].tools or {}
+
 	if table.HasValue(FPP.Groups[name].tools, tool) then
 		FPP.Notify(ply, "Tool is already in group!", false)
 		return
 	end
 
 	table.insert(FPP.Groups[name].tools, tool)
-	local tools = table.concat(FPP.Groups[name].tools, ";")
-	DB.Query("UPDATE FPP_GROUPS2 SET tools = "..sql.SQLStr(tools).." WHERE groupname = "..sql.SQLStr(name)..";")
+
+	DB.Query("REPLACE INTO FPP_GROUPTOOL VALUES("..sql.SQLStr(name)..", "..sql.SQLStr(tool)..");")
 	FPP.Notify(ply, "Tool added succesfully", true)
 end
 concommand.Add("FPP_AddGroupTool", GroupAddTool)
@@ -470,8 +478,8 @@ local function GroupRemoveTool(ply, cmd, args)
 		end
 	end
 
-	local tools = table.concat(FPP.Groups[name].tools, ";")
-	DB.Query("UPDATE FPP_GROUPS2 SET tools = "..sql.SQLStr(tools).." WHERE groupname = "..sql.SQLStr(name)..";")
+	DB.Query("DELETE FROM FPP_GROUPTOOL WHERE groupname = "..sql.SQLStr(name).." AND tool = "..sql.SQLStr(tool)..";")
+
 	FPP.Notify(ply, "Tool removed succesfully", true)
 end
 concommand.Add("FPP_RemoveGroupTool", GroupRemoveTool)
@@ -605,14 +613,11 @@ local function SetToolRestrict(ply, cmd, args)
 
 	FPP.RestrictedTools[toolname] = FPP.RestrictedTools[toolname] or {}
 
-	local teamrestrict = table.concat(FPP.RestrictedTools[toolname]["team"] or {}, ";")
-	if teamrestrict == "" then teamrestrict = "nil" end
-
 	if RestrictWho == "admin" then
 		FPP.RestrictedTools[toolname].admin = args[3] --weapons.Get("gmod_tool").Tool
 
 		--Save to database!
-		DB.Query("REPLACE INTO FPP_TOOLRESTRICT2 VALUES("..sql.SQLStr(toolname)..", "..sql.SQLStr(args[3])..", "..sql.SQLStr(teamrestrict)..");")
+		DB.Query("REPLACE INTO FPP_TOOLADMINONLY VALUES("..sql.SQLStr(toolname)..", "..sql.SQLStr(args[3])..");")
 	elseif RestrictWho == "team" then
 		FPP.RestrictedTools[toolname]["team"] = FPP.RestrictedTools[toolname]["team"] or {}
 		if teamtoggle == 0 then
@@ -626,10 +631,11 @@ local function SetToolRestrict(ply, cmd, args)
 			table.insert(FPP.RestrictedTools[toolname]["team"], tonumber(args[3]))
 		end--Remove from the table if it's in there AND it's 0 otherwise do nothing
 
-		local adminonly = FPP.RestrictedTools[toolname].admin or 0
-		teamrestrict = table.concat(FPP.RestrictedTools[toolname]["team"] or {}, ";")
-
-		DB.Query("REPLACE INTO FPP_TOOLRESTRICT2 VALUES("..sql.SQLStr(toolname)..", "..sql.SQLStr(adminonly)..", "..sql.SQLStr(teamrestrict)..");")
+		if tobool(teamtoggle) then -- if the team restrict is enabled
+			DB.Query("REPLACE INTO FPP_TOOLTEAMRESTRICT VALUES("..sql.SQLStr(toolname) ..", "..tonumber(args[3])..");")
+		else -- otherwise if the restriction for the team is being removed
+			DB.Query("DELETE FROM FPP_TOOLTEAMRESTRICT WHERE toolname = "..sql.SQLStr(toolname).. " AND team = ".. tonumber(args[3]))
+		end
 	end
 end
 concommand.Add("FPP_restricttool", SetToolRestrict)
@@ -672,10 +678,12 @@ hook.Add("InitPostEntity", "FPP_LoadSQL", function()
 			DB.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKMODELSETTINGS1(var VARCHAR(40) NOT NULL, setting INTEGER NOT NULL, PRIMARY KEY(var));")
 
 			DB.Query("CREATE TABLE IF NOT EXISTS FPP_ANTISPAM1(var VARCHAR(40) NOT NULL, setting INTEGER NOT NULL, PRIMARY KEY(var));")
-			DB.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICT2(toolname VARCHAR(40) NOT NULL, adminonly INTEGER NOT NULL, teamrestrict VARCHAR(150) NOT NULL, PRIMARY KEY(toolname));")
+			DB.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLADMINONLY(toolname VARCHAR(40) NOT NULL, adminonly INTEGER NOT NULL, PRIMARY KEY(toolname));")
+			DB.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLTEAMRESTRICT(toolname VARCHAR(40) NOT NULL, team INTEGER NOT NULL, PRIMARY KEY(toolname, team));")
 
 			DB.Query("CREATE TABLE IF NOT EXISTS FPP_TOOLRESTRICTPERSON1(toolname VARCHAR(40) NOT NULL, steamid VARCHAR(40) NOT NULL, allow INTEGER NOT NULL, PRIMARY KEY(steamid, toolname));")
-			DB.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPS2(groupname VARCHAR(40) NOT NULL, allowdefault INTEGER NOT NULL, tools VARCHAR(400) NOT NULL, PRIMARY KEY(groupname));")
+			DB.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPS3(groupname VARCHAR(40) NOT NULL, allowdefault INTEGER NOT NULL, PRIMARY KEY(groupname));")
+			DB.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPTOOL(groupname VARCHAR(40) NOT NULL, tool VARCHAR(45) NOT NULL, PRIMARY KEY(groupname, tool));")
 			DB.Query("CREATE TABLE IF NOT EXISTS FPP_GROUPMEMBERS1(steamid VARCHAR(40) NOT NULL, groupname VARCHAR(40) NOT NULL, PRIMARY KEY(steamid));")
 			DB.Query("CREATE TABLE IF NOT EXISTS FPP_BLOCKEDMODELS1(model VARCHAR(140) NOT NULL PRIMARY KEY);")
 		DB.Commit()

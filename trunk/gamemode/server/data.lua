@@ -210,17 +210,31 @@ function DB.Init()
 					end
 				end
 
-				DB.Query([[
-					CREATE TRIGGER JobPositionFKDelete
-						AFTER DELETE ON darkrp_position
-						FOR EACH ROW
-							IF OLD.type = "J" THEN
-								DELETE FROM darkrp_jobspawn WHERE darkrp_jobspawn.id = OLD.id;
-							ELSEIF OLD.type = "C" THEN
-								DELETE FROM darkrp_console WHERE darkrp_console.id = OLD.id;
-							END IF
-					;
-				]])
+				DB.Query("SHOW PRIVILEGES", function(data)
+					if not data then return end
+
+					local found;
+					for k,v in pairs(data) do
+						if v.Privilege == "Trigger" then
+							found = true
+							break;
+						end
+					end
+
+					if not found then return end
+
+					DB.Query([[
+						CREATE TRIGGER JobPositionFKDelete
+							AFTER DELETE ON darkrp_position
+							FOR EACH ROW
+								IF OLD.type = "J" THEN
+									DELETE FROM darkrp_jobspawn WHERE darkrp_jobspawn.id = OLD.id;
+								ELSEIF OLD.type = "C" THEN
+									DELETE FROM darkrp_console WHERE darkrp_console.id = OLD.id;
+								END IF
+						;
+					]])
+				end)
 			end)
 		else -- SQLite triggers, quite a different syntax
 			DB.Query([[
@@ -809,7 +823,7 @@ function DB.LoadConsoles()
 				console.ID = v.id
 			end
 		else -- If there are no custom positions in the database, use the presets.
-			for k,v in pairs(RP_ConsolePositions) do
+			for k,v in pairs(RP_ConsolePositions or {}) do
 				if v[1] == map then
 					local console = ents.Create("darkrp_console")
 					console:SetPos(Vector(RP_ConsolePositions[k][2], RP_ConsolePositions[k][3], RP_ConsolePositions[k][4]))
