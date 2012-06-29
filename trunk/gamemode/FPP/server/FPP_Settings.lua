@@ -263,9 +263,30 @@ local function RetrieveBlocked()
 end
 
 local function RetrieveBlockedModels()
+	FPP.BlockedModels = FPP.BlockedModels or {}
+	-- Sometimes when the database retrieval is corrupt,
+	-- only parts of the table will be retrieved
+	-- This is a workaround
+	if not DB.MySQLDB then
+		local count = DB.QueryValue("SELECT COUNT(*) FROM FPP_BLOCKEDMODELS1;") or 0
+
+		-- Select with offsets of a thousand.
+		-- That's about the maximum it can receive properly at once
+		for i=0, count, 1000 do
+			DB.Query("SELECT * FROM FPP_BLOCKEDMODELS1 LIMIT 1000 OFFSET "..i..";", function(data)
+				for k,v in pairs(data or {}) do
+					table.insert(FPP.BlockedModels, v.model)
+				end
+			end)
+		end
+
+		return
+	end
+
+	-- Retrieve the data normally from MySQL
 	DB.Query("SELECT * FROM FPP_BLOCKEDMODELS1;", function(data)
 		for k,v in pairs(data or {}) do
-			if not v.model then return end
+			if not v.model then continue end
 			table.insert(FPP.BlockedModels, v.model)
 		end
 	end)
