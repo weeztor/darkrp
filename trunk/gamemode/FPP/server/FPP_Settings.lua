@@ -98,9 +98,9 @@ local function AddBlockedModel(ply, cmd, args)
 	local model = string.lower(args[1])
 	model = string.Replace(model, "\\", "/")
 
-	if table.HasValue(FPP.BlockedModels, model) then FPP.Notify(ply, "This model is already in the black/whitelist", false) return end
+	if FPP.BlockedModels[model] then FPP.Notify(ply, "This model is already in the black/whitelist", false) return end
 
-	table.insert(FPP.BlockedModels, model)
+	FPP.BlockedModels[model] = true
 	DB.Query("INSERT INTO FPP_BLOCKEDMODELS1 VALUES("..sql.SQLStr(model)..");")
 
 	FPP.NotifyAll(((ply.Nick and ply:Nick()) or "Console").. " added ".. model .. " to the blocked models black/whitelist", true)
@@ -128,9 +128,8 @@ local function RemoveBlockedModel(ply, cmd, args)
 	if not args[1] then FPP.Notify(ply, "Argument(s) invalid", false) return end
 	local model = string.lower(args[1])
 
-	for k,v in pairs(FPP.BlockedModels) do
-		if v == model then table.remove(FPP.BlockedModels, k) break end
-	end
+	FPP.BlockedModels[model] = nil
+
 	DB.Query("DELETE FROM FPP_BLOCKEDMODELS1 WHERE model = "..sql.SQLStr(model)..";")
 	FPP.NotifyAll(((ply.Nick and ply:Nick()) or "Console").. " removed ".. model .. " from the blocked models black/whitelist", false)
 end
@@ -275,7 +274,7 @@ local function RetrieveBlockedModels()
 		for i=0, count, 1000 do
 			DB.Query("SELECT * FROM FPP_BLOCKEDMODELS1 LIMIT 1000 OFFSET "..i..";", function(data)
 				for k,v in pairs(data or {}) do
-					table.insert(FPP.BlockedModels, v.model)
+					FPP.BlockedModels[v.model] = true
 				end
 			end)
 		end
@@ -287,7 +286,7 @@ local function RetrieveBlockedModels()
 	DB.Query("SELECT * FROM FPP_BLOCKEDMODELS1;", function(data)
 		for k,v in pairs(data or {}) do
 			if not v.model then continue end
-			table.insert(FPP.BlockedModels, v.model)
+			FPP.BlockedModels[v.model] = true
 		end
 	end)
 end
@@ -562,7 +561,7 @@ local function SendBlockedModels(ply, cmd, args)
 	for k,v in pairs(FPP.BlockedModels) do
 		timer.Simple(k*0.05, function()
 			umsg.Start("FPP_BlockedModel", ply)
-				umsg.String(v)
+				umsg.String(k)
 			umsg.End()
 		end)
 	end
