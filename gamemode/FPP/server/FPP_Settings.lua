@@ -328,10 +328,14 @@ local function RetrieveGroups()
 	DB.Query("SELECT * FROM FPP_GROUPS3;", function(data)
 		if type(data) ~= "table" then
 			DB.Query("INSERT INTO FPP_GROUPS3 VALUES('default', 1);")
+			FPP.Groups['default'] = {}
+			FPP.Groups['default'].tools = {}
+			FPP.Groups['default'].allowdefault = true
 			return
 		end -- if there are no groups then there isn't much to load
 		for k,v in pairs(data) do
 			FPP.Groups[v.groupname] = {}
+			FPP.Groups[v.groupname].tools = {}
 			FPP.Groups[v.groupname].allowdefault = util.tobool(v.allowdefault)
 		end
 	end)
