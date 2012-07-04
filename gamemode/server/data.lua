@@ -720,7 +720,6 @@ function DB.PayPlayer(ply1, ply2, amount)
 end
 
 function DB.StoreSalary(ply, amount)
-	local steamID = ply:SteamID()
 	ply:SetSelfDarkRPVar("salary", math.floor(amount))
 	DB.Query([[REPLACE INTO darkrp_player VALUES(]] ..
 		ply:UniqueID() .. [[, ]] ..

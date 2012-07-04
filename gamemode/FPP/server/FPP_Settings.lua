@@ -319,7 +319,7 @@ local function RetrieveRestrictedTools()
 			FPP.RestrictedTools[v.toolname] = FPP.RestrictedTools[v.toolname] or {}
 			FPP.RestrictedTools[v.toolname]["team"] = FPP.RestrictedTools[v.toolname]["team"] or {}
 
-			table.insert(FPP.RestrictedTools[v.toolname]["team"], tonumber(data.team))
+			table.insert(FPP.RestrictedTools[v.toolname]["team"], tonumber(v.team))
 		end
 	end)
 end

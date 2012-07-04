@@ -60,7 +60,7 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
-	if not self.Ready or not SERVER then return end
+	if not self.Ready or not SERVER then return true end
 
 	GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
 	self.Owner:SetJumpPower(200)
