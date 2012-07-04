@@ -394,29 +394,35 @@ function DB.UpdateDatabase()
 
 	DB.Commit()
 
-	-- Separate transaction for the player data
-	DB.Query([[SELECT darkrp_wallets.steam, amount, salary, name FROM darkrp_wallets
-		LEFT OUTER JOIN darkrp_salaries ON darkrp_salaries.steam = darkrp_wallets.steam
-		LEFT OUTER JOIN darkrp_rpnames ON darkrp_rpnames.steam = darkrp_wallets.steam]], function(data)
 
-		DB.Begin()
+	local count = DB.QueryValue("SELECT COUNT(*) FROM darkrp_wallets;") or 0
+	for i = 0, count, 1000 do -- SQLite selecting limit
+		DB.Query([[SELECT darkrp_wallets.steam, amount, salary, name FROM darkrp_wallets
+			LEFT OUTER JOIN darkrp_salaries ON darkrp_salaries.steam = darkrp_wallets.steam
+			LEFT OUTER JOIN darkrp_rpnames ON darkrp_rpnames.steam = darkrp_wallets.steam LIMIT 1000 OFFSET ]]..i..[[;]], function(data)
 
-		for k,v in pairs(data or {}) do
-			local uniqueID = util.CRC("gm_" .. v.steam .. "_gm")
+			-- Separate transaction for the player data
+			DB.Begin()
 
-			DB.Query([[INSERT INTO darkrp_player VALUES(]]
-				..uniqueID..[[,]]
-				..((v.name == "NULL" or not v.name) and "NULL" or sql.SQLStr(v.name))..[[,]]
-				..((v.salary == "NULL" or not v.salary) and GetConVarNumber("normalsalary") or v.salary)..[[,]]
-				..v.amount..[[);]])
-		end
+			for k,v in pairs(data or {}) do
+				local uniqueID = util.CRC("gm_" .. v.steam .. "_gm")
 
-		DB.Query([[DROP TABLE darkrp_wallets;]])
-		DB.Query([[DROP TABLE darkrp_salaries;]])
-		DB.Query([[DROP TABLE darkrp_rpnames;]])
+				DB.Query([[INSERT INTO darkrp_player VALUES(]]
+					..uniqueID..[[,]]
+					..((v.name == "NULL" or not v.name) and "NULL" or sql.SQLStr(v.name))..[[,]]
+					..((v.salary == "NULL" or not v.salary) and GetConVarNumber("normalsalary") or v.salary)..[[,]]
+					..v.amount..[[);]])
+			end
 
-		DB.Commit()
-	end)
+			if count - i < 1000 then -- the last iteration
+				DB.Query([[DROP TABLE darkrp_wallets;]])
+				DB.Query([[DROP TABLE darkrp_salaries;]])
+				DB.Query([[DROP TABLE darkrp_rpnames;]])
+			end
+
+			DB.Commit()
+		end)
+	end
 end
 
 /*---------------------------------------------------------
