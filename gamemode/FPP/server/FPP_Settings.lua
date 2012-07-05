@@ -139,7 +139,7 @@ local function ShareProp(ply, cmd, args)
 	if not args[1] or not ValidEntity(Entity(args[1])) or not args[2] then FPP.Notify(ply, "Argument(s) invalid", false) return end
 	local ent = Entity(args[1])
 
-	if not FPP.PlayerCanTouchEnt(ply, ent, "Toolgun", "FPP_TOOLGUN", true) then --Note: This returns false when it's someone elses shared entity, so that's not a glitch
+	if not FPP.PlayerCanTouchEnt(ply, ent, "Toolgun1", "FPP_TOOLGUN1", true) then --Note: This returns false when it's someone elses shared entity, so that's not a glitch
 		FPP.Notify(ply, "You do not have the right to share this entity.", false)
 		return
 	end
