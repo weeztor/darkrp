@@ -14,17 +14,11 @@ if cleanup then
 
 			local model = string.lower(ent:GetModel() or "")
 			model = string.Replace(model, "\\", "/")
-			for k,v in pairs(FPP.BlockedModels) do FPP.BlockedModels[k] = string.Replace(v, "\\", "/") end
-			if model ~= "" and FPP.Settings and FPP.Settings.FPP_BLOCKMODELSETTINGS1 and tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.toggle) then
-				if not FPP.BlockedModels or not model then return end
 
-				local found = false
-				for k,v in pairs(FPP.BlockedModels) do
-					if string.find(v, model, 0, true) or string.find(model, v, 0, true) then
-						found = true
-						break
-					end
-				end
+			if model ~= "" and FPP.Settings and FPP.Settings.FPP_BLOCKMODELSETTINGS1 and tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.toggle)
+				and FPP.BlockedModels and model then
+
+				local found = FPP.BlockedModels[model]
 				if tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.iswhitelist) and not found then
 					-- Prop is not in the white list
 					FPP.Notify(ply, "The model of this entity is not in the white list!", false)

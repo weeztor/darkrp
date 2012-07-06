@@ -83,7 +83,10 @@ function DB.QueryValue(query, callback)
 		query:start()
 		return
 	end
-	callback(sql.QueryValue(query))
+	local val = sql.QueryValue(query)
+
+	if callback then callback(val) end
+	return val
 end
 
 function DB.ConnectToMySQL(host, username, password, database_name, database_port)
@@ -210,17 +213,31 @@ function DB.Init()
 					end
 				end
 
-				DB.Query([[
-					CREATE TRIGGER JobPositionFKDelete
-						AFTER DELETE ON darkrp_position
-						FOR EACH ROW
-							IF OLD.type = "J" THEN
-								DELETE FROM darkrp_jobspawn WHERE darkrp_jobspawn.id = OLD.id;
-							ELSEIF OLD.type = "C" THEN
-								DELETE FROM darkrp_console WHERE darkrp_console.id = OLD.id;
-							END IF
-					;
-				]])
+				DB.Query("SHOW PRIVILEGES", function(data)
+					if not data then return end
+
+					local found;
+					for k,v in pairs(data) do
+						if v.Privilege == "Trigger" then
+							found = true
+							break;
+						end
+					end
+
+					if not found then return end
+
+					DB.Query([[
+						CREATE TRIGGER JobPositionFKDelete
+							AFTER DELETE ON darkrp_position
+							FOR EACH ROW
+								IF OLD.type = "J" THEN
+									DELETE FROM darkrp_jobspawn WHERE darkrp_jobspawn.id = OLD.id;
+								ELSEIF OLD.type = "C" THEN
+									DELETE FROM darkrp_console WHERE darkrp_console.id = OLD.id;
+								END IF
+						;
+					]])
+				end)
 			end)
 		else -- SQLite triggers, quite a different syntax
 			DB.Query([[
@@ -377,29 +394,35 @@ function DB.UpdateDatabase()
 
 	DB.Commit()
 
-	-- Separate transaction for the player data
-	DB.Query([[SELECT darkrp_wallets.steam, amount, salary, name FROM darkrp_wallets
-		LEFT OUTER JOIN darkrp_salaries ON darkrp_salaries.steam = darkrp_wallets.steam
-		LEFT OUTER JOIN darkrp_rpnames ON darkrp_rpnames.steam = darkrp_wallets.steam]], function(data)
 
-		DB.Begin()
+	local count = DB.QueryValue("SELECT COUNT(*) FROM darkrp_wallets;") or 0
+	for i = 0, count, 1000 do -- SQLite selecting limit
+		DB.Query([[SELECT darkrp_wallets.steam, amount, salary, name FROM darkrp_wallets
+			LEFT OUTER JOIN darkrp_salaries ON darkrp_salaries.steam = darkrp_wallets.steam
+			LEFT OUTER JOIN darkrp_rpnames ON darkrp_rpnames.steam = darkrp_wallets.steam LIMIT 1000 OFFSET ]]..i..[[;]], function(data)
 
-		for k,v in pairs(data or {}) do
-			local uniqueID = util.CRC("gm_" .. v.steam .. "_gm")
+			-- Separate transaction for the player data
+			DB.Begin()
 
-			DB.Query([[INSERT INTO darkrp_player VALUES(]]
-				..uniqueID..[[,]]
-				..((v.name == "NULL" or not v.name) and "NULL" or sql.SQLStr(v.name))..[[,]]
-				..((v.salary == "NULL" or not v.salary) and GetConVarNumber("normalsalary") or v.salary)..[[,]]
-				..v.amount..[[);]])
-		end
+			for k,v in pairs(data or {}) do
+				local uniqueID = util.CRC("gm_" .. v.steam .. "_gm")
 
-		DB.Query([[DROP TABLE darkrp_wallets;]])
-		DB.Query([[DROP TABLE darkrp_salaries;]])
-		DB.Query([[DROP TABLE darkrp_rpnames;]])
+				DB.Query([[INSERT INTO darkrp_player VALUES(]]
+					..uniqueID..[[,]]
+					..((v.name == "NULL" or not v.name) and "NULL" or sql.SQLStr(v.name))..[[,]]
+					..((v.salary == "NULL" or not v.salary) and GetConVarNumber("normalsalary") or v.salary)..[[,]]
+					..v.amount..[[);]])
+			end
 
-		DB.Commit()
-	end)
+			if count - i < 1000 then -- the last iteration
+				DB.Query([[DROP TABLE darkrp_wallets;]])
+				DB.Query([[DROP TABLE darkrp_salaries;]])
+				DB.Query([[DROP TABLE darkrp_rpnames;]])
+			end
+
+			DB.Commit()
+		end)
+	end
 end
 
 /*---------------------------------------------------------
@@ -703,7 +726,6 @@ function DB.PayPlayer(ply1, ply2, amount)
 end
 
 function DB.StoreSalary(ply, amount)
-	local steamID = ply:SteamID()
 	ply:SetSelfDarkRPVar("salary", math.floor(amount))
 	DB.Query([[REPLACE INTO darkrp_player VALUES(]] ..
 		ply:UniqueID() .. [[, ]] ..
@@ -809,7 +831,7 @@ function DB.LoadConsoles()
 				console.ID = v.id
 			end
 		else -- If there are no custom positions in the database, use the presets.
-			for k,v in pairs(RP_ConsolePositions) do
+			for k,v in pairs(RP_ConsolePositions or {}) do
 				if v[1] == map then
 					local console = ents.Create("darkrp_console")
 					console:SetPos(Vector(RP_ConsolePositions[k][2], RP_ConsolePositions[k][3], RP_ConsolePositions[k][4]))
