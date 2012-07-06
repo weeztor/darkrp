@@ -405,6 +405,7 @@ local function OwnDoor(ply)
 			if( !bSuppress ) then
 				GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.door_sold,  CUR..(GiveMoneyBack)))
 			end
+
 			ply.LookingAtDoor = nil
 		else
 			if trace.Entity:IsOwned() and not trace.Entity:AllowedToOwn(ply) then
@@ -483,7 +484,14 @@ function meta:UnOwn(ply)
 		self:RemoveOwner(ply)
 	end
 
-	local num = 0
+	-- Decrease vehicle count
+	if self:IsVehicle() then
+		if ValidEntity(ply) then
+			ply.Vehicles = ply.Vehicles or 1
+			ply.Vehicles = ply.Vehicles - 1
+		end
+	end
+	self.Owner = nil
 
 	self:RemoveOwner(ply)
 	ply.LookingAtDoor = nil
@@ -520,6 +528,16 @@ function meta:Own(ply)
 		self:AddOwner(ply)
 		return
 	end
+
+ 	-- Increase vehicle count
+	if self:IsVehicle() then
+		if ValidEntity(ply) then
+			ply.Vehicles = ply.Vehicles or 0
+			ply.Vehicles = ply.Vehicles + 1
+		end
+	end
+
+	self.Owner = ply
 
 	if not self:IsOwned() and not self:OwnedBy(ply) then
 		self.DoorData.Owner = ply
