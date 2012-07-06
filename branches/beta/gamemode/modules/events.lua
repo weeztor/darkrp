@@ -171,8 +171,8 @@ local function StopZombie(ply)
 		timer.Stop("start2")
 		ZombieEnd()
 		GAMEMODE:Notify(ply, 0, 4, LANGUAGE.zombie_disabled)
-		return ""
 	end
+	return ""
 end
 AddChatCommand("/disablezombie", StopZombie)
 
@@ -252,8 +252,8 @@ local function StopStorm(ply)
 		timer.Stop("start")
 		StormEnd()
 		GAMEMODE:Notify(ply, 0, 4, LANGUAGE.meteor_disabled)
-		return ""
 	end
+	return ""
 end
 AddChatCommand("/disablestorm", StopStorm)
 

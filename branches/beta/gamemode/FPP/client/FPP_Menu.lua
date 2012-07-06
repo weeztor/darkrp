@@ -784,7 +784,7 @@ EditGroupTools = function(groupname)
 	GroupTools:SetSize(295, 450)
 	GroupTools:AddColumn("Tools currently in "..groupname)
 
-	for k,v in pairs(tools) do
+	for k,v in pairs(tools or {}) do
 		GroupTools:AddLine(v)
 	end
 

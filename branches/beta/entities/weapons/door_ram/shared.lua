@@ -51,8 +51,21 @@ function SWEP:Initialize()
 	self.Ready = false
 end
 
+/*---------------------------------------------------------------------------
+Name: SWEP:Deploy()
+Desc: called when the weapon is deployed
+---------------------------------------------------------------------------*/
 function SWEP:Deploy()
 	self.Ready = false
+end
+
+function SWEP:Holster()
+	if not self.Ready or not SERVER then return true end
+
+	GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
+	self.Owner:SetJumpPower(200)
+
+	return true
 end
 
 /*---------------------------------------------------------
@@ -60,7 +73,7 @@ Name: SWEP:PrimaryAttack()
 Desc: +attack1 has been pressed
 ---------------------------------------------------------*/
 function SWEP:PrimaryAttack()
-	if (CLIENT) then return end
+	if CLIENT then return end
 
 	if not self.Ready then return end
 
@@ -160,8 +173,17 @@ function SWEP:SecondaryAttack()
 	self.Ready = not self.Ready
 	if self.Ready then
 		self:SetWeaponHoldType("rpg")
+		if SERVER then
+			-- Prevent them from being able to run and jump
+			GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd") / 3, GetConVarNumber("rspd") / 3)
+			self.Owner:SetJumpPower(0)
+		end
 	else
 		self:SetWeaponHoldType("normal")
+		if SERVER then
+			GAMEMODE:SetPlayerSpeed(self.Owner, GetConVarNumber("wspd"), GetConVarNumber("rspd"))
+			self.Owner:SetJumpPower(200)
+		end
 	end
 end
 
