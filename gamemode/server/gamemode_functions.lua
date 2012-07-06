@@ -79,8 +79,7 @@ function GM:PlayerSpawnProp(ply, model)
 
 	if ply:isArrested() then return false end
 	model = string.gsub(tostring(model), "\\", "/")
-	if string.find(model,  "//") then GAMEMODE:Notify(ply, 1, 4, "You can't spawn this prop as it contains an invalid path. " ..model)
-	DB.Log(ply:SteamName().." ("..ply:SteamID()..") tried to spawn prop with an invalid path "..model) return false end
+	model = string.gsub(tostring(model), "//", "/")
 
 	if not allowed then return false end
 
