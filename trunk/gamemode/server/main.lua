@@ -739,7 +739,6 @@ local function BuyVehicle(ply, args)
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.limit, "vehicle"))
 		return ""
 	end
-	ply.Vehicles = ply.Vehicles + 1
 
 	if not ply:CanAfford(found.price) then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "vehicle")) return "" end
 	ply:AddMoney(-found.price)
