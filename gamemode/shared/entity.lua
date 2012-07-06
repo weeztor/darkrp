@@ -427,7 +427,12 @@ local function OwnDoor(ply)
 				return "";
 			end
 
-			local bVehicle = trace.Entity:IsVehicle( );
+			local bVehicle = trace.Entity:IsVehicle();
+
+			if bVehicle and (ply.Vehicles or 0) >= GetConVarNumber("maxvehicles") and trace.Entity.Owner ~= ply then
+				GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.limit, "vehicle"))
+				return ""
+			end
 
 			ply:AddMoney( -( bVehicle && GetConVarNumber( "vehiclecost" ) || GetConVarNumber( "doorcost" ) ) );
 			if( !bSuppress ) then
@@ -470,33 +475,6 @@ local function UnOwnAll(ply, cmd, args)
 end
 AddChatCommand("/unownalldoors", UnOwnAll)
 
-function meta:UnOwn(ply)
-	self.DoorData = self.DoorData or {}
-	if not ply then
-		ply = self:GetDoorOwner()
-
-		if not ValidEntity(ply) then return end
-	end
-
-	if self:IsMasterOwner(ply) then
-		self.DoorData.Owner = nil
-	else
-		self:RemoveOwner(ply)
-	end
-
-	-- Decrease vehicle count
-	if self:IsVehicle() then
-		if ValidEntity(ply) then
-			ply.Vehicles = ply.Vehicles or 1
-			ply.Vehicles = ply.Vehicles - 1
-		end
-	end
-	self.Owner = nil
-
-	self:RemoveOwner(ply)
-	ply.LookingAtDoor = nil
-end
-
 function meta:AddAllowed(ply)
 	self.DoorData = self.DoorData or {}
 	self.DoorData.AllowedToOwn = self.DoorData.AllowedToOwn and self.DoorData.AllowedToOwn .. ";" .. tostring(ply:UserID()) or tostring(ply:UserID())
@@ -535,6 +513,12 @@ function meta:Own(ply)
 			ply.Vehicles = ply.Vehicles or 0
 			ply.Vehicles = ply.Vehicles + 1
 		end
+
+		-- Decrease vehicle count of the original owner
+		if ValidEntity(self.Owner) and self.Owner ~= ply then
+			self.Owner.Vehicles = self.Owner.Vehicles or 1
+			self.Owner.Vehicles = self.Owner.Vehicles - 1
+		end
 	end
 
 	self.Owner = ply
@@ -542,6 +526,24 @@ function meta:Own(ply)
 	if not self:IsOwned() and not self:OwnedBy(ply) then
 		self.DoorData.Owner = ply
 	end
+end
+
+function meta:UnOwn(ply)
+	self.DoorData = self.DoorData or {}
+	if not ply then
+		ply = self:GetDoorOwner()
+
+		if not ValidEntity(ply) then return end
+	end
+
+	if self:IsMasterOwner(ply) then
+		self.DoorData.Owner = nil
+	else
+		self:RemoveOwner(ply)
+	end
+
+	self:RemoveOwner(ply)
+	ply.LookingAtDoor = nil
 end
 
 local function SetDoorTitle(ply, args)
