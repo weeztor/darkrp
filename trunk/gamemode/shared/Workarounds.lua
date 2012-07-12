@@ -133,3 +133,12 @@ hook.Add("InitPostEntity", "FixDoorTool", function()
 		end
 	end
 end)
+
+/*---------------------------------------------------------------------------
+Anti crash exploit
+---------------------------------------------------------------------------*/
+hook.Add("PropBreak", "drp_AntiExploit", function(attacker, ent)
+	if ValidEntity(ent) then
+		constraint.RemoveAll(ent)
+	end
+end)
