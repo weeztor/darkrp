@@ -1178,6 +1178,7 @@ function vgui.Create(classname, parent, name, ...)
 					menu:AddSpacer()
 					menu:AddOption("Delete", function() self:DeleteIcon(self.m_strCategoryName, SpawnIcon, model) end)
 					menu:AddOption("Add to FPP blocked models", function() RunConsoleCommand("FPP_AddBlockedModel", model) end)
+					menu:AddOption("Remove from FPP blocked models", function() RunConsoleCommand("FPP_RemoveBlockedModel", model) end)
 				menu:Open()
 			end
 		end)
