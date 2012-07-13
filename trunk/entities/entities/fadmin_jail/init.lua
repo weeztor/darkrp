@@ -46,8 +46,4 @@ function ENT:Think()
 		self:Remove()
 		return
 	end
-
-	/*if self:GetPos() ~= self.SolidPos or self:GetSolid() ~= SOLID_VPHYSICS then
-		self:Remove()
-	end*/
 end
