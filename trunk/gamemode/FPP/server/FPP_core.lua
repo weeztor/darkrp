@@ -488,8 +488,7 @@ end)
 local invalidToolData = {
 	["model"] = {
 		"*",
-		"\\",
-		" "
+		"\\"
 	},
 	["material"] = {
 		"*",
