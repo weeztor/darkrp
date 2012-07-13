@@ -10,11 +10,26 @@ function ENT:Initialize()
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
 	self.locked = true
-	timer.Simple( GetConVarNumber( "shipmentspawntime" ), function() if ValidEntity( self ) then self.locked = false end end )
+	timer.Simple(GetConVarNumber("shipmentspawntime"), function() if ValidEntity(self) then self.locked = false end end)
 	self.damage = 100
 	self.ShareGravgun = true
 	local phys = self:GetPhysicsObject()
 	phys:Wake()
+
+	local contents = CustomShipments[self.dt.contents or ""]
+
+	-- Create a serverside gun model
+	-- it's required serverside to be able to get OBB information clientside
+	self.dt.gunModel = ValidEntity(self.dt.gunModel) and self.dt.gunModel or ents.Create("prop_physics")
+	self.dt.gunModel:SetModel(contents.model)
+	self.dt.gunModel:SetPos(self:GetPos())
+	self.dt.gunModel:Spawn()
+	self.dt.gunModel:Activate()
+	self.dt.gunModel:SetSolid(SOLID_NONE)
+	self.dt.gunModel:SetParent(self)
+
+	phys = self.dt.gunModel:GetPhysicsObject()
+	phys:EnableMotion(false)
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -35,6 +50,7 @@ function ENT:Use()
 	if not self.locked then
 		self.locked = true -- One activation per second
 		self.sparking = true
+		self.dt.gunspawn = CurTime() + 1
 		timer.Create(self:EntIndex() .. "crate", 1, 1, self.SpawnItem, self)
 	end
 end
@@ -49,6 +65,10 @@ function ENT:SpawnItem()
 	local contents = self.dt.contents
 	local weapon = ents.Create("spawned_weapon")
 
+	local weaponAng = self:GetAngles()
+	local weaponPos = self:GetAngles():Up() * 40 + weaponAng:Up() * (math.sin(CurTime() * 3) * 8)
+	weaponAng:RotateAroundAxis(weaponAng:Up(), (CurTime() * 180) % 360)
+
 	if CustomShipments[contents] then
 		class = CustomShipments[contents].entity
 		model = CustomShipments[contents].model
@@ -59,10 +79,11 @@ function ENT:SpawnItem()
 	end
 
 	weapon.weaponclass = class
-	weapon:SetModel( model )
+	weapon:SetModel(model)
 	weapon.ammoadd = weapons.Get(class) and weapons.Get(class).Primary.DefaultClip
 	weapon.ShareGravgun = true
-	weapon:SetPos(pos + Vector(0,0,35))
+	weapon:SetPos(self:GetPos() + weaponPos)
+	weapon:SetAngles(weaponAng)
 	weapon.nodupe = true
 	weapon:Spawn()
 	count = count - 1
