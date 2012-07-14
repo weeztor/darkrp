@@ -1,4 +1,5 @@
 include("shared.lua")
+surface.CreateFont("Trebuchet", 44, 800, true, false, "HUDNumber5")
 
 local matBallGlow = Material("models/props_combine/tpballglow")
 function ENT:Draw()
