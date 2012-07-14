@@ -485,6 +485,39 @@ timer.Simple(5, function()
 	end
 end)
 
+local invalidToolData = {
+	["model"] = {
+		"*",
+		"\\"
+	},
+	["material"] = {
+		"*",
+		"\\",
+		" ",
+		"effects/highfive_red"
+	},
+	["sound"] = {
+		"?",
+		" "
+	},
+	["soundname"] = {
+		" ",
+		"?"
+	},
+	["tracer"] = {
+		"dof_node"
+	},
+	["door_class"] = {
+		"env_laser"
+	},
+	-- Limit wheel torque
+	["rx"] = 360,
+	["ry"] = 360,
+	["rz"] = 360,
+	-- Limit RT camera's
+	["key"] = 20
+}
+
 function FPP.Protect.CanTool(ply, trace, tool, ENT)
 	-- Toolgun restrict
 
@@ -538,21 +571,29 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 		end
 	end
 
-	-- Anti model server crash
+	-- Anti server crash
 	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon().GetToolObject and ply:GetActiveWeapon():GetToolObject() then
-		if (string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("model"), "*") or
-		string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("material"), "*") or
-		string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("model"), "\\")
-		/*or string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "tool" ), "/")*/) then
-			FPP.Notify(ply, "The material/model of the tool is invalid!", false)
-			FPP.CanTouch(ply, "FPP_TOOLGUN1", "The material/model of the tool is invalid!", false)
-			return false
-		end
+		local tool = ply:GetActiveWeapon():GetToolObject()
+		for t, block in pairs(invalidToolData) do
+			local clientInfo = string.lower(tool:GetClientInfo(t) or "")
+			-- Check for number limits
+			if type(block) == "number" then
+				local num = tonumber(clientInfo) or 0
+				if num > block or num < -block then
+					FPP.Notify(ply, "The client settings of the tool are invalid!", false)
+					FPP.CanTouch(ply, "FPP_TOOLGUN1", "The client settings of the tool are invalid!", false)
+					return false
+				end
+				continue
+			end
 
-		if string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo("sound"), "??", 0, true) then
-			FPP.Notify(ply, "The sound of the tool is invalid!", false)
-			FPP.CanTouch(ply, "FPP_TOOLGUN1", "The sound of the tool is invalid!", false)
-			return false
+			for _, item in pairs(block) do
+				if string.find(clientInfo, item, 1, true) then
+					FPP.Notify(ply, "The client settings of the tool are invalid!", false)
+					FPP.CanTouch(ply, "FPP_TOOLGUN1", "The client settings of the tool are invalid!", false)
+					return false
+				end
+			end
 		end
 	end
 

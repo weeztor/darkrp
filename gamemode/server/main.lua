@@ -711,6 +711,7 @@ local function BuyShipment(ply, args)
 		crate:SetMoveType(MOVETYPE_VPHYSICS)
 		crate:SetSolid(SOLID_VPHYSICS)
 	end
+
 	local phys = crate:GetPhysicsObject()
 	phys:Wake()
 
