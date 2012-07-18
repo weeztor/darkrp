@@ -14,3 +14,22 @@ local function main(ply)
 end
 concommand.Add("proplympics", main)
 AddChatCommand("/proplympics", main)
+
+local function cancelRace(ply)
+	if not ply:IsAdmin() and ply:Team() ~= TEAM_MAYOR then
+		GAMEMODE:Notify(ply, 1, 4, "You have to be admin or mayor")
+		return
+	end
+
+	for k,v in pairs(ents.FindByClass("ctrl_racegame")) do
+		v:Remove()
+	end
+
+	for k,v in pairs(ents.FindByClass("ctrl_racemanager")) do
+		v:Remove()
+	end
+
+	GAMEMODE:NotifyAll(1, 4, ply:Nick() .. " Canceled the proplympics")
+end
+concommand.Add("cancelproplympics", main)
+AddChatCommand("/cancelproplympics", cancelRace)
