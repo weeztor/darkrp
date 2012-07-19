@@ -115,9 +115,7 @@ local function GetAliveZombie()
 
 	local ZombieTypes = {"npc_zombie", "npc_fastzombie", "npc_antlion", "npc_headcrab_fast"}
 	for _, Type in pairs(ZombieTypes) do
-		for _, zombie in pairs(ents.FindByClass(Type)) do
-			zombieCount = zombieCount + 1
-		end
+		zombieCount = zombieCount + #ents.FindByClass(Type)
 	end
 
 	return zombieCount
@@ -125,18 +123,17 @@ end
 
 local function SpawnZombie()
 	timer.Start("move")
-	if GetAliveZombie() < maxZombie then
-		if table.getn(zombieSpawns) > 0 then
-			local ZombieTypes = {"npc_zombie", "npc_fastzombie", "npc_antlion", "npc_headcrab_fast"}
-			local zombieType = math.random(1, #ZombieTypes)
+	if GetAliveZombie() >= maxZombie then return end
+	if table.getn(zombieSpawns) <= 0 then return end
 
-			local Zombie = ents.Create(ZombieTypes[zombieType])
-			Zombie.nodupe = true
-			Zombie:Spawn()
-			Zombie:Activate()
-			Zombie:SetPos(DB.RetrieveRandomZombieSpawnPos())
-		end
-	end
+	local ZombieTypes = {"npc_zombie", "npc_fastzombie", "npc_antlion", "npc_headcrab_fast"}
+	local zombieType = math.random(1, #ZombieTypes)
+
+	local Zombie = ents.Create(ZombieTypes[zombieType])
+	Zombie.nodupe = true
+	Zombie:Spawn()
+	Zombie:Activate()
+	Zombie:SetPos(DB.RetrieveRandomZombieSpawnPos())
 end
 
 local function ZombieMax(ply, args)
@@ -268,7 +265,6 @@ timer.Stop("stormControl")
  ---------------------------------------------------------*/
 local lastmagnitudes = {} -- The magnitudes of the last tremors
 
-local next_update_time
 local tremor = ents.Create("env_physexplosion")
 tremor:SetPos(Vector(0,0,0))
 tremor:SetKeyValue("radius",9999999999)
@@ -290,32 +286,29 @@ end
 local function EarthQuakeTest()
 	if GetConVarNumber("earthquakes") ~= 1 then return end
 
-	if CurTime() > (next_update_time or 0) then
-		if GetConVarNumber("quakechance") ~= 0 and math.random(0, GetConVarNumber("quakechance")) < 1 then
-			local en = ents.FindByClass("prop_physics")
-			local plys = ents.FindByClass("player") or {}
+	if GetConVarNumber("quakechance") ~= 0 and math.random(0, GetConVarNumber("quakechance")) < 1 then
+		local en = ents.FindByClass("prop_physics")
+		local plys = player.GetAll()
 
-			local force = math.random(10,1000)
-			tremor:SetKeyValue("magnitude",force/6)
-			for k,v in pairs(plys) do
-				v:EmitSound("earthquake.mp3", force/6, 100)
+		local force = math.random(10,1000)
+		tremor:SetKeyValue("magnitude",force/6)
+		for k,v in pairs(plys) do
+			v:EmitSound("earthquake.mp3", force/6, 100)
+		end
+		tremor:Fire("explode","",0.5)
+		util.ScreenShake(Vector(0,0,0), force, math.random(25,50), math.random(5,12), 9999999999)
+		table.insert(lastmagnitudes, math.floor((force / 10) + .5) / 10)
+		timer.Simple(10, TremorReport, alert)
+		for k,e in pairs(en) do
+			local rand = math.random(650,1000)
+			if rand < force and rand % 2 == 0 then
+				e:Fire("enablemotion","",0)
+				constraint.RemoveAll(e)
 			end
-			tremor:Fire("explode","",0.5)
-			util.ScreenShake(Vector(0,0,0), force, math.random(25,50), math.random(5,12), 9999999999)
-			table.insert(lastmagnitudes, math.floor((force / 10) + .5) / 10)
-			timer.Simple(10, TremorReport, alert)
-			for k,e in pairs(en) do
-				local rand = math.random(650,1000)
-				if rand < force and rand % 2 == 0 then
-					e:Fire("enablemotion","",0)
-					constraint.RemoveAll(e)
-				end
-				if e:IsOnGround() then
-					e:TakeDamage((force / 100) + 15, GetWorldEntity())
-				end
+			if e:IsOnGround() then
+				e:TakeDamage((force / 100) + 15, GetWorldEntity())
 			end
 		end
-		next_update_time = CurTime() + 1
 	end
 end
-timer.Create("EarthquakeTest", 0.1, 0, EarthQuakeTest)
+timer.Create("EarthquakeTest", 1, 0, EarthQuakeTest)

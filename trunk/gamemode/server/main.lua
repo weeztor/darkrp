@@ -1,52 +1,60 @@
 /*---------------------------------------------------------
  Flammable
  ---------------------------------------------------------*/
-local FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "spawned_money", "prop_physics"}
+local FlammableProps = {drug = true,
+drug_lab = true,
+food = true,
+gunlab = true,
+letter = true,
+microwave = true,
+money_printer = true,
+spawned_shipment = true,
+spawned_weapon = true,
+spawned_money = true,
+prop_physics = true}
 
 local function IsFlammable(ent)
 	local class = ent:GetClass()
-	for k, v in pairs(FlammableProps) do
-		if class == v then return true end
-	end
-	return false
+	return FlammableProps[class] ~= nil
 end
 
 -- FireSpread from SeriousRP
 local function FireSpread(e)
-	if e:IsOnFire() then
-		if e:IsMoneyBag() then
-			e:Remove()
-		end
-		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
-		local rand = math.random(0, 300)
+	if not e:IsOnFire() then return end
 
-		if rand > 1 then return end
+	if e:IsMoneyBag() then
+		e:Remove()
+	end
 
-		for k, v in pairs(en) do
-			if not IsFlammable(v) then continue end
+	local rand = math.random(0, 300)
 
-			if not v.burned then
-				v:Ignite(math.random(5,180), 0)
-				v.burned = true
-			else
-				local r, g, b, a = v:GetColor()
-				if (r - 51)>=0 then r = r - 51 end
-				if (g - 51)>=0 then g = g - 51 end
-				if (b - 51)>=0 then b = b - 51 end
-				v:SetColor(r, g, b, a)
-				if (r + g + b) < 103 and math.random(1, 100) < 35 then
-					v:Fire("enablemotion","",0)
-					constraint.RemoveAll(v)
-				end
+	if rand > 1 then return end
+	local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
+
+	for k, v in pairs(en) do
+		if not IsFlammable(v) then continue end
+
+		if not v.burned then
+			v:Ignite(math.random(5,180), 0)
+			v.burned = true
+		else
+			local r, g, b, a = v:GetColor()
+			if (r - 51)>=0 then r = r - 51 end
+			if (g - 51)>=0 then g = g - 51 end
+			if (b - 51)>=0 then b = b - 51 end
+			v:SetColor(r, g, b, a)
+			if (r + g + b) < 103 and math.random(1, 100) < 35 then
+				v:Fire("enablemotion","",0)
+				constraint.RemoveAll(v)
 			end
-			break -- Don't ignite all entities in sphere at once, just one at a time
 		end
+		break -- Don't ignite all entities in sphere at once, just one at a time
 	end
 end
 
 local function FlammablePropThink()
-	for k, v in ipairs(FlammableProps) do
-		local ens = ents.FindByClass(v)
+	for k, v in pairs(FlammableProps) do
+		local ens = ents.FindByClass(k)
 
 		for a, b in pairs(ens) do
 			FireSpread(b)
