@@ -434,7 +434,7 @@ function DB.CreateSpawnPos()
 
 	for k, v in pairs(team_spawn_positions) do
 		if v[1] == map then
-			DB.StoreTeamSpawnPos(v[2], Vector(v[3], v[4], v[5]))
+			table.insert(DB.TeamSpawns, {id = k, map = v[1], x = v[3], y = v[4], z = v[5], team = v[2]})
 		end
 	end
 	team_spawn_positions = nil -- We're done with this now.
