@@ -598,8 +598,9 @@ function GM:InitPostEntity()
 			v.DarkRPVars = v.DarkRPVars or {}
 			if not v.DarkRPVars.job or not v.DarkRPVars.money or not v.DarkRPVars.rpname then
 				RunConsoleCommand("_sendDarkRPvars")
-				break
+				return
 			end
+			timer.Destroy("DarkRPCheckifitcamethrough")
 		end
 	end)
 end
