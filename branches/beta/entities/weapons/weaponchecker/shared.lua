@@ -47,12 +47,12 @@ if CLIENT then
 		wep.EndCheck = CurTime() + time
 
 		wep.Dots = wep.Dots or ""
-		timer.Create("WeaponCheckDots", 0.5, 0, function(wep)
+		timer.Create("WeaponCheckDots", 0.5, 0, function()
 			if not wep:IsValid() then timer.Destroy("WeaponCheckDots") return end
 			local len = string.len(wep.Dots)
 			local dots = {[0]=".", [1]="..", [2]="...", [3]=""}
 			wep.Dots = dots[len]
-		end, wep)
+		end)
 	end)
 end
 
@@ -80,7 +80,7 @@ function SWEP:PrimaryAttack()
 		end
 	end
 	self.Owner:EmitSound("npc/combine_soldier/gear5.wav", 50, 100)
-	timer.Simple(0.3, function(ply) ply:EmitSound("npc/combine_soldier/gear5.wav", 50, 100) end, self.Owner)
+	timer.Simple(0.3, function() self.Owner:EmitSound("npc/combine_soldier/gear5.wav", 50, 100) end)
 	self.Owner:ChatPrint(trace.Entity:Nick() .."'s weapons:")
 	if result == "" then
 		self.Owner:ChatPrint(trace.Entity:Nick() .. " has no weapons")
@@ -118,10 +118,10 @@ function SWEP:SecondaryAttack()
 		umsg.End()
 		self.EndCheck = CurTime() + self.WeaponCheckTime
 
-		timer.Create("WeaponCheckSounds", 0.5, self.WeaponCheckTime * 2, function(wep)
-			if not ValidEntity(wep) then return end
-			wep:EmitSound("npc/combine_soldier/gear5.wav", 100, 100)
-		end, self)
+		timer.Create("WeaponCheckSounds", 0.5, self.WeaponCheckTime * 2, function()
+			if not ValidEntity(self) then return end
+			self:EmitSound("npc/combine_soldier/gear5.wav", 100, 100)
+		end)
 	end
 end
 
@@ -129,7 +129,7 @@ SWEP.OnceReload = true
 function SWEP:Reload()
 	if CLIENT or not self.Weapon.OnceReload then return end
 	self.Weapon.OnceReload = false
-	timer.Simple(1, function(wep) wep.OnceReload = true end, self.Weapon)
+	timer.Simple(1, function() self.Weapon.OnceReload = true end)
 	local trace = self.Owner:GetEyeTrace()
 
 	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
@@ -204,7 +204,7 @@ function SWEP:Succeed()
 	if result == "" then
 		self.Owner:ChatPrint(trace.Entity:Nick() .. " has no illegal weapons")
 		self.Owner:EmitSound("npc/combine_soldier/gear5.wav", 50, 100)
-		timer.Simple(0.3, function(ply) ply:EmitSound("npc/combine_soldier/gear5.wav", 50, 100) end, self.Owner)
+		timer.Simple(0.3, function() self.Owner:EmitSound("npc/combine_soldier/gear5.wav", 50, 100) end)
 	else
 		local endresult = string.sub(result, 3)
 		self.Owner:EmitSound("ambient/energy/zap1.wav", 50, 100)

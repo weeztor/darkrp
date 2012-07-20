@@ -155,7 +155,7 @@ local function Ragdoll(ply, cmd, args)
 				if not HangOn then return end
 
 				Ragdoll:SetPos(HangOn:GetPos() - Vector(-50,0,10))
-				timer.Simple(0.2, constraint.Rope, Ragdoll, HangOn, 10, 0, Vector(-2.4,0,-0.6), Vector(0,0,53), 10, 40, 0, 4, "cable/rope", false)
+				timer.Simple(0.2, function() constraint.Rope(Ragdoll, HangOn, 10, 0, Vector(-2.4,0,-0.6), Vector(0,0,53), 10, 40, 0, 4, "cable/rope", false) end)
 			elseif string.find(RagdollType, "kick") == 1 then -- Best ragdoll mod EVER
 				if type(target.FAdminRagdoll) == "table" or ValidEntity(target.FAdminRagdoll) then return end
 				local Ragdoll = ents.Create("prop_ragdoll")
@@ -198,13 +198,13 @@ local function Ragdoll(ply, cmd, args)
 						phys:EnableMotion(false)
 						if i == 8 or i == 9 or i == 14 then
 							phys:EnableCollisions(false)
-							timer.Simple(2, function(phys)
+							timer.Simple(2, function()
 								if phys:IsValid() then
 									phys:EnableMotion(true)
 									phys:Wake()
 									phys:SetVelocity(aimVec - Vector(0, 0, 1000))
 								end
-							end, phys)
+							end)
 						end
 
 						local pos = Vector(KickerPos[i].x, KickerPos[i].y, KickerPos[i].z)
@@ -221,7 +221,7 @@ local function Ragdoll(ply, cmd, args)
 
 				target.FAdminRagdoll = Ragdoll
 
-				timer.Simple(2.1, function(Ragdoll) if ValidEntity(Ragdoll) then
+				timer.Simple(2.1, function() if ValidEntity(Ragdoll) then
 					Ragdoll:EmitSound("physics/body/body_medium_impact_hard6.wav", 100, 100)
 					for i = 1, Ragdoll:GetPhysicsObjectCount() do
 						local phys = Ragdoll:GetPhysicsObjectNum(i)
@@ -231,18 +231,18 @@ local function Ragdoll(ply, cmd, args)
 							phys:SetVelocity((aimVec:Normalize() + Vector(0, 0, 1)) * 1000)
 						end
 					end
-				end end, Ragdoll)
+				end end)
 
-				timer.Simple(2.2, function(Ragdoll) if ValidEntity(Ragdoll) then
+				timer.Simple(2.2, function() if ValidEntity(Ragdoll) then
 					for i = 1, Ragdoll:GetPhysicsObjectCount() do
 						local phys = Ragdoll:GetPhysicsObjectNum(i)
 						if phys and phys:IsValid() then
 							phys:EnableCollisions(true)
 						end
 					end
-				end end, Ragdoll)
+				end end)
 
-				timer.Simple(7, function(target)
+				timer.Simple(7, function()
 				if ValidEntity(target) then
 					target:UnSpectate()
 					target:Spawn()
@@ -258,7 +258,7 @@ local function Ragdoll(ply, cmd, args)
 					Kicker:Remove()
 				end
 
-				end, target, Ragdoll, Kicker)
+				end)
 			end
 
 			if not string.find(RagdollType, "kick") and RagdollType ~= "unragdoll" and string.lower(cmd) ~= "unragdoll" then

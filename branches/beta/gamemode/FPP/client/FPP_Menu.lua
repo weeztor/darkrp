@@ -86,7 +86,7 @@ function FPP.AdminMenu(Panel)
 		RemoveSelected.DoClick = function()
 			for k,v in pairs(lview.Lines) do
 				if v:IsLineSelected() then
-					timer.Simple(k/10, RunConsoleCommand, "FPP_RemoveBlocked", Type, v.text)
+					timer.Simple(k/10, function() RunConsoleCommand("FPP_RemoveBlocked", Type, v.text) end)
 					lview:RemoveLine(k)
 					lview:SetTall(17 + #lview:GetLines() * 17)
 					pan:InvalidateLayout()
@@ -372,11 +372,11 @@ function FPP.AdminMenu(Panel)
 		end
 		SingleEditTool:SetText("No tool selected!")
 
-		timer.Simple(1, function(SEditTool)
-			if ValidPanel(SEditTool) then
-				SEditTool:SetText("Edit/view selected tool's restrictions")
+		timer.Simple(1, function()
+			if ValidPanel(SingleEditTool) then
+				SingleEditTool:SetText("Edit/view selected tool's restrictions")
 			end
-		end, SingleEditTool)
+		end)
 	end
 
 	local EditToolListLabel = ToolRestrict:Add(Label("\nMultiple tool editor.\nAdd tools in this list by clicking on them,\nthen click \"Edit multiple tools\"\nto edit multiple tools at once!"))
@@ -411,11 +411,11 @@ function FPP.AdminMenu(Panel)
 		StartEditMultiTool:SetText("List is empty!")
 
 
-		timer.Simple(1, function(StartEditMultiTool)
+		timer.Simple(1, function()
 			if ValidPanel(StartEditMultiTool) then
 				StartEditMultiTool:SetText("Edit multiple tools")
 			end
-		end, StartEditMultiTool)
+		end)
 	end
 
 	local GroupRestrictCat, GroupRestrict = MakeOption("Group tool restriction")
@@ -506,7 +506,7 @@ function FPP.AdminMenu(Panel)
 		end
 
 		for k,v in pairs(GroupMembers:GetSelected()) do
-			timer.Simple(k/10, RunConsoleCommand, "FPP_SetPlayerGroup", v.Columns[1]:GetValue(), GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue())
+			timer.Simple(k/10, function() RunConsoleCommand("FPP_SetPlayerGroup", v.Columns[1]:GetValue(), GroupList:GetLine(GroupList:GetSelectedLine()).Columns[1]:GetValue()) end)
 		end
 	end
 
@@ -659,9 +659,9 @@ RetrieveRestrictedTool = function(um)
 					RunConsoleCommand("FPP_restricttool", tool, "admin", adminsCHKboxes[k].GoodValue)
 				else
 					for a,b in pairs(tool) do
-						timer.Simple(a/10, function(b, GoodValue) -- Timer to prevent lag of executing multiple commands at the same time.
-							RunConsoleCommand("FPP_restricttool", b, "admin", GoodValue)
-						end, b, adminsCHKboxes[k].GoodValue)
+						timer.Simple(a/10, function() -- Timer to prevent lag of executing multiple commands at the same time.
+							RunConsoleCommand("FPP_restricttool", b, "admin", adminsCHKboxes[k].GoodValue)
+						end)
 					end
 				end
 			else
@@ -691,9 +691,9 @@ RetrieveRestrictedTool = function(um)
 					RunConsoleCommand("FPP_restricttoolplayer", tool, v:UserID(), 2)
 				else
 					for a,b in pairs(tool) do
-						timer.Simple(a/10, function(b, userid, allow)
-							RunConsoleCommand("FPP_restricttoolplayer", b, userid, allow)
-						end, b, v:UserID(), 2)
+						timer.Simple(a/10, function()
+							RunConsoleCommand("FPP_restricttoolplayer", b, v:UserID(), 2)
+						end)
 					end
 				end
 			end)
@@ -704,9 +704,9 @@ RetrieveRestrictedTool = function(um)
 					RunConsoleCommand("FPP_restricttoolplayer", tool, v:UserID(), 1)
 				else
 					for a,b in pairs(tool) do
-						timer.Simple(a/10, function(b, userid, allow)
-							RunConsoleCommand("FPP_restricttoolplayer", b, userid, allow)
-						end, b, v:UserID(), 1)
+						timer.Simple(a/10, function()
+							RunConsoleCommand("FPP_restricttoolplayer", b, v:UserID(), 1)
+						end)
 					end
 				end
 			end)
@@ -717,9 +717,9 @@ RetrieveRestrictedTool = function(um)
 					RunConsoleCommand("FPP_restricttoolplayer", tool, v:UserID(), 0)
 				else
 					for a,b in pairs(tool) do
-						timer.Simple(a/10, function(b, userid, allow)
-							RunConsoleCommand("FPP_restricttoolplayer", b, userid, allow)
-						end, b, v:UserID(), 0)
+						timer.Simple(a/10, function()
+							RunConsoleCommand("FPP_restricttoolplayer", b, v:UserID(), 0)
+						end)
 					end
 				end
 			end)
@@ -756,9 +756,9 @@ RetrieveRestrictedTool = function(um)
 				RunConsoleCommand("FPP_restricttool", tool, "team", chkbx.Team, tonum[chkbx.Button:GetChecked()] )
 			else
 				for a,b in pairs(tool) do
-					timer.Simple(a/10, function(b, Team, checked)
-						RunConsoleCommand("FPP_restricttool", b, "team", Team, checked)
-					end, b, chkbx.Team, tonum[chkbx.Button:GetChecked()])
+					timer.Simple(a/10, function()
+						RunConsoleCommand("FPP_restricttool", b, "team", chkbx.Team, tonum[chkbx.Button:GetChecked()])
+					end)
 				end
 			end
 		end
@@ -845,7 +845,7 @@ EditGroupTools = function(groupname)
 				end
 				if not found then
 					GroupTools:AddLine(string.lower(v.Tool))
-					timer.Simple(k/10, RunConsoleCommand, "FPP_AddGroupTool", groupname, v.Tool)
+					timer.Simple(k/10, function() RunConsoleCommand("FPP_AddGroupTool", groupname, v.Tool) end)
 				end
 			end
 		end
@@ -857,7 +857,7 @@ EditGroupTools = function(groupname)
 	RemTool:SetText("<")
 	RemTool.DoClick = function()
 		for k,v in pairs(GroupTools:GetSelected()) do
-			timer.Simple(k/10, RunConsoleCommand, "FPP_RemoveGroupTool", groupname, v.Columns[1]:GetValue())
+			timer.Simple(k/10, function() RunConsoleCommand("FPP_RemoveGroupTool", groupname, v.Columns[1]:GetValue()) end)
 			GroupTools:RemoveLine(v.m_iID)
 		end
 	end

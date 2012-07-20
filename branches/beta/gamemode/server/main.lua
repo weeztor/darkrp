@@ -1,51 +1,60 @@
 /*---------------------------------------------------------
  Flammable
  ---------------------------------------------------------*/
-local FlammableProps = {"drug", "drug_lab", "food", "gunlab", "letter", "microwave", "money_printer", "spawned_shipment", "spawned_weapon", "spawned_money", "prop_physics"}
+local FlammableProps = {drug = true,
+drug_lab = true,
+food = true,
+gunlab = true,
+letter = true,
+microwave = true,
+money_printer = true,
+spawned_shipment = true,
+spawned_weapon = true,
+spawned_money = true,
+prop_physics = true}
 
 local function IsFlammable(ent)
 	local class = ent:GetClass()
-	for k, v in pairs(FlammableProps) do
-		if class == v then return true end
-	end
-	return false
+	return FlammableProps[class] ~= nil
 end
 
 -- FireSpread from SeriousRP
 local function FireSpread(e)
-	if e:IsOnFire() then
-		if e:IsMoneyBag() then
-			e:Remove()
-		end
-		local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
-		local rand = math.random(0, 300)
+	if not e:IsOnFire() then return end
 
-		if rand > 1 then return end
+	if e:IsMoneyBag() then
+		e:Remove()
+	end
 
-		for k, v in pairs(en) do
-			if not IsFlammable(v) then continue end
+	local rand = math.random(0, 300)
 
-			if not v.burned then
-				v:Ignite(math.random(5,180), 0)
-			else
-				local c = v:GetColor()
-				if (c.r - 51)>=0 then c.r = c.r - 51 end
-				if (c.g - 51)>=0 then c.g = c.g - 51 end
-				if (c.b - 51)>=0 then c.b = c.b - 51 end
-				v:SetColor(c)
-				if (c.r + c.g + c.b) < 103 and math.random(1, 100) < 35 then
-					v:Fire("enablemotion","",0)
-					constraint.RemoveAll(v)
-				end
+	if rand > 1 then return end
+	local en = ents.FindInSphere(e:GetPos(), math.random(20, 90))
+
+	for k, v in pairs(en) do
+		if not IsFlammable(v) then continue end
+
+		if not v.burned then
+			v:Ignite(math.random(5,180), 0)
+			v.burned = true
+		else
+			local r, g, b, a = v:GetColor()
+			if (r - 51)>=0 then r = r - 51 end
+			if (g - 51)>=0 then g = g - 51 end
+			if (b - 51)>=0 then b = b - 51 end
+			v:SetColor(r, g, b, a)
+			if (r + g + b) < 103 and math.random(1, 100) < 35 then
+				v:Fire("enablemotion","",0)
+				constraint.RemoveAll(v)
 			end
-			break -- Don't ignite all entities in sphere at once, just one at a time
 		end
+		break -- Don't ignite all entities in sphere at once, just one at a time
 	end
 end
 
 local function FlammablePropThink()
-	for k, v in ipairs(FlammableProps) do
-		local ens = ents.FindByClass(v)
+	for k, v in pairs(FlammableProps) do
+		local ens = ents.FindByClass(k)
 
 		for a, b in pairs(ens) do
 			FireSpread(b)
@@ -87,7 +96,7 @@ local function DropWeapon(ply)
 	umsg.End()
 	ply.anim_DroppingItem = true
 
-	timer.Simple(1, function(ply, ent)
+	timer.Simple(1, function()
 		if ValidEntity(ply) and ValidEntity(ent) and ent:GetModel() then
 			local ammohax = false
 			local ammotype = ent:GetPrimaryAmmoType()
@@ -96,7 +105,7 @@ local function DropWeapon(ply)
 
 			ply:DropDRPWeapon(ent)
 		end
-	end, ply, ent)
+	end)
 	return ""
 end
 AddChatCommand("/drop", DropWeapon)
@@ -120,7 +129,7 @@ local function SetWarrant(ply, target, reason)
 	hook.Call("PlayerWarranted", GAMEMODE, ply, target, reason)
 
 	target.warranted = true
-	timer.Simple(GetConVarNumber("searchtime"), UnWarrant, ply, target)
+	timer.Simple(GetConVarNumber("searchtime"), function() UnWarrant(ply, target) end)
 	for a, b in pairs(player.GetAll()) do
 		b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.warrant_approved, target:Nick()).."\nReason: "..tostring(reason))
 		if b:IsAdmin() then
@@ -250,7 +259,7 @@ local function PlayerWanted(ply, args)
 					b:PrintMessage( HUD_PRINTCONSOLE, ply:Nick() .. " has made " .. p:Nick() .. " wanted by police for " ..tostring(reason) )
 				end
 			end
-			timer.Create(p:UniqueID() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, TimerUnwanted, ply, p)
+			timer.Create(p:UniqueID() .. " wantedtimer", GetConVarNumber("wantedtime"), 1, function() TimerUnwanted(ply, p) end)
 		else
 			GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player: "..tostring(args)))
 		end
@@ -623,7 +632,7 @@ local function BuyPistol(ply, args)
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, "/buy"))
 		return ""
 	end
-	
+
 	local weapon = ents.Create("spawned_weapon")
 	weapon:SetModel(model)
 	weapon.weaponclass = class
@@ -951,15 +960,15 @@ local function MakeACall(ply,args)
 	ownphone.SID = ply.SID
 	ownphone:Spawn()
 	ownphone:Use(ply,ply)--Put it on the ear already, since you're the one who's calling...
-	timer.Simple(20, function(ply, OtherPhone)
+	timer.Simple(20, function()
 		ply.DarkRPVars = ply.DarkRPVars or {}
 		local MyPhone = ply.DarkRPVars.phone
 		local WhoPickedItUp = MyPhone.Caller
-		if ValidEntity(MyPhone) and ValidEntity(OtherPhone) and not ValidEntity(WhoPickedItUp) then -- if noone picked up the phone then hang up :)
+		if ValidEntity(MyPhone) and ValidEntity(banana) and not ValidEntity(WhoPickedItUp) then -- if noone picked up the phone then hang up :)
 			MyPhone:Remove()
-			OtherPhone:Remove()
+			banana:Remove()
 		end
-	end, ply, banana)
+	end)
 	return ""
 end
 AddChatCommand("/call", MakeACall)
@@ -1479,7 +1488,7 @@ local function GiveMoney(ply, args)
 		umsg.End()
 		ply.anim_GivingItem = true
 
-		timer.Simple(1.2, function(ply)
+		timer.Simple(1.2, function()
 			if ValidEntity(ply) then
 				local trace2 = ply:GetEyeTrace()
 				if ValidEntity(trace2.Entity) and trace2.Entity:IsPlayer() and trace2.Entity:GetPos():Distance(ply:GetPos()) < 150 then
@@ -1494,7 +1503,7 @@ local function GiveMoney(ply, args)
 					DB.Log(ply:Nick().. " (" .. ply:SteamID() .. ") has given "..CUR .. tostring(amount).. " to "..trace2.Entity:Nick() .. " (" .. trace2.Entity:SteamID() .. ")")
 				end
 			end
-		end, ply)
+		end)
 	else
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "player"))
 	end
@@ -1529,7 +1538,7 @@ local function DropMoney(ply, args)
 	umsg.End()
 	ply.anim_DroppingItem = true
 
-	timer.Simple(1, function(ply)
+	timer.Simple(1, function()
 		if ValidEntity(ply) then
 			local trace = {}
 			trace.start = ply:EyePos()
@@ -1540,7 +1549,7 @@ local function DropMoney(ply, args)
 			DarkRPCreateMoneyBag(tr.HitPos, amount)
 			DB.Log(ply:Nick().. " (" .. ply:SteamID() .. ") has dropped "..CUR .. tostring(amount))
 		end
-	end, ply)
+	end)
 
 	return ""
 end
@@ -1576,7 +1585,7 @@ local function CreateCheque(ply, args)
 	umsg.End()
 	ply.anim_DroppingItem = true
 
-	timer.Simple(1, function(ply)
+	timer.Simple(1, function()
 		if ValidEntity(ply) and ValidEntity(recipient) then
 			local trace = {}
 			trace.start = ply:EyePos()
@@ -1592,7 +1601,7 @@ local function CreateCheque(ply, args)
 			Cheque.dt.amount = amount
 			Cheque:Spawn()
 		end
-	end, ply)
+	end)
 	return ""
 end
 AddChatCommand("/cheque", CreateCheque)
@@ -1679,7 +1688,7 @@ local function DoLottery(ply)
 			GAMEMODE.ques:Create("There is a lottery! Participate for " ..CUR.. tostring(GetConVarNumber("lotterycommitcost")) .. "?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
 		end
 	end
-	timer.Create("Lottery", 30, 1, EnterLottery, nil, nil, nil, nil, true)
+	timer.Create("Lottery", 30, 1, function() EnterLottery(nil, nil, nil, nil, true) end)
 	return ""
 end
 AddChatCommand("/lottery", DoLottery)
@@ -1714,7 +1723,7 @@ function GM:UnLockdown(ply)
 		GAMEMODE:NotifyAll(1, 3, LANGUAGE.lockdown_ended)
 		wait_lockdown = true
 		RunConsoleCommand("DarkRP_LockDown", 0)
-		timer.Create("spamlock", 20, 1, WaitLock, "")
+		timer.Create("spamlock", 20, 1, function() WaitLock("") end)
 	end
 	return ""
 end

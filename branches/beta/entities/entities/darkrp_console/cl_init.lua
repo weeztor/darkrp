@@ -65,7 +65,7 @@ local function Memory(um)
 		end
 	end)
 
-	timer.Simple(MemoryTime, hook.Remove, "HUDPaint", "darkRP_memory")
+	timer.Simple(MemoryTime, function() hook.Remove("HUDPaint", "darkRP_memory") end)
 end
 usermessage.Hook("darkrp_memory", Memory)
 

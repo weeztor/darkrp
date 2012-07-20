@@ -58,11 +58,13 @@ usermessage.Hook("_Notify", DisplayNotify)
 local function LoadModules()
 	local root = GAMEMODE.FolderName.."/gamemode/modules/"
 
-	for _, folder in SortedPairs(table.Add(file.Find(root.."*", LUA_PATH)), true) do
-		for _, File in SortedPairs(table.Add(file.Find(root .. folder .."/cl_*.lua", LUA_PATH)), true) do
+	local _, folders = file.Find(root.."*", LUA_PATH)
+
+	for _, folder in SortedPairs(folders, true) do
+		for _, File in SortedPairs(file.Find(root .. folder .."/cl_*.lua", LUA_PATH), true) do
 			include(root.. folder .. "/" ..File)
 		end
-		for _, File in SortedPairs(table.Add(file.Find(root .. folder .."/sh_*.lua", LUA_PATH)), true) do
+		for _, File in SortedPairs(file.Find(root .. folder .."/sh_*.lua", LUA_PATH), true) do
 			include(root.. folder .. "/" ..File)
 		end
 	end
@@ -609,8 +611,9 @@ function GM:InitPostEntity()
 			v.DarkRPVars = v.DarkRPVars or {}
 			if not v.DarkRPVars.job or not v.DarkRPVars.money or not v.DarkRPVars.rpname then
 				RunConsoleCommand("_sendDarkRPvars")
-				break
+				return
 			end
+			timer.Destroy("DarkRPCheckifitcamethrough")
 		end
 	end)
 end

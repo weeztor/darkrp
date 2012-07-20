@@ -90,7 +90,7 @@ function ENT:Use(activator,caller)
 				GAMEMODE:Notify(owner, 0, 3, "You made a " .. word .. " of " .. CUR .. tostring(math.abs(gain)) .. " by selling food!")
 			end
 		end
-		timer.Create(self:EntIndex() .. "food", 1, 1, self.createFood, self)
+		timer.Create(self:EntIndex() .. "food", 1, 1, function() self:createFood() end)
 	end
 end
 

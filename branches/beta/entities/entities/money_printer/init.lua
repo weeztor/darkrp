@@ -17,7 +17,7 @@ function ENT:Initialize()
 	self.sparking = false
 	self.damage = 100
 	self.IsMoneyPrinter = true
-	timer.Simple(math.random(100, 350), PrintMore, self)
+	timer.Simple(math.random(100, 350), function() PrintMore(self) end)
 end
 
 function ENT:OnTakeDamage(dmg)
@@ -50,7 +50,7 @@ function ENT:BurstIntoFlames()
 	self.burningup = true
 	local burntime = math.random(8, 18)
 	self:Ignite(burntime, 0)
-	timer.Simple(burntime, self.Fireball, self)
+	timer.Simple(burntime, function() self:Fireball() end)
 end
 
 function ENT:Fireball()
@@ -66,7 +66,7 @@ end
 PrintMore = function(ent)
 	if ValidEntity(ent) then
 		ent.sparking = true
-		timer.Simple(3, ent.CreateMoneybag, ent)
+		timer.Simple(3, function() ent:CreateMoneybag() end)
 	end
 end
 
@@ -84,7 +84,7 @@ function ENT:CreateMoneybag()
 
 	DarkRPCreateMoneyBag(Vector(MoneyPos.x + 15, MoneyPos.y, MoneyPos.z + 15), amount)
 	self.sparking = false
-	timer.Simple(math.random(100, 350), PrintMore, self)
+	timer.Simple(math.random(100, 350), function() PrintMore(self) end)
 end
 
 function ENT:Think()

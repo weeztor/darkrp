@@ -31,7 +31,7 @@ function FAdmin.ScoreBoard.ChangeGmodLogo(new)
 	for i = 0, 0.5, 0.01 do
 		timer.Simple(i, function() GmodLogoColor = Color(255,255,255,GmodLogoColor.a-5.1) end)
 	end
-	timer.Simple(0.5, function() GmodLogo = surface.GetTextureID(new) end, new)
+	timer.Simple(0.5, function() GmodLogo = surface.GetTextureID(new) end)
 	for i = 0.5, 1, 0.01 do
 		timer.Simple(i, function() GmodLogoColor = Color(255,255,255,GmodLogoColor.a+5.1) end)
 	end

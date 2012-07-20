@@ -64,7 +64,7 @@ function SWEP:PrimaryAttack()
 	end
 
 	self:SetWeaponHoldType("pistol")
-	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, self)
+	timer.Simple(0.2, function() if self:IsValid() then self:SetWeaponHoldType("normal") end end)
 
 	if CLIENT then return end
 
@@ -123,7 +123,7 @@ function SWEP:SecondaryAttack()
 	end
 
 	self:NewSetWeaponHoldType("pistol")
-	timer.Simple(0.2, function(wep) if wep:IsValid() then wep:NewSetWeaponHoldType("normal") end end, self)
+	timer.Simple(0.2, function() if self:IsValid() then self:NewSetWeaponHoldType("normal") end end)
 
 	local ent = self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket]
 	self.Owner:GetTable().Pocket[#self.Owner:GetTable().Pocket] = nil
@@ -247,7 +247,7 @@ if CLIENT then
 					items = table.ClearKeys(items)
 					Reload()
 					LocalPlayer():GetActiveWeapon():SetWeaponHoldType("pistol")
-					timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, LocalPlayer():GetActiveWeapon())
+					timer.Simple(0.2, function() if LocalPlayer():GetActiveWeapon():IsValid() then LocalPlayer():GetActiveWeapon():SetWeaponHoldType("normal") end end)
 				end
 			end
 		end
@@ -272,7 +272,7 @@ elseif SERVER then
 			ply:GetTable().Pocket = table.ClearKeys(ply:GetTable().Pocket)
 
 			ply:GetActiveWeapon():SetWeaponHoldType("pistol")
-			timer.Simple(0.2, function(wep) if wep:IsValid() then wep:SetWeaponHoldType("normal") end end, ply:GetActiveWeapon())
+			timer.Simple(0.2, function() if ply:GetActiveWeapon():IsValid() then ply:GetActiveWeapon():SetWeaponHoldType("normal") end end)
 
 			local trace = {}
 			trace.start = ply:EyePos()

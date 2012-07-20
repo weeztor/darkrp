@@ -447,13 +447,13 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 				dmginfo:SetDamage(0)
 				ent.FPPAntiDamageWorld = ent.FPPAntiDamageWorld or 0
 				ent.FPPAntiDamageWorld = ent.FPPAntiDamageWorld + 1
-				timer.Simple(1, function(ent)
+				timer.Simple(1, function()
 					if not ent.FPPAntiDamageWorld then return end
 					ent.FPPAntiDamageWorld = ent.FPPAntiDamageWorld - 1
 					if ent.FPPAntiDamageWorld == 0 then
 						ent.FPPAntiDamageWorld = nil
 					end
-				end, ent)
+				end)
 			end
 			return
 		end
@@ -725,7 +725,8 @@ function FPP.PlayerDisconnect(ply)
 
 		FPP.DisconnectedPlayers[ply:SteamID()] = true
 
-		timer.Simple(FPP.Settings.FPP_GLOBALSETTINGS1.cleanupdisconnectedtime, function(SteamID)
+		local SteamID = ply:SteamID()
+		timer.Simple(FPP.Settings.FPP_GLOBALSETTINGS1.cleanupdisconnectedtime, function()
 			if not tobool(FPP.Settings.FPP_GLOBALSETTINGS1.cleanupdisconnected) then return end -- Settings can change in time.
 			for k,v in pairs(player.GetAll()) do
 				if v:SteamID() == SteamID then
@@ -738,7 +739,7 @@ function FPP.PlayerDisconnect(ply)
 				end
 			end
 			FPP.DisconnectedPlayers[SteamID] = nil -- Player out of the Disconnect table
-		end, ply:SteamID())
+		end)
 	end
 end
 hook.Add("PlayerDisconnected", "FPP.PlayerDisconnect", FPP.PlayerDisconnect)
@@ -747,14 +748,14 @@ hook.Add("PlayerDisconnected", "FPP.PlayerDisconnect", FPP.PlayerDisconnect)
 function FPP.PlayerInitialSpawn(ply)
 	local RP = RecipientFilter()
 
-	timer.Simple(5, function(ply)
+	timer.Simple(5, function()
 		if not ValidEntity(ply) then return end
 		RP:AddAllPlayers()
 		RP:RemovePlayer(ply)
 		umsg.Start("FPP_CheckBuddy", RP)--Message everyone that a new player has joined
 			umsg.Entity(ply)
 		umsg.End()
-	end, ply)
+	end)
 
 	if FPP.DisconnectedPlayers[ply:SteamID()] then -- Check if the player has rejoined within the auto remove time
 		for k,v in pairs(ents.GetAll()) do
@@ -780,7 +781,7 @@ end
 
 function FPP.Protect.LeaveVehicle(ply, vehicle)
 	local pos = vehicle:GetPos()
-	timer.Simple(0.1, function(pos)
+	timer.Simple(0.1, function()
 		if not ValidEntity(ply) then return end
 
 		local PlyPos = ply:GetPos()
@@ -805,7 +806,7 @@ function FPP.Protect.LeaveVehicle(ply, vehicle)
 		end
 
 		ply:SetPos(pos + Vector(0,0,70) + 0.1 * diff)
-	end, pos)
+	end)
 end
 hook.Add("PlayerLeaveVehicle", "FPP.PlayerLeaveVehicle", FPP.Protect.LeaveVehicle)
 

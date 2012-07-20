@@ -88,7 +88,7 @@ function ENT:Use(activator)
 			end
 		end
 	end
-	timer.Create(self:EntIndex() .. "spawned_weapon", 1, 1, self.createGun, self)
+	timer.Create(self:EntIndex() .. "spawned_weapon", 1, 1, function() self:createGun() end)
 end
 
 function ENT:createGun()

@@ -16,12 +16,12 @@ function ENT:Initialize()
 
 	self.sound = CreateSound(self, "ambient/alarms/city_firebell_loop1.wav")
 	self.sound:PlayEx(0.6, 60)
-	timer.Simple(2, function(ent) if ent and ent.sound then ent.sound:Stop() end end, self)
+	timer.Simple(2, function() if self and self.sound then self.sound:Stop() end end)
 	local S = self.sound
-	timer.Create("PhoneRinging"..tostring(self:EntIndex()), 3.5, 0, function(sound)
-		sound:PlayEx(0.6, 60)
-		timer.Simple(2, function(s) s:Stop() end, sound)
-	end, S)
+	timer.Create("PhoneRinging"..tostring(self:EntIndex()), 3.5, 0, function()
+		S:PlayEx(0.6, 60)
+		timer.Simple(2, function() S:Stop() end)
+	end)
 end
 
 
@@ -61,13 +61,13 @@ function ENT:Use( activator, caller )
 
 		activator:SendLua([[RunConsoleCommand("+voicerecord")]])
 		ply:SendLua([[RunConsoleCommand("+voicerecord")]])
-		timer.Create("PhoneCallCosts"..ply:EntIndex(), 20, 0, function(ply, ent) -- Make the caller pay!
+		timer.Create("PhoneCallCosts"..ply:EntIndex(), 20, 0, function() -- Make the caller pay!
 			if ValidEntity(ply) and ply:CanAfford(1) then
 				ply:AddMoney(-1)
 			else
-				ent:HangUp()
+				self:HangUp()
 			end
-		end, ply, self)
+		end)
 	end
 
 	self.LastUser = activator

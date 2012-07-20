@@ -70,7 +70,7 @@ function SWEP:PrimaryAttack()
 			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
 			trace.Entity:KeysLock() -- Lock the door immediately so it won't annoy people
 
-			timer.Simple(0.9, function(ply, sound) if ValidEntity(ply) then ply:EmitSound(sound) end end, self.Owner, self.Sound)
+			timer.Simple(0.9, function() if ValidEntity(self.Owner) then self.Owner:EmitSound(self.Sound) end end)
 
 			local RP = RecipientFilter()
 			RP:AddAllPlayers()
@@ -122,7 +122,8 @@ function SWEP:SecondaryAttack()
 		if SERVER then
 			self.Owner:EmitSound("npc/metropolice/gear".. math.floor(math.Rand(1,7)) ..".wav")
 			trace.Entity:KeysUnLock() -- Unlock the door immediately so it won't annoy people
-			timer.Simple(0.9, function(ply, sound) if ValidEntity(ply) then ply:EmitSound(sound) end end, self.Owner, self.Sound)
+
+			timer.Simple(0.9, function() if ValidEntity(self.Owner) then self.Owner:EmitSound(self.Sound) end end)
 
 			umsg.Start("anim_keys", RP)
 				umsg.Entity(self.Owner)

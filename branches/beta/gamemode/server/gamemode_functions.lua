@@ -291,7 +291,7 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
 end
 
 function GM:PlayerDeath(ply, weapon, killer)
-	if tobool(GetConVarNumber("deathblack")) then
+	if tobool(GetConVarNumber("deathblack")) and not ply:Alive() then
 		local RP = RecipientFilter()
 		RP:RemoveAllPlayers()
 		RP:AddPlayer(ply)
@@ -354,7 +354,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if GetConVarNumber("dmautokick") == 1 and killer and killer:IsPlayer() and killer ~= ply then
 		if not killer.kills or killer.kills == 0 then
 			killer.kills = 1
-			timer.Simple(GetConVarNumber("dmgracetime"), killer.ResetDMCounter, killer)
+			timer.Simple(GetConVarNumber("dmgracetime"), function() killer.ResetDMCounter(killer) end)
 		else
 			-- If this player is going over their limit, kick their ass
 			if killer.kills + 1 > GetConVarNumber("dmmaxkills") then
@@ -474,7 +474,7 @@ function GM:PlayerInitialSpawn(ply)
 			if v.dt then v.dt.owning_ent = ply end
 		end
 	end
-	timer.Simple(10, ply.CompleteSentence, ply)
+	timer.Simple(10, function() ply:CompleteSentence() end)
 end
 
 local meta = FindMetaTable("Player")
@@ -656,7 +656,7 @@ function GM:PlayerLoadout(ply)
 	if ply:isArrested() then return end
 
 	ply:GetTable().RPLicenseSpawn = true
-	timer.Simple(1, removelicense, ply)
+	timer.Simple(1, function() removelicense(ply) end)
 
 	local Team = ply:Team() or 1
 
