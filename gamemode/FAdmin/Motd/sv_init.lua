@@ -89,5 +89,5 @@ end
 hook.Add("PlayerInitialSpawn", "SendMOTDSite", function()
 	local Site = GetConVarString("_FAdmin_MOTDPage")
 	RunConsoleCommand("_FAdmin_MOTDPage", ".")
-	timer.Simple(0.5, RunConsoleCommand, "_FAdmin_MOTDPage", Site)
+	timer.Simple(0.5, function() RunConsoleCommand("_FAdmin_MOTDPage", Site) end)
 end)

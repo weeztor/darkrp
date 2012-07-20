@@ -21,9 +21,18 @@ function ENT:Use(activator, caller)
 
 	if not weapon:IsValid() then return false end
 
+	if not weapon:IsWeapon() then
+		weapon:SetPos(self:GetPos())
+		weapon:SetAngles(self:GetAngles())
+		weapon:Spawn()
+		weapon:Activate()
+		self:Remove()
+		return
+	end
+
 	local CanPickup = hook.Call("PlayerCanPickupWeapon", GAMEMODE, activator, weapon)
-	weapon:Remove()
 	if not CanPickup then return end
+	weapon:Remove()
 
 	activator:Give(class)
 	weapon = activator:GetWeapon(class)
@@ -37,9 +46,7 @@ function ENT:Use(activator, caller)
 	end
 
 	-- The ammo bullshit gets as bad as having four variables to handle ammo exploits
-	if weapon:IsWeapon() then
-		activator:GiveAmmo(self.ammoadd or 0, weapon:GetPrimaryAmmoType())
-	end
+	activator:GiveAmmo(self.ammoadd or 0, weapon:GetPrimaryAmmoType())
 
 	self:Remove()
 end

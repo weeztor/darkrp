@@ -75,7 +75,7 @@ end)
 Wire field generator exploit
 ---------------------------------------------------------------------------*/
 hook.Add("OnEntityCreated", "DRP_WireFieldGenerator", function(ent)
-	timer.Simple(0, function(ent)
+	timer.Simple(0, function()
 		if ValidEntity(ent) and ent:GetClass() == "gmod_wire_field_device" then
 			local TriggerInput = ent.TriggerInput
 			function ent:TriggerInput(iname, value)
@@ -85,7 +85,7 @@ hook.Add("OnEntityCreated", "DRP_WireFieldGenerator", function(ent)
 				TriggerInput(self, iname, value)
 			end
 		end
-	end, ent)
+	end)
 end)
 
 /*---------------------------------------------------------------------------

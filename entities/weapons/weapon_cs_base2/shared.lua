@@ -175,8 +175,8 @@ function SWEP:PrimaryAttack( partofburst )
 
 	if self.FireMode == "burst" and not partofburst then
 
-		timer.Simple( 0.1, self.PrimaryAttack, self, true )
-		timer.Simple( 0.2, self.PrimaryAttack, self, true )
+		timer.Simple( 0.1, function() self:PrimaryAttack(true) end)
+		timer.Simple( 0.2, function() self:PrimaryAttack(true) end)
 
 		self.LastNonBurst = CurTime()
 

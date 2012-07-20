@@ -68,7 +68,7 @@ function GM.vote:Create(question, voteid, ent, delay, callback, special)
 		umsg.Float(delay)
 	umsg.End()
 
-	timer.Create(voteid .. "timer", delay, 1, GAMEMODE.vote.HandleVoteEnd, voteid)
+	timer.Create(voteid .. "timer", delay, 1, function() GAMEMODE.vote.HandleVoteEnd(voteid) end)
 end
 
 function GM.vote.DestroyVotesWithEnt(ent)

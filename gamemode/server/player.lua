@@ -119,9 +119,9 @@ end
 
 function meta:InitiateTax()
 	local taxtime = GetConVarNumber("wallettaxtime")
-	timer.Create("rp_tax_"..self:UniqueID(), taxtime ~= 0 and taxtime or 600, 0, function(ply, timerName)
-		if not ValidEntity(ply) then
-			timer.Destroy(timerName)
+	timer.Create("rp_tax_"..self:UniqueID(), taxtime ~= 0 and taxtime or 600, 0, function()
+		if not ValidEntity(self) then
+			timer.Destroy("rp_tax_"..self:UniqueID())
 			return
 		end
 
@@ -129,7 +129,7 @@ function meta:InitiateTax()
 			return -- Don't remove the hook in case it's turned on afterwards.
 		end
 
-		local money = ply.DarkRPVars.money
+		local money = self.DarkRPVars.money
 		local mintax = GetConVarNumber("wallettaxmin") / 100
 		local maxtax = GetConVarNumber("wallettaxmax") / 100 -- convert to decimals for percentage calculations
 		local startMoney = GetConVarNumber("startingmoney")
@@ -142,10 +142,10 @@ function meta:InitiateTax()
 		local tax = (money - (startMoney * 2)) / (startMoney * 198)
 			  tax = mathx.Min(maxtax, mintax + (maxtax - mintax) * tax)
 
-		ply:AddMoney(-tax * money)
-		GAMEMODE:Notify(ply, 3, 7, "Tax day! "..math.Round(tax * 100, 3) .. "% of your income was taken!")
+		self:AddMoney(-tax * money)
+		GAMEMODE:Notify(self, 3, 7, "Tax day! "..math.Round(tax * 100, 3) .. "% of your income was taken!")
 
-	end, self, "rp_tax_"..self:UniqueID())
+	end)
 end
 
 function meta:TeamUnBan(Team)
@@ -157,7 +157,7 @@ end
 function meta:TeamBan(t)
 	if not self.bannedfrom then self.bannedfrom = {} end
 	self.bannedfrom[t or self:Team()] = 1
-	timer.Simple(GetConVarNumber("demotetime"), self.TeamUnBan, self, self:Team())
+	timer.Simple(GetConVarNumber("demotetime"), function() self:TeamUnBan(self:Team()) end)
 end
 
 function meta:CompleteSentence()
@@ -167,7 +167,7 @@ function meta:CompleteSentence()
 		local value = GetConVarNumber(v.var)
 		if value ~= v.default then
 			RunConsoleCommand(v.var, v.default)
-			timer.Simple(0, RunConsoleCommand, v.var, value)
+			timer.Simple(0, function() RunConsoleCommand(v.var, value) end)
 		end
 	end
 
@@ -175,7 +175,7 @@ function meta:CompleteSentence()
 		local value = GetConVarNumber(v.var)
 		if value ~= v.default then
 			RunConsoleCommand(v.var, v.default)
-			timer.Simple(0, RunConsoleCommand, v.var, value)
+			timer.Simple(0, function() RunConsoleCommand(v.var, value) end)
 		end
 	end
 
@@ -364,7 +364,7 @@ function meta:UpdateJob(job)
 	self:GetTable().Pay = 1
 	self:GetTable().LastPayDay = CurTime()
 
-	timer.Create(self:UniqueID() .. "jobtimer", GetConVarNumber("paydelay"), 0, self.PayDay, self)
+	timer.Create(self:UniqueID() .. "jobtimer", GetConVarNumber("paydelay"), 0, function() self:PayDay() end)
 end
 
 /*---------------------------------------------------------

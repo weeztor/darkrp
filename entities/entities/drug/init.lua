@@ -24,7 +24,7 @@ local function DrugPlayer(ply)
 			if ValidEntity(ply) then ply:SetHealth(ply:Health() - 1) end
 			if ply:Health() <= 0 then ply:Kill() end
 		end)
-		timer.Create(IDSteam, 60, 1, UnDrugPlayer, ply)
+		timer.Create(IDSteam, 60, 1, function() UnDrugPlayer(ply) end)
 	end
 end
 

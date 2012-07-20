@@ -4,10 +4,9 @@
 -- If a player uses /afk, they go into AFK mode, they will not be autodemoted and their salary is set to $0 (you can still be killed/vote demoted though!).
 -- If a player does not use /afk, and they don't do anything for the demote time specified, they will be automatically demoted to hobo.
 
-GAMEMODE:AddToggleCommand("rp_afk_demote", "afkdemote", 0)
-GAMEMODE:AddValueCommand("rp_afk_demotetime", "afkdemotetime", 600)
-GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demote <1/0> - If set to 1, players who don't do anything for ".. GetConVarNumber("afkdemotetime") .." seconds will be demoted if they do not use AFK mode.")
-GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_afk_demotetime <time> - Sets the time a player has to be AFK for before they are demoted (in seconds).")
+GM:includeCS("AFK/cl_afk.lua")
+GM:AddToggleCommand("rp_afk_demote", "afkdemote", 0)
+GM:AddValueCommand("rp_afk_demotetime", "afkdemotetime", 600)
 
 local function AFKDemote(ply)
 	local rpname = ply.DarkRPVars.rpname
@@ -28,10 +27,6 @@ local function SetAFK(ply)
 		umsg.String("colormod")
 		umsg.String(ply.DarkRPVars.AFK and "1" or "0")
 	umsg.End()
-
-	for k, v in pairs(team.GetAllTeams()) do
-		ply.bannedfrom[k] = ply.DarkRPVars.AFK and 1 or 0
-	end
 
 	if ply.DarkRPVars.AFK then
 		DB.RetrieveSalary(ply, function(amount) ply.OldSalary = amount end)

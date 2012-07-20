@@ -53,7 +53,7 @@ function FAdmin.ScoreBoard.Player.Show(ply)
 	if FAdmin.ScoreBoard.Player.Controls.AvatarLarge and FAdmin.ScoreBoard.Player.Controls.AvatarLarge:IsValid() and FAdmin.ScoreBoard.Player.Controls.AvatarLarge.Player == ply then
 		FAdmin.ScoreBoard.Player.Controls.AvatarLarge:SetVisible(true)
 	else
-		http.Get(FAdmin.SteamToProfile(SteamID).."?xml=true", "", GetBigAvatar)
+		http.Fetch(FAdmin.SteamToProfile(SteamID).."?xml=true", GetBigAvatar)
 	end
 
 	if ValidPanel(FAdmin.ScoreBoard.Player.Controls.InfoPanel1) then

@@ -177,7 +177,7 @@ local function RetrieveSettings()
 				for key, value in pairs(data) do
 					FPP.Settings[k][value.var] = tonumber(value.setting)
 					i = i + 0.05
-					timer.Simple(i, RunConsoleCommand, "_"..k.."_"..value.var, tonumber(value.setting))
+					timer.Simple(i, function() RunConsoleCommand("_"..k.."_"..value.var, tonumber(value.setting)) end)
 				end
 			end
 		end)
@@ -364,18 +364,18 @@ local function RetrieveGroups()
 end
 
 local function SendSettings(ply)
-	timer.Simple(10, function(ply)
+	timer.Simple(10, function()
 		local i = 0
 		for k,v in pairs(FPP.Settings) do
 			for a,b in pairs(v) do
 				i = i + FrameTime()*2
 				timer.Simple(i, function()
 					RunConsoleCommand("_"..k.."_"..a, (b and b + 1) or 0)
-					timer.Simple(i, RunConsoleCommand, "_"..k.."_"..a, b or "")
+					timer.Simple(i, function() RunConsoleCommand("_"..k.."_"..a, b or "") end)
 				end)
 			end
 		end
-	end, ply)
+	end)
 end
 hook.Add("PlayerInitialSpawn", "FPP_SendSettings", SendSettings)
 

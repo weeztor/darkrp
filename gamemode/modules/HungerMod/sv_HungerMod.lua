@@ -1,5 +1,14 @@
+GM:includeCS("HungerMod/cl_init.lua")
+
 local HM = { }
-FoodItems = { }
+local FoodItems = { }
+
+GM:AddToggleCommand("rp_hungermod", "hungermod", 0)
+GM:AddToggleCommand("rp_foodspawn", "foodspawn", 1)
+GM:AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
+GM:AddValueCommand("rp_foodcost", "foodcost", 15)
+GM:AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
+GM:AddValueCommand("rp_starverate", "starverate", 3)
 
 concommand.Add("rp_hungerspeed", function(ply, cmd, args)
 	if not ply:IsAdmin() then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.need_admin, "rp_hungerspeed")) return end
@@ -7,7 +16,7 @@ concommand.Add("rp_hungerspeed", function(ply, cmd, args)
 	DB.SaveSetting("hungerspeed", tonumber(args[1]) / 10)
 end)
 
-function AddFoodItem(name, mdl, amount)
+local function AddFoodItem(name, mdl, amount)
 	FoodItems[name] = { model = mdl, amount = amount }
 end
 
@@ -37,29 +46,6 @@ hook.Add("PlayerInitialSpawn", "HM.PlayerInitialSpawn", HM.PlayerInitialSpawn)
 for k, v in pairs(player.GetAll()) do
 	v:NewHungerData()
 end
-
-HELP_CATEGORY_HUNGERMOD = 4
-
-GAMEMODE:AddHelpCategory(HELP_CATEGORY_HUNGERMOD, "HungerMod - Rick Darkaliono")
-
-GAMEMODE:AddToggleCommand("rp_hungermod", "hungermod", 0)
-GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungermod <1 or 0> - Enable/disable hunger mod")
-
-GAMEMODE:AddToggleCommand("rp_foodspawn", "foodspawn", 1)
-GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_ADMINTOGGLE, "rp_foodspawn - Whether players(non-cooks) can spawn food props or not")
-
-GAMEMODE:AddToggleCommand("rp_foodspecialcost", "foodpay", 1)
-GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodspecialcost <1 or 0> - Enable/disable whether spawning food props have a special cost")
-
-GAMEMODE:AddValueCommand("rp_foodcost", "foodcost", 15)
-GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_foodcost <Amount> - Set food cost")
-
-GAMEMODE:AddValueCommand("rp_hungerspeed", "hungerspeed", 2)
-GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_hungerspeed <Amount> - Set the rate at which players will become hungry (2 is the default)")
-
-GAMEMODE:AddValueCommand("rp_starverate", "starverate", 3)
-GAMEMODE:AddHelpLabel(-1, HELP_CATEGORY_HUNGERMOD, "rp_starverate <Amount> - How much health that is taken away every second the player is starving  (3 is the default)")
-
 
 AddFoodItem("banana", "models/props/cs_italy/bananna.mdl", 10)
 AddFoodItem("bananabunch", "models/props/cs_italy/bananna_bunch.mdl", 20)

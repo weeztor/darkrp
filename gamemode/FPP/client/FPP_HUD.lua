@@ -11,7 +11,7 @@ local function CanTouch(um)
 	cantouch = um:ReadBool()
 
 	TouchAlpha = 255
-	timer.Simple(1, function(i)
+	timer.Simple(1, function()
 		TouchAlpha = 0
 	end)
 end
