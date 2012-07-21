@@ -521,7 +521,9 @@ function meta:Own(ply)
 		end
 	end
 
-	self.Owner = ply
+	if self:IsVehicle() then
+		self.Owner = ply
+	end
 
 	if not self:IsOwned() and not self:OwnedBy(ply) then
 		self.DoorData.Owner = ply
