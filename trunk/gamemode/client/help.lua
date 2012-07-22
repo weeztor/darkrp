@@ -185,6 +185,7 @@ addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_healthcost <Number> - Sets the cost of 
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_jailtimer <Number> - Sets the jailtimer. (in seconds)")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_lotterycommitcost <Number> - How much you pay for entering a lottery")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxcopsalary <Number> - Sets the max salary that the Mayor can give to a CP.")
+addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxdoors <Number> - Sets the max amount of doors one can own.")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxdrugs <Number> - Sets max drugs.")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxfoods <Number> - Sets the max food cartons per Microwave owner.")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxlawboards <Number> - The maximum number of law boards the mayor can place.")
