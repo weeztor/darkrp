@@ -572,7 +572,7 @@ function meta:DoPropertyTax()
 	if GetConVarNumber("propertytax") == 0 then return end
 	if (self:IsCP()) and GetConVarNumber("cit_propertytax") == 1 then return end
 
-	local numowned = self:GetTable().OwnedNumz
+	local numowned = self.OwnedNumz
 
 	if numowned <= 0 then return end
 
