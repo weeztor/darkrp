@@ -291,7 +291,7 @@ function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
 end
 
 function GM:PlayerDeath(ply, weapon, killer)
-	if tobool(GetConVarNumber("deathblack")) and not ply:Alive() then
+	if tobool(GetConVarNumber("deathblack")) then
 		local RP = RecipientFilter()
 		RP:RemoveAllPlayers()
 		RP:AddPlayer(ply)

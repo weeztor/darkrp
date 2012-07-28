@@ -434,6 +434,11 @@ local function OwnDoor(ply)
 				return ""
 			end
 
+			if not bVehicle and (ply.OwnedNumz or 0) >= GetConVarNumber("maxdoors") then
+				GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.limit, "door"))
+				return ""
+			end
+
 			ply:AddMoney( -( bVehicle && GetConVarNumber( "vehiclecost" ) || GetConVarNumber( "doorcost" ) ) );
 			if( !bSuppress ) then
 				GAMEMODE:Notify( ply, 0, 4, string.format( bVehicle && LANGUAGE.vehicle_bought || LANGUAGE.door_bought, CUR..math.floor( GetConVarNumber( ( bVehicle && "vehicle" || "door" ).."cost" ) ) ) );
@@ -521,7 +526,9 @@ function meta:Own(ply)
 		end
 	end
 
-	self.Owner = ply
+	if self:IsVehicle() then
+		self.Owner = ply
+	end
 
 	if not self:IsOwned() and not self:OwnedBy(ply) then
 		self.DoorData.Owner = ply
