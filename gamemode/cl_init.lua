@@ -601,7 +601,7 @@ function GM:InitPostEntity()
 	function VoiceNotify:Setup(ply)
 		self.LabelName:SetText( ply:Nick() )
 		self.Avatar:SetModel( ply:GetModel() )
-		self.Avatar:SetIconSize(32)
+		self.Avatar:SetSize(32)
 
 		self.Color = team.GetColor( ply:Team() )
 

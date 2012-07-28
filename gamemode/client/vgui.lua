@@ -61,6 +61,7 @@ local function MsgDoVote(msg)
 	label:SetText(question)
 	label:SizeToContents()
 	label:SetVisible(true)
+	label:SetBGColor(Color(0,0,0,0))
 
 	local nextHeight = label:GetTall() > 78 and label:GetTall() - 78 or 0 // make panel taller for divider and buttons
 	panel:SetTall(panel:GetTall() + nextHeight)
