@@ -513,9 +513,7 @@ local invalidToolData = {
 	-- Limit wheel torque
 	["rx"] = 360,
 	["ry"] = 360,
-	["rz"] = 360,
-	-- Limit RT camera's
-	["key"] = 20
+	["rz"] = 360
 }
 
 function FPP.Protect.CanTool(ply, trace, tool, ENT)
