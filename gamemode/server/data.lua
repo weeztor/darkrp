@@ -786,7 +786,7 @@ function DB.SetUpNonOwnableDoors()
 				if r.isLocked ~= nil then
 					e:Fire((tobool(row.locked) and "" or "un").."lock", "", 0)
 				end
-				e.DoorData.title = row.title
+				e.DoorData.title = row.title ~= "NULL" and row.title or nil
 			end
 		end
 	end)
