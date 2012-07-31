@@ -72,7 +72,6 @@ end)
 if SERVER then
 	local function CustomAnim(ply, cmd, args)
 		local Gesture = tonumber(args[1] or 0)
-		if Gesture < 1782 or Gesture > 1900 then return end
 		local RP = RecipientFilter()
 		RP:AddAllPlayers()
 
@@ -130,13 +129,13 @@ local function CustomAnimation(um)
 	local ply = um:ReadEntity()
 	local act = um:ReadShort()
 	ply:AnimRestartGesture(GESTURE_SLOT_CUSTOM, act)
+	timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
 end
 usermessage.Hook("_DarkRP_CustomAnim", CustomAnimation)
 
 local Anims = {}
 Anims["Thumbs up"] = ACT_GMOD_GESTURE_AGREE
 Anims["Non-verbal no"] = ACT_GMOD_GESTURE_DISAGREE
-Anims["Salute"] = ACT_GMOD_GESTURE_SALUTE
 Anims["Bow"] = ACT_GMOD_GESTURE_BOW
 Anims["Wave"] = ACT_GMOD_GESTURE_WAVE
 Anims["Follow me!"] = ACT_GMOD_GESTURE_BECON

@@ -1631,18 +1631,19 @@ concommand.Add("_hobo_emitsound", MakeZombieSoundsAsHobo)
  ---------------------------------------------------------*/
 local LotteryPeople = {}
 local LotteryON = false
+local LotteryAmount = 0
 local CanLottery = CurTime()
 local function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 	if answer == 1 and not table.HasValue(LotteryPeople, target) then
-		if not target:CanAfford(GetConVarNumber("lotterycommitcost")) then
+		if not target:CanAfford(LotteryAmount) then
 			GAMEMODE:Notify(target, 1,4, string.format(LANGUAGE.cant_afford, "lottery"))
 			return
 		end
 		table.insert(LotteryPeople, target)
-		target:AddMoney(-GetConVarNumber("lotterycommitcost"))
-		GAMEMODE:Notify(target, 0,4, string.format(LANGUAGE.lottery_entered, CUR..tostring(GetConVarNumber("lotterycommitcost"))))
+		target:AddMoney(-LotteryAmount)
+		GAMEMODE:Notify(target, 0,4, string.format(LANGUAGE.lottery_entered, CUR..tostring(LotteryAmount)))
 	elseif answer and not table.HasValue(LotteryPeople, target) then
-		GAMEMODE:Notify(target, 1,4, string.format(LANGUAGE.lottery_not_entered, target:Nick()))
+		GAMEMODE:Notify(target, 1,4, string.format(LANGUAGE.lottery_not_entered, "You"))
 	end
 
 	if TimeIsUp then
@@ -1653,12 +1654,12 @@ local function EnterLottery(answer, ent, initiator, target, TimeIsUp)
 			return
 		end
 		local chosen = LotteryPeople[math.random(1, #LotteryPeople)]
-		chosen:AddMoney(#LotteryPeople * GetConVarNumber("lotterycommitcost"))
-		GAMEMODE:NotifyAll(0,10, string.format(LANGUAGE.lottery_won, chosen:Nick(), CUR .. tostring(#LotteryPeople * GetConVarNumber("lotterycommitcost")) ))
+		chosen:AddMoney(#LotteryPeople * LotteryAmount)
+		GAMEMODE:NotifyAll(0,10, string.format(LANGUAGE.lottery_won, chosen:Nick(), CUR .. tostring(#LotteryPeople * LotteryAmount) ))
 	end
 end
 
-local function DoLottery(ply)
+local function DoLottery(ply, amount)
 	if ply:Team() ~= TEAM_MAYOR then
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.incorrect_job, "/lottery"))
 		return ""
@@ -1679,13 +1680,21 @@ local function DoLottery(ply)
 		return ""
 	end
 
+	amount = tonumber(amount)
+	if not amount then
+		GAMEMODE:Notify(ply, 1, 5, string.format("Please specify an entry cost ($%i-%i)", GetConVarNumber("minlotterycommitcost"), GetConVarNumber("maxlotterycommitcost")))
+		return ""
+	end
+
+	LotteryAmount = math.Clamp(math.floor(amount), GetConVarNumber("minlotterycommitcost"), GetConVarNumber("maxlotterycommitcost"))
+
 	GAMEMODE:NotifyAll(0, 4, "A lottery has started!")
 
 	LotteryON = true
 	LotteryPeople = {}
 	for k,v in pairs(player.GetAll()) do
 		if v ~= ply then
-			GAMEMODE.ques:Create("There is a lottery! Participate for " ..CUR.. tostring(GetConVarNumber("lotterycommitcost")) .. "?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
+			GAMEMODE.ques:Create("There is a lottery! Participate for " ..CUR.. tostring(LotteryAmount) .. "?", "lottery"..tostring(k), v, 30, EnterLottery, ply, v)
 		end
 	end
 	timer.Create("Lottery", 30, 1, function() EnterLottery(nil, nil, nil, nil, true) end)

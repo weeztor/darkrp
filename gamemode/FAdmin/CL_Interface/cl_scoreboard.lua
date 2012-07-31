@@ -37,13 +37,8 @@ function FAdmin.ScoreBoard.ChangeGmodLogo(new)
 	end
 end
 
-local BackgroundTexture = surface.GetTextureID("pp/blurx")
 function FAdmin.ScoreBoard.Background()
-	//DrawMotionBlur(0.05,1,0)
 	local ScreenWidth, ScreenHeight = ScrW(), ScrH()
-	surface.SetDrawColor(255,255,255,100)
-	surface.SetTexture(BackgroundTexture)
-	surface.DrawTexturedRect(FAdmin.ScoreBoard.X, FAdmin.ScoreBoard.Y, FAdmin.ScoreBoard.Width, FAdmin.ScoreBoard.Height)
 
 	surface.SetDrawColor(0,0,0,200)
 	surface.DrawRect(FAdmin.ScoreBoard.X, FAdmin.ScoreBoard.Y, FAdmin.ScoreBoard.Width, FAdmin.ScoreBoard.Height)

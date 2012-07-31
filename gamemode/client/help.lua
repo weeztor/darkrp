@@ -216,3 +216,5 @@ addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_taxmax - Maximum percentage of tax to b
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_vehiclecost <Number> - Sets the cost of a vehicle (To own it).")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_walkspeed <Number> - Sets the max walking speed.")
 addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_wantedtime <Number> - Number of seconds for which a player is wanted for.")
+addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_minlotterycost <Number> - Minimum payment the mayor can set to join a lottery.")
+addLabel(-1, HELP_CATEGORY_ADMINCMD, "rp_maxlotterycost <Number> - Maximum payment the mayor can set to join a lottery.")
