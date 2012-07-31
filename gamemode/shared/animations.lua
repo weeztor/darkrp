@@ -1,38 +1,34 @@
 hook.Add("CalcMainActivity", "darkrp_animations", function(ply, velocity) -- Using hook.Add and not GM:CalcMainActivity to prevent animation problems
 	-- Dropping weapons/money!
 	if ply.anim_DroppingItem then
-		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_DROP)
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_DROP, true)
 		ply.anim_DroppingItem = nil
 	end
 
 	-- Giving items!
 	if ply.anim_GivingItem then
-		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_GIVE)
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_GIVE, true)
 		ply.anim_GivingItem = nil
 	end
 
 	if CLIENT and ply.SaidHi then
-		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_SIGNAL_GROUP)
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_SIGNAL_GROUP, true)
 		ply.SaidHi = nil
-		timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
 	end
 
 	if CLIENT and ply.ThrewPoop then
-		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_THROW)
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_THROW, true)
 		ply.ThrewPoop = nil
-		timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
 	end
 
 	if CLIENT and ply.knocking then
-		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST, true)
 		ply.knocking = nil
-		timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
 	end
 
 	if CLIENT and ply.usekeys then
-		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE, true)
 		ply.usekeys = nil
-		timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
 	end
 
 	if not SERVER then return end
@@ -41,7 +37,7 @@ hook.Add("CalcMainActivity", "darkrp_animations", function(ply, velocity) -- Usi
 	local Weapon = ply:GetActiveWeapon()
 	if ply:Team() == TEAM_HOBO and not ply.ThrewPoop and ValidEntity(Weapon) and Weapon:GetClass() == "weapon_bugbait" and ply:KeyDown(IN_ATTACK) then
 		ply.ThrewPoop = true
-		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_THROW)
+		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_THROW, true)
 
 
 		local RP = RecipientFilter()
@@ -59,7 +55,7 @@ hook.Add("CalcMainActivity", "darkrp_animations", function(ply, velocity) -- Usi
 		local ent = ply:GetEyeTrace().Entity
 		if ValidEntity(ent) and ent:IsPlayer() then
 			ply.SaidHi = true
-			ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_SIGNAL_GROUP)
+			ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_SIGNAL_GROUP, true)
 
 			local RP = RecipientFilter()
 			RP:AddAllPlayers()
@@ -132,8 +128,7 @@ usermessage.Hook("anim_keys", KeysAnims)
 local function CustomAnimation(um)
 	local ply = um:ReadEntity()
 	local act = um:ReadShort()
-	ply:AnimRestartGesture(GESTURE_SLOT_CUSTOM, act)
-	timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
+	ply:AnimRestartGesture(GESTURE_SLOT_CUSTOM, act, true)
 end
 usermessage.Hook("_DarkRP_CustomAnim", CustomAnimation)
 

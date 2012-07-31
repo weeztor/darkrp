@@ -79,7 +79,7 @@ function SWEP:PrimaryAttack()
 				umsg.Entity(self.Owner)
 				umsg.String("usekeys")
 			umsg.End()
-			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
+			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE, true)
 		end
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.3)
 	else
@@ -92,7 +92,7 @@ function SWEP:PrimaryAttack()
 					umsg.String("knocking")
 				umsg.End()
 
-				self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
+				self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST, true)
 			end
 		end
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.2)
@@ -129,7 +129,7 @@ function SWEP:SecondaryAttack()
 				umsg.Entity(self.Owner)
 				umsg.String("usekeys")
 			umsg.End()
-			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
+			self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE, true)
 		end
 		self.Weapon:SetNextSecondaryFire(CurTime() + 0.3)
 	else
@@ -142,7 +142,7 @@ function SWEP:SecondaryAttack()
 					umsg.String("knocking")
 				umsg.End()
 
-				self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
+				self.Owner:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST, true)
 			end
 		end
 		self.Weapon:SetNextSecondaryFire(CurTime() + 0.2)
