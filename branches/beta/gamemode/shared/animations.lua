@@ -14,21 +14,25 @@ hook.Add("CalcMainActivity", "darkrp_animations", function(ply, velocity) -- Usi
 	if CLIENT and ply.SaidHi then
 		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_SIGNAL_GROUP)
 		ply.SaidHi = nil
+		timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
 	end
 
 	if CLIENT and ply.ThrewPoop then
 		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_THROW)
 		ply.ThrewPoop = nil
+		timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
 	end
 
 	if CLIENT and ply.knocking then
 		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_HL2MP_GESTURE_RANGE_ATTACK_FIST)
 		ply.knocking = nil
+		timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
 	end
 
 	if CLIENT and ply.usekeys then
 		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_PLACE)
 		ply.usekeys = nil
+		timer.Simple(3, function() ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM) end)
 	end
 
 	if not SERVER then return end
