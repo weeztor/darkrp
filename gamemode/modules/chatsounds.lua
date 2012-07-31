@@ -4,7 +4,7 @@
 -- To disble them completey, use the command rp_chatsounds 0 or delete this file.
 -- TODO: Add female sounds & detect gender of model, Use combine sounds for CPs.
 
-GAMEMODE:AddToggleCommand( "rp_chatsounds", "chatsounds", 1 )
+GM:AddToggleCommand( "rp_chatsounds", "chatsounds", 1 )
 
 local sounds = {}
 sounds[ "hi" ] = { "vo/npc/male01/hi01.wav", "vo/npc/male01/hi02.wav" }
