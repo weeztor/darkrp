@@ -177,7 +177,7 @@ local function Ragdoll(ply, cmd, args)
 						pos:Rotate(angle)
 
 						phys:SetPos(pos + Ragdoll:GetPos())
-						phys:SetAngle(VictimAng1[i] + angle)
+						phys:SetAngles(VictimAng1[i] + angle)
 					end
 				end
 
@@ -210,7 +210,7 @@ local function Ragdoll(ply, cmd, args)
 						local pos = Vector(KickerPos[i].x, KickerPos[i].y, KickerPos[i].z)
 						pos:Rotate(angle)
 						phys:SetPos(pos + Kicker:GetPos())
-						phys:SetAngle(KickerAng[i] + angle)
+						phys:SetAngles(KickerAng[i] + angle)
 					end
 
 				end
