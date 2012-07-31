@@ -451,7 +451,7 @@ local function AddToChat(msg)
 	local name = msg:ReadString()
 	local ply = msg:ReadEntity() or LocalPlayer()
 
-	if name == "" then
+	if name == "" or not name then
 		name = ply:Nick()
 		name = name ~= "" and name or ply:SteamName()
 	end
