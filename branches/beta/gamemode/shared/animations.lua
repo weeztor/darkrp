@@ -133,11 +133,15 @@ end
 usermessage.Hook("_DarkRP_CustomAnim", CustomAnimation)
 
 local Anims = {}
-Anims["Thumbs up"] = ACT_GMOD_GESTURE_AGREE
-Anims["Non-verbal no"] = ACT_GMOD_GESTURE_DISAGREE
 Anims["Bow"] = ACT_GMOD_GESTURE_BOW
-Anims["Wave"] = ACT_GMOD_GESTURE_WAVE
+Anims["Dance"] = ACT_GMOD_TAUNT_MUSCLE
 Anims["Follow me!"] = ACT_GMOD_GESTURE_BECON
+Anims["Laugh"] = ACT_GMOD_TAUNT_LAUGH
+Anims["Lion Pose"] = ACT_GMOD_TAUNT_PERSISTENCE
+Anims["Non-verbal no"] = ACT_GMOD_GESTURE_DISAGREE
+Anims["Salute"] = ACT_GMOD_TAUNT_SALUTE
+Anims["Thumbs up"] = ACT_GMOD_GESTURE_AGREE
+Anims["Wave"] = ACT_GMOD_GESTURE_WAVE
 
 local AnimFrame
 local function AnimationMenu()
@@ -151,8 +155,8 @@ local function AnimationMenu()
 	end
 
 	AnimFrame = AnimFrame or vgui.Create("DFrame", Panel)
-	local Height = table.Count(Anims) * 110
-	AnimFrame:SetSize(200, Height)
+	local Height = table.Count(Anims) * 60
+	AnimFrame:SetSize(130, Height)
 	AnimFrame:SetPos(ScrW()/2 + ScrW() * 0.1, ScrH()/2 - (Height/2))
 	AnimFrame:SetTitle("Custom animation!")
 	AnimFrame:SetVisible(true)
@@ -165,11 +169,11 @@ local function AnimationMenu()
 	end
 
 	local i = 0
-	for k,v in pairs(Anims) do
+	for k,v in SortedPairs(Anims) do
 		i = i + 1
 		local button = vgui.Create("DButton", AnimFrame)
-		button:SetPos(10, (i-1)*105 + 30)
-		button:SetSize(180, 100)
+		button:SetPos(10, (i-1)*55 + 30)
+		button:SetSize(110, 50)
 		button:SetText(k)
 
 		button.DoClick = function()
