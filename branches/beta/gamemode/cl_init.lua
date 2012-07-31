@@ -6,6 +6,15 @@ DeriveGamemode("sandbox")
 util.PrecacheSound("earthquake.mp3")
 CUR = "$"
 
+/*---------------------------------------------------------------------------
+Fonts
+---------------------------------------------------------------------------*/
+surface.CreateFont ("DejaVu Sans", 16, 600, true, true, "DarkRPHUD1")
+surface.CreateFont ("coolvetica", 21, 400, true, false, "DarkRPHUD2")
+
+/*---------------------------------------------------------------------------
+Names
+---------------------------------------------------------------------------*/
 -- Make sure the client sees the RP name where they expect to see the name
 local pmeta = FindMetaTable("Player")
 
@@ -278,16 +287,16 @@ local function RPSelectwhohearit(group)
 		local h = l - (#playercolors * 20) - 20
 		local AllTalk = GetConVarNumber("alltalk") == 1
 		if #playercolors <= 0 and ((HearMode ~= "talk through OOC" and HearMode ~= "advert" and not AllTalk) or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") or HearMode == "speak" ) then
-			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_noone, HearMode), "ScoreboardText", Color(0,0,0,120), Color(255,0,0,255))
+			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_noone, HearMode), "DarkRPHUD1", Color(0,0,0,160), Color(255,0,0,255))
 		elseif HearMode == "talk through OOC" or HearMode == "advert" then
-			draw.WordBox(2, w, h, LANGUAGE.hear_everyone, "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
+			draw.WordBox(2, w, h, LANGUAGE.hear_everyone, "DarkRPHUD1", Color(0,0,0,160), Color(0,255,0,255))
 		elseif not AllTalk or (AllTalk and HearMode ~= "talk" and HearMode ~= "me") then
-			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_certain_persons, HearMode), "ScoreboardText", Color(0,0,0,120), Color(0,255,0,255))
+			draw.WordBox(2, w, h, string.format(LANGUAGE.hear_certain_persons, HearMode), "DarkRPHUD1", Color(0,0,0,160), Color(0,255,0,255))
 		end
 
 		for k,v in pairs(playercolors) do
 			if v.Nick then
-				draw.WordBox(2, w, h + k*20, v:Nick(), "ScoreboardText", Color(0,0,0,120), Color(255,255,255,255))
+				draw.WordBox(2, w, h + k*20, v:Nick(), "DarkRPHUD1", Color(0,0,0,160), Color(255,255,255,255))
 			end
 		end
 	end)

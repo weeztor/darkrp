@@ -71,7 +71,7 @@ local function DrawHealth()
 	draw.RoundedBox(Border, RelativeX + 4, RelativeY - 30, HUDWidth - 8, 20, ConVars.Healthbackground)
 	draw.RoundedBox(Border, RelativeX + 5, RelativeY - 29, (HUDWidth - 9) * DrawHealth, 18, ConVars.Healthforeground)
 
-	draw.DrawText(math.Max(0, math.Round(LocalPlayer():Health())), "TargetID", RelativeX + 4 + (HUDWidth - 8)/2, RelativeY - 32, ConVars.HealthText, 1)
+	draw.DrawText(math.Max(0, math.Round(LocalPlayer():Health())), "DarkRPHUD2", RelativeX + 4 + (HUDWidth - 8)/2, RelativeY - 32, ConVars.HealthText, 1)
 end
 
 local function DrawInfo()
@@ -89,14 +89,14 @@ local function DrawInfo()
 		draw.DrawText("Weapon: "..name, "UiBold", RelativeX + 5, RelativeY - HUDHeight - 18, Color(255, 255, 255, 255), 0)
 	end
 
-	draw.DrawText(Salary, "TargetID", RelativeX + 5, RelativeY - HUDHeight + 6, ConVars.salary1, 0)
-	draw.DrawText(Salary, "TargetID", RelativeX + 4, RelativeY - HUDHeight + 5, ConVars.salary2, 0)
+	draw.DrawText(Salary, "DarkRPHUD2", RelativeX + 5, RelativeY - HUDHeight + 6, ConVars.salary1, 0)
+	draw.DrawText(Salary, "DarkRPHUD2", RelativeX + 4, RelativeY - HUDHeight + 5, ConVars.salary2, 0)
 
-	surface.SetFont("TargetID")
+	surface.SetFont("DarkRPHUD2")
 	local w, h = surface.GetTextSize(Salary)
 
-	draw.DrawText(JobWallet, "TargetID", RelativeX + 5, RelativeY - HUDHeight + h + 6, ConVars.Job1, 0)
-	draw.DrawText(JobWallet, "TargetID", RelativeX + 4, RelativeY - HUDHeight + h + 5, ConVars.Job2, 0)
+	draw.DrawText(JobWallet, "DarkRPHUD2", RelativeX + 5, RelativeY - HUDHeight + h + 6, ConVars.Job1, 0)
+	draw.DrawText(JobWallet, "DarkRPHUD2", RelativeX + 4, RelativeY - HUDHeight + h + 5, ConVars.Job2, 0)
 end
 
 local Page = surface.GetTextureID("icon16/page")
@@ -123,8 +123,8 @@ local function JobHelp()
 			draw.RoundedBox(10, 10, 10, 590, 194, Color(0, 0, 0, 255))
 			draw.RoundedBox(10, 12, 12, 586, 190, Color(51, 58, 51, 200))
 			draw.RoundedBox(10, 12, 12, 586, 20, Color(0, 0, 70, 200))
-			draw.DrawText(v.." Help", "ScoreboardText", 30, 12, Color(255,0,0,255),0)
-			draw.DrawText(string.format(LANGUAGE[v:lower().."help"], GetConVarNumber("jailtimer")), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+			draw.DrawText(v.." Help", "DarkRPHUD1", 30, 12, Color(255,0,0,255),0)
+			draw.DrawText(string.format(LANGUAGE[v:lower().."help"], GetConVarNumber("jailtimer")), "DarkRPHUD1", 30, 35, Color(255,255,255,255),0)
 		end
 	end
 end
@@ -144,13 +144,13 @@ local function Agenda()
 		draw.RoundedBox(10, 12, 12, 456, 106, Color(51, 58, 51,100))
 		draw.RoundedBox(10, 12, 12, 456, 20, Color(0, 0, 70, 100))
 
-		draw.DrawText(DrawAgenda.Title, "ScoreboardText", 30, 12, Color(255,0,0,255),0)
+		draw.DrawText(DrawAgenda.Title, "DarkRPHUD1", 30, 12, Color(255,0,0,255),0)
 
 		local AgendaText = ""
 		for k,v in pairs(team.GetPlayers(AgendaManager)) do
 			AgendaText = AgendaText .. (v.DarkRPVars.agenda or "")
 		end
-		draw.DrawText(string.gsub(string.gsub(AgendaText, "//", "\n"), "\\n", "\n"), "ScoreboardText", 30, 35, Color(255,255,255,255),0)
+		draw.DrawText(string.gsub(string.gsub(AgendaText, "//", "\n"), "\\n", "\n"), "DarkRPHUD1", 30, 35, Color(255,255,255,255),0)
 	end
 end
 
@@ -188,7 +188,7 @@ usermessage.Hook("GotArrested", function(msg)
 
 	Arrested = function()
 		if CurTime() - StartArrested <= ArrestedUntil and LocalPlayer().DarkRPVars.Arrested then
-		draw.DrawText(string.format(LANGUAGE.youre_arrested, math.ceil(ArrestedUntil - (CurTime() - StartArrested))), "ScoreboardText", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
+		draw.DrawText(string.format(LANGUAGE.youre_arrested, math.ceil(ArrestedUntil - (CurTime() - StartArrested))), "DarkRPHUD1", ScrW()/2, ScrH() - ScrH()/12, Color(255,255,255,255), 1)
 		elseif not LocalPlayer().DarkRPVars.Arrested then
 			Arrested = function() end
 		end
@@ -243,15 +243,15 @@ local function DrawPlayerInfo(ply)
 	pos = pos:ToScreen()
 
 	if GetConVarNumber("nametag") == 1 then
-		draw.DrawText(ply:Nick(), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
-		draw.DrawText(ply:Nick(), "TargetID", pos.x, pos.y, team.GetColor(ply:Team()), 1)
-		draw.DrawText(LANGUAGE.health ..ply:Health(), "TargetID", pos.x + 1, pos.y + 21, Color(0, 0, 0, 255), 1)
-		draw.DrawText(LANGUAGE.health..ply:Health(), "TargetID", pos.x, pos.y + 20, Color(255,255,255,200), 1)
+		draw.DrawText(ply:Nick(), "DarkRPHUD2", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
+		draw.DrawText(ply:Nick(), "DarkRPHUD2", pos.x, pos.y, team.GetColor(ply:Team()), 1)
+		draw.DrawText(LANGUAGE.health ..ply:Health(), "DarkRPHUD2", pos.x + 1, pos.y + 21, Color(0, 0, 0, 255), 1)
+		draw.DrawText(LANGUAGE.health..ply:Health(), "DarkRPHUD2", pos.x, pos.y + 20, Color(255,255,255,200), 1)
 	end
 
 	if GetConVarNumber("jobtag") == 1 then
-		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
-		draw.DrawText(ply.DarkRPVars.job or "", "TargetID", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
+		draw.DrawText(ply.DarkRPVars.job or "", "DarkRPHUD2", pos.x + 1, pos.y + 41, Color(0, 0, 0, 255), 1)
+		draw.DrawText(ply.DarkRPVars.job or "", "DarkRPHUD2", pos.x, pos.y + 40, Color(255, 255, 255, 200), 1)
 	end
 
 	if ply.DarkRPVars.HasGunlicense then
@@ -271,12 +271,12 @@ local function DrawWantedInfo(ply)
 	pos = pos:ToScreen()
 
 	if GetConVarNumber("nametag") == 1 then
-		draw.DrawText(ply:Nick(), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
-		draw.DrawText(ply:Nick(), "TargetID", pos.x, pos.y, team.GetColor(ply:Team()), 1)
+		draw.DrawText(ply:Nick(), "DarkRPHUD2", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
+		draw.DrawText(ply:Nick(), "DarkRPHUD2", pos.x, pos.y, team.GetColor(ply:Team()), 1)
 	end
 
-	draw.DrawText(LANGUAGE.wanted.."\nReason: "..tostring(ply.DarkRPVars["wantedReason"]), "TargetID", pos.x, pos.y - 40, Color(255, 255, 255, 200), 1)
-	draw.DrawText(LANGUAGE.wanted.."\nReason: "..tostring(ply.DarkRPVars["wantedReason"]), "TargetID", pos.x + 1, pos.y - 41, Color(255, 0, 0, 255), 1)
+	draw.DrawText(LANGUAGE.wanted.."\nReason: "..tostring(ply.DarkRPVars["wantedReason"]), "DarkRPHUD2", pos.x, pos.y - 40, Color(255, 255, 255, 200), 1)
+	draw.DrawText(LANGUAGE.wanted.."\nReason: "..tostring(ply.DarkRPVars["wantedReason"]), "DarkRPHUD2", pos.x + 1, pos.y - 41, Color(255, 0, 0, 255), 1)
 end
 
 /*---------------------------------------------------------------------------
@@ -313,8 +313,8 @@ local function DrawZombieInfo()
 		local zPoint = LocalPlayer().DarkRPVars["zPoints".. x]
 		if zPoint then
 			zPoint = zPoint:ToScreen()
-			draw.DrawText("Zombie Spawn (" .. x .. ")", "TargetID", zPoint.x, zPoint.y - 20, Color(255, 255, 255, 200), 1)
-			draw.DrawText("Zombie Spawn (" .. x .. ")", "TargetID", zPoint.x + 1, zPoint.y - 21, Color(255, 0, 0, 255), 1)
+			draw.DrawText("Zombie Spawn (" .. x .. ")", "DarkRPHUD2", zPoint.x, zPoint.y - 20, Color(255, 255, 255, 200), 1)
+			draw.DrawText("Zombie Spawn (" .. x .. ")", "DarkRPHUD2", zPoint.x + 1, zPoint.y - 21, Color(255, 0, 0, 255), 1)
 		end
 	end
 end
