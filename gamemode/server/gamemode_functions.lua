@@ -283,6 +283,16 @@ function GM:CanPlayerSuicide(ply)
 	return true
 end
 
+function GM:CanDrive(ply, ent)
+	GAMEMODE:Notify(ply, 1, 4, "Drive disabled for now.")
+	return false -- Disabled until people can't minge with it anymore
+end
+
+function GM:CanProperty(ply, property, ent)
+	GAMEMODE:Notify(ply, 1, 4, "Property disabled for now.")
+	return false -- Disabled until antiminge measure is found
+end
+
 function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
 	if tobool(GetConVarNumber("dropweapondeath")) and ValidEntity(ply:GetActiveWeapon()) then
 		ply:DropDRPWeapon(ply:GetActiveWeapon())
