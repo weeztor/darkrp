@@ -119,9 +119,10 @@ end
 
 function meta:InitiateTax()
 	local taxtime = GetConVarNumber("wallettaxtime")
-	timer.Create("rp_tax_"..self:UniqueID(), taxtime ~= 0 and taxtime or 600, 0, function()
+	local uniqueid = self:UniqueID() -- so we can destroy the timer if the player leaves
+	timer.Create("rp_tax_"..uniqueid, taxtime ~= 0 and taxtime or 600, 0, function()
 		if not ValidEntity(self) then
-			timer.Destroy("rp_tax_"..self:UniqueID())
+			timer.Destroy("rp_tax_"..uniqueid)
 			return
 		end
 
