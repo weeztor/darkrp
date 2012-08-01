@@ -68,7 +68,6 @@ local function CheckChat( ply, text )
 		for k, v in pairs( sounds ) do
 
 			local res1, res2 = string.find( text, k )
-			MsgN( res1 ) MsgN( res2 )
 			if res1 and ( not text[ res1 - 1 ] or text[ res1 - 1 ] == "" or text[ res1 - 1 ] == " " ) and ( not text[ res2 + 1 ] or text[ res2 + 1 ] == "" or text[ res2 + 1 ] == " " ) then
 
 				ply:EmitSound( table.Random( v ), 60, 100 )
