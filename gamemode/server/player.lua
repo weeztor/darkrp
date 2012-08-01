@@ -141,7 +141,7 @@ function meta:InitiateTax()
 
 		-- Variate the taxes between twice the starting money ($1000 by default) and 200 - 2 times the starting money (100.000 by default)
 		local tax = (money - (startMoney * 2)) / (startMoney * 198)
-			  tax = mathx.Min(maxtax, mintax + (maxtax - mintax) * tax)
+			  tax = math.Min(maxtax, mintax + (maxtax - mintax) * tax)
 
 		self:AddMoney(-tax * money)
 		GAMEMODE:Notify(self, 3, 7, "Tax day! "..math.Round(tax * 100, 3) .. "% of your income was taken!")
