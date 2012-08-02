@@ -83,16 +83,6 @@ function GM:PlayerSpawnProp(ply, model)
 
 	if not allowed then return false end
 
-	if GetConVarNumber("proppaying") == 1 then
-		if ply:CanAfford(GetConVarNumber("propcost")) then
-			GAMEMODE:Notify(ply, 0, 4, "Deducted " .. CUR .. GetConVarNumber("propcost"))
-			ply:AddMoney(-GetConVarNumber("propcost"))
-		else
-			GAMEMODE:Notify(ply, 1, 4, "Need " .. CUR .. GetConVarNumber("propcost"))
-			return false
-		end
-	end
-
 	return self.BaseClass:PlayerSpawnProp(ply, model)
 end
 
@@ -140,6 +130,16 @@ function GM:PlayerSpawnedProp(ply, model, ent)
 	self.BaseClass:PlayerSpawnedProp(ply, model, ent)
 	ent.SID = ply.SID
 	ent.Owner = ply
+
+	if GetConVarNumber("proppaying") == 1 then
+		if ply:CanAfford(GetConVarNumber("propcost")) then
+			GAMEMODE:Notify(ply, 0, 4, "Deducted " .. CUR .. GetConVarNumber("propcost"))
+			ply:AddMoney(-GetConVarNumber("propcost"))
+		else
+			GAMEMODE:Notify(ply, 1, 4, "Need " .. CUR .. GetConVarNumber("propcost"))
+			return false
+		end
+	end
 end
 
 function GM:PlayerSpawnedRagdoll(ply, model, ent)
