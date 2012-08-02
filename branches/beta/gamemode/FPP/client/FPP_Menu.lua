@@ -420,7 +420,10 @@ function FPP.AdminMenu(Panel)
 
 	local GroupRestrictCat, GroupRestrict = MakeOption("Group tool restriction")
 
-	GroupRestrict:Add(Label("Group Members: NOTE: People who have the\nusergroup that matches with this group\nare automatically in this group!"))
+	local PressLoadFirst = GroupRestrict:Add(Label("Press \"Load groups and members\" first!"))
+	local  membersLabel = Label("Group Members: NOTE: People who have the\nusergroup that matches with this group\nare automatically in this group!")
+	membersLabel:SizeToContents()
+	GroupRestrict:Add(membersLabel)
 
 	local LoadGroups = GroupRestrict:Add("DButton")
 	LoadGroups:SetText("Load groups and members")
@@ -540,7 +543,7 @@ function FPP.AdminMenu(Panel)
 	local function RetrieveGroups(len)
 		FPP.Groups = net.ReadTable()
 		GroupList:Clear()
-		for k,v in pairs(decoded) do
+		for k,v in pairs(FPP.Groups) do
 			GroupList:AddLine(k)
 		end
 		GroupList:SelectFirstItem()
@@ -551,7 +554,7 @@ function FPP.AdminMenu(Panel)
 	local function RetrieveGroupMembers(len)
 		FPP.GroupMembers = net.ReadTable()
 		GroupMembers:Clear()
-		for k,v in pairs(decoded) do
+		for k,v in pairs(FPP.GroupMembers) do
 			local name = "Unknown"
 			for _, ply in pairs(player.GetAll()) do
 				if ply:SteamID() == k then
