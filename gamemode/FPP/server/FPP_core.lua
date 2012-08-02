@@ -1,9 +1,42 @@
 FPP = FPP or {}
 FPP.DisconnectedPlayers = {}
 
---------------------------------------------------------------------------------------
---Setting owner when someone spawns something
---------------------------------------------------------------------------------------
+
+/*---------------------------------------------------------------------------
+Checks is a model is blocked
+---------------------------------------------------------------------------*/
+local function isBlocked(model)
+	if model == "" or not FPP.Settings or not FPP.Settings.FPP_BLOCKMODELSETTINGS1 or
+		not tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.toggle)
+		or not FPP.BlockedModels or not model then return end
+
+	local found = FPP.BlockedModels[model]
+	if tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.iswhitelist) and not found then
+		-- Prop is not in the white list
+		return true, "The model of this entity is not in the white list!"
+	elseif not tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.iswhitelist) and found then
+		-- prop is in the black list
+		return true, "The model of this entity is in the black list!"
+	end
+	return false
+end
+
+/*---------------------------------------------------------------------------
+Prevents spawning a prop when its model is blocked
+---------------------------------------------------------------------------*/
+
+hook.Add("PlayerSpawnProp", "FPP_SpawnProp", function(ply, model)
+	local blocked, msg = isBlocked(model)
+	if blocked then
+		FPP.Notify(ply, msg, false)
+		return false
+	end
+end)
+
+
+/*---------------------------------------------------------------------------
+Setting owner when someone spawns something
+---------------------------------------------------------------------------*/
 if cleanup then
 	FPP.oldcleanup = FPP.oldcleanup or cleanup.Add
 	function cleanup.Add(ply, Type, ent)
@@ -15,21 +48,11 @@ if cleanup then
 			local model = string.lower(ent:GetModel() or "")
 			model = string.Replace(model, "\\", "/")
 
-			if model ~= "" and FPP.Settings and FPP.Settings.FPP_BLOCKMODELSETTINGS1 and tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.toggle)
-				and FPP.BlockedModels and model then
-
-				local found = FPP.BlockedModels[model]
-				if tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.iswhitelist) and not found then
-					-- Prop is not in the white list
-					FPP.Notify(ply, "The model of this entity is not in the white list!", false)
-					ent:Remove()
-					return
-				elseif not tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.iswhitelist) and found then
-					-- prop is in the black list
-					FPP.Notify(ply, "The model of this entity is in the black list!", false)
-					ent:Remove()
-					return
-				end
+			local blocked, msg = isBlocked(model)
+			if blocked then
+				FPP.Notify(ply, msg, false)
+				ent:Remove()
+				return
 			end
 
 			if FPP.AntiSpam and Type ~= "constraints" and Type ~= "stacks" and Type ~= "AdvDupe2" and (not ent.IsVehicle() or not ent:IsVehicle()) then
@@ -40,7 +63,7 @@ if cleanup then
 				ent:SetCollisionGroup(COLLISION_GROUP_WEAPON)
 			end
 		end
-		FPP.oldcleanup(ply, Type, ent)
+		return FPP.oldcleanup(ply, Type, ent)
 	end
 end
 
