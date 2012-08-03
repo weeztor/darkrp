@@ -187,12 +187,6 @@ function meta:CompleteSentence()
 	end
 end
 
-local CSFiles = {}
-function GM:includeCS(dir)
-	AddCSLuaFile(dir)
-	table.insert(CSFiles, dir)
-end
-
 function meta:NewData()
 	if not ValidEntity(self) then return end
 

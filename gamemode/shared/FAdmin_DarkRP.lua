@@ -22,8 +22,6 @@ if SERVER then
 
 	AddDir("materials/FAdmin")
 
-	AddCSLuaFile("FAdmin.lua")
-
 	local function AddCSLuaFolder(fol)
 		local files, folders = file.Find(fol.."*", LUA_PATH)
 		for _, folder in SortedPairs(folders, true) do

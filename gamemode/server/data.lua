@@ -739,10 +739,10 @@ end
 function DB.RetrieveSalary(ply, callback)
 	if not ValidEntity(ply) then return 0 end
 
-	local normal = GetConVarNumber("normalsalary")
 	if ply.DarkRPVars.salary then return callback and callback(ply.DarkRPVars.salary) end -- First check the cache.
 
 	DB.QueryValue("SELECT salary FROM darkrp_player WHERE uid = " .. ply:UniqueID() .. ";", function(r)
+		local normal = GetConVarNumber("normalsalary")
 		if not r then
 			ply:SetSelfDarkRPVar("salary", normal)
 			callback(normal)
