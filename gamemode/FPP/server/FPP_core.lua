@@ -24,7 +24,6 @@ end
 /*---------------------------------------------------------------------------
 Prevents spawning a prop when its model is blocked
 ---------------------------------------------------------------------------*/
-
 hook.Add("PlayerSpawnProp", "FPP_SpawnProp", function(ply, model)
 	local blocked, msg = isBlocked(model)
 	if blocked then
@@ -32,7 +31,6 @@ hook.Add("PlayerSpawnProp", "FPP_SpawnProp", function(ply, model)
 		return false
 	end
 end)
-
 
 /*---------------------------------------------------------------------------
 Setting owner when someone spawns something
