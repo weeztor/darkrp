@@ -1,5 +1,3 @@
-GM:includeCS("HungerMod/cl_init.lua")
-
 local HM = { }
 local FoodItems = { }
 
