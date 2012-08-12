@@ -125,6 +125,7 @@ function ENT:Destruct()
 		weapon.weaponclass = class
 		weapon.ShareGravgun = true
 		weapon:SetPos(Vector(vPoint.x, vPoint.y, vPoint.z + (i*5)))
+		weapon.ammoadd = weapons.Get(class) and weapons.Get(class).Primary.DefaultClip
 		weapon.nodupe = true
 		weapon:Spawn()
 	end
