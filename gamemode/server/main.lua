@@ -14,8 +14,7 @@ spawned_money = true,
 prop_physics = true}
 
 local function IsFlammable(ent)
-	local class = ent:GetClass()
-	return FlammableProps[class] ~= nil
+	return FlammableProps[ent:GetClass()] ~= nil
 end
 
 -- FireSpread from SeriousRP

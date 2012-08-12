@@ -70,7 +70,7 @@ function SWEP:PrimaryAttack()
 
 	local phys = trace.Entity:GetPhysicsObject()
 	if not phys:IsValid() then return end
-	local mass = phys:GetMass()
+	local mass = trace.Entity.RPOriginalMass and trace.Entity.RPOriginalMass or phys:GetMass()
 
 	self.Owner:GetTable().Pocket = self.Owner:GetTable().Pocket or {}
 	if not trace.Entity:CPPICanPickup(self.Owner) or table.HasValue(self.Owner:GetTable().Pocket, trace.Entity) or trace.Entity.jailWall then

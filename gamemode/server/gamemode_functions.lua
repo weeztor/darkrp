@@ -129,6 +129,10 @@ function GM:PlayerSpawnedProp(ply, model, ent)
 	self.BaseClass:PlayerSpawnedProp(ply, model, ent)
 	ent.SID = ply.SID
 	ent.Owner = ply
+	local phys = ent:GetPhysicsObject()
+	if phys and phys:IsValid() then
+		ent.RPOriginalMass = phys:GetMass()
+	end
 
 	if GetConVarNumber("proppaying") == 1 then
 		if ply:CanAfford(GetConVarNumber("propcost")) then
