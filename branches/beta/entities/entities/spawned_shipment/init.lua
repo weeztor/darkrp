@@ -41,7 +41,7 @@ function ENT:OnTakeDamage(dmg)
 	end
 end
 
-function ENT:SetContents(s, c, w)
+function ENT:SetContents(s, c)
 	self.dt.contents = s
 	self.dt.count = c
 end
@@ -102,7 +102,6 @@ function ENT:Think()
 	end
 end
 
-
 function ENT:Destruct()
 	if self.Destructed then return end
 	self.Destructed = true
@@ -126,8 +125,21 @@ function ENT:Destruct()
 		weapon.weaponclass = class
 		weapon.ShareGravgun = true
 		weapon:SetPos(Vector(vPoint.x, vPoint.y, vPoint.z + (i*5)))
+		weapon.ammoadd = weapons.Get(class) and weapons.Get(class).Primary.DefaultClip
 		weapon.nodupe = true
 		weapon:Spawn()
 	end
 	self:Remove()
+end
+
+function ENT:Touch(ent)
+	if ent:GetClass() ~= "spawned_shipment" or
+		self.dt.contents ~= ent.dt.contents or
+		self.locked or ent.locked or
+		self.hasMerged or ent.hasMerged then return end
+
+	ent.hasMerged = true
+
+	self.dt.count = self.dt.count + ent.dt.count
+	ent:Remove()
 end
