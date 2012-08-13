@@ -88,6 +88,13 @@ function ENT:CreateMoneybag()
 end
 
 function ENT:Think()
+
+	if self:WaterLevel() > 0 then
+		self:Destruct()
+		self:Remove()
+		return
+	end
+
 	if not self.sparking then return end
 
 	local effectdata = EffectData()
