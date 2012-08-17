@@ -9,8 +9,18 @@ CUR = "$"
 /*---------------------------------------------------------------------------
 Fonts
 ---------------------------------------------------------------------------*/
-surface.CreateFont ("DejaVu Sans", 16, 600, true, true, "DarkRPHUD1")
-surface.CreateFont ("coolvetica", 21, 400, true, false, "DarkRPHUD2")
+surface.CreateFont ("DarkRPHUD1", {
+	size = 16,
+	weight = 600,
+	antialias = true,
+	shadow = true,
+	font = "DejaVu Sans"})
+surface.CreateFont ("DarkRPHUD2", {
+	size = 23,
+	weight = 400,
+	antialias = true,
+	shadow = false,
+	font = "coolvetica"})
 
 /*---------------------------------------------------------------------------
 Names
@@ -109,7 +119,12 @@ include("FPP/client/FPP_HUD.lua")
 include("FPP/client/FPP_Buddies.lua")
 include("FPP/sh_CPPI.lua")
 
-surface.CreateFont("akbar", 20, 500, true, false, "AckBarWriting")
+surface.CreateFont("AckBarWriting", {
+	size = 20,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "akbar"})
 
 -- Copy from FESP(made by FPtje Falco)
 -- This is no stealing since I made FESP myself.

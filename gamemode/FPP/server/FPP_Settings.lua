@@ -1,7 +1,5 @@
 FPP = FPP or {}
 
-
-
 FPP.Blocked = {}
 	FPP.Blocked.Physgun1 = {}
 	FPP.Blocked.Spawning1 = {}

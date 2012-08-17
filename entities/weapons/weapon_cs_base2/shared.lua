@@ -13,8 +13,18 @@ if CLIENT then
 	SWEP.CSMuzzleFlashes	= true
 
 	-- This is the font that's used to draw the death icons
-	surface.CreateFont("csd", ScreenScale(30), 500, true, true, "CSKillIcons")
-	surface.CreateFont("csd", ScreenScale(60), 500, true, true, "CSSelectIcons")
+	surface.CreateFont("CSKillIcons", {
+		size = ScreenScale(30),
+		weight = 500,
+		antialias = true,
+		shadow = true,
+		font = "csd"})
+	surface.CreateFont("CSSelectIcons", {
+		size = ScreenScale(60),
+		weight = 500,
+		antialias = true,
+		shadow = true,
+		font = "csd"})
 end
 
 SWEP.Base = "weapon_base"
