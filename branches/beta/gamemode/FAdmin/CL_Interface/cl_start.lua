@@ -1,7 +1,7 @@
 FAdmin.ScoreBoard = {}
 
 local ScreenWidth, ScreenHeight = ScrW(), ScrH()
-	
+
 FAdmin.ScoreBoard.X = ScreenWidth * 0.05
 FAdmin.ScoreBoard.Y = ScreenHeight * 0.025
 FAdmin.ScoreBoard.Width = ScreenWidth * 0.9
@@ -28,15 +28,75 @@ FAdmin.ScoreBoard.Help.Controls = {}
 FAdmin.ScoreBoard.Help.Logo = "FAdmin/back"
 
 -- These fonts used to exist in GMod 12 but were removed in 13.
-surface.CreateFont("Trebuchet MS",18,500,true,false,"Trebuchet18")
-surface.CreateFont("Trebuchet MS",19,500,true,false,"Trebuchet19")
-surface.CreateFont("Trebuchet MS",20,500,true,false,"Trebuchet20")
-surface.CreateFont("Trebuchet MS",22,500,true,false,"Trebuchet22")
-surface.CreateFont("Trebuchet MS",24,500,true,false,"Trebuchet24")
-surface.CreateFont("Trebuchet MS",17,700,true,false,"TabLarge",true)
-surface.CreateFont("Default",16,800,true,false,"UiBold")
-surface.CreateFont("coolvetica",32,500,true,false,"ScoreboardHeader")
-surface.CreateFont("coolvetica",22,500,true,false,"ScoreboardSubtitle")
-surface.CreateFont("coolvetica",19,500,true,false,"ScoreboardPlayerName")
-surface.CreateFont("coolvetica",15,500,true,false,"ScoreboardPlayerName2")
-surface.CreateFont("coolvetica",22,500,true,false,"ScoreboardPlayerNameBig")
+surface.CreateFont("Trebuchet18", {
+	size = 18,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "Trebuchet MS"})
+surface.CreateFont("Trebuchet19", {
+	size = 19,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "Trebuchet MS"})
+surface.CreateFont("Trebuchet20", {
+	size = 20,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "Trebuchet MS"})
+surface.CreateFont("Trebuchet22", {
+	size = 22,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "Trebuchet MS"})
+surface.CreateFont("Trebuchet24", {
+	size = 24,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "Trebuchet MS"})
+surface.CreateFont("TabLarge", {
+	size = 17,
+	weight = 700,
+	antialias = true,
+	shadow = false,
+	font = "Trebuchet MS"})
+surface.CreateFont("UiBold", {
+	size = 16,
+	weight = 800,
+	antialias = true,
+	shadow = false,
+	font = "Default"})
+surface.CreateFont("ScoreboardHeader", {
+	size = 32,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "coolvetica"})
+surface.CreateFont("ScoreboardSubtitle", {
+	size = 22,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "coolvetica"})
+surface.CreateFont("ScoreboardPlayerName", {
+	size = 19,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "coolvetica"})
+surface.CreateFont("ScoreboardPlayerName2", {
+	size = 15,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "coolvetica"})
+surface.CreateFont("ScoreboardPlayerNameBig", {
+	size = 22,
+	weight = 500,
+	antialias = true,
+	shadow = false,
+	font = "coolvetica"})
