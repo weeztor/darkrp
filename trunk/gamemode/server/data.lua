@@ -665,7 +665,7 @@ function DB.StoreRPName(ply, name)
 	DB.Query([[REPLACE INTO darkrp_player VALUES(]] ..
 		ply:UniqueID() .. [[, ]] ..
 		sql.SQLStr(name) .. [[, ]] ..
-		ply.DarkRPVars.salary .. [[, ]] ..
+		GetConVarNumber("normalsalary") .. [[, ]] ..
 		ply.DarkRPVars.money .. [[);]])
 end
 
@@ -687,7 +687,7 @@ function DB.StoreMoney(ply, amount)
 	DB.Query([[REPLACE INTO darkrp_player VALUES(]] ..
 		ply:UniqueID() .. [[, ]] ..
 		(ply.DarkRPVars.rpname and sql.SQLStr(ply.DarkRPVars.rpname) or "NULL") .. [[, ]] ..
-		ply.DarkRPVars.salary .. [[, ]] ..
+		GetConVarNumber("normalsalary") .. [[, ]] ..
 		amount .. [[);]])
 end
 
