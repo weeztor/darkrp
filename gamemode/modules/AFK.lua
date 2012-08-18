@@ -77,7 +77,7 @@ local function SetAFK(ply)
 		hook.Remove("PlayerDeath", ply:EntIndex().."DRPNPCDeath")
 	end
 	ply:SetDarkRPVar("job", ply.DarkRPVars.AFK and "AFK" or ply.OldJob)
-	DB.StoreSalary(ply, ply.DarkRPVars.AFK and 0 or ply.OldSalary or 0)
+	ply.DarkRPVars.salary = ply.DarkRPVars.AFK and 0 or ply.OldSalary or 0
 end
 
 local function StartAFKOnPlayer(ply)

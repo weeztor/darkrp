@@ -283,21 +283,25 @@ end
 The Entity display: draw HUD information about entities
 ---------------------------------------------------------------------------*/
 local function DrawEntityDisplay()
+	local shootPos = LocalPlayer():GetShootPos()
+	local aimVec = LocalPlayer():GetAimVector()
+
 	for k, ply in pairs(player.GetAll()) do
 		if not ply:Alive() then continue end
+		local hisPos = ply:GetShootPos()
 
 		ply.DarkRPVars = ply.DarkRPVars or {}
 		if ply.DarkRPVars.wanted then DrawWantedInfo(ply) end
 
-		if GetConVarNumber("globalshow") == 1 and ply ~= LocalPlayer() then DrawPlayerInfo(ply) end
+		if GetConVarNumber("globalshow") == 1 and ply ~= LocalPlayer() then
+			DrawPlayerInfo(ply)
+		elseif not tobool(GetConVarNumber("globalshow")) and hisPos:Distance(shootPos) < 400 then
+			local pos = (hisPos - shootPos):GetNormalized()
+			if pos:Dot(aimVec) > 0.95 then DrawPlayerInfo(ply) end
+		end
 	end
 
 	local tr = LocalPlayer():GetEyeTrace()
-	if tr.Entity and tr.Entity.IsValid and ValidEntity(tr.Entity) and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 400 then
-		if tr.Entity:IsPlayer() and not tobool(GetConVarNumber("globalshow")) then
-			DrawPlayerInfo(tr.Entity)
-		end
-	end
 
 	if tr.Entity:IsOwnable() and tr.Entity:GetPos():Distance(LocalPlayer():GetPos()) < 200 then
 		tr.Entity:DrawOwnableInfo()
