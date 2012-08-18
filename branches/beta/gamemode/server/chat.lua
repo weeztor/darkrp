@@ -51,7 +51,7 @@ end
 
 local otherhooks = {}
 function GM:PlayerSay(ply, text, teamonly, dead) -- We will make the old hooks run AFTER DarkRP's playersay has been run.
-	local text2 = (teamonly and "" or "/g ") .. text
+	local text2 = (not teamonly and "" or "/g ") .. text
 	local callback
 
 	for k,v in SortedPairs(otherhooks, false) do
