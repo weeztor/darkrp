@@ -239,8 +239,9 @@ Entity HUDPaint things
 local function DrawPlayerInfo(ply)
 	local pos = ply:EyePos()
 
-	pos.z = pos.z + 34
+	pos.z = pos.z + 10 -- The position we want is a bit above the position of the eyes
 	pos = pos:ToScreen()
+	pos.y = pos.y - 50 -- Move the text up a few pixels to compensate for the height of the text
 
 	if GetConVarNumber("nametag") == 1 then
 		draw.DrawText(ply:Nick(), "TargetID", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
@@ -295,6 +296,7 @@ local function DrawEntityDisplay()
 
 		if GetConVarNumber("globalshow") == 1 and ply ~= LocalPlayer() then
 			DrawPlayerInfo(ply)
+		-- Draw when you're (almost) looking at him
 		elseif not tobool(GetConVarNumber("globalshow")) and hisPos:Distance(shootPos) < 400 then
 			local pos = (hisPos - shootPos):GetNormalized()
 			if pos:Dot(aimVec) > 0.95 then DrawPlayerInfo(ply) end
