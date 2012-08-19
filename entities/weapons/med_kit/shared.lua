@@ -115,19 +115,30 @@ end
 
 function SWEP:PrimaryAttack()
 	self.Weapon:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-	trace = {}
-	trace.start = self.Owner:GetShootPos()
-	trace.endpos = trace.start + (self.Owner:GetAimVector() * 85)
-	trace.filter = { self.Owner, self.Weapon }
-	tr = util.TraceLine(trace)
 
-	if (tr.HitNonWorld) and SERVER then
-		local enthit = tr.Entity
-		local maxhealth = enthit.StartHealth or 100
-		if enthit:IsPlayer() and enthit:Health() < maxhealth then
-			enthit:SetHealth(enthit:Health() + 1)
-			self.Owner:EmitSound("hl1/fvox/boop.wav", 150, enthit:Health())
+	local found
+	local lastDot = -1 -- the opposite of what you're looking at
+	local aimVec = self.Owner:GetAimVector()
+
+	for k,v in pairs(player.GetAll()) do
+		local maxhealth = v.StartHealth or 100
+		if v == self.Owner or v:GetShootPos():Distance(self.Owner:GetShootPos()) > 85 or v:Health() >= maxhealth then continue end
+
+		local direction = v:GetShootPos() - self.Owner:GetShootPos()
+		direction:Normalize()
+		local dot = direction:Dot(aimVec)
+
+		-- Looking more in the direction of this player
+		if dot > lastDot then
+			print(dot)
+			lastDot = dot
+			found = v
 		end
+	end
+
+	if found then
+		found:SetHealth(found:Health() + 1)
+		self.Owner:EmitSound("hl1/fvox/boop.wav", 150, found:Health())
 	end
 end
 
