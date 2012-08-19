@@ -130,7 +130,6 @@ function SWEP:PrimaryAttack()
 
 		-- Looking more in the direction of this player
 		if dot > lastDot then
-			print(dot)
 			lastDot = dot
 			found = v
 		end
