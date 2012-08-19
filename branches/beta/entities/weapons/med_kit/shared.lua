@@ -35,8 +35,8 @@ function SWEP:createViewModels()
 	local viewmodel = self:GetOwner():GetViewModel()
 
 	self.viewModels = {}
-	self.viewModels[1] = self.viewModels[1] or ents.Create("prop_physics")
-	self.viewModels[2] = self.viewModels[2] or ents.Create("prop_physics")
+	self.viewModels[1] = self.viewModels[1] or ents.CreateClientProp()
+	self.viewModels[2] = self.viewModels[2] or ents.CreateClientProp()
 
 	self.viewModels[1]:SetAngles(viewmodel:GetAngles())
 	self.viewModels[2]:SetAngles(viewmodel:GetAngles())
@@ -57,9 +57,9 @@ function SWEP:createViewModels()
 	end)
 
 	for k,v in pairs(self.viewModels) do
-
+		v:SetRenderMode()
 		v:SetModel("models/Mechanics/roboticslarge/a2.mdl")
-		v:SetColor(255,0,0,255)
+		v:SetColor(Color(255,0,0,255))
 		v:SetMaterial("models/debug/debugwhite")
 
 		v:SetModelScale(Vector(0.1,0.1,0.1))
