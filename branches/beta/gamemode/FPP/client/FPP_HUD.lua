@@ -150,22 +150,22 @@ local function HUDPaint()
 		local w,h = surface.GetTextSize(Why)
 		local col = Color(255,0,0,255)
 		if CanTouchLookingAt then col = Color(0,255,0,255) end
-		if comingAroundAgain < (w + 28) then
-			comingAroundAgain = math.Min(comingAroundAgain + (FrameTime()*600), w + 28)
+		if comingAroundAgain < w then
+			comingAroundAgain = math.Min(comingAroundAgain + (RealFrameTime()*600), w)
 		end
 
-		draw.RoundedBox(4, comingAroundAgain - (w + 28), ScrH()/2 - h, w + 28, 16, Color(50,50,50,100))
-		draw.DrawText(Why, "Default", 24 - (w+28) + comingAroundAgain, ScrH()/2 - h, col, 0)
+		draw.RoundedBox(4, comingAroundAgain - w, ScrH()/2 - h - 2, w + 10, 20, Color(0, 0, 0, 110))
+		draw.DrawText(Why, "Default", 5 - w + comingAroundAgain, ScrH()/2 - h, col, 0)
 		surface.SetDrawColor(255,255,255,255)
 	elseif CanTouchLookingAt ~= nil then
 		if comingAroundAgain > 0 then
-			comingAroundAgain = math.Max(comingAroundAgain - (FrameTime()*600), 0)
+			comingAroundAgain = math.Max(comingAroundAgain - (RealFrameTime()*600), 0)
 			surface.SetFont("Default")
 			local w,h = surface.GetTextSize(Why)
-			local col = Color(255,0,0,255)
+			local col = CanTouchLookingAt and Color(0,255,0,255) or Color(255,0,0,255)
 
-			draw.RoundedBox(4, comingAroundAgain - (w + 28), ScrH()/2 - h, w + 28, 16, Color(50,50,50,100))
-			draw.DrawText(Why, "Default", 24 - (w+28) + comingAroundAgain, ScrH()/2 - h, col, 0)
+			draw.RoundedBox(4, comingAroundAgain - w, ScrH()/2 - h - 2, w + 10, 20, Color(0, 0, 0, 110))
+			draw.DrawText(Why, "Default", 5 - w + comingAroundAgain, ScrH()/2 - h, col, 0)
 			surface.SetDrawColor(255,255,255,255)
 		else
 			comingAroundAgain = 0
@@ -180,7 +180,7 @@ local function HUDPaint()
 		local w,h = surface.GetTextSize(CantTouchOwner)
 		local col = cantouch and Color(0,255,0,255) or Color(255,0,0,255)
 
-		draw.WordBox(4, ScrW()/2 - 0.51*w, ScrH()/2 + h, CantTouchOwner, "Default", Color(50,50,50,100), col)
+		draw.WordBox(4, ScrW()/2 - 0.51*w, ScrH()/2 + h, CantTouchOwner, "Default", Color(0, 0, 0, 110), col)
 	end
 
 	if not HUDNotes then return end
