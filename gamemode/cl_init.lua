@@ -419,12 +419,9 @@ function GM:ChatTextChanged(text)
 end
 
 function GM:PlayerStartVoice(ply)
-	if ply == LocalPlayer() and LocalPlayer().DarkRPVars and ValidEntity(LocalPlayer().DarkRPVars.phone) then
-		return
-	end
 	isSpeaking = true
 	LocalPlayer().DarkRPVars = LocalPlayer().DarkRPVars or {}
-	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 and not ValidEntity(LocalPlayer().DarkRPVars.phone) then
+	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 then
 		HearMode = "speak"
 		RPSelectwhohearit()
 	end
@@ -437,17 +434,6 @@ function GM:PlayerStartVoice(ply)
 end
 
 function GM:PlayerEndVoice(ply) //voice/icntlk_pl.vtf
-	if LocalPlayer().DarkRPVars and ValidEntity(LocalPlayer().DarkRPVars.phone) then
-		ply.DRPIsTalking = false
-		timer.Simple(0.2, function()
-			if ValidEntity(LocalPlayer().DarkRPVars.phone) then
-				LocalPlayer():ConCommand("+voicerecord")
-			end
-		end)
-		self.BaseClass:PlayerEndVoice(ply)
-		return
-	end
-
 	isSpeaking = false
 
 	if ply == LocalPlayer() and GetConVarNumber("sv_alltalk") == 0 and GetConVarNumber("voiceradius") == 1 then

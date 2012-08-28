@@ -921,57 +921,6 @@ local function BuyHealth(ply)
 end
 AddChatCommand("/buyhealth", BuyHealth)
 
-local function MakeACall(ply,args)
-	local p = GAMEMODE:FindPlayer(args)
-	if not ValidEntity(p) then return "" end
-	if ValidEntity(ply.DarkRPVars.phone) or ValidEntity(p.DarkRPVars.phone) then
-		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.unable, "/call", "busy"))
-		return ""
-	end
-	if not p:Alive() or p == ply or not ply:Alive() then return "" end
-	local trace = {}
-	trace.start = p:EyePos()
-	trace.endpos = trace.start + p:GetAimVector() * 85
-	trace.filter = p
-	local tr = util.TraceLine(trace)
-
-	local banana = ents.Create("phone")
-
-	banana.dt.owning_ent = p
-	banana.ShareGravgun = true
-	banana.Caller = ply
-
-	banana:SetPos(tr.HitPos)
-	banana.onlyremover = true
-	banana.SID = p.SID
-	banana:Spawn()
-
-
-	local ownphone = ents.Create("phone")
-
-	ownphone.dt.owning_ent = ply
-	ownphone.ShareGravgun = true
-	ownphone.dt.IsBeingHeld = true
-	ply:SetDarkRPVar("phone", ownphone)
-
-	ownphone:SetPos(ply:GetShootPos())
-	ownphone.onlyremover = true
-	ownphone.SID = ply.SID
-	ownphone:Spawn()
-	ownphone:Use(ply,ply)--Put it on the ear already, since you're the one who's calling...
-	timer.Simple(20, function()
-		ply.DarkRPVars = ply.DarkRPVars or {}
-		local MyPhone = ply.DarkRPVars.phone
-		local WhoPickedItUp = MyPhone.Caller
-		if ValidEntity(MyPhone) and ValidEntity(banana) and not ValidEntity(WhoPickedItUp) then -- if noone picked up the phone then hang up :)
-			MyPhone:Remove()
-			banana:Remove()
-		end
-	end)
-	return ""
-end
-AddChatCommand("/call", MakeACall)
-
 /*---------------------------------------------------------
  Jobs
  ---------------------------------------------------------*/

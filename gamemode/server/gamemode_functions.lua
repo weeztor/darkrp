@@ -203,11 +203,6 @@ end
 
 function GM:KeyPress(ply, code)
 	self.BaseClass:KeyPress(ply, code)
-
-	-- Hanging up from a call
-	if code == IN_USE and ValidEntity(ply.DarkRPVars.phone) then
-		ply.DarkRPVars.phone:HangUp()
-	end
 end
 
 local function IsInRoom(listener, talker) -- IsInRoom function to see if the player is in the same room.
@@ -223,12 +218,6 @@ local threed = GetConVar( "3dvoice" )
 local vrad = GetConVar( "voiceradius" )
 local dynv = GetConVar( "dynamicvoice" )
 function GM:PlayerCanHearPlayersVoice(listener, talker, other)
-	if listener.DarkRPVars and talker.DarkRPVars and ValidEntity(listener.DarkRPVars.phone) and ValidEntity(talker.DarkRPVars.phone) and listener == talker.DarkRPVars.phone.Caller then
-		return true, threed:GetBool()
-	elseif talker.DarkRPVars and ValidEntity(talker.DarkRPVars.phone) then
-		return false, threed:GetBool()
-	end
-
 	if vrad:GetBool() and listener:GetShootPos():Distance(talker:GetShootPos()) < 550 then
 		if dynv:GetBool() then
 			if IsInRoom( listener, talker ) then
@@ -368,7 +357,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if GetConVarNumber("dmautokick") == 1 and killer and killer:IsPlayer() and killer ~= ply then
 		if not killer.kills or killer.kills == 0 then
 			killer.kills = 1
-			timer.Simple(GetConVarNumber("dmgracetime"), function() killer.ResetDMCounter(killer) end)
+			timer.Simple(GetConVarNumber("dmgracetime"), function() if ValidEntity(killer) and killer:IsPlayer() then killer:ResetDMCounter(killer) end end)
 		else
 			-- If this player is going over their limit, kick their ass
 			if killer.kills + 1 > GetConVarNumber("dmmaxkills") then
@@ -735,7 +724,7 @@ function GM:PlayerDisconnected(ply)
 	timer.Destroy(ply:SteamID() .. "jobtimer")
 	timer.Destroy(ply:SteamID() .. "propertytax")
 
-	for k, v in pairs( ents.GetAll() ) do
+	for k, v in pairs(ents.GetAll()) do
 		local class = v:GetClass()
 		for _, customEnt in pairs(DarkRPEntities) do
 			if class == customEnt.ent and v.SID == ply.SID then
