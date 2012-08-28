@@ -877,8 +877,9 @@ local function retrieveblocked(um)
 end
 usermessage.Hook("FPP_blockedlist", retrieveblocked)
 
+local BuddiesPanel
 function FPP.BuddiesMenu(Panel)
-	local BuddiesPanel = Panel
+	BuddiesPanel = Panel
 	Panel:ClearControls()
 	BuddiesPanel:Clear()
 
