@@ -827,6 +827,9 @@ function GM:InitPostEntity()
 		DB.Init()
 	end)
 
+	-- Scriptenforcer enabled by default? Fuck you, not gonna happen.
+	game.ConsoleCommand("sv_allowcslua 1\n")
+
 	for k, v in pairs( ents.GetAll() ) do
 		local class = v:GetClass()
 		if GetConVarNumber("unlockdoorsonstart") == 1 and v:IsDoor() then

@@ -229,7 +229,7 @@ if CLIENT then
 				local icon = vgui.Create("SpawnIcon", frame)
 				icon:SetPos((k-1) * 64, 25)
 				icon:SetModel(v:GetModel())
-				icon:SetIconSize(64)
+				icon:SetSize(64, 64)
 				icon:SetToolTip()
 				icon.DoClick = function()
 					icon:SetToolTip()
