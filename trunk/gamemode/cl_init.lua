@@ -13,7 +13,7 @@ local pmeta = FindMetaTable("Player")
 
 pmeta.SteamName = pmeta.Name
 function pmeta:Name()
-	if not self or not self.IsValid or not ValidEntity(self) then return "" end
+	if not ValidEntity(self) then return "" end
 
 	self.DarkRPVars = self.DarkRPVars or {}
 	if GetConVarNumber("allowrpnames") == 0 then
