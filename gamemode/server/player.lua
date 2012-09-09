@@ -205,7 +205,8 @@ function meta:NewData()
 
 	timer.Simple(.01, ModuleDelay, self)
 
-	self:RestorePlayerData()
+	-- Restoring data delayed the player handle will not be valid on the player otherwise
+	timer.Simple(2, function() fprint("RESTORING DATA") self:RestorePlayerData() end)
 
 	self:InitiateTax()
 
