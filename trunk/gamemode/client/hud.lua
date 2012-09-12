@@ -44,6 +44,7 @@ end
 ReloadConVars()
 
 local function formatNumber(n)
+	n = tonumber(n)
 	if (!n) then
 		return 0
 	end
