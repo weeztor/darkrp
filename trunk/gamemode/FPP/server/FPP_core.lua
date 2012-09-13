@@ -834,3 +834,9 @@ local function PreventNoclip(vehicle,ply)
 	ply:ExitVehicle()
 end
 hook.Add("CanExitVehicle", "PreventVehicleNoclip", PreventNoclip)
+
+hook.Add("EntityRemoved","jeepWorkaround",function(ent)
+    if ValidEntity(ent) and ent:IsVehicle() and ValidEntity(ent:GetPassenger()) then
+        ent:GetPassenger():ExitVehicle()
+    end
+end)
