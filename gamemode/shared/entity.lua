@@ -313,6 +313,39 @@ local function SetDoorOwnable(ply)
 end
 AddChatCommand("/toggleownable", SetDoorOwnable)
 
+local time3 = false
+local function SetDoorGroupOwnable(ply, arg)
+	if time3 then return "" end
+	time3 = true
+	timer.Simple(0.1, function() time3 = false end)
+
+	local trace = ply:GetEyeTrace()
+	if not ValidEntity(trace.Entity) then return "" end
+
+	local ent = trace.Entity
+	if not ply:IsSuperAdmin() or (not ent:IsDoor() and not ent:IsVehicle()) or ply:GetPos():Distance(ent:GetPos()) > 115 then return end
+
+	if not RPExtraTeamDoors[arg] and arg ~= "" then Notify(ply, 1, 10, "Door group does not exist!") return "" end
+
+	trace.Entity:UnOwn()
+
+
+	ent.DoorData = ent.DoorData or {}
+	ent.DoorData.TeamOwn = nil
+	ent.DoorData.GroupOwn = arg
+
+	if arg == "" then ent.DoorData.GroupOwn = nil ent.DoorData.TeamOwn = nil end
+
+	-- Save it for future map loads
+	DB.SetDoorGroup(ent, arg)
+
+	ply.LookingAtDoor = nil
+
+	GAMEMODE:Notify(ply, 0, 8, "Door group set successfully")
+	return ""
+end
+AddChatCommand("/togglegroupownable", SetDoorGroupOwnable)
+
 local time4 = false
 local function SetDoorTeamOwnable(ply, arg)
 	if time4 then return "" end
