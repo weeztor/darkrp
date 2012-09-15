@@ -835,6 +835,11 @@ function DB.SetDoorGroup(ent, group)
 	local map = sql.SQLStr(string.lower(game.GetMap()))
 	local index = ent:DoorIndex()
 
+	if group == "" then
+		DB.Query("DELETE FROM darkrp_doorgroups WHERE map = " .. map .. " AND idx = " .. index .. ";")
+		return
+	end
+
 	DB.Query("REPLACE INTO darkrp_doorgroups VALUES(" .. index .. ", " .. map .. ", " .. sql.SQLStr(group) .. ");");
 end
 
