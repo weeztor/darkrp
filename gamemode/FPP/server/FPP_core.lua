@@ -10,6 +10,9 @@ local function isBlocked(model)
 		not tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.toggle)
 		or not FPP.BlockedModels or not model then return end
 
+	model = string.lower(model or "")
+	model = string.Replace(model, "\\", "")
+
 	local found = FPP.BlockedModels[model]
 	if tobool(FPP.Settings.FPP_BLOCKMODELSETTINGS1.iswhitelist) and not found then
 		-- Prop is not in the white list
@@ -42,9 +45,6 @@ if cleanup then
 			--Set the owner of the entity
 			ent.Owner = ply
 			ent.OwnerID = ply:SteamID()
-
-			local model = string.lower(ent:GetModel() or "")
-			model = string.Replace(model, "\\", "/")
 
 			local blocked, msg = isBlocked(model)
 			if blocked then
