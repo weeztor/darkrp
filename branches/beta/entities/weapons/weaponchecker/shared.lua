@@ -69,7 +69,7 @@ function SWEP:PrimaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
+	if not IsValid(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
 		return
 	end
 
@@ -103,7 +103,7 @@ function SWEP:SecondaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
+	if not IsValid(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
 		return
 	end
 
@@ -119,7 +119,7 @@ function SWEP:SecondaryAttack()
 		self.EndCheck = CurTime() + self.WeaponCheckTime
 
 		timer.Create("WeaponCheckSounds", 0.5, self.WeaponCheckTime * 2, function()
-			if not ValidEntity(self) then return end
+			if not IsValid(self) then return end
 			self:EmitSound("npc/combine_soldier/gear5.wav", 100, 100)
 		end)
 	end
@@ -132,7 +132,7 @@ function SWEP:Reload()
 	timer.Simple(1, function() self.Weapon.OnceReload = true end)
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
+	if not IsValid(trace.Entity) or not trace.Entity:IsPlayer() or trace.Entity:GetPos():Distance(self.Owner:GetPos()) > 100 then
 		return
 	end
 
@@ -163,14 +163,14 @@ function SWEP:Holster()
 end
 
 function SWEP:Succeed()
-	if not ValidEntity(self.Owner) then return end
+	if not IsValid(self.Owner) then return end
 	self.IsWeaponChecking = false
 
 	if CLIENT then return end
 	local result = ""
 	local stripped = {}
 	local trace = self.Owner:GetEyeTrace()
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() then return end
+	if not IsValid(trace.Entity) or not trace.Entity:IsPlayer() then return end
 	for k,v in pairs(trace.Entity:GetWeapons()) do
 		if not table.HasValue(NoStripWeapons, string.lower(v:GetClass())) then
 			trace.Entity:StripWeapon(v:GetClass())
@@ -230,7 +230,7 @@ end
 function SWEP:Think()
 	if self.IsWeaponChecking then
 		local trace = self.Owner:GetEyeTrace()
-		if not ValidEntity(trace.Entity) then
+		if not IsValid(trace.Entity) then
 			self:Fail()
 		end
 		if trace.HitPos:Distance(self.Owner:GetShootPos()) > 100 or not trace.Entity:IsPlayer() then

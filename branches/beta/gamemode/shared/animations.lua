@@ -35,7 +35,7 @@ hook.Add("CalcMainActivity", "darkrp_animations", function(ply, velocity) -- Usi
 
 	-- Hobo throwing poop!
 	local Weapon = ply:GetActiveWeapon()
-	if ply:Team() == TEAM_HOBO and not ply.ThrewPoop and ValidEntity(Weapon) and Weapon:GetClass() == "weapon_bugbait" and ply:KeyDown(IN_ATTACK) then
+	if ply:Team() == TEAM_HOBO and not ply.ThrewPoop and IsValid(Weapon) and Weapon:GetClass() == "weapon_bugbait" and ply:KeyDown(IN_ATTACK) then
 		ply.ThrewPoop = true
 		ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_ITEM_THROW, true)
 
@@ -51,9 +51,9 @@ hook.Add("CalcMainActivity", "darkrp_animations", function(ply, velocity) -- Usi
 	end
 
 	-- Saying hi/hello to a player
-	if not ply.SaidHi and ValidEntity(Weapon) and Weapon:GetClass() == "weapon_physgun" and ply:KeyDown(IN_ATTACK) then
+	if not ply.SaidHi and IsValid(Weapon) and Weapon:GetClass() == "weapon_physgun" and ply:KeyDown(IN_ATTACK) then
 		local ent = ply:GetEyeTrace().Entity
-		if ValidEntity(ent) and ent:IsPlayer() then
+		if IsValid(ent) and ent:IsPlayer() then
 			ply.SaidHi = true
 			ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_SIGNAL_GROUP, true)
 
@@ -86,7 +86,7 @@ end
 
 local function DropItem(um)
 	local ply = um:ReadEntity()
-	if not ValidEntity(ply) then return end
+	if not IsValid(ply) then return end
 
 	ply.anim_DroppingItem = true
 end
@@ -94,7 +94,7 @@ usermessage.Hook("anim_dropitem", DropItem)
 
 local function GiveItem(um)
 	local ply = um:ReadEntity()
-	if not ValidEntity(ply) then return end
+	if not IsValid(ply) then return end
 
 	ply.anim_GivingItem = true
 end
@@ -102,7 +102,7 @@ usermessage.Hook("anim_giveitem", GiveItem)
 
 local function ThrowPoop(um)
 	local ply = um:ReadEntity()
-	if not ValidEntity(ply) then return end
+	if not IsValid(ply) then return end
 
 	ply.ThrewPoop = true
 end
@@ -110,7 +110,7 @@ usermessage.Hook("anim_throwpoop", ThrowPoop)
 
 local function PhysgunHi(um)
 	local ply = um:ReadEntity()
-	if not ValidEntity(ply) then return end
+	if not IsValid(ply) then return end
 
 	ply.SaidHi = true
 end
@@ -118,7 +118,7 @@ usermessage.Hook("anim_sayhi", PhysgunHi)
 
 local function KeysAnims(um)
 	local ply = um:ReadEntity()
-	if not ValidEntity(ply) then return end
+	if not IsValid(ply) then return end
 	local Type = um:ReadString()
 	ply[Type] = true
 end

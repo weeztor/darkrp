@@ -76,7 +76,7 @@ Wire field generator exploit
 ---------------------------------------------------------------------------*/
 hook.Add("OnEntityCreated", "DRP_WireFieldGenerator", function(ent)
 	timer.Simple(0, function()
-		if ValidEntity(ent) and ent:GetClass() == "gmod_wire_field_device" then
+		if IsValid(ent) and ent:GetClass() == "gmod_wire_field_device" then
 			local TriggerInput = ent.TriggerInput
 			function ent:TriggerInput(iname, value)
 				if value ~= nil and iname == "Distance" then
@@ -107,7 +107,7 @@ end)
 Anti crash exploit
 ---------------------------------------------------------------------------*/
 hook.Add("PropBreak", "drp_AntiExploit", function(attacker, ent)
-	if ValidEntity(ent) then
+	if IsValid(ent) then
 		constraint.RemoveAll(ent)
 	end
 end)

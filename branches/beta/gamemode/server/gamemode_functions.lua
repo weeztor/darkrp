@@ -154,14 +154,14 @@ function GM:EntityRemoved(ent)
 	self.BaseClass:EntityRemoved(ent)
 	if ent:IsVehicle() then
 		local found = ent.Owner
-		if ValidEntity(found) then
+		if IsValid(found) then
 			found.Vehicles = found.Vehicles or 1
 			found.Vehicles = found.Vehicles - 1
 		end
 	end
 
 	for k,v in pairs(DarkRPEntities or {}) do
-		if ent:IsValid() and ent:GetClass() == v.ent and ent.dt and ValidEntity(ent.dt.owning_ent) and not ent.IsRemoved then
+		if ent:IsValid() and ent:GetClass() == v.ent and ent.dt and IsValid(ent.dt.owning_ent) and not ent.IsRemoved then
 			local ply = ent.dt.owning_ent
 			local cmdname = string.gsub(v.ent, " ", "_")
 			if not ply["max"..cmdname] then
@@ -194,7 +194,7 @@ function GM:OnNPCKilled(victim, ent, weapon)
 		end
 
 		-- If we know by now who killed the NPC, pay them.
-		if ValidEntity(ent) and GetConVarNumber("npckillpay") > 0 then
+		if IsValid(ent) and GetConVarNumber("npckillpay") > 0 then
 			ent:AddMoney(GetConVarNumber("npckillpay"))
 			GAMEMODE:Notify(ent, 0, 4, string.format(LANGUAGE.npc_killpay, CUR .. GetConVarNumber("npckillpay")))
 		end
@@ -236,7 +236,7 @@ end
 function GM:CanTool(ply, trace, mode)
 	if not self.BaseClass:CanTool(ply, trace, mode) then return false end
 
-	if ValidEntity(trace.Entity) then
+	if IsValid(trace.Entity) then
 		if trace.Entity.onlyremover then
 			if mode == "remover" then
 				return (ply:IsAdmin() or ply:IsSuperAdmin())
@@ -287,7 +287,7 @@ function GM:CanProperty(ply, property, ent)
 end
 
 function GM:DoPlayerDeath(ply, attacker, dmginfo, ...)
-	if tobool(GetConVarNumber("dropweapondeath")) and ValidEntity(ply:GetActiveWeapon()) then
+	if tobool(GetConVarNumber("dropweapondeath")) and IsValid(ply:GetActiveWeapon()) then
 		ply:DropDRPWeapon(ply:GetActiveWeapon())
 	end
 	self.BaseClass:DoPlayerDeath(ply, attacker, dmginfo, ...)
@@ -315,7 +315,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if KillerName == "prop_physics" then
 		KillerName = killer.Owner and killer.Owner:Nick() or "unknown"
 	end
-	local WeaponName = (ValidEntity(weapon) and (weapon:IsPlayer() and ValidEntity(weapon:GetActiveWeapon()) and weapon:GetActiveWeapon():GetClass()) or weapon:GetClass()) or "unknown"
+	local WeaponName = (IsValid(weapon) and (weapon:IsPlayer() and IsValid(weapon:GetActiveWeapon()) and weapon:GetActiveWeapon():GetClass()) or weapon:GetClass()) or "unknown"
 	if WeaponName == "prop_physics" then
 		WeaponName = weapon:GetClass() .. " (" .. weapon:GetModel() or "unknown" .. ")"
 	end
@@ -357,7 +357,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if GetConVarNumber("dmautokick") == 1 and killer and killer:IsPlayer() and killer ~= ply then
 		if not killer.kills or killer.kills == 0 then
 			killer.kills = 1
-			timer.Simple(GetConVarNumber("dmgracetime"), function() if ValidEntity(killer) and killer:IsPlayer() then killer:ResetDMCounter(killer) end end)
+			timer.Simple(GetConVarNumber("dmgracetime"), function() if IsValid(killer) and killer:IsPlayer() then killer:ResetDMCounter(killer) end end)
 		else
 			-- If this player is going over their limit, kick their ass
 			if killer.kills + 1 > GetConVarNumber("dmmaxkills") then
@@ -369,7 +369,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 		end
 	end
 
-	if ValidEntity(ply) and (ply ~= killer or ply.Slayed) and not ply:isArrested() then
+	if IsValid(ply) and (ply ~= killer or ply.Slayed) and not ply:isArrested() then
 		ply:SetDarkRPVar("wanted", false)
 		ply.DeathPos = nil
 		ply.Slayed = false
@@ -379,7 +379,7 @@ function GM:PlayerDeath(ply, weapon, killer)
 	if tobool(GetConVarNumber("droppocketdeath")) then
 		if ply.Pocket then
 			for k, v in pairs(ply.Pocket) do
-				if ValidEntity(v) then
+				if IsValid(v) then
 					v:SetMoveType(MOVETYPE_VPHYSICS)
 					v:SetNoDraw(false)
 					v:SetCollisionGroup(4)
@@ -411,7 +411,7 @@ function GM:PlayerCanPickupWeapon(ply, weapon)
 end
 
 local function removelicense(ply)
-	if not ValidEntity(ply) then return end
+	if not IsValid(ply) then return end
 	ply:GetTable().RPLicenseSpawn = false
 end
 
@@ -468,7 +468,7 @@ function GM:PlayerInitialSpawn(ply)
 	end
 
 	for k,v in pairs(ents.GetAll()) do
-		if ValidEntity(v) and v.deleteSteamID == ply:SteamID() then
+		if IsValid(v) and v.deleteSteamID == ply:SteamID() then
 			v.SID = ply.SID
 			v.dt.owning_ent = ply
 			v.deleteSteamID = nil
@@ -482,7 +482,7 @@ end
 
 local meta = FindMetaTable("Player")
 function meta:SetDarkRPVar(var, value, target)
-	if not ValidEntity(self) then return end
+	if not IsValid(self) then return end
 	target = target or RecipientFilter():AddAllPlayers()
 
 	hook.Call("DarkRPVarChanged", nil, self, var, (self.DarkRPVars and self.DarkRPVars[var]) or nil, value)
@@ -613,7 +613,7 @@ function GM:PlayerSpawn(ply)
 		ply:SetColor(c.r, c.g, c.b, 100)
 		ply:SetCollisionGroup(COLLISION_GROUP_WORLD)
 		timer.Create(ply:EntIndex() .. "babygod", GetConVarNumber("babygodtime"), 1, function()
-			if not ValidEntity(ply) or not ply.Babygod then return end
+			if not IsValid(ply) or not ply.Babygod then return end
 			ply.Babygod = nil
 			ply:SetColor(c.r, c.g, c.b, c.a)
 			ply:GodDisable()
@@ -632,7 +632,7 @@ function GM:PlayerSpawn(ply)
 	end
 
 	ply:Extinguish()
-	if ply:GetActiveWeapon() and ValidEntity(ply:GetActiveWeapon()) then
+	if ply:GetActiveWeapon() and IsValid(ply:GetActiveWeapon()) then
 		ply:GetActiveWeapon():Extinguish()
 	end
 
@@ -708,7 +708,7 @@ local function removeDelayed(ent, ply)
 	ent.deleteSteamID = ply:SteamID()
 	timer.Create("Remove"..ent:EntIndex(), removedelay, 1, function()
 		for _, pl in pairs(player.GetAll()) do
-			if ValidEntity(pl) and ValidEntity(ent) and pl:SteamID() == ent.deleteSteamID then
+			if IsValid(pl) and IsValid(ent) and pl:SteamID() == ent.deleteSteamID then
 				ent.SID = pl.SID
 				ent.deleteSteamID = nil
 				return
@@ -739,7 +739,7 @@ function GM:PlayerDisconnected(ply)
 
 	if ply:Team() == TEAM_MAYOR then
 		for _, ent in pairs(ply.lawboards or {}) do
-			if ValidEntity(ent) then
+			if IsValid(ent) then
 				removeDelayed(ent, ply)
 			end
 		end
@@ -751,7 +751,7 @@ function GM:PlayerDisconnected(ply)
 		GAMEMODE:UnLockdown(ply)
 	end
 
-	if ValidEntity(ply.SleepRagdoll) then
+	if IsValid(ply.SleepRagdoll) then
 		ply.SleepRagdoll:Remove()
 	end
 
@@ -762,7 +762,7 @@ end
 local function PlayerDoorCheck()
 	for k, ply in pairs(player.GetAll()) do
 		local trace = ply:GetEyeTrace()
-		if ValidEntity(trace.Entity) and (trace.Entity:IsDoor() or trace.Entity:IsVehicle()) and ply.LookingAtDoor ~= trace.Entity and trace.HitPos:Distance(ply:GetShootPos()) < 410 then
+		if IsValid(trace.Entity) and (trace.Entity:IsDoor() or trace.Entity:IsVehicle()) and ply.LookingAtDoor ~= trace.Entity and trace.HitPos:Distance(ply:GetShootPos()) < 410 then
 			ply.LookingAtDoor = trace.Entity -- Variable that prevents streaming to clients every frame
 
 			trace.Entity.DoorData = trace.Entity.DoorData or {}

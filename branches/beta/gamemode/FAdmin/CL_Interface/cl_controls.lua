@@ -9,8 +9,7 @@ end
 local PANEL = {}
 
 function PANEL:Init()
-	self:SetSpaceY(5)
-	self:SetSpaceX(5)
+	self.Padding = 5
 end
 
 function PANEL:SizeToContents()
@@ -29,7 +28,7 @@ end
 function PANEL:Paint()
 end
 
-derma.DefineControl("FAdminPanelList", "DPanellist adapted for FAdmin", PANEL, "DIconLayout")
+derma.DefineControl("FAdminPanelList", "DPanellist adapted for FAdmin", PANEL, "DPanelList")
 
 -- FAdminPlayerCatagoryHeader
 local PANEL2 = {}
@@ -105,7 +104,7 @@ function PANEL:Init()
 end
 
 function PANEL:Paint()
-	if not ValidEntity(self.Player) then return end
+	if not IsValid(self.Player) then return end
 
 	self.Size = GetConVarNumber("FAdmin_PlayerRowSize")
 	self.imgAvatar:SetSize(self.Size - 4, self.Size - 4)
@@ -181,7 +180,7 @@ function PANEL:ApplySchemeSettings()
 end
 
 function PANEL:DoClick(x, y)
-	if not ValidEntity(self.Player) then self:Remove() return end
+	if not IsValid(self.Player) then self:Remove() return end
 	FAdmin.ScoreBoard.ChangeView("Player", self.Player)
 end
 

@@ -85,9 +85,9 @@ function meta:SetRPName(name, firstRun)
 end
 
 function meta:RestorePlayerData()
-	if not ValidEntity(self) then return end
+	if not IsValid(self) then return end
 	DB.RetrievePlayerData(self, function(data)
-		if not ValidEntity(self) then return end
+		if not IsValid(self) then return end
 
 		local info = data and data[1] or {}
 		if not info.rpname or info.rpname == "NULL" then info.rpname = string.gsub(self:SteamName(), "\\\"", "\"") end
@@ -112,7 +112,7 @@ function meta:ChangeAllowed(t)
 end
 
 function meta:ResetDMCounter()
-	if not ValidEntity(self) then return end
+	if not IsValid(self) then return end
 	self.kills = 0
 	return true
 end
@@ -121,7 +121,7 @@ function meta:InitiateTax()
 	local taxtime = GetConVarNumber("wallettaxtime")
 	local uniqueid = self:UniqueID() -- so we can destroy the timer if the player leaves
 	timer.Create("rp_tax_"..uniqueid, taxtime ~= 0 and taxtime or 600, 0, function()
-		if not ValidEntity(self) then
+		if not IsValid(self) then
 			timer.Destroy("rp_tax_"..uniqueid)
 			return
 		end
@@ -150,7 +150,7 @@ function meta:InitiateTax()
 end
 
 function meta:TeamUnBan(Team)
-	if not ValidEntity(self) then return end
+	if not IsValid(self) then return end
 	if not self.bannedfrom then self.bannedfrom = {} end
 	self.bannedfrom[Team] = 0
 end
@@ -162,7 +162,7 @@ function meta:TeamBan(t)
 end
 
 function meta:CompleteSentence()
-	if not ValidEntity(self) then return end
+	if not IsValid(self) then return end
 
 	for k,v in pairs(GAMEMODE.ToggleCmds) do
 		local value = GetConVarNumber(v.var)
@@ -180,7 +180,7 @@ function meta:CompleteSentence()
 		end
 	end
 
-	if ValidEntity(self) and self:isArrested() then
+	if IsValid(self) and self:isArrested() then
 		local time = GetConVarNumber("jailtimer")
 		self:Arrest(time, true)
 		GAMEMODE:Notify(self, 0, 5, string.format(LANGUAGE.jail_punishment, time))
@@ -188,7 +188,7 @@ function meta:CompleteSentence()
 end
 
 function meta:NewData()
-	if not ValidEntity(self) then return end
+	if not IsValid(self) then return end
 
 	self:RestorePlayerData()
 
@@ -328,7 +328,7 @@ function meta:ChangeTeam(t, force)
 
 	if self:Team() == TEAM_MAYOR then
 		for _, ent in pairs(self.lawboards or {}) do
-			if ValidEntity(ent) then
+			if IsValid(ent) then
 				ent:Remove()
 			end
 		end
@@ -377,7 +377,7 @@ function meta:AddMoney(amount)
 end
 
 function meta:PayDay()
-	if not ValidEntity(self) or self:GetTable().Pay ~= 1 then return end
+	if not IsValid(self) or self:GetTable().Pay ~= 1 then return end
 	if not self:isArrested() then
 		DB.RetrieveSalary(self, function(amount)
 			amount = math.floor(amount or GetConVarNumber("normalsalary"))
@@ -449,7 +449,7 @@ function meta:Arrest(time, rejoin)
 
 	if tobool(GetConVarNumber("droppocketarrest")) and self.Pocket then
 		for k, v in pairs(self.Pocket) do
-			if ValidEntity(v) then
+			if IsValid(v) then
 				v:SetMoveType(MOVETYPE_VPHYSICS)
 				v:SetNoDraw(false)
 				v:SetCollisionGroup(4)
@@ -487,7 +487,7 @@ function meta:Arrest(time, rejoin)
 			end
 		end
 
-		timer.Create(self:UniqueID() .. "jailtimer", time, 1, function() if ValidEntity(self) then self:Unarrest() end end)
+		timer.Create(self:UniqueID() .. "jailtimer", time, 1, function() if IsValid(self) then self:Unarrest() end end)
 		umsg.Start("GotArrested", self)
 			umsg.Float(time)
 		umsg.End()
@@ -498,7 +498,7 @@ function meta:Unarrest()
 	hook.Call("PlayerUnarrested", GAMEMODE, self)
 
 	self:SetDarkRPVar("Arrested", false)
-	if not ValidEntity(self) then
+	if not IsValid(self) then
 		return
 	end
 
@@ -543,7 +543,7 @@ function meta:UnownAll()
 	for k, v in pairs(player.GetAll()) do
 		if v:GetTable().Ownedz then
 			for n, m in pairs(v:GetTable().Ownedz) do
-				if ValidEntity(m) and m:AllowedToOwn(self) then
+				if IsValid(m) and m:AllowedToOwn(self) then
 					m:RemoveAllowed(self)
 				end
 			end

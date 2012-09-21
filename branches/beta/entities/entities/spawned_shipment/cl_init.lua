@@ -52,7 +52,7 @@ end
 
 function ENT:drawFloatingGun()
 	local contents = CustomShipments[self.dt.contents or ""]
-	if not contents or not ValidEntity(self.dt.gunModel) then return end
+	if not contents or not IsValid(self.dt.gunModel) then return end
 	self.dt.gunModel:SetNoDraw(true)
 
 	local pos = self:GetPos()

@@ -76,7 +76,7 @@ local function Ragdoll(ply, cmd, args)
 	if not args[1] then return end
 
 	local targets = FAdmin.FindPlayer(args[1])
-	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or #targets == 1 and not IsValid(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
@@ -84,19 +84,19 @@ local function Ragdoll(ply, cmd, args)
 
 	for _, target in pairs(targets) do
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Ragdoll", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-		if ValidEntity(target) then
+		if IsValid(target) then
 			if RagdollType == "unragdoll" or string.lower(cmd) == "unragdoll" and target:FAdmin_GetGlobal("fadmin_ragdolled") then
 				target:FAdmin_SetGlobal("fadmin_ragdolled", false)
 				target:UnSpectate()
 				target:Spawn()
 
-				if type(target.FAdminRagdoll) ~= "table" and ValidEntity(target.FAdminRagdoll) then
+				if type(target.FAdminRagdoll) ~= "table" and IsValid(target.FAdminRagdoll) then
 					//target:SetPos(target.FAdminRagdoll:GetPos())
 					if target.FAdminRagdoll.SetCanRemove then target.FAdminRagdoll:SetCanRemove(true) end
 					target.FAdminRagdoll:Remove()
 				elseif type(target.FAdminRagdoll) == "table" then
 					for k,v in pairs(target.FAdminRagdoll) do
-						if ValidEntity(v) then
+						if IsValid(v) then
 							//target:SetPos(v:GetPos())
 							if v.SetCanRemove then v:SetCanRemove(true) end
 							v:Remove()
@@ -105,7 +105,7 @@ local function Ragdoll(ply, cmd, args)
 				end
 				target.FAdminRagdoll = nil
 			elseif RagdollType == "normal" or RagdollType == "ragdoll" then
-				if type(target.FAdminRagdoll) == "table" or ValidEntity(target.FAdminRagdoll) then return end
+				if type(target.FAdminRagdoll) == "table" or IsValid(target.FAdminRagdoll) then return end
 				local Ragdoll = ents.Create("prop_ragdoll")
 
 				Ragdoll:SetModel(target:GetModel())
@@ -120,7 +120,7 @@ local function Ragdoll(ply, cmd, args)
 
 				target.FAdminRagdoll = Ragdoll
 			elseif RagdollType == "hang" then
-				if type(target.FAdminRagdoll) == "table" or ValidEntity(target.FAdminRagdoll) then return end
+				if type(target.FAdminRagdoll) == "table" or IsValid(target.FAdminRagdoll) then return end
 				target.FAdminRagdoll = {}
 
 				local Ragdoll = ents.Create("prop_ragdoll")
@@ -157,7 +157,7 @@ local function Ragdoll(ply, cmd, args)
 				Ragdoll:SetPos(HangOn:GetPos() - Vector(-50,0,10))
 				timer.Simple(0.2, function() constraint.Rope(Ragdoll, HangOn, 10, 0, Vector(-2.4,0,-0.6), Vector(0,0,53), 10, 40, 0, 4, "cable/rope", false) end)
 			elseif string.find(RagdollType, "kick") == 1 then -- Best ragdoll mod EVER
-				if type(target.FAdminRagdoll) == "table" or ValidEntity(target.FAdminRagdoll) then return end
+				if type(target.FAdminRagdoll) == "table" or IsValid(target.FAdminRagdoll) then return end
 				local Ragdoll = ents.Create("prop_ragdoll")
 
 				Ragdoll:SetModel(target:GetModel())
@@ -221,7 +221,7 @@ local function Ragdoll(ply, cmd, args)
 
 				target.FAdminRagdoll = Ragdoll
 
-				timer.Simple(2.1, function() if ValidEntity(Ragdoll) then
+				timer.Simple(2.1, function() if IsValid(Ragdoll) then
 					Ragdoll:EmitSound("physics/body/body_medium_impact_hard6.wav", 100, 100)
 					for i = 1, Ragdoll:GetPhysicsObjectCount() do
 						local phys = Ragdoll:GetPhysicsObjectNum(i)
@@ -233,7 +233,7 @@ local function Ragdoll(ply, cmd, args)
 					end
 				end end)
 
-				timer.Simple(2.2, function() if ValidEntity(Ragdoll) then
+				timer.Simple(2.2, function() if IsValid(Ragdoll) then
 					for i = 1, Ragdoll:GetPhysicsObjectCount() do
 						local phys = Ragdoll:GetPhysicsObjectNum(i)
 						if phys and phys:IsValid() then
@@ -243,18 +243,18 @@ local function Ragdoll(ply, cmd, args)
 				end end)
 
 				timer.Simple(7, function()
-				if ValidEntity(target) then
+				if IsValid(target) then
 					target:UnSpectate()
 					target:Spawn()
 					target.FAdminRagdoll = nil
 				end
 
-				if ValidEntity(Ragdoll) then
-					if ValidEntity(target) then target:SetPos(Ragdoll:GetPos()) end
+				if IsValid(Ragdoll) then
+					if IsValid(target) then target:SetPos(Ragdoll:GetPos()) end
 					Ragdoll:Remove()
 				end
 
-				if ValidEntity(Kicker) then
+				if IsValid(Kicker) then
 					Kicker:Remove()
 				end
 
@@ -281,13 +281,13 @@ FAdmin.StartHooks["Ragdoll"] = function()
 end
 
 hook.Add("PlayerSpawnObject", "FAdmin_ragdoll", function(ply)
-	if type(ply.FAdminRagdoll) == "table" or ValidEntity(ply.FAdminRagdoll) then
+	if type(ply.FAdminRagdoll) == "table" or IsValid(ply.FAdminRagdoll) then
 		return false
 	end
 end)
 
 hook.Add("CanPlayerSuicide", "FAdmin_ragdoll", function(ply)
-	if type(ply.FAdminRagdoll) == "table" or ValidEntity(ply.FAdminRagdoll) then
+	if type(ply.FAdminRagdoll) == "table" or IsValid(ply.FAdminRagdoll) then
 		return false
 	end
 end)
@@ -295,6 +295,6 @@ end)
 hook.Add("PlayerDisconnected", "FAdmin_ragdoll", function(ply)
 	if not ply.FAdminRagdoll then return end
 	for k,v in pairs(ply.FAdminRagdoll) do
-			if ValidEntity(v) then v:Remove() end
+			if IsValid(v) then v:Remove() end
 	end
 end)

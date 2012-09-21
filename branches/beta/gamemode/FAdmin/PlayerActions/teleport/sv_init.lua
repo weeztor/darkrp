@@ -49,12 +49,12 @@ local function Teleport(ply, cmd, args)
 	if not FAdmin.Access.PlayerHasPrivilege(ply, "Teleport") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 
 	local targets = FAdmin.FindPlayer(args[1])
-	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or #targets == 1 and not IsValid(targets[1]) then
 		targets = {ply}
 	end
 
 	for _, target in pairs(targets) do
-		if ValidEntity(target) and target:Alive() then
+		if IsValid(target) and target:Alive() then
 			target:ExitVehicle()
 
 			local tracedata = {}
@@ -96,17 +96,17 @@ local function Bring(ply, cmd, args)
 	local targets = FAdmin.FindPlayer(args[1])
 	local BringTo = FAdmin.FindPlayer(args[2])
 	BringTo = (BringTo and BringTo[1]) or ply
-	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or #targets == 1 and not IsValid(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
 
 	for _, target in pairs(targets) do
-		if ValidEntity(target) and target ~= ply then
+		if IsValid(target) and target ~= ply then
 			target:ExitVehicle()
 			if not target:Alive() then target:Spawn() end
 			local PHYSGUN = false
-			if ValidEntity(target:GetActiveWeapon()) and target:GetActiveWeapon():GetClass() == "weapon_physgun" and target:KeyDown(IN_ATTACK) then
+			if IsValid(target:GetActiveWeapon()) and target:GetActiveWeapon():GetClass() == "weapon_physgun" and target:KeyDown(IN_ATTACK) then
 				target:ConCommand("-attack")--release the stuff he's holding :)
 				target:GetActiveWeapon():Remove()
 				PHYSGUN = true
@@ -156,7 +156,7 @@ local function Goto(ply, cmd, args)
 
 	local target = FAdmin.FindPlayer(args[1])
 	target = target and target[1]
-	if not ValidEntity(target) then return end
+	if not IsValid(target) then return end
 
 	ply:ExitVehicle()
 	if not ply:Alive() then ply:Spawn() end

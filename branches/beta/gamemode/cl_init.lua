@@ -30,7 +30,7 @@ local pmeta = FindMetaTable("Player")
 
 pmeta.SteamName = pmeta.Name
 function pmeta:Name()
-	if not self or not self.IsValid or not ValidEntity(self) then return "" end
+	if not self or not self.IsValid or not IsValid(self) then return "" end
 
 	self.DarkRPVars = self.DarkRPVars or {}
 	if GetConVarNumber("allowrpnames") == 0 then
@@ -242,7 +242,7 @@ local function DoSpecialEffects(Type)
 		elseif thetype == "deathpov" then
 			hook.Add("CalcView", "rp_deathPOV", function(ply, origin, angles, fov)
 				local Ragdoll = ply:GetRagdollEntity()
-				if not ValidEntity(Ragdoll) then return end
+				if not IsValid(Ragdoll) then return end
 
 				local head = Ragdoll:LookupAttachment("eyes")
 				head = Ragdoll:GetAttachment(head)
@@ -453,7 +453,7 @@ end
 
 function GM:PlayerBindPress(ply,bind,pressed)
 	self.BaseClass:PlayerBindPress(ply, bind, pressed)
-	if ply == LocalPlayer() and ValidEntity(ply:GetActiveWeapon()) and string.find(string.lower(bind), "attack2") and ply:GetActiveWeapon():GetClass() == "weapon_bugbait" then
+	if ply == LocalPlayer() and IsValid(ply:GetActiveWeapon()) and string.find(string.lower(bind), "attack2") and ply:GetActiveWeapon():GetClass() == "weapon_bugbait" then
 		LocalPlayer():ConCommand("_hobo_emitsound")
 	end
 	return
@@ -475,7 +475,7 @@ local function AddToChat(msg)
 	local text = msg:ReadString()
 	if text and text ~= "" then
 		chat.AddText(col1, name, col2, ": "..text)
-		if ValidEntity(ply) then
+		if IsValid(ply) then
 			hook.Call("OnPlayerChat", nil, ply, text, false, ply:Alive())
 		end
 	else
@@ -505,7 +505,7 @@ usermessage.Hook("DRPLogMsg", AdminLog)
 local function RetrieveDoorData(len)
 	local door = net.ReadEntity()
 	local doorData = net.ReadTable()
-	if not door or not door.IsValid or not ValidEntity(door) then return end
+	if not door or not door.IsValid or not IsValid(door) then return end
 
 	if doorData.TeamOwn then
 		local tdata = {}
@@ -530,7 +530,7 @@ net.Receive("DarkRP_DoorData", RetrieveDoorData)
 
 local function UpdateDoorData(um)
 	local door = um:ReadEntity()
-	if not ValidEntity(door) then return end
+	if not IsValid(door) then return end
 
 	local var, value = um:ReadString(), um:ReadString()
 	value = tonumber(value) or value
@@ -567,7 +567,7 @@ usermessage.Hook("DRP_UpdateDoorData", UpdateDoorData)
 
 local function RetrievePlayerVar(um)
 	local ply = um:ReadEntity()
-	if not ValidEntity(ply) then return end
+	if not IsValid(ply) then return end
 
 	ply.DarkRPVars = ply.DarkRPVars or {}
 

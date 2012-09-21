@@ -2,7 +2,7 @@ local function Jail(ply, cmd, args)
 	if not args[1] then return end
 
 	local targets = FAdmin.FindPlayer(args[1])
-	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or #targets == 1 and not IsValid(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
@@ -14,12 +14,12 @@ local function Jail(ply, cmd, args)
 
 	for _, target in pairs(targets) do
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Jail", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-		if ValidEntity(target) then
+		if IsValid(target) then
 			local JailProps = {}
 			if JailType == "unjail" or string.lower(cmd) == "unjail" then
 				if target.FAdminJailProps then
 					for k,v in pairs(target.FAdminJailProps) do
-						if ValidEntity(k) then
+						if IsValid(k) then
 							k:SetCanRemove(true)
 							k:Remove()
 						end
@@ -77,10 +77,10 @@ local function Jail(ply, cmd, args)
 
 				if JailTime ~= 0 then
 					timer.Create("FAdmin_jail"..target:UserID(), JailTime, 1, function()
-						if ValidEntity(target) and target:FAdmin_GetGlobal("fadmin_jailed") then
+						if IsValid(target) and target:FAdmin_GetGlobal("fadmin_jailed") then
 							target:FAdmin_SetGlobal("fadmin_jailed", false)
 							for k,v in pairs(target.FAdminJailProps) do
-								if ValidEntity(k) then
+								if IsValid(k) then
 									k:SetCanRemove(true)
 									k:Remove()
 								end
@@ -112,7 +112,7 @@ end
 
 hook.Add("PlayerSpawn", "FAdmin_jail", function(ply)
 	if ply:FAdmin_GetGlobal("fadmin_jailed") then
-		timer.Simple(0.1, function() if ValidEntity(ply) then ply:SetPos(ply.FAdminJailPos) end end)
+		timer.Simple(0.1, function() if IsValid(ply) then ply:SetPos(ply.FAdminJailPos) end end)
 	end
 end)
 

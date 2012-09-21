@@ -73,7 +73,7 @@ end
 
 function SWEP:Think()
 	if SERVER then return end
-	if not self.viewModels or not ValidEntity(self.viewModels[1]) then
+	if not self.viewModels or not IsValid(self.viewModels[1]) then
 		self:createViewModels()
 	end
 
@@ -96,7 +96,7 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
-	if SERVER and ValidEntity(self:GetOwner()) then
+	if SERVER and IsValid(self:GetOwner()) then
 		SendUserMessage("med_kit_model", self:GetOwner(), self)
 		return true
 	end
@@ -105,7 +105,7 @@ end
 if CLIENT then
 	usermessage.Hook("med_kit_model", function(um)
 		local ent = um:ReadEntity()
-		if ValidEntity(ent) then
+		if IsValid(ent) then
 			for k,v in pairs(ent.viewModels or {}) do
 				SafeRemoveEntity(v)
 			end
@@ -151,7 +151,7 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:OnRemove()
-	if SERVER and ValidEntity(self:GetOwner()) then
+	if SERVER and IsValid(self:GetOwner()) then
 		SendUserMessage("med_kit_model", self:GetOwner(), self)
 	end
 end

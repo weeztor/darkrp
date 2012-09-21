@@ -57,7 +57,7 @@ function ENT:Draw()
 
 	self.LastDrawn = CurTime()
 	local IsAdmin = LocalPlayer():IsAdmin()
-	local HasPhysgun = (ValidEntity(LocalPlayer():GetActiveWeapon()) and LocalPlayer():GetActiveWeapon():GetClass() == "weapon_physgun")
+	local HasPhysgun = (IsValid(LocalPlayer():GetActiveWeapon()) and LocalPlayer():GetActiveWeapon():GetClass() == "weapon_physgun")
 
 	surface.SetFont("TargetID")
 	local TextPosX = surface.GetTextSize("Physgun/use the button to see the MOTD!")*(-0.5)

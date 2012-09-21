@@ -99,7 +99,7 @@ function FPP.AdminMenu(Panel)
 		AddLA:SetDisabled(not superadmin)
 		AddLA.DoClick = function()
 			local ent = LocalPlayer():GetEyeTraceNoCursor().Entity
-			if not ValidEntity(ent) then return end
+			if not IsValid(ent) then return end
 			for k,v in pairs(lview.Lines) do
 				if v.text == string.lower(ent:GetClass()) then return end
 			end
@@ -264,7 +264,7 @@ function FPP.AdminMenu(Panel)
 	local BlockedModelsAddLA = blockedmodels:Add("DButton")
 	BlockedModelsAddLA:SetText("Add model of entity you're looking at")
 	function BlockedModelsAddLA:DoClick()
-		if not ValidEntity(LocalPlayer():GetEyeTraceNoCursor().Entity) then return end
+		if not IsValid(LocalPlayer():GetEyeTraceNoCursor().Entity) then return end
 		RunConsoleCommand("FPP_AddBlockedModel", LocalPlayer():GetEyeTraceNoCursor().Entity:GetModel())
 	end
 
@@ -1042,7 +1042,7 @@ hook.Add("SpawnMenuOpen", "FPPMenus", UpdateMenus)
 
 function FPP.SharedMenu(um)
 	local ent = um:ReadEntity()
-	if not ValidEntity(ent) then frame:Close() return end
+	if not IsValid(ent) then frame:Close() return end
 	local frame = vgui.Create("DFrame")
 	frame:SetTitle("Share "..ent:GetClass())
 	frame:MakePopup()
@@ -1067,7 +1067,7 @@ function FPP.SharedMenu(um)
 		count = count + 1
 		box:SetValue(value)
 		box.Button.Toggle = function()
-			if not ValidEntity(ent) then frame:Close() return end
+			if not IsValid(ent) then frame:Close() return end
 			if box.Button:GetChecked() == nil or not box.Button:GetChecked() then
 				box.Button:SetValue( true )
 			else
