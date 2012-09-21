@@ -831,11 +831,6 @@ function FPP.Protect.LeaveVehicle(ply, vehicle)
 end
 hook.Add("PlayerLeaveVehicle", "FPP.PlayerLeaveVehicle", FPP.Protect.LeaveVehicle)
 
-local function PreventNoclip(vehicle,ply)
-	ply:ExitVehicle()
-end
-hook.Add("CanExitVehicle", "PreventVehicleNoclip", PreventNoclip)
-
 hook.Add("EntityRemoved","jeepWorkaround",function(ent)
     if ValidEntity(ent) and ent:IsVehicle() and ValidEntity(ent:GetPassenger()) then
         ent:GetPassenger():ExitVehicle()

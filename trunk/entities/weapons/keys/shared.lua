@@ -55,7 +55,7 @@ function SWEP:PrimaryAttack()
 	trace.Entity.DoorData = trace.Entity.DoorData or {}
 
 	local Team = self.Owner:Team()
-	local DoorData = trace.Entity.DoorData or {}
+	local DoorData = table.Copy(trace.Entity.DoorData or {}) -- Copy table to make non-permanent changes
 	if SERVER and DoorData.TeamOwn then
 		local decoded = {}
 		for k, v in pairs(string.Explode("\n", DoorData.TeamOwn)) do
@@ -108,7 +108,7 @@ function SWEP:SecondaryAttack()
 	end
 
 	local Team = self.Owner:Team()
-	local DoorData = trace.Entity.DoorData or {}
+	local DoorData = table.Copy(trace.Entity.DoorData or {}) -- Copy table to make non-permanent changes
 	if SERVER and DoorData.TeamOwn then
 		local decoded = {}
 		for k, v in pairs(string.Explode("\n", DoorData.TeamOwn)) do
