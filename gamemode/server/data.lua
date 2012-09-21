@@ -680,7 +680,7 @@ function DB.RetrievePlayerData(ply, callback)
 end
 
 function DB.StoreMoney(ply, amount)
-	if not ValidEntity(ply) then return end
+	if not IsValid(ply) then return end
 	if amount < 0  then return end
 	ply:SetDarkRPVar("money", math.floor(amount))
 
@@ -692,7 +692,7 @@ function DB.StoreMoney(ply, amount)
 end
 
 function DB.RetrieveMoney(ply) -- This is only run once when the player joins, there's no need for a cache unless the player keeps rejoining.
-	if not ValidEntity(ply) then return 0 end
+	if not IsValid(ply) then return 0 end
 	local startingAmount = GetConVarNumber("startingmoney")
 
 	DB.QueryValue("SELECT wallet FROM darkrp_player WHERE uid = " .. ply:UniqueID() .. ";", function(r)
@@ -720,7 +720,7 @@ end
 concommand.Add("rp_resetallmoney", DB.ResetAllMoney)
 
 function DB.PayPlayer(ply1, ply2, amount)
-	if not ValidEntity(ply1) or not ValidEntity(ply2) then return end
+	if not IsValid(ply1) or not IsValid(ply2) then return end
 	ply1:AddMoney(-amount)
 	ply2:AddMoney(amount)
 end
@@ -737,7 +737,7 @@ function DB.StoreSalary(ply, amount)
 end
 
 function DB.RetrieveSalary(ply, callback)
-	if not ValidEntity(ply) then return 0 end
+	if not IsValid(ply) then return 0 end
 
 	if ply.DarkRPVars.salary then return callback and callback(ply.DarkRPVars.salary) end -- First check the cache.
 
@@ -780,7 +780,7 @@ function DB.SetUpNonOwnableDoors()
 
 		for _, row in pairs(r) do
 			local e = ents.GetByIndex(GAMEMODE:DoorToEntIndex(tonumber(row.idx)))
-			if ValidEntity(e) then
+			if IsValid(e) then
 				e.DoorData = e.DoorData or {}
 				e.DoorData.NonOwnable = tobool(row.isDisabled)
 				if r.isLocked ~= nil then
@@ -810,7 +810,7 @@ function DB.SetUpTeamOwnableDoors()
 
 		for _, row in pairs(r) do
 			local e = ents.GetByIndex(GAMEMODE:DoorToEntIndex(tonumber(row.idx)))
-			if ValidEntity(e) then
+			if IsValid(e) then
 				e.DoorData = e.DoorData or {}
 				e.DoorData.TeamOwn = e.DoorData.TeamOwn or ""
 				e.DoorData.TeamOwn = (e.DoorData.TeamOwn == "" and row.job) or (e.DoorData.TeamOwn .. "\n" .. row.job)

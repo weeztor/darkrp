@@ -74,7 +74,7 @@ function FPP.AntiSpam.CreateEntity(ply, ent, IsDuplicate)
 
 	if not IsDuplicate then
 		ply.FPPAntiSpamCount = (ply.FPPAntiSpamCount or 0) + 1
-		timer.Simple(ply.FPPAntiSpamCount / FPP.Settings.FPP_ANTISPAM1.smallpropdowngradecount, function() if ValidEntity(ply) then ply.FPPAntiSpamCount = ply.FPPAntiSpamCount - 1 end end)
+		timer.Simple(ply.FPPAntiSpamCount / FPP.Settings.FPP_ANTISPAM1.smallpropdowngradecount, function() if IsValid(ply) then ply.FPPAntiSpamCount = ply.FPPAntiSpamCount - 1 end end)
 		if ply.FPPAntiSpamCount >= FPP.Settings.FPP_ANTISPAM1.smallpropghostlimit and ply.FPPAntiSpamCount <= FPP.Settings.FPP_ANTISPAM1.smallpropdenylimit
 			and not ent:IsVehicle()--[[Vehicles don't like being ghosted, they tend to crash the server]] then
 			FPP.AntiSpam.GhostFreeze(ent, phys)
@@ -93,7 +93,7 @@ function FPP.AntiSpam.DuplicatorSpam(ply)
 	ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate or 0
 	ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate + 1
 
-	timer.Simple(ply.FPPAntiSpamLastDuplicate / FPP.Settings.FPP_ANTISPAM1.duplicatorlimit, function() if ValidEntity(ply) then ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate - 1 end end)
+	timer.Simple(ply.FPPAntiSpamLastDuplicate / FPP.Settings.FPP_ANTISPAM1.duplicatorlimit, function() if IsValid(ply) then ply.FPPAntiSpamLastDuplicate = ply.FPPAntiSpamLastDuplicate - 1 end end)
 
 	if ply.FPPAntiSpamLastDuplicate >= FPP.Settings.FPP_ANTISPAM1.duplicatorlimit then
 		FPP.Notify(ply, "Can't duplicate due to spam", false)

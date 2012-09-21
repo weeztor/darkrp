@@ -16,7 +16,7 @@ function SWEP:DrawHUD()
 
 	local entMessages = {}
 	for k,v in pairs(DrawData or {}) do
-		if not ValidEntity(v.ent) or not ValidEntity(v.original) then continue end
+		if not IsValid(v.ent) or not IsValid(v.original) then continue end
 		entMessages[v.ent] = (entMessages[v.ent] or 0) + 1
 		local pos = v.ent:LocalToWorld(v.ent:OBBCenter()):ToScreen()
 
@@ -34,7 +34,7 @@ end
 hook.Add("PreDrawHalos", "KeypadCheckerHalos", function()
 	local drawEnts = {}
 	for k,v in pairs(DrawData) do
-		if ValidEntity(v.ent) then
+		if IsValid(v.ent) then
 			table.insert(drawEnts, v.ent)
 		end
 	end

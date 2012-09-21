@@ -1,7 +1,7 @@
 -- Kicking
 local function Kick(ply, cmd, args)
 	local targets = FAdmin.FindPlayer(args[1])
-	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or #targets == 1 and not IsValid(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
@@ -17,7 +17,7 @@ local function Kick(ply, cmd, args)
 
 	for _, target in pairs(targets) do
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Kick", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!")  return end
-		if ValidEntity(target) then
+		if IsValid(target) then
 			if stage == "start" then
 				SendUserMessage("FAdmin_kick_start", target) -- Tell him he's getting kicked
 				target:Lock() -- Make sure he can't remove the hook clientside and keep minging.
@@ -114,14 +114,14 @@ local function Ban(ply, cmd, args)
 	local Reason = args[4] or ply.FAdminKickReason or ""
 	for _, target in pairs(targets) do
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Ban", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-		if stage == "start" and type(target) ~= "string" and ValidEntity(target) then
+		if stage == "start" and type(target) ~= "string" and IsValid(target) then
 			SendUserMessage("FAdmin_ban_start", target) -- Tell him he's getting banned
 			target:Lock() -- Make sure he can't remove the hook clientside and keep minging.
 			target:KillSilent()
 			table.insert(StartBannedUsers, target:SteamID())
 
 		elseif stage == "cancel" then
-			if type(target) ~= "string" and ValidEntity(target) then
+			if type(target) ~= "string" and IsValid(target) then
 				SendUserMessage("FAdmin_ban_cancel", target) -- No I changed my mind, you can stay
 				target:UnLock()
 				target:Spawn()
@@ -138,7 +138,7 @@ local function Ban(ply, cmd, args)
 				end
 			end
 		elseif stage == "update" then -- Update reason text
-			if not args[4] or type(target) == "string" or not ValidEntity(target) then return end
+			if not args[4] or type(target) == "string" or not IsValid(target) then return end
 			ply.FAdminKickReason = args[4]
 			umsg.Start("FAdmin_ban_update", target)
 				umsg.Long(tonumber(args[3]))
@@ -152,7 +152,7 @@ local function Ban(ply, cmd, args)
 			end
 
 			local TimeText = FAdmin.PlayerActions.ConvertBanTime(time)
-			if type(target) ~= "string" and  ValidEntity(target) then
+			if type(target) ~= "string" and  IsValid(target) then
 				for k,v in pairs(StartBannedUsers) do
 					if v == target:SteamID() then
 						table.remove(StartBannedUsers, k)

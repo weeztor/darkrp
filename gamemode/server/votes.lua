@@ -94,7 +94,7 @@ function GM.vote.DestroyLast()
 
 	if not lastVote then return end
 
-	if ValidEntity(lastVote.Ent) then
+	if IsValid(lastVote.Ent) then
 		lastVote.Ent.IsBeingDemoted = nil
 	end
 

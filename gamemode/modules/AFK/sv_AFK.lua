@@ -47,13 +47,13 @@ local function SetAFK(ply)
 		ply.AFKNpc = npc
 		npc.Owner = ply
 		npc.AFKPly = ply
-		if ValidEntity(ply:GetActiveWeapon()) then npc:Give(ply:GetActiveWeapon():GetClass()) end
+		if IsValid(ply:GetActiveWeapon()) then npc:Give(ply:GetActiveWeapon():GetClass()) end
 		npc:SetHealth(ply:Health())
 		npc:SetNoDraw(false)
 		ply:SetNoDraw(true)
 		ply:SetPos(Vector(0,0,-5000))
 		hook.Add("PlayerDeath", ply:EntIndex().."DRPNPCDeath", function(ply)
-			if not ValidEntity( ply.AFKNpc ) then hook.Remove("PlayerDeath", ply:EntIndex().."DRPNPCDeath") return end
+			if not IsValid( ply.AFKNpc ) then hook.Remove("PlayerDeath", ply:EntIndex().."DRPNPCDeath") return end
 			ply:SetEyeAngles(ply.AFKNpc:EyeAngles())
 			ply.AFKNpc:Remove()
 			hook.Remove("PlayerDeath", ply:EntIndex().."DRPNPCDeath")
@@ -65,7 +65,7 @@ local function SetAFK(ply)
 	else
 		GAMEMODE:NotifyAll(1, 5, rpname .. " is no longer AFK.")
 		GAMEMODE:Notify(ply, 0, 5, "Welcome back, your salary has now been restored.")
-		if ValidEntity(ply.AFKNpc) then
+		if IsValid(ply.AFKNpc) then
 			ply:SetEyeAngles(ply.AFKNpc:EyeAngles())
 			ply:SetPos(ply.AFKNpc:GetPos() + ply.AFKNpc:GetAimVector() * 10)
 			ply.AFKNpc:Remove()
@@ -123,7 +123,7 @@ end
 hook.Add("Think", "DarkRPKeyPressedCheck", KillAFKTimer)
 
 local function DamagePlayer(target, inflictor, attacker, damage, DmgInfo)
-	if target:IsNPC() and ValidEntity(target.AFKPly) then
+	if target:IsNPC() and IsValid(target.AFKPly) then
 		target.AFKPly:TakeDamageInfo(DmgInfo)
 	end
 end

@@ -1,5 +1,5 @@
 local function ExecuteSlap(target, Amount, ply)
-	if not ValidEntity(target) or not ValidEntity(ply) then return end
+	if not IsValid(target) or not IsValid(ply) then return end
 
 	local Force = Vector(math.Rand(-500, 500), math.Rand(-500, 500), math.Rand(-100, 700))
 
@@ -17,7 +17,7 @@ local function Slap(ply, cmd, args)
 	if not args[1] then return end
 
 	local targets = FAdmin.FindPlayer(args[1])
-	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or #targets == 1 and not IsValid(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
@@ -26,7 +26,7 @@ local function Slap(ply, cmd, args)
 
 	for _, target in pairs(targets) do
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Slap", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-		if ValidEntity(target) then
+		if IsValid(target) then
 			if not Repetitions or Repetitions == 1 then
 				ExecuteSlap(target, Amount, ply)
 			else

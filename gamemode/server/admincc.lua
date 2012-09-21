@@ -107,7 +107,7 @@ local function ccDoorOwn(ply, cmd, args)
 
 	local trace = ply:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
+	if not IsValid(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
 		return
 	end
 
@@ -130,7 +130,7 @@ local function ccDoorUnOwn(ply, cmd, args)
 
 	local trace = ply:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
+	if not IsValid(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
 		return
 	end
 
@@ -152,7 +152,7 @@ local function ccAddOwner(ply, cmd, args)
 
 	local trace = ply:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
+	if not IsValid(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
 		return
 	end
 
@@ -187,7 +187,7 @@ local function ccRemoveOwner(ply, cmd, args)
 
 	local trace = ply:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
+	if not IsValid(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
 		return
 	end
 
@@ -220,7 +220,7 @@ local function ccLock(ply, cmd, args)
 
 	local trace = ply:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
+	if not IsValid(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
 		return
 	end
 
@@ -244,7 +244,7 @@ local function ccUnLock(ply, cmd, args)
 
 	local trace = ply:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
+	if not IsValid(trace.Entity) or not trace.Entity:IsOwnable() or ply:EyePos():Distance(trace.Entity:GetPos()) > 200 then
 		return
 	end
 

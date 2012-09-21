@@ -125,5 +125,5 @@ end
 function ENT:OnRemove()
 	timer.Destroy(self:EntIndex())
 	local ply = self.dt.owning_ent
-	if not ValidEntity(ply) then return end
+	if not IsValid(ply) then return end
 end

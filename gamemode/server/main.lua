@@ -37,12 +37,12 @@ local function FireSpread(e)
 			v:Ignite(math.random(5,180), 0)
 			v.burned = true
 		else
-			local r, g, b, a = v:GetColor()
-			if (r - 51)>=0 then r = r - 51 end
-			if (g - 51)>=0 then g = g - 51 end
-			if (b - 51)>=0 then b = b - 51 end
-			v:SetColor(r, g, b, a)
-			if (r + g + b) < 103 and math.random(1, 100) < 35 then
+			local color = v:GetColor()
+			if (color.r - 51) >= 0 then color.r = color.r - 51 end
+			if (g - 51) >= 0 then g = g - 51 end
+			if (color.b - 51) >= 0 then color.b = color.b - 51 end
+			v:SetColor(color)
+			if (color.r + color.g + color.b) < 103 and math.random(1, 100) < 35 then
 				v:Fire("enablemotion","",0)
 				constraint.RemoveAll(v)
 			end
@@ -68,7 +68,7 @@ timer.Create("FlammableProps", 0.1, 0, FlammablePropThink)
 local NoDrop = {} -- Drop blacklist
 local function DropWeapon(ply)
 	local ent = ply:GetActiveWeapon()
-	if not ValidEntity(ent) then return "" end
+	if not IsValid(ent) then return "" end
 
 	if GetConVarNumber("RestrictDrop") == 1 then
 		local found = false
@@ -96,7 +96,7 @@ local function DropWeapon(ply)
 	ply.anim_DroppingItem = true
 
 	timer.Simple(1, function()
-		if ValidEntity(ply) and ValidEntity(ent) and ent:GetModel() then
+		if IsValid(ply) and IsValid(ent) and ent:GetModel() then
 			local ammohax = false
 			local ammotype = ent:GetPrimaryAmmoType()
 			local ammo = ply:GetAmmoCount(ammotype)
@@ -148,7 +148,7 @@ local function FinishWarrant(choice, mayor, initiator, target, reason)
 end
 
 local function TimerUnwanted(ply, target)
-	if ValidEntity(target) and target:Alive() and target.DarkRPVars.wanted then
+	if IsValid(target) and target:Alive() and target.DarkRPVars.wanted then
 		target:SetDarkRPVar("wanted", false)
 		for a, b in pairs(player.GetAll()) do
 			b:PrintMessage(HUD_PRINTCENTER, string.format(LANGUAGE.wanted_expired, target:Nick()))
@@ -418,7 +418,7 @@ local function LookPersonUp(ply, cmd, args)
 		return
 	end
 	local P = GAMEMODE:FindPlayer(args[1])
-	if not ValidEntity(P) then
+	if not IsValid(P) then
 		if ply:EntIndex() ~= 0 then
 			ply:PrintMessage(2, string.format(LANGUAGE.could_not_find, "player: "..tostring(args[1])))
 		else
@@ -511,7 +511,7 @@ local function MakeLetter(ply, args, type)
 		ply.maxletters = 0
 	end
 	ply.maxletters = ply.maxletters + 1
-	timer.Simple(600, function() if ValidEntity(letter) then letter:Remove() end end)
+	timer.Simple(600, function() if IsValid(letter) then letter:Remove() end end)
 end
 
 local function WriteLetter(ply, args)
@@ -551,10 +551,10 @@ local function SetPrice(ply, args)
 
 	local tr = util.TraceLine(trace)
 
-	if not ValidEntity(tr.Entity) then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "gunlab / druglab / microwave")) return "" end
+	if not IsValid(tr.Entity) then GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "gunlab / druglab / microwave")) return "" end
 
 	local class = tr.Entity:GetClass()
-	if ValidEntity(tr.Entity) and (class == "gunlab" or class == "microwave" or class == "drug_lab") and tr.Entity.SID == ply.SID then
+	if IsValid(tr.Entity) and (class == "gunlab" or class == "microwave" or class == "drug_lab") and tr.Entity.SID == ply.SID then
 		tr.Entity.dt.price = b
 	else
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "gunlab / druglab / microwave"))
@@ -641,7 +641,7 @@ local function BuyPistol(ply, args)
 	weapon.nodupe = true
 	weapon:Spawn()
 
-	if ValidEntity( weapon ) then
+	if IsValid( weapon ) then
 		ply:AddMoney(-price)
 		GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, tostring(price)))
 	end
@@ -723,7 +723,7 @@ local function BuyShipment(ply, args)
 	local phys = crate:GetPhysicsObject()
 	phys:Wake()
 
-	if ValidEntity( crate ) then
+	if IsValid( crate ) then
 		ply:AddMoney(-cost)
 		GAMEMODE:Notify(ply, 0, 4, string.format(LANGUAGE.you_bought_x, args, CUR .. tostring(cost)))
 	end
@@ -1105,7 +1105,7 @@ local function DoTeamBan(ply, args, cmdargs)
 	end
 
 	local target = GAMEMODE:FindPlayer(ent)
-	if not target or not ValidEntity(target) then
+	if not target or not IsValid(target) then
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player!"))
 		return ""
 	end
@@ -1162,7 +1162,7 @@ local function DoTeamUnBan(ply, args, cmdargs)
 	end
 
 	local target = GAMEMODE:FindPlayer(ent)
-	if not target or not ValidEntity(target) then
+	if not target or not IsValid(target) then
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.could_not_find, "player!"))
 		return ""
 	end
@@ -1382,7 +1382,7 @@ AddChatCommand("/g", GroupMsg)
 local CreditsWait = true
 local function GetDarkRPAuthors(ply, args)
 	local target = GAMEMODE:FindPlayer(args); -- Only send to one player. Prevents spamming
-	if not ValidEntity(target) then
+	if not IsValid(target) then
 		GAMEMODE:Notify(ply, 1, 4, "Player does not exist")
 		return ""
 	end
@@ -1415,7 +1415,7 @@ local function GiveMoney(ply, args)
 	end
 	local trace = ply:GetEyeTrace()
 
-	if ValidEntity(trace.Entity) and trace.Entity:IsPlayer() and trace.Entity:GetPos():Distance(ply:GetPos()) < 150 then
+	if IsValid(trace.Entity) and trace.Entity:IsPlayer() and trace.Entity:GetPos():Distance(ply:GetPos()) < 150 then
 		local amount = math.floor(tonumber(args))
 
 		if amount < 1 then
@@ -1437,9 +1437,9 @@ local function GiveMoney(ply, args)
 		ply.anim_GivingItem = true
 
 		timer.Simple(1.2, function()
-			if ValidEntity(ply) then
+			if IsValid(ply) then
 				local trace2 = ply:GetEyeTrace()
-				if ValidEntity(trace2.Entity) and trace2.Entity:IsPlayer() and trace2.Entity:GetPos():Distance(ply:GetPos()) < 150 then
+				if IsValid(trace2.Entity) and trace2.Entity:IsPlayer() and trace2.Entity:GetPos():Distance(ply:GetPos()) < 150 then
 					if not ply:CanAfford(amount) then
 						GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.cant_afford, ""))
 						return ""
@@ -1487,7 +1487,7 @@ local function DropMoney(ply, args)
 	ply.anim_DroppingItem = true
 
 	timer.Simple(1, function()
-		if ValidEntity(ply) then
+		if IsValid(ply) then
 			local trace = {}
 			trace.start = ply:EyePos()
 			trace.endpos = trace.start + ply:GetAimVector() * 85
@@ -1524,7 +1524,7 @@ local function CreateCheque(ply, args)
 		return ""
 	end
 
-	if ValidEntity(ply) and ValidEntity(recipient) then
+	if IsValid(ply) and IsValid(recipient) then
 		ply:AddMoney(-amount)
 	end
 
@@ -1534,7 +1534,7 @@ local function CreateCheque(ply, args)
 	ply.anim_DroppingItem = true
 
 	timer.Simple(1, function()
-		if ValidEntity(ply) and ValidEntity(recipient) then
+		if IsValid(ply) and IsValid(recipient) then
 			local trace = {}
 			trace.start = ply:EyePos()
 			trace.endpos = trace.start + ply:GetAimVector() * 85
@@ -1559,7 +1559,7 @@ local function MakeZombieSoundsAsHobo(ply)
 	if not ply.nospamtime then
 		ply.nospamtime = CurTime() - 2
 	end
-	if not TEAM_HOBO or ply:Team() ~= TEAM_HOBO or CurTime() < (ply.nospamtime + 1.3) or (ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetClass() ~= "weapon_bugbait") then
+	if not TEAM_HOBO or ply:Team() ~= TEAM_HOBO or CurTime() < (ply.nospamtime + 1.3) or (IsValid(ply:GetActiveWeapon()) and ply:GetActiveWeapon():GetClass() ~= "weapon_bugbait") then
 		return
 	end
 	ply.nospamtime = CurTime()
@@ -1808,7 +1808,7 @@ local function RequestLicense(ply)
 		return ""
 	end
 
-	if not ValidEntity(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
+	if not IsValid(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "mayor/chief/cop"))
 		return ""
 	end
@@ -1871,7 +1871,7 @@ local function GiveLicense(ply)
 	end
 
 	local LookingAt = ply:GetEyeTrace().Entity
-	if not ValidEntity(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
+	if not IsValid(LookingAt) or not LookingAt:IsPlayer() or LookingAt:GetPos():Distance(ply:GetPos()) > 100 then
 		GAMEMODE:Notify(ply, 1, 4, string.format(LANGUAGE.must_be_looking_at, "player"))
 		return ""
 	end
@@ -2040,7 +2040,7 @@ local function ReportEntity(ply, cmd, args)
 	tr = util.TraceLine(tracedata).Entity
 
 	local illegal = {"money_printer", "drug_lab", "drug"}
-	if ValidEntity(tr) and tr.dt and ValidEntity(tr.dt.owning_ent) and (table.HasValue(illegal, tr:GetClass()) or tr.Illegal) then
+	if IsValid(tr) and tr.dt and IsValid(tr.dt.owning_ent) and (table.HasValue(illegal, tr:GetClass()) or tr.Illegal) then
 		for k, v in pairs(ents.FindByClass("darkrp_console")) do
 			v.dt.reporter = ply
 			v.dt.reported = tr.dt.owning_ent

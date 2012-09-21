@@ -84,7 +84,7 @@ local function DrawInfo()
 
 	local wep = LocalPlayer( ):GetActiveWeapon( );
 
-	if ValidEntity( wep ) and GetConVarNumber("weaponhud") == 1 then
+	if IsValid( wep ) and GetConVarNumber("weaponhud") == 1 then
         local name = wep:GetPrintName();
 		draw.DrawText("Weapon: "..name, "UiBold", RelativeX + 5, RelativeY - HUDHeight - 18, Color(255, 255, 255, 255), 0)
 	end

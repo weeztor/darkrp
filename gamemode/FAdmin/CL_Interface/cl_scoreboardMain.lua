@@ -10,9 +10,11 @@ function FAdmin.ScoreBoard.Main.Show()
 
 	FAdmin.ScoreBoard.ChangeView("Main")
 
-	FAdmin.ScoreBoard.Main.Controls.FAdminPanelList = FAdmin.ScoreBoard.Main.Controls.FAdminPanelList or vgui.Create("FAdminPanelList")
+	FAdmin.ScoreBoard.Main.Controls.FAdminPanelList = FAdmin.ScoreBoard.Main.Controls.FAdminPanelList or vgui.Create("DPanelList")
 	FAdmin.ScoreBoard.Main.Controls.FAdminPanelList:SetVisible(true)
 	FAdmin.ScoreBoard.Main.Controls.FAdminPanelList:Clear(true)
+	FAdmin.ScoreBoard.Main.Controls.FAdminPanelList.Padding = 3
+	FAdmin.ScoreBoard.Main.Controls.FAdminPanelList:EnableVerticalScrollbar(true)
 
 
 	FAdmin.ScoreBoard.Main.Controls.FAdminPanelList:Clear(true)

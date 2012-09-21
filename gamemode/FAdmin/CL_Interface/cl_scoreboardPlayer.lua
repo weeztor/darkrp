@@ -39,7 +39,7 @@ function FAdmin.ScoreBoard.Player.Show(ply)
 	ply = ply or FAdmin.ScoreBoard.Player.Player
 	FAdmin.ScoreBoard.Player.Player = ply
 
-	if not ValidEntity(ply) or not ValidEntity(FAdmin.ScoreBoard.Player.Player) then CancelRetrieveAvatar = true FAdmin.ScoreBoard.ChangeView("Main") return end
+	if not IsValid(ply) or not IsValid(FAdmin.ScoreBoard.Player.Player) then CancelRetrieveAvatar = true FAdmin.ScoreBoard.ChangeView("Main") return end
 
 	local ScreenWidth, ScreenHeight = ScrW(), ScrH()
 	local SteamID = ply:SteamID()
@@ -103,10 +103,10 @@ function FAdmin.ScoreBoard.Player.Show(ply)
 			end
 
 			timer.Create("FAdmin_Scoreboard_text_update_"..v.name, 1, 0, function()
-				if not ValidEntity(ply) or not ValidEntity(FAdmin.ScoreBoard.Player.Player) or not ValidPanel(Text) then
+				if not IsValid(ply) or not IsValid(FAdmin.ScoreBoard.Player.Player) or not ValidPanel(Text) then
 					timer.Destroy("FAdmin_Scoreboard_text_update_"..v.name)
 					CancelRetrieveAvatar = true
-					if FAdmin.ScoreBoard.Visible and (not ValidEntity(ply) or not ValidEntity(FAdmin.ScoreBoard.Player.Player)) then FAdmin.ScoreBoard.ChangeView("Main") end
+					if FAdmin.ScoreBoard.Visible and (not IsValid(ply) or not IsValid(FAdmin.ScoreBoard.Player.Player)) then FAdmin.ScoreBoard.ChangeView("Main") end
 					return
 				end
 				Value = v.func(FAdmin.ScoreBoard.Player.Player)

@@ -64,14 +64,14 @@ function ENT:Fireball()
 end
 
 PrintMore = function(ent)
-	if ValidEntity(ent) then
+	if IsValid(ent) then
 		ent.sparking = true
 		timer.Simple(3, function() ent:CreateMoneybag() end)
 	end
 end
 
 function ENT:CreateMoneybag()
-	if not ValidEntity(self) then return end
+	if not IsValid(self) then return end
 	if self:IsOnFire() then return end
 	local MoneyPos = self:GetPos()
 

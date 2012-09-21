@@ -43,7 +43,7 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
 
 function SWEP:Deploy()
-	if CLIENT or not ValidEntity(self:GetOwner()) then return end
+	if CLIENT or not IsValid(self:GetOwner()) then return end
 	self:SetColor(Color(0,0,255,255))
 	self:SetMaterial("models/shiny")
 	SendUserMessage("StunStickColour", self:GetOwner(), 0,0,255, "models/shiny")
@@ -51,13 +51,13 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
-	if CLIENT or not ValidEntity(self:GetOwner()) then return end
+	if CLIENT or not IsValid(self:GetOwner()) then return end
 	SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
 	return true
 end
 
 function SWEP:OnRemove()
-	if SERVER and ValidEntity(self:GetOwner()) then
+	if SERVER and IsValid(self:GetOwner()) then
 		SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
 	end
 end
@@ -84,7 +84,7 @@ function SWEP:Initialize()
 end
 
 function SWEP:DoFlash(ply)
-	if not ValidEntity(ply) or not ply:IsPlayer() then return end
+	if not IsValid(ply) or not ply:IsPlayer() then return end
 	umsg.Start("StunStickFlash", ply)
 	umsg.End()
 end
@@ -105,7 +105,7 @@ function SWEP:PrimaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100) then return end
+	if not IsValid(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100) then return end
 
 	if not trace.Entity:IsDoor() then
 		trace.Entity:SetVelocity((trace.Entity:GetPos() - self.Owner:GetPos()) * 7)
@@ -142,7 +142,7 @@ function SWEP:SecondaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 
-	if (not ValidEntity(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100)) then return end
+	if (not IsValid(trace.Entity) or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 100)) then return end
 
 	if SERVER then
 		if not trace.Entity:IsDoor() then

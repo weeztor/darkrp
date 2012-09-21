@@ -27,11 +27,11 @@ end
 usermessage.Hook("FPP_Owner", RetrieveOwner)
 
 hook.Add("CanTool", "FPP_CL_CanTool", function(ply, trace, tool) -- Prevent client from SEEING his toolgun shoot while it doesn't shoot serverside.
-	if ValidEntity(trace.Entity) and FPP.CanTouchEntities[trace.Entity] == false then
+	if IsValid(trace.Entity) and FPP.CanTouchEntities[trace.Entity] == false then
 		return false
 	end
 
-	if ValidEntity(ply:GetActiveWeapon()) and ply:GetActiveWeapon().GetToolObject and ply:GetActiveWeapon():GetToolObject() and
+	if IsValid(ply:GetActiveWeapon()) and ply:GetActiveWeapon().GetToolObject and ply:GetActiveWeapon():GetToolObject() and
 	(string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ) or "", "*") or
 	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "material" ) or "", "*") or
 	string.find(ply:GetActiveWeapon():GetToolObject():GetClientInfo( "model" ) or "", "\\")
@@ -144,7 +144,7 @@ local function HUDPaint()
 
 	--Show the owner:
 	local LAEnt = LocalPlayer():GetEyeTraceNoCursor().Entity
-	if CanTouchLookingAt ~= nil and ValidEntity(LAEnt) and (LAEnt == LookingatEntity or (LookingatEntity == NULL and LAEnt:EntIndex() ~= 0)) then--LookingatEntity is null when you look at a prop you just spawned(haven't spawned on client yet)
+	if CanTouchLookingAt ~= nil and IsValid(LAEnt) and (LAEnt == LookingatEntity or (LookingatEntity == NULL and LAEnt:EntIndex() ~= 0)) then--LookingatEntity is null when you look at a prop you just spawned(haven't spawned on client yet)
 
 		surface.SetFont("Default")
 		local w,h = surface.GetTextSize(Why)

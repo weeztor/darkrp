@@ -1,6 +1,6 @@
 local function Ignite(ply, cmd, args)
 	local targets = FAdmin.FindPlayer(args[1])
-	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or #targets == 1 and not IsValid(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
@@ -9,12 +9,12 @@ local function Ignite(ply, cmd, args)
 
 	for _, target in pairs(targets) do
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Ignite", target) then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-		if ValidEntity(target) then
+		if IsValid(target) then
 			target:Ignite(time, 0)
 			target:FAdmin_SetGlobal("FAdmin_ignited", true)
 
 			timer.Simple(time, function()
-				if ValidEntity(target) then target:FAdmin_SetGlobal("FAdmin_ignited", false) end
+				if IsValid(target) then target:FAdmin_SetGlobal("FAdmin_ignited", false) end
 			end)
 		end
 	end
@@ -23,14 +23,14 @@ end
 
 local function UnIgnite(ply, cmd, args)
 	local targets = FAdmin.FindPlayer(args[1])
-	if not targets or #targets == 1 and not ValidEntity(targets[1]) then
+	if not targets or #targets == 1 and not IsValid(targets[1]) then
 		FAdmin.Messages.SendMessage(ply, 1, "Player not found")
 		return
 	end
 
 	for _, target in pairs(targets) do
 		if not FAdmin.Access.PlayerHasPrivilege(ply, "Ignite") then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
-		if ValidEntity(target) then
+		if IsValid(target) then
 			target:Extinguish()
 
 			target:FAdmin_SetGlobal("FAdmin_ignited", false)

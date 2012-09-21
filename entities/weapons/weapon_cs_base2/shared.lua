@@ -114,7 +114,7 @@ function SWEP:Reload()
 	self.CurHoldType = self.HoldType
 	self.Owner:SetAnimation(PLAYER_RELOAD)
 	timer.Simple(2, function()
-		if not ValidEntity(self) then return end
+		if not IsValid(self) then return end
 		self.Reloading = false
 		self:NewSetWeaponHoldType("normal")
 		self.CurHoldType = "normal"
@@ -208,7 +208,7 @@ Name: SWEP:PrimaryAttack()
 Desc: +attack1 has been pressed
 ---------------------------------------------------------*/
 function SWEP:CSShootBullet(dmg, recoil, numbul, cone)
-	if not ValidEntity(self.Owner) then return end
+	if not IsValid(self.Owner) then return end
 	numbul = numbul or 1
 	cone = cone or 0.01
 
@@ -434,7 +434,7 @@ if CLIENT then
 		local wep = um:ReadEntity()
 		local holdtype = um:ReadString()
 
-		if not ValidEntity( wep ) or not wep:IsWeapon() then return end
+		if not IsValid( wep ) or not wep:IsWeapon() then return end
 
 		wep:SetWeaponHoldType(holdtype)
 	end)

@@ -47,7 +47,7 @@ function SWEP:Initialize()
 end
 
 function SWEP:Deploy()
-	if CLIENT or not ValidEntity(self:GetOwner()) then return end
+	if CLIENT or not IsValid(self:GetOwner()) then return end
 	self:SetColor(Color(0,255,0,255))
 	self:SetMaterial("models/shiny")
 	SendUserMessage("StunStickColour", self:GetOwner(), 0,255,0, "models/shiny")
@@ -55,13 +55,13 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
-	if CLIENT or not ValidEntity(self:GetOwner()) then return end
+	if CLIENT or not IsValid(self:GetOwner()) then return end
 	SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
 	return true
 end
 
 function SWEP:OnRemove()
-	if SERVER and ValidEntity(self:GetOwner()) then
+	if SERVER and IsValid(self:GetOwner()) then
 		SendUserMessage("StunStickColour", self:GetOwner(), 255, 255, 255, "")
 	end
 end
@@ -89,7 +89,7 @@ function SWEP:PrimaryAttack()
 
 	local trace = self.Owner:GetEyeTrace()
 
-	if not ValidEntity(trace.Entity) or not trace.Entity:IsPlayer() or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) or not trace.Entity.DarkRPVars.Arrested then
+	if not IsValid(trace.Entity) or not trace.Entity:IsPlayer() or (self.Owner:EyePos():Distance(trace.Entity:GetPos()) > 115) or not trace.Entity.DarkRPVars.Arrested then
 		return
 	end
 
