@@ -219,7 +219,7 @@ local function cantouchsingleEnt(ply, ent, Type1, Type2, TryingToShare)
 		elseif ent.Owner and ply:IsAdmin() and tobool(FPP.Settings[Type2].adminall) then -- if not world prop AND admin allowed
 			return not OnlyMine, ent.Owner
 		-- Misc entities
-		elseif ent == GetWorldEntity() or ent:GetClass() == "gmod_anchor" then
+		elseif ent == game.GetWorld() or ent:GetClass() == "gmod_anchor" then
 			return true
 		--If world prop or a prop belonging to someone who left
 		elseif not IsValid(ent.Owner) then
@@ -278,7 +278,7 @@ function FPP.ShowOwner()
 	for _, ply in pairs(player.GetAll()) do
 		local wep = ply:GetActiveWeapon()
 		local trace = ply:GetEyeTrace()
-		if IsValid(wep) and IsValid(trace.Entity) and trace.Entity ~= GetWorldEntity() and not trace.Entity:IsPlayer() and ply.FPP_LOOKINGAT ~= trace.Entity then
+		if IsValid(wep) and IsValid(trace.Entity) and trace.Entity ~= game.GetWorld() and not trace.Entity:IsPlayer() and ply.FPP_LOOKINGAT ~= trace.Entity then
 			ply.FPP_LOOKINGAT = trace.Entity -- Easy way to prevent spamming the usermessages
 			local class, cantouch, why = wep:GetClass()
 			if class == "weapon_physgun" then
@@ -479,7 +479,7 @@ function FPP.Protect.EntityDamage(ent, inflictor, attacker, amount, dmginfo)
 			return
 		end
 
-		if attacker == GetWorldEntity() and ent.FPPAntiDamageWorld then
+		if attacker == game.GetWorld() and ent.FPPAntiDamageWorld then
 			dmginfo:SetDamage(0)
 		end
 		return

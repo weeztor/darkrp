@@ -127,7 +127,7 @@ local function DamageSleepers(ent, inflictor, attacker, amount, dmginfo)
 	if ownerint and ownerint ~= 0 then
 		for k,v in pairs(player.GetAll()) do
 			if v:EntIndex() == ownerint then
-				if attacker == GetWorldEntity() then
+				if attacker == game.GetWorld() then
 					amount = 10
 					dmginfo:ScaleDamage(0.1)
 				end

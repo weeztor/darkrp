@@ -229,7 +229,7 @@ function SWEP:CSShootBullet(dmg, recoil, numbul, cone)
 	if ( self.Owner:IsNPC() ) then return end
 
 	// CUSTOM RECOIL !
-	if ( (SinglePlayer() && SERVER) || ( !SinglePlayer() && CLIENT && IsFirstTimePredicted() ) ) then
+	if ( (game.SinglePlayer() && SERVER) || ( !game.SinglePlayer() && CLIENT && IsFirstTimePredicted() ) ) then
 		local eyeang = self.Owner:EyeAngles()
 		eyeang.pitch = eyeang.pitch - recoil
 		self.Owner:SetEyeAngles( eyeang )
@@ -347,7 +347,7 @@ SetIronsights
 ---------------------------------------------------------*/
 
 function SWEP:SetIronsights(b)
-	if SinglePlayer() then -- Make ironsights work on SP
+	if game.SinglePlayer() then -- Make ironsights work on SP
 		self.Owner:SendLua("LocalPlayer():GetActiveWeapon().Ironsights = "..tostring(b))
 	end
 	if b then

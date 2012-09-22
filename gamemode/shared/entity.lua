@@ -28,11 +28,11 @@ function meta:IsDoor()
 end
 
 function meta:DoorIndex()
-	return self:EntIndex() - MaxPlayers()
+	return self:EntIndex() - game.MaxPlayers()
 end
 
 function GM:DoorToEntIndex(num)
-	return num + MaxPlayers()
+	return num + game.MaxPlayers()
 end
 
 function meta:IsOwned()

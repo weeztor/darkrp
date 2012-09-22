@@ -386,7 +386,7 @@ function DB.UpdateDatabase()
 
 	-- Doors
 	DB.Query([[DELETE FROM darkrp_door;]])
-	DB.Query([[INSERT INTO darkrp_door SELECT old.idx - ]] .. MaxPlayers() .. [[, old.map, old.title, old.locked, old.disabled FROM darkrp_doors old;]])
+	DB.Query([[INSERT INTO darkrp_door SELECT old.idx - ]] .. game.MaxPlayers() .. [[, old.map, old.title, old.locked, old.disabled FROM darkrp_doors old;]])
 
 	DB.Query([[DROP TABLE darkrp_doors;]])
 	DB.Query([[DROP TABLE darkrp_teamdoors;]])
