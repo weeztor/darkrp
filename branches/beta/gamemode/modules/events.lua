@@ -306,7 +306,7 @@ local function EarthQuakeTest()
 				constraint.RemoveAll(e)
 			end
 			if e:IsOnGround() then
-				e:TakeDamage((force / 100) + 15, GetWorldEntity())
+				e:TakeDamage((force / 100) + 15, game.GetWorld())
 			end
 		end
 	end

@@ -76,7 +76,7 @@ function FAdmin.MOTD.SetMOTDPage(ply, cmd, args)
 end
 
 local function CreateMOTD(ply)
-	if ply ~= GetWorldEntity() and not ply:IsSuperAdmin() then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
+	if ply ~= game.GetWorld() and not ply:IsSuperAdmin() then FAdmin.Messages.SendMessage(ply, 5, "No access!") return end
 	local MOTD = ents.Create("fadmin_motd")
 	MOTD:SpawnFunction(ply, ply:GetEyeTrace())
 end

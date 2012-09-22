@@ -63,7 +63,7 @@ function GM:PlayerSay(ply, text, teamonly, dead) -- We will make the old hooks r
 	text2, callback, DoSayFunc = RP_PlayerChat(ply, text2)
 	if tostring(text2) == " " then text2, callback = callback, text2 end
 
-	if isDedicatedServer() then
+	if game.IsDedicated() then
 		ServerLog("\""..ply:Nick().."<"..ply:UserID()..">" .."<"..ply:SteamID()..">".."<"..team.GetName( ply:Team() )..">\" say \""..text.. "\"\n")
 	end
 
