@@ -737,6 +737,26 @@ function FPP.Protect.CanTool(ply, trace, tool, ENT)
 end
 hook.Add("CanTool", "FPP.Protect.CanTool", FPP.Protect.CanTool)
 
+function FPP.Protect.CanProperty(ply, property, ent)
+	-- Use physgun because I'm way too lazy to make a new type
+	local cantouch, why = FPP.PlayerCanTouchEnt(ply, ent, "Physgun1", "FPP_PHYSGUN1")
+	if why then
+		FPP.CanTouch(ply, "FPP_PHYSGUN1", why, cantouch)
+	end
+	if not cantouch then return false end
+end
+hook.Add("CanProperty", "FPP.Protect.CanProperty", FPP.Protect.CanProperty)
+
+function FPP.Protect.CanDrive(ply, ent)
+	-- Use physgun because I'm way too lazy to make a new type
+	local cantouch, why = FPP.PlayerCanTouchEnt(ply, ent, "Physgun1", "FPP_PHYSGUN1")
+	if why then
+		FPP.CanTouch(ply, "FPP_PHYSGUN1", why, cantouch)
+	end
+	if not cantouch then return false end
+end
+hook.Add("CanDrive", "FPP.Protect.CanDrive", FPP.Protect.CanDrive)
+
 --Player disconnect, not part of the Protect table.
 function FPP.PlayerDisconnect(ply)
 	if IsValid(ply) and tobool(FPP.Settings.FPP_GLOBALSETTINGS1.cleanupdisconnected) and FPP.Settings.FPP_GLOBALSETTINGS1.cleanupdisconnectedtime then
