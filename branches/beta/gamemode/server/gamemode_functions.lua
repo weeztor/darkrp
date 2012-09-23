@@ -425,6 +425,7 @@ function GM:PlayerSetModel(ply)
 	local EndModel = ""
 	if GetConVarNumber("enforceplayermodel") == 1 then
 		local TEAM = RPExtraTeams[ply:Team()]
+		if not TEAM then return end
 
 		if type(TEAM.model) == "table" then
 			local ChosenModel = ply.rpChosenModel or ply:GetInfo("rp_playermodel")

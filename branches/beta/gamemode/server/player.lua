@@ -190,7 +190,8 @@ end
 function meta:NewData()
 	if not IsValid(self) then return end
 
-	self:RestorePlayerData()
+	-- Restoring data delayed the player handle will not be valid on the player otherwise
+	timer.Simple(5, function() self:RestorePlayerData() end)
 
 	self:InitiateTax()
 
