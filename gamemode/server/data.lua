@@ -197,6 +197,17 @@ function DB.Init()
 			);
 		]])
 
+		-- Door groups
+		DB.Query([[
+			CREATE TABLE IF NOT EXISTS darkrp_doorgroups(
+				idx INTEGER NOT NULL,
+				map VARCHAR(45) NOT NULL,
+				doorgroup VARCHAR(100) NOT NULL,
+
+				PRIMARY KEY(idx, map)
+			)
+		]])
+
 		-- SQlite doesn't really handle foreign keys strictly, neither does MySQL by default
 		-- So to keep the DB clean, here's a manual partial foreign key enforcement
 		-- For now it's deletion only, since updating of the common attribute doesn't happen.
@@ -278,6 +289,7 @@ function DB.Init()
 
 	DB.SetUpNonOwnableDoors()
 	DB.SetUpTeamOwnableDoors()
+	DB.SetUpGroupDoors()
 	DB.LoadConsoles()
 
 	DB.Query("SELECT * FROM darkrp_cvar;", function(settings)
@@ -818,6 +830,40 @@ function DB.SetUpTeamOwnableDoors()
 		end
 	end)
 end
+
+function DB.SetDoorGroup(ent, group)
+	local map = sql.SQLStr(string.lower(game.GetMap()))
+	local index = ent:DoorIndex()
+
+	if group == "" then
+		DB.Query("DELETE FROM darkrp_doorgroups WHERE map = " .. map .. " AND idx = " .. index .. ";")
+		return
+	end
+
+	DB.Query("REPLACE INTO darkrp_doorgroups VALUES(" .. index .. ", " .. map .. ", " .. sql.SQLStr(group) .. ");");
+end
+
+function DB.SetUpGroupDoors()
+	local map = sql.SQLStr(string.lower(game.GetMap()))
+	DB.Query("SELECT idx, doorgroup FROM darkrp_doorgroups WHERE map = " .. map, function(data)
+		if not data then return end
+
+		for _, row in pairs(data) do
+			local ent = ents.GetByIndex(GAMEMODE:DoorToEntIndex(tonumber(row.idx)))
+
+			if not ValidEntity(ent) then
+				continue
+			end
+
+			ent.DoorData = ent.DoorData or {}
+			ent.DoorData.GroupOwn = row.doorgroup
+		end
+	end)
+end
+
+/*---------------------------------------------------------------------------
+Consoles
+---------------------------------------------------------------------------*/
 
 function DB.LoadConsoles()
 	local map = string.lower(game.GetMap())

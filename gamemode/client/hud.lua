@@ -44,6 +44,7 @@ end
 ReloadConVars()
 
 local function formatNumber(n)
+	n = tonumber(n)
 	if (!n) then
 		return 0
 	end
@@ -299,7 +300,11 @@ local function DrawEntityDisplay()
 		-- Draw when you're (almost) looking at him
 		elseif not tobool(GetConVarNumber("globalshow")) and hisPos:Distance(shootPos) < 400 then
 			local pos = (hisPos - shootPos):GetNormalized()
-			if pos:Dot(aimVec) > 0.95 then DrawPlayerInfo(ply) end
+			if pos:Dot(aimVec) > 0.95 then
+				local trace = util.QuickTrace(shootPos, pos * 400, LocalPlayer())
+				if trace.Hit and trace.Entity ~= ply then return end
+				DrawPlayerInfo(ply)
+			end
 		end
 	end
 

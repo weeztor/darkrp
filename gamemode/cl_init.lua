@@ -598,36 +598,35 @@ local function InitializeDarkRPVars(len)
 	local vars = net.ReadTable()
 	if not vars then return end
 	ply.DarkRPVars = vars
+	varsReceived = true
 end
 net.Receive("DarkRP_InitializeVars", InitializeDarkRPVars)
 
 function GM:InitPostEntity()
 	LoadModules()
 	function VoiceNotify:Init()
-		self.LabelName = vgui.Create( "DLabel", self )
-		self.Avatar = vgui.Create( "SpawnIcon", self )
+		self.LabelName = vgui.Create("DLabel", self)
+		self.Avatar = vgui.Create("SpawnIcon", self)
 	end
 
 	function VoiceNotify:Setup(ply)
-		self.LabelName:SetText( ply:Nick() )
-		self.Avatar:SetModel( ply:GetModel() )
+		self.LabelName:SetText(ply:Nick())
+		self.Avatar:SetModel(ply:GetModel())
 		self.Avatar:SetSize(32)
 
-		self.Color = team.GetColor( ply:Team() )
+		self.Color = team.GetColor(ply:Team())
 
 		self:InvalidateLayout()
 	end
 
 	RunConsoleCommand("_sendDarkRPvars")
 	timer.Create("DarkRPCheckifitcamethrough", 30, 0, function()
-		for k,v in pairs(player.GetAll()) do
-			v.DarkRPVars = v.DarkRPVars or {}
-			if not v.DarkRPVars.job or not v.DarkRPVars.money or not v.DarkRPVars.rpname then
-				RunConsoleCommand("_sendDarkRPvars")
-				return
-			end
-			timer.Destroy("DarkRPCheckifitcamethrough")
+		if not varsReceived then
+			RunConsoleCommand("_sendDarkRPvars")
+			return
 		end
+
+		timer.Destroy("DarkRPCheckifitcamethrough")
 	end)
 end
 
