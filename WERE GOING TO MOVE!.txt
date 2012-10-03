@@ -1,0 +1,37 @@
+READ THIS SHIT CAREFULLY! MAKE CHANGES BEFORE OCTOBER 24TH! WE'RE GOING TO MOVE SHORTLY AFTER THE RELEASE OF GMOD 13!
+WHICH IS OCTOBER 24TH.
+
+I don't like SVN.
+I like git more.
+We're going to move to github.
+
+If you don't know what git is then
+	look it up on Google.
+
+This is where we're going to move to:
+	https://github.com/FPtje/DarkRP
+
+Try to go along with the change and use git. There's a nice program for it:
+	http://windows.github.com/
+	The download button is on the top right.
+
+If you're a stubborn fuckwit and you still want to use SVN, you can do that, but don't stick with this address.
+Here are the addresses:
+	GMod 12 version (And GMod 13 version after October 24th)
+		https://github.com/FPtje/DarkRP/trunk
+
+	Gmod 13 Beta version (will be removed after October 24th)
+		https://github.com/FPtje/DarkRP/branches/beta
+
+HOW TO STICK WITH SVN IF YOU'RE THAT STUBBORN: (TortoiseSVN guide)
+	0. Backup your shit and don't blame your stupid mistakes on me.
+	1. Right click the folder in which this very file is located
+	2. Hover your mouse over that little text that says "TortoiseSVN". You'll see a little submenu
+	3. Click SVN Relocate.
+	4. Enter one of the URL's given above.
+	5. Press the god damn OK button.
+
+
+WHINING/COMPLAINING ABOUT THE MOVE/GIT/GITHUB:
+	Send a tweet to FPtje on twitter.
+	Don't you fucking spam my e-mail.
